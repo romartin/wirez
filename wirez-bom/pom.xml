@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>wirez-parent-metadata</artifactId>
+    <groupId>org.wirez</groupId>
+    <version>0.1.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>wirez-bom</artifactId>
+  <packaging>pom</packaging>
+  <name>Wirez BOM (Bill Of Materials)</name>
+
+  <dependencyManagement>
+    <dependencies>
+      <!--
+        IMPORTANT: Only declare modules of groupId org.wirez
+        Do not declare external dependencies.
+        Do not duplicate modules from another bom.
+      -->
+      <!--
+        Declare all dependency versions. Do not declare <scope> or <optional>.
+        Each module should declare it's direct dependencies and possibly overwrite scope/optional.
+        Always declare the sources jar too and optionally the test-jar.
+      -->
+
+      <!-- Wirez Core-->
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-core-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-core-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-core-backend</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-core-backend</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-core-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-core-client</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <!-- Wirez Client-->
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-client-widgets</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-client-widgets</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-client-workbench</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-client-workbench</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <!-- Wirez Default Sets-->
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-basicset</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-basicset</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
+    </dependencies>
+  </dependencyManagement>
+  
+
+</project>

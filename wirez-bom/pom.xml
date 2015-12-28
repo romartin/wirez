@@ -69,13 +69,13 @@
       <!-- Wirez Client-->
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-client-widgets</artifactId>
+        <artifactId>wirez-widgets</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-client-widgets</artifactId>
+        <artifactId>wirez-widgets</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>

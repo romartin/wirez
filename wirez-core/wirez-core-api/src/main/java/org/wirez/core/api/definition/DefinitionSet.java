@@ -17,7 +17,7 @@
 package org.wirez.core.api.definition;
 
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.definition.rule.Rule;
+import org.wirez.core.api.rule.Rule;
 
 import java.util.Collection;
 

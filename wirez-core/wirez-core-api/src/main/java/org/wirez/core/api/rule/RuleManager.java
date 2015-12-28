@@ -16,23 +16,16 @@
 
 package org.wirez.core.api.rule;
 
-import org.wirez.core.api.definition.rule.Rule;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 
 /**
  * Rule Manager to report validation issues when attempting to mutate Elements
  */
 public interface RuleManager {
 
-    /**
-     * Add a rule to the Rule Manager
-     */
-    RuleManager addRule(final Rule rule);
-
-    /**
-     * Clear all rules.
-     */
-    RuleManager clearRules();
-    
     /**
      * Rules are applied against an unmodified Graph to check whether the proposed mutated state is valid.
      * This is deliberate to avoid, for example, costly "undo" operations if we were to mutate the state
@@ -44,4 +37,58 @@ public interface RuleManager {
         DELETE
     }
 
+    /**
+     * Add a rule to the Rule Manager
+     */
+    RuleManager addRule(final Rule rule);
+    
+    /**
+     * Check whether adding the proposed Node to the target Process breaks any containment Rules
+     * @param target Target process
+     * @param candidate Candidate node
+     * @return
+     */
+    RuleViolations checkContainment(final Graph<? extends Definition, ? extends Node> target,
+                                    final Node<? extends Definition, ? extends Edge> candidate);
+
+    /**
+     * Check whether adding the proposed Node to the target Process breaks any cardinality Rules
+     * @param target Target process
+     * @param candidate Candidate node
+     * @param operation Is the candidate Node being added or removed
+     * @return
+     */
+    RuleViolations checkCardinality(final Graph<? extends Definition, ? extends Node> target,
+                                    final Node<? extends Definition, ? extends Edge> candidate,
+                                    final Operation operation);
+
+    /**
+     * Check whether adding the proposed Edge to the target Process breaks any connection Rules
+     * @param outgoingNode Node from which the Edge will emanate
+     * @param incomingNode Node to which the Edge will terminate
+     * @param edge Candidate edge
+     * @return Is the Edge being added or removed
+     */
+    RuleViolations checkConnectionRules(final Node<? extends Definition, ? extends Edge> outgoingNode,
+                                        final Node<? extends Definition, ? extends Edge> incomingNode,
+                                        final Edge<? extends Definition, ? extends Node> edge);
+
+    /**
+     * Check whether adding the proposed Edge to the target Process breaks any cardinality Rules
+     * @param outgoingNode Node from which the Edge will emanate
+     * @param incomingNode Node to which the Edge will terminate
+     * @param edge Candidate edge
+     * @param operation
+     * @return Is the Edge being added or removed
+     */
+    RuleViolations checkCardinality(final Node<? extends Definition, ? extends Edge> outgoingNode,
+                                    final Node<? extends Definition, ? extends Edge> incomingNode,
+                                    final Edge<? extends Definition, ? extends Node> edge,
+                                    final Operation operation);
+    
+    /**
+     * Clear all rules.
+     */
+    RuleManager clearRules();
+    
 }

@@ -13,17 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.definition.rule;
 
-/**
- * Rules define restrictions on behaviour of Elements in a diagram
- */
-public interface RuleById extends Rule {
+package org.wirez.core.api.command;
 
-    /**
-     * The identifier for which the Rule applies. All Elements with this Id will be affected by the Rule.
-     * @return
-     */
-    String getId();
+import java.util.Collection;
+import java.util.LinkedList;
+
+public class DefaultCommandResults implements CommandResults {
+    
+    Collection<CommandResult> results = new LinkedList<CommandResult>();
+
+    public Collection<CommandResult> getItems() {
+        return results;
+    }
+
+    @Override
+    public Iterable<CommandResult> results() {
+        return results;
+    }
+
+    @Override
+    public Iterable<CommandResult> results(CommandResult.Type resultType) {
+        return results;
+    }
 
 }

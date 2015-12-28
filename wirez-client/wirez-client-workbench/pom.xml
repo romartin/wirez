@@ -62,7 +62,7 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-client-widgets</artifactId>
+      <artifactId>wirez-widgets</artifactId>
     </dependency>
 
     <!-- Errai. -->

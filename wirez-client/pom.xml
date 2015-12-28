@@ -15,7 +15,7 @@
   <name>Wirez - Client</name>
   
   <modules>
-    <module>wirez-client-widgets</module>
+    <module>wirez-widgets</module>
     <module>wirez-client-workbench</module>
   </modules>
 

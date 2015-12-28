@@ -22,7 +22,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
-import org.wirez.core.api.definition.rule.Rule;
+import org.wirez.core.api.rule.Rule;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.definition.rule;
+
+package org.wirez.core.api.rule;
 
 /**
  * Rules define restrictions on behaviour of Elements in a diagram
  */
-public interface Rule {
+public interface RuleById extends Rule {
 
     /**
-     * A name for the rule.
+     * The identifier for which the Rule applies. All Elements with this Id will be affected by the Rule.
      * @return
-     *//**/
-    String getName();
+     */
+    String getId();
 
 }

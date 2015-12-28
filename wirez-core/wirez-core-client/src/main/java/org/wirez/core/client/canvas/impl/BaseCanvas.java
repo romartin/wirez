@@ -19,18 +19,20 @@ package org.wirez.core.client.canvas.impl;
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.Layer;
-import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.management.SelectionManager;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
+import org.wirez.core.client.impl.BaseShape;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
@@ -44,6 +46,12 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         this.canvasShapeStateModifiedEvent = canvasShapeStateModifiedEvent;
     }
 
+    /*
+        ******************************************
+        *       Canvas impl methods
+        ******************************************
+     */
+    
     @Override
     public BaseCanvas initialize(final Layer lienzoLayer) {
         wiresManager = WiresManager.get(lienzoLayer);
@@ -69,6 +77,40 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         }
         return null;
     }
+
+    @Override
+    public Canvas addShape(final Shape shape) {
+        try {
+            BaseShape baseShape = (BaseShape) shape;
+            registerShape(baseShape);
+        } catch (ClassCastException e) {
+            // TODO
+            /*try {
+                WirezBaseConnector baseConnector = (WirezBaseConnector) shape;
+                registerConnector(baseConnector);
+            } catch (ClassCastException e1) {
+                throw new RuntimeException("WirezFreeCanvas - Cannot register wirez shape as it's not a base shape neither a base connector.");
+            }*/
+        }
+        return this;
+    }
+
+    @Override
+    public Canvas deleteShape(final Shape shape) {
+        try {
+            BaseShape baseShape = (BaseShape) shape;
+            deregisterShape(baseShape);
+        } catch (ClassCastException e) {
+            // TODO
+            /*try {
+                WirezBaseConnector baseConnector = (WirezBaseConnector) shape;
+                deregisterConnector(baseConnector);
+            } catch (ClassCastException e1) {
+                throw new RuntimeException("WirezFreeCanvas - Cannot deregister wirez shape as it's not a base shape neither a base connector.");
+            }*/
+        }
+        return this;
+    }
     
     @Override
     public BaseCanvas draw() {
@@ -76,17 +118,44 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         return this;
     }
 
-    protected void registerShape(final WirezBaseShape shape) {
+    public BaseCanvas clear() {
+
+        // Clear shapes.
+        for (Shape shape : shapes) {
+            deleteShape(shape);
+        }
+
+        // Clear state.
+        shapes.clear();
+        selectedShapes.clear();
+
+        return this;
+    }
+    
+    /*
+        ******************************************
+        *       Shapes register/deregister
+        ******************************************
+     */
+    
+    protected void registerShape(final BaseShape shape) {
         assert wiresManager != null;
         GWT.log("BaseWirezCanvas#registerShape - " + shape.toString());
-        if (shape.getUUID() == null) {
-            shape.setUUID(UUID.uuid());
+        if (shape.getId() == null) {
+            shape.setId(org.wirez.core.api.util.UUID.uuid());
         }
         wiresManager.registerShape(shape);
         shapes.add(shape);
     }
 
-    protected void registerConnector(final WirezBaseConnector connector) {
+    protected void deregisterShape(final BaseShape shape) {
+        assert wiresManager != null;
+        wiresManager.deregisterShape(shape);
+        shapes.remove(shape);
+    }
+
+    // TODO
+    /*protected void registerConnector(final WirezBaseConnector connector) {
         assert wiresManager != null;
         GWT.log("BaseWirezCanvas#registerConnector - " + connector.toString());
         if (connector.getUUID() == null) {
@@ -96,36 +165,19 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         shapes.add(connector);
     }
 
-    protected void deregisterShape(final WirezBaseShape shape) {
-        assert wiresManager != null;
-        wiresManager.deregisterShape(shape);
-        shapes.remove(shape);
-    }
-
     protected void deregisterConnector(final WirezBaseConnector connector) {
         assert wiresManager != null;
         final WiresConnector wiresConnector = (WiresConnector) connector;
         wiresManager.deregisterConnector(wiresConnector);
         shapes.remove(connector);
-    }
+    }*/
 
-    public BaseCanvas clear() {
-        
-        // Clear shapes.
-        for (Shape shape : shapes) {
-            deregister(shape);
-        }
-        
-        // Clear state.
-        shapes.clear();
-        selectedShapes.clear();
-        
-        return this;
-    }
-
-    public WiresManager getWiresManager() {
-        return wiresManager;
-    }
+    
+    /*
+        ******************************************
+        *       Selection management
+        ******************************************
+     */
 
     @Override
     public SelectionManager<Shape> select(final Shape shape) {
@@ -166,12 +218,18 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         fireCanvasSelected();
         return this;
     }
-    
-    private void fireCanvasSelected() {
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, null, Shape.ShapeState.SELECTED));
+
+    protected void selectShape(final Shape shape) {
+        // TODO: new WirezSelectionAnimation(shape).setDuration(500).run();
     }
 
-    private BaseCanvas updateViewShapesState() {
+    protected void deselectShape(final Shape shape) {
+        // TODO
+        /*final boolean isConnector = shape instanceof WirezBaseConnector;
+        new WirezDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK);*/
+    }
+
+    protected BaseCanvas updateViewShapesState() {
         final List<Shape> shapes = getShapes();
         for (final Shape shape : shapes) {
             final boolean isSelected = selectedShapes.isEmpty() || selectedShapes.contains( shape );
@@ -183,41 +241,19 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         }
         return this;
     }
-
-    private void selectShape(final Shape shape) {
-        new WirezSelectionAnimation(shape).setDuration(500).run();
-    }
     
-    private void deselectShape(final Shape shape) {
-        final boolean isConnector = shape instanceof WirezBaseConnector;
-        new WirezDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK);
+    protected void fireCanvasSelected() {
+        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, null, Shape.ShapeState.SELECTED));
     }
 
-    protected void register(final Shape shape) {
-        try {
-            WirezBaseShape baseShape = (WirezBaseShape) shape;
-            registerShape(baseShape);
-        } catch (ClassCastException e) {
-            try {
-                WirezBaseConnector baseConnector = (WirezBaseConnector) shape;
-                registerConnector(baseConnector);
-            } catch (ClassCastException e1) {
-                throw new RuntimeException("WirezFreeCanvas - Cannot register wirez shape as it's not a base shape neither a base connector.");
-            }
-        }
+    /*
+        ******************************************
+        *       Other helper methods.
+        ******************************************
+     */
+
+    public WiresManager getWiresManager() {
+        return wiresManager;
     }
 
-    protected void deregister(final Shape shape) {
-        try {
-            WirezBaseShape baseShape = (WirezBaseShape) shape;
-            deregisterShape(baseShape);
-        } catch (ClassCastException e) {
-            try {
-                WirezBaseConnector baseConnector = (WirezBaseConnector) shape;
-                deregisterConnector(baseConnector);
-            } catch (ClassCastException e1) {
-                throw new RuntimeException("WirezFreeCanvas - Cannot deregister wirez shape as it's not a base shape neither a base connector.");
-            }
-        }
-    }
 }

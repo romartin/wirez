@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client;
+package org.wirez.core.api.rule;
 
-import org.wirez.core.api.WirezManager;
 
-import java.util.Collection;
+import java.util.Set;
 
-public interface WirezClientManager extends WirezManager {
-    
-    Collection<ShapeSet> getShapeSets();
-    
+/**
+ * Rule restricting the Elements that can be contained within another Element.
+ */
+public interface ContainmentRule extends RuleById {
+
+    /**
+     * The Roles of Elements permitted to be held within another Element.
+     * @return
+     */
+    Set<String> getPermittedRoles();
+
 }

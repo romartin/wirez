@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.definition.rule;
+
+package org.wirez.core.api.rule;
 
 /**
  * Rules define restrictions on behaviour of Elements in a diagram

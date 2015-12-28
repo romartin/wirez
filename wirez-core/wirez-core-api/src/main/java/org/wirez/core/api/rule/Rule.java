@@ -13,20 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.definition.rule;
 
-
-import java.util.Set;
+package org.wirez.core.api.rule;
 
 /**
- * Rule restricting the Elements that can be contained within another Element.
+ * Rules define restrictions on behaviour of Elements in a diagram
  */
-public interface ContainmentRule extends RuleById {
+public interface Rule {
 
     /**
-     * The Roles of Elements permitted to be held within another Element.
+     * A name for the rule.
      * @return
-     */
-    Set<String> getPermittedRoles();
+     *//**/
+    String getName();
 
 }

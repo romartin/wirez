@@ -23,7 +23,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.management.SelectionManager;
+import org.wirez.core.client.canvas.SelectionManager;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.impl.BaseShape;
 

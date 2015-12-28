@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas.management;
+package org.wirez.core.client.canvas.command;
 
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.command.CommandResults;

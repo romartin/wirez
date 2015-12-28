@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas.management;
+package org.wirez.core.client.mutation;
 
-import java.util.Collection;
-
-/**
- * Mediator for selection operations
- */
-public interface SelectionManager<E> {
-
-    SelectionManager<E> select(final E item);
-
-    SelectionManager<E> deselect(final E item);
-
-    boolean isSelected(final E item);
-
-    Collection<E> getSelectedItems();
-
-    SelectionManager<E> clearSelection();
-
+public class StaticMutationContext implements MutationContext {
+    
+    @Override
+    public MutationType getType() {
+        return MutationType.STATIC;
+    }
+    
 }

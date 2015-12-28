@@ -30,6 +30,7 @@ import java.util.HashSet;
 @Portable
 public class BasicSet implements DefinitionSet {
 
+    public static final BasicSet INSTANCE = new BasicSet();
     public static final String ID = "basicSet";
     
     private final Collection<PropertySet> propertySets = new HashSet<PropertySet>() {{

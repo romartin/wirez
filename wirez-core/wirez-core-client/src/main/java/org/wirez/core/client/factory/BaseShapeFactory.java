@@ -13,39 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.wirez.core.client.factory;
 
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.ShapeGlyph;
-import org.wirez.core.client.canvas.CanvasHandler;
 
-/**
- * Factory for building shapes available for authoring.
- */
-public interface ShapeFactory<W extends Definition, S extends Shape<W>> {
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 
-    /**
-     * Does the Factory builds the given Wirez definition.
-     */
-    boolean accepts(final Definition definition);
+public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>> 
+        implements ShapeFactory<W, S> {
     
-    /**
-     * Get a glyph to represent the Shape. Used by the Palette Screen and Layers Screen.
-     * @return
-     */
-    ShapeGlyph getGlyph();
+    @Inject
+    public BaseShapeFactory() {
 
-    /**
-     * Get description of Shape.
-     * @return
-     */
-    String getDescription();
+    }
 
-    /**
-     * Get a Shape to be created on the Canvas.
-     * @return
-     */
-    S build(W definition, CanvasHandler canvasHandler);
-
+    @PostConstruct
+    public void init() {
+    }
+    
 }

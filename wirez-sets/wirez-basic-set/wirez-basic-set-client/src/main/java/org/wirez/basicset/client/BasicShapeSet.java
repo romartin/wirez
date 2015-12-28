@@ -16,5 +16,38 @@
 
 package org.wirez.basicset.client;
 
-public class BasicShapeSet {
+import com.google.gwt.safehtml.shared.SafeUri;
+import org.wirez.basicset.api.BasicSet;
+import org.wirez.basicset.client.resources.BasicSetImageResources;
+import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.client.ShapeSet;
+
+public class BasicShapeSet implements ShapeSet {
+
+    public static final String ID = "basic";
+
+    @Override
+    public String getId() {
+        return ID;
+    }
+
+    @Override
+    public String getName() {
+        return "Basic Shapes";
+    }
+
+    @Override
+    public String getDescription() {
+        return "The basic shapes set";
+    }
+
+    @Override
+    public SafeUri getThumbnailUri() {
+        return BasicSetImageResources.INSTANCE.basicSetThumb().getSafeUri();
+    }
+
+    @Override
+    public DefinitionSet getDefinitionSet() {
+        return BasicSet.INSTANCE;
+    }
 }

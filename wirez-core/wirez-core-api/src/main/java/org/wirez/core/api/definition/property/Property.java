@@ -13,10 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wirez.core.api.definition.property;
 
-package org.wirez.core.api;
 
-public interface WResource {
+/**
+ * A Property of an Element
+ */
+public interface Property {
+
+    String getId();
+
+    PropertyType getType();
+
+    String getCaption();
+
+    String getDescription();
+
+    boolean isReadOnly();
+
+    boolean isOptional();
     
+    boolean isPublic();
     
 }

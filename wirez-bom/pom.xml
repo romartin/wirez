@@ -96,19 +96,31 @@
       <!-- Wirez Default Sets-->
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-basicset</artifactId>
+        <artifactId>wirez-basic-set-api</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-basicset</artifactId>
+        <artifactId>wirez-basic-set-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-basic-set-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-basic-set-client</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
       
     </dependencies>
   </dependencyManagement>
-  
 
 </project>

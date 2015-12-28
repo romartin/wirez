@@ -15,8 +15,7 @@
   <name>Wirez - Default Sets</name>
   
   <modules>
-    <module>wirez-basicset</module>
+    <module>wirez-basic-set</module>
   </modules>
-
 
 </project>

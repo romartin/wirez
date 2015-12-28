@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api;
+package org.wirez.core.api.definition;
 
-public interface WResourceSet {
-    
+public interface Definition<C extends Content> {
+
+    String getId();
+
+    C getContent();
     
 }

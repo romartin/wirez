@@ -16,8 +16,10 @@
 
 package org.wirez.core.client.canvas;
 
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.ShapeSet;
 
 public interface CanvasSettings {
@@ -28,7 +30,7 @@ public interface CanvasSettings {
 
     Canvas getCanvas();
     
-    Graph getGraph();
+    Graph<? extends Definition, ? extends Node> getGraph();
 
     DefinitionSet getDefinitionSet();
 

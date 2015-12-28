@@ -25,6 +25,7 @@ import org.wirez.basicset.client.glyph.RectangleGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.factory.BaseShapeFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -68,10 +69,8 @@ public class RectangleFactory extends BaseShapeFactory<Rectangle, RectangleShape
 
         group.setEventPropagationMode(EventPropagationMode.FIRST_ANCESTOR);
 
-        // TODO: canvasHandler.getWiresManager()
-        RectangleShape rectangleShape = new RectangleShape(path, group, null);
+        return new RectangleShape(path, group, ( (BaseCanvas) canvasHandler.getCanvas()).getWiresManager());
 
-        return rectangleShape;
     }
 
 }

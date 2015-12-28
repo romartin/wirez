@@ -25,6 +25,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
@@ -48,7 +49,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     protected DefaultRuleManager ruleManager;
     protected CanvasSettings settings;
     protected Canvas canvas;
-    protected DefaultGraph graph;
+    protected DefaultGraph<? extends Definition> graph;
     protected Collection<CanvasListener> listeners = new LinkedList<CanvasListener>();
 
     @Inject
@@ -64,7 +65,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     public CanvasHandler initialize(final CanvasSettings settings) {
         this.settings = settings;
         this.canvas = settings.getCanvas();
-        this.graph = (DefaultGraph) settings.getGraph();
+        this.graph = (DefaultGraph<? extends Definition>) settings.getGraph();
         return this;
     }
 
@@ -74,7 +75,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     }
 
     @Override
-    public Graph getGraph() {
+    public Graph<? extends Definition, ? extends Node> getGraph() {
         return graph;
     }
 

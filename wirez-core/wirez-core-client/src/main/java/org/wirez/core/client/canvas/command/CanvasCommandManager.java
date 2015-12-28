@@ -18,7 +18,6 @@ package org.wirez.core.client.canvas.command;
 
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.command.CommandResults;
-import org.wirez.core.client.canvas.command.CanvasCommand;
 
 public interface CanvasCommandManager extends CommandManager<CanvasCommand> {
 

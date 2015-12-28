@@ -16,8 +16,10 @@
 
 package org.wirez.core.client.canvas;
 
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.ShapeSet;
 
 public interface CanvasSettingsBuilder<T> {
@@ -30,7 +32,7 @@ public interface CanvasSettingsBuilder<T> {
     
     T title(String title);
     
-    T graph(Graph graph);
+    T graph(Graph<? extends Definition, ? extends Node> graph);
     
     T canvas(Canvas canvas);
     

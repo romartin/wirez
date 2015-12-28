@@ -17,7 +17,11 @@
 package org.wirez.core.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.client.factory.ShapeFactory;
+
+import java.util.Collection;
 
 public interface ShapeSet {
 
@@ -45,5 +49,10 @@ public interface ShapeSet {
      * The id of the wirez set.
      */
     DefinitionSet getDefinitionSet();
-    
+
+    /**
+     * The shape factories available in this set.
+     * @return The available shapes' factories.
+     */
+    Collection<ShapeFactory<? extends Definition, ? extends Shape>> getFactories();
 }

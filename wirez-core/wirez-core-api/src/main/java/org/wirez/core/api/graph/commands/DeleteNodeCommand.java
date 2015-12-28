@@ -28,7 +28,6 @@ import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
-
 import java.util.Collection;
 import java.util.List;
 

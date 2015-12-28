@@ -19,3 +19,4 @@ to relationships is particularly useful for providing additional metadata for gr
 algorithms, adding additional semantics to relationships (including quality and
 weight), and for constraining queries at runtime, if needed.                   
 * You can create more domain specific diagrams (such as E-R, hierarchical, etc) by providing rule constraints in the Definition Set.            
+* Despite being graphs, E-R diagrams allow only single, undirected, named relationships between entities.            

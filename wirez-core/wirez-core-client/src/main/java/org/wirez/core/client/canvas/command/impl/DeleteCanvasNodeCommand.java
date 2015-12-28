@@ -17,6 +17,8 @@ package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.DeleteNodeCommand;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.DefaultNode;
@@ -40,7 +42,7 @@ public class DeleteCanvasNodeCommand extends BaseCanvasCommand {
 
     @Override
     protected Command getCommand() {
-        return new DeleteNodeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
+        return new DeleteNodeCommand((DefaultGraph<? extends Definition>) canvasHandler.getGraph(), candidate);
     }
 
     @Override

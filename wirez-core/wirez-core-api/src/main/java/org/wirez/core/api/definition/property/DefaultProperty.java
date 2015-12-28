@@ -29,18 +29,6 @@ public class DefaultProperty<V> extends BaseHasDefaultValueProperty<V> {
         this.type = type;
     }
 
-    public DefaultProperty(@MapsTo("id") String id,
-                           @MapsTo("caption") String caption,
-                           @MapsTo("description") String description,
-                           @MapsTo("isReadOnly") boolean isReadOnly,
-                           @MapsTo("isOptional") boolean isOptional,
-                           @MapsTo("isPublic") boolean isPublic,
-                           @MapsTo("type") PropertyType type,
-                           @MapsTo("defaultValue") V defaultValue) {
-        super(id, caption, description, isReadOnly, isOptional, isPublic, defaultValue);
-        this.type = type;
-    }
-
     @Override
     public PropertyType getType() {
         return type;

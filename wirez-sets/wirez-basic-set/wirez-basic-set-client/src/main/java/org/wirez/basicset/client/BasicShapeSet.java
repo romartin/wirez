@@ -18,13 +18,40 @@ package org.wirez.basicset.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.basicset.api.BasicSet;
+import org.wirez.basicset.client.factory.RectangleFactory;
 import org.wirez.basicset.client.resources.BasicSetImageResources;
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
+import org.wirez.core.client.factory.ShapeFactory;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+@ApplicationScoped
 public class BasicShapeSet implements ShapeSet {
 
     public static final String ID = "basic";
+
+    RectangleFactory rectangleFactory;
+    private List<ShapeFactory<? extends Definition, ? extends Shape>> factories;
+
+    @Inject
+    public BasicShapeSet(final RectangleFactory rectangleFactory) {
+        this.rectangleFactory = rectangleFactory;
+    }
+
+    @PostConstruct
+    public void init() {
+        factories = new LinkedList<ShapeFactory<? extends Definition, ? extends Shape>>() {{
+            add(rectangleFactory);
+        }};
+    }
 
     @Override
     public String getId() {
@@ -49,5 +76,10 @@ public class BasicShapeSet implements ShapeSet {
     @Override
     public DefinitionSet getDefinitionSet() {
         return BasicSet.INSTANCE;
+    }
+
+    @Override
+    public Collection<ShapeFactory<? extends Definition, ? extends Shape>> getFactories() {
+        return null;
     }
 }

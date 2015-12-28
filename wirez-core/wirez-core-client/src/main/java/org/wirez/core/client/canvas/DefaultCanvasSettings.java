@@ -16,19 +16,19 @@
 
 package org.wirez.core.client.canvas;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.ShapeSet;
 
-@Portable
 public class DefaultCanvasSettings implements CanvasSettings {
     
     private String uuid;
     private DefinitionSet definitionSet;
     private ShapeSet shapeSet;
     private String title;
-    private Graph graph;
+    private Graph<? extends Definition, ? extends Node> graph;
     private Canvas canvas;
 
     public DefaultCanvasSettings() {
@@ -43,11 +43,11 @@ public class DefaultCanvasSettings implements CanvasSettings {
         this.uuid = uuid;
     }
 
-    public Graph getGraph() {
+    public Graph<? extends Definition, ? extends Node> getGraph() {
         return graph;
     }
 
-    public void setGraph(Graph graph) {
+    public void setGraph(Graph<? extends Definition, ? extends Node> graph) {
         this.graph = graph;
     }
 

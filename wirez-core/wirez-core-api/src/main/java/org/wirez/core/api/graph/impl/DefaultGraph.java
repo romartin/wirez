@@ -34,7 +34,7 @@ import java.util.Set;
  * Default graph interface supports unconnected edges (implements HasEdges).
  */
 @Portable
-public class DefaultGraph<W extends Definition>  extends DefaultElement<W> 
+public class DefaultGraph<W extends Definition> extends DefaultElement<W> 
         implements Graph<W, DefaultNode>, HasEdges<DefaultEdge> {
 
     private final DefaultGraphNodeStore nodeStore;
@@ -90,6 +90,7 @@ public class DefaultGraph<W extends Definition>  extends DefaultElement<W>
 
     @Override
     public Element<W> copy() {
-        return new DefaultGraph<W>(uuid, definition, properties, labels, bounds, nodeStore, edgeStore);
+        // TODO: return new DefaultGraph<W>(uuid, definition, properties, labels, bounds, nodeStore, edgeStore);
+        return null;
     }
 }

@@ -18,6 +18,7 @@ package org.wirez.core.api.command;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.rule.RuleViolation;
+
 import java.util.ArrayList;
 import java.util.Collection;
 

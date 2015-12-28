@@ -42,6 +42,7 @@
     <module>wirez-core</module>
     <module>wirez-client</module>
     <module>wirez-sets</module>
+    <module>wirez-webapp</module>
   </modules>
   
   <!-- Repositories -->

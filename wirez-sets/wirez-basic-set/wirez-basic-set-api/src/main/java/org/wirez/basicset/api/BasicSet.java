@@ -24,9 +24,11 @@ import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
 import org.wirez.core.api.rule.Rule;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.Collection;
 import java.util.HashSet;
 
+@ApplicationScoped
 @Portable
 public class BasicSet implements DefinitionSet {
 

@@ -16,8 +16,9 @@
 
 package org.wirez.core.client.canvas;
 
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 
 public interface CanvasHandler {
 
@@ -39,7 +40,7 @@ public interface CanvasHandler {
     /**
      * Returns the working copy of the graph. 
      */
-    Graph getGraph();
+    Graph<? extends Definition, ? extends Node> getGraph();
     
     /**
      * Returns the shape canvas.

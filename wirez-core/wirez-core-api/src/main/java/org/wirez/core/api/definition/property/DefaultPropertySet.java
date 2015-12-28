@@ -28,14 +28,6 @@ public class DefaultPropertySet implements PropertySet {
     protected String name;
     protected Collection<Property> properties;
 
-    public DefaultPropertySet() { }
-
-    public DefaultPropertySet(@MapsTo("id") String id, 
-                              @MapsTo("name") String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public DefaultPropertySet(@MapsTo("id") String id, 
                               @MapsTo("name") String name, 
                               @MapsTo("properties") Collection<Property> properties) {

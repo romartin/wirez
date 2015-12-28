@@ -17,7 +17,6 @@
 package org.wirez.core.api.graph.store;
 
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
 
 public interface GraphEdgeStore<T extends Edge> extends GraphStore<T> {
     

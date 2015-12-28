@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.control.rule;
+package org.wirez.core.api.rule;
 
 import org.wirez.core.api.definition.rule.Rule;
 

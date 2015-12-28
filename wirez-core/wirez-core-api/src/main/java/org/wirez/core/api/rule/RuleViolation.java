@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.control.rule;
+package org.wirez.core.api.rule;
 
-public interface RuleViolations {
-
-    // TODO: Implement in the default impl class -> RuleViolations addViolation(RuleViolation violation);
+public interface RuleViolation {
     
-    Iterable<RuleViolation> violations();
+    String getMessage();
 
-    Iterable<RuleViolation> violations(RuleViolation.Type violationType);
+    Type getViolationType();
     
+    enum Type {
+        ERROR, WARNING, INFO
+    }
 }

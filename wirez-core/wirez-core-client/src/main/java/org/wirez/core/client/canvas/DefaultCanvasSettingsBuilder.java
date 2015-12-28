@@ -61,6 +61,12 @@ public class DefaultCanvasSettingsBuilder implements CanvasSettingsBuilder<Defau
     }
 
     @Override
+    public DefaultCanvasSettingsBuilder canvas(final Canvas canvas) {
+        settings.setCanvas(canvas);
+        return this;
+    }
+
+    @Override
     public CanvasSettings build() {
         return settings;
     }

@@ -13,34 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.control.command;
 
-import org.wirez.core.api.control.rule.RuleManager;
+package org.wirez.core.client.canvas.management;
 
-/**
- * Command to mutate Elements in a Graph.
- */
-public interface Command {
+import org.wirez.core.api.command.CommandManager;
+import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.client.canvas.command.CanvasCommand;
 
-    /**
-     * Check whether the command operation is allowed. It does not mutate the graph.
-     * @param ruleManager
-     * @return
-     */
-    CommandResult allow(final RuleManager ruleManager);
+public interface CanvasCommandManager extends CommandManager<CanvasCommand> {
 
     /**
-     * Executes the command operation. Graph can be mutated.
-     * @param ruleManager
+     * Check whether command can be executed and return results. Graph elements are not mutated.
+     * @param command
      * @return
      */
-    CommandResult execute(final RuleManager ruleManager);
+    boolean allow(final CanvasCommand command);
 
     /**
-     * Undo the changes the command execution made to the model
-     * @param ruleManager
+     * Execute a command and return the results. Graph elements can be mutated.
+     * @param commands
      * @return
      */
-    CommandResult undo(final RuleManager ruleManager);
+    CommandResults execute(final CanvasCommand... commands);
 
+    /**
+     * Undo the most recent command.
+     * @return
+     */
+    CommandResults undo();
 }

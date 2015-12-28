@@ -21,9 +21,9 @@ public interface GraphStore<T extends Element> extends Iterable<T> {
 
     T add(T node);
 
-    T remove(String id);
+    T remove(String uuid);
 
-    T get(String id);
+    T get(String uuid);
 
     int size();
     

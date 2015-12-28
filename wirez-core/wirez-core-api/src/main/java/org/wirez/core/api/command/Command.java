@@ -13,40 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wirez.core.api.command;
 
-package org.wirez.core.api.control.command;
-
-
-import org.wirez.core.api.control.rule.RuleManager;
+import org.wirez.core.api.rule.RuleManager;
 
 /**
- * Manager to handle execution of commands.
+ * Command to mutate Elements in a Graph.
  */
-public interface CommandManager<C extends Command> {
+public interface Command {
 
     /**
-     * Check whether command can be executed and return results. Graph elements are not mutated.
+     * Check whether the command operation is allowed. It does not mutate the graph.
      * @param ruleManager
-     * @param command
      * @return
      */
-    boolean allow(final RuleManager ruleManager,
-                  final C command);
-    
-    /**
-     * Execute a command and return the results. Graph elements can be mutated.
-     * @param ruleManager
-     * @param command
-     * @return
-     */
-    CommandResults execute(final RuleManager ruleManager,
-                           final C... command);
+    CommandResult allow(final RuleManager ruleManager);
 
     /**
-     * Undo the most recent command.
+     * Executes the command operation. Graph can be mutated.
      * @param ruleManager
      * @return
      */
-    CommandResults undo(final RuleManager ruleManager);
+    CommandResult execute(final RuleManager ruleManager);
+
+    /**
+     * Undo the changes the command execution made to the model
+     * @param ruleManager
+     * @return
+     */
+    CommandResult undo(final RuleManager ruleManager);
 
 }

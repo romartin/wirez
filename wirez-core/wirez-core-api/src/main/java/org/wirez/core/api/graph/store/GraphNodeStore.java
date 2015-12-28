@@ -14,21 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.command;
+package org.wirez.core.api.graph.store;
 
-import org.wirez.core.api.control.command.Command;
-import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.api.graph.Node;
 
-public interface CanvasCommand extends Command {
-
-    /**
-     * Set the target canvas.
-     */
-    CanvasCommand setCanvas(CanvasHandler canvasHandler);
-
-    /**
-     * Apply command results on canvas.
-     */
-    CanvasCommand apply();
+public interface GraphNodeStore<T extends Node> extends GraphStore<T> {
     
 }

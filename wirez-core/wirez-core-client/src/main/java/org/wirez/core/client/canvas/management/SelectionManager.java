@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.control.rule;
+package org.wirez.core.client.canvas.management;
 
-public interface RuleViolation {
-    
-    String getMessage();
+import java.util.Collection;
 
-    Type getViolationType();
-    
-    enum Type {
-        ERROR, WARNING, INFO
-    }
+/**
+ * Mediator for selection operations
+ */
+public interface SelectionManager<E> {
+
+    SelectionManager<E> select(final E item);
+
+    SelectionManager<E> deselect(final E item);
+
+    boolean isSelected(final E item);
+
+    Collection<E> getSelectedItems();
+
+    SelectionManager<E> clearSelection();
+
 }

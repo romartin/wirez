@@ -25,12 +25,12 @@ public class NameBuilder extends BasePropertyBuilder<String> {
     
     public NameBuilder() {
         super(PROPERTY_ID, new StringType());
-        caption("Name")
-        .description("The element's name")
-        .optional(true)
-        .readOnly(false)
-        .publish(true)
-        .defaultValue("My element");
+        this.caption("Name")
+            .description("The element's name")
+            .optional(true)
+            .readOnly(false)
+            .publish(true)
+            .defaultValue("My element");
     }
     
 }

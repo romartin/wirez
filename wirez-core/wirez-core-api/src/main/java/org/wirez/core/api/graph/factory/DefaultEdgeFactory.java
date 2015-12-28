@@ -13,23 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.client.control;
 
-import java.util.Collection;
+package org.wirez.core.api.graph.factory;
 
-/**
- * Mediator for selection operations
- */
-public interface SelectionManager<E> {
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.impl.DefaultNode;
 
-    SelectionManager<E> select(final E element);
-
-    SelectionManager<E> deselect(final E element);
-
-    boolean isSelected(final E element);
-
-    Collection<E> getSelectedItems();
-
-    SelectionManager<E> clearSelection();
-
+public interface DefaultEdgeFactory<W extends Definition> extends ElementFactory<W, DefaultEdge<W>> {
+    
 }

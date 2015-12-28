@@ -14,25 +14,12 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas;
+package org.wirez.core.api.command;
 
-import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.client.ShapeSet;
+public interface CommandResults {
 
-public interface CanvasSettingsBuilder<T> {
+    Iterable<CommandResult> results();
+
+    Iterable<CommandResult> results(CommandResult.Type resultType);
     
-    T uuid(String uuid);
-    
-    T definitionSet(DefinitionSet definitionSet);
-    
-    T shapeSet(ShapeSet shapeSet);
-    
-    T title(String title);
-    
-    T graph(Graph graph);
-    
-    T canvas(Canvas canvas);
-    
-    CanvasSettings build();
 }

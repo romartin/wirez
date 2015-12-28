@@ -22,12 +22,18 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
+import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.factory.DefaultGraphFactory;
+import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
+import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class Diagram extends BasicDefinition {
+public class Diagram extends BasicDefinition implements DefaultGraphFactory<Diagram> {
 
     public static final String ID = "diagram";
 
@@ -52,5 +58,13 @@ public class Diagram extends BasicDefinition {
                 .build()
         );
     }};
-    
+
+    @Override
+    public DefaultGraph<Diagram> build(final String uuid, 
+                                       final Set<String> labels, 
+                                       final Map<String, Object> properties, 
+                                       final Bounds bounds) {
+        return new DefaultGraph<Diagram>(uuid, this, properties, labels, bounds, 
+                new DefaultGraphNodeStore(), new DefaultGraphEdgeStore());
+    }
 }

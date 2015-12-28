@@ -21,11 +21,11 @@ import org.wirez.core.api.definition.Definition;
 import java.util.Map;
 import java.util.Set;
 
-public interface Element<W extends Definition> extends Clonable<Element> {
+public interface Element<W extends Definition> extends Clonable<Element<W>> {
     
     String getUUID();
 
-    W getWDefinition();
+    W getDefinition();
 
     Map<String, Object> getProperties();
     

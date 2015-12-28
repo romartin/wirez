@@ -22,43 +22,28 @@ import org.wirez.core.api.graph.Graph;
 public interface CanvasHandler {
 
     /**
-     * Initialize a graphical shape canvas.
+     * Initializes a graphical shape canvas.
      */
-    CanvasHandler initialize(CanvasSettings settings, Canvas canvas);
+    CanvasHandler initialize(CanvasSettings settings);
 
     /**
-     * Listen to events from elements in the canvas.
+     * Listens to events from elements in the canvas.
      */
     CanvasHandler addListener(CanvasListener listener);
 
     /**
-     * Return the canvas' unique identifier. 
+     * Returns the canvas' unique identifier. 
      */
     String getUUID();
 
     /**
-     * Return the working copy of the graph. 
+     * Returns the working copy of the graph. 
      */
     Graph getGraph();
     
     /**
-     * Get the shape canvas.
+     * Returns the shape canvas.
      */
     Canvas getCanvas();
-    
-    /**
-     * Listen to events from elements in the canvas.
-     */
-    interface CanvasListener {
-
-        void onElementAdded(Element element);
-        
-        void onElementModified(Element element);
-
-        void onElementDeleted(Element element);
-        
-        void onClear();
-        
-    }
     
 }

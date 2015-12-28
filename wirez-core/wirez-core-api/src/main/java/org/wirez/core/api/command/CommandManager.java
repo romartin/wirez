@@ -14,30 +14,39 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.command;
+package org.wirez.core.api.command;
 
-import org.wirez.core.api.control.command.CommandManager;
-import org.wirez.core.api.control.command.CommandResults;
 
-public interface CanvasCommandManager extends CommandManager<CanvasCommand> {
+import org.wirez.core.api.rule.RuleManager;
+
+/**
+ * Manager to handle execution of commands.
+ */
+public interface CommandManager<C extends Command> {
 
     /**
      * Check whether command can be executed and return results. Graph elements are not mutated.
+     * @param ruleManager
      * @param command
      * @return
      */
-    boolean allow(final CanvasCommand command);
-
+    boolean allow(final RuleManager ruleManager,
+                  final C command);
+    
     /**
      * Execute a command and return the results. Graph elements can be mutated.
-     * @param commands
+     * @param ruleManager
+     * @param command
      * @return
      */
-    CommandResults execute(final CanvasCommand... commands);
+    CommandResults execute(final RuleManager ruleManager,
+                           final C... command);
 
     /**
      * Undo the most recent command.
+     * @param ruleManager
      * @return
      */
-    CommandResults undo();
+    CommandResults undo(final RuleManager ruleManager);
+
 }

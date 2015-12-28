@@ -14,25 +14,11 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas;
+package org.wirez.core.api.graph.factory;
 
-import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.client.ShapeSet;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.impl.DefaultNode;
 
-public interface CanvasSettingsBuilder<T> {
+public interface DefaultNodeFactory<W extends Definition> extends ElementFactory<W, DefaultNode<W>> {
     
-    T uuid(String uuid);
-    
-    T definitionSet(DefinitionSet definitionSet);
-    
-    T shapeSet(ShapeSet shapeSet);
-    
-    T title(String title);
-    
-    T graph(Graph graph);
-    
-    T canvas(Canvas canvas);
-    
-    CanvasSettings build();
 }

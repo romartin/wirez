@@ -22,9 +22,9 @@ public interface Graph<W extends Definition, N extends Node> extends Element<W> 
 
     N addNode(N node);
 
-    N removeNode(String id);
+    N removeNode(String uuid);
 
-    N getNode(String id);
+    N getNode(String uuid);
 
     Iterable<N> nodes();
     

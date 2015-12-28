@@ -29,6 +29,7 @@ public class DefaultCanvasSettings implements CanvasSettings {
     private ShapeSet shapeSet;
     private String title;
     private Graph graph;
+    private Canvas canvas;
 
     public DefaultCanvasSettings() {
     }
@@ -74,5 +75,14 @@ public class DefaultCanvasSettings implements CanvasSettings {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
+    public void setCanvas(Canvas canvas) {
+        this.canvas = canvas;
     }
 }

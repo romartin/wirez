@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.control.command;
+package org.wirez.core.client.canvas.command;
 
-public interface CommandResults {
+import org.wirez.core.api.command.Command;
+import org.wirez.core.client.canvas.CanvasHandler;
 
-    Iterable<CommandResult> results();
+public interface CanvasCommand extends Command {
 
-    Iterable<CommandResult> results(CommandResult.Type resultType);
+    /**
+     * Set the target canvas.
+     */
+    CanvasCommand setCanvas(CanvasHandler canvasHandler);
+
+    /**
+     * Apply command results on canvas.
+     */
+    CanvasCommand apply();
     
 }

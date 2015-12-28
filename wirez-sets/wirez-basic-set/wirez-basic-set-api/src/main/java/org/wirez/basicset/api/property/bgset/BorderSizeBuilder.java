@@ -25,12 +25,12 @@ public class BorderSizeBuilder extends BasePropertyBuilder<Integer> {
     
     public BorderSizeBuilder() {
         super(PROPERTY_ID, new IntegerType());
-        caption("Border size")
-        .description("The border size")
-        .optional(true)
-        .readOnly(false)
-        .publish(true)
-        .defaultValue(1);
+        this.caption("Border size")
+            .description("The border size")
+            .optional(true)
+            .readOnly(false)
+            .publish(true)
+            .defaultValue(1);
     }
     
 }

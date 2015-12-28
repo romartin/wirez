@@ -14,25 +14,30 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas;
+package org.wirez.core.api.command;
 
-import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.client.ShapeSet;
+import org.wirez.core.api.rule.RuleViolation;
 
-public interface CanvasSettingsBuilder<T> {
-    
-    T uuid(String uuid);
-    
-    T definitionSet(DefinitionSet definitionSet);
-    
-    T shapeSet(ShapeSet shapeSet);
-    
-    T title(String title);
-    
-    T graph(Graph graph);
-    
-    T canvas(Canvas canvas);
-    
-    CanvasSettings build();
+/**
+ * Result from the execution of a command
+ */
+public interface CommandResult {
+
+    /**
+     * Type of Result
+     * @return
+     */
+    Type getType();
+
+    /**
+     * Detailed message for the Result
+     * @return
+     */
+    String getMessage();
+
+    Iterable<RuleViolation> getRuleViolations();
+
+    enum Type {
+        ERROR, WARNING, INFO
+    }
 }

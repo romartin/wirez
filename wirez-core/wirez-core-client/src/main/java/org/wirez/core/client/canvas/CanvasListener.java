@@ -16,23 +16,19 @@
 
 package org.wirez.core.client.canvas;
 
-import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.client.ShapeSet;
+import org.wirez.core.api.graph.Element;
 
-public interface CanvasSettingsBuilder<T> {
+/**
+ * Listen to events from elements in the canvas.
+ */
+public interface CanvasListener {
     
-    T uuid(String uuid);
+    void onElementAdded(Element element);
+
+    void onElementModified(Element element);
+
+    void onElementDeleted(Element element);
+
+    void onClear();
     
-    T definitionSet(DefinitionSet definitionSet);
-    
-    T shapeSet(ShapeSet shapeSet);
-    
-    T title(String title);
-    
-    T graph(Graph graph);
-    
-    T canvas(Canvas canvas);
-    
-    CanvasSettings build();
 }

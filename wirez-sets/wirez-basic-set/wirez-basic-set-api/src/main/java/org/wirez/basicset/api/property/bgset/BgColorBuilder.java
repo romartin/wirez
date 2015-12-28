@@ -25,12 +25,12 @@ public class BgColorBuilder extends BasePropertyBuilder<String> {
     
     public BgColorBuilder() {
         super(PROPERTY_ID, new ColorType());
-        caption("Background Color")
-        .description("The background Color")
-        .optional(true)
-        .readOnly(false)
-        .publish(true)
-        .defaultValue("#ffffff");
+        this.caption("Background Color")
+            .description("The background Color")
+            .optional(true)
+            .readOnly(false)
+            .publish(true)
+            .defaultValue("#ffffff");
     }
     
 }

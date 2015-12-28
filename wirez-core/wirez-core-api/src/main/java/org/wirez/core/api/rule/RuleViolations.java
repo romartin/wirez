@@ -14,30 +14,14 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.control.command;
+package org.wirez.core.api.rule;
 
-import org.wirez.core.api.control.rule.RuleViolation;
+public interface RuleViolations {
 
-/**
- * Result from the execution of a command
- */
-public interface CommandResult {
+    // TODO: Implement in the default impl class -> RuleViolations addViolation(RuleViolation violation);
+    
+    Iterable<RuleViolation> violations();
 
-    /**
-     * Type of Result
-     * @return
-     */
-    Type getType();
-
-    /**
-     * Detailed message for the Result
-     * @return
-     */
-    String getMessage();
-
-    Iterable<RuleViolation> getRuleViolations();
-
-    enum Type {
-        ERROR, WARNING, INFO
-    }
+    Iterable<RuleViolation> violations(RuleViolation.Type violationType);
+    
 }

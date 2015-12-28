@@ -24,12 +24,14 @@ public interface CanvasSettings {
     
     String getUUID();
 
+    String getTitle();
+
+    Canvas getCanvas();
+    
     Graph getGraph();
 
     DefinitionSet getDefinitionSet();
 
     ShapeSet getShapeSet();
-
-    String getTitle();
     
 }

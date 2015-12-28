@@ -25,12 +25,12 @@ public class BorderColorBuilder extends BasePropertyBuilder<String> {
     
     public BorderColorBuilder() {
         super(PROPERTY_ID, new ColorType());
-        caption("Border Color")
-        .description("The border Color")
-        .optional(true)
-        .readOnly(false)
-        .publish(true)
-        .defaultValue("#000000");
+        this.caption("Border Color")
+            .description("The border Color")
+            .optional(true)
+            .readOnly(false)
+            .publish(true)
+            .defaultValue("#000000");
     }
     
 }

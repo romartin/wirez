@@ -14,30 +14,15 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.command;
+package org.wirez.core.api.graph;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
+public interface HasEdges<E extends Edge> {
 
-import java.util.Collection;
-import java.util.LinkedList;
+    E addEdge(final E edge);
 
-@Portable
-public class DefaultCommandResults implements CommandResults {
-    
-    Collection<CommandResult> results = new LinkedList<CommandResult>();
+    E removeEdge(final String uuid);
 
-    public Collection<CommandResult> getItems() {
-        return results;
-    }
+    E getEdge(final String uuid);
 
-    @Override
-    public Iterable<CommandResult> results() {
-        return results;
-    }
-
-    @Override
-    public Iterable<CommandResult> results(CommandResult.Type resultType) {
-        return results;
-    }
-
+    Iterable<E> edges();
 }

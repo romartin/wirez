@@ -21,7 +21,9 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.HasEdges;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
 import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
 
@@ -29,10 +31,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Default graph interface supports unconnected edges.
+ * Default graph interface supports unconnected edges (implements HasEdges).
  */
 @Portable
-public class DefaultGraph<W extends Definition>  extends DefaultElement<W> implements Graph<W, DefaultNode> {
+public class DefaultGraph<W extends Definition>  extends DefaultElement<W> 
+        implements Graph<W, DefaultNode>, HasEdges<DefaultEdge> {
 
     private final DefaultGraphNodeStore nodeStore;
     private final DefaultGraphEdgeStore edgeStore;
@@ -85,4 +88,8 @@ public class DefaultGraph<W extends Definition>  extends DefaultElement<W> imple
         return edgeStore;
     }
 
+    @Override
+    public Element<W> copy() {
+        return new DefaultGraph<W>(uuid, definition, properties, labels, bounds, nodeStore, edgeStore);
+    }
 }

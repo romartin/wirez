@@ -20,9 +20,6 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.rule.RuleViolation;
 
-/*
- 
- */
 @Portable
 public class CardinalityMaxRuleViolation implements RuleViolation {
     

@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * A Command to delete a DefaultNode from a Graph
+ * A Command to delete a DefaultNode from a DefaultGraph
  */
 public class DeleteNodeCommand implements Command {
 

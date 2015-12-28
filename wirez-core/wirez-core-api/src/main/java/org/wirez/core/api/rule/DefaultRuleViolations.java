@@ -16,9 +16,12 @@
 
 package org.wirez.core.api.rule;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+
 import java.util.LinkedList;
 import java.util.List;
 
+@Portable
 public class DefaultRuleViolations implements RuleViolations {
     
     private List<RuleViolation> violations = new LinkedList<RuleViolation>();

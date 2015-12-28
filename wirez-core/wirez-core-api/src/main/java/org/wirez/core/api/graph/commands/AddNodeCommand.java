@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * A Command to add a DefaultNode to a Graph
+ * A Command to add a DefaultNode to a DefaultGraph
  */
 public class AddNodeCommand implements Command {
 

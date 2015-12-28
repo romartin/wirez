@@ -23,11 +23,6 @@ import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.Set;
 
-/*
-results.addMessage( new DefaultResultImpl( ResultType.ERROR,
- "Edge does not emanate from a GraphNode with a permitted Role nor terminate at GraphNode with a permitted Role. Permitted Connections are: " + couples.toString() ) );
-                                                   
- */
 @Portable
 public class ConnectionRuleViolation implements RuleViolation {
     

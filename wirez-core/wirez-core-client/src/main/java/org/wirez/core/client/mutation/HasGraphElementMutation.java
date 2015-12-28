@@ -14,44 +14,18 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client;
+package org.wirez.core.client.mutation;
 
-import com.ait.lienzo.client.core.shape.Node;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.client.canvas.CanvasHandler;
 
-public interface Shape<W extends Definition> {
+public interface HasGraphElementMutation<W extends Definition, E extends Element<W>> extends HasMutation {
     
-    /**
-     * Get the identifier for the Shape.
-     * @return The identifier for Shape
-     */
-    String getId();
+    void applyElementPosition(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
 
-    /**
-     * Set the identifier for the shape.
-     */
-    Shape<W> setId(String id);
+    void applyElementSize(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
 
-    /**
-     * Set shape's state.
-     */
-    Shape<W> setState(ShapeState state);
-
-    /**
-     * The main shape's node.
-     */
-    Node getShapeNode();
-
-    /**
-     * Destroy the shape and any related components.
-     */
-    void destroy();
-
-    /**
-     * Shape's available states.
-     */
-    enum ShapeState {
-        SELECTED, DESELECTED;
-    }
+    void applyElementProperties(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
     
 }

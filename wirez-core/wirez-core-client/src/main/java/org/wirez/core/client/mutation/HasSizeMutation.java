@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.control;
+package org.wirez.core.client.mutation;
 
-public interface HasPosition {
+public interface HasSizeMutation extends HasMutation {
     
-    void setCoordinates(double x, double y);
+    void applySize(double width, double height, MutationContext mutationContext);
     
 }

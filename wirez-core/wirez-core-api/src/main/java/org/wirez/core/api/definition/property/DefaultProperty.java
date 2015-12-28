@@ -18,7 +18,6 @@ package org.wirez.core.api.definition.property;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.definition.DefaultContent;
 
 @Portable
 public class DefaultProperty<V> extends BaseHasDefaultValueProperty<V> {

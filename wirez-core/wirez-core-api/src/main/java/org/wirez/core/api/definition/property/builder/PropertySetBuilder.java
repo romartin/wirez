@@ -42,7 +42,7 @@ public interface PropertySetBuilder<T, P extends PropertySet> {
      * @param property The property to add.
      * @return The property set builder instance.
      */
-    T replaceProperty(Property property);
+    T withProperty(Property property);
 
     /**
      * Builds the property set builder instance.

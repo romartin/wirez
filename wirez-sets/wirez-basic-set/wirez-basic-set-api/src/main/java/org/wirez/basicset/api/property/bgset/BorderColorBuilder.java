@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package org.wirez.basicset.api;
+package org.wirez.basicset.api.property.bgset;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.definition.property.builder.BasePropertyBuilder;
+import org.wirez.core.api.definition.property.type.ColorType;
 
-@Portable
-public class BasicSetCategories {
-
-    public static final BasicSetCategories INSTANCE = new BasicSetCategories();
+public class BorderColorBuilder extends BasePropertyBuilder<String> {
     
-    public final String DIAGRAM = "diagram";
+    public static final String PROPERTY_ID = "borderColor";
     
-    public final String BASIC = "basic";
-
-    public final String CONNECTORS = "connectors";
-
+    public BorderColorBuilder() {
+        super(PROPERTY_ID, new ColorType());
+        caption("Border Color")
+        .description("The border Color")
+        .optional(true)
+        .readOnly(false)
+        .publish(true)
+        .defaultValue("#000000");
+    }
+    
 }

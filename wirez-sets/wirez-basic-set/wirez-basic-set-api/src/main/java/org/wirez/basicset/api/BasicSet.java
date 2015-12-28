@@ -16,28 +16,31 @@
 
 package org.wirez.basicset.api;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.basicset.api.property.bgset.BackgroundPropertySetBuilder;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.definition.property.set.ElementPropertySetBuilder;
+import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
 import org.wirez.core.api.definition.rule.Rule;
 
-import javax.enterprise.context.ApplicationScoped;
 import java.util.Collection;
 import java.util.HashSet;
 
-@ApplicationScoped
+@Portable
 public class BasicSet implements DefinitionSet {
 
     public static final String ID = "basicSet";
     
-    private static final Collection<PropertySet> propertySets = new HashSet<PropertySet>() {{
-        add( new ElementPropertySetBuilder().build() );
+    private final Collection<PropertySet> propertySets = new HashSet<PropertySet>() {{
+        add( new DefaultPropertySetBuilder().build() );
+        add (new BackgroundPropertySetBuilder().build() );
     }};
 
 
-    private static final Collection<Definition> definitions = new HashSet<Definition>() {{
+    private final Collection<Definition> definitions = new HashSet<Definition>() {{
         add( new Diagram() );
+        add( new Rectangle() );
     }};
     
     @Override

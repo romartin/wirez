@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.control;
+package org.wirez.core.api.definition.property.defaultset;
 
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.api.definition.property.builder.BasePropertyBuilder;
+import org.wirez.core.api.definition.property.type.StringType;
 
-public interface GraphControl<W extends Definition, E extends Element<W>> {
+public class NameBuilder extends BasePropertyBuilder<String> {
     
-    void applyPosition(E element, CanvasHandler wirezCanvas);
-
-    void applySize(E element, CanvasHandler wirezCanvas);
-
-    void applyProperties(E element, CanvasHandler wirezCanvas);
+    public static final String PROPERTY_ID = "name";
+    
+    public NameBuilder() {
+        super(PROPERTY_ID, new StringType());
+        caption("Name")
+        .description("The element's name")
+        .optional(true)
+        .readOnly(false)
+        .publish(true)
+        .defaultValue("My element");
+    }
     
 }

@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package org.wirez.basicset.api;
+package org.wirez.basicset.api.property.bgset;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.definition.property.builder.BasePropertyBuilder;
+import org.wirez.core.api.definition.property.type.IntegerType;
 
-@Portable
-public class BasicSetCategories {
-
-    public static final BasicSetCategories INSTANCE = new BasicSetCategories();
+public class BorderSizeBuilder extends BasePropertyBuilder<Integer> {
     
-    public final String DIAGRAM = "diagram";
+    public static final String PROPERTY_ID = "borderSize";
     
-    public final String BASIC = "basic";
-
-    public final String CONNECTORS = "connectors";
-
+    public BorderSizeBuilder() {
+        super(PROPERTY_ID, new IntegerType());
+        caption("Border size")
+        .description("The border size")
+        .optional(true)
+        .readOnly(false)
+        .publish(true)
+        .defaultValue(1);
+    }
+    
 }

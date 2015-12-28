@@ -48,12 +48,13 @@ public abstract class BasePropertySetBuilder<P extends DefaultPropertySet> imple
     }
 
     @Override
-    public BasePropertySetBuilder replaceProperty(final Property property) {
+    public BasePropertySetBuilder withProperty(final Property property) {
         final int index = properties.indexOf(property);
         if (index > -1) {
             final Property p = properties.get(index);
             propertySet.getProperties().remove(p);
         }
+        // TODO: Add into same index as the one removed, if any.
         propertySet.getProperties().add(property);
         return this;
     }

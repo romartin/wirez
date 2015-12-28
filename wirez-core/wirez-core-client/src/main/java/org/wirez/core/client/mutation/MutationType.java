@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.control;
+package org.wirez.core.client.mutation;
 
-public interface HasSize {
+public enum MutationType {
     
-    void setSize(double width, double height);
+    STATIC, ANIMATION;
     
 }

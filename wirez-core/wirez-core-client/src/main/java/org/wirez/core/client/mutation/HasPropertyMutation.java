@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.basicset.api;
+package org.wirez.core.client.mutation;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
-
-@Portable
-public class BasicSetCategories {
-
-    public static final BasicSetCategories INSTANCE = new BasicSetCategories();
+public interface HasPropertyMutation extends HasMutation {
     
-    public final String DIAGRAM = "diagram";
+    void applyPropertyValue(final String propertyId, Object value, MutationContext mutationContext);
     
-    public final String BASIC = "basic";
-
-    public final String CONNECTORS = "connectors";
-
 }

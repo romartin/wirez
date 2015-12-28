@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package org.wirez.basicset.api;
+package org.wirez.core.client.control;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.client.Shape;
 
-@Portable
-public class BasicSetCategories {
-
-    public static final BasicSetCategories INSTANCE = new BasicSetCategories();
+public interface ShapeControl<S extends Shape, E extends Element> {
     
-    public final String DIAGRAM = "diagram";
+    void enable(S shape, E element);
+
+    void disable(S shape);
     
-    public final String BASIC = "basic";
-
-    public final String CONNECTORS = "connectors";
-
 }

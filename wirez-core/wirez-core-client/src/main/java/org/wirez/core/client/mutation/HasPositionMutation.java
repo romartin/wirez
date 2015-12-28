@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.definition.property.set;
+package org.wirez.core.client.mutation;
 
-import org.wirez.core.api.definition.property.DefaultPropertySet;
-import org.wirez.core.api.definition.property.builder.BasePropertySetBuilder;
-
-public class ElementPropertySetBuilder extends BasePropertySetBuilder<DefaultPropertySet> {
-
-    private static final String ID = "wirez.element";
-    private static final String NAME = "Element";
+public interface HasPositionMutation extends HasMutation {
     
-    public ElementPropertySetBuilder() {
-        super();
-        properties.add( new NamePropertyBuilder().build() );
-        propertySet = new DefaultPropertySet(ID, NAME, properties);
-    }
-
+    void applyPosition(double x, double y, MutationContext mutationContext);
+    
 }

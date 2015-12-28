@@ -17,7 +17,6 @@
 package org.wirez.core.api.definition.property.builder;
 
 import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.PropertyType;
 
 public interface PropertyBuilder<T, V> {
     

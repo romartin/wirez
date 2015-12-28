@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package org.wirez.basicset.api;
+package org.wirez.core.client.animation;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
-
-@Portable
-public class BasicSetCategories {
-
-    public static final BasicSetCategories INSTANCE = new BasicSetCategories();
+public interface ShapeAnimation {
     
-    public final String DIAGRAM = "diagram";
+    interface AnimationCallback {
+
+        void onStart();
+
+        void onFrame();
+        
+        void onComplete();
+        
+    }
+
+    ShapeAnimation setCallback(AnimationCallback callback);
+
+    ShapeAnimation setDuration(long duration);
     
-    public final String BASIC = "basic";
-
-    public final String CONNECTORS = "connectors";
-
+    void run();
+    
 }

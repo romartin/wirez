@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package org.wirez.basicset.api;
+package org.wirez.core.api.definition.property.defaultset;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.definition.property.DefaultPropertySet;
+import org.wirez.core.api.definition.property.builder.BasePropertySetBuilder;
 
-@Portable
-public class BasicSetCategories {
+public class DefaultPropertySetBuilder extends BasePropertySetBuilder<DefaultPropertySet> {
 
-    public static final BasicSetCategories INSTANCE = new BasicSetCategories();
+    private static final String ID = "wirez.element";
+    private static final String NAME = "Element";
     
-    public final String DIAGRAM = "diagram";
-    
-    public final String BASIC = "basic";
-
-    public final String CONNECTORS = "connectors";
+    public DefaultPropertySetBuilder() {
+        super();
+        properties.add( new NameBuilder().build() );
+        propertySet = new DefaultPropertySet(ID, NAME, properties);
+    }
 
 }

@@ -17,6 +17,8 @@
 package org.wirez.basicset.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.basicset.api.property.bgset.BackgroundPropertySetBuilder;
+import org.wirez.basicset.api.property.bgset.BgColorBuilder;
 import org.wirez.core.api.definition.DefaultContent;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -27,30 +29,36 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Portable
-public class Diagram extends BasicDefinition {
+public class Rectangle extends BasicDefinition {
 
-    public static final String ID = "diagram";
-
-    public Diagram() {
-        super(ID);
-        setContent(new DefaultContent(BasicSetCategories.INSTANCE.DIAGRAM,
-                "Basic Diagram",
-                "A basic shapes diagram",
-                new HashSet<String>(),
-                propertySets,
-                properties));
-            
-    }
+    public static final String ID = "rectangle";
+    public static final String COLOR = "#00CC00";
 
     private final Set<Property> properties = new HashSet<Property>() {{
-        // No custom properties.
+        
     }};
 
     private final Set<PropertySet> propertySets = new HashSet<PropertySet>() {{
         add(new DefaultPropertySetBuilder()
-                .withProperty(new NameBuilder().defaultValue("My diagram").build())
+                .withProperty(new NameBuilder().defaultValue("My rectangle").build())
                 .build()
+        );
+        add (new BackgroundPropertySetBuilder()
+                .withProperty(new BgColorBuilder().defaultValue(COLOR).build())
+                .build() 
         );
     }};
     
+    public Rectangle() {
+        super(ID);
+        setContent(new DefaultContent(BasicSetCategories.INSTANCE.BASIC,
+                "Rectangle",
+                "A rectangle.",
+                new HashSet<String>(),
+                propertySets,
+                properties));
+    }
+
+
+   
 }

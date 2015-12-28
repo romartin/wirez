@@ -14,23 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.definition.property.set;
+package org.wirez.core.client.mutation;
 
-import org.wirez.core.api.definition.property.builder.BasePropertyBuilder;
-import org.wirez.core.api.definition.property.type.StringType;
-
-public class NamePropertyBuilder extends BasePropertyBuilder<String> {
+public interface MutationContext {
     
-    public static final String ID = "name";
-    
-    public NamePropertyBuilder() {
-        super(ID, new StringType());
-        caption("Name")
-        .description("The element's name")
-        .optional(true)
-        .readOnly(false)
-        .publish(true)
-        .defaultValue("My element");
-    }
+    MutationType getType();
     
 }

@@ -31,7 +31,6 @@ import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.event.ShapeSetSelectedEvent;
 import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.workbench.perspectives.WirezPerspective;
-import org.wirez.core.api.WirezManager;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
@@ -46,10 +45,10 @@ import java.util.Map;
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @Dependent
-@WorkbenchScreen(identifier = WirezWizardScreen.SCREEN_ID )
-public class WirezWizardScreen {
+@WorkbenchScreen(identifier = CanvasWizardScreen.SCREEN_ID )
+public class CanvasWizardScreen {
 
-    public static final String SCREEN_ID = "WirezWizardScreen";
+    public static final String SCREEN_ID = "CanvasWizardScreen";
 
     @Inject
     CanvasWizard wizard;
@@ -91,7 +90,7 @@ public class WirezWizardScreen {
             public void execute() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put( "bpmnTestMode", "true" );
-                PlaceRequest placeRequest = new DefaultPlaceRequest( WirezCanvasScreen.SCREEN_ID , params );
+                PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );
                 placeManager.goTo(placeRequest);
             }
         };
@@ -129,7 +128,7 @@ public class WirezWizardScreen {
     
     @WorkbenchContextId
     public String getMyContextRef() {
-        return "wirezWizardScreenContext";
+        return "canvasWizardScreenContext";
     }
 
     void onShapeSetSelected(@Observes ShapeSetSelectedEvent shapeSetSelectedEvent) {
@@ -146,7 +145,7 @@ public class WirezWizardScreen {
         params.put( "shapeSetUUID", shapeSetUUID );
         params.put( "title", "New " + shapSetName + " diagram" );
 
-        PlaceRequest placeRequest = new DefaultPlaceRequest( WirezCanvasScreen.SCREEN_ID , params );
+        PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );
         placeManager.goTo(placeRequest);
     }
 

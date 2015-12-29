@@ -40,6 +40,11 @@ public interface Canvas {
     List<Shape> getShapes();
 
     /**
+     * Returns the shape with the given identifier.
+     */
+    Shape getShape(String id);
+
+    /**
      * Add a Shape to the Canvas
      * @param shape
      */

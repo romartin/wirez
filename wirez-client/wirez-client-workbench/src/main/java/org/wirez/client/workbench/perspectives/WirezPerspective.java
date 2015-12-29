@@ -25,8 +25,8 @@ import org.uberfire.workbench.model.PerspectiveDefinition;
 import org.uberfire.workbench.model.impl.PanelDefinitionImpl;
 import org.uberfire.workbench.model.impl.PartDefinitionImpl;
 import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
-import org.wirez.client.workbench.screens.WirezPaletteScreen;
-import org.wirez.client.workbench.screens.WirezWizardScreen;
+import org.wirez.client.workbench.screens.PaletteScreen;
+import org.wirez.client.workbench.screens.CanvasWizardScreen;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -45,12 +45,12 @@ public class WirezPerspective {
 
         // perspective.getRoot().addPart( new PartDefinitionImpl( new DefaultPlaceRequest( WirezCanvasScreen.SCREEN_ID ) ) );
 
-        perspective.getRoot().addPart( new PartDefinitionImpl( new DefaultPlaceRequest( WirezWizardScreen.SCREEN_ID ) ) );
+        perspective.getRoot().addPart( new PartDefinitionImpl( new DefaultPlaceRequest( CanvasWizardScreen.SCREEN_ID ) ) );
         
         palettePanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         palettePanel.setMinWidth( 400 );
         palettePanel.setWidth( 400 );
-        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( WirezPaletteScreen.SCREEN_ID ) ) );
+        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( PaletteScreen.SCREEN_ID ) ) );
 
         /*propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         propertiesPanel.setMinWidth( 400 );

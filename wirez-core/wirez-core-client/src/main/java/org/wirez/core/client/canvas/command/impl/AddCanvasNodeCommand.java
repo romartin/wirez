@@ -26,7 +26,6 @@ import org.wirez.core.api.graph.impl.DefaultNode;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
-import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 import org.wirez.core.client.factory.ShapeFactory;
 
 /**
@@ -49,7 +48,7 @@ public class AddCanvasNodeCommand extends BaseCanvasCommand {
 
     @Override
     public CanvasCommand apply() {
-        ((BaseCanvasHandler) canvasHandler).register(factory, candidate);
+        canvasHandler.register(factory, candidate);
         return this;
     }
 

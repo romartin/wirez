@@ -16,14 +16,9 @@
 
 package org.wirez.client.workbench.screens;
 
-import com.ait.lienzo.client.core.shape.Shape;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.bus.client.api.messaging.Message;
-import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
-import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.client.annotations.*;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.events.ChangeTitleWidgetEvent;
@@ -41,12 +36,12 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.factory.DefaultEdgeFactory;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
 import org.wirez.core.api.graph.factory.DefaultNodeFactory;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.util.Logger;
 import org.wirez.core.api.util.UUID;
+import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasSettings;
@@ -54,7 +49,6 @@ import org.wirez.core.client.canvas.DefaultCanvasSettingsBuilder;
 import org.wirez.core.client.canvas.SelectionManager;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
-import org.wirez.core.client.canvas.impl.DefaultCanvasHandler;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import javax.annotation.PostConstruct;
@@ -62,17 +56,15 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @Dependent
-@WorkbenchScreen(identifier = WirezCanvasScreen.SCREEN_ID )
-public class WirezCanvasScreen {
+@WorkbenchScreen(identifier = CanvasScreen.SCREEN_ID )
+public class CanvasScreen {
 
-    public static final String SCREEN_ID = "WirezCanvasScreen";
+    public static final String SCREEN_ID = "CanvasScreen";
 
     @Inject
     Canvas canvas;
@@ -86,9 +78,6 @@ public class WirezCanvasScreen {
     @Inject
     DefaultCanvasCommands defaultCanvasCommands;
 
-    //@Inject
-    //WirezFactoryUtils factoryUtils;
-    
     @Inject
     ErrorPopupPresenter errorPopupPresenter;
     
@@ -121,7 +110,8 @@ public class WirezCanvasScreen {
             String shapeSetUUID = placeRequest.getParameter( "shapeSetUUID", "" );
             String title = placeRequest.getParameter( "title", "" );
 
-            final DefinitionSet wirezSet = getWirezSet(wirezSetId);
+            final DefinitionSet wirezSet = getDefinitionSet(wirezSetId);
+            final ShapeSet shapeSet = getShapeSet(shapeSetUUID);
             final DefaultGraphFactory graphFactory = getGraphFactory(wirezSet);
 
             // For testing...
@@ -131,29 +121,31 @@ public class WirezCanvasScreen {
                     new DefaultBound(0d,0d)
             );
 
-            final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, properties, bounds);
+            final Set<String> labels = new HashSet<>();
+            final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties, bounds);
 
-            open(uuid, wirezSetId, shapeSetUUID, title, graph);
+            open(uuid, wirezSet, shapeSet, title, graph);
         }
         
         this.menu = makeMenuBar();
        
     }
 
-    private void open(String uuid, String  definitionSetId, String shapeSetUUID, String title, Graph graph) {
+    private void open(String uuid, DefinitionSet definitionSet, ShapeSet shapeSet, String title, Graph graph) {
 
-        WirezCanvasScreen.this.title = title;
+        CanvasScreen.this.title = title;
         changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, this.title));
         
         CanvasSettings settings = new DefaultCanvasSettingsBuilder()
                 .uuid(uuid)
-                .definitionSet(definitionSetId)
-                .shapeSet(shapeSetUUID)
+                .definitionSet(definitionSet)
+                .shapeSet(shapeSet)
                 .title(title)
                 .graph(graph)
+                .canvas(canvas)
                 .build();
         
-        canvasHandler.initialize(settings, canvas);
+        canvasHandler.initialize(settings);
 
     }
     
@@ -288,8 +280,17 @@ public class WirezCanvasScreen {
         };
     }
 
-    private DefinitionSet getWirezSet(final String id) {
+    private DefinitionSet getDefinitionSet(final String id) {
         for (final DefinitionSet set : wirezClientManager.getDefinitionSets()) {
+            if (set.getId().equals(id)) {
+                return set;
+            }
+        }
+        return null;
+    }
+
+    private ShapeSet getShapeSet(final String id) {
+        for (final ShapeSet set : wirezClientManager.getShapeSets()) {
             if (set.getId().equals(id)) {
                 return set;
             }
@@ -300,7 +301,7 @@ public class WirezCanvasScreen {
     private final ErrorCallback<Message> errorCallback = new ErrorCallback<Message>() {
         @Override
         public boolean error(final Message message, final Throwable throwable) {
-            WirezCanvasScreen.this.showError(throwable);
+            CanvasScreen.this.showError(throwable);
             return false;
         }
     };
@@ -366,17 +367,32 @@ public class WirezCanvasScreen {
     }
     
     private void buildShape(final ShapeFactory factory) {
-        final Wirez w = factoryUtils.getWirez(factory);
-        final Element element = buildElement(w);
-        if ( w instanceof DefaultNodeFactory) {
-            wirezCanvas.execute(defaultCommands.ADD_NODE((DefaultNode) element, factory));
-        } else if ( w instanceof DefaultEdgeFactory) {
-            wirezCanvas.execute(defaultCommands.ADD_EDGE((DefaultEdge) element, factory));
+        final Definition definition = getDefinition(factory);
+        final Element element = buildElement(definition);
+        if ( definition instanceof DefaultNodeFactory) {
+            ((CanvasCommandManager)canvasHandler).execute(defaultCanvasCommands.ADD_NODE((DefaultNode) element, factory));
+        } 
+        
+        /* TODO: else if ( w instanceof DefaultEdgeFactory) {
+            canvasHandler.execute(defaultCanvasCommands.ADD_EDGE((DefaultEdge) element, factory));
+        }*/
+    }
+
+    private Definition getDefinition(final ShapeFactory factory) {
+        
+        final Collection<DefinitionSet> definitionSets = wirezClientManager.getDefinitionSets();
+        for (final DefinitionSet definitionSet : definitionSets) {
+            final Collection<Definition> definitions = definitionSet.getDefinitions();
+            for (final Definition definition : definitions) {
+                if (factory.accepts(definition)) return definition;
+            }
         }
+        return null;
     }
     
     private Element<? extends Definition> buildElement(final Definition wirez) {
         final Map<String, Object> properties = new HashMap<String, Object>();
+        final Set<String> labels = new HashSet<>();
         
         final Bounds bounds =
                 new DefaultBounds(
@@ -384,7 +400,7 @@ public class WirezCanvasScreen {
                         new DefaultBound(100d, 100d)
                 );
         
-        return ((GraphElementFactory) wirez).build(UUID.uuid(), properties, bounds);
+        return ((DefaultGraphFactory) wirez).build(UUID.uuid(), labels, properties, bounds);
     }
 
 }

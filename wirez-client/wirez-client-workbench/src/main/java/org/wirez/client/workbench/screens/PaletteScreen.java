@@ -32,16 +32,13 @@ import org.wirez.core.client.WirezClientManager;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
-import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
-
 @Dependent
-@WorkbenchScreen(identifier = WirezPaletteScreen.SCREEN_ID )
-public class WirezPaletteScreen {
+@WorkbenchScreen(identifier = PaletteScreen.SCREEN_ID )
+public class PaletteScreen {
 
-    public static final String SCREEN_ID = "WirezPaletteScreen";
+    public static final String SCREEN_ID = "PaletteScreen";
 
     @Inject
     Palette palette;

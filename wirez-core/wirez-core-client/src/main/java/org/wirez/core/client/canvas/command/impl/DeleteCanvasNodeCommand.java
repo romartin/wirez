@@ -28,7 +28,6 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
-import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 
 /**
  * A Command to delete a DefaultNode from a Graph and delete the corresponding canvas shapes.
@@ -48,14 +47,7 @@ public class DeleteCanvasNodeCommand extends BaseCanvasCommand {
 
     @Override
     public CanvasCommand apply() {
-
-        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getCanvas();
-        final BaseCanvasHandler wirezCanvas = (BaseCanvasHandler) canvasHandler;
-        final Shape shape = baseCanvas.getShape(candidate.getUUID());
-        // TODO: Delete connector connections to the node being deleted?
-        canvasHandler.getCanvas().deleteShape(shape);
-        canvasHandler.getCanvas().draw();
-        wirezCanvas.fireElementDeleted(candidate);
+        canvasHandler.deregister(candidate);
         return this;
     }
 

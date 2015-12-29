@@ -17,8 +17,10 @@
 package org.wirez.core.api.graph.factory;
 
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.impl.DefaultEdgeImpl;
 import org.wirez.core.api.graph.impl.DefaultNode;
 
-public interface DefaultNodeFactory<W extends Definition> extends ElementFactory<W, DefaultNode<W>> {
+public interface DefaultNodeFactory<W extends Definition> extends ElementFactory<W, DefaultNode<W, DefaultEdge>> {
     
 }

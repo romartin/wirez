@@ -33,64 +33,7 @@ import java.util.Set;
 /**
  * Default graph interface supports unconnected edges (implements HasEdges).
  */
-@Portable
-public class DefaultGraph<W extends Definition> extends DefaultElement<W> 
-        implements Graph<W, DefaultNode>, HasEdges<DefaultEdge> {
+public interface DefaultGraph<W extends Definition, T extends DefaultNode, E extends DefaultEdge> 
+        extends  Graph<W, T>, HasEdges<E> {
 
-    private final DefaultGraphNodeStore nodeStore;
-    private final DefaultGraphEdgeStore edgeStore;
-    
-    public DefaultGraph(@MapsTo("uuid") String uuid, 
-                        @MapsTo("definition") W definition, 
-                        @MapsTo("properties") Map<String, Object> properties, 
-                        @MapsTo("labels") Set<String> labels, 
-                        @MapsTo("bounds") Bounds bounds,
-                        @MapsTo("graphNodeStore") DefaultGraphNodeStore nodeStore,
-                        @MapsTo("graphEdgeStore") DefaultGraphEdgeStore edgeStore) {
-        super(uuid, definition, properties, labels, bounds);
-        this.nodeStore = nodeStore;
-        this.edgeStore = edgeStore;
-    }
-
-    @Override
-    public DefaultNode addNode(final DefaultNode node) {
-        return nodeStore.add(node);
-    }
-
-    @Override
-    public DefaultNode removeNode(final String uuid) {
-        return nodeStore.remove(uuid);
-    }
-
-    @Override
-    public DefaultNode getNode(final String uuid) {
-        return nodeStore.get(uuid);
-    }
-
-    @Override
-    public Iterable<DefaultNode> nodes() {
-        return nodeStore;
-    }
-
-    public DefaultEdge addEdge(final DefaultEdge edge) {
-        return edgeStore.add(edge);
-    }
-
-    public DefaultEdge removeEdge(final String uuid) {
-        return edgeStore.remove(uuid);
-    }
-
-    public DefaultEdge getEdge(final String uuid) {
-        return edgeStore.get(uuid);
-    }
-
-    public Iterable<DefaultEdge> edges() {
-        return edgeStore;
-    }
-
-    @Override
-    public Element<W> copy() {
-        // TODO: return new DefaultGraph<W>(uuid, definition, properties, labels, bounds, nodeStore, edgeStore);
-        return null;
-    }
 }

@@ -26,7 +26,9 @@ import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuild
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.factory.DefaultNodeFactory;
+import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.impl.DefaultNodeImpl;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -65,10 +67,10 @@ public class Rectangle extends BasicDefinition implements DefaultNodeFactory<Rec
 
 
     @Override
-    public DefaultNode<Rectangle> build(final String uuid, 
-                                        final Set<String> labels, 
-                                        final Map<String, Object> properties, 
-                                        final Bounds bounds) {
-        return new DefaultNode<Rectangle>(uuid, this, properties, labels, bounds);
+    public DefaultNode<Rectangle, DefaultEdge> build(final String uuid,
+                                                     final Set<String> labels,
+                                                     final Map<String, Object> properties,
+                                                     final Bounds bounds) {
+        return new DefaultNodeImpl<Rectangle>(uuid, this, properties, labels, bounds);
     }
 }

@@ -20,6 +20,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.AddNodeCommand;
+import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.DefaultNode;
 import org.wirez.core.api.rule.RuleManager;
@@ -43,7 +44,7 @@ public class AddCanvasNodeCommand extends BaseCanvasCommand {
 
     @Override
     public Command getCommand() {
-        return new AddNodeCommand((DefaultGraph<? extends Definition>) canvasHandler.getGraph(), candidate);
+        return new AddNodeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
     }
 
     @Override

@@ -36,11 +36,11 @@ import java.util.List;
  */
 public class DeleteNodeCommand implements Command {
 
-    private DefaultGraph<? extends Definition> target;
-    private DefaultNode<? extends Definition> candidate;
+    private DefaultGraph target;
+    private DefaultNode candidate;
 
-    public DeleteNodeCommand(final DefaultGraph<? extends Definition> target,
-                             final DefaultNode<? extends Definition> candidate ) {
+    public DeleteNodeCommand(final DefaultGraph target,
+                             final DefaultNode candidate ) {
         this.target = PortablePreconditions.checkNotNull( "target",
                                                           target );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
@@ -81,7 +81,7 @@ public class DeleteNodeCommand implements Command {
 
         final DefaultRuleManager defaultRuleManager = (DefaultRuleManager) ruleManager;
         boolean isNodeInGraph = false;
-        for ( Node node : target.nodes() ) {
+        for ( Object node : target.nodes() ) {
             if ( node.equals( candidate ) ) {
                 isNodeInGraph = true;
                 break;

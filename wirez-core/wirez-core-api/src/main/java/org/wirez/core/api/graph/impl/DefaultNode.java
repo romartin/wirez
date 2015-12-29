@@ -28,36 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Portable
-public class DefaultNode<W extends Definition> extends DefaultElement<W> implements Node<W, DefaultEdge> {
-
-    private List<DefaultEdge> inEdges = new ArrayList<DefaultEdge>();
-    private List<DefaultEdge> outEdges = new ArrayList<DefaultEdge>();
-    
-    public DefaultNode(@MapsTo("uuid") String uuid, 
-                       @MapsTo("definition") W definition, 
-                       @MapsTo("properties") Map<String, Object> properties, 
-                       @MapsTo("labels") Set<String> labels, 
-                       @MapsTo("bounds") Bounds bounds) {
-        super(uuid, definition, properties, labels, bounds);
-    }
-
-    @Override
-    public List<DefaultEdge> getInEdges() {
-        return inEdges;
-    }
-
-    @Override
-    public List<DefaultEdge> getOutEdges() {
-        return outEdges;
-    }
-
-    @Override
-    public Element<W> copy() {
-        DefaultNode<W> node = new DefaultNode<W>(uuid, definition, properties, labels, bounds);
-        node.getInEdges().addAll(inEdges);
-        node.getOutEdges().addAll(outEdges);
-        return node;
-    }
+public interface DefaultNode<W extends Definition, T extends DefaultEdge> extends Node<W, T> {
     
 }

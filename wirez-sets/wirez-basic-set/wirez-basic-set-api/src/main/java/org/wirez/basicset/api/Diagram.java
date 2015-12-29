@@ -24,7 +24,10 @@ import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuild
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
+import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.graph.impl.DefaultGraphImpl;
+import org.wirez.core.api.graph.impl.DefaultNode;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
 import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
 
@@ -60,11 +63,11 @@ public class Diagram extends BasicDefinition implements DefaultGraphFactory<Diag
     }};
 
     @Override
-    public DefaultGraph<Diagram> build(final String uuid, 
-                                       final Set<String> labels, 
-                                       final Map<String, Object> properties, 
-                                       final Bounds bounds) {
-        return new DefaultGraph<Diagram>(uuid, this, properties, labels, bounds, 
+    public DefaultGraph<Diagram, DefaultNode, DefaultEdge> build(final String uuid,
+                                                                 final Set<String> labels,
+                                                                 final Map<String, Object> properties,
+                                                                 final Bounds bounds) {
+        return new DefaultGraphImpl<Diagram>(uuid, this, properties, labels, bounds, 
                 new DefaultGraphNodeStore(), new DefaultGraphEdgeStore());
     }
 }

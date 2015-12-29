@@ -26,43 +26,10 @@ import org.wirez.core.api.graph.Element;
 import java.util.Map;
 import java.util.Set;
 
-@Portable
-public class DefaultEdge<W extends Definition> extends DefaultElement<W> implements Edge<W, DefaultNode> {
+public interface DefaultEdge<W extends Definition,  T extends DefaultNode> extends Edge<W, T> {
 
-    private DefaultNode sourceNode;
-    private DefaultNode targetNode;
+    void setTargetNode(DefaultNode node);
 
-    public DefaultEdge(@MapsTo("id") String id,
-                    @MapsTo("definition") W definition,
-                    @MapsTo("properties") Map<String, Object> properties, 
-                    @MapsTo("labels") Set<String> labels,
-                    @MapsTo("bounds") Bounds bounds) {
-        super(id, definition, properties, labels, bounds);
-    }
+    void setSourceNode(DefaultNode node);
     
-    @Override
-    public DefaultNode getSourceNode() {
-        return sourceNode;
-    }
-
-    @Override
-    public DefaultNode getTargetNode() {
-        return targetNode;
-    }
-
-    public void setSourceNode(DefaultNode sourceNode) {
-        this.sourceNode = sourceNode;
-    }
-
-    public void setTargetNode(DefaultNode targetNode) {
-        this.targetNode = targetNode;
-    }
-
-    @Override
-    public Element<W> copy() {
-        final DefaultEdge edge = new DefaultEdge<W>(uuid, definition, properties, labels, bounds);
-        edge.setTargetNode(targetNode);
-        edge.setSourceNode(sourceNode);
-        return edge;
-    }
 }

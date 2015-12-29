@@ -23,10 +23,10 @@ public class BasicSetCategories {
 
     public static final BasicSetCategories INSTANCE = new BasicSetCategories();
     
-    public final String DIAGRAM = "diagram";
+    public String DIAGRAM = "diagram";
     
-    public final String BASIC = "basic";
+    public String BASIC = "basic";
 
-    public final String CONNECTORS = "connectors";
+    public String CONNECTORS = "connectors";
 
 }

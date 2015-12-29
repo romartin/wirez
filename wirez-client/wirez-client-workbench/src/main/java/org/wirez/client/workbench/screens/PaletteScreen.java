@@ -26,13 +26,19 @@ import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
+import org.wirez.client.widgets.event.PaletteShapeSelectedEvent;
 import org.wirez.client.widgets.palette.accordion.Palette;
+import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
+import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+
+import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @Dependent
 @WorkbenchScreen(identifier = PaletteScreen.SCREEN_ID )
@@ -56,7 +62,7 @@ public class PaletteScreen {
     Event<ChangeTitleWidgetEvent> changeTitleNotification;
     
     private PlaceRequest placeRequest;
-    private String uuid;
+    private String shapeSetId;
     
     @PostConstruct
     public void init() {
@@ -65,7 +71,7 @@ public class PaletteScreen {
     @OnStartup
     public void onStartup(final PlaceRequest placeRequest) {
         this.placeRequest = placeRequest;
-        this.uuid = placeRequest.getParameter( "uuid", "" );
+        this.shapeSetId = placeRequest.getParameter( "shapeSetId", "" );
         open();
     }
     
@@ -80,8 +86,8 @@ public class PaletteScreen {
     }
 
     private void open() {
-        if (uuid.trim().length() > 0) {
-            palette.show(uuid);
+        if (shapeSetId.trim().length() > 0) {
+            palette.show(shapeSetId);
         } else {
             palette.showNoCanvasState();
         }
@@ -98,7 +104,7 @@ public class PaletteScreen {
 
     @WorkbenchPartTitle
     public String getTitle() {
-        return "Wirez Palette";
+        return "Palette";
     }
 
     @WorkbenchPartView
@@ -111,4 +117,25 @@ public class PaletteScreen {
         return "wirezPaletteScreenContext";
     }
 
+    void onCanvasScreenStateChanged(@Observes CanvasScreenStateChangedEvent canvasScreenStateChangedEvent) {
+        checkNotNull("canvasScreenStateChangedEvent", canvasScreenStateChangedEvent);
+        final CanvasScreen.CanvasScreenState state = canvasScreenStateChangedEvent.getState();
+        final ShapeSet shapeSet = canvasScreenStateChangedEvent.getCanvasHandler().getSettings().getShapeSet();
+        
+        if (CanvasScreen.CanvasScreenState.ACTIVE.equals(state)) {
+            
+            // Open the palette with the given shape set.
+            changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, shapeSet.getName() + " Palette"));
+            this.shapeSetId = shapeSet.getId();
+            open();
+            
+        } else if (this.shapeSetId != null && shapeSetId.equals(shapeSet.getId())){
+            
+            // Close the current palette.
+            changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Palette"));
+            this.shapeSetId = null;
+            open();
+        }
+        
+    }
 }

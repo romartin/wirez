@@ -40,6 +40,7 @@ public class WirezManagerImpl implements WirezManager {
 
     @PostConstruct
     public void init() {
+        definitionSets.clear();
         initDefinitionSets();
     }
 

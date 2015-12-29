@@ -24,19 +24,19 @@ import org.uberfire.workbench.events.UberFireEvent;
  */
 public class ShapeSetSelectedEvent implements UberFireEvent {
 
-    private String uuid;
+    private String shapeSetId;
 
-    public ShapeSetSelectedEvent(final String uuid) {
-        this.uuid = uuid;
+    public ShapeSetSelectedEvent(final String shapeSetId) {
+        this.shapeSetId = shapeSetId;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getShapeSetId() {
+        return shapeSetId;
     }
 
     @Override
     public String toString() {
-        return "ShapeSetSelectedEvent [uuid=" + uuid + "]";
+        return "ShapeSetSelectedEvent [shapeSet=" + shapeSetId + "]";
     }
 
 }

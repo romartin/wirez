@@ -78,21 +78,16 @@ public class DefaultCanvasHandler implements CanvasHandler, CanvasCommandManager
     }
 
     @Override
-    public String getUUID() {
-        return settings.getUUID();
-    }
-
-    @Override
     public Graph<? extends Definition, ? extends Node> getGraph() {
         return graph;
     }
 
     @Override
-    public Canvas getCanvas() {
-        return canvas;
+    public CanvasSettings getSettings() {
+        return settings;
     }
-    
-    /*
+
+/*
         *********************************************************
         * Initialization & rules
         *********************************************************
@@ -112,7 +107,7 @@ public class DefaultCanvasHandler implements CanvasHandler, CanvasCommandManager
         drawGraph();
 
         // Draw it.
-        getCanvas().draw();
+        canvas.draw();
         
         return this;
     }

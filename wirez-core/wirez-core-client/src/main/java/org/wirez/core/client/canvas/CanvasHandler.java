@@ -38,18 +38,15 @@ public interface CanvasHandler {
     CanvasHandler addListener(CanvasListener listener);
 
     /**
-     * Returns the canvas' unique identifier. 
+     * Returns this canvas' settings. 
      */
-    String getUUID();
+    CanvasSettings getSettings();
 
     /**
      * Returns the working copy of the graph. 
      */
     Graph<? extends Definition, ? extends Node> getGraph();
     
-    /**
-     * Returns the shape canvas.
-     */
-    Canvas getCanvas();
+    
     
 }

@@ -23,6 +23,7 @@ import org.uberfire.client.mvp.UberView;
 import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.event.ShapeSetSelectedEvent;
 import org.wirez.core.api.WirezManager;
+import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
 
@@ -54,7 +55,7 @@ public class CanvasWizard implements IsWidget {
     WirezClientManager wirezClientManager;
     Event<ShapeSetSelectedEvent> shapeSetSelectedEvent;
     View view;
-    private String selectedShapeSetUUUID;
+    private String selectedShapeSetId;
 
     @Inject
     public CanvasWizard(final WirezClientManager wirezClientManager, 
@@ -89,7 +90,7 @@ public class CanvasWizard implements IsWidget {
                 final String name = shapeSet.getName();
                 final String description = shapeSet.getDescription();
                 final SafeUri thumbnailUri = shapeSet.getThumbnailUri();
-                final boolean isSelected = selectedShapeSetUUUID == null || selectedShapeSetUUUID.equals(uuid);
+                final boolean isSelected = selectedShapeSetId == null || selectedShapeSetId.equals(uuid);
                 view.addItem(name, description, thumbnailUri, isSelected, 
                         new Command() {
                             @Override
@@ -97,7 +98,7 @@ public class CanvasWizard implements IsWidget {
                                 CanvasWizard.this.onShapeSetSelected(uuid);
                             }
                         });
-                view.setActionButtonEnabled(selectedShapeSetUUUID != null);
+                view.setActionButtonEnabled(selectedShapeSetId != null);
                 
             }
         }
@@ -105,21 +106,20 @@ public class CanvasWizard implements IsWidget {
     }
     
     public void clear() {
-        selectedShapeSetUUUID = null;
+        selectedShapeSetId = null;
         view.setActionButtonEnabled(false);
         view.clear();
     }
 
-    private void onShapeSetSelected(final String uuid) {
-        selectedShapeSetUUUID = uuid;
+    private void onShapeSetSelected(final String shapeSetId) {
+        selectedShapeSetId = shapeSetId;
         show();
     }
 
     void onActionButtonClick() {
-        if (selectedShapeSetUUUID != null) {
-            shapeSetSelectedEvent.fire(new ShapeSetSelectedEvent(selectedShapeSetUUUID));
-            selectedShapeSetUUUID = null;
-            show();
-        }
+        assert selectedShapeSetId != null;
+        shapeSetSelectedEvent.fire(new ShapeSetSelectedEvent(selectedShapeSetId));
+        clear();
+        show();
     }
 }

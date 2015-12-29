@@ -41,10 +41,12 @@ public class WirezClientManagerImpl extends WirezManagerImpl implements WirezCli
 
     @PostConstruct
     public void init() {
+        super.init();
         initShapeSets();
     }
 
     private void initShapeSets() {
+        shapeSets.clear();
         Collection<IOCBeanDef<ShapeSet>> beanDefs = beanManager.lookupBeans(ShapeSet.class);
         for (IOCBeanDef<ShapeSet> beanDef : beanDefs) {
             ShapeSet shapeSet = beanDef.getInstance();

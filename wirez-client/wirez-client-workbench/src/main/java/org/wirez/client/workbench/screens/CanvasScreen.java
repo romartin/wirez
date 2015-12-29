@@ -31,6 +31,7 @@ import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.canvas.Canvas;
 import org.wirez.client.widgets.event.PaletteShapeSelectedEvent;
+import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Bounds;
@@ -66,6 +67,10 @@ public class CanvasScreen {
 
     public static final String SCREEN_ID = "CanvasScreen";
 
+    public enum CanvasScreenState {
+        ACTIVE, NOT_ACTIVE;
+    }
+    
     @Inject
     Canvas canvas;
 
@@ -85,12 +90,15 @@ public class CanvasScreen {
     PlaceManager placeManager;
 
     @Inject
-    Event<ChangeTitleWidgetEvent> changeTitleNotification;
+    Event<ChangeTitleWidgetEvent> changeTitleNotificationEvent;
+
+    @Inject
+    Event<CanvasScreenStateChangedEvent> canvasScreenStateChangedEvent;
     
     private Menus menu = null;
     private PlaceRequest placeRequest;
     private String uuid;
-    private String title = "Wirez Canvas Screen";
+    private String title = "Canvas Screen";
     
     @PostConstruct
     public void init() {
@@ -101,31 +109,26 @@ public class CanvasScreen {
     public void onStartup(final PlaceRequest placeRequest) {
 
         this.placeRequest = placeRequest;
-        String bpmnTestMode = placeRequest.getParameter( "bpmnTestMode", "" );
-        if (bpmnTestMode.equals("true")) {
-            // showBPMNTestProcess();
-        } else {
-            String uuid = placeRequest.getParameter( "uuid", "" );
-            String wirezSetId = placeRequest.getParameter( "wirezSetId", "" );
-            String shapeSetUUID = placeRequest.getParameter( "shapeSetUUID", "" );
-            String title = placeRequest.getParameter( "title", "" );
+        String uuid = placeRequest.getParameter( "uuid", "" );
+        String wirezSetId = placeRequest.getParameter( "defSetId", "" );
+        String shapeSetUUID = placeRequest.getParameter( "shapeSetId", "" );
+        String title = placeRequest.getParameter( "title", "" );
 
-            final DefinitionSet wirezSet = getDefinitionSet(wirezSetId);
-            final ShapeSet shapeSet = getShapeSet(shapeSetUUID);
-            final DefaultGraphFactory graphFactory = getGraphFactory(wirezSet);
+        final DefinitionSet wirezSet = getDefinitionSet(wirezSetId);
+        final ShapeSet shapeSet = getShapeSet(shapeSetUUID);
+        final DefaultGraphFactory graphFactory = getGraphFactory(wirezSet);
 
-            // For testing...
-            final Map<String, Object> properties = new HashMap<String, Object>();
-            final Bounds bounds = new DefaultBounds(
-                    new DefaultBound(0d,0d),
-                    new DefaultBound(0d,0d)
-            );
+        // For testing...
+        final Map<String, Object> properties = new HashMap<String, Object>();
+        final Bounds bounds = new DefaultBounds(
+                new DefaultBound(0d,0d),
+                new DefaultBound(0d,0d)
+        );
 
-            final Set<String> labels = new HashSet<>();
-            final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties, bounds);
+        final Set<String> labels = new HashSet<>();
+        final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties, bounds);
 
-            open(uuid, wirezSet, shapeSet, title, graph);
-        }
+        open(uuid, wirezSet, shapeSet, title, graph);
         
         this.menu = makeMenuBar();
        
@@ -134,7 +137,7 @@ public class CanvasScreen {
     private void open(String uuid, DefinitionSet definitionSet, ShapeSet shapeSet, String title, Graph graph) {
 
         CanvasScreen.this.title = title;
-        changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, this.title));
+        changeTitleNotificationEvent.fire(new ChangeTitleWidgetEvent(placeRequest, this.title));
         
         CanvasSettings settings = new DefaultCanvasSettingsBuilder()
                 .uuid(uuid)
@@ -147,6 +150,8 @@ public class CanvasScreen {
         
         canvasHandler.initialize(settings);
 
+        setStateActive();
+        
     }
     
     private DefaultGraphFactory getGraphFactory(final DefinitionSet definitionSet) {
@@ -161,20 +166,22 @@ public class CanvasScreen {
     
     @OnOpen
     public void onOpen() {
+        setStateActive();
     }
 
     @OnFocus
     public void onFocus() {
+        setStateActive();
     }
     
     @OnClose
     public void onClose() {
-        
+        setStateNotActive();
     }
 
     @OnLostFocus
     public void OnLostFocus() {
-        
+        setStateNotActive();
     }
     
     @WorkbenchMenu
@@ -182,6 +189,14 @@ public class CanvasScreen {
         return menu;
     }
 
+    private void setStateActive() {
+        canvasScreenStateChangedEvent.fire(new CanvasScreenStateChangedEvent(canvasHandler, CanvasScreenState.ACTIVE));
+    }
+
+    private void setStateNotActive() {
+        canvasScreenStateChangedEvent.fire(new CanvasScreenStateChangedEvent(canvasHandler, CanvasScreenState.NOT_ACTIVE));
+    }
+    
     private Menus makeMenuBar() {
         return MenuFactory
                 .newTopLevelMenu("Clear grid")

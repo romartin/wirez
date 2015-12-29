@@ -91,18 +91,18 @@ public class Palette implements IsWidget {
         view.setNoCanvasViewVisible(true);
     }
     
-    public void show(final String uuid) {
+    public void show(final String shapeSetId) {
         clear();
-        final ShapeSet wirezShapeSet = getShapeSet(uuid);
+        final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
         doShow(wirezShapeSet);
         view.setNoCanvasViewVisible(false);
         view.setGroupsViewVisible(true);
     }
     
-    private ShapeSet getShapeSet(final String uuid) {
+    private ShapeSet getShapeSet(final String shapeSetId) {
         final Collection<ShapeSet> sets = wirezClientManager.getShapeSets();
         for (final ShapeSet set  : sets) {
-            if (set.getId().equals(uuid)) {
+            if (set.getId().equals(shapeSetId)) {
                 return set;
             }
         }
@@ -114,26 +114,25 @@ public class Palette implements IsWidget {
     }
     
     private void doShow(final ShapeSet wirezShapeSet) {
-        final DefinitionSet definitionSet = wirezShapeSet.getDefinitionSet();
-        final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
-        final Collection<Definition> definitions = definitionSet.getDefinitions();
-
 
         // Clear current palette groups.
         view.clearGroups();
 
         // Load shapes by category.
+        final DefinitionSet definitionSet = wirezShapeSet.getDefinitionSet();
+        final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
+        final Collection<Definition> definitions = definitionSet.getDefinitions();
         final Map<String, Collection<ShapeFactory<? extends Definition, ? extends Shape>>>
                 groupFactories = new HashMap<String, Collection<ShapeFactory<? extends Definition, ? extends Shape>>>();
-        for (final Definition definition : definitions) {
-
-            for (final ShapeFactory<? extends Definition, ? extends Shape> factory : factories) {
+        for (final ShapeFactory<? extends Definition, ? extends Shape> factory : factories) {
+            for (final Definition definition : definitions) {
                 if (factory.accepts(definition)) {
                     final String category = definition.getContent().getCategory();
                     if (groupFactories.get(category) == null)  {
                         groupFactories.put(category, new LinkedList<ShapeFactory<? extends Definition, ? extends Shape>>());
                     }
                     groupFactories.get(category).add(factory);
+                    break;
                 }
             }
             

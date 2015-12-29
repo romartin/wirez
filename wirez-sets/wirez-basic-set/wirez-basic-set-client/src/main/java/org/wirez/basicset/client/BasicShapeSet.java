@@ -80,6 +80,6 @@ public class BasicShapeSet implements ShapeSet {
 
     @Override
     public Collection<ShapeFactory<? extends Definition, ? extends Shape>> getFactories() {
-        return null;
+        return factories;
     }
 }

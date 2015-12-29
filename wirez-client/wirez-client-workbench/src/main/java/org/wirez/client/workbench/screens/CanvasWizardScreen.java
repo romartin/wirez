@@ -118,7 +118,7 @@ public class CanvasWizardScreen {
 
     @WorkbenchPartTitle
     public String getTitle() {
-        return "Wirez Wizard Screen";
+        return "Wizard";
     }
 
     @WorkbenchPartView
@@ -135,14 +135,14 @@ public class CanvasWizardScreen {
         checkNotNull("shapeSetSelectedEvent", shapeSetSelectedEvent);
 
         final String uuid = UUID.uuid();
-        final String shapeSetUUID = shapeSetSelectedEvent.getUuid();
-        final ShapeSet shapeSet = getWirezShapeSet(shapeSetUUID);
+        final String shapeSetId = shapeSetSelectedEvent.getShapeSetId();
+        final ShapeSet shapeSet = getWirezShapeSet(shapeSetId);
         final String shapSetName = shapeSet.getName();
         final String wirezSetId = shapeSet.getDefinitionSet().getId();
         Map<String, String> params = new HashMap<String, String>();
         params.put( "uuid", uuid );
-        params.put( "wirezSetId", wirezSetId );
-        params.put( "shapeSetUUID", shapeSetUUID );
+        params.put( "defSetId", wirezSetId );
+        params.put( "shapeSetId", shapeSetId );
         params.put( "title", "New " + shapSetName + " diagram" );
 
         PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );

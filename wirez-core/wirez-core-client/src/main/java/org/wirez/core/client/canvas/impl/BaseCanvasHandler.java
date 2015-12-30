@@ -189,6 +189,36 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         fireElementAdded(candidate);
     }
 
+    public void updateElementSize(final Element element) {
+        final Shape shape = canvas.getShape(element.getUUID());
+
+        final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
+        final MutationContext context = new StaticMutationContext();
+        shapeMutation.applyElementSize(element, this, context);
+        canvas.draw();
+        fireElementUpdated(element);
+    }
+
+    public void updateElementPosition(final Element element) {
+        final Shape shape = canvas.getShape(element.getUUID());
+
+        final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
+        final MutationContext context = new StaticMutationContext();
+        shapeMutation.applyElementPosition(element, this, context);
+        canvas.draw();
+        fireElementUpdated(element);
+    }
+
+    public void updateElementProperties(final Element element) {
+        final Shape shape = canvas.getShape(element.getUUID());
+
+        final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
+        final MutationContext context = new StaticMutationContext();
+        shapeMutation.applyElementProperties(element, this, context);
+        canvas.draw();
+        fireElementUpdated(element);
+    }
+
     public void deregister(final Element element) {
 
         final Shape shape = canvas.getShape(element.getUUID());

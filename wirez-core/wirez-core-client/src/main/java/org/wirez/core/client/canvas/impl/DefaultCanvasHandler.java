@@ -16,40 +16,36 @@
 
 package org.wirez.core.client.canvas.impl;
 
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.wires.*;
-import com.google.gwt.core.client.GWT;
+import org.wirez.core.api.command.Command;
+import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.event.NotificationEvent;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.commands.SetConnectionSourceNodeCommand;
+import org.wirez.core.api.graph.commands.SetConnectionTargetNodeCommand;
 import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.DefaultNode;
 import org.wirez.core.api.graph.processing.GraphVisitor;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.Rule;
-import org.wirez.core.api.rule.RuleManager;
-import org.wirez.core.client.Shape;
+import org.wirez.core.api.util.Logger;
 import org.wirez.core.client.WirezClientManager;
-import org.wirez.core.client.canvas.*;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.CanvasSettings;
+import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.factory.ShapeFactory;
-import org.wirez.core.client.mutation.*;
+import org.wirez.core.client.impl.BaseConnector;
+import org.wirez.core.client.impl.BaseShape;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.LinkedList;
 
 // TODO: Implement SelectionManager<Element>
 @Dependent
@@ -130,18 +126,16 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
             @Override
             public void visitEdge(final DefaultEdge edge) {
-                // TODO
-                /*final ShapeFactory factory = wirezClientManager.getFactory(edge.getDefinition());
+                final ShapeFactory factory = wirezClientManager.getFactory(edge.getDefinition());
                 defaultCanvasCommands.ADD_EDGE( edge, factory )
                         .setCanvas(DefaultCanvasHandler.this)
-                        .apply();*/
+                        .apply();
             }
 
             @Override
             public void visitUnconnectedEdge(DefaultEdge edge) {
-                // TODO
-                /*final ShapeFactory factory = wirezClientManager.getFactory(edge.getDefinition());
-                defaultCanvasCommands.ADD_EDGE(edge, factory).setCanvas(DefaultCanvasHandler.this).apply();*/
+                final ShapeFactory factory = wirezClientManager.getFactory(edge.getDefinition());
+                defaultCanvasCommands.ADD_EDGE(edge, factory).setCanvas(DefaultCanvasHandler.this).apply();
             }
 
             @Override
@@ -164,23 +158,138 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         // Set the source Node for the connector.
         @Override
         public boolean acceptHead(WiresConnection head, WiresMagnet magnet) {
-            return true;
+            final BaseConnector connector = (BaseConnector) head.getConnector();
+            final BaseShape sourceShape = (BaseShape) magnet.getMagnets().getWiresShape();
+            final DefaultNode sourceNode = getNode(sourceShape);
+            final DefaultEdge edge = getEdge(connector);
+            final String sourceUUID = sourceNode != null ? sourceNode.getUUID() : null;
+
+            final String message = "Executed SetConnectionSourceNodeCommand [source=" + sourceUUID + "]";
+            Logger.log(message);
+            CommandResults results = execute(new BaseCanvasCommand() {
+                @Override
+                protected Command getCommand() {
+                    return new SetConnectionSourceNodeCommand(sourceNode, edge);
+                }
+
+                @Override
+                public CanvasCommand apply() {
+                    // Do nothing, lienzo wires do it for us.
+                    return this;
+                }
+
+                @Override
+                public String toString() {
+                    return getCommand().toString();
+                }
+
+            });
+
+
+            final boolean isAccept = isAccept(results);
+            return isAccept;
         }
 
         // Set the target Node for the connector.
         @Override
         public boolean acceptTail(WiresConnection tail, WiresMagnet magnet) {
-            return true;
+            WiresConnection head = tail.getConnector().getHeadConnection();
+            final BaseConnector connector = (BaseConnector) head.getConnector();
+            final BaseShape targetShape = (BaseShape) magnet.getMagnets().getWiresShape();
+            final DefaultNode targetNode = getNode(targetShape);
+            final DefaultEdge edge = getEdge(connector);
+            final String targetUUID = targetNode != null ? targetNode.getUUID() : null;
+
+            final String message = "Executed SetConnectionTargetNodeCommand [target=" + targetUUID + "]";
+            Logger.log(message);
+            CommandResults results = execute(new BaseCanvasCommand() {
+                @Override
+                protected Command getCommand() {
+                    return new SetConnectionTargetNodeCommand(targetNode, edge);
+                }
+
+                @Override
+                public CanvasCommand apply() {
+                    // Do nothing, lienzo wires do it for us.
+                    return this;
+                }
+
+                @Override
+                public String toString() {
+                    return getCommand().toString();
+                }
+
+            });
+
+            final boolean isAccept = isAccept(results);
+            return isAccept;
         }
 
         @Override
         public boolean headConnectionAllowed(WiresConnection head, WiresShape shape) {
-            return true;
+            WiresConnection tail = head.getConnector().getTailConnection();
+            WiresMagnet m = tail.getMagnet();
+
+            final BaseConnector connector = (BaseConnector) tail.getConnector();
+            final BaseShape outNode = (BaseShape) shape;
+            final BaseShape inNode = tail.getMagnet() != null ? (BaseShape) tail.getMagnet().getMagnets().getWiresShape() : null;
+
+            final boolean isAllowed = allow(new BaseCanvasCommand() {
+                @Override
+                protected Command getCommand() {
+                    return new SetConnectionSourceNodeCommand(getNode(outNode), getEdge(connector));
+                }
+
+                @Override
+                public CanvasCommand apply() {
+                    // Do nothing, lienzo wires do it for us.
+                    return this;
+                }
+
+                @Override
+                public String toString() {
+                    return getCommand().toString();
+                }
+
+            });
+            final String outUUID = outNode != null ? outNode.getId() : null;
+            final String inUUID = inNode != null ? inNode.getId() : null;
+            final String message = "HeadConnectionAllowed  [out=" + outUUID + "] [in=" + inUUID + "] [isAllowed=" + isAllowed + "]";
+            Logger.log(message);
+            return isAllowed;
         }
 
         @Override
         public boolean tailConnectionAllowed(WiresConnection tail, WiresShape shape) {
-            return true;
+            WiresConnection head = tail.getConnector().getHeadConnection();
+
+            final BaseConnector connector = (BaseConnector) tail.getConnector();
+            final BaseShape inNode = (BaseShape) shape;
+            final BaseShape outNode = head.getMagnet() != null ? (BaseShape) head.getMagnet().getMagnets().getWiresShape() : null;
+
+            final boolean isAllowed = allow(new BaseCanvasCommand() {
+                @Override
+                protected Command getCommand() {
+                    return new SetConnectionTargetNodeCommand(getNode(inNode), getEdge(connector));
+                }
+
+                @Override
+                public CanvasCommand apply() {
+                    // Do nothing, lienzo wires do it for us.
+                    return this;
+                }
+
+                @Override
+                public String toString() {
+                    return getCommand().toString();
+                }
+
+            });
+            final String outUUID = outNode != null ? outNode.getId() : null;
+            final String inUUID = inNode != null ? inNode.getId() : null;
+            final String message = "TailConnectionAllowed  [out=" + outUUID + "] [in=" + inUUID + "] [isAllowed=" + isAllowed + "]";
+            Logger.log(message);
+            return isAllowed;
         }
 
     };
@@ -197,5 +306,28 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             return false;
         }
     };
+
+    private DefaultNode getNode(final BaseShape shape) {
+        final String uuid = shape.getId();
+        if ( null != uuid ) {
+            return graph.getNode(uuid);
+        }
+        return null;
+    }
+
+    private DefaultEdge getEdge(final BaseConnector connector) {
+        final String uuid = connector.getId();
+        if ( null != uuid ) {
+            return graph.getEdge(uuid);
+        }
+        return null;
+    }
+
+    private boolean isAccept(final CommandResults results) {
+        Logger.logCommandResults(results.results());
+        final boolean hasCommandErrors = results.results(CommandResult.Type.ERROR) != null
+                && results.results(CommandResult.Type.ERROR).iterator().hasNext();
+        return hasCommandErrors;
+    }
 }
 

@@ -19,6 +19,8 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.DefaultNode;
@@ -27,22 +29,21 @@ import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
- * A Command to delete a DefaultNode from a DefaultGraph
+ * A Command to delete a DefaultEdge from a Graph
  */
-public class DeleteNodeCommand implements Command {
+public class DeleteEdgeCommand implements Command {
 
-    private DefaultGraph target;
-    private DefaultNode candidate;
+    private DefaultGraph<? extends Definition, DefaultNode, DefaultEdge> graph;
+    private DefaultEdge<? extends Definition, DefaultNode> edge;
 
-    public DeleteNodeCommand(final DefaultGraph target,
-                             final DefaultNode candidate ) {
-        this.target = PortablePreconditions.checkNotNull( "target",
-                                                          target );
-        this.candidate = PortablePreconditions.checkNotNull( "candidate",
-                                                             candidate );
+    public DeleteEdgeCommand(final DefaultGraph<? extends Definition, DefaultNode, DefaultEdge> graph,
+                             final DefaultEdge<? extends Definition, DefaultNode> edge) {
+        this.graph = PortablePreconditions.checkNotNull( "graph",
+                graph );;
+        this.edge = PortablePreconditions.checkNotNull( "edge",
+                edge );;
     }
     
     @Override
@@ -54,61 +55,56 @@ public class DeleteNodeCommand implements Command {
     @Override
     public CommandResult execute(final RuleManager ruleManager) {
         final CommandResult results = check(ruleManager);
-        if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
+        if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
             
-            final List<DefaultEdge> inEdges = candidate.getInEdges();
-            if ( null != inEdges ) {
-                for (final DefaultEdge inEdge : inEdges) {
-                    inEdge.setTargetNode(null);
-                }
+            final DefaultNode outNode = edge.getTargetNode();
+            final DefaultNode inNode = edge.getSourceNode();
+
+            if ( null != outNode ) {
+                outNode.getInEdges().remove( edge );
+            }
+            if ( null != inNode ) {
+                inNode.getOutEdges().remove( edge );
             }
 
-            final List<DefaultEdge> outEdges = candidate.getOutEdges();
-            if ( null != outEdges ) {
-                for (final DefaultEdge outEdge : outEdges) {
-                    outEdge.setSourceNode(null);
-                }
-            }
+            graph.removeEdge( edge.getUUID() );
             
-            target.removeNode( candidate.getUUID() );
         }
         return results;
     }
     
     private CommandResult check(final RuleManager ruleManager) {
-
         final DefaultRuleManager defaultRuleManager = (DefaultRuleManager) ruleManager;
-        boolean isNodeInGraph = false;
-        for ( Object node : target.nodes() ) {
-            if ( node.equals( candidate ) ) {
-                isNodeInGraph = true;
+        boolean isEdgeInGraph = false;
+        for ( Edge edge : graph.edges() ) {
+            if ( edge.equals( this.edge ) ) {
+                isEdgeInGraph = true;
                 break;
             }
         }
 
         DefaultCommandResult results;
-        if ( isNodeInGraph ) {
-            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality( target, candidate, RuleManager.Operation.DELETE).violations();
+        if ( isEdgeInGraph ) {
+            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), edge, RuleManager.Operation.DELETE).violations();
             results = new DefaultCommandResult(cardinalityRuleViolations);
         } else {
             results = new DefaultCommandResult();
             results.setType(CommandResult.Type.ERROR);
-            results.setMessage("GraphNode was not present in Graph and hence was not deleted");
+            results.setMessage("Edge was not present in Graph and hence was not deleted");
         }
 
         return results;
+
     }
 
     @Override
     public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = new AddNodeCommand( target,
-                candidate );
+        final Command undoCommand = new AddEdgeCommand( graph, edge );
         return undoCommand.execute( ruleManager );
     }
 
     @Override
     public String toString() {
-        return "DeleteNodeCommand [graph=" + target.getUUID() + ", candidate=" + candidate.getUUID() + "]";
+        return "DeleteEdgeCommand [graph=" + graph.getUUID() + ", edge=" + edge.getUUID() + "]";
     }
-    
 }

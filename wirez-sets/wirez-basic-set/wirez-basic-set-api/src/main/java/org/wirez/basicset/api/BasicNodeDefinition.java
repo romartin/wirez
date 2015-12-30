@@ -17,9 +17,6 @@
 package org.wirez.basicset.api;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
-import org.wirez.basicset.api.BasicDefinition;
-import org.wirez.core.api.definition.DefaultContent;
-import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.factory.DefaultNodeFactory;

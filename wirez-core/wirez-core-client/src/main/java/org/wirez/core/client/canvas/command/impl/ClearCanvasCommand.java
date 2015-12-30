@@ -15,38 +15,33 @@
  */
 package org.wirez.core.client.canvas.command.impl;
 
+
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.commands.AddNodeCommand;
+import org.wirez.core.api.graph.commands.ClearGraphCommand;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.DefaultNode;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
-import org.wirez.core.client.factory.ShapeFactory;
 
 /**
- * A Command to add a DefaultNode to a Graph and add the corresponding canvas shapes.
+ * A Command to clear a canvas and all the graph's elements..
  */
-public class AddCanvasNodeCommand extends BaseCanvasCommand {
+public class ClearCanvasCommand extends BaseCanvasCommand {
 
-    DefaultNode candidate;
-    ShapeFactory factory;
-
-    public AddCanvasNodeCommand(final DefaultNode candidate, final ShapeFactory factory ) {
-        this.candidate = candidate;
-        this.factory = factory;
+    public ClearCanvasCommand( ) {
     }
 
     @Override
-    public Command getCommand() {
-        return new AddNodeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
+    protected Command getCommand() {
+        return new ClearGraphCommand( (DefaultGraph) canvasHandler.getGraph() );
     }
 
     @Override
     public CanvasCommand apply() {
-        ( (BaseCanvasHandler) canvasHandler).register(factory, candidate);
+        final BaseCanvasHandler baseCanvasHandler = (BaseCanvasHandler) canvasHandler;
+        baseCanvasHandler.clear();
         return this;
     }
 
@@ -63,8 +58,7 @@ public class AddCanvasNodeCommand extends BaseCanvasCommand {
     
     @Override
     public String toString() {
-        return "AddCanvasNodeCommand [node=" + candidate.getUUID() + ", factory=" + factory + "]";
+        return "ClearCanvasCommand [canvas=" + canvasHandler.getSettings().getUUID() + "]";
     }
-
 
 }

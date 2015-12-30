@@ -16,6 +16,7 @@
 
 package org.wirez.client.workbench.screens;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -23,7 +24,6 @@ import org.uberfire.client.annotations.*;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.events.ChangeTitleWidgetEvent;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
-
 import org.uberfire.lifecycle.*;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
@@ -38,14 +38,13 @@ import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.factory.DefaultNodeFactory;
 import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.util.Logger;
 import org.wirez.core.api.util.UUID;
+import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
-import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.DefaultCanvasSettingsBuilder;
 import org.wirez.core.client.canvas.SelectionManager;
@@ -229,7 +228,7 @@ public class CanvasScreen {
     private Command getClearGridCommand() {
         return new Command() {
             public void execute() {
-                // TODO
+                canvasHandler.execute(defaultCanvasCommands.CLEAR());
             }
         };
     }
@@ -245,23 +244,25 @@ public class CanvasScreen {
     private Command getDeleteSelectionCommand() {
         return new Command() {
             public void execute() {
-                // TODO
-                /*final Collection<Shape> selectedItems = ((SelectionManager)canvas).getSelectedItems();
+                final Collection<Shape> selectedItems = ((SelectionManager)canvas).getSelectedItems();
                 if (selectedItems != null && !selectedItems.isEmpty()) {
                     for (Shape shape : selectedItems) {
-                        final Element element = ( (DefaultGraph) canvasHandler.getGraph()).get(shape.getUUID());
-                        
-                        if (element instanceof Node) {
-                            GWT.log("Deleting node with id " + element.getId());
-                            wirezCanvas.execute(defaultCommands.DELETE_NODE((DefaultNode) element));
-                        } else if (element instanceof Edge) {
-                            GWT.log("Deleting edge with id " + element.getId());
-                            wirezCanvas.execute(defaultCommands.DELETE_EDGE((DefaultEdge) element));
+                        Element element = ( (DefaultGraph) canvasHandler.getGraph()).getNode(shape.getId());
+                        if (element == null) {
+                            element = ( (DefaultGraph) canvasHandler.getGraph()).getEdge(shape.getId());
+                            if (element != null) {
+                                GWT.log("Deleting edge with id " + element.getUUID());
+                                canvasHandler.execute(defaultCanvasCommands.DELETE_EDGE((DefaultEdge) element));
+                            }
+                        } else {
+                            GWT.log("Deleting node with id " + element.getUUID());
+                            canvasHandler.execute(defaultCanvasCommands.DELETE_NODE((DefaultNode) element));
+
                         }
                     }
                 } else {
                     GWT.log("Cannot delete element, no element selected on canvas.");
-                }*/
+                }
             }
         };
     }
@@ -387,15 +388,18 @@ public class CanvasScreen {
     
     private void buildShape(final Definition definition, final ShapeFactory factory) {
         final Element element = buildElement(definition);
-        if ( element instanceof DefaultNode ) {
-            final DefaultNode defaultNode = (DefaultNode) element;
-            final CanvasCommand command = defaultCanvasCommands.ADD_NODE(defaultNode, factory);
-            canvasHandler.execute(command);
-        } 
         
-        /* TODO: else if ( w instanceof DefaultEdgeFactory) {
-            canvasHandler.execute(defaultCanvasCommands.ADD_EDGE((DefaultEdge) element, factory));
-        }*/
+        CanvasCommand command = null;
+        if ( element instanceof DefaultNode ) {
+            command = defaultCanvasCommands.ADD_NODE((DefaultNode) element, factory);
+        } else if ( element instanceof DefaultEdge ) {
+            command = defaultCanvasCommands.ADD_EDGE((DefaultEdge) element, factory);
+        }
+
+        if ( null != command ) {
+            canvasHandler.execute(command);
+        }
+
     }
 
     private Element<? extends Definition> buildElement(final Definition wirez) {

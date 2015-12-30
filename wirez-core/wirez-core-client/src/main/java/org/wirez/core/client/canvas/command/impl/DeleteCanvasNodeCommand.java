@@ -17,17 +17,12 @@ package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.DeleteNodeCommand;
-import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.DefaultNode;
 import org.wirez.core.api.rule.RuleManager;
-import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 
 /**

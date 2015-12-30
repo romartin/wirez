@@ -14,12 +14,28 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.factory;
+package org.wirez.basicset.api;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.factory.DefaultEdgeFactory;
 import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.impl.DefaultEdgeImpl;
 import org.wirez.core.api.graph.impl.DefaultNode;
 
-public interface DefaultNodeFactory<W extends Definition> extends ElementFactory<W, DefaultNode<W, DefaultEdge>> {
-    
+import java.util.Map;
+import java.util.Set;
+
+public abstract class BasicEdgeDefinition<W extends Definition> extends BasicDefinition implements DefaultEdgeFactory<W> {
+
+    public BasicEdgeDefinition(@MapsTo("id") String id) {
+        super(id);
+    }
+
+    @Override
+    public DefaultEdge<W, DefaultNode> build(String uuid, Set<String> labels, Map<String, Object> properties, Bounds bounds) {
+        return new DefaultEdgeImpl<W>(uuid, (W) this, buildElementProperties(properties), buildElementLabels(labels), bounds);
+    }
+
 }

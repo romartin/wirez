@@ -26,7 +26,6 @@ import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.widgets.event.PaletteShapeSelectedEvent;
 import org.wirez.client.widgets.palette.accordion.Palette;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.core.client.ShapeSet;

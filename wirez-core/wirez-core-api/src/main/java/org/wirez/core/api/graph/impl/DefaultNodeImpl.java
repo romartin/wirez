@@ -21,7 +21,6 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
 
 import java.util.ArrayList;
 import java.util.List;

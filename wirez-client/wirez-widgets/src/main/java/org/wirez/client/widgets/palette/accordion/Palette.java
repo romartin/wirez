@@ -36,7 +36,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.Collection;
 
 @Dependent
 public class Palette implements IsWidget {

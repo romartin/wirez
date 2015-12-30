@@ -18,6 +18,7 @@ package org.wirez.basicset.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.basicset.api.BasicSet;
+import org.wirez.basicset.client.factory.ConnectorFactory;
 import org.wirez.basicset.client.factory.RectangleFactory;
 import org.wirez.basicset.client.resources.BasicSetImageResources;
 import org.wirez.core.api.definition.Definition;
@@ -39,17 +40,21 @@ public class BasicShapeSet implements ShapeSet {
     public static final String ID = "basic";
 
     RectangleFactory rectangleFactory;
+    ConnectorFactory connectorFactory;
     private List<ShapeFactory<? extends Definition, ? extends Shape>> factories;
 
     @Inject
-    public BasicShapeSet(final RectangleFactory rectangleFactory) {
+    public BasicShapeSet(final RectangleFactory rectangleFactory,
+                         final ConnectorFactory connectorFactory) {
         this.rectangleFactory = rectangleFactory;
+        this.connectorFactory = connectorFactory;
     }
 
     @PostConstruct
     public void init() {
         factories = new LinkedList<ShapeFactory<? extends Definition, ? extends Shape>>() {{
             add(rectangleFactory);
+            add(connectorFactory);
         }};
     }
 

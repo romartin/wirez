@@ -17,6 +17,7 @@
 package org.wirez.core.client.canvas.command.impl;
 
 
+import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.api.graph.impl.DefaultNode;
 import org.wirez.core.client.factory.ShapeFactory;
 
@@ -25,6 +26,10 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class DefaultCanvasCommands {
 
+    public ClearCanvasCommand CLEAR() {
+        return new ClearCanvasCommand( );
+    }
+
     public AddCanvasNodeCommand ADD_NODE(final DefaultNode node, final ShapeFactory factory ) {
         return new AddCanvasNodeCommand( node, factory );
     }
@@ -32,5 +37,14 @@ public class DefaultCanvasCommands {
     public DeleteCanvasNodeCommand DELETE_NODE(final DefaultNode node) {
         return new DeleteCanvasNodeCommand( node );
     }
+    
+    public AddCanvasEdgeCommand ADD_EDGE(final DefaultEdge edge, final ShapeFactory factory ) {
+        return new AddCanvasEdgeCommand( edge, factory );
+    }
+
+    public DeleteCanvasEdgeCommand DELETE_EDGE(final DefaultEdge edge) {
+        return new DeleteCanvasEdgeCommand( edge );
+    }
+
 
 }

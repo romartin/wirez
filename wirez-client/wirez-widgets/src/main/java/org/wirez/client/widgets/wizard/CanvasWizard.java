@@ -22,8 +22,6 @@ import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.event.ShapeSetSelectedEvent;
-import org.wirez.core.api.WirezManager;
-import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
 

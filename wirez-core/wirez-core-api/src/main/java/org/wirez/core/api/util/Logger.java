@@ -18,7 +18,6 @@ package org.wirez.core.api.util;
 
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.DefaultEdge;

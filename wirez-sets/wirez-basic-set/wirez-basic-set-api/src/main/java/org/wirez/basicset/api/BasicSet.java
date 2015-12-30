@@ -46,6 +46,7 @@ public class BasicSet implements DefinitionSet {
     private final Collection<Definition> definitions = new HashSet<Definition>() {{
         add( new Diagram() );
         add( new Rectangle() );
+        add( new Connector() );
     }};
     
     @Override

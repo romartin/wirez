@@ -13,40 +13,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.commands.AddNodeCommand;
+import org.wirez.core.api.graph.commands.DeleteEdgeCommand;
+import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.DefaultNode;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
-import org.wirez.core.client.factory.ShapeFactory;
 
 /**
- * A Command to add a DefaultNode to a Graph and add the corresponding canvas shapes.
+ * A Command to delete a DefaultNode from a Graph and delete the corresponding canvas shapes.
  */
-public class AddCanvasNodeCommand extends BaseCanvasCommand {
+public class DeleteCanvasEdgeCommand extends BaseCanvasCommand {
 
-    DefaultNode candidate;
-    ShapeFactory factory;
+    DefaultEdge candidate;
 
-    public AddCanvasNodeCommand(final DefaultNode candidate, final ShapeFactory factory ) {
+    public DeleteCanvasEdgeCommand(final DefaultEdge candidate) {
         this.candidate = candidate;
-        this.factory = factory;
     }
 
     @Override
-    public Command getCommand() {
-        return new AddNodeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
+    protected Command getCommand() {
+        return new DeleteEdgeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
     }
 
     @Override
     public CanvasCommand apply() {
-        ( (BaseCanvasHandler) canvasHandler).register(factory, candidate);
+        ( (BaseCanvasHandler) canvasHandler).deregister(candidate);
         return this;
     }
 
@@ -63,8 +61,8 @@ public class AddCanvasNodeCommand extends BaseCanvasCommand {
     
     @Override
     public String toString() {
-        return "AddCanvasNodeCommand [node=" + candidate.getUUID() + ", factory=" + factory + "]";
+        return "DeleteCanvasEdgeCommand [edge=" + candidate.getUUID() + "]";
     }
-
+    
 
 }

@@ -25,8 +25,8 @@ import org.uberfire.workbench.model.PerspectiveDefinition;
 import org.uberfire.workbench.model.impl.PanelDefinitionImpl;
 import org.uberfire.workbench.model.impl.PartDefinitionImpl;
 import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
-import org.wirez.client.workbench.screens.PaletteScreen;
 import org.wirez.client.workbench.screens.CanvasWizardScreen;
+import org.wirez.client.workbench.screens.PaletteScreen;
 
 import javax.enterprise.context.ApplicationScoped;
 

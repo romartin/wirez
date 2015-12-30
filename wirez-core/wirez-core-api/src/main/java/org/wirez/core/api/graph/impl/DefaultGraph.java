@@ -17,18 +17,9 @@
 package org.wirez.core.api.graph.impl;
 
 
-import org.jboss.errai.common.client.api.annotations.MapsTo;
-import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.HasEdges;
-import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
-import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
-
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Default graph interface supports unconnected edges (implements HasEdges).
@@ -36,4 +27,6 @@ import java.util.Set;
 public interface DefaultGraph<W extends Definition, T extends DefaultNode, E extends DefaultEdge> 
         extends  Graph<W, T>, HasEdges<E> {
 
+    void clear();
+    
 }

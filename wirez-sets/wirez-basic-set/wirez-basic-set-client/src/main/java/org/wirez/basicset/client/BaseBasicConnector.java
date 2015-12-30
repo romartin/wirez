@@ -16,8 +16,9 @@
 
 package org.wirez.basicset.client;
 
-import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.client.core.shape.MultiPath;
+import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
+import com.ait.lienzo.client.core.shape.Decorator;
+import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import com.ait.lienzo.client.core.types.RadialGradient;
@@ -27,18 +28,27 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.impl.BaseShape;
+import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.mutation.MutationContext;
 
-public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> {
+public abstract class BaseBasicConnector<W extends Definition> extends BaseConnector<W> {
 
-    public BaseBasicShape(MultiPath path, Group group, WiresManager manager) {
-        super(path, group, manager);
+
+    public BaseBasicConnector(final AbstractDirectionalMultiPointShape<?> line, 
+                              final Decorator<?> head, 
+                              final Decorator<?> tail, 
+                              final WiresManager manager) {
+        super(line, head, tail, manager);
     }
 
     @Override
-    public void applyElementProperties(Node<W, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
-        super.applyElementProperties(element, wirezCanvas, mutationContext);
+    public Shape getShape() {
+        return getDecoratableLine();
+    }
+
+    @Override
+    public void applyElementProperties(Edge<W, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+        super.applyElementProperties(element, canvasHandler, mutationContext);
 
         // Fill color.
         _applyFillColor(element);
@@ -51,10 +61,9 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
 
         // Apply font styles.
         _applyFont(element);
-        
     }
 
-    protected BaseBasicShape<W> _applyFillColor(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFillColor(Element<W> element) {
         final String color = (String) element.getProperties().get(BgColorBuilder.PROPERTY_ID);
         if (color != null && color.trim().length() > 0) {
             getShape().setFillColor(color);
@@ -62,12 +71,12 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
         return this;
     }
 
-    protected BaseBasicShape<W> _applyFillGradientColor(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFillGradientColor(Element<W> element) {
         _applyFillLinearGradientColor(element);
         return this;
     }
 
-    protected BaseBasicShape<W> _applyFillLinearGradientColor(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFillLinearGradientColor(Element<W> element) {
         final String start = (String) element.getProperties().get(BgGradiendStartColorBuilder.PROPERTY_ID);
         final String end = (String) element.getProperties().get(BgGradiendEndColorBuilder.PROPERTY_ID);
         if ( start != null && start.trim().length() > 0 && end != null && end.trim().length() > 0 ) {
@@ -80,7 +89,7 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
         return this;
     }
 
-    protected BaseBasicShape<W> _applyFillRadialGradientColor(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFillRadialGradientColor(Element<W> element) {
         final String start = (String) element.getProperties().get(BgGradiendStartColorBuilder.PROPERTY_ID);
         final String end = (String) element.getProperties().get(BgGradiendEndColorBuilder.PROPERTY_ID);
         if ( start != null && start.trim().length() > 0 && end != null && end.trim().length() > 0 ) {
@@ -92,7 +101,7 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
         return this;
     }
 
-    protected BaseBasicShape<W> _applyBorders(Element<W> element) {
+    protected BaseBasicConnector<W> _applyBorders(Element<W> element) {
         final String color = (String) element.getProperties().get(BorderColorBuilder.PROPERTY_ID);
         final Integer width = (Integer) element.getProperties().get(BorderSizeBuilder.PROPERTY_ID);
         if (color != null && color.trim().length() > 0) {
@@ -104,7 +113,7 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
         return this;
     }
 
-    protected BaseBasicShape<W> _applyFont(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFont(Element<W> element) {
         // TODO
         /*final Text text = super.getText();
         if ( null != text ) {

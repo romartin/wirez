@@ -16,17 +16,8 @@
 
 package org.wirez.core.api.graph.impl;
 
-import org.jboss.errai.common.client.api.annotations.MapsTo;
-import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public interface DefaultNode<W extends Definition, T extends DefaultEdge> extends Node<W, T> {
     

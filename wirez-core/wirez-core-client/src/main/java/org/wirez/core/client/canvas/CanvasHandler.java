@@ -17,10 +17,8 @@
 package org.wirez.core.client.canvas;
 
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.client.factory.ShapeFactory;
 
 public interface CanvasHandler {
 

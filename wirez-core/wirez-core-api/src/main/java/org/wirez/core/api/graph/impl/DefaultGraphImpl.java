@@ -22,8 +22,6 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.HasEdges;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
 import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
 
@@ -89,8 +87,15 @@ public class DefaultGraphImpl<W extends Definition> extends DefaultElement<W>
     }
 
     @Override
+    public void clear() {
+        nodeStore.clear();
+        edgeStore.clear();
+    }
+    
+    @Override
     public Element<W> copy() {
         // TODO: return new DefaultGraph<W>(uuid, definition, properties, labels, bounds, nodeStore, edgeStore);
         return null;
     }
+    
 }

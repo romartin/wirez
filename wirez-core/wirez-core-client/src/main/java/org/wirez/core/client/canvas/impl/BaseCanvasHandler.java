@@ -197,6 +197,12 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
 
     }
     
+    public void clear() {
+        canvas.clear();
+        canvas.draw();
+        fireCanvasClear();
+    }
+    
     /*
         ***************************************************************************************
         * Listeners handling

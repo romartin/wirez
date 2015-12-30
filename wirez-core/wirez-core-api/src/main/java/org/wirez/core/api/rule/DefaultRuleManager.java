@@ -19,6 +19,7 @@ import org.uberfire.commons.data.Pair;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.rule.violations.CardinalityMaxRuleViolation;
@@ -58,8 +59,8 @@ public class DefaultRuleManager implements RuleManager {
     }
     
     @Override
-    public RuleViolations checkContainment(final Graph<? extends Definition, ? extends Node> target,
-                                           final Node<? extends Definition, ? extends Edge> candidate ) {
+    public RuleViolations checkContainment(final Element<? extends Definition> target,
+                                           final Element<? extends Definition> candidate ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         if ( containmentRules.isEmpty() ) {
             return results;

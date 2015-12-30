@@ -18,6 +18,7 @@ package org.wirez.core.api.rule;
 
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 
@@ -48,9 +49,9 @@ public interface RuleManager {
      * @param candidate Candidate node
      * @return
      */
-    RuleViolations checkContainment(final Graph<? extends Definition, ? extends Node> target,
-                                    final Node<? extends Definition, ? extends Edge> candidate);
-
+    RuleViolations checkContainment(final Element<? extends Definition> target,
+                                    final Element<? extends Definition> candidate);
+    
     /**
      * Check whether adding the proposed Node to the target Process breaks any cardinality Rules
      * @param target Target process

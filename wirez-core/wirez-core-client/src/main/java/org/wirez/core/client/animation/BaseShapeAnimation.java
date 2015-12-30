@@ -16,7 +16,14 @@
 
 package org.wirez.core.client.animation;
 
-import com.ait.lienzo.client.core.shape.Shape;
+import com.ait.lienzo.client.core.animation.IAnimation;
+import com.ait.lienzo.client.core.animation.IAnimationHandle;
+import org.wirez.core.client.Shape;
+import org.wirez.core.client.impl.BaseConnector;
+import org.wirez.core.client.impl.BaseShape;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public abstract class BaseShapeAnimation implements ShapeAnimation {
 
@@ -49,6 +56,32 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
     public BaseShapeAnimation setDuration(long duration) {
         this.duration = duration;
         return this;
+    }
+
+    protected void onClose() {
+
+    }
+    
+    protected com.ait.lienzo.client.core.animation.AnimationCallback animationCallback = new com.ait.lienzo.client.core.animation.AnimationCallback() {
+        @Override
+        public void onClose(IAnimation animation, IAnimationHandle handle) {
+            super.onClose(animation, handle);
+            BaseShapeAnimation.this.onClose();
+            if ( null != callback ) {
+                callback.onComplete();
+            }
+        }
+    };
+
+    public Collection<com.ait.lienzo.client.core.shape.Shape> getDecorators() {
+        if ( shape instanceof BaseShape) {
+            return ( (BaseShape) shape).getDecorators();
+        } else if ( shape instanceof BaseConnector) {
+            Collection<com.ait.lienzo.client.core.shape.Shape> decorators = new ArrayList<com.ait.lienzo.client.core.shape.Shape>(1);
+            decorators.add( ( (BaseConnector) shape).getShape() );
+            return decorators;
+        }
+        return null;
     }
     
 }

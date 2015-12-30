@@ -14,34 +14,12 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client;
+package org.wirez.core.client.factory.control;
 
-import com.ait.lienzo.client.core.shape.Node;
-import org.wirez.core.api.definition.Definition;
+import java.util.Collection;
 
-public interface Shape<W extends Definition> {
+public interface HasShapeControlFactories {
     
-    /**
-     * Get the identifier for the Shape.
-     * @return The identifier for Shape
-     */
-    String getId();
-
-    /**
-     * Set the identifier for the shape.
-     */
-    Shape<W> setId(String id);
-
-    /**
-     * The main shape's node.
-     */
-    Node getShapeNode();
-
-    /**
-     * Destroy the shape and any related components.
-     */
-    void destroy();
-
-    
+    Collection<ShapeControlFactory<?, ?>> getFactories();
     
 }

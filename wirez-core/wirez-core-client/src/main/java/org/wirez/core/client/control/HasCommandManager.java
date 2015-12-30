@@ -14,34 +14,13 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client;
+package org.wirez.core.client.control;
 
-import com.ait.lienzo.client.core.shape.Node;
-import org.wirez.core.api.definition.Definition;
 
-public interface Shape<W extends Definition> {
+import org.wirez.core.client.canvas.command.CanvasCommandManager;
+
+public interface HasCommandManager {
     
-    /**
-     * Get the identifier for the Shape.
-     * @return The identifier for Shape
-     */
-    String getId();
-
-    /**
-     * Set the identifier for the shape.
-     */
-    Shape<W> setId(String id);
-
-    /**
-     * The main shape's node.
-     */
-    Node getShapeNode();
-
-    /**
-     * Destroy the shape and any related components.
-     */
-    void destroy();
-
-    
+    void setCommandManager(CanvasCommandManager commandManager);
     
 }

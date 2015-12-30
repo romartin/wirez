@@ -21,9 +21,12 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
+import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.SelectionManager;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
@@ -179,11 +182,19 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         ******************************************
      */
 
+    /**
+     * Shape's available states.
+     */
+    public enum ShapeState {
+        SELECTED, DESELECTED;
+    }
+    
+    
     @Override
     public SelectionManager<Shape> select(final Shape shape) {
         selectedShapes.add(shape);
         updateViewShapesState().draw();
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, shape, Shape.ShapeState.SELECTED));
+        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, shape, ShapeState.SELECTED));
         return this;
     }
 
@@ -191,7 +202,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     public SelectionManager<Shape> deselect(final Shape shape) {
         selectedShapes.remove(shape);
         updateViewShapesState().draw();
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, shape, Shape.ShapeState.DESELECTED));
+        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, shape, ShapeState.DESELECTED));
         return this;
     }
 
@@ -209,8 +220,6 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     public SelectionManager<Shape> clearSelection() {
         selectedShapes.clear();
         for (final Shape shape : getShapes()) {
-            // Set deselected state.
-            shape.setState(Shape.ShapeState.DESELECTED);
             // Run the deselection animation.
             deselectShape(shape);
         }
@@ -220,12 +229,12 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     }
 
     protected void selectShape(final Shape shape) {
-        // TODO: new WirezSelectionAnimation(shape).setDuration(500).run();
+        new ShapeSelectionAnimation(shape).setDuration(500).run();
     }
 
     protected void deselectShape(final Shape shape) {
         final boolean isConnector = shape instanceof BaseConnector;
-        // TODO: new WirezDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK);
+        new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK);
     }
 
     protected BaseCanvas updateViewShapesState() {
@@ -242,7 +251,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     }
     
     protected void fireCanvasSelected() {
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, null, Shape.ShapeState.SELECTED));
+        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, null, ShapeState.SELECTED));
     }
 
     /*

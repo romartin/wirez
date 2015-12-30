@@ -13,35 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wirez.core.client.control;
 
-package org.wirez.core.client;
+import com.ait.lienzo.client.core.types.Point2D;
+import org.wirez.core.client.impl.BaseShape;
 
-import com.ait.lienzo.client.core.shape.Node;
-import org.wirez.core.api.definition.Definition;
+import java.util.Map;
 
-public interface Shape<W extends Definition> {
-    
-    /**
-     * Get the identifier for the Shape.
-     * @return The identifier for Shape
-     */
-    String getId();
+/**
+ * Manager for Layout related operations
+ */
+public interface LayoutControl {
 
     /**
-     * Set the identifier for the shape.
+     * Get the layout information for the shapes
+     * @param root Root element of the shapes to layout
+     * @return Map of Shape-to-Location information
      */
-    Shape<W> setId(String id);
+    Map<BaseShape, Point2D> getLayoutInformation(final BaseShape root);
 
-    /**
-     * The main shape's node.
-     */
-    Node getShapeNode();
-
-    /**
-     * Destroy the shape and any related components.
-     */
-    void destroy();
-
-    
-    
 }

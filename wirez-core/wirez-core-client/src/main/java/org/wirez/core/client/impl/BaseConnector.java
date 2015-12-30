@@ -25,12 +25,18 @@ import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.Point2DArray;
+import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
+import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.control.DefaultDragControl;
+import org.wirez.core.client.control.HasDragControl;
 import org.wirez.core.client.mutation.*;
 
 public abstract class BaseConnector<W extends Definition> extends WiresConnector implements
@@ -38,10 +44,12 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         HasPositionMutation,
         HasSizeMutation,
         HasPropertyMutation,
-        HasGraphElementMutation<W, Edge<W, Node>> {
+        HasGraphElementMutation<W, Edge<W, Node>>,
+        HasDragControl<Shape<W>, DefaultEdge> {
 
     protected String id;
     protected Group group;
+    protected DefaultDragControl<Shape<W>, DefaultEdge> dragControl;
 
     public BaseConnector(AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
         super(line, head, tail, manager);
@@ -73,24 +81,6 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     @Override
     public com.ait.lienzo.client.core.shape.Node getShapeNode() {
         return getDecoratableLine();
-    }
-
-    @Override
-    public Shape<W> setState(final Shape.ShapeState state) {
-        if (Shape.ShapeState.SELECTED.equals(state)) {
-            doSelect();
-        } else if (Shape.ShapeState.DESELECTED.equals(state)) {
-            doDeSelect();
-        }
-        return this;
-    }
-
-    protected void doSelect() {
-        // TODO: new WirezSelectionAnimation(this).setDuration(0).run();
-    }
-
-    protected void doDeSelect() {
-        // TODO: new WirezDeSelectionAnimation(this, 1, 1, ColorName.BLACK).setDuration(0).run();
     }
 
     @Override
@@ -173,8 +163,15 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
 
     }
 
-    protected final OrthogonalPolyLine createLine(final double... points)
-    {
-        return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
+    @Override
+    public void setDragControl(final DefaultDragControl<Shape<W>, DefaultEdge> dragControl) {
+        this.dragControl = dragControl;
     }
+
+    @Override
+    public DefaultDragControl<Shape<W>, DefaultEdge> getDragControl() {
+        return dragControl;
+    }
+    
+   
 }

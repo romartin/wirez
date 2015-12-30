@@ -14,34 +14,15 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client;
+package org.wirez.core.client.control;
 
-import com.ait.lienzo.client.core.shape.Node;
-import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.client.Shape;
 
-public interface Shape<W extends Definition> {
+public interface HasDragControl<S extends Shape, E extends Element> {
+
+    void setDragControl(DefaultDragControl<S, E> dragControl);
     
-    /**
-     * Get the identifier for the Shape.
-     * @return The identifier for Shape
-     */
-    String getId();
-
-    /**
-     * Set the identifier for the shape.
-     */
-    Shape<W> setId(String id);
-
-    /**
-     * The main shape's node.
-     */
-    Node getShapeNode();
-
-    /**
-     * Destroy the shape and any related components.
-     */
-    void destroy();
-
-    
+    DefaultDragControl<S, E> getDragControl();
     
 }

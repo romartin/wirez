@@ -18,20 +18,45 @@ package org.wirez.core.client.factory;
 
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
+import org.wirez.core.client.factory.control.HasShapeControlFactories;
+import org.wirez.core.client.factory.control.ShapeControlFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>> 
-        implements ShapeFactory<W, S> {
-    
-    @Inject
-    public BaseShapeFactory() {
+        implements ShapeFactory<W, S>, HasShapeControlFactories {
 
+    protected DefaultShapeControlFactories defaultShapeControlFactories;
+    protected Collection<ShapeControlFactory<?, ?>> DEFAULT_FACTORIES;
+
+    @Inject
+    public BaseShapeFactory(DefaultShapeControlFactories defaultShapeControlFactories) {
+        this.defaultShapeControlFactories = defaultShapeControlFactories;
     }
 
     @PostConstruct
     public void init() {
+        DEFAULT_FACTORIES = new ArrayList<ShapeControlFactory<?, ?>>() {{
+            add( getDragControlFactory() );
+            add( getResizeControlFactory() );
+        }};
+    }
+
+    protected ShapeControlFactory<?, ?> getDragControlFactory() {
+        return defaultShapeControlFactories.dragControlFactory();
+    }
+
+    protected ShapeControlFactory<?, ?> getResizeControlFactory() {
+        return defaultShapeControlFactories.resizeControlFactory();
+    }
+
+    @Override
+    public Collection<ShapeControlFactory<?, ?>> getFactories() {
+        return DEFAULT_FACTORIES;
     }
     
 }

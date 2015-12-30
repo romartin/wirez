@@ -17,13 +17,24 @@
 package org.wirez.core.client.impl;
 
 import com.ait.lienzo.client.core.shape.*;
+import com.ait.lienzo.client.core.shape.Shape;
+import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
+import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.client.*;
+import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
+import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.control.DefaultDragControl;
+import org.wirez.core.client.control.DefaultResizeControl;
+import org.wirez.core.client.control.HasDragControl;
+import org.wirez.core.client.control.HasResizeControl;
 import org.wirez.core.client.mutation.*;
 
 import java.util.Collection;
@@ -36,10 +47,14 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         HasPositionMutation,
         HasSizeMutation,
         HasPropertyMutation,
-        HasGraphElementMutation<W, org.wirez.core.api.graph.Node<W, Edge>> {
+        HasGraphElementMutation<W, org.wirez.core.api.graph.Node<W, Edge>>,
+        HasDragControl<org.wirez.core.client.Shape<W>, DefaultNode>,
+        HasResizeControl<org.wirez.core.client.Shape<W>, DefaultNode> {
 
     protected String id;
     protected Text text;
+    protected DefaultDragControl<org.wirez.core.client.Shape<W>, DefaultNode> dragControl;
+    protected DefaultResizeControl<org.wirez.core.client.Shape<W>, DefaultNode> resizeControl;
     
     public BaseShape(final MultiPath path, final Group group, final WiresManager manager) {
         super(path, group, manager);
@@ -66,16 +81,6 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
 
-    @Override
-    public org.wirez.core.client.Shape<W> setState(ShapeState state) {
-        if (org.wirez.core.client.Shape.ShapeState.SELECTED.equals(state)) {
-            doSelect();
-        } else if (org.wirez.core.client.Shape.ShapeState.DESELECTED.equals(state)) {
-            doDeSelect();
-        }
-        return this;
-    }
-
     /*
         ****************************************************************************************
         *                       SHAPE MUTATIONS
@@ -87,14 +92,6 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         return MutationType.STATIC.equals(type);
     }
 
-    protected void doSelect() {
-        // TODO: new WirezSelectionAnimation(this).setDuration(0).run();
-    }
-
-    protected void doDeSelect() {
-        // TODO: new WirezDeSelectionAnimation(this, 0, 0, ColorName.BLACK).setDuration(0).run();
-    }
-    
     @Override
     public void applyElementPosition(final org.wirez.core.api.graph.Node<W, Edge> element,
                                      final CanvasHandler wirezCanvas,
@@ -149,9 +146,27 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
                                    final MutationContext mutationContext) {
         
         if (NameBuilder.PROPERTY_ID.equals(propertyId)) {
-            // TODO
+            final String name = (String) value;
+            if ( name != null ) {
+                if ( text == null ) {
+                    text = buildText(name);
+                    this.addChild(text, WiresLayoutContainer.Layout.CENTER);
+                } else {
+                    text.setText(name);
+                }
+            } else {
+                this.removeChild(text);
+            }
         }
         
+    }
+
+    protected Text buildText(String text) {
+        return new Text(text).setFontSize(14).setFillColor(ColorName.BLACK).setStrokeWidth(1).moveToTop();
+    }
+
+    protected Text getText() {
+        return text;
     }
 
     protected void _applyElementName(final org.wirez.core.api.graph.Node<W, Edge> element,
@@ -169,6 +184,27 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     public void destroy() {
         // TODO
     }
+
+    @Override
+    public void setDragControl(final DefaultDragControl<org.wirez.core.client.Shape<W>, DefaultNode> dragControl) {
+        this.dragControl = dragControl;
+    }
+
+    @Override
+    public DefaultDragControl<org.wirez.core.client.Shape<W>, DefaultNode> getDragControl() {
+        return dragControl;
+    }
+
+    @Override
+    public void setResizeControl(final DefaultResizeControl<org.wirez.core.client.Shape<W>, DefaultNode> resizeControl) {
+        this.resizeControl = resizeControl;
+    }
+
+    @Override
+    public DefaultResizeControl<org.wirez.core.client.Shape<W>, DefaultNode> getResizeControl() {
+        return resizeControl;
+    }
+
 
     @Override
     public boolean equals(Object obj) {

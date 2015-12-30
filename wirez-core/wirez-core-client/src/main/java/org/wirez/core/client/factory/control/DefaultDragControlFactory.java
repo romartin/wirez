@@ -14,34 +14,17 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client;
+package org.wirez.core.client.factory.control;
 
-import com.ait.lienzo.client.core.shape.Node;
-import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.client.Shape;
+import org.wirez.core.client.control.DefaultDragControl;
 
-public interface Shape<W extends Definition> {
+public class DefaultDragControlFactory<S extends Shape, E extends Element> implements ShapeControlFactory<S, DefaultDragControl<S, E>> {
     
-    /**
-     * Get the identifier for the Shape.
-     * @return The identifier for Shape
-     */
-    String getId();
-
-    /**
-     * Set the identifier for the shape.
-     */
-    Shape<W> setId(String id);
-
-    /**
-     * The main shape's node.
-     */
-    Node getShapeNode();
-
-    /**
-     * Destroy the shape and any related components.
-     */
-    void destroy();
-
-    
+    @Override
+    public DefaultDragControl<S, E> build(S shape) {
+        return new DefaultDragControl<S, E>();
+    }
     
 }

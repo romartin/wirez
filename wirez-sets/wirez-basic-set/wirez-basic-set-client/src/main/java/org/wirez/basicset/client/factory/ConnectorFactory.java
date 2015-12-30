@@ -26,6 +26,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.BaseShapeFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -35,8 +36,8 @@ import javax.inject.Inject;
 public class ConnectorFactory extends BaseShapeFactory<Connector, ConnectorShape> {
 
     @Inject
-    public ConnectorFactory() {
-        super();
+    public ConnectorFactory(final DefaultShapeControlFactories defaultShapeControlFactories) {
+        super(defaultShapeControlFactories);
     }
 
     @Override

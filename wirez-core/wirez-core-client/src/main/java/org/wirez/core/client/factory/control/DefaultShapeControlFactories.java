@@ -14,34 +14,25 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client;
+package org.wirez.core.client.factory.control;
 
-import com.ait.lienzo.client.core.shape.Node;
-import org.wirez.core.api.definition.Definition;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
-public interface Shape<W extends Definition> {
+@ApplicationScoped
+public class DefaultShapeControlFactories {
+
+    private DefaultDragControlFactory dragControlFactory = new DefaultDragControlFactory();
+    private DefaultResizeControlFactory resizeControlFactory = new DefaultResizeControlFactory();
     
-    /**
-     * Get the identifier for the Shape.
-     * @return The identifier for Shape
-     */
-    String getId();
+    @Produces
+    public DefaultDragControlFactory dragControlFactory() {
+        return dragControlFactory;
+    }
 
-    /**
-     * Set the identifier for the shape.
-     */
-    Shape<W> setId(String id);
+    @Produces
+    public DefaultResizeControlFactory resizeControlFactory() {
+        return resizeControlFactory;
+    }
 
-    /**
-     * The main shape's node.
-     */
-    Node getShapeNode();
-
-    /**
-     * Destroy the shape and any related components.
-     */
-    void destroy();
-
-    
-    
 }

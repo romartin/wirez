@@ -19,6 +19,7 @@ package org.wirez.core.client.event;
 import org.uberfire.workbench.events.UberFireEvent;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.impl.BaseCanvas;
 
 /**
  * CDI event when the shape's state for an element in the graph has been modified. 
@@ -27,11 +28,11 @@ public class ShapeStateModifiedEvent implements UberFireEvent {
     
     private Canvas canvas;
     private Shape shape;
-    private Shape.ShapeState state;
+    private BaseCanvas.ShapeState state;
 
     public ShapeStateModifiedEvent(final Canvas canvas,
                                    final Shape shape,
-                                   final Shape.ShapeState state) {
+                                   final BaseCanvas.ShapeState state) {
         this.canvas = canvas;
         this.shape = shape;
         this.state = state;
@@ -45,7 +46,7 @@ public class ShapeStateModifiedEvent implements UberFireEvent {
         return shape;
     }
 
-    public Shape.ShapeState getState() {
+    public BaseCanvas.ShapeState getState() {
         return state;
     }
 

@@ -26,6 +26,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.BaseShapeFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -35,8 +36,8 @@ import javax.inject.Inject;
 public class RectangleFactory extends BaseShapeFactory<Rectangle, RectangleShape> {
 
     @Inject
-    public RectangleFactory() {
-        super();
+    public RectangleFactory(final DefaultShapeControlFactories defaultShapeControlFactories) {
+        super(defaultShapeControlFactories);
     }
 
     @Override

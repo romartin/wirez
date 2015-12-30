@@ -36,6 +36,9 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.*;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
+import org.wirez.core.client.control.*;
+import org.wirez.core.client.factory.control.HasShapeControlFactories;
+import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.mutation.*;
 
@@ -142,8 +145,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
 
         }
 
-        // TODO: Shape controls
-        /*if (factory instanceof HasShapeControlFactories) {
+        if (factory instanceof HasShapeControlFactories) {
 
             final Collection<ShapeControlFactory<?, ?>> factories = ((HasShapeControlFactories) factory).getFactories();
             for (ShapeControlFactory controlFactory : factories) {
@@ -166,7 +168,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                 }
             }
 
-        }*/
+        }
 
         // TODO: Contextual menu.
         /*if (canvas instanceof HasContextualMenu) {

@@ -44,13 +44,7 @@ public class DefaultCommandManager implements CommandManager<Command> {
         final CommandResult result = command.allow( ruleManager );
         final DefaultCommandResults results = new DefaultCommandResults();
         results.getItems().add(result);
-        boolean isAllowed = true;
-        if (CommandResult.Type.ERROR.equals(result.getType())) {
-            isAllowed = false;
-            notifyViolations("CHECKING IF COMMAND IS ALLOWED: " + command.toString(), results);
-        }
-        
-        return isAllowed;
+        return  !CommandResult.Type.ERROR.equals(result.getType());
     }
 
     @Override
@@ -63,36 +57,10 @@ public class DefaultCommandManager implements CommandManager<Command> {
         for (final Command command : commands) {
             final CommandResult result = command.execute( ruleManager );
             results.getItems().add(result);
-            notifyViolations("EXECUTING COMMAND: " + command.toString(), results);
         }
         return results;
     }
     
-    private void notifyViolations(final String uuid, final CommandResults results) {
-        if ( null != results ) {
-            final Iterable<CommandResult> it = results.results();
-            _notifyViolations(uuid, it);
-        }
-     }
-    
-    private void _notifyViolations(final String uuid, final Iterable<CommandResult> it) {
-        final Iterator<CommandResult> iterator = it.iterator();
-        while (iterator.hasNext()) {
-            final CommandResult result = iterator.next();
-            notificationEvent.fire(new NotificationEvent(getNotificationType(result.getType()), uuid, result.getMessage()));
-        }
-    }
-    
-    private NotificationEvent.Type getNotificationType(final CommandResult.Type resultType) {
-        if (CommandResult.Type.ERROR.equals(resultType)) {
-            return NotificationEvent.Type.ERROR;
-        } else if (CommandResult.Type.WARNING.equals(resultType)) {
-            return NotificationEvent.Type.WARNING;
-        } else {
-            return NotificationEvent.Type.INFO;
-        }
-    }
-
     @Override
     public CommandResults undo( final RuleManager ruleManager ) {
         // TODO

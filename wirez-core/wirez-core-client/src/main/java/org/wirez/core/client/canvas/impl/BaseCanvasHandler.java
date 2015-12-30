@@ -19,6 +19,7 @@ package org.wirez.core.client.canvas.impl;
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.google.gwt.core.client.GWT;
+import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
 import org.wirez.core.api.definition.Definition;
@@ -41,6 +42,7 @@ import org.wirez.core.client.mutation.*;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 // TODO: Implement SelectionManager<Element>
@@ -265,7 +267,15 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     public boolean allow(final RuleManager ruleManager,
                          final CanvasCommand command) {
         command.setCanvas(this);
-        return commandManager.allow(ruleManager, command);
+        boolean isAllowed = commandManager.allow(ruleManager, command);
+        
+        if (!isAllowed) {
+            notificationEvent.fire(new NotificationEvent(NotificationEvent.Type.ERROR, 
+                    "Canvas=" + this.getSettings().getUUID(), 
+                    "NOT ALLOWED=" + command.toString()));
+        }
+        
+        return isAllowed;
     }
 
     @Override
@@ -277,11 +287,40 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         for (final CanvasCommand command : commands) {
             command.setCanvas(this);
             results = commandManager.execute(ruleManager, command);
+            
             // TODO: Check errors.
+            
+            _notifyViolations("Canvas=" + getSettings().getTitle() + " EXECUTED=" + command.toString(), results);
+            
             command.apply();
         }
 
         return results;
+    }
+
+    private void _notifyViolations(final String uuid, final CommandResults results) {
+        if ( null != results ) {
+            final Iterable<CommandResult> it = results.results();
+            _notifyViolations(uuid, it);
+        }
+    }
+
+    private void _notifyViolations(final String uuid, final Iterable<CommandResult> it) {
+        final Iterator<CommandResult> iterator = it.iterator();
+        while (iterator.hasNext()) {
+            final CommandResult result = iterator.next();
+            notificationEvent.fire(new NotificationEvent(getNotificationType(result.getType()), uuid, result.getMessage()));
+        }
+    }
+
+    private NotificationEvent.Type getNotificationType(final CommandResult.Type resultType) {
+        if (CommandResult.Type.ERROR.equals(resultType)) {
+            return NotificationEvent.Type.ERROR;
+        } else if (CommandResult.Type.WARNING.equals(resultType)) {
+            return NotificationEvent.Type.WARNING;
+        } else {
+            return NotificationEvent.Type.INFO;
+        }
     }
 
     @Override

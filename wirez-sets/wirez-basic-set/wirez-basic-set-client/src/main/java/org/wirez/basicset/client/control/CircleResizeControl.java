@@ -20,20 +20,20 @@ import org.wirez.basicset.api.property.RadiusBuilder;
 import org.wirez.basicset.client.CircleShape;
 import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
 import org.wirez.core.api.graph.commands.UpdateElementSizeCommand;
-import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
 import org.wirez.core.client.control.DefaultResizeControl;
 
-public class CircleResizeControl extends DefaultResizeControl<CircleShape, DefaultNode> {
+public class CircleResizeControl extends DefaultResizeControl<CircleShape, ViewNode> {
 
     @Override
-    protected void doResizeStep(CircleShape shape, DefaultNode element, double width, double height) {
+    protected void doResizeStep(CircleShape shape, ViewNode element, double width, double height) {
         double radius = getRadius(width, height);
         shape.setRadius(radius);
     }
     
     @Override
-    protected void doResizeEnd(CircleShape shape, DefaultNode element, double width, double height) {
+    protected void doResizeEnd(CircleShape shape, ViewNode element, double width, double height) {
         double radius = getRadius(width, height);
         commandManager.execute(
                 new CompositeElementCanvasCommand(element)

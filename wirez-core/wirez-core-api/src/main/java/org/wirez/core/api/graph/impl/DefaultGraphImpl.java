@@ -21,7 +21,8 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
 import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
 
@@ -32,8 +33,8 @@ import java.util.Set;
  * Default graph interface supports unconnected edges (implements HasEdges).
  */
 @Portable
-public class DefaultGraphImpl<W extends Definition> extends DefaultElement<W> 
-        implements DefaultGraph<W, DefaultNode, DefaultEdge> {
+public class DefaultGraphImpl<W extends Definition> extends ViewElementImpl<W> 
+        implements DefaultGraph<W, Node, Edge> {
 
     private final DefaultGraphNodeStore nodeStore;
     private final DefaultGraphEdgeStore edgeStore;
@@ -51,38 +52,38 @@ public class DefaultGraphImpl<W extends Definition> extends DefaultElement<W>
     }
 
     @Override
-    public DefaultNode addNode(final DefaultNode node) {
+    public Node addNode(final Node node) {
         return nodeStore.add(node);
     }
 
     @Override
-    public DefaultNode removeNode(final String uuid) {
+    public Node removeNode(final String uuid) {
         return nodeStore.remove(uuid);
     }
 
     @Override
-    public DefaultNode getNode(final String uuid) {
+    public Node getNode(final String uuid) {
         return nodeStore.get(uuid);
     }
 
     @Override
-    public Iterable<DefaultNode> nodes() {
+    public Iterable<Node> nodes() {
         return nodeStore;
     }
 
-    public DefaultEdge addEdge(final DefaultEdge edge) {
+    public Edge addEdge(final Edge edge) {
         return edgeStore.add(edge);
     }
 
-    public DefaultEdge removeEdge(final String uuid) {
+    public Edge removeEdge(final String uuid) {
         return edgeStore.remove(uuid);
     }
 
-    public DefaultEdge getEdge(final String uuid) {
+    public Edge getEdge(final String uuid) {
         return edgeStore.get(uuid);
     }
 
-    public Iterable<DefaultEdge> edges() {
+    public Iterable<Edge> edges() {
         return edgeStore;
     }
 
@@ -90,12 +91,6 @@ public class DefaultGraphImpl<W extends Definition> extends DefaultElement<W>
     public void clear() {
         nodeStore.clear();
         edgeStore.clear();
-    }
-    
-    @Override
-    public Element<W> copy() {
-        // TODO: return new DefaultGraph<W>(uuid, definition, properties, labels, bounds, nodeStore, edgeStore);
-        return null;
     }
     
 }

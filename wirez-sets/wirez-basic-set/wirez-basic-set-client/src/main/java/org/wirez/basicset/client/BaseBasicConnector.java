@@ -27,6 +27,8 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.impl.ViewEdge;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.mutation.MutationContext;
@@ -47,7 +49,7 @@ public abstract class BaseBasicConnector<W extends Definition> extends BaseConne
     }
 
     @Override
-    public void applyElementProperties(Edge<W, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementProperties(ViewEdge<W, ViewNode> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         super.applyElementProperties(element, canvasHandler, mutationContext);
 
         // Fill color.
@@ -63,7 +65,7 @@ public abstract class BaseBasicConnector<W extends Definition> extends BaseConne
         _applyFont(element);
     }
 
-    protected BaseBasicConnector<W> _applyFillColor(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFillColor(ViewEdge<W, ViewNode> element) {
         final String color = (String) element.getProperties().get(BgColorBuilder.PROPERTY_ID);
         if (color != null && color.trim().length() > 0) {
             getShape().setFillColor(color);
@@ -71,12 +73,12 @@ public abstract class BaseBasicConnector<W extends Definition> extends BaseConne
         return this;
     }
 
-    protected BaseBasicConnector<W> _applyFillGradientColor(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFillGradientColor(ViewEdge<W, ViewNode> element) {
         _applyFillLinearGradientColor(element);
         return this;
     }
 
-    protected BaseBasicConnector<W> _applyFillLinearGradientColor(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFillLinearGradientColor(ViewEdge<W, ViewNode> element) {
         final String start = (String) element.getProperties().get(BgGradiendStartColorBuilder.PROPERTY_ID);
         final String end = (String) element.getProperties().get(BgGradiendEndColorBuilder.PROPERTY_ID);
         if ( start != null && start.trim().length() > 0 && end != null && end.trim().length() > 0 ) {
@@ -89,7 +91,7 @@ public abstract class BaseBasicConnector<W extends Definition> extends BaseConne
         return this;
     }
 
-    protected BaseBasicConnector<W> _applyFillRadialGradientColor(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFillRadialGradientColor(ViewEdge<W, ViewNode> element) {
         final String start = (String) element.getProperties().get(BgGradiendStartColorBuilder.PROPERTY_ID);
         final String end = (String) element.getProperties().get(BgGradiendEndColorBuilder.PROPERTY_ID);
         if ( start != null && start.trim().length() > 0 && end != null && end.trim().length() > 0 ) {
@@ -101,7 +103,7 @@ public abstract class BaseBasicConnector<W extends Definition> extends BaseConne
         return this;
     }
 
-    protected BaseBasicConnector<W> _applyBorders(Element<W> element) {
+    protected BaseBasicConnector<W> _applyBorders(ViewEdge<W, ViewNode> element) {
         final String color = (String) element.getProperties().get(BorderColorBuilder.PROPERTY_ID);
         final Integer width = (Integer) element.getProperties().get(BorderSizeBuilder.PROPERTY_ID);
         if (color != null && color.trim().length() > 0) {
@@ -113,7 +115,7 @@ public abstract class BaseBasicConnector<W extends Definition> extends BaseConne
         return this;
     }
 
-    protected BaseBasicConnector<W> _applyFont(Element<W> element) {
+    protected BaseBasicConnector<W> _applyFont(ViewEdge<W, ViewNode> element) {
         // TODO
         /*final Text text = super.getText();
         if ( null != text ) {

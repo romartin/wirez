@@ -19,9 +19,9 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
-import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
@@ -35,10 +35,10 @@ import java.util.List;
 public class DeleteNodeCommand implements Command {
 
     private DefaultGraph target;
-    private DefaultNode candidate;
+    private ViewNode candidate;
 
     public DeleteNodeCommand(final DefaultGraph target,
-                             final DefaultNode candidate ) {
+                             final ViewNode candidate ) {
         this.target = PortablePreconditions.checkNotNull( "target",
                                                           target );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
@@ -56,16 +56,16 @@ public class DeleteNodeCommand implements Command {
         final CommandResult results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
             
-            final List<DefaultEdge> inEdges = candidate.getInEdges();
+            final List<ViewEdge> inEdges = candidate.getInEdges();
             if ( null != inEdges ) {
-                for (final DefaultEdge inEdge : inEdges) {
+                for (final ViewEdge inEdge : inEdges) {
                     inEdge.setTargetNode(null);
                 }
             }
 
-            final List<DefaultEdge> outEdges = candidate.getOutEdges();
+            final List<ViewEdge> outEdges = candidate.getOutEdges();
             if ( null != outEdges ) {
-                for (final DefaultEdge outEdge : outEdges) {
+                for (final ViewEdge outEdge : outEdges) {
                     outEdge.setSourceNode(null);
                 }
             }

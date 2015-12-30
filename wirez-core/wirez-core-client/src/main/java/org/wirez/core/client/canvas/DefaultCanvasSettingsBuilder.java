@@ -57,7 +57,7 @@ public class DefaultCanvasSettingsBuilder implements CanvasSettingsBuilder<Defau
     }
 
     @Override
-    public DefaultCanvasSettingsBuilder graph(final Graph<? extends Definition, ? extends Node> graph) {
+    public DefaultCanvasSettingsBuilder graph(final Graph<? extends Node> graph) {
         settings.setGraph(graph);
         return this;
     }

@@ -32,7 +32,7 @@ public interface CanvasSettingsBuilder<T> {
     
     T title(String title);
     
-    T graph(Graph<? extends Definition, ? extends Node> graph);
+    T graph(Graph<? extends Node> graph);
     
     T canvas(Canvas canvas);
     

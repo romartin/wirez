@@ -18,9 +18,10 @@ package org.wirez.core.api.graph.processing;
 
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.HasView;
+import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.impl.ViewNode;
 
 import java.util.*;
 
@@ -30,18 +31,18 @@ public class GraphVisitor {
         
         void visitGraph(DefaultGraph graph);
 
-        void visitNode(DefaultNode node);
+        void visitNode(ViewNode node);
 
-        void visitEdge(DefaultEdge edge);
+        void visitEdge(ViewEdge edge);
         
-        void visitUnconnectedEdge(DefaultEdge edge);
+        void visitUnconnectedEdge(ViewEdge edge);
         
         void end();
         
     }
 
     public interface BoundsVisitor {
-        void visitBounds(Element element, Bounds.Bound ul, Bounds.Bound lr);
+        void visitBounds(HasView element, Bounds.Bound ul, Bounds.Bound lr);
     }
     
     public interface PropertyVisitor {
@@ -85,10 +86,10 @@ public class GraphVisitor {
     }
 
     private void visitUnconnectedEdges() {
-        Iterable<DefaultEdge> edges = graph.edges();
-        Iterator<DefaultEdge> edgesIt = edges.iterator();
+        Iterable<ViewEdge> edges = graph.edges();
+        Iterator<ViewEdge> edgesIt = edges.iterator();
         while (edgesIt.hasNext()) {
-            DefaultEdge edge = edgesIt.next();
+            ViewEdge edge = edgesIt.next();
             if (!this.processesEdges.contains(edge.getUUID())) {
                 visitor.visitUnconnectedEdge(edge);
             }
@@ -103,35 +104,35 @@ public class GraphVisitor {
         visitProperties(graph);
         visitBounds(graph)
         ;
-        Collection<DefaultNode> startingNodes = getStartingNodes(graph);
+        Collection<ViewNode> startingNodes = getStartingNodes(graph);
         if (!startingNodes.isEmpty()) {
-            for (DefaultNode node : startingNodes) {
+            for (ViewNode node : startingNodes) {
                 visitNode(node);
             }
         }
     }
 
-    private void visitNode(final DefaultNode graphNode) {
+    private void visitNode(final ViewNode graphNode) {
         visitor.visitNode(graphNode);
         visitProperties(graphNode);
         visitBounds(graphNode);
                 
-        List<DefaultEdge> outEdges = graphNode.getOutEdges();
+        List<ViewEdge> outEdges = graphNode.getOutEdges();
         if (outEdges != null && !outEdges.isEmpty()) {
-            for (DefaultEdge edge : outEdges) {
+            for (ViewEdge edge : outEdges) {
                 visitEdge(edge);
             }
         }
     }
 
-    private void visitEdge(final DefaultEdge edge) {
+    private void visitEdge(final ViewEdge edge) {
         processesEdges.add(edge.getUUID());
         if (VisitorPolicy.EDGE_FIRST.equals(policy)) {
             visitor.visitEdge(edge);
             visitProperties(edge);
             visitBounds(edge);
         }
-        final DefaultNode outNode = (DefaultNode) edge.getTargetNode();
+        final ViewNode outNode = (ViewNode) edge.getTargetNode();
         if (outNode != null) {
             visitNode(outNode);
         }
@@ -142,12 +143,12 @@ public class GraphVisitor {
         }
     }
 
-    private Collection<DefaultNode> getStartingNodes(final DefaultGraph graph) {
-        final Collection<DefaultNode> result = new LinkedList<DefaultNode>();
+    private Collection<ViewNode> getStartingNodes(final DefaultGraph graph) {
+        final Collection<ViewNode> result = new LinkedList<ViewNode>();
 
-        final Iterator<DefaultNode> nodesIt = graph.nodes().iterator();
+        final Iterator<ViewNode> nodesIt = graph.nodes().iterator();
         while (nodesIt.hasNext()) {
-            final DefaultNode node = nodesIt.next();
+            final ViewNode node = nodesIt.next();
             if (node.getInEdges() == null || !node.getInEdges().iterator().hasNext()) {
                 result.add(node);
             }
@@ -167,7 +168,7 @@ public class GraphVisitor {
         }
     }
 
-    private void visitBounds(final Element element) {
+    private void visitBounds(final HasView element) {
         if (element != null && boundsVisitor != null) {
             final Bounds bounds = element.getBounds();
             if (bounds != null) {

@@ -28,7 +28,7 @@ public class DefaultCanvasSettings implements CanvasSettings {
     private DefinitionSet definitionSet;
     private ShapeSet shapeSet;
     private String title;
-    private Graph<? extends Definition, ? extends Node> graph;
+    private Graph<? extends Node> graph;
     private Canvas canvas;
 
     public DefaultCanvasSettings() {
@@ -43,11 +43,11 @@ public class DefaultCanvasSettings implements CanvasSettings {
         this.uuid = uuid;
     }
 
-    public Graph<? extends Definition, ? extends Node> getGraph() {
+    public Graph<? extends Node> getGraph() {
         return graph;
     }
 
-    public void setGraph(Graph<? extends Definition, ? extends Node> graph) {
+    public void setGraph(Graph<? extends Node> graph) {
         this.graph = graph;
     }
 

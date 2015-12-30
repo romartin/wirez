@@ -21,16 +21,15 @@ import org.wirez.core.api.definition.Definition;
 import java.util.Map;
 import java.util.Set;
 
-public interface Element<W extends Definition> extends Clonable<Element<W>> {
+/**
+ * An element of a graph. All graph elements (nodes, edges, etc) must have a unique identifier, a collection of properties and a set of labels (roles).
+ */
+public interface Element {
     
     String getUUID();
-
-    W getDefinition();
 
     Map<String, Object> getProperties();
     
     Set<String> getLabels();
-    
-    Bounds getBounds();
     
 }

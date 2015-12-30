@@ -19,7 +19,7 @@ package org.wirez.core.client.canvas.command.impl;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.commands.DeleteEdgeCommand;
-import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
@@ -31,9 +31,9 @@ import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
  */
 public class DeleteCanvasEdgeCommand extends BaseCanvasCommand {
 
-    DefaultEdge candidate;
+    ViewEdge candidate;
 
-    public DeleteCanvasEdgeCommand(final DefaultEdge candidate) {
+    public DeleteCanvasEdgeCommand(final ViewEdge candidate) {
         this.candidate = candidate;
     }
 

@@ -20,7 +20,11 @@ import org.wirez.core.api.definition.Definition;
 
 import java.util.List;
 
-public interface Node<W extends Definition, E extends Edge> extends Element<W> {
+/**
+ * A generic node of a graph. A node can contain incoming and/or outgoing edges.
+ * @param <E> The edge type.
+ */
+public interface Node<E extends Edge> extends Element {
     
     List<E> getInEdges();
 

@@ -20,9 +20,10 @@ import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.HasView;
+import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.graph.processing.GraphVisitor;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -83,7 +84,7 @@ public class Logger {
             }
 
             @Override
-            public void visitNode(DefaultNode node) {
+            public void visitNode(ViewNode node) {
                 String graphTitle = node.getDefinition().getContent().getTitle();
                 String graphDesc = node.getDefinition().getContent().getDescription();
                 log("**************************************************************************************");
@@ -91,7 +92,7 @@ public class Logger {
                 log("Node Title: " + graphTitle);
                 log("Node Description: " + graphDesc);
 
-                List<DefaultEdge> outEdges = (List<DefaultEdge>) node.getOutEdges();
+                List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
                 if (outEdges == null || outEdges.isEmpty()) {
                     log("No outgoing edges found");
                 } else {
@@ -101,7 +102,7 @@ public class Logger {
             }
 
             @Override
-            public void visitEdge(DefaultEdge edge) {
+            public void visitEdge(ViewEdge edge) {
                 if (edge == null) {
                     error("Edge is null!");
                 } else {
@@ -109,7 +110,7 @@ public class Logger {
 
                     log("Edge Id: " + edgeId);
 
-                    final DefaultNode outNode = (DefaultNode) edge.getTargetNode();
+                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
                     if (outNode == null) {
                         error("No outgoing node found");
                     } else {
@@ -120,7 +121,7 @@ public class Logger {
             }
 
             @Override
-            public void visitUnconnectedEdge(DefaultEdge edge) {
+            public void visitUnconnectedEdge(ViewEdge edge) {
                 if (edge == null) {
                     error("Edge unconnected is null!");
                 } else {
@@ -128,7 +129,7 @@ public class Logger {
 
                     log("Edge unconnected Id: " + edgeId);
 
-                    final DefaultNode outNode = (DefaultNode) edge.getTargetNode();
+                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
                     if (outNode == null) {
                         error("No outgoing node found");
                     } else {
@@ -145,7 +146,7 @@ public class Logger {
         }, GraphVisitor.VisitorPolicy.EDGE_FIRST)
                 .setBoundsVisitor(new GraphVisitor.BoundsVisitor() {
                     @Override
-                    public void visitBounds(Element element, Bounds.Bound ul, Bounds.Bound lr) {
+                    public void visitBounds(HasView element, Bounds.Bound ul, Bounds.Bound lr) {
                         log(" Bound UL [x=" + ul.getX() + ", y=" + ul.getY() + "]");
                         log(" Bound LR [x=" + lr.getX() + ", y=" + lr.getY() + "]");
                     }

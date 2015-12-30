@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.mutation;
+package org.wirez.core.api.graph.impl;
 
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.impl.ViewElement;
-import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.HasView;
 
-public interface HasGraphElementMutation<W extends Definition, E extends ViewElement<W>> extends HasMutation {
-    
-    void applyElementPosition(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
+/**
+ * An element of a graph that has a view representation.
+ * @param <W> The view definition.
+ */
+public interface ViewElement<W extends Definition> extends Element, HasView<W> {
 
-    void applyElementSize(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
-
-    void applyElementProperties(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
+    void setBounds(Bounds bounds);
     
 }

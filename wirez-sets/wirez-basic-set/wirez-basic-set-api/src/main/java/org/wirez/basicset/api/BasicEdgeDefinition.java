@@ -19,23 +19,23 @@ package org.wirez.basicset.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.factory.DefaultEdgeFactory;
-import org.wirez.core.api.graph.impl.DefaultEdge;
-import org.wirez.core.api.graph.impl.DefaultEdgeImpl;
-import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.factory.ViewEdgeFactory;
+import org.wirez.core.api.graph.impl.ViewEdge;
+import org.wirez.core.api.graph.impl.ViewEdgeImpl;
+import org.wirez.core.api.graph.impl.ViewNode;
 
 import java.util.Map;
 import java.util.Set;
 
-public abstract class BasicEdgeDefinition<W extends Definition> extends BasicDefinition implements DefaultEdgeFactory<W> {
+public abstract class BasicEdgeDefinition<W extends Definition> extends BasicDefinition implements ViewEdgeFactory<W> {
 
     public BasicEdgeDefinition(@MapsTo("id") String id) {
         super(id);
     }
 
     @Override
-    public DefaultEdge<W, DefaultNode> build(String uuid, Set<String> labels, Map<String, Object> properties, Bounds bounds) {
-        return new DefaultEdgeImpl<W>(uuid, (W) this, buildElementProperties(properties), buildElementLabels(labels), bounds);
+    public ViewEdge<W, ViewNode> build(String uuid, Set<String> labels, Map<String, Object> properties, Bounds bounds) {
+        return new ViewEdgeImpl<W>(uuid, (W) this, buildElementProperties(properties), buildElementLabels(labels), bounds);
     }
 
 }

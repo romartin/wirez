@@ -19,6 +19,7 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.commands.UpdateElementSizeCommand;
+import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
@@ -31,11 +32,11 @@ import org.wirez.core.client.mutation.HasGraphElementMutation;
  */
 public class SetCanvasElementSizeCommand extends BaseCanvasCommand implements CanvasCommand {
 
-    Element element;
+    ViewElement element;
     double w;
     double h;
     
-    public SetCanvasElementSizeCommand(final Element element ,
+    public SetCanvasElementSizeCommand(final ViewElement element ,
                                        final double w,
                                        final double h) {
         this.element = element;

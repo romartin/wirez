@@ -20,13 +20,14 @@ import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresEvent;
 import com.ait.lienzo.client.core.shape.wires.event.ResizeEvent;
 import com.ait.lienzo.client.core.shape.wires.event.ResizeHandler;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.SetCanvasElementSizeCommand;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.StaticMutationContext;
 
-public class DefaultResizeControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E> {
+public class DefaultResizeControl<S extends Shape, E extends ViewElement> extends BaseShapeControl<S, E> {
     
     @Override
     public void enable(final S shape, final E element) {

@@ -18,7 +18,12 @@ package org.wirez.core.api.graph;
 
 import org.wirez.core.api.definition.Definition;
 
-public interface Graph<W extends Definition, N extends Node> extends Element<W> {
+/**
+ * This interface is the main entry point for a graph representation.
+ * 
+ * @param <N> Type of nodes that it contains.
+ */
+public interface Graph<N extends Node> extends Element {
 
     N addNode(N node);
 

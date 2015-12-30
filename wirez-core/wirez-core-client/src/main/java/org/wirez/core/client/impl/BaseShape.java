@@ -26,10 +26,8 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.impl.DefaultNode;
-import org.wirez.core.client.*;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
-import org.wirez.core.client.animation.ShapeSelectionAnimation;
+import org.wirez.core.api.graph.impl.ViewEdge;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.DefaultDragControl;
 import org.wirez.core.client.control.DefaultResizeControl;
@@ -47,14 +45,14 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         HasPositionMutation,
         HasSizeMutation,
         HasPropertyMutation,
-        HasGraphElementMutation<W, org.wirez.core.api.graph.Node<W, Edge>>,
-        HasDragControl<org.wirez.core.client.Shape<W>, DefaultNode>,
-        HasResizeControl<org.wirez.core.client.Shape<W>, DefaultNode> {
+        HasGraphElementMutation<W, org.wirez.core.api.graph.impl.ViewNode<W, Edge>>,
+        HasDragControl<org.wirez.core.client.Shape<W>, ViewNode>,
+        HasResizeControl<org.wirez.core.client.Shape<W>, ViewNode> {
 
     protected String id;
     protected Text text;
-    protected DefaultDragControl<org.wirez.core.client.Shape<W>, DefaultNode> dragControl;
-    protected DefaultResizeControl<org.wirez.core.client.Shape<W>, DefaultNode> resizeControl;
+    protected DefaultDragControl<org.wirez.core.client.Shape<W>, ViewNode> dragControl;
+    protected DefaultResizeControl<org.wirez.core.client.Shape<W>, ViewNode> resizeControl;
     
     public BaseShape(final MultiPath path, final Group group, final WiresManager manager) {
         super(path, group, manager);
@@ -93,7 +91,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void applyElementPosition(final org.wirez.core.api.graph.Node<W, Edge> element,
+    public void applyElementPosition(final ViewNode<W, Edge> element,
                                      final CanvasHandler wirezCanvas,
                                      final MutationContext mutationContext) {
         final Bounds.Bound ul = element.getBounds().getUpperLeft();
@@ -104,7 +102,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void applyElementSize(final org.wirez.core.api.graph.Node<W, Edge> element,
+    public void applyElementSize(final ViewNode<W, Edge> element,
                                  final CanvasHandler wirezCanvas,
                                  final MutationContext mutationContext) {
         final Bounds.Bound ul = element.getBounds().getUpperLeft();
@@ -115,7 +113,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void applyElementProperties(final org.wirez.core.api.graph.Node<W, Edge> element,
+    public void applyElementProperties(final ViewNode<W, Edge> element,
                                        final CanvasHandler wirezCanvas,
                                        final MutationContext mutationContext) {
         
@@ -169,7 +167,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         return text;
     }
 
-    protected void _applyElementName(final org.wirez.core.api.graph.Node<W, Edge> element,
+    protected void _applyElementName(final ViewNode<W, Edge> element,
                                      final MutationContext mutationContext) {
         String name = (String) element.getProperties().get(NameBuilder.PROPERTY_ID);
         applyPropertyValue(NameBuilder.PROPERTY_ID, name, mutationContext);
@@ -186,22 +184,22 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void setDragControl(final DefaultDragControl<org.wirez.core.client.Shape<W>, DefaultNode> dragControl) {
+    public void setDragControl(final DefaultDragControl<org.wirez.core.client.Shape<W>, ViewNode> dragControl) {
         this.dragControl = dragControl;
     }
 
     @Override
-    public DefaultDragControl<org.wirez.core.client.Shape<W>, DefaultNode> getDragControl() {
+    public DefaultDragControl<org.wirez.core.client.Shape<W>, ViewNode> getDragControl() {
         return dragControl;
     }
 
     @Override
-    public void setResizeControl(final DefaultResizeControl<org.wirez.core.client.Shape<W>, DefaultNode> resizeControl) {
+    public void setResizeControl(final DefaultResizeControl<org.wirez.core.client.Shape<W>, ViewNode> resizeControl) {
         this.resizeControl = resizeControl;
     }
 
     @Override
-    public DefaultResizeControl<org.wirez.core.client.Shape<W>, DefaultNode> getResizeControl() {
+    public DefaultResizeControl<org.wirez.core.client.Shape<W>, ViewNode> getResizeControl() {
         return resizeControl;
     }
 

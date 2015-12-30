@@ -21,9 +21,9 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
@@ -35,11 +35,11 @@ import java.util.Collection;
  */
 public class DeleteEdgeCommand implements Command {
 
-    private DefaultGraph<? extends Definition, DefaultNode, DefaultEdge> graph;
-    private DefaultEdge<? extends Definition, DefaultNode> edge;
+    private DefaultGraph<? extends Definition, ViewNode, ViewEdge> graph;
+    private ViewEdge<? extends Definition, ViewNode> edge;
 
-    public DeleteEdgeCommand(final DefaultGraph<? extends Definition, DefaultNode, DefaultEdge> graph,
-                             final DefaultEdge<? extends Definition, DefaultNode> edge) {
+    public DeleteEdgeCommand(final DefaultGraph<? extends Definition, ViewNode, ViewEdge> graph,
+                             final ViewEdge<? extends Definition, ViewNode> edge) {
         this.graph = PortablePreconditions.checkNotNull( "graph",
                 graph );;
         this.edge = PortablePreconditions.checkNotNull( "edge",
@@ -57,8 +57,8 @@ public class DeleteEdgeCommand implements Command {
         final CommandResult results = check(ruleManager);
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
             
-            final DefaultNode outNode = edge.getTargetNode();
-            final DefaultNode inNode = edge.getSourceNode();
+            final ViewNode outNode = edge.getTargetNode();
+            final ViewNode inNode = edge.getSourceNode();
 
             if ( null != outNode ) {
                 outNode.getInEdges().remove( edge );

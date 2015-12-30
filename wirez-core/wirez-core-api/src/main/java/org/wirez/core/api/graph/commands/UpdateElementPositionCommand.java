@@ -24,7 +24,7 @@ import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.DefaultBound;
 import org.wirez.core.api.graph.impl.DefaultBounds;
-import org.wirez.core.api.graph.impl.DefaultElement;
+import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -59,7 +59,7 @@ public class UpdateElementPositionCommand implements Command {
 
     @Override
     public CommandResult execute(final RuleManager ruleManager) {
-        final Bounds bounds = element.getBounds();
+        final Bounds bounds = ((ViewElement) element).getBounds();
         final Bounds.Bound ul = bounds.getUpperLeft();
         final Bounds.Bound lr = bounds.getLowerRight();
         final double w = lr.getX() - ul.getX();
@@ -70,7 +70,7 @@ public class UpdateElementPositionCommand implements Command {
                 new DefaultBound(x + w, y + h),
                 new DefaultBound(x, y)
         );
-        ((DefaultElement) element).setBounds(newBounds);
+        ((ViewElement) element).setBounds(newBounds);
         return new DefaultCommandResult(new ArrayList<RuleViolation>());
     }
     

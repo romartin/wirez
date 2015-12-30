@@ -17,29 +17,29 @@
 package org.wirez.core.api.graph.store;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.Edge;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 @Portable
-public class DefaultGraphEdgeStore implements GraphEdgeStore<DefaultEdge> {
+public class DefaultGraphEdgeStore implements GraphEdgeStore<Edge> {
 
-    protected Map<String, DefaultEdge> edges = new HashMap<String, DefaultEdge>();
+    protected Map<String, Edge> edges = new HashMap<String, Edge>();
     
     @Override
-    public DefaultEdge add(final DefaultEdge edge) {
+    public Edge add(final Edge edge) {
         return edges.put(edge.getUUID(), edge);
     }
 
     @Override
-    public DefaultEdge remove(final String uuid) {
+    public Edge remove(final String uuid) {
         return edges.remove(uuid);
     }
 
     @Override
-    public DefaultEdge get(final String uuid) {
+    public Edge get(final String uuid) {
         return edges.get(uuid);
     }
 
@@ -54,7 +54,7 @@ public class DefaultGraphEdgeStore implements GraphEdgeStore<DefaultEdge> {
     }
 
     @Override
-    public Iterator<DefaultEdge> iterator() {
+    public Iterator<Edge> iterator() {
         return edges.values().iterator();
     }
 }

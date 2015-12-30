@@ -20,50 +20,40 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Element;
 
 import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class DefaultEdgeImpl<W extends Definition> extends DefaultElement<W> implements DefaultEdge<W, DefaultNode> {
+public class ViewEdgeImpl<W extends Definition> extends ViewElementImpl<W> implements ViewEdge<W, ViewNode> {
 
-    private DefaultNode sourceNode;
-    private DefaultNode targetNode;
+    private ViewNode sourceNode;
+    private ViewNode targetNode;
 
-    public DefaultEdgeImpl(@MapsTo("id") String id,
-                           @MapsTo("definition") W definition,
-                           @MapsTo("properties") Map<String, Object> properties,
-                           @MapsTo("labels") Set<String> labels,
-                           @MapsTo("bounds") Bounds bounds) {
+    public ViewEdgeImpl(@MapsTo("id") String id,
+                        @MapsTo("definition") W definition,
+                        @MapsTo("properties") Map<String, Object> properties,
+                        @MapsTo("labels") Set<String> labels,
+                        @MapsTo("bounds") Bounds bounds) {
         super(id, definition, properties, labels, bounds);
     }
     
     @Override
-    public DefaultNode getSourceNode() {
+    public ViewNode getSourceNode() {
         return sourceNode;
     }
 
     @Override
-    public DefaultNode getTargetNode() {
+    public ViewNode getTargetNode() {
         return targetNode;
     }
 
-    public void setSourceNode(DefaultNode sourceNode) {
+    public void setSourceNode(ViewNode sourceNode) {
         this.sourceNode = sourceNode;
     }
 
-    public void setTargetNode(DefaultNode targetNode) {
+    public void setTargetNode(ViewNode targetNode) {
         this.targetNode = targetNode;
     }
 
-    @Override
-    public Element<W> copy() {
-        // TODO
-        /*final DefaultEdgeImpl edge = new DefaultEdgeImpl<W>(uuid, definition, properties, labels, bounds);
-        edge.setTargetNode(targetNode);
-        edge.setSourceNode(sourceNode);
-        return edge;*/
-        return null;
-    }
 }

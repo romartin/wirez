@@ -17,8 +17,10 @@
 package org.wirez.core.client.canvas;
 
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 
 public interface CanvasHandler {
 
@@ -40,7 +42,7 @@ public interface CanvasHandler {
     /**
      * Returns the working copy of the graph. The original graph can be obtained from the canvas settings.
      */
-    Graph<? extends Definition, ? extends Node> getGraph();
+    DefaultGraph<? extends Definition, ? extends Node, ? extends Edge> getGraph();
     
     
     

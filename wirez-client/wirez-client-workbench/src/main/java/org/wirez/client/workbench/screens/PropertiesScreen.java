@@ -31,6 +31,7 @@ import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.impl.ViewElement;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -64,7 +65,7 @@ public class PropertiesScreen {
     public void init() {
         propertiesEditor.setEditorCallback(new PropertiesEditor.EditorCallback() {
             @Override
-            public void onShowElement(Element<? extends Definition> element) {
+            public void onShowElement(ViewElement<? extends Definition> element) {
                 if ( null != element ) {
                     String name = (String) element.getProperties().get(NameBuilder.PROPERTY_ID);
                     name = name != null ? name : element.getDefinition().getContent().getTitle();

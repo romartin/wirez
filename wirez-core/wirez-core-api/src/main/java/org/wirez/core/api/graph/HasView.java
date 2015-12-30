@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.factory;
+package org.wirez.core.api.graph;
 
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.impl.DefaultEdge;
-import org.wirez.core.api.graph.impl.DefaultNode;
 
-public interface DefaultEdgeFactory<W extends Definition> extends ElementFactory<W, DefaultEdge<W, DefaultNode>> {
+/**
+ * An element of a graph that has a view representation. A view representation is given by a view definition and the view bounds.
+ * @param <W> The view definition.
+ */
+public interface HasView<W extends Definition> {
+
+    W getDefinition();
+
+    Bounds getBounds();
     
 }

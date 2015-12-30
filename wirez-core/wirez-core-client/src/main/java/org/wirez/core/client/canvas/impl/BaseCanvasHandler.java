@@ -24,12 +24,14 @@ import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.event.NotificationEvent;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.Shape;
@@ -56,7 +58,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     protected DefaultRuleManager ruleManager;
     protected CanvasSettings settings;
     protected Canvas canvas;
-    protected DefaultGraph<? extends Definition, DefaultNode, DefaultEdge> graph;
+    protected DefaultGraph<? extends Definition, ? extends Node, ? extends Edge> graph;
     protected Collection<CanvasListener> listeners = new LinkedList<CanvasListener>();
 
     @Inject
@@ -72,12 +74,12 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     public CanvasHandler initialize(final CanvasSettings settings) {
         this.settings = settings;
         this.canvas = settings.getCanvas();
-        this.graph = (DefaultGraph<? extends Definition, DefaultNode, DefaultEdge>) settings.getGraph();
+        this.graph = (DefaultGraph<? extends Definition, ? extends Node, ? extends Edge>) settings.getGraph();
         return this;
     }
 
     @Override
-    public Graph<? extends Definition, ? extends Node> getGraph() {
+    public DefaultGraph<? extends Definition, ? extends Node, ? extends Edge> getGraph() {
         return graph;
     }
 
@@ -92,7 +94,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         ***************************************************************************************
      */
 
-    public void register(final ShapeFactory factory, final Element candidate) {
+    public void register(final ShapeFactory factory, final ViewElement candidate) {
         assert factory != null && candidate != null;
 
         final Definition wirez = candidate.getDefinition();
@@ -191,7 +193,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         fireElementAdded(candidate);
     }
 
-    public void updateElementSize(final Element element) {
+    public void updateElementSize(final ViewElement element) {
         final Shape shape = canvas.getShape(element.getUUID());
 
         final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
@@ -201,7 +203,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         fireElementUpdated(element);
     }
 
-    public void updateElementPosition(final Element element) {
+    public void updateElementPosition(final ViewElement element) {
         final Shape shape = canvas.getShape(element.getUUID());
 
         final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
@@ -211,7 +213,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         fireElementUpdated(element);
     }
 
-    public void updateElementProperties(final Element element) {
+    public void updateElementProperties(final ViewElement element) {
         final Shape shape = canvas.getShape(element.getUUID());
 
         final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;

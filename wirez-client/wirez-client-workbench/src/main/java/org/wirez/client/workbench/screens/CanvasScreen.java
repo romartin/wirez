@@ -38,7 +38,7 @@ import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.factory.ElementFactory;
+import org.wirez.core.api.graph.factory.ViewElementFactory;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.util.Logger;
 import org.wirez.core.api.util.UUID;
@@ -252,11 +252,11 @@ public class CanvasScreen {
                             element = ( (DefaultGraph) canvasHandler.getGraph()).getEdge(shape.getId());
                             if (element != null) {
                                 GWT.log("Deleting edge with id " + element.getUUID());
-                                canvasHandler.execute(defaultCanvasCommands.DELETE_EDGE((DefaultEdge) element));
+                                canvasHandler.execute(defaultCanvasCommands.DELETE_EDGE((ViewEdge) element));
                             }
                         } else {
                             GWT.log("Deleting node with id " + element.getUUID());
-                            canvasHandler.execute(defaultCanvasCommands.DELETE_NODE((DefaultNode) element));
+                            canvasHandler.execute(defaultCanvasCommands.DELETE_NODE((ViewNode) element));
 
                         }
                     }
@@ -390,10 +390,10 @@ public class CanvasScreen {
         final Element element = buildElement(definition);
         
         CanvasCommand command = null;
-        if ( element instanceof DefaultNode ) {
-            command = defaultCanvasCommands.ADD_NODE((DefaultNode) element, factory);
-        } else if ( element instanceof DefaultEdge ) {
-            command = defaultCanvasCommands.ADD_EDGE((DefaultEdge) element, factory);
+        if ( element instanceof ViewNode) {
+            command = defaultCanvasCommands.ADD_NODE((ViewNode) element, factory);
+        } else if ( element instanceof ViewEdge) {
+            command = defaultCanvasCommands.ADD_EDGE((ViewEdge) element, factory);
         }
 
         if ( null != command ) {
@@ -402,7 +402,7 @@ public class CanvasScreen {
 
     }
 
-    private Element<? extends Definition> buildElement(final Definition wirez) {
+    private ViewElement<? extends Definition> buildElement(final Definition wirez) {
         
         // TODO: Set right bounds when a shape can be dragged into a given coordinates from the palettte.
         final Bounds bounds =
@@ -410,7 +410,7 @@ public class CanvasScreen {
                         new DefaultBound(150d, 150d),
                         new DefaultBound(100d, 100d)
                 );
-        return ((ElementFactory) wirez).build(UUID.uuid(), new HashSet<String>(), new HashMap<String, Object>(), bounds);
+        return ((ViewElementFactory) wirez).build(UUID.uuid(), new HashSet<String>(), new HashMap<String, Object>(), bounds);
         
     }
 

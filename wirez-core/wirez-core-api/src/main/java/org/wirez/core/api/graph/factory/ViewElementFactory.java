@@ -14,11 +14,17 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.impl;
+package org.wirez.core.api.graph.factory;
 
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.impl.ViewElement;
 
-public interface DefaultNode<W extends Definition, T extends DefaultEdge> extends Node<W, T> {
+import java.util.Map;
+import java.util.Set;
+
+public interface ViewElementFactory<W extends Definition, T extends ViewElement<W>> {
+    
+    T build(String uuid, Set<String> labels, Map<String, Object> properties, Bounds bounds);
     
 }

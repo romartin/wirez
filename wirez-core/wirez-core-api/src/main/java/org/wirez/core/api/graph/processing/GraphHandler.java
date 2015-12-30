@@ -14,13 +14,26 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph;
+package org.wirez.core.api.graph.processing;
 
-/**
- * Implementations can provide a clone of themselves.
- */
-public interface Clonable<T> {
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 
-    T copy();
+import javax.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
+public class GraphHandler {
+
+    /**
+     * Returns the element (node or edge) with the given uuid.
+     */
+    public Element get(final DefaultGraph graph, final String uuid) {
+        assert graph != null && uuid != null;
+        Element element = graph.getNode(uuid);
+        if (element == null) {
+            element = graph.getEdge(uuid);
+        }
+        return element;
+    }
+    
 }

@@ -19,7 +19,7 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
-import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 
@@ -29,9 +29,9 @@ import org.wirez.core.api.rule.RuleManager;
 public class AddEdgeCommand implements Command {
 
     private DefaultGraph target;
-    private DefaultEdge edge;
+    private ViewEdge edge;
 
-    public AddEdgeCommand(DefaultGraph target, DefaultEdge edge) {
+    public AddEdgeCommand(DefaultGraph target, ViewEdge edge) {
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );;
         this.edge = PortablePreconditions.checkNotNull( "edge",

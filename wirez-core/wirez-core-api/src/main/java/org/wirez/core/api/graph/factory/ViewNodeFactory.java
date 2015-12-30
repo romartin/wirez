@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.impl;
+package org.wirez.core.api.graph.factory;
 
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.impl.ViewNode;
 
-public interface DefaultEdge<W extends Definition,  T extends DefaultNode> extends Edge<W, T> {
-
-    void setTargetNode(DefaultNode node);
-
-    void setSourceNode(DefaultNode node);
+public interface ViewNodeFactory<W extends Definition> extends ViewElementFactory<W, ViewNode<W, Edge>> {
     
 }

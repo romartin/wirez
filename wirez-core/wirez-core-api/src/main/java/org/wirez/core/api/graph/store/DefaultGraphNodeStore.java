@@ -17,29 +17,29 @@
 package org.wirez.core.api.graph.store;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.Node;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 @Portable
-public class DefaultGraphNodeStore implements GraphNodeStore<DefaultNode> {
+public class DefaultGraphNodeStore implements GraphNodeStore<Node> {
 
-    protected Map<String, DefaultNode> nodes = new HashMap<String, DefaultNode>();
+    protected Map<String, Node> nodes = new HashMap<String, Node>();
     
     @Override
-    public DefaultNode add(final DefaultNode node) {
+    public Node add(final Node node) {
         return nodes.put(node.getUUID(), node);
     }
 
     @Override
-    public DefaultNode remove(final String uuid) {
+    public Node remove(final String uuid) {
         return nodes.remove(uuid);
     }
 
     @Override
-    public DefaultNode get(final String uuid) {
+    public Node get(final String uuid) {
         return nodes.get(uuid);
     }
 
@@ -54,7 +54,7 @@ public class DefaultGraphNodeStore implements GraphNodeStore<DefaultNode> {
     }
 
     @Override
-    public Iterator<DefaultNode> iterator() {
+    public Iterator<Node> iterator() {
         return nodes.values().iterator();
     }
 }

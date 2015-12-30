@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.wirez.core.api.graph.commands;
 
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
@@ -31,15 +31,15 @@ import java.util.LinkedList;
 /**
  * A Command to add a DefaultNode to a DefaultGraph
  */
-public class AddNodeCommand implements Command {
+public class AddChildNodeCommand implements Command {
 
-    private DefaultGraph target;
+    private ViewNode parent;
     private ViewNode candidate;
 
-    public AddNodeCommand(final DefaultGraph target,
-                          final ViewNode candidate ) {
-        this.target = PortablePreconditions.checkNotNull( "target",
-                                                          target );
+    public AddChildNodeCommand(final ViewNode parent,
+                               final ViewNode candidate ) {
+        this.parent = PortablePreconditions.checkNotNull( "parent",
+                parent );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
                                                              candidate );
     }
@@ -54,31 +54,30 @@ public class AddNodeCommand implements Command {
     public CommandResult execute(final RuleManager ruleManager) {
         final CommandResult results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
-            target.addNode( candidate );
+            // TODO: target.addNode( candidate );
         }
         return results;
     }
     
     private CommandResult check(final RuleManager ruleManager) {
         final DefaultRuleManager defaultRuleManager = (DefaultRuleManager) ruleManager;
-        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkContainment( target, candidate).violations();
-        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
+        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkContainment( parent, candidate).violations();
+        // TODO: final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality( parent, candidate, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(containmentRuleViolations);
-        violations.addAll(cardinalityRuleViolations);
+        // TODO: violations.addAll(cardinalityRuleViolations);
         final CommandResult results = new DefaultCommandResult(violations);
         return results;
     }
 
     @Override
     public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = new DeleteNodeCommand( target,
-                candidate );
-        return undoCommand.execute( ruleManager );
+        // TODO
+        return null;
     }
 
     @Override
     public String toString() {
-        return "AddNodeCommand [target=" + target.getUUID() + ", candidate=" + candidate.getUUID() + "]";
+        return "AddChildNodeCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
     }
 }

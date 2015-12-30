@@ -19,8 +19,9 @@ package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.impl.DefaultEdge;
-import org.wirez.core.api.graph.impl.DefaultNode;
+import org.wirez.core.api.graph.impl.ViewEdge;
+import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -32,35 +33,35 @@ public class DefaultCanvasCommands {
         return new ClearCanvasCommand( );
     }
 
-    public AddCanvasNodeCommand ADD_NODE(final DefaultNode node, final ShapeFactory factory ) {
+    public AddCanvasNodeCommand ADD_NODE(final ViewNode node, final ShapeFactory factory ) {
         return new AddCanvasNodeCommand( node, factory );
     }
 
-    public DeleteCanvasNodeCommand DELETE_NODE(final DefaultNode node) {
+    public DeleteCanvasNodeCommand DELETE_NODE(final ViewNode node) {
         return new DeleteCanvasNodeCommand( node );
     }
     
-    public AddCanvasEdgeCommand ADD_EDGE(final DefaultEdge edge, final ShapeFactory factory ) {
+    public AddCanvasEdgeCommand ADD_EDGE(final ViewEdge edge, final ShapeFactory factory ) {
         return new AddCanvasEdgeCommand( edge, factory );
     }
 
-    public DeleteCanvasEdgeCommand DELETE_EDGE(final DefaultEdge edge) {
+    public DeleteCanvasEdgeCommand DELETE_EDGE(final ViewEdge edge) {
         return new DeleteCanvasEdgeCommand( edge );
     }
 
-    public MoveCanvasElementCommand MOVE( final Element element ,
+    public MoveCanvasElementCommand MOVE( final ViewElement element ,
                                           final Double x,
                                           final Double y ) {
         return new MoveCanvasElementCommand( element, x, y );
     }
 
-    public SetCanvasElementSizeCommand RESIZE( final Element element ,
+    public SetCanvasElementSizeCommand RESIZE( final ViewElement element ,
                                                final Double w,
                                                final Double h) {
         return new SetCanvasElementSizeCommand( element, w, h );
     }
 
-    public UpdateCanvasElementPropertyValueCommand UPDATE_PROPERTY( final Element element ,
+    public UpdateCanvasElementPropertyValueCommand UPDATE_PROPERTY( final ViewElement element ,
                                                                     final Property property,
                                                                     final Object value ) {
         return new UpdateCanvasElementPropertyValueCommand( element, property, value );

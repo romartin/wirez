@@ -21,11 +21,12 @@ import com.ait.lienzo.client.core.shape.wires.event.DragEvent;
 import com.ait.lienzo.client.core.shape.wires.event.DragHandler;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
 import org.wirez.core.client.impl.BaseShape;
 
-public class DefaultDragControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E>  {
+public class DefaultDragControl<S extends Shape, E extends ViewElement> extends BaseShapeControl<S, E>  {
 
     @Override
     public void enable(final S shape, final E element) {

@@ -35,7 +35,8 @@ import org.wirez.core.api.definition.property.type.StringType;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.processing.GraphUtils;
+import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.processing.GraphHandler;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.WirezClientManager;
 import org.wirez.core.client.canvas.Canvas;
@@ -65,12 +66,12 @@ public class PropertiesEditor implements IsWidget {
     }
     
     public interface EditorCallback {
-        void onShowElement(Element<? extends Definition> element);
+        void onShowElement(ViewElement<? extends Definition> element);
     }
 
     WirezClientManager wirezClientManager;
     DefaultCanvasCommands defaultCommands;
-    GraphUtils graphUtils;
+    GraphHandler graphUtils;
     View view;
     private CanvasHandler canvasHandler;
     private DefaultCanvasListener canvasListener;
@@ -80,7 +81,7 @@ public class PropertiesEditor implements IsWidget {
     public PropertiesEditor(final View view,
                             final WirezClientManager wirezClientManager,
                             final DefaultCanvasCommands defaultCommands,
-                            final GraphUtils graphUtils) {
+                            final GraphHandler graphUtils) {
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.defaultCommands = defaultCommands;
@@ -115,7 +116,7 @@ public class PropertiesEditor implements IsWidget {
     }
     
     @SuppressWarnings("unchecked")
-    protected void show(final Element<? extends Definition> element) {
+    protected void show(final ViewElement<? extends Definition> element) {
         assert element != null;
         
         final String elementId = element.getUUID();
@@ -180,7 +181,7 @@ public class PropertiesEditor implements IsWidget {
         
     }
 
-    private PropertyEditorCategory buildPropertiesCategory(final Element<? extends Definition> element,
+    private PropertyEditorCategory buildPropertiesCategory(final ViewElement<? extends Definition> element,
                                                            final Set<String> processedPropertyIds) {
         final String title = element.getDefinition().getContent().getTitle();
         final PropertyEditorCategory result = new PropertyEditorCategory(title, 1);
@@ -210,7 +211,7 @@ public class PropertiesEditor implements IsWidget {
         
     }
     
-    private PropertyEditorFieldInfo buildGenericFieldInfo(final Element<? extends Definition> element,
+    private PropertyEditorFieldInfo buildGenericFieldInfo(final ViewElement<? extends Definition> element,
                                                           final Property property,
                                                           final Object value,
                                                           final PropertyValueChangedHandler changedHandler) {
@@ -281,7 +282,7 @@ public class PropertiesEditor implements IsWidget {
         return value;
     }
     
-    private PropertyEditorCategory buildElementCategory(final Element<? extends Definition> element) {
+    private PropertyEditorCategory buildElementCategory(final ViewElement<? extends Definition> element) {
         final PropertyEditorCategory result = new PropertyEditorCategory("Element", 0);
 
         final String id = element.getUUID();
@@ -366,31 +367,31 @@ public class PropertiesEditor implements IsWidget {
         return result.withField(idField).withField(xField).withField(yField).withField(wField).withField(hField);
     }
     
-    private void executeUpdateProperty(final Element<? extends Definition> element, 
+    private void executeUpdateProperty(final ViewElement<? extends Definition> element, 
                                        final Property property,
                                        final Object value) {
         ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.UPDATE_PROPERTY(element, property, value));
     }
 
-    private void executeMove(final Element<? extends Definition> element,
+    private void executeMove(final ViewElement<? extends Definition> element,
                                        final double x,
                                        final double y) {
         ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.MOVE(element, x, y));
     }
 
-    private void executeResize(final Element<? extends Definition> element,
+    private void executeResize(final ViewElement<? extends Definition> element,
                              final double width,
                              final double height) {
         ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.RESIZE(element, width, height));
     }
     
-    private double getWidth(final Element element) {
+    private double getWidth(final ViewElement element) {
         final Bounds.Bound ul = element.getBounds().getUpperLeft();
         final Bounds.Bound lr = element.getBounds().getLowerRight();
         return lr.getX() - ul.getX();
     }
 
-    private double getHeight(final Element element) {
+    private double getHeight(final ViewElement element) {
         final Bounds.Bound ul = element.getBounds().getUpperLeft();
         final Bounds.Bound lr = element.getBounds().getLowerRight();
         return lr.getY() - ul.getY();
@@ -413,7 +414,7 @@ public class PropertiesEditor implements IsWidget {
             show(defaultGraph);
         } else {
             final String shapeUUID = shape.getId();
-            final Element<? extends Definition> element = graphUtils.get(defaultGraph, shapeUUID);
+            final ViewElement<? extends Definition> element = (ViewElement<? extends Definition>) graphUtils.get(defaultGraph, shapeUUID);
             if (element != null && Canvas.ShapeState.SELECTED.equals(state)) {
                 GWT.log("PropertiesEditor  - Showing properties for node [" + element.getUUID() + "]");
                 show(element);
@@ -437,7 +438,7 @@ public class PropertiesEditor implements IsWidget {
             @Override
             public void onElementModified(final Element _element) {
                 super.onElementModified(_element);
-                show(_element);
+                show((ViewElement<? extends Definition>) _element);
             }
 
             @Override

@@ -18,14 +18,13 @@ package org.wirez.core.api.graph.impl;
 
 
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.HasEdges;
+import org.wirez.core.api.graph.*;
 
 /**
  * Default graph interface supports unconnected edges (implements HasEdges).
  */
-public interface DefaultGraph<W extends Definition, T extends DefaultNode, E extends DefaultEdge> 
-        extends  Graph<W, T>, HasEdges<E> {
+public interface DefaultGraph<W extends Definition, T extends Node, E extends Edge> 
+        extends  Graph<T>, HasEdges<E>, ViewElement<W> {
 
     void clear();
     

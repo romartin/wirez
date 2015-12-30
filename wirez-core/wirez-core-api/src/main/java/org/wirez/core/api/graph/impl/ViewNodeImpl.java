@@ -20,7 +20,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Edge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,37 +28,27 @@ import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class DefaultNodeImpl<W extends Definition> extends DefaultElement<W> implements DefaultNode<W, DefaultEdge> {
+public class ViewNodeImpl<W extends Definition> extends ViewElementImpl<W> implements ViewNode<W, Edge> {
 
-    private List<DefaultEdge> inEdges = new ArrayList<DefaultEdge>();
-    private List<DefaultEdge> outEdges = new ArrayList<DefaultEdge>();
+    private List<Edge> inEdges = new ArrayList<Edge>();
+    private List<Edge> outEdges = new ArrayList<Edge>();
     
-    public DefaultNodeImpl(@MapsTo("uuid") String uuid,
-                           @MapsTo("definition") W definition,
-                           @MapsTo("properties") Map<String, Object> properties,
-                           @MapsTo("labels") Set<String> labels,
-                           @MapsTo("bounds") Bounds bounds) {
+    public ViewNodeImpl(@MapsTo("uuid") String uuid,
+                        @MapsTo("definition") W definition,
+                        @MapsTo("properties") Map<String, Object> properties,
+                        @MapsTo("labels") Set<String> labels,
+                        @MapsTo("bounds") Bounds bounds) {
         super(uuid, definition, properties, labels, bounds);
     }
 
     @Override
-    public List<DefaultEdge> getInEdges() {
+    public List<Edge> getInEdges() {
         return inEdges;
     }
 
     @Override
-    public List<DefaultEdge> getOutEdges() {
+    public List<Edge> getOutEdges() {
         return outEdges;
     }
 
-    @Override
-    public Element<W> copy() {
-        // TODO
-        /*DefaultNodeImpl<W> node = new DefaultNodeImpl<W>(uuid, definition, properties, labels, bounds);
-        node.getInEdges().addAll(inEdges);
-        node.getOutEdges().addAll(outEdges);
-        return node;*/
-        return null;
-    }
-    
 }

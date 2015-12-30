@@ -19,4 +19,8 @@ to relationships is particularly useful for providing additional metadata for gr
 algorithms, adding additional semantics to relationships (including quality and
 weight), and for constraining queries at runtime, if needed.                   
 * You can create more domain specific diagrams (such as E-R, hierarchical, etc) by providing rule constraints in the Definition Set.            
-* Despite being graphs, E-R diagrams allow only single, undirected, named relationships between entities.            
+* NOTE about E-R diagrams: Despite being graphs, E-R diagrams allow only single, undirected, named relationships between entities.            
+
+The subpackage `impl` contains the default graph interfaces implentation used in this tool. Using it, in addition of all the graph generic features, it supports:           
+* Define nodes with or without graphical representations (such as nodes for shapes or resulting fact nodes when using cross-domain graph interactions)      
+* Define two type of relationships: connection edges AND containment relationships      

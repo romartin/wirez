@@ -20,13 +20,12 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Element;
 
 import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class DefaultElementImpl<W extends Definition> implements Element<W> {
+public class ViewElementImpl<W extends Definition> implements ViewElement<W> {
 
     protected String uuid;
     protected W definition;
@@ -34,11 +33,11 @@ public class DefaultElementImpl<W extends Definition> implements Element<W> {
     protected Set<String> labels;
     protected Bounds bounds;
 
-    public DefaultElementImpl(@MapsTo("uuid") String uuid,
-                              @MapsTo("definition") W definition,
-                              @MapsTo("properties") Map<String, Object> properties,
-                              @MapsTo("labels") Set<String> labels,
-                              @MapsTo("bounds") Bounds bounds) {
+    public ViewElementImpl(@MapsTo("uuid") String uuid,
+                           @MapsTo("definition") W definition,
+                           @MapsTo("properties") Map<String, Object> properties,
+                           @MapsTo("labels") Set<String> labels,
+                           @MapsTo("bounds") Bounds bounds) {
         this.uuid = uuid;
         this.definition = definition;
         this.properties = properties;
@@ -84,8 +83,4 @@ public class DefaultElementImpl<W extends Definition> implements Element<W> {
                 '}';
     }
 
-    @Override
-    public Element<W> copy() {
-        return new DefaultElementImpl<W>(uuid, definition, properties, labels, bounds);
-    }
 }

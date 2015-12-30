@@ -19,20 +19,15 @@ package org.wirez.core.client.impl;
 import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.Decorator;
 import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
 import com.ait.lienzo.client.core.shape.wires.MagnetManager;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.client.core.types.Point2DArray;
-import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.DefaultEdge;
+import org.wirez.core.api.graph.impl.ViewEdge;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
-import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.control.DefaultDragControl;
@@ -44,12 +39,12 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         HasPositionMutation,
         HasSizeMutation,
         HasPropertyMutation,
-        HasGraphElementMutation<W, Edge<W, Node>>,
-        HasDragControl<Shape<W>, DefaultEdge> {
+        HasGraphElementMutation<W, ViewEdge<W, ViewNode>>,
+        HasDragControl<Shape<W>, ViewEdge> {
 
     protected String id;
     protected Group group;
-    protected DefaultDragControl<Shape<W>, DefaultEdge> dragControl;
+    protected DefaultDragControl<Shape<W>, ViewEdge> dragControl;
 
     public BaseConnector(AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
         super(line, head, tail, manager);
@@ -89,17 +84,17 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public void applyElementPosition(Edge<W, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementPosition(ViewEdge<W, ViewNode> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         // TODO
     }
 
     @Override
-    public void applyElementSize(Edge<W, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementSize(ViewEdge<W, ViewNode> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         // TODO
     }
 
     @Override
-    public void applyElementProperties(Edge<W, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementProperties(ViewEdge<W, ViewNode> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         
         // TODO
 
@@ -123,7 +118,7 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         // TODO
     }
 
-    protected Shape<W> _applyConnections(final Edge<W, Node> element, final CanvasHandler canvasHandler) {
+    protected Shape<W> _applyConnections(final ViewEdge<W, ViewNode> element, final CanvasHandler canvasHandler) {
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
@@ -164,12 +159,12 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public void setDragControl(final DefaultDragControl<Shape<W>, DefaultEdge> dragControl) {
+    public void setDragControl(final DefaultDragControl<Shape<W>, ViewEdge> dragControl) {
         this.dragControl = dragControl;
     }
 
     @Override
-    public DefaultDragControl<Shape<W>, DefaultEdge> getDragControl() {
+    public DefaultDragControl<Shape<W>, ViewEdge> getDragControl() {
         return dragControl;
     }
     

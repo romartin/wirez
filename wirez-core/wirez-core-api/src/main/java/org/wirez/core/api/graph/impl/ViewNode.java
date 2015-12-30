@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.processing;
+package org.wirez.core.api.graph.impl;
 
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@ApplicationScoped
-public class GraphUtils {
-    
-    public Element get(final DefaultGraph graph, final String uuid) {
-        assert graph != null && uuid != null;
-        Element element = graph.getNode(uuid);
-        if (element == null) {
-            element = graph.getEdge(uuid);
-        }
-        return element;
-    }
+/**
+ * A node of a graph that has a view representation.
+ * @param <W> The view definition.
+ */
+public interface ViewNode<W extends Definition, T extends Edge> extends Node<T>, ViewElement<W> {
     
 }

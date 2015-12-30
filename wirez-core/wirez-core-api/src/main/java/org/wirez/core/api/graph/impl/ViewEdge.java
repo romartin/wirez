@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.factory;
+package org.wirez.core.api.graph.impl;
 
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Edge;
 
-import java.util.Map;
-import java.util.Set;
+/**
+ * An edge of a graph that has a view representation.
+ * @param <W> The view definition.
+ */
+public interface ViewEdge<W extends Definition,  T extends ViewNode> extends Edge<T>, ViewElement<W> {
 
-public interface ElementFactory<W extends Definition, T extends Element<W>> {
-    
-    T build(String uuid, Set<String> labels, Map<String, Object> properties, Bounds bounds);
+    void setTargetNode(ViewNode node);
+
+    void setSourceNode(ViewNode node);
     
 }

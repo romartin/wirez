@@ -18,7 +18,11 @@ package org.wirez.core.api.graph;
 
 import org.wirez.core.api.definition.Definition;
 
-public interface Edge<W extends Definition, N extends Node> extends Element<W> {
+/**
+ * A generic edge of a graph. An edge represents a relationship between two nodes and has a given direction.
+ * @param <N> The type of nodes.
+ */
+public interface Edge<N extends Node> extends Element {
 
     N getSourceNode();
 

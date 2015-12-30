@@ -19,6 +19,7 @@ package org.wirez.basicset.api;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.basicset.api.property.bgset.BackgroundPropertySetBuilder;
 import org.wirez.basicset.api.property.bgset.BgColorBuilder;
+import org.wirez.basicset.api.property.font.FontPropertySetBuilder;
 import org.wirez.core.api.definition.DefaultContent;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -47,6 +48,7 @@ public class Rectangle extends BasicNodeDefinition<Rectangle> {
                 .withProperty(new BgColorBuilder().defaultValue(COLOR).build())
                 .build() 
         );
+        add( new FontPropertySetBuilder().build() );
     }};
     
     public Rectangle() {

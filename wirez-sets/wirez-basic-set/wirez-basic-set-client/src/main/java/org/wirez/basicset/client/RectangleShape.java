@@ -21,12 +21,11 @@ import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import org.wirez.core.client.impl.BaseShape;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class RectangleShape extends BaseShape<org.wirez.basicset.api.Rectangle> {
+public class RectangleShape extends BaseBasicShape<org.wirez.basicset.api.Rectangle> {
 
     private static final double WIDTH = 100;
     private static final double HEIGHT = 100;

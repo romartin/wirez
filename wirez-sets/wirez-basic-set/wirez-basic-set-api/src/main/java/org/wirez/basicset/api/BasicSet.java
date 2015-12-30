@@ -18,6 +18,7 @@ package org.wirez.basicset.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.basicset.api.property.bgset.BackgroundPropertySetBuilder;
+import org.wirez.basicset.api.property.font.FontPropertySetBuilder;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -38,6 +39,7 @@ public class BasicSet implements DefinitionSet {
     private final Collection<PropertySet> propertySets = new HashSet<PropertySet>() {{
         add( new DefaultPropertySetBuilder().build() );
         add (new BackgroundPropertySetBuilder().build() );
+        add (new FontPropertySetBuilder().build() );
     }};
 
 

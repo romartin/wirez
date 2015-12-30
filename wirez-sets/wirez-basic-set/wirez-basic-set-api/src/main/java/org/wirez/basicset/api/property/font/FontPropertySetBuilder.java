@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package org.wirez.basicset.api.property.bgset;
+package org.wirez.basicset.api.property.font;
 
 import org.wirez.core.api.definition.property.DefaultPropertySet;
 import org.wirez.core.api.definition.property.builder.BasePropertySetBuilder;
 
-public class BackgroundPropertySetBuilder extends BasePropertySetBuilder<DefaultPropertySet> {
+public class FontPropertySetBuilder extends BasePropertySetBuilder<DefaultPropertySet> {
 
-    private static final String ID = "basicset.background";
-    private static final String NAME = "Background";
+    private static final String ID = "basicset.font";
+    private static final String NAME = "Font";
     
-    public BackgroundPropertySetBuilder() {
+    public FontPropertySetBuilder() {
         super();
-        properties.add( new BgColorBuilder().build() );
-        properties.add( new BgGradiendStartColorBuilder().build() );
-        properties.add( new BgGradiendEndColorBuilder().build() );
-        properties.add( new BorderColorBuilder().build() );
-        properties.add( new BorderSizeBuilder().build() );
+        properties.add( new FontColorBuilder().build() );
+        properties.add( new FontSizeBuilder().build() );
+        properties.add( new FontBorderSizeBuilder().build() );
         propertySet = new DefaultPropertySet(ID, NAME, properties);
     }
 

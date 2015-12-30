@@ -182,8 +182,8 @@ public class PropertiesEditor implements IsWidget {
 
     private PropertyEditorCategory buildPropertiesCategory(final Element<? extends Definition> element,
                                                            final Set<String> processedPropertyIds) {
-        
-        final PropertyEditorCategory result = new PropertyEditorCategory("Properties", 1);
+        final String title = element.getDefinition().getContent().getTitle();
+        final PropertyEditorCategory result = new PropertyEditorCategory(title, 1);
         
         final Set<Property> propertySet = element.getDefinition().getContent().getProperties();
         if (propertySet != null) {

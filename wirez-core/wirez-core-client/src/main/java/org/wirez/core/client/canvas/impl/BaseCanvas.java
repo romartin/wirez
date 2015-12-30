@@ -210,11 +210,10 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
     @Override
     public SelectionManager<Shape> clearSelection() {
-        selectedShapes.clear();
-        for (final Shape shape : getShapes()) {
-            // Run the deselection animation.
+        for (final Shape shape : selectedShapes) {
             deselectShape(shape);
         }
+        selectedShapes.clear();
         draw();
         fireCanvasSelected();
         return this;
@@ -226,7 +225,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
     protected void deselectShape(final Shape shape) {
         final boolean isConnector = shape instanceof BaseConnector;
-        new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK);
+        new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK).setDuration(500).run();
     }
 
     protected BaseCanvas updateViewShapesState() {

@@ -27,10 +27,17 @@ import org.wirez.core.client.factory.ShapeFactory;
  */
 public class PaletteShapeSelectedEvent implements UberFireEvent {
 
+    private Definition definition;
     private ShapeFactory<? extends Definition, ? extends Shape> shapeFactory;
 
-    public PaletteShapeSelectedEvent(final ShapeFactory<? extends Definition, ? extends Shape> shapeFactory) {
+    public PaletteShapeSelectedEvent(final Definition definition,
+                                     final ShapeFactory<? extends Definition, ? extends Shape> shapeFactory) {
+        this.definition = definition;
         this.shapeFactory = shapeFactory;
+    }
+
+    public Definition getDefinition() {
+        return definition;
     }
 
     public ShapeFactory<? extends Definition, ? extends Shape> getShapeFactory() {
@@ -39,7 +46,7 @@ public class PaletteShapeSelectedEvent implements UberFireEvent {
 
     @Override
     public String toString() {
-        return "PaletteShapeSelectedEvent [factory=" + shapeFactory.toString() + "]";
+        return "PaletteShapeSelectedEvent [definition=" + definition.getId() + ", factory=" + shapeFactory.toString() + "]";
     }
 
 }

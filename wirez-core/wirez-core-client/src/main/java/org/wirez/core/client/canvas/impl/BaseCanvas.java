@@ -140,7 +140,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     
     protected void registerShape(final BaseShape shape) {
         assert wiresManager != null;
-        GWT.log("BaseWirezCanvas#registerShape - " + shape.toString());
+        GWT.log("BaseCanvas#registerShape - " + shape.toString());
         if (shape.getId() == null) {
             shape.setId(org.wirez.core.api.util.UUID.uuid());
         }

@@ -67,7 +67,13 @@ public class Diagram extends BasicDefinition implements DefaultGraphFactory<Diag
                                                                  final Set<String> labels,
                                                                  final Map<String, Object> properties,
                                                                  final Bounds bounds) {
-        return new DefaultGraphImpl<Diagram>(uuid, this, properties, labels, bounds, 
-                new DefaultGraphNodeStore(), new DefaultGraphEdgeStore());
+        return new DefaultGraphImpl<Diagram>(
+                uuid,
+                this,
+                buildElementProperties(properties),
+                buildElementLabels(labels),
+                bounds,
+                new DefaultGraphNodeStore(), new DefaultGraphEdgeStore()
+        );
     }
 }

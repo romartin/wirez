@@ -19,6 +19,13 @@ package org.wirez.core.api.definition;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
+import org.wirez.core.api.definition.property.HasDefaultValue;
+import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.definition.property.PropertySet;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 @Portable
 public class DefaultDefinition<C extends Content> implements Definition<C> {
@@ -44,4 +51,50 @@ public class DefaultDefinition<C extends Content> implements Definition<C> {
     public void setContent(C content) {
         this.content = content;
     }
+
+    protected Set<String> buildElementLabels(final Set<String> labels) {
+        final Set<String> defLabels = getContent().getLabels();
+        labels.addAll(defLabels);
+        return labels;
+    }
+    
+    protected Map<String, Object> buildElementProperties(final Map<String, Object> properties) {
+        
+        // Property set properties.
+        final Set<PropertySet> propertySetSets = getContent().getPropertySets();
+        for (final PropertySet propertySet : propertySetSets) {
+            final Collection<Property> setProperties = propertySet.getProperties();
+            buildElementProperties(properties, setProperties);
+        }
+
+        // Custom definition properties.
+        final Collection<Property> defProperties = getContent().getProperties();
+        buildElementProperties(properties, defProperties);
+        
+        return properties;
+    }
+    
+    protected void buildElementProperties(final Map<String, Object> properties,
+                                          final Collection<Property> defProperties) {
+        
+        for (final Property defProperty : defProperties) {
+            addElementProperty(properties, defProperty);
+        }
+    }
+    
+    protected void addElementProperty(final Map<String, Object> properties,
+                                      final Property property) {
+        final String id = property.getId();
+        
+        if (!properties.containsKey(id)) {
+            
+            if (property instanceof HasDefaultValue) {
+                Object value = ((HasDefaultValue) property).getDefaultValue();
+                properties.put(id, value);
+            }
+            
+        }
+        
+    }
+    
 }

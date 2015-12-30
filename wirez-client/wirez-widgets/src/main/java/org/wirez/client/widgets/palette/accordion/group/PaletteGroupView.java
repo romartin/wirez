@@ -91,6 +91,7 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
     public PaletteGroup.View addGlyph(final IPrimitive glyphView, 
                                       final double x, final double y,
                                       final PaletteGroup.GlyphViewCallback callback) {
+        GWT.log("PaletteGroupView#addGlyph");
         glyphView.setX(x);
         glyphView.setY(y);
         glyphView.addNodeMouseClickHandler(new NodeMouseClickHandler() {

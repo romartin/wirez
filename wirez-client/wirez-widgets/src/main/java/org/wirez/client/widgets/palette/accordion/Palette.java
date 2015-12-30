@@ -36,10 +36,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 @Dependent
 public class Palette implements IsWidget {
@@ -112,55 +109,51 @@ public class Palette implements IsWidget {
     public void clear() {
         view.clear();
     }
-    
+
     private void doShow(final ShapeSet wirezShapeSet) {
 
         // Clear current palette groups.
         view.clearGroups();
 
-        // Load shapes by category.
         final DefinitionSet definitionSet = wirezShapeSet.getDefinitionSet();
-        final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
         final Collection<Definition> definitions = definitionSet.getDefinitions();
-        final Map<String, Collection<ShapeFactory<? extends Definition, ? extends Shape>>>
-                groupFactories = new HashMap<String, Collection<ShapeFactory<? extends Definition, ? extends Shape>>>();
+        final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
+
+        // Load entries.
         for (final ShapeFactory<? extends Definition, ? extends Shape> factory : factories) {
-            for (final Definition definition : definitions) {
-                if (factory.accepts(definition)) {
-                    final String category = definition.getContent().getCategory();
-                    if (groupFactories.get(category) == null)  {
-                        groupFactories.put(category, new LinkedList<ShapeFactory<? extends Definition, ? extends Shape>>());
-                    }
-                    groupFactories.get(category).add(factory);
-                    break;
-                }
-            }
-            
-        }
-        
-        // Show a palette group for each category.
-        for (final Map.Entry<String, Collection<ShapeFactory<? extends Definition, ? extends Shape>>> entry : groupFactories.entrySet()) {
-            final String category = entry.getKey();
-            final Collection<ShapeFactory<? extends Definition, ? extends Shape>> _factories = entry.getValue();
+            final Definition definition = getDefinition(definitions, factory);
 
-            final PaletteGroup paletteGroup = buildPaletteGroup();
-            paletteGroup.setSize(350, 100);
-            paletteGroup.setHeader(category);
-            view.addGroup(paletteGroup);
+            if ( null != definition ) {
 
-            for (final ShapeFactory<? extends Definition, ? extends Shape> _factory : _factories) {
-                final String description = _factory.getDescription();
-                final ShapeGlyph glyph = _factory.getGlyph();
+                final String category = definition.getContent().getCategory();
+                final String description = factory.getDescription();
+                final PaletteGroup paletteGroup = buildPaletteGroup();
+                paletteGroup.setSize(350, 100);
+                paletteGroup.setHeader(category);
+                view.addGroup(paletteGroup);
+
+                final ShapeGlyph glyph = factory.getGlyph();
                 paletteGroup.addGlyph(description, glyph, new Command() {
                     @Override
                     public void execute() {
                         GWT.log("Palette: Adding " + description);
-                        paletteShapeSelectedEvent.fire(new PaletteShapeSelectedEvent(_factory));
+                        paletteShapeSelectedEvent.fire(new PaletteShapeSelectedEvent(definition, factory));
                     }
                 });
+                
             }
+            
         }
         
+    }
+    
+    private Definition getDefinition(final Collection<Definition> definitions, final ShapeFactory factory) {
+        for (final Definition definition : definitions) {
+            if (factory.accepts(definition)) {
+                return definition;
+            }
+        }
+        return null;
     }
     
     private PaletteGroup buildPaletteGroup() {

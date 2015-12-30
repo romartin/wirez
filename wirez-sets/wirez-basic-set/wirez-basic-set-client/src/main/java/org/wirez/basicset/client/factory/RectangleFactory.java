@@ -69,7 +69,9 @@ public class RectangleFactory extends BaseShapeFactory<Rectangle, RectangleShape
 
         group.setEventPropagationMode(EventPropagationMode.FIRST_ANCESTOR);
 
-        return new RectangleShape(path, group, ( (BaseCanvas) canvasHandler.getSettings()).getWiresManager());
+        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
+        
+        return new RectangleShape(path, group, baseCanvas.getWiresManager());
 
     }
 

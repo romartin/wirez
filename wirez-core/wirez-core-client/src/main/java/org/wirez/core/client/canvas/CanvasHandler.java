@@ -29,9 +29,6 @@ public interface CanvasHandler {
      */
     CanvasHandler initialize(CanvasSettings settings);
 
-    CanvasHandler register(ShapeFactory factory, Element candidate);
-
-    CanvasHandler deregister(Element candidate);
     /**
      * Listens to events from elements in the canvas.
      */
@@ -43,7 +40,7 @@ public interface CanvasHandler {
     CanvasSettings getSettings();
 
     /**
-     * Returns the working copy of the graph. 
+     * Returns the working copy of the graph. The original graph can be obtained from the canvas settings.
      */
     Graph<? extends Definition, ? extends Node> getGraph();
     

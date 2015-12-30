@@ -28,6 +28,7 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 
 /**
  * A Command to delete a DefaultNode from a Graph and delete the corresponding canvas shapes.
@@ -47,7 +48,7 @@ public class DeleteCanvasNodeCommand extends BaseCanvasCommand {
 
     @Override
     public CanvasCommand apply() {
-        canvasHandler.deregister(candidate);
+        ( (BaseCanvasHandler) canvasHandler).deregister(candidate);
         return this;
     }
 

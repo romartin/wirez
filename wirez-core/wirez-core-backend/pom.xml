@@ -43,8 +43,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-wirez-core-api</artifactId>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-core-api</artifactId>
     </dependency>
 
     <dependency>

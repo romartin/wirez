@@ -24,18 +24,12 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
-import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.factory.DefaultNodeFactory;
-import org.wirez.core.api.graph.impl.DefaultEdge;
-import org.wirez.core.api.graph.impl.DefaultNode;
-import org.wirez.core.api.graph.impl.DefaultNodeImpl;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class Rectangle extends BasicDefinition implements DefaultNodeFactory<Rectangle> {
+public class Rectangle extends BasicNodeDefinition<Rectangle> {
 
     public static final String ID = "rectangle";
     public static final String COLOR = "#00CC00";
@@ -65,12 +59,4 @@ public class Rectangle extends BasicDefinition implements DefaultNodeFactory<Rec
                 properties));
     }
 
-
-    @Override
-    public DefaultNode<Rectangle, DefaultEdge> build(final String uuid,
-                                                     final Set<String> labels,
-                                                     final Map<String, Object> properties,
-                                                     final Bounds bounds) {
-        return new DefaultNodeImpl<Rectangle>(uuid, this, properties, labels, bounds);
-    }
 }

@@ -39,6 +39,7 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
 import org.wirez.core.api.graph.factory.DefaultNodeFactory;
+import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.util.Logger;
 import org.wirez.core.api.util.UUID;
@@ -48,8 +49,10 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.DefaultCanvasSettingsBuilder;
 import org.wirez.core.client.canvas.SelectionManager;
+import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.canvas.impl.DefaultCanvasHandler;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import javax.annotation.PostConstruct;
@@ -75,7 +78,7 @@ public class CanvasScreen {
     Canvas canvas;
 
     @Inject
-    CanvasHandler canvasHandler;
+    DefaultCanvasHandler canvasHandler;
 
     @Inject
     WirezClientManager wirezClientManager;
@@ -166,12 +169,12 @@ public class CanvasScreen {
     
     @OnOpen
     public void onOpen() {
-        setStateActive();
+        
     }
 
     @OnFocus
     public void onFocus() {
-        setStateActive();
+        
     }
     
     @OnClose
@@ -375,17 +378,19 @@ public class CanvasScreen {
     // This event should only have to be processed if the canvas is currently in use, 
     // but it's being processes for all canvas, so any shape added from palette results into all existing canvas screens.
     void onPaletteShapeSelected(@Observes PaletteShapeSelectedEvent paletteShapeSelectedEvent) {
-            checkNotNull("paletteShapeSelectedEvent", paletteShapeSelectedEvent);
-            final ShapeFactory factory = paletteShapeSelectedEvent.getShapeFactory();
-            buildShape(factory);
-            canvas.draw();
+        checkNotNull("paletteShapeSelectedEvent", paletteShapeSelectedEvent);
+        final ShapeFactory factory = paletteShapeSelectedEvent.getShapeFactory();
+        final Definition definition = paletteShapeSelectedEvent.getDefinition();
+        buildShape(definition, factory);
+        canvas.draw();
     }
     
-    private void buildShape(final ShapeFactory factory) {
-        final Definition definition = getDefinition(factory);
+    private void buildShape(final Definition definition, final ShapeFactory factory) {
         final Element element = buildElement(definition);
-        if ( definition instanceof DefaultNodeFactory) {
-            ((CanvasCommandManager)canvasHandler).execute(defaultCanvasCommands.ADD_NODE((DefaultNode) element, factory));
+        if ( element instanceof DefaultNode ) {
+            final DefaultNode defaultNode = (DefaultNode) element;
+            final CanvasCommand command = defaultCanvasCommands.ADD_NODE(defaultNode, factory);
+            canvasHandler.execute(command);
         } 
         
         /* TODO: else if ( w instanceof DefaultEdgeFactory) {
@@ -393,29 +398,16 @@ public class CanvasScreen {
         }*/
     }
 
-    private Definition getDefinition(final ShapeFactory factory) {
-        
-        final Collection<DefinitionSet> definitionSets = wirezClientManager.getDefinitionSets();
-        for (final DefinitionSet definitionSet : definitionSets) {
-            final Collection<Definition> definitions = definitionSet.getDefinitions();
-            for (final Definition definition : definitions) {
-                if (factory.accepts(definition)) return definition;
-            }
-        }
-        return null;
-    }
-    
     private Element<? extends Definition> buildElement(final Definition wirez) {
-        final Map<String, Object> properties = new HashMap<String, Object>();
-        final Set<String> labels = new HashSet<>();
         
+        // TODO: Set right bounds when a shape can be dragged into a given coordinates from the palettte.
         final Bounds bounds =
                 new DefaultBounds(
                         new DefaultBound(150d, 150d),
                         new DefaultBound(100d, 100d)
                 );
+        return ((ElementFactory) wirez).build(UUID.uuid(), new HashSet<String>(), new HashMap<String, Object>(), bounds);
         
-        return ((DefaultGraphFactory) wirez).build(UUID.uuid(), labels, properties, bounds);
     }
 
 }

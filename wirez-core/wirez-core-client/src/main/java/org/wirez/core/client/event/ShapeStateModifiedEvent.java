@@ -28,11 +28,11 @@ public class ShapeStateModifiedEvent implements UberFireEvent {
     
     private Canvas canvas;
     private Shape shape;
-    private BaseCanvas.ShapeState state;
+    private Canvas.ShapeState state;
 
     public ShapeStateModifiedEvent(final Canvas canvas,
                                    final Shape shape,
-                                   final BaseCanvas.ShapeState state) {
+                                   final Canvas.ShapeState state) {
         this.canvas = canvas;
         this.shape = shape;
         this.state = state;
@@ -46,7 +46,7 @@ public class ShapeStateModifiedEvent implements UberFireEvent {
         return shape;
     }
 
-    public BaseCanvas.ShapeState getState() {
+    public Canvas.ShapeState getState() {
         return state;
     }
 

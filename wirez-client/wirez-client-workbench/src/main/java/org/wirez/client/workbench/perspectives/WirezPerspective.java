@@ -28,6 +28,7 @@ import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
 import org.wirez.client.workbench.screens.CanvasWizardScreen;
 import org.wirez.client.workbench.screens.NotificationsScreen;
 import org.wirez.client.workbench.screens.PaletteScreen;
+import org.wirez.client.workbench.screens.PropertiesScreen;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -53,13 +54,11 @@ public class WirezPerspective {
         palettePanel.setWidth( 400 );
         palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( PaletteScreen.SCREEN_ID ) ) );
 
-        /*propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
+        propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         propertiesPanel.setMinWidth( 400 );
         propertiesPanel.setWidth( 400 );
-        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(WirezPropertiesScreen.SCREEN_ID ) ) );
-        palettePanel.appendChild( CompassPosition.SOUTH,
-                propertiesPanel );*/
-
+        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
+       
         notificationsPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         notificationsPanel.setMinWidth( 400 );
         notificationsPanel.setWidth( 400 );
@@ -67,6 +66,9 @@ public class WirezPerspective {
 
         perspective.getRoot().insertChild( CompassPosition.WEST,
                 palettePanel );
+
+        perspective.getRoot().insertChild( CompassPosition.EAST,
+                propertiesPanel );
 
         perspective.getRoot().insertChild( CompassPosition.SOUTH,
                 notificationsPanel );

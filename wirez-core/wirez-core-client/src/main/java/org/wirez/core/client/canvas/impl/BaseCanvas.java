@@ -182,14 +182,6 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         ******************************************
      */
 
-    /**
-     * Shape's available states.
-     */
-    public enum ShapeState {
-        SELECTED, DESELECTED;
-    }
-    
-    
     @Override
     public SelectionManager<Shape> select(final Shape shape) {
         selectedShapes.add(shape);

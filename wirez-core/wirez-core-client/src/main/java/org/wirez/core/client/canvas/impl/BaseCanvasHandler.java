@@ -274,6 +274,10 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         }
     }
     
+    public void removeListener(final CanvasListener listener) {
+        listeners.remove(listener);
+    }
+    
     /*
         ***************************************************************************************
         * Command handling

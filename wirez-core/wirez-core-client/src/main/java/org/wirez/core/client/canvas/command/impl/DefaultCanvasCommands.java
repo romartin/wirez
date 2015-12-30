@@ -17,6 +17,8 @@
 package org.wirez.core.client.canvas.command.impl;
 
 
+import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.DefaultEdge;
 import org.wirez.core.api.graph.impl.DefaultNode;
 import org.wirez.core.client.factory.ShapeFactory;
@@ -46,5 +48,21 @@ public class DefaultCanvasCommands {
         return new DeleteCanvasEdgeCommand( edge );
     }
 
+    public MoveCanvasElementCommand MOVE( final Element element ,
+                                          final Double x,
+                                          final Double y ) {
+        return new MoveCanvasElementCommand( element, x, y );
+    }
 
+    public SetCanvasElementSizeCommand RESIZE( final Element element ,
+                                               final Double w,
+                                               final Double h) {
+        return new SetCanvasElementSizeCommand( element, w, h );
+    }
+
+    public UpdateCanvasElementPropertyValueCommand UPDATE_PROPERTY( final Element element ,
+                                                                    final Property property,
+                                                                    final Object value ) {
+        return new UpdateCanvasElementPropertyValueCommand( element, property, value );
+    }
 }

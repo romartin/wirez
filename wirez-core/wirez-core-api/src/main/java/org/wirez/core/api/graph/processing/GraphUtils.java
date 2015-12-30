@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.definition.property.defaultset;
+package org.wirez.core.api.graph.processing;
 
-import org.wirez.core.api.definition.property.DefaultPropertySet;
-import org.wirez.core.api.definition.property.builder.BasePropertySetBuilder;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 
-public class DefaultPropertySetBuilder extends BasePropertySetBuilder<DefaultPropertySet> {
+import javax.enterprise.context.ApplicationScoped;
 
-    public static final String ID = "wirez.default";
-    private static final String NAME = "Element";
+@ApplicationScoped
+public class GraphUtils {
     
-    public DefaultPropertySetBuilder() {
-        super();
-        properties.add( new NameBuilder().build() );
-        propertySet = new DefaultPropertySet(ID, NAME, properties);
+    public Element get(final DefaultGraph graph, final String uuid) {
+        assert graph != null && uuid != null;
+        Element element = graph.getNode(uuid);
+        if (element == null) {
+            element = graph.getEdge(uuid);
+        }
+        return element;
     }
-
+    
 }

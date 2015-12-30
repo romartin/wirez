@@ -60,4 +60,11 @@ public interface Canvas {
      * Clears the canvas. 
      */
     Canvas clear();
+
+    /**
+     * Shape's available states.
+     */
+    public enum ShapeState {
+        SELECTED, DESELECTED;
+    }
 }

@@ -44,6 +44,6 @@ public class RectangleGlyph implements ShapeGlyph {
 
     @Override
     public double getHeight() {
-        return 50;
+        return HEIGHT;
     }
 }

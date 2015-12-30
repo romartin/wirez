@@ -37,6 +37,8 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Dependent
 public class Palette implements IsWidget {
@@ -120,6 +122,7 @@ public class Palette implements IsWidget {
         final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
 
         // Load entries.
+        final Map<String, PaletteGroup> paletteGroups = new HashMap<>();
         for (final ShapeFactory<? extends Definition, ? extends Shape> factory : factories) {
             final Definition definition = getDefinition(definitions, factory);
 
@@ -127,11 +130,16 @@ public class Palette implements IsWidget {
 
                 final String category = definition.getContent().getCategory();
                 final String description = factory.getDescription();
-                final PaletteGroup paletteGroup = buildPaletteGroup();
-                paletteGroup.setSize(350, 100);
-                paletteGroup.setHeader(category);
-                view.addGroup(paletteGroup);
 
+                PaletteGroup paletteGroup = paletteGroups.get(category);
+                if (null == paletteGroup) {
+                    paletteGroup = buildPaletteGroup();
+                    paletteGroup.setSize(350, 100);
+                    paletteGroup.setHeader(category);
+                    view.addGroup(paletteGroup);
+                    paletteGroups.put(category, paletteGroup);
+                }
+                
                 final ShapeGlyph glyph = factory.getGlyph();
                 paletteGroup.addGlyph(description, glyph, new Command() {
                     @Override

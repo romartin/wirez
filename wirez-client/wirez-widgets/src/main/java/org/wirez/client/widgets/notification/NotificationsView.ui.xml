@@ -30,12 +30,6 @@
 
   <b:Container fluid="true">
 
-    <b:Row>
-      <b:Column size="MD_12" >
-        <b:Heading size="H3" text="Wirez Logs"/>
-      </b:Column>
-    </b:Row>
-
     <b:Row ui:field="logsRow">
       <b:Column size="MD_12" >
         <g:VerticalPanel>

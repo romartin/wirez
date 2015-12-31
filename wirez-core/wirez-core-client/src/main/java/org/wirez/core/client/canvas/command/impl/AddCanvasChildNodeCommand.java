@@ -18,9 +18,10 @@ package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.commands.AddEdgeCommand;
-import org.wirez.core.api.graph.impl.ViewEdge;
+import org.wirez.core.api.graph.commands.AddChildNodeCommand;
+import org.wirez.core.api.graph.commands.AddNodeCommand;
 import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
@@ -28,26 +29,29 @@ import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 import org.wirez.core.client.factory.ShapeFactory;
 
 /**
- * A Command to add a DefaultEdge to a Graph and add the corresponding canvas shapes.
+ * A Command to add a DefaultNode to a Graph and add the corresponding canvas shapes.
  */
-public class AddCanvasEdgeCommand extends BaseCanvasCommand {
+public class AddCanvasChildNodeCommand extends BaseCanvasCommand {
 
-    ViewEdge candidate;
+    ViewNode parent;
+    ViewNode candidate;
     ShapeFactory factory;
 
-    public AddCanvasEdgeCommand(final ViewEdge candidate, final ShapeFactory factory ) {
+    public AddCanvasChildNodeCommand(final ViewNode parent, final ViewNode candidate, final ShapeFactory factory ) {
+        this.parent = parent;
         this.candidate = candidate;
         this.factory = factory;
     }
 
     @Override
     public Command getCommand() {
-        return new AddEdgeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
+        return new AddChildNodeCommand((DefaultGraph) canvasHandler.getGraph(), parent, candidate);
     }
 
     @Override
     public CanvasCommand apply() {
         ( (BaseCanvasHandler) canvasHandler).register(factory, candidate);
+        ( (BaseCanvasHandler) canvasHandler).addChild(parent, candidate);
         ( (BaseCanvasHandler) canvasHandler).applyElementMutation(candidate);
         return this;
     }
@@ -65,7 +69,7 @@ public class AddCanvasEdgeCommand extends BaseCanvasCommand {
     
     @Override
     public String toString() {
-        return "AddCanvasEdgeCommand [edge=" + candidate.getUUID() + ", factory=" + factory + "]";
+        return "AddCanvasChildNodeCommand [parent=" + parent + ", candidate=" + candidate.getUUID() + ", factory=" + factory + "]";
     }
 
 

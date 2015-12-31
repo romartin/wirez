@@ -20,47 +20,48 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.Element;
 
 import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class ViewElementImpl<W extends Definition> extends ElementImpl implements ViewElement<W> {
+public class ElementImpl implements Element {
 
-    protected W definition;
-    protected Bounds bounds;
+    protected String uuid;
+    protected Map<String, Object> properties;
+    protected Set<String> labels;
 
-    public ViewElementImpl(@MapsTo("uuid") String uuid,
-                           @MapsTo("definition") W definition,
-                           @MapsTo("properties") Map<String, Object> properties,
-                           @MapsTo("labels") Set<String> labels,
-                           @MapsTo("bounds") Bounds bounds) {
-        super(uuid, properties, labels);
-        this.definition = definition;
-        this.bounds = bounds;
+    public ElementImpl(@MapsTo("uuid") String uuid,
+                       @MapsTo("properties") Map<String, Object> properties,
+                       @MapsTo("labels") Set<String> labels) {
+        this.uuid = uuid;
+        this.properties = properties;
+        this.labels = labels;
     }
 
     @Override
-    public W getDefinition() {
-        return definition;
+    public String getUUID() {
+        return uuid;
     }
 
     @Override
-    public Bounds getBounds() {
-        return bounds;
+    public Map<String, Object> getProperties() {
+        return properties;
     }
 
-    public void setBounds(Bounds bounds) {
-        this.bounds = bounds;
+    @Override
+    public Set<String> getLabels() {
+        return labels;
     }
+
 
     @Override
     public String toString() {
-        return "ViewElementImpl{" +
+        return "ElementImpl{" +
                 "uuid=" + uuid +
-                ", def=" + definition +
                 ", properties=" + properties +
-                ", labels=" + labels +
+                ", labels=" + labels + 
                 '}';
     }
 

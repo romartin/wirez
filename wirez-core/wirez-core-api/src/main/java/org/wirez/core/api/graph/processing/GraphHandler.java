@@ -16,7 +16,9 @@
 
 package org.wirez.core.api.graph.processing;
 
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -34,6 +36,20 @@ public class GraphHandler {
             element = graph.getEdge(uuid);
         }
         return element;
+    }
+
+    public Node getNode(final DefaultGraph graph, final String uuid) {
+        if ( null != uuid ) {
+            return graph.getNode(uuid);
+        }
+        return null;
+    }
+
+    public Edge getEdge(final DefaultGraph graph, final String uuid) {
+        if ( null != uuid ) {
+            return graph.getEdge(uuid);
+        }
+        return null;
     }
     
 }

@@ -18,13 +18,14 @@ package org.wirez.core.api.util;
 
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.HasView;
+import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.impl.ChildRelationship;
 import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.api.graph.processing.AbstractVisitor;
 import org.wirez.core.api.graph.processing.GraphVisitor;
+import org.wirez.core.api.graph.processing.Visitor;
 import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.List;
@@ -69,7 +70,7 @@ public class Logger {
     }
 
     public static void log(final DefaultGraph graph) {
-        new GraphVisitor(graph, new GraphVisitor.Visitor() {
+        new GraphVisitor(graph, new AbstractVisitor() {
             @Override
             public void visitGraph(DefaultGraph graph) {
                 if (graph == null) {
@@ -84,7 +85,7 @@ public class Logger {
             }
 
             @Override
-            public void visitNode(ViewNode node) {
+            public void visitViewNode(ViewNode node) {
                 String graphTitle = node.getDefinition().getContent().getTitle();
                 String graphDesc = node.getDefinition().getContent().getDescription();
                 log("**************************************************************************************");
@@ -102,7 +103,7 @@ public class Logger {
             }
 
             @Override
-            public void visitEdge(ViewEdge edge) {
+            public void visitViewEdge(ViewEdge edge) {
                 if (edge == null) {
                     error("Edge is null!");
                 } else {
@@ -121,7 +122,7 @@ public class Logger {
             }
 
             @Override
-            public void visitUnconnectedEdge(ViewEdge edge) {
+            public void visitUnconnectedEdge(Edge edge) {
                 if (edge == null) {
                     error("Edge unconnected is null!");
                 } else {
@@ -140,21 +141,148 @@ public class Logger {
             }
 
             @Override
-            public void end() {
+            public void endVisit() {
                 log("**************************************************************************************");
             }
         }, GraphVisitor.VisitorPolicy.EDGE_FIRST)
-                .setBoundsVisitor(new GraphVisitor.BoundsVisitor() {
+                .setBoundsVisitor(new Visitor.BoundsVisitor() {
                     @Override
                     public void visitBounds(HasView element, Bounds.Bound ul, Bounds.Bound lr) {
                         log(" Bound UL [x=" + ul.getX() + ", y=" + ul.getY() + "]");
                         log(" Bound LR [x=" + lr.getX() + ", y=" + lr.getY() + "]");
                     }
                 })
-                .setPropertyVisitor(new GraphVisitor.PropertyVisitor() {
+                .setPropertyVisitor(new Visitor.PropertyVisitor() {
                     @Override
                     public void visitProperty(Element element, String key, Object value) {
                         log(" Property [key=" + key + ", value=" + value + "]");
+                    }
+                })
+                .run();
+    }
+
+    public static void resume(final DefaultGraph graph) {
+        new GraphVisitor(graph, new AbstractVisitor() {
+            @Override
+            public void visitGraph(DefaultGraph graph) {
+                if (graph == null) {
+                    error("Graph is null!");
+                } else {
+                    log("**************************************************************************************");
+                    log("Graph [uuid=" + graph.getUUID() + ", name=" + ( (String) graph.getProperties().get("name") ) + "]");
+                }
+            }
+
+            @Override
+            public void visitViewNode(ViewNode node) {
+                String graphTitle = node.getDefinition().getContent().getTitle();
+                log( graphTitle + " [uuid=" + node.getUUID() + "]");
+
+                List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
+                if (outEdges == null || outEdges.isEmpty()) {
+                    log("No outgoing edges found for " + " [uuid=" + node.getUUID() + "]");
+                } else {
+                    log("Outgoing edge for" + " [uuid=" + node.getUUID() + "]");
+                }
+            }
+
+            @Override
+            public void visitNode(Node node) {
+                log( "Node [uuid=" + node.getUUID() + "]");
+
+                List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
+                if (outEdges == null || outEdges.isEmpty()) {
+                    log("No outgoing edges found for " + " [uuid=" + node.getUUID() + "]");
+                } else {
+                    log("Outgoing edge for" + " [uuid=" + node.getUUID() + "]");
+                }
+            }
+
+            @Override
+            public void visitViewEdge(ViewEdge edge) {
+                if (edge == null) {
+                    error("Edge is null!");
+                } else {
+                    final String edgeId = edge.getUUID();
+
+                    log("ViewEdge [uuid=" + edgeId + "]");
+
+                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
+                    if (outNode == null) {
+                        error("No outgoing node found for [uuid=" + edgeId + "]");
+                    } else {
+                        log("Outgoing node for [uuid=" + edgeId + "]");
+                    }
+                }
+            }
+
+            @Override
+            public void visitUnconnectedEdge(Edge edge) {
+                if (edge == null) {
+                    error("UnconnectedEdge is null!");
+                } else {
+                    final String edgeId = edge.getUUID();
+
+                    log("UnconnectedEdge [uuid=" + edgeId + "]");
+
+                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
+                    if (outNode == null) {
+                        error("No outgoing node found for [uuid=" + edgeId + "]");
+                    } else {
+                        log("Outgoing node for [uuid=" + edgeId + "]");
+                    }
+                }
+            }
+
+            @Override
+            public void visitChildRelationship(ChildRelationship edge) {
+                if (edge == null) {
+                    error("ChildRelationship is null!");
+                } else {
+                    final String edgeId = edge.getUUID();
+
+                    log("ChildRelationship [uuid=" + edgeId + "]");
+
+                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
+                    if (outNode == null) {
+                        error("No outgoing node found for [uuid=" + edgeId + "]");
+                    } else {
+                        log("Outgoing node for [uuid=" + edgeId + "]");
+                    }
+                }
+            }
+
+            @Override
+            public void visitEdge(Edge edge) {
+                if (edge == null) {
+                    error("Edge is null!");
+                } else {
+                    final String edgeId = edge.getUUID();
+
+                    log("Edge [uuid=" + edgeId + "]");
+
+                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
+                    if (outNode == null) {
+                        error("No outgoing node found for [uuid=" + edgeId + "]");
+                    } else {
+                        log("Outgoing node for [uuid=" + edgeId + "]");
+                    }
+                }
+            }
+
+            @Override
+            public void endVisit() {
+                log("**************************************************************************************");
+            }
+        }, GraphVisitor.VisitorPolicy.EDGE_FIRST)
+                .setBoundsVisitor(new Visitor.BoundsVisitor() {
+                    @Override
+                    public void visitBounds(HasView element, Bounds.Bound ul, Bounds.Bound lr) {
+                    }
+                })
+                .setPropertyVisitor(new Visitor.PropertyVisitor() {
+                    @Override
+                    public void visitProperty(Element element, String key, Object value) {
                     }
                 })
                 .run();

@@ -329,7 +329,7 @@ public class CanvasScreen {
     }
 
     private void logGraph() {
-        Logger.log((DefaultGraph) canvasHandler.getGraph());
+        Logger.resume((DefaultGraph) canvasHandler.getGraph());
     }
 
     private void sendGraph() {

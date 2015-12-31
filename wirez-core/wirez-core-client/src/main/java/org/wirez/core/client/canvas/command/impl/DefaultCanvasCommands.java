@@ -49,6 +49,12 @@ public class DefaultCanvasCommands {
         return new DeleteCanvasEdgeCommand( edge );
     }
 
+    public AddCanvasChildNodeCommand ADD_CHILD(final ViewNode parent, ViewNode child, final ShapeFactory factory ) {
+        return new AddCanvasChildNodeCommand( parent, child, factory );
+    }
+    
+    // TODO: Remove parent command.
+    
     public MoveCanvasElementCommand MOVE( final ViewElement element ,
                                           final Double x,
                                           final Double y ) {

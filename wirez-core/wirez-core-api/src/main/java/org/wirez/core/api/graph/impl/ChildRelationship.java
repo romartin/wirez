@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph;
+package org.wirez.core.api.graph.impl;
 
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Node;
 
 /**
- * Any element of a graph that has a view representation associated. A view representation is given by a view definition and the view bounds.
- * @param <W> The view definition.
+ * A relationship for graphs to indicate node child-parent relationships..
  */
-public interface HasView<W extends Definition> {
+public interface ChildRelationship<T extends Node> extends Edge<T>, Element {
 
-    W getDefinition();
+    void setChildNode(Node node);
 
-    Bounds getBounds();
+    void setParentNode(Node node);
     
 }

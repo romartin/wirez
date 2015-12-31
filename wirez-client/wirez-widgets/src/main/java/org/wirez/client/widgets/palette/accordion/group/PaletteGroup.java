@@ -87,7 +87,7 @@ public class PaletteGroup implements IsWidget {
         assert glyph != null;
 
         final double[] positions = layoutBuilder.add(glyph.getWidth(), glyph.getHeight());
-        view.addGlyph(glyph.getGroup().setDraggable(true), positions[0], positions[1], new GlyphViewCallback() {
+        view.addGlyph(glyph.getGroup().setDraggable(false), positions[0], positions[1], new GlyphViewCallback() {
             @Override
             public void onClick() {
                 callback.execute();

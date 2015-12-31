@@ -42,6 +42,7 @@ import org.wirez.core.client.control.*;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.*;
 
 import javax.enterprise.event.Event;
@@ -101,26 +102,6 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         final Shape shape = factory.build(wirez, this);
 
         shape.setId(candidate.getUUID());
-
-
-        if (shape instanceof HasMutation) {
-
-            final HasMutation hasMutation = (HasMutation) shape;
-
-            if (hasMutation.accepts(MutationType.STATIC)) {
-
-                MutationContext context = new StaticMutationContext();
-
-                if (shape instanceof HasGraphElementMutation) {
-                    final HasGraphElementMutation hasGraphElement = (HasGraphElementMutation) shape;
-                    hasGraphElement.applyElementPosition(candidate, this, context);
-                    hasGraphElement.applyElementSize(candidate, this, context);
-                    hasGraphElement.applyElementProperties(candidate, this, context);
-                }
-
-            }
-
-        }
 
         // Selection handling.
         if (canvas instanceof SelectionManager) {
@@ -191,6 +172,37 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         canvas.addShape(shape);
         canvas.draw();
         fireElementAdded(candidate);
+    }
+
+    public void applyElementMutation(final ViewElement candidate) {
+        final Shape shape = canvas.getShape(candidate.getUUID());
+        if (shape instanceof HasMutation) {
+
+            final HasMutation hasMutation = (HasMutation) shape;
+
+            if (hasMutation.accepts(MutationType.STATIC)) {
+
+                MutationContext context = new StaticMutationContext();
+
+                if (shape instanceof HasGraphElementMutation) {
+                    final HasGraphElementMutation hasGraphElement = (HasGraphElementMutation) shape;
+                    hasGraphElement.applyElementPosition(candidate, this, context);
+                    hasGraphElement.applyElementSize(candidate, this, context);
+                    hasGraphElement.applyElementProperties(candidate, this, context);
+                }
+
+            }
+
+        }
+    }
+    
+    public void addChild(final ViewElement parent, final ViewElement child) {
+        assert parent != null && child != null;
+
+        final BaseShape parentShape = (BaseShape) canvas.getShape(parent.getUUID());
+        final BaseShape childShape = (BaseShape) canvas.getShape(child.getUUID());
+        parentShape.add(childShape);
+        
     }
 
     public void updateElementSize(final ViewElement element) {

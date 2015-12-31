@@ -47,6 +47,7 @@ public class AddCanvasNodeCommand extends BaseCanvasCommand {
     @Override
     public CanvasCommand apply() {
         ( (BaseCanvasHandler) canvasHandler).register(factory, candidate);
+        ( (BaseCanvasHandler) canvasHandler).applyElementMutation(candidate);
         return this;
     }
 

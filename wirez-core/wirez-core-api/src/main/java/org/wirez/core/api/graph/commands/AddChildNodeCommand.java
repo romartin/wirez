@@ -20,24 +20,31 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
+import org.wirez.core.api.graph.impl.ChildRelationship;
+import org.wirez.core.api.graph.impl.ChildRelationshipImpl;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.util.UUID;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * A Command to add a DefaultNode to a DefaultGraph
  */
 public class AddChildNodeCommand implements Command {
 
+    private DefaultGraph target;
     private ViewNode parent;
     private ViewNode candidate;
 
-    public AddChildNodeCommand(final ViewNode parent,
+    public AddChildNodeCommand(final DefaultGraph target,
+                               final ViewNode parent,
                                final ViewNode candidate ) {
+        this.target = PortablePreconditions.checkNotNull( "target",
+                target );
         this.parent = PortablePreconditions.checkNotNull( "parent",
                 parent );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
@@ -54,7 +61,15 @@ public class AddChildNodeCommand implements Command {
     public CommandResult execute(final RuleManager ruleManager) {
         final CommandResult results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
-            // TODO: target.addNode( candidate );
+            final String uuid = UUID.uuid();
+            final Map<String, Object> properties = new HashMap<>();
+            final Set<String> labels = new HashSet<>(1);
+            final ChildRelationship childRelationship = new ChildRelationshipImpl(uuid, properties, labels);
+            childRelationship.setParentNode(parent);
+            childRelationship.setChildNode(candidate);
+            target.addNode( candidate );
+            parent.getOutEdges().add(childRelationship);
+            candidate.getInEdges().add(childRelationship);
         }
         return results;
     }
@@ -62,10 +77,10 @@ public class AddChildNodeCommand implements Command {
     private CommandResult check(final RuleManager ruleManager) {
         final DefaultRuleManager defaultRuleManager = (DefaultRuleManager) ruleManager;
         final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkContainment( parent, candidate).violations();
-        // TODO: final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality( parent, candidate, RuleManager.Operation.ADD).violations();
+        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(containmentRuleViolations);
-        // TODO: violations.addAll(cardinalityRuleViolations);
+        violations.addAll(cardinalityRuleViolations);
         final CommandResult results = new DefaultCommandResult(violations);
         return results;
     }

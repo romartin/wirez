@@ -19,19 +19,14 @@ package org.wirez.core.api.util;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.impl.ChildRelationship;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewNode;
-import org.wirez.core.api.graph.processing.AbstractVisitor;
-import org.wirez.core.api.graph.processing.GraphVisitor;
-import org.wirez.core.api.graph.processing.Visitor;
+import org.wirez.core.api.graph.impl.*;
+import org.wirez.core.api.graph.processing.visitor.*;
 import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.List;
 
 /**
- * Just for development use
+ * Just for development use.
  */
 public class Logger {
 
@@ -68,224 +63,137 @@ public class Logger {
         RuleViolation.Type type = violation.getViolationType();
         log("Rule Violation [message=" + message + "] [type" + type.name());
     }
+    
+    private static final AbstractGraphVisitorCallback VISITOR_CALLBACK = new AbstractGraphVisitorCallback() {
+
+        @Override
+        public void visitGraph(DefaultGraph graph) {
+            if (graph == null) {
+                error("Graph is null!");
+            } else {
+                log("Graph UUID: " + graph.getUUID());
+                log("Graph Id: " + graph.getDefinition().getId());
+                log("  Graph Starting nodes");
+                log("  ====================");
+            }
+        }
+
+        @Override
+        public void visitNode(Node node) {
+            log("Node UUID: " + node.getUUID());
+            List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
+            if (outEdges == null || outEdges.isEmpty()) {
+                log("  No outgoing edges found");
+            } else {
+                log("  Outgoing edges");
+                log("  ==============");
+            }
+        }
+
+        @Override
+        public void visitViewNode(ViewNode node) {
+            log("View Node UUID: " + node.getUUID());
+            log("View Node Id: " + node.getDefinition().getId());
+
+            List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
+            if (outEdges == null || outEdges.isEmpty()) {
+                log("  No outgoing edges found");
+            } else {
+                log("  Outgoing edges");
+                log("  ==============");
+            }
+        }
+
+        @Override
+        public void visitDefaultNode(final DefaultNode node) {
+            log("Default Node UUID: " + node.getUUID());
+            List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
+            if (outEdges == null || outEdges.isEmpty()) {
+                log("  No outgoing edges found");
+            } else {
+                log("  Outgoing edges");
+                log("  ==============");
+            }
+        }
+
+        @Override
+        public void visitEdge(Edge edge) {
+            log("Edge UUI: " + edge.getUUID());
+
+            final ViewNode outNode = (ViewNode) edge.getTargetNode();
+            if (outNode == null) {
+                log("  No outgoing node found");
+            } else {
+                log("  Outgoing Node");
+                log("  ==============");
+            }
+        }
+
+        @Override
+        public void visitViewEdge(ViewEdge edge) {
+            log("View Edge UUI: " + edge.getUUID());
+            log("View Edge Id: " + edge.getDefinition().getId());
+
+            final ViewNode outNode = (ViewNode) edge.getTargetNode();
+            if (outNode == null) {
+                log("  No outgoing node found");
+            } else {
+                log("  Outgoing Node");
+                log("  ==============");
+            }
+        }
+
+        @Override
+        public void visitDefaultEdge(DefaultEdge edge) {
+            log("Default Edge UUI: " + edge.getUUID());
+
+            final ViewNode outNode = (ViewNode) edge.getTargetNode();
+            if (outNode == null) {
+                log("  No outgoing node found");
+            } else {
+                log("  Outgoing Node");
+                log("  ==============");
+            }
+        }
+
+        @Override
+        public void visitChildRelationEdge(ChildRelationEdge edge) {
+            log("Child-Relation Edge UUI: " + edge.getUUID());
+
+            final ViewNode outNode = (ViewNode) edge.getTargetNode();
+            if (outNode == null) {
+                log("  No outgoing node found");
+            } else {
+                log("  Outgoing Node");
+                log("  ==============");
+            }
+        }
+
+    };
 
     public static void log(final DefaultGraph graph) {
-        new GraphVisitor(graph, new AbstractVisitor() {
-            @Override
-            public void visitGraph(DefaultGraph graph) {
-                if (graph == null) {
-                    error("Graph is null!");
-                } else {
-                    log("**************************************************************************************");
-                    log("Title: " + graph.getDefinition().getContent().getTitle());
-                    log("Description: " + graph.getDefinition().getContent().getDescription());
-                    log("Starting nodes");
-                    log("==============");
-                }
-            }
-
-            @Override
-            public void visitViewNode(ViewNode node) {
-                String graphTitle = node.getDefinition().getContent().getTitle();
-                String graphDesc = node.getDefinition().getContent().getDescription();
-                log("**************************************************************************************");
-                log("Node Id: " + node.getUUID());
-                log("Node Title: " + graphTitle);
-                log("Node Description: " + graphDesc);
-
-                List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
-                if (outEdges == null || outEdges.isEmpty()) {
-                    log("No outgoing edges found");
-                } else {
-                    log("Outgoing edges");
-                    log("==============");
-                }
-            }
-
-            @Override
-            public void visitViewEdge(ViewEdge edge) {
-                if (edge == null) {
-                    error("Edge is null!");
-                } else {
-                    final String edgeId = edge.getUUID();
-
-                    log("Edge Id: " + edgeId);
-
-                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
-                    if (outNode == null) {
-                        error("No outgoing node found");
-                    } else {
-                        log("Outgoing Node");
-                        log("==============");
-                    }
-                }
-            }
-
-            @Override
-            public void visitUnconnectedEdge(Edge edge) {
-                if (edge == null) {
-                    error("Edge unconnected is null!");
-                } else {
-                    final String edgeId = edge.getUUID();
-
-                    log("Edge unconnected Id: " + edgeId);
-
-                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
-                    if (outNode == null) {
-                        error("No outgoing node found");
-                    } else {
-                        log("Outgoing Node");
-                        log("==============");
-                    }
-                }
-            }
-
-            @Override
-            public void endVisit() {
-                log("**************************************************************************************");
-            }
-        }, GraphVisitor.VisitorPolicy.EDGE_FIRST)
-                .setBoundsVisitor(new Visitor.BoundsVisitor() {
+        new DefaultGraphVisitorImpl()
+                .setBoundsVisitorCallback(new GraphVisitorCallback.BoundsVisitorCallback() {
                     @Override
                     public void visitBounds(HasView element, Bounds.Bound ul, Bounds.Bound lr) {
                         log(" Bound UL [x=" + ul.getX() + ", y=" + ul.getY() + "]");
                         log(" Bound LR [x=" + lr.getX() + ", y=" + lr.getY() + "]");
                     }
                 })
-                .setPropertyVisitor(new Visitor.PropertyVisitor() {
+
+                .setPropertiesVisitorCallback(new GraphVisitorCallback.PropertyVisitorCallback() {
                     @Override
                     public void visitProperty(Element element, String key, Object value) {
                         log(" Property [key=" + key + ", value=" + value + "]");
                     }
                 })
-                .run();
+                .run(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
+
+
     }
 
     public static void resume(final DefaultGraph graph) {
-        new GraphVisitor(graph, new AbstractVisitor() {
-            @Override
-            public void visitGraph(DefaultGraph graph) {
-                if (graph == null) {
-                    error("Graph is null!");
-                } else {
-                    log("**************************************************************************************");
-                    log("Graph [uuid=" + graph.getUUID() + ", name=" + ( (String) graph.getProperties().get("name") ) + "]");
-                }
-            }
-
-            @Override
-            public void visitViewNode(ViewNode node) {
-                String graphTitle = node.getDefinition().getContent().getTitle();
-                log( graphTitle + " [uuid=" + node.getUUID() + "]");
-
-                List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
-                if (outEdges == null || outEdges.isEmpty()) {
-                    log("No outgoing edges found for " + " [uuid=" + node.getUUID() + "]");
-                } else {
-                    log("Outgoing edge for" + " [uuid=" + node.getUUID() + "]");
-                }
-            }
-
-            @Override
-            public void visitNode(Node node) {
-                log( "Node [uuid=" + node.getUUID() + "]");
-
-                List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
-                if (outEdges == null || outEdges.isEmpty()) {
-                    log("No outgoing edges found for " + " [uuid=" + node.getUUID() + "]");
-                } else {
-                    log("Outgoing edge for" + " [uuid=" + node.getUUID() + "]");
-                }
-            }
-
-            @Override
-            public void visitViewEdge(ViewEdge edge) {
-                if (edge == null) {
-                    error("Edge is null!");
-                } else {
-                    final String edgeId = edge.getUUID();
-
-                    log("ViewEdge [uuid=" + edgeId + "]");
-
-                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
-                    if (outNode == null) {
-                        error("No outgoing node found for [uuid=" + edgeId + "]");
-                    } else {
-                        log("Outgoing node for [uuid=" + edgeId + "]");
-                    }
-                }
-            }
-
-            @Override
-            public void visitUnconnectedEdge(Edge edge) {
-                if (edge == null) {
-                    error("UnconnectedEdge is null!");
-                } else {
-                    final String edgeId = edge.getUUID();
-
-                    log("UnconnectedEdge [uuid=" + edgeId + "]");
-
-                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
-                    if (outNode == null) {
-                        error("No outgoing node found for [uuid=" + edgeId + "]");
-                    } else {
-                        log("Outgoing node for [uuid=" + edgeId + "]");
-                    }
-                }
-            }
-
-            @Override
-            public void visitChildRelationship(ChildRelationship edge) {
-                if (edge == null) {
-                    error("ChildRelationship is null!");
-                } else {
-                    final String edgeId = edge.getUUID();
-
-                    log("ChildRelationship [uuid=" + edgeId + "]");
-
-                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
-                    if (outNode == null) {
-                        error("No outgoing node found for [uuid=" + edgeId + "]");
-                    } else {
-                        log("Outgoing node for [uuid=" + edgeId + "]");
-                    }
-                }
-            }
-
-            @Override
-            public void visitEdge(Edge edge) {
-                if (edge == null) {
-                    error("Edge is null!");
-                } else {
-                    final String edgeId = edge.getUUID();
-
-                    log("Edge [uuid=" + edgeId + "]");
-
-                    final ViewNode outNode = (ViewNode) edge.getTargetNode();
-                    if (outNode == null) {
-                        error("No outgoing node found for [uuid=" + edgeId + "]");
-                    } else {
-                        log("Outgoing node for [uuid=" + edgeId + "]");
-                    }
-                }
-            }
-
-            @Override
-            public void endVisit() {
-                log("**************************************************************************************");
-            }
-        }, GraphVisitor.VisitorPolicy.EDGE_FIRST)
-                .setBoundsVisitor(new Visitor.BoundsVisitor() {
-                    @Override
-                    public void visitBounds(HasView element, Bounds.Bound ul, Bounds.Bound lr) {
-                    }
-                })
-                .setPropertyVisitor(new Visitor.PropertyVisitor() {
-                    @Override
-                    public void visitProperty(Element element, String key, Object value) {
-                    }
-                })
-                .run();
+        new DefaultGraphVisitorImpl().run(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
     }
     
     public static void log(final String message) {

@@ -125,8 +125,10 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
-        final int sourceMagnet = (int) element.getProperties().get(ConnectionSourceMagnetBuilder.PROPERTY_ID);
-        final int targetMagnet = (int) element.getProperties().get(ConnectionTargetMagnetBuilder.PROPERTY_ID);
+        final Integer _sourceMagnet = (Integer) element.getProperties().get(ConnectionSourceMagnetBuilder.PROPERTY_ID);
+        final Integer _targetMagnet = (Integer) element.getProperties().get(ConnectionTargetMagnetBuilder.PROPERTY_ID);
+        final int sourceMagnet = _sourceMagnet != null ? _sourceMagnet : 0;
+        final int targetMagnet = _targetMagnet != null ? _targetMagnet : 0;
         
         if (targetNode != null) {
             final BaseShape outNodeShape = (BaseShape) canvas.getShape(targetNode.getUUID());

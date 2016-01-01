@@ -36,7 +36,7 @@ import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.ViewElement;
-import org.wirez.core.api.graph.processing.GraphHandler;
+import org.wirez.core.api.graph.processing.handler.DefaultGraphHandler;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.WirezClientManager;
 import org.wirez.core.client.canvas.Canvas;
@@ -71,7 +71,7 @@ public class PropertiesEditor implements IsWidget {
 
     WirezClientManager wirezClientManager;
     DefaultCanvasCommands defaultCommands;
-    GraphHandler graphHandler;
+    DefaultGraphHandler defaultGraphHandler;
     View view;
     private CanvasHandler canvasHandler;
     private DefaultCanvasListener canvasListener;
@@ -81,11 +81,11 @@ public class PropertiesEditor implements IsWidget {
     public PropertiesEditor(final View view,
                             final WirezClientManager wirezClientManager,
                             final DefaultCanvasCommands defaultCommands,
-                            final GraphHandler graphUtils) {
+                            final DefaultGraphHandler defaultGraphHandler) {
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.defaultCommands = defaultCommands;
-        this.graphHandler = graphUtils;
+        this.defaultGraphHandler = defaultGraphHandler;
     }
 
     @PostConstruct
@@ -414,7 +414,7 @@ public class PropertiesEditor implements IsWidget {
             show(defaultGraph);
         } else {
             final String shapeUUID = shape.getId();
-            final ViewElement<? extends Definition> element = (ViewElement<? extends Definition>) graphHandler.get(defaultGraph, shapeUUID);
+            final ViewElement<? extends Definition> element = (ViewElement<? extends Definition>) defaultGraphHandler.initialize(defaultGraph).get(shapeUUID);
             if (element != null && Canvas.ShapeState.SELECTED.equals(state)) {
                 GWT.log("PropertiesEditor  - Showing properties for node [" + element.getUUID() + "]");
                 show(element);

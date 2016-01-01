@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,49 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.processing;
+package org.wirez.core.api.graph.processing.handler;
 
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 
-import javax.enterprise.context.ApplicationScoped;
 import java.util.Collection;
+import java.util.List;
 
-public interface GraphHandler {
+/**
+ * A generic graph handler interface for processing and querying operations over a graph.
+ */
+public interface GraphHandler<G extends Graph, N extends Node, E extends Edge> {
 
+    /**
+     * Initialize the handler with the graph.
+     */
+    GraphHandler<G, N, E> initialize(G graph);
+    
     /**
      * Returns the element (node or edge) with the given uuid.
      */
-    Element get(DefaultGraph graph, String uuid);
+    Element get(String uuid);
 
     /**
      * Returns the node with the given uuid.
      */
-    Node getNode(DefaultGraph graph, String uuid);
+    N getNode(String uuid);
 
     /**
      * Returns the edge with the given uuid.
      */
-    Edge getEdge(DefaultGraph graph, String uuid);
+    E getEdge(String uuid);
 
     /**
-     * Returns the children nodes for a given parent one.
-     * Impls can iterates over the child relationships in several ways to obtain best performance.
+     * Returns the nodes with the given labels.
      */
-    Collection<Node> getChildren(Node parent);
+    Collection<N> findNodes(List<String> labels);
+
+    /**
+     * Returns the edges with the given labels.
+     */
+    Collection<E> findEdges(List<String> labels);
     
 }

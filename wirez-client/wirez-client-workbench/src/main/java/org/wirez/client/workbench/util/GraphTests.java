@@ -104,7 +104,7 @@ public class GraphTests {
 
         Map<String, Object> childRelationshipProperties = new HashMap<>();
         Set<String> childRelationshipLabels = new HashSet<>();
-        ChildRelationship childRelationship = new ChildRelationshipImpl("childRelationshipUUID", childRelationshipProperties, childRelationshipLabels);
+        ChildRelationEdge childRelationship = new ChildRelationEdge("childRelationshipUUID", childRelationshipProperties, childRelationshipLabels);
         parentNode.getOutEdges().add(childRelationship);
         childRelationship.setParentNode(parentNode);
         
@@ -167,7 +167,7 @@ public class GraphTests {
 
         Map<String, Object> childRelationshipProperties = new HashMap<>();
         Set<String> childRelationshipLabels = new HashSet<>();
-        ChildRelationship childRelationship = new ChildRelationshipImpl("childRelationshipUUID", childRelationshipProperties, childRelationshipLabels);
+        ChildRelationEdge childRelationship = new ChildRelationEdge("childRelationshipUUID", childRelationshipProperties, childRelationshipLabels);
         parentNode.getOutEdges().add(childRelationship);
         childRelationship.setParentNode(parentNode);
 
@@ -192,7 +192,7 @@ public class GraphTests {
 
         Map<String, Object> childRelationshipProperties1 = new HashMap<>();
         Set<String> childRelationshipLabels1 = new HashSet<>();
-        ChildRelationship childRelationship1 = new ChildRelationshipImpl("childRelationshipUUID1", childRelationshipProperties1, childRelationshipLabels1);
+        ChildRelationEdge childRelationship1 = new ChildRelationEdge("childRelationshipUUID1", childRelationshipProperties1, childRelationshipLabels1);
         parentNode.getOutEdges().add(childRelationship1);
         childRelationship1.setParentNode(parentNode);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,28 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.processing;
+package org.wirez.core.api.graph.processing.visitor;
 
 import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.impl.ChildRelationship;
-import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.ViewNode;
 
-public interface Visitor {
+/**
+ * A generic graph visitor callback interface.
+ */
+public interface GraphVisitorCallback<G extends Graph, N extends Node, E extends Edge> {
 
-    void visitGraph(DefaultGraph graph);
+    void visitGraph(G graph);
 
-    void visitViewNode(ViewNode node);
+    void visitNode(N node);
 
-    void visitNode(Node node);
-
-    void visitViewEdge(ViewEdge edge);
-
-    void visitEdge(Edge edge);
-
-    void visitChildRelationship(ChildRelationship childRelationship);
-
-    void visitUnconnectedEdge(Edge edge);
+    void visitEdge(E edge);
 
     void endVisit();
 
-    public interface BoundsVisitor {
+    interface BoundsVisitorCallback {
         void visitBounds(HasView element, Bounds.Bound ul, Bounds.Bound lr);
     }
 
-    public interface PropertyVisitor {
+    interface PropertyVisitorCallback {
         void visitProperty(Element element, String key, Object value);
     }
     

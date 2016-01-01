@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,72 +14,63 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.processing;
+package org.wirez.core.api.graph.processing.visitor;
 
 import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.impl.ChildRelationship;
-import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.api.graph.impl.*;
 
+import javax.enterprise.context.Dependent;
 import java.util.*;
 
-public class GraphVisitor {
+@Dependent
+public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
 
-    public enum VisitorPolicy {
-        EDGE_FIRST, EDGE_LAST;
-    }
-    
     private DefaultGraph graph;
-    private Visitor visitor;
-    private VisitorPolicy policy;
-    private Visitor.BoundsVisitor boundsVisitor = null;
-    private Visitor.PropertyVisitor propertyVisitor = null;
+    private DefaultGraphVisitorCallback visitorCallback;
+    private GraphVisitorPolicy policy;
+    private GraphVisitorCallback.BoundsVisitorCallback boundsVisitor = null;
+    private GraphVisitorCallback.PropertyVisitorCallback propertyVisitor = null;
     private Set<String> processesEdges;
 
-    public GraphVisitor(final DefaultGraph graph,
-                        final Visitor visitor,
-                        final VisitorPolicy policy) {
+    /*
+        ******************************************
+        *   PUBLIC API
+        ******************************************
+     */
+    
+    @Override
+    public DefaultGraphVisitorImpl setBoundsVisitorCallback(GraphVisitorCallback.BoundsVisitorCallback callback) {
+        this.boundsVisitor = callback;
+        return this;
+    }
+
+    @Override
+    public DefaultGraphVisitorImpl setPropertiesVisitorCallback(GraphVisitorCallback.PropertyVisitorCallback callback) {
+        this.propertyVisitor = callback;
+        return this;
+    }
+
+    @Override
+    public void run(DefaultGraph graph, DefaultGraphVisitorCallback callback, GraphVisitorPolicy policy) {
         this.graph = graph;
-        this.visitor = visitor;
+        this.visitorCallback = callback;
         this.policy = policy;
         this.processesEdges = new HashSet<String>();
-    }
-    
-    public void run() {
-        processesEdges.clear();
         visitGraph();
         visitUnconnectedEdges();
-        visitor.endVisit();
+        visitorCallback.endVisit();
     }
-
-    public GraphVisitor setBoundsVisitor(Visitor.BoundsVisitor boundsVisitor) {
-        this.boundsVisitor = boundsVisitor;
-        return this;
-    }
-
-    public GraphVisitor setPropertyVisitor(Visitor.PropertyVisitor propertyVisitor) {
-        this.propertyVisitor = propertyVisitor;
-        return this;
-    }
-
-    private void visitUnconnectedEdges() {
-        Iterable<Edge> edges = graph.edges();
-        Iterator<Edge> edgesIt = edges.iterator();
-        while (edgesIt.hasNext()) {
-            Edge edge = edgesIt.next();
-            if (!this.processesEdges.contains(edge.getUUID())) {
-                visitor.visitUnconnectedEdge(edge);
-                visitProperties(edge);
-            }
-        }
-    }
-
-
+    
+     /*
+        ******************************************
+        *   PRIVATE METHODS
+        ******************************************
+     */
+    
     private void visitGraph() {
-        assert graph != null && visitor != null;
-        
-        visitor.visitGraph(graph);
+        assert graph != null && visitorCallback != null;
+
+        visitorCallback.visitGraph(graph);
         visitProperties(graph);
         visitBounds(graph)
         ;
@@ -92,51 +83,77 @@ public class GraphVisitor {
     }
 
     private void visitNode(final Node graphNode) {
-        
+
         if (graphNode instanceof ViewNode) {
             final ViewNode viewNode = (ViewNode) graphNode;
-            visitor.visitViewNode(viewNode);
-            visitProperties(viewNode);
+            visitorCallback.visitViewNode(viewNode);
             visitBounds(viewNode);
+        } else if (graphNode instanceof DefaultNode) {
+            final DefaultNode defaultNode = (DefaultNode) graphNode;
+            visitorCallback.visitDefaultNode(defaultNode);
         } else {
-            visitor.visitNode(graphNode);
-            visitProperties(graphNode);
+            visitorCallback.visitNode(graphNode);
         }
+        visitProperties(graphNode);
+        
         List<Edge> outEdges = graphNode.getOutEdges();
         if (outEdges != null && !outEdges.isEmpty()) {
             for (Edge edge : outEdges) {
                 visitEdge(edge);
             }
         }
+        
     }
 
     private void visitEdge(final Edge edge) {
         if (!this.processesEdges.contains(edge.getUUID())) {
             processesEdges.add(edge.getUUID());
-            if (VisitorPolicy.EDGE_FIRST.equals(policy)) {
+            if (GraphVisitorPolicy.EDGE_FIRST.equals(policy)) {
                 doVisitEdge(edge);
             }
             final Node outNode = (Node) edge.getTargetNode();
             if (outNode != null) {
                 visitNode(outNode);
             }
-            if (VisitorPolicy.EDGE_LAST.equals(policy)) {
+            if (GraphVisitorPolicy.EDGE_LAST.equals(policy)) {
                 doVisitEdge(edge);
             }
         }
+
+    }
+
+    private void doVisitEdge(final Edge edge) {
+        
+        if (edge instanceof ViewEdge) {
+            final ViewEdge viewEdge = (ViewEdge) edge;
+            visitorCallback.visitViewEdge(viewEdge);
+            visitBounds(viewEdge);
+        } else if (edge instanceof DefaultEdge) {
+            final DefaultEdge defaultEdge = (DefaultEdge) edge;
+            final String relationName = defaultEdge.getRelationName();
+            
+            if (ChildRelationEdge.RELATION_NAME.equals(relationName)) {
+                final ChildRelationEdge childRelationEdge = (ChildRelationEdge) edge;
+                visitorCallback.visitChildRelationEdge(childRelationEdge);
+            } else {
+                visitorCallback.visitDefaultEdge(defaultEdge);
+            }
+
+        } else {
+            visitorCallback.visitEdge(edge);
+        }
+        visitProperties(edge);
         
     }
     
-    private void doVisitEdge(final Edge edge) {
-        if (edge instanceof ViewEdge) {
-            final ViewEdge viewEdge = (ViewEdge) edge;
-            visitor.visitViewEdge(viewEdge);
-            visitProperties(viewEdge);
-            visitBounds(viewEdge);
-        } else if (edge instanceof ChildRelationship) {
-            final ChildRelationship childRelationship = (ChildRelationship) edge;
-            visitor.visitChildRelationship(childRelationship);
-            visitProperties(childRelationship);
+    private void visitUnconnectedEdges() {
+        Iterable<Edge> edges = graph.edges();
+        Iterator<Edge> edgesIt = edges.iterator();
+        while (edgesIt.hasNext()) {
+            Edge edge = edgesIt.next();
+            if (!this.processesEdges.contains(edge.getUUID())) {
+                doVisitEdge(edge);
+            }
         }
     }
 

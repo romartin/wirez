@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.impl;
+package org.wirez.core.api.graph.processing.visitor;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.impl.*;
 
 /**
- * A relationship for graphs to indicate node child-parent relationships..
+ * The specific graph visitor callback interface for the default graph implementation provided by Wirez.
  */
-public interface ChildRelationship<T extends Node> extends Edge<T>, Element {
 
-    void setChildNode(Node node);
+public interface DefaultGraphVisitorCallback extends GraphVisitorCallback<DefaultGraph, Node, Edge> {
 
-    void setParentNode(Node node);
+    void visitViewNode(ViewNode node);
+
+    void visitDefaultNode(DefaultNode node);
+
+    void visitViewEdge(ViewEdge edge);
+
+    void visitDefaultEdge(DefaultEdge edge);
+
+    void visitChildRelationEdge(ChildRelationEdge edge);
     
 }

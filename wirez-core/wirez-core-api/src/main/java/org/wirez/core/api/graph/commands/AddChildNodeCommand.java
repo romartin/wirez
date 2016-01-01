@@ -20,8 +20,7 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
-import org.wirez.core.api.graph.impl.ChildRelationship;
-import org.wirez.core.api.graph.impl.ChildRelationshipImpl;
+import org.wirez.core.api.graph.impl.ChildRelationEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.DefaultRuleManager;
@@ -64,7 +63,7 @@ public class AddChildNodeCommand implements Command {
             final String uuid = UUID.uuid();
             final Map<String, Object> properties = new HashMap<>();
             final Set<String> labels = new HashSet<>(1);
-            final ChildRelationship childRelationship = new ChildRelationshipImpl(uuid, properties, labels);
+            final ChildRelationEdge childRelationship = new ChildRelationEdge(uuid, properties, labels);
             childRelationship.setParentNode(parent);
             childRelationship.setChildNode(candidate);
             target.addNode( candidate );

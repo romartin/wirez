@@ -21,12 +21,12 @@ import com.google.gwt.core.client.GWT;
 import org.uberfire.mvp.Command;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.ChildRelationship;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.ViewNode;
-import org.wirez.core.api.graph.processing.AbstractVisitor;
-import org.wirez.core.api.graph.processing.GraphVisitor;
+import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
+import org.wirez.core.api.graph.processing.visitor.DefaultGraphVisitorImpl;
+import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeHighlightAnimation;
@@ -35,6 +35,9 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Visits the graph and highlights elements while visiting. Just for development use.
+ */
 public class CanvasHighlightVisitor {
 
     private static final double ALPHA_INIT = 0.1;
@@ -102,7 +105,7 @@ public class CanvasHighlightVisitor {
 
         shapes.clear();
 
-        new GraphVisitor(graph, new AbstractVisitor() {
+        new DefaultGraphVisitorImpl().run(graph, new AbstractGraphVisitorCallback() {
 
             @Override
             public void visitViewNode(ViewNode node) {
@@ -129,9 +132,8 @@ public class CanvasHighlightVisitor {
             }
 
             @Override
-            public void visitUnconnectedEdge(Edge edge) {
-                super.visitUnconnectedEdge(edge);
-                addShape(edge.getUUID());
+            public void visitGraph(DefaultGraph graph) {
+                super.visitGraph(graph);
             }
 
             @Override
@@ -140,20 +142,15 @@ public class CanvasHighlightVisitor {
                 command.execute();
             }
 
-            @Override
-            public void visitChildRelationship(ChildRelationship childRelationship) {
-                super.visitChildRelationship(childRelationship);
-            }
-            
             private void addShape(String uuid) {
                 final Shape shape = canvasHandler.getSettings().getCanvas().getShape(uuid);
                 if ( null != shape ) {
                     shapes.add(shape);
                 }
             }
-            
-        }, GraphVisitor.VisitorPolicy.EDGE_FIRST).run();
 
+        }, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
+        
     }
     
 }

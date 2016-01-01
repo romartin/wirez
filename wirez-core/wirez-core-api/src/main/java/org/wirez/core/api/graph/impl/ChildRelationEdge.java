@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,36 +23,43 @@ import org.wirez.core.api.graph.Node;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A relationship for graph nodes that indicates parent-child semantics..
+ */
 @Portable
-public class ChildRelationshipImpl extends ElementImpl implements ChildRelationship {
-    
-    private Node parent;
-    private Node child;
+public class ChildRelationEdge<T extends Node> extends ElementImpl implements DefaultEdge<T> {
 
-    public ChildRelationshipImpl(@MapsTo("uuid") String uuid, 
-                                 @MapsTo("properties") Map<String, Object> properties, 
-                                 @MapsTo("labels") Set<String> labels) {
+    public static final String RELATION_NAME = "p-c";
+
+    private T parentNode;
+    private T childNode;
+    
+    public ChildRelationEdge(@MapsTo("uuid") String uuid, 
+                             @MapsTo("properties") Map<String, Object> properties, 
+                             @MapsTo("labels") Set<String> labels) {
         super(uuid, properties, labels);
     }
 
-    @Override
-    public void setChildNode(final Node node) {
-        this.child = node;
+    public void setChildNode(final T node) {
+        this.childNode = node;   
+    }
+
+    public void setParentNode(final T node) {
+        this.parentNode = node;
     }
 
     @Override
-    public void setParentNode(final Node node) {
-        this.parent = node;
+    public String getRelationName() {
+        return RELATION_NAME;
     }
 
     @Override
-    public Node getSourceNode() {
-        return parent;
+    public T getSourceNode() {
+        return parentNode;
     }
 
     @Override
-    public Node getTargetNode() {
-        return child;
+    public T getTargetNode() {
+        return childNode;
     }
-
 }

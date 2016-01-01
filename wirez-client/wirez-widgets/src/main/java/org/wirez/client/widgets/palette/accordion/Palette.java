@@ -89,10 +89,10 @@ public class Palette implements IsWidget {
         view.setNoCanvasViewVisible(true);
     }
     
-    public void show(final String shapeSetId) {
+    public void show(final int width, final String shapeSetId) {
         clear();
         final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
-        doShow(wirezShapeSet);
+        doShow(width, wirezShapeSet);
         view.setNoCanvasViewVisible(false);
         view.setGroupsViewVisible(true);
     }
@@ -111,7 +111,7 @@ public class Palette implements IsWidget {
         view.clear();
     }
 
-    private void doShow(final ShapeSet wirezShapeSet) {
+    private void doShow(final int width, final ShapeSet wirezShapeSet) {
 
         // Clear current palette groups.
         view.clearGroups();
@@ -159,7 +159,7 @@ public class Palette implements IsWidget {
                 final List<PaletteGroupItem> items = entry.getValue();
 
                 PaletteGroup paletteGroup = buildPaletteGroup();
-                paletteGroup.show(category, 350, items);
+                paletteGroup.show(category, width, items);
                 view.addGroup(paletteGroup);
             }
         }

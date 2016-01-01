@@ -44,6 +44,7 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 public class PaletteScreen {
 
     public static final String SCREEN_ID = "PaletteScreen";
+    public static final int WIDTH = 400;
 
     @Inject
     Palette palette;
@@ -86,7 +87,7 @@ public class PaletteScreen {
 
     private void open() {
         if (shapeSetId.trim().length() > 0) {
-            palette.show(shapeSetId);
+            palette.show(WIDTH, shapeSetId);
         } else {
             palette.showNoCanvasState();
         }

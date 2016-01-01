@@ -16,7 +16,7 @@
 
 package org.wirez.client.widgets.palette.accordion.group.layout;
 
-public class HorizLayoutBuilder implements LayoutBuilder {
+public class HorizLayoutBuilder implements LayoutBuilder<HorizLayoutSettings> {
 
     private double width = 0;
     private double currentX = 0;
@@ -24,21 +24,11 @@ public class HorizLayoutBuilder implements LayoutBuilder {
     private double margin = 0;
 
     @Override
-    public LayoutBuilder setWidth(final double width) {
-        this.width = width;
-        return this;
-    }
-
-    @Override
-    public LayoutBuilder setHeight(final double height) {
-        throw new UnsupportedOperationException("Height cannot be constrained if using the palette HorizLayoutBuilder.");
-    }
-
-    @Override
-    public LayoutBuilder setItemMargin(final double margin) {
-        this.margin = margin;
-        this.currentX = margin;
-        this.currentY = margin;
+    public LayoutBuilder setSettings(final HorizLayoutSettings settings) {
+        this.width = settings.getWidth();
+        this.margin = settings.getMargin();
+        this.currentX = settings.getMargin();
+        this.currentY = settings.getMargin();
         return this;
     }
 

@@ -58,7 +58,6 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
 
     private LienzoPanel lienzoPanel;
     private final Layer lienzoLayer = new Layer();
-    // final Tooltip tooltip = new Tooltip();
     
     final Timer timer = new Timer() {
         @Override
@@ -113,6 +112,7 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
         GWT.log("PaletteGroupView#addGlyph");
         glyphView.setX(x);
         glyphView.setY(y);
+        
         glyphView.addNodeMouseClickHandler(new NodeMouseClickHandler() {
             @Override
             public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
@@ -125,6 +125,7 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
                 callback.onClick();
             }
         });
+        
         lienzoLayer.add(glyphView);
         
         glyphView.addNodeMouseMoveHandler(new NodeMouseMoveHandler() {

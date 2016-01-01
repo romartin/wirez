@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,22 @@
 
 package org.wirez.client.widgets.palette.accordion.group.layout;
 
-public interface LayoutBuilder<S> {
-
-    LayoutBuilder  setSettings(S settings);
-
-    double[] add(double width, double height);
-
-    double[] build();
+public class HorizLayoutSettings {
     
-    LayoutBuilder clear();
-    
+    private final double width;
+    private final double margin;
+
+    public HorizLayoutSettings(double width, double margin) {
+        this.width = width;
+        this.margin = margin;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getMargin() {
+        return margin;
+    }
+
 }

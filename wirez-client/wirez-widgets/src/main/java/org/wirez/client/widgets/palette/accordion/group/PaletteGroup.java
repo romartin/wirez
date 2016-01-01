@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.palette.accordion.group.layout.HorizLayoutBuilder;
+import org.wirez.client.widgets.palette.accordion.group.layout.HorizLayoutSettings;
 import org.wirez.client.widgets.palette.accordion.group.layout.LayoutBuilder;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.WirezClientManager;
@@ -145,7 +146,6 @@ public class PaletteGroup implements IsWidget {
                         final double tx = x + ( glyph.getWidth() / 2);
                         final double ty = y + ( glyph.getHeight() / 2);
                         view.showTooltip(description, tx, ty, 1000);
-
                     }
                 });
             }
@@ -157,8 +157,8 @@ public class PaletteGroup implements IsWidget {
     
     private double[] buildItemPositions(final double width, final Collection<PaletteGroupItem> items) {
         
-        // Size & margins.
-        layoutBuilder.setWidth(width).setItemMargin(10);
+        // Layout settings.
+        layoutBuilder.setSettings(new HorizLayoutSettings(width, 10));
         
         // Glyph positions.
         if ( null != items && !items.isEmpty() ) {

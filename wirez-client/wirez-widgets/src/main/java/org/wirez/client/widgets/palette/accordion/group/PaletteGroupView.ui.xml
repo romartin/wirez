@@ -20,11 +20,7 @@
              xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
 
   <ui:style>
-    .panelGroup {
-      margin-top: 25px;
-      margin-bottom: 25px;
-      margin-left: 10px;
-    }
+    
   </ui:style>
 
   <b:PanelGroup ui:field="accordion">
@@ -36,7 +32,7 @@
       </b:PanelHeader>
       <b:PanelCollapse ui:field="panelCollapse" in="true">
         <b:PanelBody>
-          <g:SimplePanel ui:field="panelShapes" addStyleNames="{style.panelGroup}"/>
+          <g:SimplePanel ui:field="panelShapes"/>
         </b:PanelBody>
       </b:PanelCollapse>
     </b:Panel>

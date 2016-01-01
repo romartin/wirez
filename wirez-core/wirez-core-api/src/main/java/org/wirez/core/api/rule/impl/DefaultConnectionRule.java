@@ -26,16 +26,16 @@ import java.util.Set;
 public class DefaultConnectionRule implements ConnectionRule {
 
     private String name;
-    private String role;
+    private String id;
     private Set<PermittedConnection> permittedConnections;
 
     public DefaultConnectionRule(@MapsTo("name") final String name,
-                                 @MapsTo("role") final String role,
+                                 @MapsTo("id") final String id,
                                  @MapsTo("permittedConnections") final Set<ConnectionRule.PermittedConnection> permittedConnections) {
         this.name = PortablePreconditions.checkNotNull( "name",
                                                         name );
-        this.role = PortablePreconditions.checkNotNull( "role",
-                                                        role );
+        this.id = PortablePreconditions.checkNotNull( "id",
+                id );
         this.permittedConnections = PortablePreconditions.checkNotNull( "permittedConnections",
                 permittedConnections);
     }
@@ -46,8 +46,8 @@ public class DefaultConnectionRule implements ConnectionRule {
     }
 
     @Override
-    public String getRole() {
-        return role;
+    public String getId() {
+        return id;
     }
 
     @Override

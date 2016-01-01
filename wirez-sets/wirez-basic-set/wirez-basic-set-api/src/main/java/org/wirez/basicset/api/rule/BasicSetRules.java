@@ -56,12 +56,13 @@ public class BasicSetRules {
 
     public Collection<ConnectionRule> CONNECTION_RULES = new HashSet<ConnectionRule>() {{
 
-        // Sequence flow.
-        /*add(new DefaultConnectionRule("SequenceFlowConnectionRule", "SequenceFlow",
+        // Allow connections only between rectangles <-> circles.
+        add(new DefaultConnectionRule("connectorConnectionRule", "connector",
                 new HashSet<ConnectionRule.PermittedConnection>() {{
-                    add(new DefaultPermittedConnection("sequence_start", "sequence_end"));
+                    add(new DefaultPermittedConnection("circle", "rectangle"));
+                    add(new DefaultPermittedConnection("rectangle", "circle"));
                 }}
-        ));*/
+        ));
 
     }};
 

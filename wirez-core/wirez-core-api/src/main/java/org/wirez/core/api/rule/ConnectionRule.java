@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * Rule to restrict how Elements can be connected. Connections can be restricted to Elements with certain Roles.
  */
-public interface ConnectionRule extends RuleByRole {
+public interface ConnectionRule extends RuleById {
 
     /**
      * The Connections that are permitted by the Rule. The source and target of the connection must have the Role defined in the PermittedConnection

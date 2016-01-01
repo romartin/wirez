@@ -121,9 +121,9 @@ public class DefaultRuleManager implements RuleManager {
         }
 
         final Set<Pair<String, String>> couples = new HashSet<Pair<String, String>>();
-        final String role = edge.getDefinition().getId();
+        final String id = edge.getDefinition().getId();
         for ( ConnectionRule rule : connectionRules ) {
-            if ( role.equals( rule.getRole() ) ) {
+            if ( id.equals( rule.getId() ) ) {
                 for ( ConnectionRule.PermittedConnection pc : rule.getPermittedConnections() ) {
                     couples.add( new Pair<String, String>( pc.getStartRole(), pc.getEndRole() ) );
                     if ( outgoingNode.getLabels().contains( pc.getStartRole() ) ) {
@@ -135,7 +135,7 @@ public class DefaultRuleManager implements RuleManager {
             }
         }
 
-        results.addViolation(new ConnectionRuleViolation(role, couples));
+        results.addViolation(new ConnectionRuleViolation(id, couples));
         return results;
     }
 

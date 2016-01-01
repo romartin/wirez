@@ -19,7 +19,10 @@ package org.wirez.client.workbench.screens;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.bus.client.api.messaging.Message;
+import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
+import org.jboss.errai.common.client.api.RemoteCallback;
+import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.annotations.*;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.events.ChangeTitleWidgetEvent;
@@ -29,9 +32,11 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
+import org.wirez.basicset.api.BasicSet;
 import org.wirez.client.widgets.canvas.Canvas;
 import org.wirez.client.widgets.event.PaletteShapeSelectedEvent;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
+import org.wirez.client.workbench.util.GraphTests;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Bounds;
@@ -40,6 +45,7 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
 import org.wirez.core.api.graph.factory.ViewElementFactory;
 import org.wirez.core.api.graph.impl.*;
+import org.wirez.core.api.service.GraphVfsServices;
 import org.wirez.core.api.util.Logger;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.Shape;
@@ -115,23 +121,35 @@ public class CanvasScreen {
         String wirezSetId = placeRequest.getParameter( "defSetId", "" );
         String shapeSetUUID = placeRequest.getParameter( "shapeSetId", "" );
         String title = placeRequest.getParameter( "title", "" );
+        String graphTestMode = placeRequest.getParameter( "graphTestMode", "false" );
+        
+        if ("true".equals(graphTestMode)) {
 
-        final DefinitionSet wirezSet = getDefinitionSet(wirezSetId);
-        final ShapeSet shapeSet = getShapeSet(shapeSetUUID);
-        final DefaultGraphFactory graphFactory = getGraphFactory(wirezSet);
+            final DefinitionSet wirezSet = getDefinitionSet("basicSet");
+            final ShapeSet shapeSet = getShapeSet("basic");
+            final DefaultGraph graph = GraphTests.basicTest();
+            open("graphTests", wirezSet, shapeSet, "Graph Tests", graph);
+            
+        } else {
 
-        // For testing...
-        final Map<String, Object> properties = new HashMap<String, Object>();
-        final Bounds bounds = new DefaultBounds(
-                new DefaultBound(0d,0d),
-                new DefaultBound(0d,0d)
-        );
+            final DefinitionSet wirezSet = getDefinitionSet(wirezSetId);
+            final ShapeSet shapeSet = getShapeSet(shapeSetUUID);
+            final DefaultGraphFactory graphFactory = getGraphFactory(wirezSet);
 
-        final Set<String> labels = new HashSet<>();
-        final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties, bounds);
+            // For testing...
+            final Map<String, Object> properties = new HashMap<String, Object>();
+            final Bounds bounds = new DefaultBounds(
+                    new DefaultBound(0d,0d),
+                    new DefaultBound(0d,0d)
+            );
 
-        open(uuid, wirezSet, shapeSet, title, graph);
+            final Set<String> labels = new HashSet<>();
+            final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties, bounds);
 
+            open(uuid, wirezSet, shapeSet, title, graph);
+            
+        }
+      
         this.menu = makeMenuBar();
 
     }

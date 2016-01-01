@@ -79,17 +79,17 @@ public class CanvasWizardScreen {
 
     private Menus makeMenuBar() {
         return MenuFactory
-                .newTopLevelMenu("Load BPMN test process")
-                .respondsWith(getLoadBPMNTestProcessCommand())
+                .newTopLevelMenu("Load test process")
+                .respondsWith(getLoadTestProcessCommand())
                 .endMenu()
                 .build();
     }
 
-    private Command getLoadBPMNTestProcessCommand() {
+    private Command getLoadTestProcessCommand() {
         return new Command() {
             public void execute() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put( "bpmnTestMode", "true" );
+                params.put( "graphTestMode", "true" );
                 PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );
                 placeManager.goTo(placeRequest);
             }

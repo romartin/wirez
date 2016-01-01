@@ -142,7 +142,8 @@ public class PropertiesEditor implements IsWidget {
                     for (final Property property : properties) {
                         final String propertyId = property.getId();
                         final Object value = element.getProperties().get(propertyId);
-                        GWT.log("PropertiesEditor  - Building field info with value [" + value.toString() + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
+                        GWT.log("PropertiesEditor  - Building field info with value [" 
+                                + ( value != null ? value.toString() : null ) + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
                         final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                             @Override
                             public void onValueChanged(final Object value) {
@@ -261,7 +262,7 @@ public class PropertiesEditor implements IsWidget {
             }
             
         }
-        return null;
+        return "";
     }
 
     private Object fromEditorValue(final PropertyEditorType type, final String value) {

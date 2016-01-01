@@ -19,10 +19,7 @@ package org.wirez.client.workbench.screens;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.bus.client.api.messaging.Message;
-import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
-import org.jboss.errai.common.client.api.RemoteCallback;
-import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.annotations.*;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.events.ChangeTitleWidgetEvent;
@@ -32,7 +29,6 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.basicset.api.BasicSet;
 import org.wirez.client.widgets.canvas.Canvas;
 import org.wirez.client.widgets.event.PaletteShapeSelectedEvent;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
@@ -45,7 +41,6 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
 import org.wirez.core.api.graph.factory.ViewElementFactory;
 import org.wirez.core.api.graph.impl.*;
-import org.wirez.core.api.service.GraphVfsServices;
 import org.wirez.core.api.util.Logger;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.Shape;
@@ -59,6 +54,7 @@ import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.canvas.impl.DefaultCanvasHandler;
 import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.util.CanvasHighlightVisitor;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -127,7 +123,7 @@ public class CanvasScreen {
 
             final DefinitionSet wirezSet = getDefinitionSet("basicSet");
             final ShapeSet shapeSet = getShapeSet("basic");
-            final DefaultGraph graph = GraphTests.basicTest();
+            final DefaultGraph graph = GraphTests.childrenTest2();
             open("graphTests", wirezSet, shapeSet, "Graph Tests", graph);
             
         } else {
@@ -228,17 +224,14 @@ public class CanvasScreen {
                 .newTopLevelMenu("Delete selected")
                 .respondsWith(getDeleteSelectionCommand())
                 .endMenu()
-                .newTopLevelMenu("Send graph to backend")
-                .respondsWith(getSendGraphCommand())
-                .endMenu()
                 .newTopLevelMenu("Undo")
                 .respondsWith(getUndoCommand())
                 .endMenu()
                 .newTopLevelMenu("Log graph")
                 .respondsWith(getLogGraphCommand())
                 .endMenu()
-                .newTopLevelMenu("Run graph")
-                .respondsWith(getRunGraphCommand())
+                .newTopLevelMenu("Visit graph")
+                .respondsWith(getVisitGraphCommand())
                 .endMenu()
                 .build();
     }
@@ -301,18 +294,10 @@ public class CanvasScreen {
         };
     }
 
-    private Command getSendGraphCommand() {
+    private Command getVisitGraphCommand() {
         return new Command() {
             public void execute() {
-                sendGraph();
-            }
-        };
-    }
-
-    private Command getRunGraphCommand() {
-        return new Command() {
-            public void execute() {
-                runGraph();
+                visitGraph();
             }
         };
     }
@@ -350,24 +335,8 @@ public class CanvasScreen {
         Logger.resume((DefaultGraph) canvasHandler.getGraph());
     }
 
-    private void sendGraph() {
-        // TODO
-        /*Graph graph = wirezCanvas.getGraph();
-        if (graph != null) {
-            wirezServices.call(new RemoteCallback<Void>() {
-                @Override
-                public void callback(final Void aVoid) {
-                    Window.alert("Graph send successfully! See server's log output for more details.");
-                }
-            }, errorCallback).send(graph);
-            
-        } else {
-            Window.alert("Error sending graph - it is NULL");
-        }*/
-    }
-
-    private void runGraph() {
-        // TODO: new GraphCanvasSimulator(wirezCanvas).run();
+    private void visitGraph() {
+        new CanvasHighlightVisitor(canvasHandler).run();
     }
 
     private void showError(final Throwable throwable) {

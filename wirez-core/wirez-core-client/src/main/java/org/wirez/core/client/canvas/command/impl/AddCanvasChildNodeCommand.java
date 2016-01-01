@@ -50,7 +50,6 @@ public class AddCanvasChildNodeCommand extends BaseCanvasCommand {
 
     @Override
     public CanvasCommand apply() {
-        ( (BaseCanvasHandler) canvasHandler).register(factory, candidate);
         ( (BaseCanvasHandler) canvasHandler).addChild(parent, candidate);
         ( (BaseCanvasHandler) canvasHandler).applyElementMutation(candidate);
         return this;

@@ -27,9 +27,11 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.PanelCollapse;
 import org.gwtbootstrap3.client.ui.PanelGroup;
 import org.gwtbootstrap3.client.ui.PanelHeader;
+import org.wirez.core.api.util.UUID;
 
 public class PaletteGroupView extends Composite implements PaletteGroup.View {
 
@@ -46,12 +48,15 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
     PanelHeader panelHeader;
 
     @UiField
+    Anchor anchor;
+    
+    @UiField
     PanelCollapse panelCollapse;
     
     @UiField
     SimplePanel panelShapes;
 
-    private final LienzoPanel lienzoPanel = new LienzoPanel(400, 400);
+    private LienzoPanel lienzoPanel;
     private final Layer lienzoLayer = new Layer();
     // final Tooltip tooltip = new Tooltip();
     
@@ -69,21 +74,33 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
         this.presenter = presenter;
         initWidget( uiBinder.createAndBindUi( this ) );
         lienzoLayer.setTransformable(true);
+        
+        // Bootstrap accordion setup.
+        final String accId = UUID.uuid();
+        accordion.setId(accId);
+        final String collapseId = UUID.uuid();
+        panelCollapse.setId(collapseId);
+        anchor.setDataParent("#" + accId);
+        anchor.setDataTarget("#" + collapseId);
+    }
+
+    @Override
+    public PaletteGroup.View setSize(final double width, final double height) {
+        initLienzoPanel( (int)width, (int) height);
+        return this;
+    }
+    
+    private void initLienzoPanel(final int width, final int height) {
+        lienzoPanel = new LienzoPanel(width, height);
         lienzoPanel.add(lienzoLayer);
         // lienzoLayer.add(tooltip);
         panelShapes.add(lienzoPanel);
     }
 
     @Override
-    public PaletteGroup.View setSize(double width, double height) {
-        lienzoPanel.setSize(width + "px", height + "px");
-        return this;
-    }
-
-    @Override
     public PaletteGroup.View setHeader(final String title) {
-        panelHeader.setText(title);
-        panelHeader.setTitle(title);
+        anchor.setText(title);
+        anchor.setTitle(title);
         return this;
     }
 
@@ -91,6 +108,8 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
     public PaletteGroup.View addGlyph(final IPrimitive glyphView, 
                                       final double x, final double y,
                                       final PaletteGroup.GlyphViewCallback callback) {
+        assert lienzoPanel != null;
+        
         GWT.log("PaletteGroupView#addGlyph");
         glyphView.setX(x);
         glyphView.setY(y);

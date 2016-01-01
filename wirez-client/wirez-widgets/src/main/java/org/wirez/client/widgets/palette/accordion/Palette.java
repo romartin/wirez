@@ -24,6 +24,7 @@ import org.uberfire.client.mvp.UberView;
 import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.event.PaletteShapeSelectedEvent;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroup;
+import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.client.Shape;
@@ -36,9 +37,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Dependent
 public class Palette implements IsWidget {
@@ -122,7 +121,7 @@ public class Palette implements IsWidget {
         final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
 
         // Load entries.
-        final Map<String, PaletteGroup> paletteGroups = new HashMap<>();
+        final Map<String, List<PaletteGroupItem>> paletteGroupItems = new HashMap<>();
         for (final ShapeFactory<? extends Definition, ? extends Shape> factory : factories) {
             final Definition definition = getDefinition(definitions, factory);
 
@@ -130,27 +129,39 @@ public class Palette implements IsWidget {
 
                 final String category = definition.getContent().getCategory();
                 final String description = factory.getDescription();
+                final ShapeGlyph glyph = factory.getGlyph();
 
-                PaletteGroup paletteGroup = paletteGroups.get(category);
-                if (null == paletteGroup) {
-                    paletteGroup = buildPaletteGroup();
-                    paletteGroup.setSize(350, 100);
-                    paletteGroup.setHeader(category);
-                    view.addGroup(paletteGroup);
-                    paletteGroups.put(category, paletteGroup);
+                List<PaletteGroupItem> items = paletteGroupItems.get(category);
+                if ( null == items ) {
+                    items = new LinkedList<>();
+                    paletteGroupItems.put(category, items);
                 }
                 
-                final ShapeGlyph glyph = factory.getGlyph();
-                paletteGroup.addGlyph(description, glyph, new Command() {
-                    @Override
-                    public void execute() {
-                        GWT.log("Palette: Adding " + description);
-                        paletteShapeSelectedEvent.fire(new PaletteShapeSelectedEvent(definition, factory));
-                    }
-                });
+                PaletteGroupItem paletteGroupItem = PaletteGroup.buildItem(glyph, description,
+                        new Command() {
+                            @Override
+                            public void execute() {
+                                GWT.log("Palette: Adding " + description);
+                                paletteShapeSelectedEvent.fire(new PaletteShapeSelectedEvent(definition, factory));
+                            }
+                        });
+                items.add(paletteGroupItem);
                 
             }
             
+        }
+        
+        // Show palette groups.
+        if (!paletteGroupItems.isEmpty()) {
+            final Set<Map.Entry<String, List<PaletteGroupItem>>> entries = paletteGroupItems.entrySet();
+            for (final Map.Entry<String, List<PaletteGroupItem>> entry : entries) {
+                final String category = entry.getKey();
+                final List<PaletteGroupItem> items = entry.getValue();
+
+                PaletteGroup paletteGroup = buildPaletteGroup();
+                paletteGroup.show(category, 350, items);
+                view.addGroup(paletteGroup);
+            }
         }
         
     }

@@ -19,20 +19,33 @@ package org.wirez.client.widgets.palette.accordion.group.layout;
 public class HorizLayoutBuilder implements LayoutBuilder {
 
     private double width = 0;
-    private double height = 0;
     private double currentX = 0;
     private double currentY = 0;
+    private double margin = 0;
 
     @Override
-    public LayoutBuilder setSize(final double width, final double height) {
+    public LayoutBuilder setWidth(final double width) {
         this.width = width;
-        this.height = height;
         return this;
     }
 
     @Override
-    public double[] add(final double gW, final double gH) {
-        
+    public LayoutBuilder setHeight(final double height) {
+        throw new UnsupportedOperationException("Height cannot be constrained if using the palette HorizLayoutBuilder.");
+    }
+
+    @Override
+    public LayoutBuilder setItemMargin(final double margin) {
+        this.margin = margin;
+        this.currentX = margin;
+        this.currentY = margin;
+        return this;
+    }
+
+    @Override
+    public double[] add(final double _gW, final double _gH) {
+        final double gW = _gW + margin; 
+        final double gH = _gH + margin;
         final double maxX = currentX + gW;
         
         if (currentY == 0 || ( gH > currentY) ) {
@@ -42,14 +55,16 @@ public class HorizLayoutBuilder implements LayoutBuilder {
         if (maxX > width) {
             currentX = 0;
             currentY += gH;
-            if (currentY > height) {
-                throw new IndexOutOfBoundsException("No more glyphs can be added, not enough space.");
-            }
         } else {
             currentX += gW;
         }
 
-        return new double[] {currentX - ( gW / 2), currentY - ( gH / 2)};
+        return new double[] {currentX - ( gW / 2), currentY - gH };
+    }
+
+    @Override
+    public double[] build() {
+        return new double[] { width, currentY };
     }
 
     @Override

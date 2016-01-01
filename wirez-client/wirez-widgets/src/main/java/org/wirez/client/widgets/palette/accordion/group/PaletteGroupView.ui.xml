@@ -20,15 +20,23 @@
              xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
 
   <ui:style>
-    
+    .panelGroup {
+      margin-top: 25px;
+      margin-bottom: 25px;
+      margin-left: 10px;
+    }
   </ui:style>
 
   <b:PanelGroup ui:field="accordion">
     <b:Panel>
-      <b:PanelHeader ui:field="panelHeader" dataToggle="COLLAPSE"/>
+      <b:PanelHeader ui:field="panelHeader">
+        <b:Heading size="H4">
+          <b:Anchor ui:field="anchor" dataToggle="COLLAPSE"/>
+        </b:Heading>
+      </b:PanelHeader>
       <b:PanelCollapse ui:field="panelCollapse" in="true">
         <b:PanelBody>
-          <g:SimplePanel ui:field="panelShapes"/>
+          <g:SimplePanel ui:field="panelShapes" addStyleNames="{style.panelGroup}"/>
         </b:PanelBody>
       </b:PanelCollapse>
     </b:Panel>

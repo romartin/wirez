@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package org.wirez.client.widgets.palette.accordion.group.layout;
+package org.wirez.client.widgets.palette.accordion.group;
 
-public interface LayoutBuilder {
+import org.uberfire.mvp.Command;
+import org.wirez.core.client.ShapeGlyph;
 
-    LayoutBuilder setWidth(double width);
-
-    LayoutBuilder setHeight(double height);
-
-    LayoutBuilder setItemMargin(double margin);
-
-    double[] add(double width, double height);
-
-    double[] build();
+public interface PaletteGroupItem {
     
-    LayoutBuilder clear();
+    String getDescription();
+    
+    ShapeGlyph getGlyph();
+    
+    Command getClickHandler();
     
 }

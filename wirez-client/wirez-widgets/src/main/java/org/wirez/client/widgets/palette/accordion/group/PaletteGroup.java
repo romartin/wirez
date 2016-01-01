@@ -17,6 +17,7 @@
 package org.wirez.client.widgets.palette.accordion.group;
 
 import com.ait.lienzo.client.core.shape.IPrimitive;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
@@ -29,6 +30,7 @@ import org.wirez.core.client.WirezClientManager;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import java.util.Collection;
 
 @Dependent
 public class PaletteGroup implements IsWidget {
@@ -66,7 +68,6 @@ public class PaletteGroup implements IsWidget {
     public void init() {
         view.init(this);
         layoutBuilder = new HorizLayoutBuilder();
-        setSize(200, 200);
     }
     
     @Override
@@ -74,35 +75,105 @@ public class PaletteGroup implements IsWidget {
         return view.asWidget();
     }
     
-    public void setHeader(final String header) {
-        view.setHeader(header);
+    
+    public static PaletteGroupItem buildItem(final ShapeGlyph glyph,
+                                             final String description,
+                                             final Command clickHandler) {
+        return new PaletteGroupItemImpl(glyph, description, clickHandler);
     }
     
-    public void setSize(final double width, final double height) {
-        view.setSize(width, height);
-        layoutBuilder.setSize(width, height);
+    private static class PaletteGroupItemImpl implements PaletteGroupItem {
+        private final ShapeGlyph glyph;
+        private final String description;
+        private final Command clickHandler;
+        double x;
+        double y;
+        
+        public PaletteGroupItemImpl(final ShapeGlyph glyph, 
+                                    final String description, 
+                                    final Command clickHandler) {
+            this.glyph = glyph;
+            this.description = description;
+            this.clickHandler = clickHandler;
+        }
+
+        @Override
+        public String getDescription() {
+            return description;
+        }
+
+        @Override
+        public ShapeGlyph getGlyph() {
+            return glyph;
+        }
+
+        @Override
+        public Command getClickHandler() {
+            return clickHandler;
+        }
     }
+    
+    public void show(final String header, final double width, final Collection<PaletteGroupItem> items) {
+        
+        // Group header.
+        view.setHeader(header);
+        
+        // Layout item positions calculations.
+        final double[] size = buildItemPositions(width, items);
+        
+     
+        // View init & canvas size.
+        view.setSize(size[0], size[1]);
 
-    public void addGlyph(final String description, final ShapeGlyph glyph, final Command callback) {
-        assert glyph != null;
 
-        final double[] positions = layoutBuilder.add(glyph.getWidth(), glyph.getHeight());
-        view.addGlyph(glyph.getGroup().setDraggable(false), positions[0], positions[1], new GlyphViewCallback() {
-            @Override
-            public void onClick() {
-                callback.execute();
+        if ( null != items && !items.isEmpty() ) {
+            for (final PaletteGroupItem item : items) {
+                final PaletteGroupItemImpl itemImpl = (PaletteGroupItemImpl) item;
+                final ShapeGlyph glyph = item.getGlyph();
+                final String description = item.getDescription();
+                final Command callback = item.getClickHandler();
+                
+                // Add the glyph view to the canvas..
+                view.addGlyph(glyph.getGroup().setDraggable(false), itemImpl.x, itemImpl.y, new GlyphViewCallback() {
+                    @Override
+                    public void onClick() {
+                        callback.execute();
+                    }
+
+                    @Override
+                    public void onNodeMouseMove(final double x, final double y) {
+                        final double tx = x + ( glyph.getWidth() / 2);
+                        final double ty = y + ( glyph.getHeight() / 2);
+                        view.showTooltip(description, tx, ty, 1000);
+
+                    }
+                });
             }
-
-            @Override
-            public void onNodeMouseMove(final double x, final double y) {
-                final double tx = x + ( glyph.getWidth() / 2);
-                final double ty = y + ( glyph.getHeight() / 2);
-                view.showTooltip(description, tx, ty, 1000);
-
-            }
-        });
+        }
+        
+        
         
     }
+    
+    private double[] buildItemPositions(final double width, final Collection<PaletteGroupItem> items) {
+        
+        // Size & margins.
+        layoutBuilder.setWidth(width).setItemMargin(10);
+        
+        // Glyph positions.
+        if ( null != items && !items.isEmpty() ) {
+            for (final PaletteGroupItem item : items) {
+                PaletteGroupItemImpl itemImpl = (PaletteGroupItemImpl) item;
+                final double[] positions = layoutBuilder.add(item.getGlyph().getWidth(), item.getGlyph().getHeight());
+                itemImpl.x = positions[0];
+                itemImpl.y = positions[1];
+                GWT.log("PaletteGroup#buildItemPositions [desc=" + item.getDescription() + ", x=" + itemImpl.x + ", y=" + itemImpl.y + "]");
+            }
+        }
+        
+        return layoutBuilder.build();
+    }
+
 
     public void clear() {
         layoutBuilder.clear();

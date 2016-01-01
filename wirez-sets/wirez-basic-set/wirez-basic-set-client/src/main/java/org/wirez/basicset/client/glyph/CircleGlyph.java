@@ -26,7 +26,7 @@ public class CircleGlyph implements ShapeGlyph {
     private Group group = new Group();
 
     public CircleGlyph() {
-        final Circle circle = new Circle(25).setFillColor(org.wirez.basicset.api.Circle.COLOR);
+        final Circle circle = new Circle(25).setX(25).setY(25).setFillColor(org.wirez.basicset.api.Circle.COLOR);
         group.add(circle);
     }
 

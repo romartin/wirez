@@ -59,7 +59,7 @@ public class CanvasHighlightVisitor {
                 animate(0, new Command() {
                     @Override
                     public void execute() {
-                        GWT.log("GraphCanvasSimulator - FINISHED");
+                        GWT.log("CanvasHighlightVisitor - FINISHED");
                         
                     }
                 });

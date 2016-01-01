@@ -23,7 +23,10 @@ import com.ait.lienzo.client.core.shape.wires.MagnetManager;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnetBuilder;
+import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnetBuilder;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.ViewNode;
@@ -122,12 +125,14 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
+        final int sourceMagnet = (int) element.getProperties().get(ConnectionSourceMagnetBuilder.PROPERTY_ID);
+        final int targetMagnet = (int) element.getProperties().get(ConnectionTargetMagnetBuilder.PROPERTY_ID);
+        
         if (targetNode != null) {
             final BaseShape outNodeShape = (BaseShape) canvas.getShape(targetNode.getUUID());
             if ( null != sourceNode && null != outNodeShape ) {
                 final BaseShape inNodeShape = (BaseShape) canvas.getShape(sourceNode.getUUID());
-                // TODO: Magnets concrete control points to use
-                connect(inNodeShape.getMagnets(), 3, outNodeShape.getMagnets(), 7, true, false);
+                connect(inNodeShape.getMagnets(), sourceMagnet, outNodeShape.getMagnets(), targetMagnet, true, false);
             }
         }
         return this;
@@ -136,6 +141,17 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     protected void connect(MagnetManager.Magnets headMagnets, int headMagnetsIndex, MagnetManager.Magnets tailMagnets, int tailMagnetsIndex,
                            final boolean tailArrow, final boolean headArrow)
     {
+        if (headMagnetsIndex < 0) {
+            GWT.log("WARN - HeadMagnet index invalid!");
+            headMagnetsIndex = 0;
+        }
+
+        if (tailMagnetsIndex < 0) {
+            GWT.log("WARN - TailMagnet index invalid!");
+            tailMagnetsIndex = 0;
+        }
+        
+        
         // Obtain the magnets.
         WiresMagnet m0_1 = headMagnets.getMagnet(headMagnetsIndex);
         WiresMagnet m1_1 = tailMagnets.getMagnet(tailMagnetsIndex);

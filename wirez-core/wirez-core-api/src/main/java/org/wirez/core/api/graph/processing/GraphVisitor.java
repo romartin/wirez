@@ -70,6 +70,7 @@ public class GraphVisitor {
             Edge edge = edgesIt.next();
             if (!this.processesEdges.contains(edge.getUUID())) {
                 visitor.visitUnconnectedEdge(edge);
+                visitProperties(edge);
             }
         }
     }

@@ -23,6 +23,8 @@ import org.wirez.basicset.api.property.font.FontPropertySetBuilder;
 import org.wirez.core.api.definition.DefaultContent;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnetBuilder;
+import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnetBuilder;
 import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 
@@ -36,7 +38,8 @@ public class Connector extends BasicEdgeDefinition<Connector> {
     public static final String COLOR = "#000000";
 
     private final Set<Property> properties = new HashSet<Property>() {{
-        
+        add( new ConnectionSourceMagnetBuilder().build() );
+        add( new ConnectionTargetMagnetBuilder().build() );
     }};
 
     private final Set<PropertySet> propertySets = new HashSet<PropertySet>() {{

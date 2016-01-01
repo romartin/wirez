@@ -24,12 +24,15 @@ import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnetBuilder;
+import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnetBuilder;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.AddChildNodeCommand;
 import org.wirez.core.api.graph.commands.SetConnectionSourceNodeCommand;
 import org.wirez.core.api.graph.commands.SetConnectionTargetNodeCommand;
+import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
 import org.wirez.core.api.graph.impl.ChildRelationship;
 import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
@@ -45,6 +48,7 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
+import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.impl.BaseConnector;
@@ -180,13 +184,12 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final ViewEdge edge = (ViewEdge) graphHandler.getEdge(graph, connector.getId());
             final String sourceUUID = sourceNode != null ? sourceNode.getUUID() : null;
 
-            final String message = "Executed SetConnectionSourceNodeCommand [source=" + sourceUUID + "]";
+            final int mIndex = getMagnetIndex(magnet);
+
+            final String message = "Executed SetConnectionSourceNodeCommand [source=" + sourceUUID + ", magnet=" + mIndex +  "]";
             Logger.log(message);
-            CommandResults results = execute(new BaseCanvasCommand() {
-                @Override
-                protected Command getCommand() {
-                    return new SetConnectionSourceNodeCommand(sourceNode, edge);
-                }
+
+            CommandResults results = execute(new CompositeElementCanvasCommand(edge) {
 
                 @Override
                 public CanvasCommand apply() {
@@ -194,13 +197,9 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                     return this;
                 }
 
-                @Override
-                public String toString() {
-                    return getCommand().toString();
-                }
-
-            });
-
+            }
+            .add(new UpdateElementPropertyValueCommand(edge, new ConnectionSourceMagnetBuilder().build(), mIndex))
+            .add(new SetConnectionSourceNodeCommand(sourceNode, edge)));
 
             final boolean isAccept = isAccept(results);
             return isAccept;
@@ -216,13 +215,12 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final ViewEdge edge = (ViewEdge) graphHandler.getEdge(graph, connector.getId());
             final String targetUUID = targetNode != null ? targetNode.getUUID() : null;
 
-            final String message = "Executed SetConnectionTargetNodeCommand [target=" + targetUUID + "]";
+            final int mIndex = getMagnetIndex(magnet);
+            
+            final String message = "Executed SetConnectionTargetNodeCommand [target=" + targetUUID + ", magnet=" + mIndex +  "]";
             Logger.log(message);
-            CommandResults results = execute(new BaseCanvasCommand() {
-                @Override
-                protected Command getCommand() {
-                    return new SetConnectionTargetNodeCommand(targetNode, edge);
-                }
+
+            CommandResults results = execute(new CompositeElementCanvasCommand(edge) {
 
                 @Override
                 public CanvasCommand apply() {
@@ -230,13 +228,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                     return this;
                 }
 
-                @Override
-                public String toString() {
-                    return getCommand().toString();
-                }
-
-            });
-
+            }
+            .add(new UpdateElementPropertyValueCommand(edge, new ConnectionTargetMagnetBuilder().build(), mIndex))
+            .add(new SetConnectionTargetNodeCommand(targetNode, edge)) );
+            
             final boolean isAccept = isAccept(results);
             return isAccept;
         }
@@ -306,6 +301,19 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String message = "TailConnectionAllowed  [out=" + outUUID + "] [in=" + inUUID + "] [isAllowed=" + isAllowed + "]";
             Logger.log(message);
             return isAllowed;
+        }
+        
+        private int getMagnetIndex(final WiresMagnet magnet) {
+            if ( null != magnet ) {
+                MagnetManager.Magnets magnets = magnet.getMagnets();
+                for (int x = 0; x < magnets.size(); x++) {
+                    WiresMagnet _m = magnets.getMagnet(x);
+                    if ( _m.equals(magnet) ) {
+                        return x;
+                    }
+                }
+            }
+            return -1;
         }
 
     };

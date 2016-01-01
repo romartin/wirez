@@ -230,6 +230,9 @@ public class CanvasScreen {
                 .newTopLevelMenu("Log graph")
                 .respondsWith(getLogGraphCommand())
                 .endMenu()
+                .newTopLevelMenu("Resume graph")
+                .respondsWith(getResumeGraphCommand())
+                .endMenu()
                 .newTopLevelMenu("Visit graph")
                 .respondsWith(getVisitGraphCommand())
                 .endMenu()
@@ -294,6 +297,14 @@ public class CanvasScreen {
         };
     }
 
+    private Command getResumeGraphCommand() {
+        return new Command() {
+            public void execute() {
+                resumeGraph();
+            }
+        };
+    }
+    
     private Command getVisitGraphCommand() {
         return new Command() {
             public void execute() {
@@ -331,8 +342,12 @@ public class CanvasScreen {
         ((CanvasCommandManager)canvasHandler).undo();
     }
 
-    private void logGraph() {
+    private void resumeGraph() {
         Logger.resume((DefaultGraph) canvasHandler.getGraph());
+    }
+
+    private void logGraph() {
+        Logger.log((DefaultGraph) canvasHandler.getGraph());
     }
 
     private void visitGraph() {

@@ -19,6 +19,7 @@ package org.wirez.basicset.api;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.basicset.api.property.bgset.BackgroundPropertySetBuilder;
 import org.wirez.basicset.api.property.font.FontPropertySetBuilder;
+import org.wirez.basicset.api.rule.BasicSetRules;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -77,7 +78,7 @@ public class BasicSet implements DefinitionSet {
 
     @Override
     public Collection<Rule> getRules() {
-        return null;
+        return new BasicSetRules().getRules();
     }
     
 }

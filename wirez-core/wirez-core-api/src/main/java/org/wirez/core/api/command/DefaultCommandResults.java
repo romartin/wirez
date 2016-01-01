@@ -36,8 +36,16 @@ public class DefaultCommandResults implements CommandResults {
     }
 
     @Override
-    public Iterable<CommandResult> results(CommandResult.Type resultType) {
-        return results;
+    public Iterable<CommandResult> results(final CommandResult.Type resultType) {
+        final Collection<CommandResult> resultsByType = new LinkedList<>();
+        if ( results != null ) {
+            for (final CommandResult _result : results) {
+                if (_result.getType().equals(resultType)) {
+                    resultsByType.add(_result);
+                }
+            }
+        }
+        return resultsByType;
     }
 
 }

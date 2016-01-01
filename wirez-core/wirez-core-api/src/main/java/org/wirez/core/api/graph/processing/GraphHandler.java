@@ -22,34 +22,29 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.Collection;
 
-@ApplicationScoped
-public class GraphHandler {
+public interface GraphHandler {
 
     /**
      * Returns the element (node or edge) with the given uuid.
      */
-    public Element get(final DefaultGraph graph, final String uuid) {
-        assert graph != null && uuid != null;
-        Element element = graph.getNode(uuid);
-        if (element == null) {
-            element = graph.getEdge(uuid);
-        }
-        return element;
-    }
+    Element get(DefaultGraph graph, String uuid);
 
-    public Node getNode(final DefaultGraph graph, final String uuid) {
-        if ( null != uuid ) {
-            return graph.getNode(uuid);
-        }
-        return null;
-    }
+    /**
+     * Returns the node with the given uuid.
+     */
+    Node getNode(DefaultGraph graph, String uuid);
 
-    public Edge getEdge(final DefaultGraph graph, final String uuid) {
-        if ( null != uuid ) {
-            return graph.getEdge(uuid);
-        }
-        return null;
-    }
+    /**
+     * Returns the edge with the given uuid.
+     */
+    Edge getEdge(DefaultGraph graph, String uuid);
+
+    /**
+     * Returns the children nodes for a given parent one.
+     * Impls can iterates over the child relationships in several ways to obtain best performance.
+     */
+    Collection<Node> getChildren(Node parent);
     
 }

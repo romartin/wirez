@@ -40,6 +40,11 @@ public class Circle extends BasicNodeDefinition<Circle> {
         add(new RadiusBuilder().build() );
     }};
 
+    private final Set<String> labels = new HashSet<String>() {{
+        add( "all" );
+        add( "circle" );
+    }};
+
     private final Set<PropertySet> propertySets = new HashSet<PropertySet>() {{
         add(new DefaultPropertySetBuilder()
                 .withProperty(new NameBuilder().defaultValue("My circle").build())
@@ -57,7 +62,7 @@ public class Circle extends BasicNodeDefinition<Circle> {
         setContent(new DefaultContent(BasicSetCategories.INSTANCE.BASIC,
                 "Circle",
                 "A circle.",
-                new HashSet<String>(),
+                labels,
                 propertySets,
                 properties));
     }

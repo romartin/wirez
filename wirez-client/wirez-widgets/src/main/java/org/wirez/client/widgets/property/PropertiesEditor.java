@@ -71,7 +71,7 @@ public class PropertiesEditor implements IsWidget {
 
     WirezClientManager wirezClientManager;
     DefaultCanvasCommands defaultCommands;
-    GraphHandler graphUtils;
+    GraphHandler graphHandler;
     View view;
     private CanvasHandler canvasHandler;
     private DefaultCanvasListener canvasListener;
@@ -85,7 +85,7 @@ public class PropertiesEditor implements IsWidget {
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.defaultCommands = defaultCommands;
-        this.graphUtils = graphUtils;
+        this.graphHandler = graphUtils;
     }
 
     @PostConstruct
@@ -142,8 +142,7 @@ public class PropertiesEditor implements IsWidget {
                     for (final Property property : properties) {
                         final String propertyId = property.getId();
                         final Object value = element.getProperties().get(propertyId);
-                        GWT.log("PropertiesEditor  - Building field info with value [" 
-                                + ( value != null ? value.toString() : null ) + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
+                        // GWT.log("PropertiesEditor  - Building field info with value [" + ( value != null ? value.toString() : null ) + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
                         final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                             @Override
                             public void onValueChanged(final Object value) {
@@ -415,7 +414,7 @@ public class PropertiesEditor implements IsWidget {
             show(defaultGraph);
         } else {
             final String shapeUUID = shape.getId();
-            final ViewElement<? extends Definition> element = (ViewElement<? extends Definition>) graphUtils.get(defaultGraph, shapeUUID);
+            final ViewElement<? extends Definition> element = (ViewElement<? extends Definition>) graphHandler.get(defaultGraph, shapeUUID);
             if (element != null && Canvas.ShapeState.SELECTED.equals(state)) {
                 GWT.log("PropertiesEditor  - Showing properties for node [" + element.getUUID() + "]");
                 show(element);

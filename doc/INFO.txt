@@ -1,0 +1,27 @@
+- Links
+    
+    - Wirez -> https://github.com/romartin/uberfire-extensions/tree/wirez/ 
+    
+    - Lienzo KS -> https://www.lienzo-core.com/lienzo-ks/#WELCOME
+    
+    - GitHub
+        - Ahome-it -> https://github.com/ahome-it
+        - Lienzo core -> https://github.com/ahome-it/lienzo-core
+    
+    - Mark's TODOS on lienzo -> https://github.com/ahome-it/lienzo-core/wiki/Wires
+    - Some Mark's videos
+        - multipath resize -> https://www.lienzo-core.com/lienzo-ks/#MULTIPATH_RESIZE
+        - orthogonal lines -> http://www.screencast.com/users/MarkPr/folders/Jing/media/9457bf7a-77d6-4088-ac15-bc9d61fe513d
+        - magnets, connectors & orthogonal lines -> http://www.screencast.com/users/MarkPr/folders/Jing/media/23630312-615c-4df2-8f4b-2e39574e71f8
+    
+    - Joe
+        - https://docs.google.com/document/d/1ude4PTuZCmsaXTIJDXRYMUzyktnmgyOuLj_a7mPJDik/edit#heading=h.vd3008tfh0ss
+        - lanes -> https://grapholite.com/Diagrams/Swimlane
+        - subprocess on new canvas (when click)
+        - copy elements between canvas
+        
+    - QE
+        - Lienzo testing -> https://docs.google.com/document/d/1QITse3Guo-p1mA33JLzBLN9qDOburaS_3ubWeNN0Dgo/edit#heading=h.32egv0z2klab
+        
+    -  genmymodel
+        - https://dashboard.genmymodel.com/

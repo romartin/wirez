@@ -47,7 +47,7 @@ public class Diagram extends BasicDefinition implements DefaultGraphFactory<Diag
         setContent(new DefaultContent(BasicSetCategories.INSTANCE.DIAGRAM,
                 "Basic Diagram",
                 "A basic shapes diagram",
-                new HashSet<String>(),
+                labels,
                 propertySets,
                 properties));
             
@@ -57,6 +57,11 @@ public class Diagram extends BasicDefinition implements DefaultGraphFactory<Diag
         // No custom properties.
     }};
 
+    private final Set<String> labels = new HashSet<String>() {{
+        add( "all" );
+        add( "diagram" );
+    }};
+    
     private final Set<PropertySet> propertySets = new HashSet<PropertySet>() {{
         add(new DefaultPropertySetBuilder()
                 .withProperty(new NameBuilder().defaultValue("My diagram").build())

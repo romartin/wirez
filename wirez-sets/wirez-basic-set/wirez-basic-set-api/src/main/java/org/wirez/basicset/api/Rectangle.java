@@ -39,6 +39,11 @@ public class Rectangle extends BasicNodeDefinition<Rectangle> {
         
     }};
 
+    private final Set<String> labels = new HashSet<String>() {{
+        add( "all" );
+        add( "rectangle" );
+    }};
+
     private final Set<PropertySet> propertySets = new HashSet<PropertySet>() {{
         add(new DefaultPropertySetBuilder()
                 .withProperty(new NameBuilder().defaultValue("My rectangle").build())
@@ -56,7 +61,7 @@ public class Rectangle extends BasicNodeDefinition<Rectangle> {
         setContent(new DefaultContent(BasicSetCategories.INSTANCE.BASIC,
                 "Rectangle",
                 "A rectangle.",
-                new HashSet<String>(),
+                labels,
                 propertySets,
                 properties));
     }

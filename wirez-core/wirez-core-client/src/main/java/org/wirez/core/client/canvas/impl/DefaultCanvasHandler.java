@@ -110,7 +110,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
         final WiresManager wiresManager = getBaseCanvas().getWiresManager();
         wiresManager.setConnectionAcceptor(CONNECTION_ACCEPTOR);
-        wiresManager.setContainmentAcceptor(CONTAINTMENT_ACCEPTOR);
+        wiresManager.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
     }
     
     /*
@@ -310,11 +310,39 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
     };
 
-    private final IContainmentAcceptor CONTAINTMENT_ACCEPTOR = new IContainmentAcceptor() {
+    private final IContainmentAcceptor CONTAINMENT_ACCEPTOR = new IContainmentAcceptor() {
         @Override
         public boolean containmentAllowed(final WiresContainer wiresContainer, final WiresShape wiresShape) {
-            // TODO
-            return true;
+
+            final BaseShape parent = (BaseShape) wiresContainer;
+            final BaseShape child = (BaseShape) wiresShape;
+            final ViewNode parentNode = (ViewNode) graphHandler.getNode(graph, parent.getId());
+            final ViewNode childNode = (ViewNode) graphHandler.getNode(graph, child.getId());
+
+            final boolean isAllowed = allow(new BaseCanvasCommand() {
+                @Override
+                protected Command getCommand() {
+                    return  new AddChildNodeCommand(graph, parentNode, childNode);
+                }
+
+                @Override
+                public CanvasCommand apply() {
+                    // Do nothing, lienzo wires do it for us.
+                    return this;
+                }
+
+                @Override
+                public String toString() {
+                    return getCommand().toString();
+                }
+
+            });
+            final String parentUUID = parent != null ? parent.getId() : null;
+            final String childUUID = child != null ? child.getId() : null;
+            Logger.log("containmentAllowed  [parent=" + parentUUID + "] [child=" + childUUID + "] [isAllowed=" + isAllowed + "]");
+            Logger.log("containmentAllowed#Result=" + isAllowed);
+            return isAllowed;
+            
         }
 
         @Override
@@ -348,6 +376,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             });
 
             final boolean isAccept = isAccept(results);
+            Logger.log("acceptContainment#Result=" + isAccept);
             return isAccept;
 
         }
@@ -357,7 +386,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         Logger.logCommandResults(results.results());
         final boolean hasCommandErrors = results.results(CommandResult.Type.ERROR) != null
                 && results.results(CommandResult.Type.ERROR).iterator().hasNext();
-        return hasCommandErrors;
+        return !hasCommandErrors;
     }
 }
 

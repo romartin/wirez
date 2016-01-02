@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.control;
+package org.wirez.core.client.control.toolbox;
 
 import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.control.ToolboxControl;
 
-public interface HasDragControl<S extends Shape, E extends ViewElement> {
+public interface HasToolboxControl<S extends Shape, E extends ViewElement> {
 
-    void setDragControl(DefaultDragControl<S, E> dragControl);
-    
-    DefaultDragControl<S, E> getDragControl();
+    void setToolboxControl(ToolboxControl<S, E> toolboxControl);
+
+    ToolboxControl<S, E> getToolboxControl();
     
 }

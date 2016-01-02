@@ -53,6 +53,7 @@ import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.canvas.impl.DefaultCanvasHandler;
+import org.wirez.core.client.control.toolbox.Toolbox;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.util.CanvasHighlightVisitor;
 

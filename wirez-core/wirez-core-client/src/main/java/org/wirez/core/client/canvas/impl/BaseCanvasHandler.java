@@ -19,6 +19,7 @@ package org.wirez.core.client.canvas.impl;
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
@@ -32,22 +33,30 @@ import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.canvas.*;
+import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.CanvasListener;
+import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.control.*;
+import org.wirez.core.client.control.toolbox.HasToolboxControl;
+import org.wirez.core.client.event.ShapeStateModifiedEvent;
+import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
-import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.*;
 
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 // TODO: Implement SelectionManager<Element>
 public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandManager {
@@ -100,7 +109,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         final Shape shape = factory.build(wirez, this);
 
         shape.setId(candidate.getUUID());
-
+        
         // Selection handling.
         if (canvas instanceof SelectionManager) {
             final SelectionManager<Shape> selectionManager = (SelectionManager<Shape>) canvas;
@@ -126,45 +135,45 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
 
         }
 
+        // Shape controls.
         if (factory instanceof HasShapeControlFactories) {
 
             final Collection<ShapeControlFactory<?, ?>> factories = ((HasShapeControlFactories) factory).getFactories();
             for (ShapeControlFactory controlFactory : factories) {
                 ShapeControl control = controlFactory.build(shape);
 
-                // DRAG handling..
+                // Some controls needs to add elements on the DOM.
+                if (control instanceof IsWidget) {
+                    final IsWidget controlWidget = (IsWidget) control;
+                    canvas.addControl(controlWidget);
+                }
+                
+                // DRAG control.
                 if (control instanceof DefaultDragControl && shape instanceof HasDragControl) {
                     final HasDragControl hasDragControl = (HasDragControl) shape;
                     hasDragControl.setDragControl((DefaultDragControl) control);
-                    ((DefaultDragControl) control).setCommandManager(this);
+                    ((DefaultDragControl) control).setCanvasHandler(this);
                     control.enable(shape, candidate);
                 }
 
-                // RESIZE handling.
+                // RESIZE control.
                 if (control instanceof DefaultResizeControl && shape instanceof HasResizeControl) {
                     final HasResizeControl hasResizeControl = (HasResizeControl) shape;
                     hasResizeControl.setResizeControl((DefaultResizeControl) control);
-                    ((DefaultResizeControl) control).setCommandManager(this);
+                    ((DefaultResizeControl) control).setCanvasHandler(this);
+                    control.enable(shape, candidate);
+                }
+                
+                // Toolbox.
+                if (control instanceof ToolboxControl && shape instanceof HasToolboxControl) {
+                    final HasToolboxControl hasToolboxControl = (HasToolboxControl) shape;
+                    hasToolboxControl.setToolboxControl((ToolboxControl) control);
+                    ((ToolboxControl) control).setCanvasHandler(this);
                     control.enable(shape, candidate);
                 }
             }
 
         }
-
-        // TODO: Contextual menu.
-        /*if (canvas instanceof HasContextualMenu) {
-            final ContextualMenu<Element> contextualMenu = ((HasContextualMenu) canvas).getContextualMenu();
-            getContainer().addNodeMouseDoubleClickHandler(new NodeMouseDoubleClickHandler() {
-                @Override
-                public void onNodeMouseDoubleClick(NodeMouseDoubleClickEvent nodeMouseDoubleClickEvent) {
-                    final double mx = nodeMouseDoubleClickEvent.getX();
-                    final double my = nodeMouseDoubleClickEvent.getY();
-                    GWT.log("Double click for " + candidate.getId() + " at [mx=" + mx + ", my=" + my + "]");
-                    contextualMenu.show(candidate, null, mx, my);
-                }
-            });
-
-        }*/
 
         // Add the shapes on canvas and fire events.
         canvas.addShape(shape);
@@ -378,5 +387,14 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
 
     protected BaseCanvas getBaseCanvas() {
         return (BaseCanvas) canvas;
+    }
+
+    void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
+        checkNotNull("event", event);
+        final Canvas.ShapeState state = event.getState();
+        final Shape shape = event.getShape();
+        if ( null == shape ) {
+            fireCanvasClear();
+        }
     }
 }

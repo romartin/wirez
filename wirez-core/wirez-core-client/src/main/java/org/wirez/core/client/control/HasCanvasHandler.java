@@ -17,10 +17,10 @@
 package org.wirez.core.client.control;
 
 
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
+import org.wirez.core.client.canvas.CanvasHandler;
 
-public interface HasCommandManager {
+public interface HasCanvasHandler {
     
-    void setCommandManager(CanvasCommandManager commandManager);
+    void setCanvasHandler(CanvasHandler canvasHandler);
     
 }

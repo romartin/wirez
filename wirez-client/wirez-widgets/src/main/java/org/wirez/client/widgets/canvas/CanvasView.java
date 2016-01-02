@@ -20,6 +20,8 @@ import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Line;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 
 import javax.annotation.PostConstruct;
 
@@ -31,6 +33,8 @@ public class CanvasView extends Composite implements Canvas.View {
     public static final int DEFAULT_SIZE_WIDTH = 1000;
     public static final int DEFAULT_SIZE_HEIGHT = 1000;
 
+    private FlowPanel mainPanel = new FlowPanel();
+    private FlowPanel toolsPanel = new FlowPanel();
     private FocusableLienzoPanel panel;
     protected Layer canvasLayer = new Layer();
     private Canvas presenter;
@@ -46,7 +50,9 @@ public class CanvasView extends Composite implements Canvas.View {
         panel = new FocusableLienzoPanel( DEFAULT_SIZE_WIDTH,
                                           DEFAULT_SIZE_HEIGHT );
 
-        initWidget( panel );
+        mainPanel.add(toolsPanel);
+        mainPanel.add(panel);
+        initWidget( mainPanel );
 
         //Grid...
         Line line1 = new Line( 0,
@@ -59,7 +65,7 @@ public class CanvasView extends Composite implements Canvas.View {
                                0 ).setStrokeColor( ColorName.GREEN ).setAlpha( 0.5 ); // secondary dashed-lines
         line2.setDashArray( 2,
                             2 );
-
+    
         GridLayer gridLayer = new GridLayer( 100,
                                              line1,
                                              25,
@@ -67,6 +73,12 @@ public class CanvasView extends Composite implements Canvas.View {
         panel.setBackgroundLayer( gridLayer );
 
         panel.getScene().add( canvasLayer );
+    }
+
+    @Override
+    public Canvas.View add(final IsWidget widget) {
+        toolsPanel.add(widget);
+        return this;
     }
 
     @Override

@@ -408,11 +408,7 @@ public class PropertiesEditor implements IsWidget {
         final Canvas.ShapeState state = event.getState();
         final Shape shape = event.getShape();
         final DefaultGraph defaultGraph = (DefaultGraph) this.canvasHandler.getGraph();
-        if ( shape == null ) {
-            GWT.log("PropertiesEditor - Showing properties for graph [" + defaultGraph.getUUID() + "]");
-            view.clear();
-            show(defaultGraph);
-        } else {
+        if ( shape != null ) {
             final String shapeUUID = shape.getId();
             final ViewElement<? extends Definition> element = (ViewElement<? extends Definition>) defaultGraphHandler.initialize(defaultGraph).get(shapeUUID);
             if (element != null && Canvas.ShapeState.SELECTED.equals(state)) {
@@ -422,7 +418,6 @@ public class PropertiesEditor implements IsWidget {
                 view.clear();
             }
         }
-        
         
     }
     
@@ -449,6 +444,10 @@ public class PropertiesEditor implements IsWidget {
             @Override
             public void onClear() {
                 view.clear();
+                final DefaultGraph defaultGraph = (DefaultGraph) PropertiesEditor.this.canvasHandler.getGraph();
+                if ( null != defaultGraph) {
+                    show(defaultGraph);
+                }
             }
         };
         canvasHandler.addListener(canvasListener);

@@ -17,18 +17,27 @@
 package org.wirez.core.client.control;
 
 
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 
-public abstract class BaseShapeControl<S extends Shape, E extends ViewElement> implements ShapeControl<S, E>, HasCommandManager {
+public abstract class BaseShapeControl<S extends Shape, E extends ViewElement> implements ShapeControl<S, E>, HasCanvasHandler {
     
-    protected CanvasCommandManager commandManager;
+    protected CanvasHandler canvasHandler;
 
     @Override
-    public void setCommandManager(final CanvasCommandManager commandManager) {
-        this.commandManager = commandManager;
+    public void setCanvasHandler(final CanvasHandler canvasHandler) {
+        this.canvasHandler = canvasHandler;
+    }
+
+    protected double[] getContainerXY(final Shape shape) {
+        return new double[] { shape.getShapeNode().getAttributes().getX(),
+                shape.getShapeNode().getAttributes().getY()};
+    }
+    
+    protected CanvasCommandManager getCommandManager() {
+        return (CanvasCommandManager) canvasHandler;
     }
     
 }

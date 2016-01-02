@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.control.toolbox.Toolbox;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 
 import javax.annotation.PostConstruct;
@@ -31,6 +32,7 @@ import javax.inject.Inject;
 public class Canvas extends BaseCanvas implements IsWidget {
 
     public interface View extends UberView<Canvas> {
+        View add(IsWidget widget);
         View clear();
     }
 
@@ -51,6 +53,12 @@ public class Canvas extends BaseCanvas implements IsWidget {
     @Override
     public Widget asWidget() {
         return view.asWidget();
+    }
+
+    @Override
+    public Canvas addControl(final IsWidget control) {
+        view.add(control);
+        return this;
     }
 
     public Canvas clear() {

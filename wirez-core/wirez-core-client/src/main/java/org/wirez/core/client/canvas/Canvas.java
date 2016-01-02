@@ -17,6 +17,7 @@
 package org.wirez.core.client.canvas;
 
 import com.ait.lienzo.client.core.shape.Layer;
+import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.Shape;
 
 import java.util.List;
@@ -27,6 +28,11 @@ public interface Canvas {
      * Initialize a wirez layer.
      */
     Canvas initialize(Layer layer);
+
+    /**
+     * Add the shape control widget into the view for this canvas.
+     */
+    Canvas addControl(IsWidget control);
 
     /**
      * Draws or batches the updates on the canvas. 

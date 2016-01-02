@@ -38,7 +38,7 @@ public class RadiusBasedResizeControl<S extends Shape> extends DefaultResizeCont
     @Override
     protected void doResizeEnd(S shape, ViewNode element, double width, double height) {
         double radius = getRadius(width, height);
-        commandManager.execute(
+        getCommandManager().execute(
                 new CompositeElementCanvasCommand(element)
                         .add(new UpdateElementSizeCommand(element, width, height))
                         .add(new UpdateElementPropertyValueCommand(element, new RadiusBuilder().build() , (int) radius ))

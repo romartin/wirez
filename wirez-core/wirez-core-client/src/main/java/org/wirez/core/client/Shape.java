@@ -33,7 +33,8 @@ public interface Shape<W extends Definition> {
     Shape<W> setId(String id);
 
     /**
-     * The main shape's node.
+     * The main shape's node. All handlers and controls provided by wirez will be attached to this node. 
+     * Usually it returns the parent Group of all shapes that conform this wirez shape.
      */
     Node getShapeNode();
 

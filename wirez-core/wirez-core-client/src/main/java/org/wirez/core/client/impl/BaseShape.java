@@ -27,12 +27,11 @@ import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.impl.ViewEdge;
+import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.control.DefaultDragControl;
-import org.wirez.core.client.control.DefaultResizeControl;
-import org.wirez.core.client.control.HasDragControl;
-import org.wirez.core.client.control.HasResizeControl;
+import org.wirez.core.client.control.*;
+import org.wirez.core.client.control.toolbox.HasToolboxControl;
 import org.wirez.core.client.mutation.*;
 
 import java.util.Collection;
@@ -47,13 +46,16 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         HasPropertyMutation,
         HasGraphElementMutation<W, org.wirez.core.api.graph.impl.ViewNode<W, Edge>>,
         HasDragControl<org.wirez.core.client.Shape<W>, ViewNode>,
-        HasResizeControl<org.wirez.core.client.Shape<W>, ViewNode> {
+        HasResizeControl<org.wirez.core.client.Shape<W>, ViewNode>,
+        HasToolboxControl<org.wirez.core.client.Shape<W>, ViewNode> {
 
     protected String id;
     protected Text text;
     protected DefaultDragControl<org.wirez.core.client.Shape<W>, ViewNode> dragControl;
     protected DefaultResizeControl<org.wirez.core.client.Shape<W>, ViewNode> resizeControl;
-    
+    protected ToolboxControl<org.wirez.core.client.Shape<W>, ViewNode> toolboxControl;
+
+
     public BaseShape(final MultiPath path, final Group group, final WiresManager manager) {
         super(path, group, manager);
     }
@@ -203,6 +205,15 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         return resizeControl;
     }
 
+    @Override
+    public void setToolboxControl(ToolboxControl<org.wirez.core.client.Shape<W>, ViewNode> toolboxControl) {
+        this.toolboxControl = toolboxControl;
+    }
+
+    @Override
+    public ToolboxControl<org.wirez.core.client.Shape<W>, ViewNode> getToolboxControl() {
+        return toolboxControl;
+    }
 
     @Override
     public boolean equals(Object obj) {

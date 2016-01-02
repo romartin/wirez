@@ -20,7 +20,6 @@ import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresEvent;
 import com.ait.lienzo.client.core.shape.wires.event.DragEvent;
 import com.ait.lienzo.client.core.shape.wires.event.DragHandler;
 import com.google.gwt.core.client.GWT;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
@@ -48,7 +47,7 @@ public class DefaultDragControl<S extends Shape, E extends ViewElement> extends 
                     final double[] xy = getContainerXY(shape);
                     GWT.log("DragControl#onDragEnd [node=" + element.getUUID() + "]  [x=" + dragEvent.getX() + "] [y=" + dragEvent.getY() + "]");
                     GWT.log("DragControl#onDragEnd [shape=" + shape.getId() + "]  [x=" + xy[0]  + "] [y=" + xy[1] + "]");
-                    commandManager.execute(new MoveCanvasElementCommand(element, xy[0], xy[1]));
+                    getCommandManager().execute(new MoveCanvasElementCommand(element, xy[0], xy[1]));
                 }
             });
         }

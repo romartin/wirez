@@ -48,6 +48,7 @@ public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>>
         DEFAULT_FACTORIES = new ArrayList<ShapeControlFactory<?, ?>>() {{
             add( getDragControlFactory() );
             add( getResizeControlFactory() );
+            add( getToolboxControlFactory() );
         }};
     }
 
@@ -62,6 +63,10 @@ public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>>
 
     protected ShapeControlFactory<?, ?> getResizeControlFactory() {
         return defaultShapeControlFactories.resizeControlFactory();
+    }
+
+    protected ShapeControlFactory<?, ?> getToolboxControlFactory() {
+        return defaultShapeControlFactories.toolboxControlFactory();
     }
 
     @Override

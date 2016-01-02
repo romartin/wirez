@@ -16,11 +16,13 @@
 
 package org.wirez.core.client.factory.control;
 
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.control.DefaultResizeControl;
 
+import javax.enterprise.context.Dependent;
+
+@Dependent
 public class DefaultResizeControlFactory<S extends Shape,  E extends ViewElement> implements ShapeControlFactory<S, DefaultResizeControl<S, E>> {
     
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,16 +18,25 @@ package org.wirez.core.client.factory.control;
 
 import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.control.DefaultDragControl;
+import org.wirez.core.client.control.ToolboxControl;
+import org.wirez.core.client.control.toolbox.Toolbox;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 @Dependent
-public class DefaultDragControlFactory<S extends Shape, E extends ViewElement> implements ShapeControlFactory<S, DefaultDragControl<S, E>> {
+public class DefaultToolboxControlFactory<S extends Shape, E extends ViewElement> implements ShapeControlFactory<S, ToolboxControl<S, E>> {
     
+    Toolbox toolbox;
+
+    @Inject
+    public DefaultToolboxControlFactory(Toolbox toolbox) {
+        this.toolbox = toolbox;
+    }
+
     @Override
-    public DefaultDragControl<S, E> build(S shape) {
-        return new DefaultDragControl<S, E>();
+    public ToolboxControl<S, E> build(S shape) {
+        return new ToolboxControl<S, E>(toolbox);
     }
     
 }

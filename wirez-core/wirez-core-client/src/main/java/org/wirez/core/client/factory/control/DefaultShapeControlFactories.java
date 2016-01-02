@@ -17,22 +17,31 @@
 package org.wirez.core.client.factory.control;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import javax.inject.Inject;
 
 @ApplicationScoped
 public class DefaultShapeControlFactories {
 
-    private DefaultDragControlFactory dragControlFactory = new DefaultDragControlFactory();
-    private DefaultResizeControlFactory resizeControlFactory = new DefaultResizeControlFactory();
-    
-    @Produces
+    DefaultDragControlFactory dragControlFactory;
+    DefaultResizeControlFactory resizeControlFactory;
+    DefaultToolboxControlFactory toolboxControlFactory;
+
+    @Inject
+    public DefaultShapeControlFactories(DefaultDragControlFactory dragControlFactory, DefaultResizeControlFactory resizeControlFactory, DefaultToolboxControlFactory toolboxControlFactory) {
+        this.dragControlFactory = dragControlFactory;
+        this.resizeControlFactory = resizeControlFactory;
+        this.toolboxControlFactory = toolboxControlFactory;
+    }
+
     public DefaultDragControlFactory dragControlFactory() {
         return dragControlFactory;
     }
 
-    @Produces
     public DefaultResizeControlFactory resizeControlFactory() {
         return resizeControlFactory;
     }
 
+    public DefaultToolboxControlFactory toolboxControlFactory() {
+        return toolboxControlFactory;
+    }
 }

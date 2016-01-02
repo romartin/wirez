@@ -19,7 +19,6 @@ package org.wirez.core.client.control;
 import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresEvent;
 import com.ait.lienzo.client.core.shape.wires.event.ResizeEvent;
 import com.ait.lienzo.client.core.shape.wires.event.ResizeHandler;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.SetCanvasElementSizeCommand;
@@ -64,7 +63,7 @@ public class DefaultResizeControl<S extends Shape, E extends ViewElement> extend
     }
     
     protected void doResizeEnd(final S shape, final E element, final double width, final double height) {
-        commandManager.execute(new SetCanvasElementSizeCommand(element, width, height));
+        getCommandManager().execute(new SetCanvasElementSizeCommand(element, width, height));
     }
 
     @Override

@@ -124,15 +124,13 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
         glyphView.addNodeMouseClickHandler(new NodeMouseClickHandler() {
             @Override
             public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
-                GWT.log("Mouse Click");
-                // callback.onClick();
+                callback.onClick();
             }
         });
         glyphView.addNodeMouseDoubleClickHandler(new NodeMouseDoubleClickHandler() {
             @Override
             public void onNodeMouseDoubleClick(final NodeMouseDoubleClickEvent nodeMouseDoubleClickEvent) {
-                GWT.log("Mouse Double Click");
-                //callback.onClick();
+                callback.onClick();
             }
         });
         
@@ -141,7 +139,6 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
         glyphView.addNodeMouseDownHandler(new NodeMouseDownHandler() {
             @Override
             public void onNodeMouseDown(NodeMouseDownEvent event) {
-                GWT.log("Mouse down");
                 callback.onMouseDown(lienzoPanel, event.getX(), event.getY());
             }
         });
@@ -149,8 +146,7 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
         glyphView.addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
             @Override
             public void onNodeMouseMove(final NodeMouseMoveEvent nodeMouseMoveEvent) {
-                GWT.log("Mouse move");
-                // callback.onNodeMouseMove(lienzoPanel, glyphView.getX(), glyphView.getY());
+                callback.onMouseMove(lienzoPanel, glyphView.getX(), glyphView.getY());
             }
         });
         

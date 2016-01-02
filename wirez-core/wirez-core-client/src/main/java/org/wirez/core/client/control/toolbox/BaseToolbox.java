@@ -16,7 +16,6 @@
 
 package org.wirez.core.client.control.toolbox;
 
-import com.google.gwt.user.client.ui.Widget;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.canvas.CanvasHandler;

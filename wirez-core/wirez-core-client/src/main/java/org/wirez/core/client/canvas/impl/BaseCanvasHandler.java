@@ -20,7 +20,6 @@ import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
 import org.wirez.core.api.definition.Definition;
@@ -48,12 +47,13 @@ import org.wirez.core.client.factory.control.HasShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.*;
+import org.wirez.core.client.notification.CanvasCommandAllowedNotification;
+import org.wirez.core.client.notification.CanvasCommandExecutionNotification;
 
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
@@ -325,13 +325,8 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                          final CanvasCommand command) {
         command.setCanvas(this);
         boolean isAllowed = commandManager.allow(ruleManager, command);
-        
-        if (!isAllowed) {
-            notificationEvent.fire(new NotificationEvent(NotificationEvent.Type.ERROR, 
-                    "Canvas=" + this.getSettings().getUUID(), 
-                    "NOT ALLOWED=" + command.toString()));
-        }
-        
+        final CanvasCommandAllowedNotification notification = new CanvasCommandAllowedNotification(getSettings().getTitle(), command, isAllowed);
+        notificationEvent.fire(new NotificationEvent(notification));
         return isAllowed;
     }
 
@@ -344,40 +339,13 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         for (final CanvasCommand command : commands) {
             command.setCanvas(this);
             results = commandManager.execute(ruleManager, command);
-            
             // TODO: Check errors.
-            
-            _notifyViolations("Canvas=" + getSettings().getTitle() + " EXECUTED=" + command.toString(), results);
-            
             command.apply();
+            final CanvasCommandExecutionNotification notification = new CanvasCommandExecutionNotification(getSettings().getTitle(), command, results);
+            notificationEvent.fire(new NotificationEvent(notification));
         }
 
         return results;
-    }
-
-    private void _notifyViolations(final String uuid, final CommandResults results) {
-        if ( null != results ) {
-            final Iterable<CommandResult> it = results.results();
-            _notifyViolations(uuid, it);
-        }
-    }
-
-    private void _notifyViolations(final String uuid, final Iterable<CommandResult> it) {
-        final Iterator<CommandResult> iterator = it.iterator();
-        while (iterator.hasNext()) {
-            final CommandResult result = iterator.next();
-            notificationEvent.fire(new NotificationEvent(getNotificationType(result.getType()), uuid, result.getMessage()));
-        }
-    }
-
-    private NotificationEvent.Type getNotificationType(final CommandResult.Type resultType) {
-        if (CommandResult.Type.ERROR.equals(resultType)) {
-            return NotificationEvent.Type.ERROR;
-        } else if (CommandResult.Type.WARNING.equals(resultType)) {
-            return NotificationEvent.Type.WARNING;
-        } else {
-            return NotificationEvent.Type.INFO;
-        }
     }
 
     @Override

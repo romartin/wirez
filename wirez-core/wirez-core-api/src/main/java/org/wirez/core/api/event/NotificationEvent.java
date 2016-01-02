@@ -17,6 +17,7 @@
 package org.wirez.core.api.event;
 
 import org.uberfire.workbench.events.UberFireEvent;
+import org.wirez.core.api.notification.Notification;
 
 /**
  * <p>CDI event for Wirez logging.</p>
@@ -24,47 +25,19 @@ import org.uberfire.workbench.events.UberFireEvent;
  */
 public class NotificationEvent implements UberFireEvent {
 
-    public enum Type {
-        ERROR, WARNING, INFO, DEBUG
-    }
-    
-    private Type type;
-    private Object context;
-    private String message;
-    private Exception exception;
+    private final Notification notification;
 
-    public NotificationEvent(Type type, Object context, String message) {
-        this.type = type;
-        this.context = context;
-        this.message = message;
+    public NotificationEvent(final Notification notification) {
+        this.notification = notification;
     }
 
-    public NotificationEvent(Type type, Object context, String message, Exception exception) {
-        this.type = type;
-        this.context = context;
-        this.message = message;
-        this.exception = exception;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public Object getContext() {
-        return context;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Exception getException() {
-        return exception;
+    public Notification getNotification() {
+        return notification;
     }
 
     @Override
     public String toString() {
-        return "NotificationEvent [type=" + type.name() + ", context=" + context + ", message='" + message + "']";
+        return "NotificationEvent [notification=" + notification.toString() + "']";
     }
 
 }

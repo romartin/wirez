@@ -26,6 +26,7 @@ import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.event.NotificationEvent;
+import org.wirez.core.api.notification.Notification;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -39,9 +40,9 @@ public class Notifications implements IsWidget {
 
     public interface View extends UberView<Notifications> {
         
-        View setColumnSortHandler(ColumnSortEvent.ListHandler<NotificationEvent> sortHandler);
+        View setColumnSortHandler(ColumnSortEvent.ListHandler<Notification> sortHandler);
         
-        View addColumn(com.google.gwt.user.cellview.client.Column<NotificationEvent, String> column,
+        View addColumn(com.google.gwt.user.cellview.client.Column<Notification, String> column,
                        String name);
         
         View removeColumn(int index);
@@ -55,7 +56,7 @@ public class Notifications implements IsWidget {
     }
     
     View view;
-    final ListDataProvider<NotificationEvent> logsProvider = new ListDataProvider<NotificationEvent>();
+    final ListDataProvider<Notification> logsProvider = new ListDataProvider<Notification>();
 
     @Inject
     public Notifications(final View view) {
@@ -73,9 +74,9 @@ public class Notifications implements IsWidget {
         return view.asWidget();
     }
     
-    public void add(final NotificationEvent logEvent) {
-        if ( null != logEvent ) {
-            addLogEventEntry(logEvent);
+    public void add(final Notification notification) {
+        if ( null != notification ) {
+            addLogEntry(notification);
             view.redraw();
         }
     }
@@ -89,17 +90,17 @@ public class Notifications implements IsWidget {
                                  VIEW CALLBACKS 
      ****************************************************************************************************** */
     
-    final ProvidesKey<NotificationEvent> KEY_PROVIDER = new ProvidesKey<NotificationEvent>() {
+    final ProvidesKey<Notification> KEY_PROVIDER = new ProvidesKey<Notification>() {
         @Override
-        public Object getKey(final NotificationEvent item) {
-            return item == null ? null : item.getContext().toString();
+        public Object getKey(final Notification item) {
+            return item == null ? null : item.getNotificationUUID();
         }
     };
     
     /**
      * View callback for getting the list.
      */
-    void addDataDisplay(final HasData<NotificationEvent> display) {
+    void addDataDisplay(final HasData<Notification> display) {
         logsProvider.addDataDisplay(display);
     }
 
@@ -111,23 +112,23 @@ public class Notifications implements IsWidget {
         }
 
         // Attach a column sort handler to the ListDataProvider to sort the list.
-        ColumnSortEvent.ListHandler<NotificationEvent> sortHandler = new ColumnSortEvent.ListHandler<NotificationEvent>(logsProvider.getList());
+        ColumnSortEvent.ListHandler<Notification> sortHandler = new ColumnSortEvent.ListHandler<Notification>(logsProvider.getList());
         view.setColumnSortHandler(sortHandler);
 
         // Log's type.
-        final com.google.gwt.user.cellview.client.Column<NotificationEvent, String> typeColumn = createTypeColumn(sortHandler);
+        final com.google.gwt.user.cellview.client.Column<Notification, String> typeColumn = createTypeColumn(sortHandler);
         if (typeColumn != null) {
             view.addColumn(typeColumn, "Type");
         }
 
         // Log element's UUID.
-        final com.google.gwt.user.cellview.client.Column<NotificationEvent, String> contextColumn = createContextColumn(sortHandler);
+        final com.google.gwt.user.cellview.client.Column<Notification, String> contextColumn = createContextColumn(sortHandler);
         if (contextColumn != null) {
             view.addColumn(contextColumn, "Context");
         }
 
         // Log's message.
-        final com.google.gwt.user.cellview.client.Column<NotificationEvent, String> messageColumn = createMessageColumn(sortHandler);
+        final com.google.gwt.user.cellview.client.Column<Notification, String> messageColumn = createMessageColumn(sortHandler);
         if (messageColumn != null) {
             view.addColumn(messageColumn, "Message");
         }
@@ -135,27 +136,27 @@ public class Notifications implements IsWidget {
     }
     
     
-    private void addLogEventEntry(final NotificationEvent entry) {
-        List<NotificationEvent> logs = logsProvider.getList();
+    private void addLogEntry(final Notification entry) {
+        List<Notification> logs = logsProvider.getList();
         logs.remove(entry);
         logs.add(entry);
     }
 
 
-    private com.google.gwt.user.cellview.client.Column<NotificationEvent, String> createTypeColumn(ColumnSortEvent.ListHandler<NotificationEvent> sortHandler) {
+    private com.google.gwt.user.cellview.client.Column<Notification, String> createTypeColumn(ColumnSortEvent.ListHandler<Notification> sortHandler) {
         // Log type..
         final Cell<String> typeCell = new TextCell();
-        final com.google.gwt.user.cellview.client.Column<NotificationEvent, String> typeColumn = new com.google.gwt.user.cellview.client.Column<NotificationEvent, String>(
+        final com.google.gwt.user.cellview.client.Column<Notification, String> typeColumn = new com.google.gwt.user.cellview.client.Column<Notification, String>(
                 typeCell) {
             @Override
-            public String getValue(final NotificationEvent object) {
+            public String getValue(final Notification object) {
                 return object.getType() != null ? object.getType().name() : "-- No type --";
             }
         };
         typeColumn.setSortable(true);
-        sortHandler.setComparator(typeColumn, new Comparator<NotificationEvent>() {
+        sortHandler.setComparator(typeColumn, new Comparator<Notification>() {
             @Override
-            public int compare(NotificationEvent o1, NotificationEvent o2) {
+            public int compare(Notification o1, Notification o2) {
                 return o1.getType().compareTo(o2.getType());
             }
         });
@@ -163,50 +164,43 @@ public class Notifications implements IsWidget {
         return typeColumn;
     }
 
-    private com.google.gwt.user.cellview.client.Column<NotificationEvent, String> createContextColumn(ColumnSortEvent.ListHandler<NotificationEvent> sortHandler) {
+    private com.google.gwt.user.cellview.client.Column<Notification, String> createContextColumn(ColumnSortEvent.ListHandler<Notification> sortHandler) {
         // Log element's context.
         final Cell<String> contextCell = new TextCell();
-        final com.google.gwt.user.cellview.client.Column<NotificationEvent, String> contextColumn = new com.google.gwt.user.cellview.client.Column<NotificationEvent, String>(
+        final com.google.gwt.user.cellview.client.Column<Notification, String> contextColumn = new com.google.gwt.user.cellview.client.Column<Notification, String>(
                 contextCell) {
             @Override
-            public String getValue(final NotificationEvent object) {
-                return object.getContext() != null ? object.getContext().toString() : "-- No Context --";
+            public String getValue(final Notification object) {
+                return object.getSource() != null ? object.getSource() : "-- No Context --";
             }
         };
         contextColumn.setSortable(true);
-        sortHandler.setComparator(contextColumn, new Comparator<NotificationEvent>() {
+        sortHandler.setComparator(contextColumn, new Comparator<Notification>() {
             @Override
-            public int compare(NotificationEvent o1, NotificationEvent o2) {
-                return o1.getContext().toString().compareTo(o2.getContext().toString());
+            public int compare(Notification o1, Notification o2) {
+                return o1.getSource().compareTo(o2.getSource());
             }
         });
 
         return contextColumn;
     }
 
-    private com.google.gwt.user.cellview.client.Column<NotificationEvent, String> createMessageColumn(ColumnSortEvent.ListHandler<NotificationEvent> sortHandler) {
+    private com.google.gwt.user.cellview.client.Column<Notification, String> createMessageColumn(ColumnSortEvent.ListHandler<Notification> sortHandler) {
         // Log message.
         final Cell<String> messageCell = new TextCell();
-        final com.google.gwt.user.cellview.client.Column<NotificationEvent, String> messageColumn = new com.google.gwt.user.cellview.client.Column<NotificationEvent, String>(
+        final com.google.gwt.user.cellview.client.Column<Notification, String> messageColumn = new com.google.gwt.user.cellview.client.Column<Notification, String>(
                 messageCell) {
             @Override
-            public String getValue(final NotificationEvent object) {
-                return object.getMessage() != null ? object.getMessage() : "-- No Message --";
+            public String getValue(final Notification object) {
+                return object.getContext() != null ? object.getContext().toString(): "-- No Message --";
             }
         };
-        messageColumn.setSortable(true);
-        sortHandler.setComparator(messageColumn, new Comparator<NotificationEvent>() {
-            @Override
-            public int compare(NotificationEvent o1, NotificationEvent o2) {
-                return o1.getMessage().compareTo(o2.getMessage());
-            }
-        });
-
+        messageColumn.setSortable(false);
         return messageColumn;
     }
 
-    void onAttributeCreated(@Observes final NotificationEvent logEvent) {
-        add(logEvent);
+    void onNotification(@Observes final NotificationEvent logEvent) {
+        add(logEvent.getNotification());
     }
     
 }

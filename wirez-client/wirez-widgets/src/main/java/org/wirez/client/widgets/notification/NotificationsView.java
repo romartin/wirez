@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.Row;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
-import org.wirez.core.api.event.NotificationEvent;
+import org.wirez.core.api.notification.Notification;
 
 public class NotificationsView extends Composite implements Notifications.View {
 
@@ -58,7 +58,7 @@ public class NotificationsView extends Composite implements Notifications.View {
     private void initGrid() {
         
         // Init the logs grid.
-        logsGrid = new CellTable<NotificationEvent>(presenter.KEY_PROVIDER);
+        logsGrid = new CellTable<Notification>(presenter.KEY_PROVIDER);
         logsGrid.setWidth("100%", true);
 
         // Do not refresh the headers and footers every time the data is updated.
@@ -75,13 +75,13 @@ public class NotificationsView extends Composite implements Notifications.View {
     }
 
     @Override
-    public Notifications.View setColumnSortHandler(final ColumnSortEvent.ListHandler<NotificationEvent> sortHandler) {
+    public Notifications.View setColumnSortHandler(final ColumnSortEvent.ListHandler<Notification> sortHandler) {
         logsGrid.addColumnSortHandler(sortHandler);
         return this;
     }
 
     @Override
-    public Notifications.View addColumn(final Column<NotificationEvent, String> column, String name) {
+    public Notifications.View addColumn(final Column<Notification, String> column, String name) {
         logsGrid.addColumn(column, name);
         logsGrid.setColumnWidth(column, 5, Style.Unit.PCT);
         return this;

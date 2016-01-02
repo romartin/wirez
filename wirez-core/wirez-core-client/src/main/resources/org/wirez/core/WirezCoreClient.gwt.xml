@@ -20,6 +20,7 @@
 <module>
 
 	<inherits name='com.google.gwt.user.User' />
+	<inherits name="org.uberfire.commons.UberfireCommons"/>
 	<inherits name="com.ait.lienzo.Lienzo"/>
 	<inherits name="org.wirez.core.WirezCoreApi"/>
 

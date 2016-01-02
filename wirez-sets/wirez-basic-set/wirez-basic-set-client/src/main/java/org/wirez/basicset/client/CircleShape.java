@@ -35,8 +35,6 @@ import java.util.Collection;
 
 public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> implements HasRadiusMutation {
 
-    private static final double RADIUS = 50;
-
     protected Circle circle;
     protected Circle decorator;
 
@@ -58,8 +56,9 @@ public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> i
     }
 
     protected void init() {
-        circle = new Circle(RADIUS).setRadius(25).setX(25).setY(25);
-        decorator = new Circle(RADIUS).setRadius(25).setX(25).setY(25).setStrokeWidth(0).setStrokeAlpha(0).setFillAlpha(0);
+        final double radius = org.wirez.basicset.api.Circle.RADIUS;
+        circle = new Circle(radius).setX(radius).setY(radius);
+        decorator = new Circle(radius).setX(radius).setY(radius).setStrokeWidth(0).setStrokeAlpha(0).setFillAlpha(0);
         this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
         this.addChild(circle, WiresLayoutContainer.Layout.CENTER);
     }

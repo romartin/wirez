@@ -35,9 +35,11 @@ public class Circle extends BasicNodeDefinition<Circle> {
 
     public static final String ID = "circle";
     public static final String COLOR = "#0000CC";
+    public static final int RADIUS = 25;
+
 
     private final Set<Property> properties = new HashSet<Property>() {{
-        add(new RadiusBuilder().build() );
+        add(new RadiusBuilder().defaultValue(RADIUS).build() );
     }};
 
     private final Set<String> labels = new HashSet<String>() {{

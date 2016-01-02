@@ -26,6 +26,9 @@ import org.wirez.core.api.rule.impl.*;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * The following rules are just for development purposes. The basic set is not intended to have any semantic rules.
+ */
 @Portable
 public class BasicSetRules {
 
@@ -38,11 +41,13 @@ public class BasicSetRules {
 
     public Collection<ContainmentRule> CONTAINMENT_RULES = new HashSet<ContainmentRule>() {{
 
+        // A diagram can contain any element.
         add( new DefaultContainmentRule("diagramContainmentRule", "diagram", new HashSet<String>() {{
                 add("all");
             }}
         ));
         
+        // A rectangle can only be parent of rectangles.
         add( new DefaultContainmentRule("rectangleContainmentRule", "rectangle", new HashSet<String>() {{
                 add("rectangle");
             }}
@@ -72,20 +77,15 @@ public class BasicSetRules {
 
     public Collection<CardinalityRule> CARDINALITY_RULES = new HashSet<CardinalityRule>() {{
 
-        // Cardinality rules for start events..
-        add(new DefaultCardinalityRule("cardinalityStartEventsRule", "Startevents_all", 0l, -1l,
+        // Rectangles are only allowed to have one outgoing connector..
+        add(new DefaultCardinalityRule("rectangleCardinalityRule", "rectangle", 0l, -1l,
                 new HashSet<CardinalityRule.ConnectorRule>() {{
-                    add(new DefaultConnectorRule(0l, 0l, "SequenceFlow", "startEventsIncomingEdgesRule"));
+                   
                 }}, 
-                new HashSet<CardinalityRule.ConnectorRule>()));
-
-        // Cardinality rules for start events.
-        add(new DefaultCardinalityRule("cardinalityEndEventsRule", "Endevents_all", 0l, -1l, 
-                new HashSet<CardinalityRule.ConnectorRule>(), 
                 new HashSet<CardinalityRule.ConnectorRule>() {{
-                    add(new DefaultConnectorRule(0l, 0l, "SequenceFlow", "endEventsIncomingEdgesRule"));
+                    add(new DefaultConnectorRule(0l, 1l, "connector", ""));
                 }}));
-        
+
     }};
 
     public Collection<Rule> getRules() {

@@ -153,22 +153,23 @@ public class DefaultRuleManager implements RuleManager {
             //Check outgoing connections
             if ( outgoingNode != null && outgoingNode.getLabels().contains( rule.getRole() ) ) {
                 for ( CardinalityRule.ConnectorRule cr : rule.getOutgoingConnectionRules() ) {
-                    if( edge.getDefinition().getId().equals( cr.getRole() )) {
+                    if( edge.getDefinition().getId().equals( cr.getId() )) {
                         final long minOccurrences = cr.getMinOccurrences();
                         final long maxOccurrences = cr.getMaxOccurrences();
                         long count = ( operation == Operation.ADD ? 1 : -1 );
                         for ( Edge e : outgoingNode.getOutEdges() ) {
-                            if (e != null) {
-                                if ( checkLabels( e, edge) ) {
+                            if (e != null && e instanceof ViewEdge) {
+                                final ViewEdge viewEdge = (ViewEdge) e;
+                                if ( (viewEdge.getDefinition().getId().equals( edge.getDefinition().getId())) ) {
                                     count++;
                                 }
                             }
                         }
 
                         if ( count < minOccurrences ) {
-                            results.addViolation(new CardinalityMinRuleViolation(outgoingNode.getUUID(), cr.getRole(), minOccurrences, count));
+                            results.addViolation(new CardinalityMinRuleViolation(outgoingNode.getUUID(), cr.getId(), minOccurrences, count));
                         } else if ( maxOccurrences > -1 && count > maxOccurrences ) {
-                            results.addViolation(new CardinalityMaxRuleViolation(outgoingNode.getUUID(), cr.getRole(), maxOccurrences, count));
+                            results.addViolation(new CardinalityMaxRuleViolation(outgoingNode.getUUID(), cr.getId(), maxOccurrences, count));
                         }
                     }
                 }
@@ -177,22 +178,23 @@ public class DefaultRuleManager implements RuleManager {
             //Check incoming connections
             if ( incomingNode != null && incomingNode.getLabels().contains( rule.getRole() ) ) {
                 for ( CardinalityRule.ConnectorRule cr : rule.getIncomingConnectionRules() ) {
-                    if( edge.getDefinition().getId().equals( cr.getRole() )) {
+                    if( edge.getDefinition().getId().equals( cr.getId() )) {
                         final long minOccurrences = cr.getMinOccurrences();
                         final long maxOccurrences = cr.getMaxOccurrences();
                         long count = ( operation == Operation.ADD ? 1 : -1 );
                         for ( Edge e : incomingNode.getInEdges() ) {
-                            if (e != null) {
-                                if ( checkLabels( e, edge) ) {
+                            if (e != null && e instanceof ViewEdge) {
+                                final ViewEdge viewEdge = (ViewEdge) e;
+                                if ( (viewEdge.getDefinition().getId().equals( edge.getDefinition().getId())) ) {
                                     count++;
                                 }
                             }
                         }
 
                         if ( count < minOccurrences ) {
-                            results.addViolation(new CardinalityMinRuleViolation(incomingNode.getUUID(), cr.getRole(), minOccurrences, count));
+                            results.addViolation(new CardinalityMinRuleViolation(incomingNode.getUUID(), cr.getId(), minOccurrences, count));
                         } else if ( maxOccurrences > -1 && count > maxOccurrences ) {
-                            results.addViolation(new CardinalityMaxRuleViolation(incomingNode.getUUID(), cr.getRole(), maxOccurrences, count));
+                            results.addViolation(new CardinalityMaxRuleViolation(incomingNode.getUUID(), cr.getId(), maxOccurrences, count));
                         }
                     }
                 }

@@ -25,16 +25,16 @@ public class DefaultConnectorRule implements CardinalityRule.ConnectorRule {
     
     private Long minOccurrences;
     private Long maxOccurrences;
-    private String role;
+    private String id;
     private String name;
 
     public DefaultConnectorRule(@MapsTo("minOccurrences") Long minOccurrences,
                                 @MapsTo("maxOccurrences") Long maxOccurrences,
-                                @MapsTo("role") String role,
+                                @MapsTo("id") String id,
                                 @MapsTo("name") String name) {
         this.minOccurrences = minOccurrences;
         this.maxOccurrences = maxOccurrences;
-        this.role = role;
+        this.id = id;
         this.name = name;
     }
 
@@ -49,12 +49,12 @@ public class DefaultConnectorRule implements CardinalityRule.ConnectorRule {
     }
 
     @Override
-    public String getRole() {
-        return role;
+    public String getName() {
+        return name;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 }

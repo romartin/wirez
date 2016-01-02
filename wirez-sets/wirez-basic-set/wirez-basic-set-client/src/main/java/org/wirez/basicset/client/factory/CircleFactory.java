@@ -71,7 +71,9 @@ public class CircleFactory extends BaseShapeFactory<Circle, CircleShape> {
 
         final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
 
-        MultiPath path = new MultiPath().rect(0, 0, 50, 50).setStrokeAlpha(0);
+        final double size = Circle.RADIUS * 2;
+        
+        MultiPath path = new MultiPath().rect(0, 0, size, size).setStrokeAlpha(0);
 
         path.setDraggable(false);
 

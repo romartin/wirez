@@ -38,7 +38,7 @@ import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.canvas.Canvas;
-import org.wirez.client.widgets.event.PaletteShapeSelectedEvent;
+import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.client.workbench.screens.CanvasScreen;
 import org.wirez.client.workbench.screens.DefaultGraphType;
@@ -58,7 +58,7 @@ import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.DefaultCanvasSettingsBuilder;
-import org.wirez.core.client.canvas.SelectionManager;
+import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
@@ -412,21 +412,24 @@ public class CanvasEditor extends BaseEditor {
     public String getMyContextRef() {
         return "wirezCanvasScreenContext";
     }
-    
+
     // TODO: 
     // This event should only have to be processed if the canvas is currently in use, 
     // but it's being processes for all canvas, so any shape added from palette results into all existing canvas screens.
-    void onPaletteShapeSelected(@Observes PaletteShapeSelectedEvent paletteShapeSelectedEvent) {
-        checkNotNull("paletteShapeSelectedEvent", paletteShapeSelectedEvent);
-        final ShapeFactory factory = paletteShapeSelectedEvent.getShapeFactory();
-        final Definition definition = paletteShapeSelectedEvent.getDefinition();
-        buildShape(definition, factory);
+    void AddShapeToCanvasEvent(@Observes AddShapeToCanvasEvent addShapeToCanvasEvent) {
+        checkNotNull("addShapeToPaletteEvent", addShapeToCanvasEvent);
+        final ShapeFactory factory = addShapeToCanvasEvent.getShapeFactory();
+        final Definition definition = addShapeToCanvasEvent.getDefinition();
+        final double x = addShapeToCanvasEvent.getX();
+        final double y = addShapeToCanvasEvent.getY();
+        buildShape(definition, factory, x, y);
         canvas.draw();
     }
-    
-    private void buildShape(final Definition definition, final ShapeFactory factory) {
-        final Element element = buildElement(definition);
-        
+
+    private void buildShape(final Definition definition, final ShapeFactory factory,
+                            final double x, final double y) {
+        final Element element = buildElement(definition, x, y);
+
         CanvasCommand command = null;
         if ( element instanceof ViewNode) {
             command = defaultCanvasCommands.ADD_NODE((ViewNode) element, factory);
@@ -440,16 +443,19 @@ public class CanvasEditor extends BaseEditor {
 
     }
 
-    private ViewElement<? extends Definition> buildElement(final Definition wirez) {
-        
-        // TODO: Set right bounds when a shape can be dragged into a given coordinates from the palettte.
+    private ViewElement<? extends Definition> buildElement(final Definition wirez, final double _x, final double _y) {
+
+        final double x = _x > -1 ? _x : 100d;
+        final double y = _y > -1 ? _y : 100d;
+
         final Bounds bounds =
                 new DefaultBounds(
-                        new DefaultBound(150d, 150d),
-                        new DefaultBound(100d, 100d)
+                        // TODO: Size hardcoded by default to 50...
+                        new DefaultBound(x + 50, y + 50),
+                        new DefaultBound(x, y)
                 );
         return ((ViewElementFactory) wirez).build(UUID.uuid(), new HashSet<String>(), new HashMap<String, Object>(), bounds);
-        
+
     }
 
 }

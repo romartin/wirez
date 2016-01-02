@@ -18,6 +18,8 @@ package org.wirez.core.client.factory;
 
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.control.HasShapeGlyphDragHandler;
+import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
@@ -28,14 +30,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>> 
-        implements ShapeFactory<W, S>, HasShapeControlFactories {
+        implements ShapeFactory<W, S>, HasShapeControlFactories, HasShapeGlyphDragHandler {
 
     protected DefaultShapeControlFactories defaultShapeControlFactories;
     protected Collection<ShapeControlFactory<?, ?>> DEFAULT_FACTORIES;
+    protected ShapeGlyphDragHandler shapeGlyphDragHandler;
 
     @Inject
-    public BaseShapeFactory(DefaultShapeControlFactories defaultShapeControlFactories) {
+    public BaseShapeFactory(DefaultShapeControlFactories defaultShapeControlFactories,
+                            ShapeGlyphDragHandler shapeGlyphDragHandler) {
         this.defaultShapeControlFactories = defaultShapeControlFactories;
+        this.shapeGlyphDragHandler = shapeGlyphDragHandler;
     }
 
     @PostConstruct
@@ -44,6 +49,11 @@ public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>>
             add( getDragControlFactory() );
             add( getResizeControlFactory() );
         }};
+    }
+
+    @Override
+    public ShapeGlyphDragHandler getShapeGlyphDragHandler() {
+        return shapeGlyphDragHandler;
     }
 
     protected ShapeControlFactory<?, ?> getDragControlFactory() {

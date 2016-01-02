@@ -17,14 +17,22 @@
 package org.wirez.client.widgets.palette.accordion.group;
 
 import com.ait.lienzo.client.core.event.*;
+import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.MouseMoveEvent;
+import com.google.gwt.event.dom.client.MouseMoveHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.Anchor;
@@ -116,22 +124,33 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
         glyphView.addNodeMouseClickHandler(new NodeMouseClickHandler() {
             @Override
             public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
-                callback.onClick();
+                GWT.log("Mouse Click");
+                // callback.onClick();
             }
         });
         glyphView.addNodeMouseDoubleClickHandler(new NodeMouseDoubleClickHandler() {
             @Override
             public void onNodeMouseDoubleClick(final NodeMouseDoubleClickEvent nodeMouseDoubleClickEvent) {
-                callback.onClick();
+                GWT.log("Mouse Double Click");
+                //callback.onClick();
             }
         });
         
         lienzoLayer.add(glyphView);
         
+        glyphView.addNodeMouseDownHandler(new NodeMouseDownHandler() {
+            @Override
+            public void onNodeMouseDown(NodeMouseDownEvent event) {
+                GWT.log("Mouse down");
+                callback.onMouseDown(lienzoPanel, event.getX(), event.getY());
+            }
+        });
+        
         glyphView.addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
             @Override
             public void onNodeMouseMove(final NodeMouseMoveEvent nodeMouseMoveEvent) {
-                callback.onNodeMouseMove(glyphView.getX(), glyphView.getY());
+                GWT.log("Mouse move");
+                // callback.onNodeMouseMove(lienzoPanel, glyphView.getX(), glyphView.getY());
             }
         });
         

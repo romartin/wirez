@@ -28,7 +28,7 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.widgets.event.ShapeSetSelectedEvent;
+import org.wirez.client.widgets.event.CreateEmptyDiagramEvent;
 import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.workbench.perspectives.WirezPerspective;
 import org.wirez.core.api.util.UUID;
@@ -131,11 +131,11 @@ public class CanvasWizardScreen {
         return "canvasWizardScreenContext";
     }
 
-    void onShapeSetSelected(@Observes ShapeSetSelectedEvent shapeSetSelectedEvent) {
-        checkNotNull("shapeSetSelectedEvent", shapeSetSelectedEvent);
+    void onCreateEmptyDiagramEvent(@Observes CreateEmptyDiagramEvent createEmptyDiagramEvent) {
+        checkNotNull("createEmptyDiagramEvent", createEmptyDiagramEvent);
 
         final String uuid = UUID.uuid();
-        final String shapeSetId = shapeSetSelectedEvent.getShapeSetId();
+        final String shapeSetId = createEmptyDiagramEvent.getShapeSetId();
         final ShapeSet shapeSet = getWirezShapeSet(shapeSetId);
         final String shapSetName = shapeSet.getName();
         final String wirezSetId = shapeSet.getDefinitionSet().getId();

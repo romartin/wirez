@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.uberfire.mvp.Command;
-import org.wirez.client.widgets.event.ShapeSetSelectedEvent;
+import org.wirez.client.widgets.event.CreateEmptyDiagramEvent;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
 
@@ -51,16 +51,16 @@ public class CanvasWizard implements IsWidget {
     }
 
     WirezClientManager wirezClientManager;
-    Event<ShapeSetSelectedEvent> shapeSetSelectedEvent;
+    Event<CreateEmptyDiagramEvent> createEmptyDiagramEventEvent;
     View view;
     private String selectedShapeSetId;
 
     @Inject
     public CanvasWizard(final WirezClientManager wirezClientManager, 
-                        final Event<ShapeSetSelectedEvent> shapeSetSelectedEvent,
+                        final Event<CreateEmptyDiagramEvent> createEmptyDiagramEventEvent,
                         final View view) {
         this.wirezClientManager = wirezClientManager;
-        this.shapeSetSelectedEvent = shapeSetSelectedEvent;
+        this.createEmptyDiagramEventEvent = createEmptyDiagramEventEvent;
         this.view = view;
     }
     
@@ -116,7 +116,7 @@ public class CanvasWizard implements IsWidget {
 
     void onActionButtonClick() {
         assert selectedShapeSetId != null;
-        shapeSetSelectedEvent.fire(new ShapeSetSelectedEvent(selectedShapeSetId));
+        createEmptyDiagramEventEvent.fire(new CreateEmptyDiagramEvent(selectedShapeSetId));
         clear();
         show();
     }

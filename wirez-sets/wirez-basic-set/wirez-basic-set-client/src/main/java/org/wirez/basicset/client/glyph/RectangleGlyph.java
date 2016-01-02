@@ -28,7 +28,7 @@ public class RectangleGlyph implements ShapeGlyph {
     private Group group = new Group();
 
     public RectangleGlyph() {
-        final Rectangle rectangle = new Rectangle(WIDTH, 50).setFillColor(org.wirez.basicset.api.Rectangle.COLOR);
+        final Rectangle rectangle = new Rectangle(WIDTH, HEIGHT).setFillColor(org.wirez.basicset.api.Rectangle.COLOR);
         group.add(rectangle);
     }
 

@@ -26,6 +26,7 @@ import org.wirez.basicset.client.glyph.PolygonGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.factory.BaseShapeFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
@@ -41,8 +42,9 @@ public class PolygonFactory extends BaseShapeFactory<Polygon, PolygonShape> {
 
     @Inject
     public PolygonFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                          final RadiusBasedResizeControlFactory radiusBasedResizeControlFactory) {
-        super(defaultShapeControlFactories);
+                          final RadiusBasedResizeControlFactory radiusBasedResizeControlFactory,
+                          final ShapeGlyphDragHandler shapeGlyphDragHandler) {
+        super(defaultShapeControlFactories, shapeGlyphDragHandler);
         this.radiusBasedResizeControlFactory = radiusBasedResizeControlFactory;
     }
 

@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.client.widgets.palette.accordion.group;
+package org.wirez.core.client.canvas.control;
 
-import com.ait.lienzo.client.widget.LienzoPanel;
-import org.uberfire.mvp.Command;
-import org.wirez.core.client.ShapeGlyph;
+public interface HasShapeGlyphDragHandler {
 
-public interface PaletteGroupItem {
+    ShapeGlyphDragHandler getShapeGlyphDragHandler();
     
-    String getDescription();
-    
-    ShapeGlyph getGlyph();
-
-    Handler getClickHandler();
-
-    interface Handler {
-
-        void onClick();
-
-        void onDragStart(LienzoPanel parentPanel, double x, double y);
-    }
 }

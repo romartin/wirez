@@ -16,13 +16,13 @@
 
 package org.wirez.client.widgets.palette.accordion;
 
+import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.uberfire.client.mvp.UberView;
-import org.uberfire.mvp.Command;
-import org.wirez.client.widgets.event.PaletteShapeSelectedEvent;
+import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroup;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
 import org.wirez.core.api.definition.Definition;
@@ -31,6 +31,8 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
+import org.wirez.core.client.canvas.control.HasShapeGlyphDragHandler;
+import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import javax.annotation.PostConstruct;
@@ -57,7 +59,7 @@ public class Palette implements IsWidget {
     }
 
     WirezClientManager wirezClientManager;
-    Event<PaletteShapeSelectedEvent> paletteShapeSelectedEvent;
+    Event<AddShapeToCanvasEvent> addShapeToCanvasEvent;
     SyncBeanManager beanManager;
     View view;
     
@@ -65,11 +67,11 @@ public class Palette implements IsWidget {
     public Palette(final View view,
                    final WirezClientManager wirezClientManager,
                    final SyncBeanManager beanManager,
-                   final Event<PaletteShapeSelectedEvent> paletteShapeSelectedEvent) {
+                   final Event<AddShapeToCanvasEvent> addShapeToCanvasEvent) {
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.beanManager = beanManager;
-        this.paletteShapeSelectedEvent = paletteShapeSelectedEvent;
+        this.addShapeToCanvasEvent = addShapeToCanvasEvent;
     }
 
     @PostConstruct
@@ -137,14 +139,50 @@ public class Palette implements IsWidget {
                     paletteGroupItems.put(category, items);
                 }
                 
+                
+
                 PaletteGroupItem paletteGroupItem = PaletteGroup.buildItem(glyph, description,
-                        new Command() {
+                        new PaletteGroupItem.Handler() {
+
+                            /**
+                             * Add the shape into the canvas diagram when mouse click at a fixed position.
+                             */
                             @Override
-                            public void execute() {
+                            public void onClick() {
                                 GWT.log("Palette: Adding " + description);
-                                paletteShapeSelectedEvent.fire(new PaletteShapeSelectedEvent(definition, factory));
+                                addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory));
+                            }
+
+                            /**
+                             * Add the shape into the canvas diagram using drag features. 
+                             * Drag proxy and final position into the canvas is given by the glyph drag handler implementation.
+                             */
+
+                            @Override
+                            public void onDragStart(final LienzoPanel parentPanel, final double x, final double y) {
+
+                                if (factory instanceof HasShapeGlyphDragHandler) {
+                                    final HasShapeGlyphDragHandler hasShapeGlyphDragHandler = (HasShapeGlyphDragHandler) factory;
+                                    final ShapeGlyphDragHandler shapeGlyphDragHandler = hasShapeGlyphDragHandler.getShapeGlyphDragHandler();
+
+                                    shapeGlyphDragHandler.show(parentPanel, glyph, x, y, new ShapeGlyphDragHandler.Callback() {
+                                        @Override
+                                        public void onMove(final LienzoPanel floatingPanel, final double x, final double y) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete(final LienzoPanel floatingPanel, final double x, final double y) {
+                                            GWT.log("Palette: Adding " + description + " at " + x + "," + y);
+                                            addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory, x - width, y));
+                                        }
+                                    });
+                                    
+                                }
+
                             }
                         });
+
                 items.add(paletteGroupItem);
                 
             }

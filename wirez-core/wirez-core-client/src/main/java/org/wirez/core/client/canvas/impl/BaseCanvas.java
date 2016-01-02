@@ -28,7 +28,7 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.SelectionManager;
+import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.impl.BaseShape;

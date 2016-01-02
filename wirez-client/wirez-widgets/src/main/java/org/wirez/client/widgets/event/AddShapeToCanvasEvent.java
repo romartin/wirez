@@ -22,18 +22,32 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.factory.ShapeFactory;
 
 /**
- * <p>CDI event when a shape in the palette is selected.</p>
+ * <p>CDI event when a shape in the palette is selected and must be added into the active canvas diagram.</p>
  *
  */
-public class PaletteShapeSelectedEvent implements UberFireEvent {
+public class AddShapeToCanvasEvent implements UberFireEvent {
 
     private Definition definition;
     private ShapeFactory<? extends Definition, ? extends Shape> shapeFactory;
+    private double x;
+    private double y;
 
-    public PaletteShapeSelectedEvent(final Definition definition,
-                                     final ShapeFactory<? extends Definition, ? extends Shape> shapeFactory) {
+    public AddShapeToCanvasEvent(final Definition definition,
+                                 final ShapeFactory<? extends Definition, ? extends Shape> shapeFactory) {
         this.definition = definition;
         this.shapeFactory = shapeFactory;
+        this.x = -1;
+        this.y = -1;
+    }
+
+    public AddShapeToCanvasEvent(final Definition definition,
+                                 final ShapeFactory<? extends Definition, ? extends Shape> shapeFactory,
+                                 final double x,
+                                 final double y) {
+        this.definition = definition;
+        this.shapeFactory = shapeFactory;
+        this.x = x;
+        this.y = y;
     }
 
     public Definition getDefinition() {
@@ -44,9 +58,18 @@ public class PaletteShapeSelectedEvent implements UberFireEvent {
         return shapeFactory;
     }
 
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
     @Override
     public String toString() {
-        return "PaletteShapeSelectedEvent [definition=" + definition.getId() + ", factory=" + shapeFactory.toString() + "]";
+        return "PaletteShapeSelectedEvent [definition=" + definition.getId() + ", factory=" + shapeFactory.toString() + 
+                ", x=" + x + ", y=" + y + "]";
     }
 
 }

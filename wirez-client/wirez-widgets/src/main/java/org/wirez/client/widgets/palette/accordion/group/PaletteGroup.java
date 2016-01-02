@@ -17,6 +17,7 @@
 package org.wirez.client.widgets.palette.accordion.group;
 
 import com.ait.lienzo.client.core.shape.IPrimitive;
+import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -50,8 +51,13 @@ public class PaletteGroup implements IsWidget {
     }
 
     public interface GlyphViewCallback {
+        
         void onClick();
-        void onNodeMouseMove(double x, double y);
+        
+        void onMouseMove(LienzoPanel lienzoPanel, double x, double y);
+        
+        void onMouseDown(LienzoPanel lienzoPanel, double x, double y);
+        
     }
     
     WirezClientManager wirezClientManager;
@@ -79,20 +85,20 @@ public class PaletteGroup implements IsWidget {
     
     public static PaletteGroupItem buildItem(final ShapeGlyph glyph,
                                              final String description,
-                                             final Command clickHandler) {
+                                             final PaletteGroupItem.Handler clickHandler) {
         return new PaletteGroupItemImpl(glyph, description, clickHandler);
     }
     
     private static class PaletteGroupItemImpl implements PaletteGroupItem {
         private final ShapeGlyph glyph;
         private final String description;
-        private final Command clickHandler;
+        private final Handler clickHandler;
         double x;
         double y;
         
         public PaletteGroupItemImpl(final ShapeGlyph glyph, 
                                     final String description, 
-                                    final Command clickHandler) {
+                                    final Handler clickHandler) {
             this.glyph = glyph;
             this.description = description;
             this.clickHandler = clickHandler;
@@ -109,7 +115,7 @@ public class PaletteGroup implements IsWidget {
         }
 
         @Override
-        public Command getClickHandler() {
+        public Handler getClickHandler() {
             return clickHandler;
         }
     }
@@ -132,20 +138,25 @@ public class PaletteGroup implements IsWidget {
                 final PaletteGroupItemImpl itemImpl = (PaletteGroupItemImpl) item;
                 final ShapeGlyph glyph = item.getGlyph();
                 final String description = item.getDescription();
-                final Command callback = item.getClickHandler();
+                final PaletteGroupItem.Handler callback = item.getClickHandler();
                 
                 // Add the glyph view to the canvas..
                 view.addGlyph(glyph.getGroup().setDraggable(false), itemImpl.x, itemImpl.y, new GlyphViewCallback() {
                     @Override
                     public void onClick() {
-                        callback.execute();
+                        callback.onClick();
                     }
 
                     @Override
-                    public void onNodeMouseMove(final double x, final double y) {
+                    public void onMouseMove(final LienzoPanel panel, final double x, final double y) {
                         final double tx = x + ( glyph.getWidth() / 2);
                         final double ty = y + ( glyph.getHeight() / 2);
                         view.showTooltip(description, tx, ty, 1000);
+                    }
+
+                    @Override
+                    public void onMouseDown(final LienzoPanel panel, final double x, final double y) {
+                        callback.onDragStart(panel, x, y);
                     }
                 });
             }

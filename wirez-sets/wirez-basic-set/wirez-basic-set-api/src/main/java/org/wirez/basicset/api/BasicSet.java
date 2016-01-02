@@ -48,8 +48,11 @@ public class BasicSet implements DefinitionSet {
         add( new Diagram() );
         add( new Rectangle() );
         add( new Circle() );
+        add( new Polygon() );
         add( new Connector() );
     }};
+
+    private final Collection<Rule> rules = new BasicSetRules().getRules();
     
     @Override
     public String getDomain() {
@@ -78,7 +81,7 @@ public class BasicSet implements DefinitionSet {
 
     @Override
     public Collection<Rule> getRules() {
-        return new BasicSetRules().getRules();
+        return rules;
     }
     
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,23 +17,26 @@
 package org.wirez.basicset.client.control;
 
 import org.wirez.basicset.api.property.RadiusBuilder;
-import org.wirez.basicset.client.CircleShape;
 import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
 import org.wirez.core.api.graph.commands.UpdateElementSizeCommand;
 import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
 import org.wirez.core.client.control.DefaultResizeControl;
+import org.wirez.core.client.mutation.HasRadiusMutation;
+import org.wirez.core.client.mutation.StaticMutationContext;
 
-public class CircleResizeControl extends DefaultResizeControl<CircleShape, ViewNode> {
+public class RadiusBasedResizeControl<S extends Shape> extends DefaultResizeControl<S, ViewNode> {
 
     @Override
-    protected void doResizeStep(CircleShape shape, ViewNode element, double width, double height) {
+    protected void doResizeStep(S shape, ViewNode element, double width, double height) {
         double radius = getRadius(width, height);
-        shape.setRadius(radius);
+        final HasRadiusMutation hasRadiusMutation = (HasRadiusMutation) shape;
+        hasRadiusMutation.applyRadius(radius, new StaticMutationContext());
     }
     
     @Override
-    protected void doResizeEnd(CircleShape shape, ViewNode element, double width, double height) {
+    protected void doResizeEnd(S shape, ViewNode element, double width, double height) {
         double radius = getRadius(width, height);
         commandManager.execute(
                 new CompositeElementCanvasCommand(element)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package org.wirez.basicset.client.factory;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
-import org.wirez.basicset.api.Circle;
-import org.wirez.basicset.client.CircleShape;
+import org.wirez.basicset.api.Polygon;
+import org.wirez.basicset.client.PolygonShape;
 import org.wirez.basicset.client.factory.control.RadiusBasedResizeControlFactory;
-import org.wirez.basicset.client.glyph.CircleGlyph;
+import org.wirez.basicset.client.glyph.PolygonGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -35,41 +35,39 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class CircleFactory extends BaseShapeFactory<Circle, CircleShape> {
-    
+public class PolygonFactory extends BaseShapeFactory<Polygon, PolygonShape> {
+
     RadiusBasedResizeControlFactory radiusBasedResizeControlFactory;
-    
+
     @Inject
-    public CircleFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                         final RadiusBasedResizeControlFactory radiusBasedResizeControlFactory) {
+    public PolygonFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
+                          final RadiusBasedResizeControlFactory radiusBasedResizeControlFactory) {
         super(defaultShapeControlFactories);
         this.radiusBasedResizeControlFactory = radiusBasedResizeControlFactory;
     }
 
     @Override
     public boolean accepts(final Definition definition) {
-        return definition instanceof Circle;
+        return definition instanceof Polygon;
     }
 
     @Override
     public ShapeGlyph getGlyph() {
-        return CircleGlyph.INSTANCE;
+        return PolygonGlyph.INSTANCE;
     }
 
     @Override
     public String getDescription() {
-        return "A circle";
+        return "A polygon";
     }
 
     @Override
     protected ShapeControlFactory<?, ?> getResizeControlFactory() {
         return radiusBasedResizeControlFactory;
     }
-    
-    @Override
-    public CircleShape build(final Circle definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
+    @Override
+    public PolygonShape build(final Polygon definition, final CanvasHandler canvasHandler) {
 
         MultiPath path = new MultiPath().rect(0, 0, 50, 50).setStrokeAlpha(0);
 
@@ -83,9 +81,9 @@ public class CircleFactory extends BaseShapeFactory<Circle, CircleShape> {
 
         group.setEventPropagationMode(EventPropagationMode.FIRST_ANCESTOR);
 
-        CircleShape circleShape = new CircleShape(path, group, baseWirezCanvas.getWiresManager());
-
-        return circleShape;
+        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
+        
+        return new PolygonShape(path, group, baseCanvas.getWiresManager());
 
     }
 

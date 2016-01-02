@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,20 @@
 
 package org.wirez.basicset.client.factory.control;
 
-import org.wirez.basicset.client.CircleShape;
-import org.wirez.basicset.client.control.CircleResizeControl;
+import org.wirez.basicset.client.control.RadiusBasedResizeControl;
+import org.wirez.core.client.Shape;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class CircleResizeControlFactory implements ShapeControlFactory<CircleShape, CircleResizeControl> {
+public class RadiusBasedResizeControlFactory implements ShapeControlFactory<Shape, RadiusBasedResizeControl<Shape>> {
 
-    public CircleResizeControlFactory() {
+    public RadiusBasedResizeControlFactory() {
     }
 
     @Override
-    public CircleResizeControl build(CircleShape shape) {
-        return new CircleResizeControl();
+    public RadiusBasedResizeControl<Shape> build(final Shape shape) {
+        return new RadiusBasedResizeControl<Shape>();
     }
 }

@@ -16,9 +16,7 @@
 
 package org.wirez.client.widgets.palette.accordion.group.decorator;
 
-import com.ait.lienzo.client.core.animation.AnimationProperties;
-import com.ait.lienzo.client.core.animation.AnimationProperty;
-import com.ait.lienzo.client.core.animation.AnimationTweener;
+import com.ait.lienzo.client.core.animation.*;
 import com.ait.lienzo.client.core.event.*;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
@@ -33,7 +31,12 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
     private static final double ANIMATION_DURATION = 500;
     private double padding = 5;
     Rectangle decorator;
-    
+    Callback callback;
+
+    public DefaultPaletteItemDecorator(final Callback callback) {
+        this.callback = callback;
+    }
+
     private Timer timer = timer = new Timer() {
         @Override
         public void run() {
@@ -44,6 +47,12 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
     @Override
     public PaletteItemDecorator setPadding(final double padding) {
         this.padding = padding;
+        return this;
+    }
+
+    @Override
+    public PaletteItemDecorator setCallback(final Callback callback) {
+        this.callback = callback;
         return this;
     }
 
@@ -66,7 +75,7 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
         decorator.addNodeMouseEnterHandler(new NodeMouseEnterHandler() {
             @Override
             public void onNodeMouseEnter(NodeMouseEnterEvent nodeMouseEnterEvent) {
-                show();
+                show(nodeMouseEnterEvent.getMouseEvent().getClientX(), nodeMouseEnterEvent.getMouseEvent().getClientY());
             }
         });
         
@@ -91,19 +100,48 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
         return this;
     }
 
-    public PaletteItemDecorator show() {
+    public PaletteItemDecorator show(final double x, final double y) {
         if (!timer.isRunning()) {
-            decorator.animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(1)), ANIMATION_DURATION);
+            decorator.animate(AnimationTweener.LINEAR,
+                    AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(1)),
+                    ANIMATION_DURATION,
+                    new AnimationCallback() {
+                        @Override
+                        public void onClose(IAnimation animation, IAnimationHandle handle) {
+                            super.onClose(animation, handle);
+                            fireShow(x, y);
+                        }
+                    });
             timer.schedule(TIMER_DELAY);
         }
         return this;
     }
 
     public PaletteItemDecorator hide() {
-        if (timer.isRunning()) {
-            timer.cancel();
+        if (!timer.isRunning()) {
+         decorator.animate(AnimationTweener.LINEAR,
+                AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(0)),
+                ANIMATION_DURATION,
+                new AnimationCallback() {
+                    @Override
+                    public void onClose(IAnimation animation, IAnimationHandle handle) {
+                        super.onClose(animation, handle);
+                        fireHide();
+                    }
+                });
         }
-        decorator.animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(0)), ANIMATION_DURATION);
         return this;
+    }
+
+    protected void fireShow(double x, double y) {
+        if ( null != callback ) {
+            callback.onShow(x, y);
+        }
+    }
+
+    protected void fireHide() {
+        if ( null != callback ) {
+            callback.onHide();
+        }
     }
 }

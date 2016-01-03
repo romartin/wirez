@@ -20,6 +20,9 @@
              xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
 
   <ui:style>
+    .noCanvasPanel {
+      padding: 5px;
+    }
     .palette {
       padding: 5px;
     }
@@ -29,14 +32,16 @@
     }
   </ui:style>
 
-  <g:VerticalPanel styleName="{style.palette}">
+  <g:FlowPanel ui:field="mainPanel">
     
-    <g:FlowPanel ui:field="noCanvasPanel">
+    <g:FlowPanel ui:field="noCanvasPanel" addStyleNames="{style.noCanvasPanel}">
       <g:HTML text="No canvas currently in use" addStyleNames="{style.emptyText}"/>  
     </g:FlowPanel>
+
+    <g:VerticalPanel styleName="{style.palette}">
+      <b:PanelGroup ui:field="accordion"/>
+    </g:VerticalPanel>
     
-    <b:PanelGroup ui:field="accordion"/>
-    
-  </g:VerticalPanel>
+  </g:FlowPanel>
 
 </ui:UiBinder>

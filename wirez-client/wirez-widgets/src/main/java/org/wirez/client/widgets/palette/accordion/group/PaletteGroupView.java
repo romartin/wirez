@@ -72,13 +72,6 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
     private LienzoPanel lienzoPanel;
     private final Layer lienzoLayer = new Layer();
     
-    final Timer timer = new Timer() {
-        @Override
-        public void run() {
-            // tooltip.hide();
-        }
-    };
-    
     PaletteGroup presenter;
 
     @Override
@@ -105,7 +98,6 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
     private void initLienzoPanel(final int width, final int height) {
         lienzoPanel = new LienzoPanel(width, height);
         lienzoPanel.add(lienzoLayer);
-        // lienzoLayer.add(tooltip);
         panelShapes.add(lienzoPanel);
     }
 
@@ -125,7 +117,18 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
 
         GWT.log("PaletteGroupView#addGlyph");
         
-        final PaletteItemDecorator decorator = new DefaultPaletteItemDecorator();
+        final PaletteItemDecorator decorator = new DefaultPaletteItemDecorator(new PaletteItemDecorator.Callback() {
+            @Override
+            public void onShow(double absX, double absY) {
+                callback.onFocus(absX, absY);
+            }
+
+            @Override
+            public void onHide() {
+                callback.onLostFocus();
+            }
+        });
+        
         final IPrimitive<?> decoratorPrimitive = decorator.build(glyphView, width, height);
 
         decoratorPrimitive.setX(x);

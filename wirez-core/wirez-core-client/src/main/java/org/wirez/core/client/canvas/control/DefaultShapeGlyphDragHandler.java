@@ -43,7 +43,7 @@ public class DefaultShapeGlyphDragHandler implements ShapeGlyphDragHandler {
 
         final double proxyWidth = shapeGlyph.getWidth();
         final double proxyHeight = shapeGlyph.getHeight();
-        final Group dragShape = shapeGlyph.getGroup();
+        final Group dragShape = shapeGlyph.getGroup().copy();
         dragShape.setX( proxyWidth / 2 );
         dragShape.setY( proxyHeight / 2 );
 

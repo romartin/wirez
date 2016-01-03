@@ -49,6 +49,10 @@ public class PaletteGroup implements IsWidget {
     }
 
     public interface GlyphViewCallback {
+
+        void onFocus(double x, double y);
+
+        void onLostFocus();
         
         void onClick();
         
@@ -129,27 +133,36 @@ public class PaletteGroup implements IsWidget {
         view.setSize(size[0], size[1]);
 
 
-        if ( null != items && !items.isEmpty() ) {
+        if (null != items && !items.isEmpty()) {
             for (final PaletteGroupItem item : items) {
                 final PaletteGroupItemImpl itemImpl = (PaletteGroupItemImpl) item;
                 final ShapeGlyph glyph = item.getGlyph();
-                final String description = item.getDescription();
                 final PaletteGroupItem.Handler callback = item.getClickHandler();
-                
+
                 // Add the glyph view to the canvas..
-                view.addGlyph(glyph.getGroup().setDraggable(false), 
+                view.addGlyph(glyph.getGroup().setDraggable(false),
                         glyph.getWidth(), glyph.getHeight(),
                         itemImpl.x, itemImpl.y, new GlyphViewCallback() {
-                    @Override
-                    public void onClick() {
-                        callback.onClick();
-                    }
+                            @Override
+                            public void onFocus(double x, double y) {
+                                callback.onFocus(x, y);
+                            }
 
-                    @Override
-                    public void onMouseDown(final LienzoPanel panel, final double x, final double y) {
-                        callback.onDragStart(panel, x, y);
-                    }
-                });
+                            @Override
+                            public void onLostFocus() {
+                                callback.onLostFocus();
+                            }
+
+                            @Override
+                            public void onClick() {
+                                callback.onClick();
+                            }
+
+                            @Override
+                            public void onMouseDown(final LienzoPanel panel, final double x, final double y) {
+                                callback.onDragStart(panel, x, y);
+                            }
+                        });
             }
         }
         

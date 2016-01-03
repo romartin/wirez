@@ -14,28 +14,16 @@
  * limitations under the License.
  */
 
-package org.wirez.client.widgets.palette.accordion.group;
+package org.wirez.client.widgets.palette.tooltip;
 
-import com.ait.lienzo.client.widget.LienzoPanel;
-import org.uberfire.mvp.Command;
+import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.ShapeGlyph;
 
-public interface PaletteGroupItem {
+public interface PaletteTooltip extends IsWidget {
     
-    String getDescription();
+    void show(ShapeGlyph glyph, String text, double x, double y);
     
-    ShapeGlyph getGlyph();
-
-    Handler getClickHandler();
-
-    interface Handler {
-        
-        void onFocus(double x, double y);
-        
-        void onLostFocus();
-
-        void onClick();
-
-        void onDragStart(LienzoPanel parentPanel, double x, double y);
-    }
+    void hide();
+    
+    
 }

@@ -23,7 +23,17 @@ import com.ait.lienzo.client.core.shape.Rectangle;
 public interface PaletteItemDecorator  {
 
     PaletteItemDecorator setPadding(double padding);
-    
+
+    PaletteItemDecorator setCallback(Callback callback);
+            
     IPrimitive<?> build(IPrimitive<?> item, double width, double height);
+    
+    interface Callback {
+        
+        void onShow(double x, double y);
+        
+        void onHide();
+        
+    }
     
 }

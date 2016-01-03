@@ -25,6 +25,7 @@ import org.uberfire.client.mvp.UberView;
 import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroup;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
+import org.wirez.client.widgets.palette.tooltip.PaletteTooltip;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.client.Shape;
@@ -61,17 +62,20 @@ public class Palette implements IsWidget {
     WirezClientManager wirezClientManager;
     Event<AddShapeToCanvasEvent> addShapeToCanvasEvent;
     SyncBeanManager beanManager;
+    PaletteTooltip paletteTooltip;
     View view;
     
     @Inject
     public Palette(final View view,
                    final WirezClientManager wirezClientManager,
                    final SyncBeanManager beanManager,
-                   final Event<AddShapeToCanvasEvent> addShapeToCanvasEvent) {
+                   final Event<AddShapeToCanvasEvent> addShapeToCanvasEvent,
+                   final PaletteTooltip paletteTooltip) {
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.beanManager = beanManager;
         this.addShapeToCanvasEvent = addShapeToCanvasEvent;
+        this.paletteTooltip = paletteTooltip;
     }
 
     @PostConstruct
@@ -143,6 +147,16 @@ public class Palette implements IsWidget {
 
                 PaletteGroupItem paletteGroupItem = PaletteGroup.buildItem(glyph, description,
                         new PaletteGroupItem.Handler() {
+
+                            @Override
+                            public void onFocus(double x, double y) {
+                                paletteTooltip.show(glyph,description,  width + 5, y - 50);
+                            }
+
+                            @Override
+                            public void onLostFocus() {
+                                paletteTooltip.hide();
+                            }
 
                             /**
                              * Add the shape into the canvas diagram when mouse click at a fixed position.

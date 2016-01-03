@@ -43,9 +43,7 @@ public class PaletteGroup implements IsWidget {
             
         View setHeader(String title);
         
-        View addGlyph(IPrimitive glyphView, double x, double y, GlyphViewCallback callback);
-        
-        View showTooltip(String title, double x, double y, int duration);
+        View addGlyph(IPrimitive glyphView, double width, double height, double x, double y, GlyphViewCallback callback);
         
         View clear();
     }
@@ -53,8 +51,6 @@ public class PaletteGroup implements IsWidget {
     public interface GlyphViewCallback {
         
         void onClick();
-        
-        void onMouseMove(LienzoPanel lienzoPanel, double x, double y);
         
         void onMouseDown(LienzoPanel lienzoPanel, double x, double y);
         
@@ -141,17 +137,12 @@ public class PaletteGroup implements IsWidget {
                 final PaletteGroupItem.Handler callback = item.getClickHandler();
                 
                 // Add the glyph view to the canvas..
-                view.addGlyph(glyph.getGroup().setDraggable(false), itemImpl.x, itemImpl.y, new GlyphViewCallback() {
+                view.addGlyph(glyph.getGroup().setDraggable(false), 
+                        glyph.getWidth(), glyph.getHeight(),
+                        itemImpl.x, itemImpl.y, new GlyphViewCallback() {
                     @Override
                     public void onClick() {
                         callback.onClick();
-                    }
-
-                    @Override
-                    public void onMouseMove(final LienzoPanel panel, final double x, final double y) {
-                        final double tx = x + ( glyph.getWidth() / 2);
-                        final double ty = y + ( glyph.getHeight() / 2);
-                        view.showTooltip(description, tx, ty, 1000);
                     }
 
                     @Override

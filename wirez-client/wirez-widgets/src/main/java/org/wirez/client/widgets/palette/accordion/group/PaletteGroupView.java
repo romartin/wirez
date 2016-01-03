@@ -20,7 +20,10 @@ import com.ait.lienzo.client.core.event.*;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
+import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.widget.LienzoPanel;
+import com.ait.lienzo.shared.core.types.ColorName;
+import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
@@ -39,6 +42,8 @@ import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.PanelCollapse;
 import org.gwtbootstrap3.client.ui.PanelGroup;
 import org.gwtbootstrap3.client.ui.PanelHeader;
+import org.wirez.client.widgets.palette.accordion.group.decorator.DefaultPaletteItemDecorator;
+import org.wirez.client.widgets.palette.accordion.group.decorator.PaletteItemDecorator;
 import org.wirez.core.api.util.UUID;
 
 public class PaletteGroupView extends Composite implements PaletteGroup.View {
@@ -112,57 +117,44 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
     }
 
     @Override
-    public PaletteGroup.View addGlyph(final IPrimitive glyphView, 
+    public PaletteGroup.View addGlyph(final IPrimitive glyphView,
+                                      final double width, final double height,
                                       final double x, final double y,
                                       final PaletteGroup.GlyphViewCallback callback) {
         assert lienzoPanel != null;
-        
+
         GWT.log("PaletteGroupView#addGlyph");
-        glyphView.setX(x);
-        glyphView.setY(y);
         
-        glyphView.addNodeMouseClickHandler(new NodeMouseClickHandler() {
+        final PaletteItemDecorator decorator = new DefaultPaletteItemDecorator();
+        final IPrimitive<?> decoratorPrimitive = decorator.build(glyphView, width, height);
+
+        decoratorPrimitive.setX(x);
+        decoratorPrimitive.setY(y);
+
+        decoratorPrimitive.addNodeMouseClickHandler(new NodeMouseClickHandler() {
             @Override
             public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
                 callback.onClick();
             }
         });
-        glyphView.addNodeMouseDoubleClickHandler(new NodeMouseDoubleClickHandler() {
+        decoratorPrimitive.addNodeMouseDoubleClickHandler(new NodeMouseDoubleClickHandler() {
             @Override
             public void onNodeMouseDoubleClick(final NodeMouseDoubleClickEvent nodeMouseDoubleClickEvent) {
                 callback.onClick();
             }
         });
         
-        lienzoLayer.add(glyphView);
-        
-        glyphView.addNodeMouseDownHandler(new NodeMouseDownHandler() {
+        decoratorPrimitive.addNodeMouseDownHandler(new NodeMouseDownHandler() {
             @Override
             public void onNodeMouseDown(NodeMouseDownEvent event) {
                 callback.onMouseDown(lienzoPanel, event.getX(), event.getY());
             }
         });
-        
-        glyphView.addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
-            @Override
-            public void onNodeMouseMove(final NodeMouseMoveEvent nodeMouseMoveEvent) {
-                callback.onMouseMove(lienzoPanel, glyphView.getX(), glyphView.getY());
-            }
-        });
-        
-        return this;
-    }
 
-    @Override
-    public PaletteGroup.View showTooltip(final String title, 
-                                         final double x, 
-                                         final double y, 
-                                         final int duration) {
-        /*if (!timer.isRunning()) {
-            tooltip.setX(x).setY(y);
-            tooltip.show(title, "");
-            timer.schedule(duration);
-        }*/
+        lienzoLayer.add(decoratorPrimitive);
+
+        decoratorPrimitive.setDraggable(false).moveToTop();
+        
         return this;
     }
 

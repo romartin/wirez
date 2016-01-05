@@ -16,11 +16,10 @@
 
 package org.wirez.client.widgets.palette.tooltip;
 
-import com.ait.lienzo.client.core.shape.IPrimitive;
-import com.ait.lienzo.client.core.shape.Layer;
-import com.ait.lienzo.client.core.shape.Rectangle;
-import com.ait.lienzo.client.core.shape.Text;
+import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.types.BoundingBox;
+import com.ait.lienzo.client.core.types.Point2D;
+import com.ait.lienzo.client.core.types.Shadow;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -32,6 +31,8 @@ import javax.annotation.PostConstruct;
 public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPaletteTooltip.View {
 
     private static final double PADDING = 20;
+    private static final double TRIANGLE_SIZE = 20;
+    private static final double ALPHA = 0.8;
     
     DefaultPaletteTooltip presenter;
     private Layer canvasLayer = new Layer();
@@ -40,11 +41,11 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
     @Override
     public void init(final DefaultPaletteTooltip presenter) {
         this.presenter = presenter;
+        // TODO: Remove from gwt root panel at some point?
         RootPanel.get().add(this);
         this.getElement().getStyle().setPosition(Style.Position.FIXED);
         this.getElement().getStyle().setZIndex(20);
         this.getElement().getStyle().setDisplay(Style.Display.NONE);
-        this.getElement().getStyle().setBackgroundColor(ColorName.LIGHTGREY.getValue());
     }
 
     @Override
@@ -62,10 +63,13 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
         final double descTextBbW = 80;
         final double descTextBbH = 30;
         
-        final double w = ( descTextBbW >  width ? ( descTextBbW + PADDING ) : ( width + PADDING ) ); 
-        final double h = height + descTextBbH + PADDING + 10;
-        final IPrimitive<?> decorator = buildDecorator(w, h);
+        final double dw = ( descTextBbW >  width ? ( descTextBbW + PADDING ) : ( width + PADDING ) ); 
+        final double dh = height + descTextBbH + PADDING + 10;
+        final IPrimitive<?> decorator = buildDecorator(dw, dh);
+        final double w = dw + ( TRIANGLE_SIZE * 2);
+        final double h = dh;
 
+        
         lienzoPanel = new FocusableLienzoPanel( (int) w , (int) h );
 
         this.add(lienzoPanel);
@@ -76,10 +80,10 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
         canvasLayer.add(glyph);
         canvasLayer.add(descText);
         
-        glyph.setX( ( w / 2) - (width / 2) );
+        glyph.setX( TRIANGLE_SIZE + ( w / 2) - (width / 2) );
         glyph.setY(PADDING / 2);
 
-        descText.setX( ( w / 2) - (descTextBbW / 2) );
+        descText.setX( TRIANGLE_SIZE + ( w / 2) - (descTextBbW / 2) );
         descText.setY(height + descTextBbH + 5);
         
         
@@ -99,14 +103,34 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
     }
     
     private IPrimitive<?> buildDecorator(final double width, final double height) {
-        return new Rectangle(width, height)
+        final double h2 = height / 2;
+        final double s2 = TRIANGLE_SIZE / 2;
+        final Triangle triangle = new Triangle(new Point2D(0, h2), new Point2D(TRIANGLE_SIZE, h2 + s2), new Point2D(TRIANGLE_SIZE, h2 - s2))
+                .setFillColor(ColorName.WHITE)
+                .setFillAlpha(ALPHA)
+                .setStrokeWidth(1)
+                .setStrokeColor(ColorName.BLACK)
+                .setStrokeAlpha(ALPHA);
+        
+        final Shadow shadow = new Shadow(ColorName.BLACK.getColor().setA(0.80), 10, 3, 3);
+        final Rectangle rectangle = new Rectangle(width + TRIANGLE_SIZE, height)
+                .setX(TRIANGLE_SIZE)
+                .setY(0)
                 .setCornerRadius(10)
                 .setFillColor(ColorName.WHITE)
-                .setFillAlpha(0)
-                .setStrokeWidth(3)
+                .setFillAlpha(ALPHA)
+                .setStrokeWidth(1)
                 .setStrokeColor(ColorName.BLACK)
-                .setStrokeAlpha(1);
+                .setStrokeAlpha(ALPHA)
+                .setShadow(shadow);
+
+        final Group decorator = new Group();
+        decorator.add(rectangle);
+        decorator.add(triangle);
+
+        return decorator;
     }
+    
     private void reset() {
         this.clear();
         canvasLayer = new Layer();

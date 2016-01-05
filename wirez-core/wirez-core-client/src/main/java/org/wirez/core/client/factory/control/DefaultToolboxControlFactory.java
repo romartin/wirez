@@ -16,7 +16,7 @@
 
 package org.wirez.core.client.factory.control;
 
-import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.control.ToolboxControl;
 import org.wirez.core.client.control.toolbox.Toolbox;
@@ -25,7 +25,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class DefaultToolboxControlFactory<S extends Shape, E extends ViewElement> implements ShapeControlFactory<S, ToolboxControl<S, E>> {
+public class DefaultToolboxControlFactory<S extends Shape, E extends Element> implements ShapeControlFactory<S, ToolboxControl<S, E>> {
     
     Toolbox toolbox;
 

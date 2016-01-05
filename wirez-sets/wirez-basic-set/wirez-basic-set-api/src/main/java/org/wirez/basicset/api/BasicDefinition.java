@@ -19,11 +19,21 @@ package org.wirez.basicset.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.wirez.core.api.definition.DefaultContent;
 import org.wirez.core.api.definition.DefaultDefinition;
+import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.impl.DefaultBound;
+import org.wirez.core.api.graph.impl.DefaultBounds;
 
 public abstract class BasicDefinition extends DefaultDefinition<DefaultContent> {
 
     public BasicDefinition(@MapsTo("id") String id) {
         super(id);
     }
+
+    public abstract double getWidth();
+
+    public abstract double getHeight();
     
+    protected Bounds buildBounds() {
+        return new DefaultBounds(new DefaultBound(getWidth(), getHeight()), new DefaultBound(0d, 0d));
+    }
 }

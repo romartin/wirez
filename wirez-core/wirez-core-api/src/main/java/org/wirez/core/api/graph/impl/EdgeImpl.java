@@ -18,48 +18,43 @@ package org.wirez.core.api.graph.impl;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 
 import java.util.Map;
 import java.util.Set;
 
-/**
- * A relationship for graph nodes that indicates parent-child semantics..
- */
 @Portable
-public class ChildRelationEdge<T extends Node> extends ElementImpl implements DefaultEdge<T> {
+public class EdgeImpl<C> extends ElementImpl<C> implements Edge<C, Node> {
 
-    public static final String RELATION_NAME = "p-c";
+    private Node sourceNode;
+    private Node targetNode;
 
-    private T parentNode;
-    private T childNode;
+    public EdgeImpl(@MapsTo("id") String id,
+                    @MapsTo("properties") Map<String, Object> properties,
+                    @MapsTo("labels") Set<String> labels,
+                    @MapsTo("content") C content) {
+        super(id, properties, labels, content);
+    }
     
-    public ChildRelationEdge(@MapsTo("uuid") String uuid, 
-                             @MapsTo("properties") Map<String, Object> properties, 
-                             @MapsTo("labels") Set<String> labels) {
-        super(uuid, properties, labels);
-    }
-
-    public void setChildNode(final T node) {
-        this.childNode = node;   
-    }
-
-    public void setParentNode(final T node) {
-        this.parentNode = node;
+    @Override
+    public Node getSourceNode() {
+        return sourceNode;
     }
 
     @Override
-    public String getRelationName() {
-        return RELATION_NAME;
+    public Node getTargetNode() {
+        return targetNode;
     }
 
-    @Override
-    public T getSourceNode() {
-        return parentNode;
+    public void setSourceNode(Node sourceNode) {
+        this.sourceNode = sourceNode;
     }
 
-    @Override
-    public T getTargetNode() {
-        return childNode;
+    public void setTargetNode(Node targetNode) {
+        this.targetNode = targetNode;
     }
+
 }

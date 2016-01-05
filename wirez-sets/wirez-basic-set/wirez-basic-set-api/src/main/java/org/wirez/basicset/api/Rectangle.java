@@ -34,7 +34,9 @@ public class Rectangle extends BasicNodeDefinition<Rectangle> {
 
     public static final String ID = "rectangle";
     public static final String COLOR = "#00CC00";
-
+    public static final double WIDTH = 100;
+    public static final double HEIGHT = 100;
+    
     private final Set<Property> properties = new HashSet<Property>() {{
         
     }};
@@ -66,4 +68,13 @@ public class Rectangle extends BasicNodeDefinition<Rectangle> {
                 properties));
     }
 
+    @Override
+    public double getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public double getHeight() {
+        return HEIGHT;
+    }
 }

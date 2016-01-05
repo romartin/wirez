@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.impl;
+package org.wirez.core.api.graph.content;
 
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Edge;
-
-/**
- * An edge of a graph that has a view representation.
- * @param <W> The view definition.
- */
-public interface ViewEdge<W extends Definition,  T extends ViewNode> extends Edge<T>, ViewElement<W> {
-
-    void setTargetNode(ViewNode node);
-
-    void setSourceNode(ViewNode node);
-    
+public interface Content {
 }

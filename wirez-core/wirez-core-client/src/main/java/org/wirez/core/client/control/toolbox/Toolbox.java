@@ -17,10 +17,10 @@
 package org.wirez.core.client.control.toolbox;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.canvas.CanvasHandler;
 
-public interface Toolbox<E extends ViewElement> extends IsWidget {
+public interface Toolbox<E extends Element> extends IsWidget {
 
     void initialize(CanvasHandler canvasHandler);
 

@@ -22,9 +22,9 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultBound;
 import org.wirez.core.api.graph.impl.DefaultBounds;
-import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -62,7 +62,7 @@ public class UpdateElementSizeCommand implements Command {
         assert w > 0;
         assert h > 0;
         
-        final Bounds bounds = ((ViewElement)element).getBounds();
+        final Bounds bounds = ((ViewContent) element.getContent()).getBounds();
         final Bounds.Bound ul = bounds.getUpperLeft();
         final Bounds.Bound lr = bounds.getLowerRight();
         final double x = ul.getX();
@@ -73,7 +73,7 @@ public class UpdateElementSizeCommand implements Command {
                 new DefaultBound(x + w, y + h),
                 new DefaultBound(x, y)
         );
-        ((ViewElement) element).setBounds(newBounds);
+        ((ViewContent) element.getContent()).setBounds(newBounds);
         return new DefaultCommandResult(new ArrayList<RuleViolation>());
     }
     

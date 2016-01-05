@@ -21,24 +21,21 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
-import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
-import org.wirez.core.client.mutation.HasGraphElementMutation;
 
 /**
  * A Command to update an element's property produce the corresponding shape mutation.
  */
 public class UpdateCanvasElementPropertyValueCommand extends BaseCanvasCommand implements CanvasCommand {
 
-    ViewElement element;
+    Element element;
     Property property;
     Object value;
     
-    public UpdateCanvasElementPropertyValueCommand(final ViewElement element ,
+    public UpdateCanvasElementPropertyValueCommand(final Element element ,
                                                    final Property property,
                                                    final Object value) {
         this.element = element;

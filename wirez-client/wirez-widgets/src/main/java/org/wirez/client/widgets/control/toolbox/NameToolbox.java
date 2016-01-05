@@ -17,18 +17,13 @@
 package org.wirez.client.widgets.control.toolbox;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.impl.ViewElement;
-import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.CanvasListener;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.control.toolbox.BaseToolbox;
-import org.wirez.core.client.control.toolbox.Toolbox;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -47,7 +42,7 @@ public class NameToolbox extends BaseToolbox {
 
     View view;
     DefaultCanvasCommands defaultCanvasCommands;
-    private ViewElement element;
+    private Element element;
 
     @Inject
     public NameToolbox(final DefaultCanvasCommands defaultCanvasCommands, final View view) {
@@ -61,7 +56,7 @@ public class NameToolbox extends BaseToolbox {
     }
     
     @Override
-    public void show(final ViewElement element, final double x, final double y) {
+    public void show(final Element element, final double x, final double y) {
         this.element = element;
         final String name = (String) element.getProperties().get(NameBuilder.PROPERTY_ID);
         GWT.log("Showing NameToolbox at [" + x + "," + y + "]");

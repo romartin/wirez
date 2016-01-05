@@ -21,9 +21,8 @@ import com.google.gwt.core.client.GWT;
 import org.uberfire.mvp.Command;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.DefaultGraphVisitorImpl;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
@@ -105,24 +104,25 @@ public class CanvasHighlightVisitor {
 
         shapes.clear();
 
-        new DefaultGraphVisitorImpl().run(graph, new AbstractGraphVisitorCallback() {
+        new DefaultGraphVisitorImpl().visit(graph, new AbstractGraphVisitorCallback() {
 
             @Override
-            public void visitViewNode(ViewNode node) {
-                super.visitViewNode(node);
+            public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
+                super.visitNodeWithViewContent(node);
                 addShape(node.getUUID());
+                
+            }
+
+            @Override
+            public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
+                super.visitEdgeWithViewContent(edge);
+                addShape(edge.getUUID());
             }
 
             @Override
             public void visitNode(Node node) {
                 super.visitNode(node);
                 addShape(node.getUUID());
-            }
-
-            @Override
-            public void visitViewEdge(ViewEdge edge) {
-                super.visitViewEdge(edge);
-                addShape(edge.getUUID());
             }
 
             @Override

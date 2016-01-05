@@ -24,8 +24,8 @@ import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.basicset.api.property.RadiusBuilder;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.impl.ViewElement;
-import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.MutationContext;
@@ -65,12 +65,12 @@ public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> i
 
 
     @Override
-    public void applyElementPosition(ViewNode<org.wirez.basicset.api.Circle, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementPosition(Node<ViewContent<org.wirez.basicset.api.Circle>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementPosition(element, wirezCanvas, mutationContext);
     }
 
     @Override
-    public void applyElementSize(ViewNode<org.wirez.basicset.api.Circle, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementSize(Node<ViewContent<org.wirez.basicset.api.Circle>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementSize(element, wirezCanvas, mutationContext);
 
         // Radius.
@@ -78,7 +78,7 @@ public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> i
     }
 
     @Override
-    public void applyElementProperties(ViewNode<org.wirez.basicset.api.Circle, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<ViewContent<org.wirez.basicset.api.Circle>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Radius.
@@ -99,12 +99,12 @@ public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> i
     }
 
     @Override
-    protected BaseBasicShape<org.wirez.basicset.api.Circle> _applyFillGradientColor(ViewNode<org.wirez.basicset.api.Circle, Edge> element) {
+    protected BaseBasicShape<org.wirez.basicset.api.Circle> _applyFillGradientColor(Node<ViewContent<org.wirez.basicset.api.Circle>, Edge> element) {
         _applyFillRadialGradientColor(element);
         return this;
     }
 
-    protected CircleShape _applyRadius(final ViewElement<org.wirez.basicset.api.Circle> element, MutationContext mutationContext) {
+    protected CircleShape _applyRadius(final Node<ViewContent<org.wirez.basicset.api.Circle>, Edge> element, MutationContext mutationContext) {
         final Integer radius = (Integer) element.getProperties().get(RadiusBuilder.PROPERTY_ID);
         if ( null != radius ) {
             applyRadius(radius, mutationContext);

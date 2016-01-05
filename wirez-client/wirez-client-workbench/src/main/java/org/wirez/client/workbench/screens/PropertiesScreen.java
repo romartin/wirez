@@ -28,10 +28,9 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.property.PropertiesEditor;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.content.ViewContent;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -65,10 +64,10 @@ public class PropertiesScreen {
     public void init() {
         propertiesEditor.setEditorCallback(new PropertiesEditor.EditorCallback() {
             @Override
-            public void onShowElement(ViewElement<? extends Definition> element) {
+            public void onShowElement(Element<? extends ViewContent<?>> element) {
                 if ( null != element ) {
                     String name = (String) element.getProperties().get(NameBuilder.PROPERTY_ID);
-                    name = name != null ? name : element.getDefinition().getContent().getTitle();
+                    name = name != null ? name : element.getContent().getDefinition().getContent().getTitle();
                     changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, name + " Properties"));
                 } else {
                     changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));

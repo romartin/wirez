@@ -21,11 +21,20 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.*;
 
 /**
- * Default graph interface supports unconnected edges (implements HasEdges).
+ * Default graph interface that provides an edge store too, so supports unconnected edges (implements HasEdges). 
+ * It's useful for graphical modelling as you can just drop your connectors inside the canvas and let them unconnected for some time...
  */
-public interface DefaultGraph<W extends Definition, T extends Node, E extends Edge> 
-        extends  Graph<T>, HasEdges<E>, ViewElement<W> {
+public interface DefaultGraph<C, N extends Node, E extends Edge> 
+        extends  Graph<C, N>, Element<C> {
 
+    E addEdge(final E edge);
+
+    E removeEdge(final String uuid);
+
+    E getEdge(final String uuid);
+
+    Iterable<E> edges();
+    
     void clear();
     
 }

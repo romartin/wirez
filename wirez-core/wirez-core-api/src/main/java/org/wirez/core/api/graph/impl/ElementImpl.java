@@ -26,18 +26,21 @@ import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class ElementImpl implements Element {
+public class ElementImpl<C> implements Element<C> {
 
     protected String uuid;
     protected Map<String, Object> properties;
     protected Set<String> labels;
+    protected C content;
 
     public ElementImpl(@MapsTo("uuid") String uuid,
                        @MapsTo("properties") Map<String, Object> properties,
-                       @MapsTo("labels") Set<String> labels) {
+                       @MapsTo("labels") Set<String> labels,
+                       @MapsTo("content") C content) {
         this.uuid = uuid;
         this.properties = properties;
         this.labels = labels;
+        this.content = content;
     }
 
     @Override
@@ -53,6 +56,11 @@ public class ElementImpl implements Element {
     @Override
     public Set<String> getLabels() {
         return labels;
+    }
+
+    @Override
+    public C getContent() {
+        return content;
     }
 
 

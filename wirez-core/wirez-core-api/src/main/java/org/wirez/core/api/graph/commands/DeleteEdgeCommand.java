@@ -21,9 +21,9 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.impl.ViewEdge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
@@ -35,11 +35,11 @@ import java.util.Collection;
  */
 public class DeleteEdgeCommand implements Command {
 
-    private DefaultGraph<? extends Definition, ViewNode, ViewEdge> graph;
-    private ViewEdge<? extends Definition, ViewNode> edge;
+    private DefaultGraph<?, Node, Edge> graph;
+    private Edge<? extends ViewContent, Node> edge;
 
-    public DeleteEdgeCommand(final DefaultGraph<? extends Definition, ViewNode, ViewEdge> graph,
-                             final ViewEdge<? extends Definition, ViewNode> edge) {
+    public DeleteEdgeCommand(final DefaultGraph<? extends Definition, Node, Edge> graph,
+                             final Edge<? extends ViewContent, Node> edge) {
         this.graph = PortablePreconditions.checkNotNull( "graph",
                 graph );;
         this.edge = PortablePreconditions.checkNotNull( "edge",
@@ -57,8 +57,8 @@ public class DeleteEdgeCommand implements Command {
         final CommandResult results = check(ruleManager);
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
             
-            final ViewNode outNode = edge.getTargetNode();
-            final ViewNode inNode = edge.getSourceNode();
+            final Node outNode = edge.getTargetNode();
+            final Node inNode = edge.getSourceNode();
 
             if ( null != outNode ) {
                 outNode.getInEdges().remove( edge );
@@ -85,7 +85,7 @@ public class DeleteEdgeCommand implements Command {
 
         DefaultCommandResult results;
         if ( isEdgeInGraph ) {
-            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), edge, RuleManager.Operation.DELETE).violations();
+            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), (Edge<? extends ViewContent<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
             results = new DefaultCommandResult(cardinalityRuleViolations);
         } else {
             results = new DefaultCommandResult();

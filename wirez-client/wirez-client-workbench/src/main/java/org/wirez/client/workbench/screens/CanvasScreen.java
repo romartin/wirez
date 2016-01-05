@@ -35,11 +35,9 @@ import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.client.workbench.util.GraphTests;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.factory.ViewElementFactory;
+import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.util.Logger;
 import org.wirez.core.api.util.UUID;
@@ -48,12 +46,13 @@ import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.WirezClientManager;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.DefaultCanvasSettingsBuilder;
+import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
+import org.wirez.core.client.canvas.command.impl.SetCanvasElementSizeCommand;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.canvas.impl.DefaultCanvasHandler;
-import org.wirez.core.client.control.toolbox.Toolbox;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.util.CanvasHighlightVisitor;
 
@@ -124,7 +123,7 @@ public class CanvasScreen {
 
             final DefinitionSet wirezSet = getDefinitionSet("basicSet");
             final ShapeSet shapeSet = getShapeSet("basic");
-            final DefaultGraph graph = GraphTests.childrenTest2();
+            final DefaultGraph graph = GraphTests.connectionsTest2();
             open("graphTests", wirezSet, shapeSet, "Graph Tests", graph);
             
         } else {
@@ -135,13 +134,9 @@ public class CanvasScreen {
 
             // For testing...
             final Map<String, Object> properties = new HashMap<String, Object>();
-            final Bounds bounds = new DefaultBounds(
-                    new DefaultBound(0d,0d),
-                    new DefaultBound(0d,0d)
-            );
 
             final Set<String> labels = new HashSet<>();
-            final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties, bounds);
+            final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties);
 
             open(uuid, wirezSet, shapeSet, title, graph);
             
@@ -267,11 +262,11 @@ public class CanvasScreen {
                             element = ( (DefaultGraph) canvasHandler.getGraph()).getEdge(shape.getId());
                             if (element != null) {
                                 GWT.log("Deleting edge with id " + element.getUUID());
-                                canvasHandler.execute(defaultCanvasCommands.DELETE_EDGE((ViewEdge) element));
+                                canvasHandler.execute(defaultCanvasCommands.DELETE_EDGE((Edge) element));
                             }
                         } else {
                             GWT.log("Deleting node with id " + element.getUUID());
-                            canvasHandler.execute(defaultCanvasCommands.DELETE_NODE((ViewNode) element));
+                            canvasHandler.execute(defaultCanvasCommands.DELETE_NODE((Node) element));
 
                         }
                     }
@@ -392,34 +387,24 @@ public class CanvasScreen {
     }
 
     private void buildShape(final Definition definition, final ShapeFactory factory,
-                            final double x, final double y) {
-        final Element element = buildElement(definition, x, y);
-
-        CanvasCommand command = null;
-        if ( element instanceof ViewNode) {
-            command = defaultCanvasCommands.ADD_NODE((ViewNode) element, factory);
-        } else if ( element instanceof ViewEdge) {
-            command = defaultCanvasCommands.ADD_EDGE((ViewEdge) element, factory);
-        }
-
-        if ( null != command ) {
-            canvasHandler.execute(command);
-        }
-
-    }
-
-    private ViewElement<? extends Definition> buildElement(final Definition wirez, final double _x, final double _y) {
+                            final double _x, final double _y) {
+        final Element<?> element = ((ElementFactory) definition).build(UUID.uuid(), new HashSet<String>(), new HashMap<String, Object>());
 
         final double x = _x > -1 ? _x : 100d;
         final double y = _y > -1 ? _y : 100d;
-        
-        final Bounds bounds =
-                new DefaultBounds(
-                        // TODO: Size hardcoded by default to 50...
-                        new DefaultBound(x + 50, y + 50),
-                        new DefaultBound(x, y)
-                );
-        return ((ViewElementFactory) wirez).build(UUID.uuid(), new HashSet<String>(), new HashMap<String, Object>(), bounds);
+
+        CanvasCommand command = null;
+        if ( element instanceof Node) {
+            command = defaultCanvasCommands.ADD_NODE((Node) element, factory);
+        } else if ( element instanceof Edge) {
+            command = defaultCanvasCommands.ADD_EDGE((Edge) element, factory);
+        }
+
+        // Add, move and resize the shape.
+        if ( null != command ) {
+            canvasHandler.execute(command);
+            canvasHandler.execute(new MoveCanvasElementCommand(element, x, y));
+        }
 
     }
 

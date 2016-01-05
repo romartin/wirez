@@ -19,6 +19,8 @@ package org.wirez.core.api.util;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.graph.processing.visitor.*;
 import org.wirez.core.api.rule.RuleViolation;
@@ -67,12 +69,23 @@ public class Logger {
     private static final AbstractGraphVisitorCallback VISITOR_CALLBACK = new AbstractGraphVisitorCallback() {
 
         @Override
+        public void visitGraphWithViewContent(DefaultGraph<? extends ViewContent, ? extends Node, ? extends Edge> graph) {
+            if (graph == null) {
+                error("Graph is null!");
+            } else {
+                log("Graph UUID: " + graph.getUUID());
+                log("Graph Id: " + graph.getContent().getDefinition().getId());
+                log("  Graph Starting nodes");
+                log("  ====================");
+            }
+        }
+
+        @Override
         public void visitGraph(DefaultGraph graph) {
             if (graph == null) {
                 error("Graph is null!");
             } else {
                 log("Graph UUID: " + graph.getUUID());
-                log("Graph Id: " + graph.getDefinition().getId());
                 log("  Graph Starting nodes");
                 log("  ====================");
             }
@@ -81,7 +94,21 @@ public class Logger {
         @Override
         public void visitNode(Node node) {
             log("Node UUID: " + node.getUUID());
-            List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
+            List<Edge> outEdges = (List<Edge>) node.getOutEdges();
+            if (outEdges == null || outEdges.isEmpty()) {
+                log("  No outgoing edges found");
+            } else {
+                log("  Outgoing edges");
+                log("  ==============");
+            }
+        }
+
+
+        @Override
+        public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
+            log("(View) UUID: " + node.getUUID());
+            log("(View) Node Id: " + node.getContent().getDefinition().getId());
+            List<Edge> outEdges = (List<Edge>) node.getOutEdges();
             if (outEdges == null || outEdges.isEmpty()) {
                 log("  No outgoing edges found");
             } else {
@@ -91,27 +118,28 @@ public class Logger {
         }
 
         @Override
-        public void visitViewNode(ViewNode node) {
-            log("View Node UUID: " + node.getUUID());
-            log("View Node Id: " + node.getDefinition().getId());
+        public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
+            log("(View) Edge UUI: " + edge.getUUID());
+            log("(View) Edge Id: " + edge.getContent().getDefinition().getId());
 
-            List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
-            if (outEdges == null || outEdges.isEmpty()) {
-                log("  No outgoing edges found");
+            final Node outNode = (Node) edge.getTargetNode();
+            if (outNode == null) {
+                log("  No outgoing node found");
             } else {
-                log("  Outgoing edges");
+                log("  Outgoing Node");
                 log("  ==============");
             }
         }
 
         @Override
-        public void visitDefaultNode(final DefaultNode node) {
-            log("Default Node UUID: " + node.getUUID());
-            List<ViewEdge> outEdges = (List<ViewEdge>) node.getOutEdges();
-            if (outEdges == null || outEdges.isEmpty()) {
-                log("  No outgoing edges found");
+        public void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge) {
+            log("(Parent-Child= Edge UUI: " + edge.getUUID());
+
+            final Node outNode = (Node) edge.getTargetNode();
+            if (outNode == null) {
+                log("  No outgoing node found");
             } else {
-                log("  Outgoing edges");
+                log("  Outgoing Node");
                 log("  ==============");
             }
         }
@@ -120,47 +148,7 @@ public class Logger {
         public void visitEdge(Edge edge) {
             log("Edge UUI: " + edge.getUUID());
 
-            final ViewNode outNode = (ViewNode) edge.getTargetNode();
-            if (outNode == null) {
-                log("  No outgoing node found");
-            } else {
-                log("  Outgoing Node");
-                log("  ==============");
-            }
-        }
-
-        @Override
-        public void visitViewEdge(ViewEdge edge) {
-            log("View Edge UUI: " + edge.getUUID());
-            log("View Edge Id: " + edge.getDefinition().getId());
-
-            final ViewNode outNode = (ViewNode) edge.getTargetNode();
-            if (outNode == null) {
-                log("  No outgoing node found");
-            } else {
-                log("  Outgoing Node");
-                log("  ==============");
-            }
-        }
-
-        @Override
-        public void visitDefaultEdge(DefaultEdge edge) {
-            log("Default Edge UUI: " + edge.getUUID());
-
-            final ViewNode outNode = (ViewNode) edge.getTargetNode();
-            if (outNode == null) {
-                log("  No outgoing node found");
-            } else {
-                log("  Outgoing Node");
-                log("  ==============");
-            }
-        }
-
-        @Override
-        public void visitChildRelationEdge(ChildRelationEdge edge) {
-            log("Child-Relation Edge UUI: " + edge.getUUID());
-
-            final ViewNode outNode = (ViewNode) edge.getTargetNode();
+            final Node outNode = (Node) edge.getTargetNode();
             if (outNode == null) {
                 log("  No outgoing node found");
             } else {
@@ -173,27 +161,27 @@ public class Logger {
 
     public static void log(final DefaultGraph graph) {
         new DefaultGraphVisitorImpl()
-                .setBoundsVisitorCallback(new GraphVisitorCallback.BoundsVisitorCallback() {
+                .setBoundsVisitorCallback(new DefaultGraphVisitorCallback.BoundsVisitorCallback() {
                     @Override
-                    public void visitBounds(HasView element, Bounds.Bound ul, Bounds.Bound lr) {
+                    public void visitBounds(Element<? extends ViewContent> element, Bounds.Bound ul, Bounds.Bound lr) {
                         log(" Bound UL [x=" + ul.getX() + ", y=" + ul.getY() + "]");
                         log(" Bound LR [x=" + lr.getX() + ", y=" + lr.getY() + "]");
                     }
                 })
 
-                .setPropertiesVisitorCallback(new GraphVisitorCallback.PropertyVisitorCallback() {
+                .setPropertiesVisitorCallback(new DefaultGraphVisitorCallback.PropertyVisitorCallback() {
                     @Override
                     public void visitProperty(Element element, String key, Object value) {
                         log(" Property [key=" + key + ", value=" + value + "]");
                     }
                 })
-                .run(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
+                .visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
 
 
     }
 
     public static void resume(final DefaultGraph graph) {
-        new DefaultGraphVisitorImpl().run(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
+        new DefaultGraphVisitorImpl().visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
     }
     
     public static void log(final String message) {

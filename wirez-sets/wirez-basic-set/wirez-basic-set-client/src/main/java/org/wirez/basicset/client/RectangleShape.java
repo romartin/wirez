@@ -27,8 +27,7 @@ import java.util.Collection;
 
 public class RectangleShape extends BaseBasicShape<org.wirez.basicset.api.Rectangle> {
 
-    private static final double WIDTH = 100;
-    private static final double HEIGHT = 100;
+    
     
     protected Rectangle rectangle;
     protected Rectangle decorator;
@@ -51,8 +50,8 @@ public class RectangleShape extends BaseBasicShape<org.wirez.basicset.api.Rectan
     }
 
     protected void init() {
-        rectangle = new Rectangle(WIDTH, HEIGHT).setX(0).setY(0).setStrokeWidth(0);
-        decorator = new Rectangle(WIDTH, HEIGHT).setX(0).setY(0).setStrokeWidth(0).setStrokeAlpha(0).setFillAlpha(0);
+        rectangle = new Rectangle(org.wirez.basicset.api.Rectangle.WIDTH, org.wirez.basicset.api.Rectangle.HEIGHT).setX(0).setY(0).setStrokeWidth(0);
+        decorator = new Rectangle(org.wirez.basicset.api.Rectangle.WIDTH, org.wirez.basicset.api.Rectangle.HEIGHT).setX(0).setY(0).setStrokeWidth(0).setStrokeAlpha(0).setFillAlpha(0);
         getGroup().add(decorator);
         getGroup().add(rectangle);
     }

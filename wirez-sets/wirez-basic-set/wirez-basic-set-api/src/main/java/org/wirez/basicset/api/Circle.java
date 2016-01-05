@@ -69,4 +69,13 @@ public class Circle extends BasicNodeDefinition<Circle> {
                 properties));
     }
 
+    @Override
+    public double getWidth() {
+        return RADIUS * 2;
+    }
+
+    @Override
+    public double getHeight() {
+        return RADIUS * 2;
+    }
 }

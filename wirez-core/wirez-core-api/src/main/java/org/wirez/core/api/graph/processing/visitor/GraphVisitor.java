@@ -26,10 +26,8 @@ public interface GraphVisitor<G extends Graph, N extends Node, E extends Edge, C
         EDGE_FIRST, EDGE_LAST;
     }
 
-    GraphVisitor<G, N, E, C > setBoundsVisitorCallback(GraphVisitorCallback.BoundsVisitorCallback callback);
+    
 
-    GraphVisitor<G, N, E, C > setPropertiesVisitorCallback(GraphVisitorCallback.PropertyVisitorCallback callback);
-
-    void run(G graph, C callback, GraphVisitorPolicy policy);
+    void visit(G graph, C callback, GraphVisitorPolicy policy);
     
 }

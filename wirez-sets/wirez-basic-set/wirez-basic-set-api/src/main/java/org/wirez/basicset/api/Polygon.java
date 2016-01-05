@@ -35,9 +35,11 @@ public class Polygon extends BasicNodeDefinition<Polygon> {
 
     public static final String ID = "polygon";
     public static final String COLOR = "#ff1a1a";
+    public static final int RADIUS = 25;
+
 
     private final Set<Property> properties = new HashSet<Property>() {{
-        add( new RadiusBuilder().defaultValue(25).build() );
+        add( new RadiusBuilder().defaultValue(RADIUS).build() );
     }};
 
     private final Set<String> labels = new HashSet<String>() {{
@@ -67,4 +69,13 @@ public class Polygon extends BasicNodeDefinition<Polygon> {
                 properties));
     }
 
+    @Override
+    public double getWidth() {
+        return RADIUS * 2;
+    }
+
+    @Override
+    public double getHeight() {
+        return RADIUS * 2;
+    }
 }

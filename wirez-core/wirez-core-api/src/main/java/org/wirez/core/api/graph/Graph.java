@@ -23,7 +23,7 @@ import org.wirez.core.api.definition.Definition;
  * 
  * @param <N> Type of nodes that it contains.
  */
-public interface Graph<N extends Node> extends Element {
+public interface Graph<C, N extends Node> extends Element<C> {
 
     N addNode(N node);
 

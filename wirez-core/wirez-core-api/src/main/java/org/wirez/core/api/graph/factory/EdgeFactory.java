@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.impl;
+package org.wirez.core.api.graph.factory;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 
-/**
- * A node of a graph that has a view representation.
- * @param <W> The view definition.
- */
-public interface ViewNode<W extends Definition, T extends Edge> extends Node<T>, ViewElement<W> {
+public interface EdgeFactory<C> extends ElementFactory<C, Edge<C, Node>> {
     
 }

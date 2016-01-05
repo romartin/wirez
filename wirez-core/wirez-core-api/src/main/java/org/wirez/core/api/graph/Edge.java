@@ -22,10 +22,14 @@ import org.wirez.core.api.definition.Definition;
  * A generic edge of a graph. An edge represents a relationship between two nodes and has a given direction.
  * @param <N> The type of nodes.
  */
-public interface Edge<N extends Node> extends Element {
+public interface Edge<C, N extends Node> extends Element<C> {
 
     N getSourceNode();
 
+    void setSourceNode(N node);
+    
     N getTargetNode();
+
+    void setTargetNode(N node);
 
 }

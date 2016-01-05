@@ -24,10 +24,8 @@ import com.ait.lienzo.client.core.types.RadialGradient;
 import org.wirez.basicset.api.property.bgset.*;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.MutationContext;
@@ -39,7 +37,7 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
     }
 
     @Override
-    public void applyElementProperties(ViewNode<W, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<ViewContent<W>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Fill color.
@@ -56,7 +54,7 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
         
     }
 
-    protected BaseBasicShape<W> _applyFillColor(ViewNode<W, Edge> element) {
+    protected BaseBasicShape<W> _applyFillColor(Node<ViewContent<W>, Edge> element) {
         final String color = (String) element.getProperties().get(BgColorBuilder.PROPERTY_ID);
         if (color != null && color.trim().length() > 0) {
             getShape().setFillColor(color);
@@ -64,12 +62,12 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
         return this;
     }
 
-    protected BaseBasicShape<W> _applyFillGradientColor(ViewNode<W, Edge> element) {
+    protected BaseBasicShape<W> _applyFillGradientColor(Node<ViewContent<W>, Edge> element) {
         _applyFillLinearGradientColor(element);
         return this;
     }
 
-    protected BaseBasicShape<W> _applyFillLinearGradientColor(ViewNode<W, Edge> element) {
+    protected BaseBasicShape<W> _applyFillLinearGradientColor(Node<ViewContent<W>, Edge> element) {
         final String start = (String) element.getProperties().get(BgGradiendStartColorBuilder.PROPERTY_ID);
         final String end = (String) element.getProperties().get(BgGradiendEndColorBuilder.PROPERTY_ID);
         if ( start != null && start.trim().length() > 0 && end != null && end.trim().length() > 0 ) {
@@ -82,7 +80,7 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
         return this;
     }
 
-    protected BaseBasicShape<W> _applyFillRadialGradientColor(ViewNode<W, Edge> element) {
+    protected BaseBasicShape<W> _applyFillRadialGradientColor(Node<ViewContent<W>, Edge> element) {
         final String start = (String) element.getProperties().get(BgGradiendStartColorBuilder.PROPERTY_ID);
         final String end = (String) element.getProperties().get(BgGradiendEndColorBuilder.PROPERTY_ID);
         if ( start != null && start.trim().length() > 0 && end != null && end.trim().length() > 0 ) {
@@ -94,7 +92,7 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
         return this;
     }
 
-    protected BaseBasicShape<W> _applyBorders(ViewNode<W, Edge> element) {
+    protected BaseBasicShape<W> _applyBorders(Node<ViewContent<W>, Edge> element) {
         final String color = (String) element.getProperties().get(BorderColorBuilder.PROPERTY_ID);
         final Integer width = (Integer) element.getProperties().get(BorderSizeBuilder.PROPERTY_ID);
         if (color != null && color.trim().length() > 0) {
@@ -106,7 +104,7 @@ public abstract class BaseBasicShape<W extends Definition> extends BaseShape<W> 
         return this;
     }
 
-    protected BaseBasicShape<W> _applyFont(ViewNode<W, Edge> element) {
+    protected BaseBasicShape<W> _applyFont(Node<ViewContent<W>, Edge> element) {
         // TODO
         /*final Text text = super.getText();
         if ( null != text ) {

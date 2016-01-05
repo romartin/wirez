@@ -48,7 +48,7 @@ import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.factory.ViewElementFactory;
+import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.service.GraphVfsServices;
 import org.wirez.core.api.util.Logger;
@@ -157,13 +157,9 @@ public class CanvasEditor extends BaseEditor {
 
         // For testing...
         final Map<String, Object> properties = new HashMap<String, Object>();
-        final Bounds bounds = new DefaultBounds(
-                new DefaultBound(0d,0d),
-                new DefaultBound(0d,0d)
-        );
 
         final Set<String> labels = new HashSet<>();
-        final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties, bounds);
+        final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties);
 
         open(uuid, wirezSet, shapeSet, title, graph);
         
@@ -454,7 +450,7 @@ public class CanvasEditor extends BaseEditor {
                         new DefaultBound(x + 50, y + 50),
                         new DefaultBound(x, y)
                 );
-        return ((ViewElementFactory) wirez).build(UUID.uuid(), new HashSet<String>(), new HashMap<String, Object>(), bounds);
+        return ((ElementFactory) wirez).build(UUID.uuid(), new HashSet<String>(), new HashMap<String, Object>(), bounds);
 
     }
 

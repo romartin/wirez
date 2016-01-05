@@ -18,32 +18,29 @@ package org.wirez.core.api.graph.processing.visitor;
 
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
 
 public abstract class AbstractGraphVisitorCallback implements DefaultGraphVisitorCallback {
-    
+
     @Override
-    public void visitViewNode(ViewNode node) {
+    public void visitGraphWithViewContent(DefaultGraph<? extends ViewContent, ? extends Node, ? extends Edge> graph) {
         
     }
 
     @Override
-    public void visitDefaultNode(DefaultNode node) {
+    public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
+        
+    }
+
+    @Override
+    public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
 
     }
 
     @Override
-    public void visitViewEdge(ViewEdge edge) {
-
-    }
-
-    @Override
-    public void visitDefaultEdge(DefaultEdge edge) {
-
-    }
-
-    @Override
-    public void visitChildRelationEdge(ChildRelationEdge edge) {
+    public void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge) {
 
     }
 
@@ -66,5 +63,4 @@ public abstract class AbstractGraphVisitorCallback implements DefaultGraphVisito
     public void endVisit() {
 
     }
-    
 }

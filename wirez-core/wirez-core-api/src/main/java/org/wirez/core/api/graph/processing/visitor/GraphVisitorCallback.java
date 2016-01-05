@@ -17,6 +17,7 @@
 package org.wirez.core.api.graph.processing.visitor;
 
 import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.content.ViewContent;
 
 /**
  * A generic graph visitor callback interface.
@@ -31,12 +32,6 @@ public interface GraphVisitorCallback<G extends Graph, N extends Node, E extends
 
     void endVisit();
 
-    interface BoundsVisitorCallback {
-        void visitBounds(HasView element, Bounds.Bound ul, Bounds.Bound lr);
-    }
-
-    interface PropertyVisitorCallback {
-        void visitProperty(Element element, String key, Object value);
-    }
+    
     
 }

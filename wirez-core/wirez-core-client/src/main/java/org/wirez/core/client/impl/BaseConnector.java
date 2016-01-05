@@ -27,9 +27,9 @@ import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnetBuilder;
 import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnetBuilder;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
@@ -44,14 +44,14 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         HasPositionMutation,
         HasSizeMutation,
         HasPropertyMutation,
-        HasGraphElementMutation<W, ViewEdge<W, ViewNode>>,
-        HasDragControl<Shape<W>, ViewEdge>,
-        HasToolboxControl<Shape<W>, ViewEdge> {
+        HasGraphElementMutation<W, ViewContent<W>, Edge<ViewContent<W>, Node>>,
+        HasDragControl<Shape<W>, Edge>,
+        HasToolboxControl<Shape<W>, Edge> {
 
     protected String id;
     protected Group group;
-    protected DefaultDragControl<Shape<W>, ViewEdge> dragControl;
-    protected ToolboxControl<Shape<W>, ViewEdge> toolboxControl;
+    protected DefaultDragControl<Shape<W>, Edge> dragControl;
+    protected ToolboxControl<Shape<W>, Edge> toolboxControl;
 
     public BaseConnector(AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
         super(line, head, tail, manager);
@@ -91,17 +91,17 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public void applyElementPosition(ViewEdge<W, ViewNode> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementPosition(Edge<ViewContent<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         // TODO
     }
 
     @Override
-    public void applyElementSize(ViewEdge<W, ViewNode> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementSize(Edge<ViewContent<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         // TODO
     }
 
     @Override
-    public void applyElementProperties(ViewEdge<W, ViewNode> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementProperties(Edge<ViewContent<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         
         // TODO
 
@@ -125,7 +125,7 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         // TODO
     }
 
-    protected Shape<W> _applyConnections(final ViewEdge<W, ViewNode> element, final CanvasHandler canvasHandler) {
+    protected Shape<W> _applyConnections(final Edge<ViewContent<W>, Node> element, final CanvasHandler canvasHandler) {
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
@@ -181,22 +181,22 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public void setDragControl(final DefaultDragControl<Shape<W>, ViewEdge> dragControl) {
+    public void setDragControl(final DefaultDragControl<Shape<W>, Edge> dragControl) {
         this.dragControl = dragControl;
     }
 
     @Override
-    public DefaultDragControl<Shape<W>, ViewEdge> getDragControl() {
+    public DefaultDragControl<Shape<W>, Edge> getDragControl() {
         return dragControl;
     }
 
     @Override
-    public void setToolboxControl(ToolboxControl<Shape<W>, ViewEdge> toolboxControl) {
+    public void setToolboxControl(ToolboxControl<Shape<W>, Edge> toolboxControl) {
         this.toolboxControl = toolboxControl;
     }
 
     @Override
-    public ToolboxControl<Shape<W>, ViewEdge> getToolboxControl() {
+    public ToolboxControl<Shape<W>, Edge> getToolboxControl() {
         return toolboxControl;
     }
     

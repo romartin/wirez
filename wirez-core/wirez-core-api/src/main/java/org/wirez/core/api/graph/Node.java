@@ -24,7 +24,7 @@ import java.util.List;
  * A generic node of a graph. A node can contain incoming and/or outgoing edges.
  * @param <E> The edge type.
  */
-public interface Node<E extends Edge> extends Element {
+public interface Node<C, E extends Edge> extends Element<C> {
     
     List<E> getInEdges();
 

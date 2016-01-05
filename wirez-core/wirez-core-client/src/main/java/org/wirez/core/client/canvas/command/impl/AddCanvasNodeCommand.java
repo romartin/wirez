@@ -17,9 +17,9 @@ package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.AddNodeCommand;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
@@ -31,10 +31,10 @@ import org.wirez.core.client.factory.ShapeFactory;
  */
 public class AddCanvasNodeCommand extends BaseCanvasCommand {
 
-    ViewNode candidate;
+    Node candidate;
     ShapeFactory factory;
 
-    public AddCanvasNodeCommand(final ViewNode candidate, final ShapeFactory factory ) {
+    public AddCanvasNodeCommand(final Node candidate, final ShapeFactory factory ) {
         this.candidate = candidate;
         this.factory = factory;
     }

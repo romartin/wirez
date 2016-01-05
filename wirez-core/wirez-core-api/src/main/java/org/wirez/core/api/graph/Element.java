@@ -22,14 +22,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An element of a graph. All graph elements (nodes, edges, etc) must have a unique identifier, a collection of properties and a set of labels (roles).
+ * An element of a graph. All graph elements (nodes, edges, etc) must have a unique identifier, a collection of properties, a set of labels (roles) and a generic content. 
+ * The content gives the semantics and views, if any, for the element.
  */
-public interface Element {
+public interface Element<C> {
     
     String getUUID();
 
     Map<String, Object> getProperties();
     
     Set<String> getLabels();
+    
+    C getContent();
     
 }

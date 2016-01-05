@@ -18,10 +18,9 @@ package org.wirez.core.client.control;
 
 
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.Shape;
 
-public interface HasResizeControl<S extends Shape, E extends ViewElement> {
+public interface HasResizeControl<S extends Shape, E extends Element> {
 
     void setResizeControl(DefaultResizeControl<S, E> resizeControl);
     

@@ -17,26 +17,26 @@
 package org.wirez.basicset.client.control;
 
 import org.wirez.basicset.api.property.RadiusBuilder;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
 import org.wirez.core.api.graph.commands.UpdateElementSizeCommand;
-import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
 import org.wirez.core.client.control.DefaultResizeControl;
 import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.StaticMutationContext;
 
-public class RadiusBasedResizeControl<S extends Shape> extends DefaultResizeControl<S, ViewNode> {
+public class RadiusBasedResizeControl<S extends Shape> extends DefaultResizeControl<S, Node> {
 
     @Override
-    protected void doResizeStep(S shape, ViewNode element, double width, double height) {
+    protected void doResizeStep(S shape, Node element, double width, double height) {
         double radius = getRadius(width, height);
         final HasRadiusMutation hasRadiusMutation = (HasRadiusMutation) shape;
         hasRadiusMutation.applyRadius(radius, new StaticMutationContext());
     }
     
     @Override
-    protected void doResizeEnd(S shape, ViewNode element, double width, double height) {
+    protected void doResizeEnd(S shape, Node element, double width, double height) {
         double radius = getRadius(width, height);
         getCommandManager().execute(
                 new CompositeElementCanvasCommand(element)

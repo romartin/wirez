@@ -16,13 +16,12 @@
 
 package org.wirez.core.client.control;
 
-
-import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 
-public abstract class BaseShapeControl<S extends Shape, E extends ViewElement> implements ShapeControl<S, E>, HasCanvasHandler {
+public abstract class BaseShapeControl<S extends Shape, E extends Element> implements ShapeControl<S, E>, HasCanvasHandler {
     
     protected CanvasHandler canvasHandler;
 

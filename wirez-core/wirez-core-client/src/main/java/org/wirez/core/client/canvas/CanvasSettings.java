@@ -31,7 +31,7 @@ public interface CanvasSettings {
 
     Canvas getCanvas();
     
-    Graph<? extends Node> getGraph();
+    Graph<?, ? extends Node> getGraph();
 
     DefinitionSet getDefinitionSet();
 

@@ -17,6 +17,8 @@
 package org.wirez.core.api.graph.processing.visitor;
 
 import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
 
 import javax.enterprise.context.Dependent;
@@ -28,8 +30,8 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
     private DefaultGraph graph;
     private DefaultGraphVisitorCallback visitorCallback;
     private GraphVisitorPolicy policy;
-    private GraphVisitorCallback.BoundsVisitorCallback boundsVisitor = null;
-    private GraphVisitorCallback.PropertyVisitorCallback propertyVisitor = null;
+    private DefaultGraphVisitorCallback.BoundsVisitorCallback boundsVisitor = null;
+    private DefaultGraphVisitorCallback.PropertyVisitorCallback propertyVisitor = null;
     private Set<String> processesEdges;
 
     /*
@@ -39,19 +41,19 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
      */
     
     @Override
-    public DefaultGraphVisitorImpl setBoundsVisitorCallback(GraphVisitorCallback.BoundsVisitorCallback callback) {
+    public DefaultGraphVisitorImpl setBoundsVisitorCallback(DefaultGraphVisitorCallback.BoundsVisitorCallback callback) {
         this.boundsVisitor = callback;
         return this;
     }
 
     @Override
-    public DefaultGraphVisitorImpl setPropertiesVisitorCallback(GraphVisitorCallback.PropertyVisitorCallback callback) {
+    public DefaultGraphVisitorImpl setPropertiesVisitorCallback(DefaultGraphVisitorCallback.PropertyVisitorCallback callback) {
         this.propertyVisitor = callback;
         return this;
     }
 
     @Override
-    public void run(DefaultGraph graph, DefaultGraphVisitorCallback callback, GraphVisitorPolicy policy) {
+    public void visit(DefaultGraph graph, DefaultGraphVisitorCallback callback, GraphVisitorPolicy policy) {
         this.graph = graph;
         this.visitorCallback = callback;
         this.policy = policy;
@@ -70,9 +72,15 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
     private void visitGraph() {
         assert graph != null && visitorCallback != null;
 
-        visitorCallback.visitGraph(graph);
+        
+        final Object content = graph.getContent();
+        if (content instanceof ViewContent) {
+            visitorCallback.visitGraphWithViewContent(graph);
+            visitBounds(graph);
+        } else {
+            visitorCallback.visitGraph(graph);
+        }
         visitProperties(graph);
-        visitBounds(graph)
         ;
         Collection<Node> startingNodes = getStartingNodes(graph);
         if (!startingNodes.isEmpty()) {
@@ -84,13 +92,11 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
 
     private void visitNode(final Node graphNode) {
 
-        if (graphNode instanceof ViewNode) {
-            final ViewNode viewNode = (ViewNode) graphNode;
-            visitorCallback.visitViewNode(viewNode);
-            visitBounds(viewNode);
-        } else if (graphNode instanceof DefaultNode) {
-            final DefaultNode defaultNode = (DefaultNode) graphNode;
-            visitorCallback.visitDefaultNode(defaultNode);
+        final Object contet = graphNode.getContent();
+        
+        if (contet instanceof ViewContent) {
+            visitorCallback.visitNodeWithViewContent(graphNode);
+            visitBounds(graphNode);
         } else {
             visitorCallback.visitNode(graphNode);
         }
@@ -124,21 +130,12 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
 
     private void doVisitEdge(final Edge edge) {
         
-        if (edge instanceof ViewEdge) {
-            final ViewEdge viewEdge = (ViewEdge) edge;
-            visitorCallback.visitViewEdge(viewEdge);
-            visitBounds(viewEdge);
-        } else if (edge instanceof DefaultEdge) {
-            final DefaultEdge defaultEdge = (DefaultEdge) edge;
-            final String relationName = defaultEdge.getRelationName();
-            
-            if (ChildRelationEdge.RELATION_NAME.equals(relationName)) {
-                final ChildRelationEdge childRelationEdge = (ChildRelationEdge) edge;
-                visitorCallback.visitChildRelationEdge(childRelationEdge);
-            } else {
-                visitorCallback.visitDefaultEdge(defaultEdge);
-            }
-
+        final Object content = edge.getContent();
+        if (content instanceof ViewContent) {
+            visitorCallback.visitEdgeWithViewContent(edge);
+            visitBounds(edge);
+        } else if (content instanceof ParentChildRelationship) {
+            visitorCallback.visitEdgeWithParentChildRelationContent(edge);
         } else {
             visitorCallback.visitEdge(edge);
         }
@@ -182,13 +179,14 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
         }
     }
 
-    private void visitBounds(final HasView element) {
+    private void visitBounds(final Element<? extends ViewContent> element) {
         if (element != null && boundsVisitor != null) {
-            final Bounds bounds = element.getBounds();
+            final Bounds bounds = element.getContent().getBounds();
             if (bounds != null) {
                 boundsVisitor.visitBounds(element, bounds.getUpperLeft(), bounds.getLowerRight());
             }
         }
     }
+
     
 }

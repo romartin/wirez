@@ -71,7 +71,8 @@ public class PolygonFactory extends BaseShapeFactory<Polygon, PolygonShape> {
     @Override
     public PolygonShape build(final Polygon definition, final CanvasHandler canvasHandler) {
 
-        MultiPath path = new MultiPath().rect(0, 0, 50, 50).setStrokeAlpha(0);
+        final double radius = Polygon.RADIUS * 2;
+        MultiPath path = new MultiPath().rect(0, 0, radius, radius).setStrokeAlpha(0);
 
         path.setDraggable(false);
 

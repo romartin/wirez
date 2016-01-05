@@ -19,11 +19,10 @@ import org.uberfire.commons.data.Pair;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.rule.violations.CardinalityMaxRuleViolation;
 import org.wirez.core.api.rule.violations.CardinalityMinRuleViolation;
 import org.wirez.core.api.rule.violations.ConnectionRuleViolation;
@@ -61,15 +60,15 @@ public class DefaultRuleManager implements RuleManager {
     }
     
     @Override
-    public RuleViolations checkContainment(final ViewElement<? extends Definition> target,
-                                           final ViewElement<? extends Definition> candidate ) {
+    public RuleViolations checkContainment(final Element<? extends ViewContent<?>> target,
+                                           final Element<? extends ViewContent<?>> candidate ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         if ( containmentRules.isEmpty() ) {
             return results;
         }
 
         for ( ContainmentRule rule : containmentRules ) {
-            if ( rule.getId().equals( target.getDefinition().getId() ) ) {
+            if ( rule.getId().equals( target.getContent().getDefinition().getId() ) ) {
                 final Set<String> permittedStrings = new HashSet<String>( rule.getPermittedRoles() );
                 permittedStrings.retainAll( candidate.getLabels() );
                 if ( permittedStrings.size() > 0 ) {
@@ -84,7 +83,7 @@ public class DefaultRuleManager implements RuleManager {
 
     @Override
     public RuleViolations checkCardinality(final DefaultGraph<? extends Definition, ? extends Node, ? extends Edge> target,
-                                           final ViewNode<? extends Definition, ? extends Edge> candidate,
+                                           final Node<? extends ViewContent, ? extends Edge> candidate,
                                            final DefaultRuleManager.Operation operation ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         if ( cardinalityRules.isEmpty() ) {
@@ -96,8 +95,8 @@ public class DefaultRuleManager implements RuleManager {
                 final long minOccurrences = rule.getMinOccurrences();
                 final long maxOccurrences = rule.getMaxOccurrences();
                 long count = ( operation == Operation.ADD ? 1 : -1 );
-                for ( Node node : target.nodes() ) {
-                    if (node instanceof ViewNode && ((ViewNode)node).getDefinition().getId().equals( candidate.getDefinition().getId() ))  {
+                for ( Node<? extends ViewContent, ? extends Edge> node : target.nodes() ) {
+                    if (node.getContent().getDefinition().getId().equals( candidate.getContent().getDefinition().getId() ))  {
                         count++;
                     }
                 }
@@ -112,16 +111,16 @@ public class DefaultRuleManager implements RuleManager {
     }
 
     @Override
-    public RuleViolations checkConnectionRules( final ViewNode<? extends Definition, ? extends Edge> outgoingNode,
-                                         final ViewNode<? extends Definition, ? extends Edge> incomingNode,
-                                         final ViewEdge<? extends Definition, ? extends Node> edge ) {
+    public RuleViolations checkConnectionRules( final Node<? extends ViewContent<?>, ? extends Edge> outgoingNode,
+                                                final Node<? extends ViewContent<?>, ? extends Edge> incomingNode,
+                                                final Edge<? extends ViewContent<?>, ? extends Node> edge ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         if ( connectionRules.isEmpty() || incomingNode == null || outgoingNode == null ) {
             return results;
         }
 
         final Set<Pair<String, String>> couples = new HashSet<Pair<String, String>>();
-        final String id = edge.getDefinition().getId();
+        final String id = edge.getContent().getDefinition().getId();
         for ( ConnectionRule rule : connectionRules ) {
             if ( id.equals( rule.getId() ) ) {
                 for ( ConnectionRule.PermittedConnection pc : rule.getPermittedConnections() ) {
@@ -140,10 +139,10 @@ public class DefaultRuleManager implements RuleManager {
     }
 
     @Override
-    public RuleViolations checkCardinality( final ViewNode<? extends Definition, ? extends Edge> outgoingNode,
-                                     final ViewNode<? extends Definition, ? extends Edge> incomingNode,
-                                     final ViewEdge<? extends Definition, ? extends Node> edge,
-                                     final Operation operation ) {
+    public RuleViolations checkCardinality( final Node<? extends ViewContent<?>, ? extends Edge> outgoingNode,
+                                            final Node<? extends ViewContent<?>, ? extends Edge> incomingNode,
+                                            final Edge<? extends ViewContent<?>, ? extends Node> edge,
+                                            final Operation operation ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         if ( cardinalityRules.isEmpty() ) {
             return results;
@@ -153,17 +152,14 @@ public class DefaultRuleManager implements RuleManager {
             //Check outgoing connections
             if ( outgoingNode != null && outgoingNode.getLabels().contains( rule.getRole() ) ) {
                 for ( CardinalityRule.ConnectorRule cr : rule.getOutgoingConnectionRules() ) {
-                    if( edge.getDefinition().getId().equals( cr.getId() )) {
+                    if( edge.getContent().getDefinition().getId().equals( cr.getId() )) {
                         final long minOccurrences = cr.getMinOccurrences();
                         final long maxOccurrences = cr.getMaxOccurrences();
                         long count = ( operation == Operation.ADD ? 1 : -1 );
                         for ( Edge e : outgoingNode.getOutEdges() ) {
-                            if (e != null && e instanceof ViewEdge) {
-                                final ViewEdge viewEdge = (ViewEdge) e;
-                                if ( (viewEdge.getDefinition().getId().equals( edge.getDefinition().getId())) ) {
+                                if ( (edge.getContent().getDefinition().getId().equals( edge.getContent().getDefinition().getId())) ) {
                                     count++;
                                 }
-                            }
                         }
 
                         if ( count < minOccurrences ) {
@@ -178,16 +174,13 @@ public class DefaultRuleManager implements RuleManager {
             //Check incoming connections
             if ( incomingNode != null && incomingNode.getLabels().contains( rule.getRole() ) ) {
                 for ( CardinalityRule.ConnectorRule cr : rule.getIncomingConnectionRules() ) {
-                    if( edge.getDefinition().getId().equals( cr.getId() )) {
+                    if( edge.getContent().getDefinition().getId().equals( cr.getId() )) {
                         final long minOccurrences = cr.getMinOccurrences();
                         final long maxOccurrences = cr.getMaxOccurrences();
                         long count = ( operation == Operation.ADD ? 1 : -1 );
                         for ( Edge e : incomingNode.getInEdges() ) {
-                            if (e != null && e instanceof ViewEdge) {
-                                final ViewEdge viewEdge = (ViewEdge) e;
-                                if ( (viewEdge.getDefinition().getId().equals( edge.getDefinition().getId())) ) {
-                                    count++;
-                                }
+                            if ( (edge.getContent().getDefinition().getId().equals( edge.getContent().getDefinition().getId())) ) {
+                                count++;
                             }
                         }
 
@@ -203,7 +196,7 @@ public class DefaultRuleManager implements RuleManager {
         return results;
     }
     
-    private boolean checkLabels(Edge<? extends Node> e1, Edge<? extends Node> e2) {
+    private boolean checkLabels(Edge<? extends ViewContent, ? extends Node> e1, Edge<? extends ViewContent, ? extends Node> e2) {
         final Set<String> e1Strings = e1.getLabels();
         final Set<String> e2Strings = e2.getLabels();
         for (final String role : e1Strings) {

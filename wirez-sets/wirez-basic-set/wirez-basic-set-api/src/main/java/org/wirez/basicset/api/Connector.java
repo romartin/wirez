@@ -64,4 +64,13 @@ public class Connector extends BasicEdgeDefinition<Connector> {
                 properties));
     }
 
+    @Override
+    public double getWidth() {
+        return 0;
+    }
+
+    @Override
+    public double getHeight() {
+        return 0;
+    }
 }

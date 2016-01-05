@@ -26,8 +26,8 @@ import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.basicset.api.Polygon;
 import org.wirez.basicset.api.property.RadiusBuilder;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.impl.ViewElement;
-import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.MutationContext;
@@ -38,7 +38,6 @@ import java.util.Collection;
 public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon> implements HasRadiusMutation {
 
     private static final int SIZE = 5;
-    private static final double RADIUS = 25;
     
     protected RegularPolygon polygon;
     protected RegularPolygon decorator;
@@ -62,7 +61,7 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
 
     protected void init() {
 
-        polygon = new RegularPolygon(SIZE, RADIUS)
+        polygon = new RegularPolygon(SIZE, org.wirez.basicset.api.Polygon.RADIUS)
             .setX(25)
             .setY(25)
             .setStrokeWidth(0)
@@ -71,7 +70,7 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
             .setFillAlpha(0.50)
             .setStrokeColor(ColorName.BLACK);
 
-        decorator = new RegularPolygon(SIZE, RADIUS)
+        decorator = new RegularPolygon(SIZE, org.wirez.basicset.api.Polygon.RADIUS)
                 .setX(25)
                 .setY(25)
                 .setStrokeWidth(0)
@@ -85,7 +84,7 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
     }
 
     @Override
-    public void applyElementSize(ViewNode<org.wirez.basicset.api.Polygon, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementSize(Node<ViewContent<Polygon>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementSize(element, wirezCanvas, mutationContext);
 
         // Radius.
@@ -93,14 +92,14 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
     }
 
     @Override
-    public void applyElementProperties(ViewNode<org.wirez.basicset.api.Polygon, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<ViewContent<Polygon>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Radius.
         _applyRadius(element, mutationContext);
     }
 
-    protected PolygonShape _applyRadius(final ViewElement<Polygon> element, final MutationContext mutationContext) {
+    protected PolygonShape _applyRadius(final Node<ViewContent<Polygon>, Edge> element, final MutationContext mutationContext) {
         final Integer radius = (Integer) element.getProperties().get(RadiusBuilder.PROPERTY_ID);
         if ( null != radius ) {
             applyRadius(radius, mutationContext);

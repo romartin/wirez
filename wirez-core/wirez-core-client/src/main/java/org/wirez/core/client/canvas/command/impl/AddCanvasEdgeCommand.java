@@ -18,8 +18,8 @@ package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.commands.AddEdgeCommand;
-import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
@@ -32,10 +32,10 @@ import org.wirez.core.client.factory.ShapeFactory;
  */
 public class AddCanvasEdgeCommand extends BaseCanvasCommand {
 
-    ViewEdge candidate;
+    Edge candidate;
     ShapeFactory factory;
 
-    public AddCanvasEdgeCommand(final ViewEdge candidate, final ShapeFactory factory ) {
+    public AddCanvasEdgeCommand(final Edge candidate, final ShapeFactory factory ) {
         this.candidate = candidate;
         this.factory = factory;
     }

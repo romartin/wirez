@@ -60,7 +60,7 @@ public class RectangleFactory extends BaseShapeFactory<Rectangle, RectangleShape
     @Override
     public RectangleShape build(final Rectangle definition, final CanvasHandler canvasHandler) {
 
-        MultiPath path = new MultiPath().rect(0, 0, 50, 50).setStrokeAlpha(0);
+        MultiPath path = new MultiPath().rect(0, 0, Rectangle.WIDTH, Rectangle.HEIGHT).setStrokeAlpha(0);
 
         path.setDraggable(false);
 

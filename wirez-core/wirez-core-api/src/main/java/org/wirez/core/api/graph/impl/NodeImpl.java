@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +29,16 @@ import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class ViewNodeImpl<W extends Definition> extends ViewElementImpl<W> implements ViewNode<W, Edge> {
+public class NodeImpl<C> extends ElementImpl<C> implements Node<C, Edge> {
 
     private List<Edge> inEdges = new ArrayList<Edge>();
     private List<Edge> outEdges = new ArrayList<Edge>();
     
-    public ViewNodeImpl(@MapsTo("uuid") String uuid,
-                        @MapsTo("definition") W definition,
-                        @MapsTo("properties") Map<String, Object> properties,
-                        @MapsTo("labels") Set<String> labels,
-                        @MapsTo("bounds") Bounds bounds) {
-        super(uuid, definition, properties, labels, bounds);
+    public NodeImpl(@MapsTo("uuid") String uuid,
+                    @MapsTo("properties") Map<String, Object> properties,
+                    @MapsTo("labels") Set<String> labels,
+                    @MapsTo("content") C content) {
+        super(uuid, properties, labels, content);
     }
 
     @Override

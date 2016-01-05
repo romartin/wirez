@@ -16,10 +16,10 @@
 
 package org.wirez.core.client.control;
 
-import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 
-public interface HasDragControl<S extends Shape, E extends ViewElement> {
+public interface HasDragControl<S extends Shape, E extends Element> {
 
     void setDragControl(DefaultDragControl<S, E> dragControl);
     

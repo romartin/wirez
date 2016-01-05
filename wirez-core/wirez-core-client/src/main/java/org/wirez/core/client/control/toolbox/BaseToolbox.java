@@ -17,12 +17,11 @@
 package org.wirez.core.client.control.toolbox;
 
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasListener;
 import org.wirez.core.client.canvas.DefaultCanvasListener;
 
-public abstract class BaseToolbox<E extends ViewElement> implements Toolbox<E> {
+public abstract class BaseToolbox<E extends Element> implements Toolbox<E> {
 
     protected CanvasHandler canvasHandler;
     

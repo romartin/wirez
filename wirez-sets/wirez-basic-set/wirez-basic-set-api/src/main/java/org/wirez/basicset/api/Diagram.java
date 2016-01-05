@@ -25,11 +25,11 @@ import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.ViewContentImpl;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.impl.ViewEdge;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.DefaultGraphImpl;
-import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
 import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
 
@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class Diagram extends BasicDefinition implements DefaultGraphFactory<Diagram> {
+public class Diagram extends BasicDefinition implements DefaultGraphFactory<ViewContent<Diagram>> {
 
     public static final String ID = "diagram";
 
@@ -70,17 +70,25 @@ public class Diagram extends BasicDefinition implements DefaultGraphFactory<Diag
     }};
 
     @Override
-    public DefaultGraph<Diagram, Node, Edge> build(final String uuid,
-                                                   final Set<String> labels,
-                                                   final Map<String, Object> properties,
-                                                   final Bounds bounds) {
-        return new DefaultGraphImpl<Diagram>(
+    public DefaultGraph<ViewContent<Diagram>, Node, Edge> build(final String uuid,
+                                                               final Set<String> labels,
+                                                               final Map<String, Object> properties) {
+        return new DefaultGraphImpl<ViewContent<Diagram>> (
                 uuid,
-                this,
                 buildElementProperties(properties),
                 buildElementLabels(labels),
-                bounds,
+                new ViewContentImpl<Diagram>(this, buildBounds()),
                 new DefaultGraphNodeStore(), new DefaultGraphEdgeStore()
         );
+    }
+
+    @Override
+    public double getWidth() {
+        return 0;
+    }
+
+    @Override
+    public double getHeight() {
+        return 0;
     }
 }

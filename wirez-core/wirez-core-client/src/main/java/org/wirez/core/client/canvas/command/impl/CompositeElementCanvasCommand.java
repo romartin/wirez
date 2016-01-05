@@ -20,12 +20,10 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommand;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 
 import java.util.LinkedList;
@@ -35,9 +33,9 @@ public class CompositeElementCanvasCommand implements CanvasCommand {
 
     CanvasHandler canvasHandler;
     List<Command> commands = new LinkedList<Command>();
-    final ViewElement element;
+    final Element element;
 
-    public CompositeElementCanvasCommand(final ViewElement element) {
+    public CompositeElementCanvasCommand(final Element element) {
         this.element = element;
     }
 

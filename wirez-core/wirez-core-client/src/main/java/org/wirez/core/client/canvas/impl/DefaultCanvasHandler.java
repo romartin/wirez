@@ -26,14 +26,15 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnetBuilder;
 import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnetBuilder;
 import org.wirez.core.api.event.NotificationEvent;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.AddChildNodeCommand;
 import org.wirez.core.api.graph.commands.SetConnectionSourceNodeCommand;
 import org.wirez.core.api.graph.commands.SetConnectionTargetNodeCommand;
 import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
-import org.wirez.core.api.graph.impl.ChildRelationEdge;
+import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.ViewNode;
 import org.wirez.core.api.graph.processing.handler.DefaultGraphHandler;
 import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.DefaultGraphVisitor;
@@ -129,35 +130,49 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
     private final AbstractGraphVisitorCallback DRAW_VISITOR_CALLBACK = new AbstractGraphVisitorCallback() {
 
         @Override
-        public void visitViewNode(final ViewNode node) {
-            final ShapeFactory factory = wirezClientManager.getFactory(node.getDefinition());
+        public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
+            final ShapeFactory factory = wirezClientManager.getFactory(node.getContent().getDefinition());
             defaultCanvasCommands.ADD_NODE(node, factory)
                     .setCanvas(DefaultCanvasHandler.this)
                     .apply();
         }
 
         @Override
-        public void visitViewEdge(final ViewEdge edge) {
-            final ShapeFactory factory = wirezClientManager.getFactory(edge.getDefinition());
+        public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
+            final ShapeFactory factory = wirezClientManager.getFactory(edge.getContent().getDefinition());
             defaultCanvasCommands.ADD_EDGE( edge, factory )
                     .setCanvas(DefaultCanvasHandler.this)
                     .apply();
         }
 
         @Override
-        public void visitChildRelationEdge(final ChildRelationEdge edge) {
-            final ViewNode child = (ViewNode) edge.getTargetNode();
-            final ViewNode parent = (ViewNode) edge.getSourceNode();
-            final ShapeFactory factory = wirezClientManager.getFactory(child.getDefinition());
-            defaultCanvasCommands.ADD_CHILD( parent, child, factory )
-                    .setCanvas(DefaultCanvasHandler.this)
-                    .apply();
+        public void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge) {
+            final Node child = edge.getTargetNode();
+            final Node parent = edge.getSourceNode();
+            final Object content = child.getContent();
+            if (content instanceof ViewContent) {
+                final ViewContent viewContent = (ViewContent) content;
+                final ShapeFactory factory = wirezClientManager.getFactory(viewContent.getDefinition());
+                defaultCanvasCommands.ADD_CHILD( parent, child, factory )
+                        .setCanvas(DefaultCanvasHandler.this)
+                        .apply();
+            }
+        }
+
+        @Override
+        public void visitNode(final Node node) {
+            
+        }
+
+        @Override
+        public void visitEdge(final Edge edge) {
+            
         }
 
     };
     
     private void drawGraph() {
-        defaultGraphVisitor.run(graph, DRAW_VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_LAST);
+        defaultGraphVisitor.visit(graph, DRAW_VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_LAST);
     }
     
     /*
@@ -173,8 +188,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         public boolean acceptHead(WiresConnection head, WiresMagnet magnet) {
             final BaseConnector connector = (BaseConnector) head.getConnector();
             final BaseShape sourceShape = (BaseShape) magnet.getMagnets().getWiresShape();
-            final ViewNode sourceNode = (ViewNode) defaultGraphHandler.getNode(sourceShape.getId());
-            final ViewEdge edge = (ViewEdge) defaultGraphHandler.getEdge(connector.getId());
+            final Node sourceNode = (Node) defaultGraphHandler.getNode(sourceShape.getId());
+            final Edge edge = (Edge) defaultGraphHandler.getEdge(connector.getId());
             final String sourceUUID = sourceNode != null ? sourceNode.getUUID() : null;
 
             final int mIndex = getMagnetIndex(magnet);
@@ -204,8 +219,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             WiresConnection head = tail.getConnector().getHeadConnection();
             final BaseConnector connector = (BaseConnector) head.getConnector();
             final BaseShape targetShape = (BaseShape) magnet.getMagnets().getWiresShape();
-            final ViewNode targetNode = (ViewNode) defaultGraphHandler.getNode(targetShape.getId());
-            final ViewEdge edge = (ViewEdge) defaultGraphHandler.getEdge(connector.getId());
+            final Node targetNode = (Node) defaultGraphHandler.getNode(targetShape.getId());
+            final Edge edge = (Edge) defaultGraphHandler.getEdge(connector.getId());
             final String targetUUID = targetNode != null ? targetNode.getUUID() : null;
 
             final int mIndex = getMagnetIndex(magnet);
@@ -226,6 +241,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             .add(new SetConnectionTargetNodeCommand(targetNode, edge)) );
             
             final boolean isAccept = isAccept(results);
+            GWT.log("ConnectionAccepted=" + isAccept);
             return isAccept;
         }
 
@@ -241,7 +257,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final boolean isAllowed = allow(new BaseCanvasCommand() {
                 @Override
                 protected Command getCommand() {
-                    return new SetConnectionSourceNodeCommand(defaultGraphHandler.getViewNode(outNode.getId()), defaultGraphHandler.getViewEdge(connector.getId()));
+                    return new SetConnectionSourceNodeCommand(defaultGraphHandler.getNode(outNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
                 }
 
                 @Override
@@ -274,7 +290,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final boolean isAllowed = allow(new BaseCanvasCommand() {
                 @Override
                 protected Command getCommand() {
-                    return new SetConnectionTargetNodeCommand(defaultGraphHandler.getViewNode(inNode.getId()), defaultGraphHandler.getViewEdge(connector.getId()));
+                    return new SetConnectionTargetNodeCommand(defaultGraphHandler.getNode(inNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
                 }
 
                 @Override
@@ -293,6 +309,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String inUUID = inNode != null ? inNode.getId() : null;
             final String message = "TailConnectionAllowed  [out=" + outUUID + "] [in=" + inUUID + "] [isAllowed=" + isAllowed + "]";
             Logger.log(message);
+            GWT.log("ConnectionAllowed=" + isAllowed);
+
             return isAllowed;
         }
         
@@ -317,8 +335,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
             final BaseShape parent = (BaseShape) wiresContainer;
             final BaseShape child = (BaseShape) wiresShape;
-            final ViewNode parentNode = defaultGraphHandler.getViewNode(parent.getId());
-            final ViewNode childNode = defaultGraphHandler.getViewNode(child.getId());
+            final Node parentNode = defaultGraphHandler.getNode(parent.getId());
+            final Node childNode = defaultGraphHandler.getNode(child.getId());
 
             final boolean isAllowed = allow(new BaseCanvasCommand() {
                 @Override
@@ -351,8 +369,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
             final BaseShape parent = (BaseShape) wiresContainer;
             final BaseShape child = (BaseShape) wiresShape;
-            final ViewNode parentNode = defaultGraphHandler.getViewNode(parent.getId());
-            final ViewNode childNode = defaultGraphHandler.getViewNode(child.getId());
+            final Node parentNode = defaultGraphHandler.getNode(parent.getId());
+            final Node childNode = defaultGraphHandler.getNode(child.getId());
 
             final String message = "Executed AddChildNodeCommand [parent=" + parentNode.getUUID() + ", child=" + childNode.getUUID() + "]";
             GWT.log(message);

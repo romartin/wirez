@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,23 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.impl;
+package org.wirez.core.api.graph.content;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
 
-import java.util.Map;
-import java.util.Set;
-
 @Portable
-public class ViewElementImpl<W extends Definition> extends ElementImpl implements ViewElement<W> {
-
+public class ViewContentImpl<W extends Definition> implements ViewContent<W> {
     protected W definition;
     protected Bounds bounds;
 
-    public ViewElementImpl(@MapsTo("uuid") String uuid,
-                           @MapsTo("definition") W definition,
-                           @MapsTo("properties") Map<String, Object> properties,
-                           @MapsTo("labels") Set<String> labels,
-                           @MapsTo("bounds") Bounds bounds) {
-        super(uuid, properties, labels);
+    public ViewContentImpl(@MapsTo("definition") W definition, @MapsTo("bounds") Bounds bounds) {
         this.definition = definition;
         this.bounds = bounds;
     }
-
+    
     @Override
     public W getDefinition() {
         return definition;
@@ -50,18 +41,9 @@ public class ViewElementImpl<W extends Definition> extends ElementImpl implement
         return bounds;
     }
 
-    public void setBounds(Bounds bounds) {
-        this.bounds = bounds;
-    }
-
     @Override
-    public String toString() {
-        return "ViewElementImpl{" +
-                "uuid=" + uuid +
-                ", def=" + definition +
-                ", properties=" + properties +
-                ", labels=" + labels +
-                '}';
+    public void setBounds(final Bounds bounds) {
+        this.bounds = bounds;
     }
 
 }

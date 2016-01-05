@@ -34,8 +34,8 @@ import org.wirez.core.api.definition.property.type.IntegerType;
 import org.wirez.core.api.definition.property.type.StringType;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.graph.processing.handler.DefaultGraphHandler;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.WirezClientManager;
@@ -66,7 +66,7 @@ public class PropertiesEditor implements IsWidget {
     }
     
     public interface EditorCallback {
-        void onShowElement(ViewElement<? extends Definition> element);
+        void onShowElement(Element<? extends ViewContent<?>> element);
     }
 
     WirezClientManager wirezClientManager;
@@ -116,11 +116,11 @@ public class PropertiesEditor implements IsWidget {
     }
     
     @SuppressWarnings("unchecked")
-    protected void show(final ViewElement<? extends Definition> element) {
+    protected void show(final Element<? extends ViewContent<?>> element) {
         assert element != null;
         
         final String elementId = element.getUUID();
-        final Definition wirez = element.getDefinition();
+        final Definition wirez = element.getContent().getDefinition();
         
         final List<PropertyEditorCategory> categories = new ArrayList<PropertyEditorCategory>();
         final Set<String> processedProperties = new HashSet<String>();
@@ -181,12 +181,12 @@ public class PropertiesEditor implements IsWidget {
         
     }
 
-    private PropertyEditorCategory buildPropertiesCategory(final ViewElement<? extends Definition> element,
+    private PropertyEditorCategory buildPropertiesCategory(final Element<? extends ViewContent<?>> element,
                                                            final Set<String> processedPropertyIds) {
-        final String title = element.getDefinition().getContent().getTitle();
+        final String title = element.getContent().getDefinition().getContent().getTitle();
         final PropertyEditorCategory result = new PropertyEditorCategory(title, 1);
         
-        final Set<Property> propertySet = element.getDefinition().getContent().getProperties();
+        final Set<Property> propertySet = element.getContent().getDefinition().getContent().getProperties();
         if (propertySet != null) {
             for (final Property property : propertySet) {
                 final String propertyId = property.getId();
@@ -211,7 +211,7 @@ public class PropertiesEditor implements IsWidget {
         
     }
     
-    private PropertyEditorFieldInfo buildGenericFieldInfo(final ViewElement<? extends Definition> element,
+    private PropertyEditorFieldInfo buildGenericFieldInfo(final Element<? extends ViewContent<?>> element,
                                                           final Property property,
                                                           final Object value,
                                                           final PropertyValueChangedHandler changedHandler) {
@@ -282,12 +282,12 @@ public class PropertiesEditor implements IsWidget {
         return value;
     }
     
-    private PropertyEditorCategory buildElementCategory(final ViewElement<? extends Definition> element) {
+    private PropertyEditorCategory buildElementCategory(final Element<? extends ViewContent<?>> element) {
         final PropertyEditorCategory result = new PropertyEditorCategory("Element", 0);
 
         final String id = element.getUUID();
-        final double x = element.getBounds().getUpperLeft().getX();
-        final double y = element.getBounds().getLowerRight().getY();
+        final double x = element.getContent().getBounds().getUpperLeft().getX();
+        final double y = element.getContent().getBounds().getLowerRight().getY();
 
         final double w = getWidth(element);
         final double h = getHeight(element);
@@ -313,7 +313,7 @@ public class PropertiesEditor implements IsWidget {
             public void setCurrentStringValue( final String currentStringValue ) {
                 super.setCurrentStringValue( currentStringValue );
                 final Double x = Double.parseDouble(currentStringValue);
-                final Double y = element.getBounds().getUpperLeft().getY();
+                final Double y = element.getContent().getBounds().getUpperLeft().getY();
                 GWT.log("PropertiesEditor  tiesEditor - Setting value [" + x + "] for property [X] in element with id [" + id + "].");
                 executeMove(element, x, y);
             }
@@ -328,7 +328,7 @@ public class PropertiesEditor implements IsWidget {
             public void setCurrentStringValue( final String currentStringValue ) {
                 super.setCurrentStringValue( currentStringValue );
                 final Double y = Double.parseDouble(currentStringValue);
-                final Double x = element.getBounds().getUpperLeft().getX();
+                final Double x = element.getContent().getBounds().getUpperLeft().getX();
                 GWT.log("PropertiesEditor  - Setting value [" + y + "] for property [Y] in element with id [" + id + "].");
                 executeMove(element, x, y);
             }
@@ -367,33 +367,33 @@ public class PropertiesEditor implements IsWidget {
         return result.withField(idField).withField(xField).withField(yField).withField(wField).withField(hField);
     }
     
-    private void executeUpdateProperty(final ViewElement<? extends Definition> element, 
+    private void executeUpdateProperty(final Element<? extends ViewContent<?>> element, 
                                        final Property property,
                                        final Object value) {
         ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.UPDATE_PROPERTY(element, property, value));
     }
 
-    private void executeMove(final ViewElement<? extends Definition> element,
+    private void executeMove(final Element<? extends ViewContent<?>> element,
                                        final double x,
                                        final double y) {
         ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.MOVE(element, x, y));
     }
 
-    private void executeResize(final ViewElement<? extends Definition> element,
+    private void executeResize(final Element<? extends ViewContent<?>> element,
                              final double width,
                              final double height) {
         ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.RESIZE(element, width, height));
     }
     
-    private double getWidth(final ViewElement element) {
-        final Bounds.Bound ul = element.getBounds().getUpperLeft();
-        final Bounds.Bound lr = element.getBounds().getLowerRight();
+    private double getWidth(final Element<? extends ViewContent<?>> element) {
+        final Bounds.Bound ul = element.getContent().getBounds().getUpperLeft();
+        final Bounds.Bound lr = element.getContent().getBounds().getLowerRight();
         return lr.getX() - ul.getX();
     }
 
-    private double getHeight(final ViewElement element) {
-        final Bounds.Bound ul = element.getBounds().getUpperLeft();
-        final Bounds.Bound lr = element.getBounds().getLowerRight();
+    private double getHeight(final Element<? extends ViewContent<?>> element) {
+        final Bounds.Bound ul = element.getContent().getBounds().getUpperLeft();
+        final Bounds.Bound lr = element.getContent().getBounds().getLowerRight();
         return lr.getY() - ul.getY();
     }
     
@@ -410,7 +410,7 @@ public class PropertiesEditor implements IsWidget {
         final DefaultGraph defaultGraph = (DefaultGraph) this.canvasHandler.getGraph();
         if ( shape != null ) {
             final String shapeUUID = shape.getId();
-            final ViewElement<? extends Definition> element = (ViewElement<? extends Definition>) defaultGraphHandler.initialize(defaultGraph).get(shapeUUID);
+            final Element<? extends ViewContent<?>> element = defaultGraphHandler.initialize(defaultGraph).get(shapeUUID);
             if (element != null && Canvas.ShapeState.SELECTED.equals(state)) {
                 GWT.log("PropertiesEditor  - Showing properties for node [" + element.getUUID() + "]");
                 show(element);
@@ -433,7 +433,7 @@ public class PropertiesEditor implements IsWidget {
             @Override
             public void onElementModified(final Element _element) {
                 super.onElementModified(_element);
-                show((ViewElement<? extends Definition>) _element);
+                show(_element);
             }
 
             @Override

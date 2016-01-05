@@ -27,8 +27,8 @@ import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.Shape;
@@ -66,7 +66,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     protected DefaultRuleManager ruleManager;
     protected CanvasSettings settings;
     protected Canvas canvas;
-    protected DefaultGraph<? extends Definition, ? extends Node, ? extends Edge> graph;
+    protected DefaultGraph<?, ? extends Node, ? extends Edge> graph;
     protected Collection<CanvasListener> listeners = new LinkedList<CanvasListener>();
 
     @Inject
@@ -87,7 +87,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     }
 
     @Override
-    public DefaultGraph<? extends Definition, ? extends Node, ? extends Edge> getGraph() {
+    public DefaultGraph<?, ? extends Node, ? extends Edge> getGraph() {
         return graph;
     }
 
@@ -102,14 +102,18 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         ***************************************************************************************
      */
 
-    public void register(final ShapeFactory factory, final ViewElement candidate) {
+    public void register(final ShapeFactory factory, final Element candidate) {
         assert factory != null && candidate != null;
-
-        final Definition wirez = candidate.getDefinition();
+        
+        final Object content = candidate.getContent();
+        assert content instanceof ViewContent;
+        
+        final Definition wirez = ( (ViewContent) candidate.getContent()).getDefinition();
         final Shape shape = factory.build(wirez, this);
 
         shape.setId(candidate.getUUID());
-        
+
+
         // Selection handling.
         if (canvas instanceof SelectionManager) {
             final SelectionManager<Shape> selectionManager = (SelectionManager<Shape>) canvas;
@@ -181,7 +185,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         fireElementAdded(candidate);
     }
 
-    public void applyElementMutation(final ViewElement candidate) {
+    public void applyElementMutation(final Element candidate) {
         final Shape shape = canvas.getShape(candidate.getUUID());
         if (shape instanceof HasMutation) {
 
@@ -203,7 +207,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         }
     }
     
-    public void addChild(final ViewElement parent, final ViewElement child) {
+    public void addChild(final Element parent, final Element child) {
         assert parent != null && child != null;
 
         final BaseShape parentShape = (BaseShape) canvas.getShape(parent.getUUID());
@@ -212,7 +216,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         
     }
 
-    public void updateElementSize(final ViewElement element) {
+    public void updateElementSize(final Element element) {
         final Shape shape = canvas.getShape(element.getUUID());
 
         final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
@@ -222,7 +226,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         fireElementUpdated(element);
     }
 
-    public void updateElementPosition(final ViewElement element) {
+    public void updateElementPosition(final Element element) {
         final Shape shape = canvas.getShape(element.getUUID());
 
         final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
@@ -232,7 +236,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         fireElementUpdated(element);
     }
 
-    public void updateElementProperties(final ViewElement element) {
+    public void updateElementProperties(final Element element) {
         final Shape shape = canvas.getShape(element.getUUID());
 
         final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;

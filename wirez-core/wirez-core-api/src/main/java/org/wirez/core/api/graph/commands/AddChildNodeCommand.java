@@ -20,9 +20,11 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
-import org.wirez.core.api.graph.impl.ChildRelationEdge;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
@@ -36,12 +38,12 @@ import java.util.*;
 public class AddChildNodeCommand implements Command {
 
     private DefaultGraph target;
-    private ViewNode parent;
-    private ViewNode candidate;
+    private Node parent;
+    private Node candidate;
 
     public AddChildNodeCommand(final DefaultGraph target,
-                               final ViewNode parent,
-                               final ViewNode candidate ) {
+                               final Node parent,
+                               final Node candidate ) {
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );
         this.parent = PortablePreconditions.checkNotNull( "parent",
@@ -63,12 +65,13 @@ public class AddChildNodeCommand implements Command {
             final String uuid = UUID.uuid();
             final Map<String, Object> properties = new HashMap<>();
             final Set<String> labels = new HashSet<>(1);
-            final ChildRelationEdge childRelationship = new ChildRelationEdge(uuid, properties, labels);
-            childRelationship.setParentNode(parent);
-            childRelationship.setChildNode(candidate);
+            
+            final Edge<ParentChildRelationship, Node> child = new EdgeImpl<>(uuid, properties, labels, new ParentChildRelationship());
+            child.setSourceNode(parent);
+            child.setTargetNode(candidate);
             target.addNode( candidate );
-            parent.getOutEdges().add(childRelationship);
-            candidate.getInEdges().add(childRelationship);
+            parent.getOutEdges().add( child );
+            candidate.getInEdges().add( child );
         }
         return results;
     }

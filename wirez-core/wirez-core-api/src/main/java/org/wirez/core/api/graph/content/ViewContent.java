@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph;
+package org.wirez.core.api.graph.content;
 
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Bounds;
 
-/**
- * Any element of a graph that has a view representation associated. A view representation is given by a view definition and the view bounds.
- * @param <W> The view definition.
- */
-public interface HasView<W extends Definition> {
+public interface ViewContent<W extends Definition> extends Content {
 
     W getDefinition();
 
     Bounds getBounds();
+    
+    void setBounds(Bounds bounds);
     
 }

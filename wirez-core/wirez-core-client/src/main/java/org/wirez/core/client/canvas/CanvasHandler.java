@@ -42,7 +42,7 @@ public interface CanvasHandler {
     /**
      * Returns the working copy of the graph. The original graph can be obtained from the canvas settings.
      */
-    DefaultGraph<? extends Definition, ? extends Node, ? extends Edge> getGraph();
+    DefaultGraph<?, ? extends Node, ? extends Edge> getGraph();
     
     
     

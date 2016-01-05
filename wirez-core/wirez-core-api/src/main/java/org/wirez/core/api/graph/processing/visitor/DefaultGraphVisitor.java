@@ -21,5 +21,9 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 
 public interface DefaultGraphVisitor extends GraphVisitor<DefaultGraph, Node, Edge, DefaultGraphVisitorCallback> {
+
+    DefaultGraphVisitor setBoundsVisitorCallback(DefaultGraphVisitorCallback.BoundsVisitorCallback callback);
+
+    DefaultGraphVisitor setPropertiesVisitorCallback(DefaultGraphVisitorCallback.PropertyVisitorCallback callback);
     
 }

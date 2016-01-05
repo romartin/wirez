@@ -22,11 +22,11 @@ import com.ait.lienzo.client.core.shape.Node;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import org.wirez.core.api.graph.impl.ViewElement;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.control.toolbox.Toolbox;
 
-public class ToolboxControl<S extends Shape, E extends ViewElement> extends BaseShapeControl<S, E> implements IsWidget {
+public class ToolboxControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E> implements IsWidget {
 
     final Toolbox<E> toolbox;
 

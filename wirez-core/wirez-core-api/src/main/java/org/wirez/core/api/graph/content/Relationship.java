@@ -14,14 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.impl;
+package org.wirez.core.api.graph.content;
 
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-
-/**
- * A node of a graph that does not have a view representation.
- */
-public interface DefaultNode<T extends Edge> extends Node<T>  {
+public interface Relationship extends Content {
+    
+    String getName();
     
 }

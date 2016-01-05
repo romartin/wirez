@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.factory;
+package org.wirez.core.api.graph.content;
 
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.impl.ViewNode;
+import org.jboss.errai.common.client.api.annotations.Portable;
 
-public interface ViewNodeFactory<W extends Definition> extends ViewElementFactory<W, ViewNode<W, Edge>> {
+@Portable
+public class ParentChildRelationship implements Relationship {
+    
+    public static final String PARENT_CHILD_NAME = "p-c";
+    
+    @Override
+    public String getName() {
+        return PARENT_CHILD_NAME;
+    }
     
 }

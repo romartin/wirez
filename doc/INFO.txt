@@ -25,3 +25,7 @@
         
     -  genmymodel
         - https://dashboard.genmymodel.com/
+        
+        
+    Graph theory
+        - http://blog.athico.com/2015/08/ruleml2015-hybrid-reactive-relational.html

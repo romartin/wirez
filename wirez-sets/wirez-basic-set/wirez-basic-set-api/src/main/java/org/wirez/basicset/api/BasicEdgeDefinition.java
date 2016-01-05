@@ -18,24 +18,27 @@ package org.wirez.basicset.api;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.factory.ViewEdgeFactory;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.ViewEdgeImpl;
-import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.ViewContentImpl;
+import org.wirez.core.api.graph.factory.EdgeFactory;
+import org.wirez.core.api.graph.impl.EdgeImpl;
 
 import java.util.Map;
 import java.util.Set;
 
-public abstract class BasicEdgeDefinition<W extends Definition> extends BasicDefinition implements ViewEdgeFactory<W> {
+public abstract class BasicEdgeDefinition<W extends Definition> extends BasicDefinition implements EdgeFactory<ViewContent<W>> {
 
     public BasicEdgeDefinition(@MapsTo("id") String id) {
         super(id);
     }
 
     @Override
-    public ViewEdge<W, ViewNode> build(String uuid, Set<String> labels, Map<String, Object> properties, Bounds bounds) {
-        return new ViewEdgeImpl<W>(uuid, (W) this, buildElementProperties(properties), buildElementLabels(labels), bounds);
+    public Edge<ViewContent<W>, Node> build(String uuid, Set<String> labels, Map<String, Object> properties) {
+        return new EdgeImpl<ViewContent<W>>(uuid, buildElementProperties(properties),
+                 buildElementLabels(labels), new ViewContentImpl<>( (W) this, buildBounds()));
     }
+
 
 }

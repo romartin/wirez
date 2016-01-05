@@ -16,29 +16,25 @@
 package org.wirez.core.client.canvas.command.impl;
 
 
-import org.jgroups.View;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.commands.UpdateElementPositionCommand;
-import org.wirez.core.api.graph.impl.ViewElement;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
-import org.wirez.core.client.mutation.HasGraphElementMutation;
 
 /**
  * A Command to update an element's bounds and their corresponding shape positions.
  */
 public class MoveCanvasElementCommand extends BaseCanvasCommand implements CanvasCommand {
 
-    ViewElement element;
+    Element element;
     Double x;
     Double y;
     
-    public MoveCanvasElementCommand(final ViewElement element ,
+    public MoveCanvasElementCommand(final Element element ,
                                     final Double x,
                                     final Double y) {
         this.element = element;

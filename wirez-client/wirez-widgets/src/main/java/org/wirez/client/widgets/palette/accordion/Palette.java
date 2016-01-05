@@ -171,7 +171,6 @@ public class Palette implements IsWidget {
                              * Add the shape into the canvas diagram using drag features. 
                              * Drag proxy and final position into the canvas is given by the glyph drag handler implementation.
                              */
-
                             @Override
                             public void onDragStart(final LienzoPanel parentPanel, final double x, final double y) {
 

@@ -19,9 +19,9 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.impl.ViewEdge;
-import org.wirez.core.api.graph.impl.ViewNode;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
@@ -34,13 +34,13 @@ import java.util.LinkedList;
  */
 public class SetConnectionSourceNodeCommand implements Command {
 
-    private ViewNode<? extends Definition, ViewEdge> targetNode;
-    private ViewNode<? extends Definition, ViewEdge> lastSourceNode;
-    private ViewNode<? extends Definition, ViewEdge> sourceNode;
-    private ViewEdge<? extends Definition, ViewNode> edge;
+    private Node<? extends ViewContent<?>, Edge> targetNode;
+    private Node<? extends ViewContent<?>, Edge> lastSourceNode;
+    private Node<? extends ViewContent<?>, Edge> sourceNode;
+    private Edge<? extends ViewContent<?>, Node> edge;
 
-    public SetConnectionSourceNodeCommand(final ViewNode<? extends Definition, ViewEdge> sourceNode,
-                                          final ViewEdge<? extends Definition, ViewNode> edge) {
+    public SetConnectionSourceNodeCommand(final Node<? extends ViewContent<?>, Edge> sourceNode,
+                                          final Edge<? extends ViewContent<?>, Node> edge) {
         this.edge = PortablePreconditions.checkNotNull( "edge",
                 edge );;
         this.sourceNode = PortablePreconditions.checkNotNull( "sourceNode",

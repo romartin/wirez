@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.impl;
+package org.wirez.core.api.graph.factory;
 
-import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
 
-/**
- * A default relationship that has no view representation, so its semantics are not given by a certain Definition, semantics are given by the <code>getRelationName</code> method.
- */
-public interface DefaultEdge<T extends Node> extends Edge<T>, Element {
+import java.util.Map;
+import java.util.Set;
 
-    String getRelationName();
+public interface ElementFactory<C, T extends Element<C>> {
+    
+    T build(String uuid, Set<String> labels, Map<String, Object> properties);
     
 }

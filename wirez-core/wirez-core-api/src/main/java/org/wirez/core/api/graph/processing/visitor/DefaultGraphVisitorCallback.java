@@ -16,24 +16,31 @@
 
 package org.wirez.core.api.graph.processing.visitor;
 
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
 
 /**
- * The specific graph visitor callback interface for the default graph implementation provided by Wirez.
+ * The more specific graph visitor callback interface for the graph implementation provided by Wirez.
  */
 
 public interface DefaultGraphVisitorCallback extends GraphVisitorCallback<DefaultGraph, Node, Edge> {
 
-    void visitViewNode(ViewNode node);
+    void visitGraphWithViewContent(DefaultGraph<? extends ViewContent, ? extends Node, ? extends Edge> graph);
+    
+    void visitNodeWithViewContent(Node<? extends ViewContent, ?> node);
 
-    void visitDefaultNode(DefaultNode node);
+    void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge);
 
-    void visitViewEdge(ViewEdge edge);
+    void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge);
 
-    void visitDefaultEdge(DefaultEdge edge);
+    interface BoundsVisitorCallback {
+        void visitBounds(Element<? extends ViewContent> element, Bounds.Bound ul, Bounds.Bound lr);
+    }
 
-    void visitChildRelationEdge(ChildRelationEdge edge);
+    interface PropertyVisitorCallback {
+        void visitProperty(Element<? extends ViewContent> element, String key, Object value);
+    }
     
 }

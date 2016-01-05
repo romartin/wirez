@@ -35,44 +35,24 @@ import java.util.Collection;
 
 public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> implements HasRadiusMutation {
 
-    protected Circle circle;
-    protected Circle decorator;
-
     public CircleShape(MultiPath path, Group group, WiresManager manager) {
         super(path, group, manager);
-        init();
     }
 
     @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>() {{
-            add( decorator );
+            add( getPath() );
         }};
     }
 
     @Override
     public Shape getShape() {
-        return circle;
-    }
-
-    protected void init() {
-        final double radius = org.wirez.basicset.api.Circle.RADIUS;
-        circle = new Circle(radius).setX(radius).setY(radius);
-        decorator = new Circle(radius).setX(radius).setY(radius).setStrokeWidth(0).setStrokeAlpha(0).setFillAlpha(0);
-        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
-        this.addChild(circle, WiresLayoutContainer.Layout.CENTER);
-    }
-
-
-    @Override
-    public void applyElementPosition(Node<ViewContent<org.wirez.basicset.api.Circle>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
-        super.applyElementPosition(element, wirezCanvas, mutationContext);
+        return getPath();
     }
 
     @Override
     public void applyElementSize(Node<ViewContent<org.wirez.basicset.api.Circle>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
-        super.applyElementSize(element, wirezCanvas, mutationContext);
-
         // Radius.
         _applyRadius(element, mutationContext);
     }
@@ -86,15 +66,9 @@ public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> i
     }
 
     @Override
-    public void applyPosition(double x, double y, MutationContext mutationContext) {
-        super.applyPosition(x, y, mutationContext);
-    }
-
-    @Override
     public void applyRadius(double radius, MutationContext mutationContext) {
         if (radius > 0) {
-            _applyCircleRadius(circle, radius);
-            _applyCircleRadius(decorator, radius);
+            getPath().clear().circle(radius).close();
         }
     }
 
@@ -109,15 +83,6 @@ public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> i
         if ( null != radius ) {
             applyRadius(radius, mutationContext);
         }
-        return this;
-    }
-
-    /*
-        Updates the circle X/Y coordinates for the given radius, as the WiresShapes CENTER layout is based on the circle's bounding box.
-     */
-    protected CircleShape _applyCircleRadius(final Circle circle, final double radius) {
-        circle.setRadius(radius);
-        this.moveChild(circle.getID(), radius, radius);
         return this;
     }
 

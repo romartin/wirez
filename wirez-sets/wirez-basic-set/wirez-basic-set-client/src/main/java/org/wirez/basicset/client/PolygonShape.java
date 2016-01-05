@@ -40,7 +40,6 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
     private static final int SIZE = 5;
     
     protected RegularPolygon polygon;
-    protected RegularPolygon decorator;
 
     public PolygonShape(MultiPath path, Group group, WiresManager manager) {
         super(path, group, manager);
@@ -50,7 +49,7 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
     @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>() {{
-            add( decorator );
+            add( polygon );
         }};
     }
 
@@ -70,16 +69,6 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
             .setFillAlpha(0.50)
             .setStrokeColor(ColorName.BLACK);
 
-        decorator = new RegularPolygon(SIZE, org.wirez.basicset.api.Polygon.RADIUS)
-                .setX(25)
-                .setY(25)
-                .setStrokeWidth(0)
-                .setStrokeAlpha(0)
-                .setFillColor(org.wirez.basicset.api.Polygon.COLOR)
-                .setFillAlpha(0)
-                .setStrokeColor(ColorName.BLACK);
-
-        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
         this.addChild(polygon, WiresLayoutContainer.Layout.CENTER);
     }
 
@@ -107,6 +96,13 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
         return this;
     }
 
+    @Override
+    public void applyRadius(final double radius, final MutationContext mutationContext) {
+        if (radius > 0) {
+            _applyPolygonRadius(polygon, radius);
+        }
+    }
+
     protected PolygonShape _applyPolygonRadius(final com.ait.lienzo.client.core.shape.RegularPolygon polygon, final double radius) {
         polygon.setRadius(radius);
         this.moveChild(polygon.getID(), radius, radius);
@@ -118,12 +114,5 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
     public String toString() {
         return "PolygonShape{}";
     }
-
-    @Override
-    public void applyRadius(final double radius, final MutationContext mutationContext) {
-        if (radius > 0) {
-            _applyPolygonRadius(polygon, radius);
-            _applyPolygonRadius(decorator, radius);
-        }
-    }
+    
 }

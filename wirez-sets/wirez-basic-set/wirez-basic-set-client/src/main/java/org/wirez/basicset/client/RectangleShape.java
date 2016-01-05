@@ -21,39 +21,34 @@ import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.client.mutation.MutationContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class RectangleShape extends BaseBasicShape<org.wirez.basicset.api.Rectangle> {
 
-    
-    
-    protected Rectangle rectangle;
-    protected Rectangle decorator;
 
     public RectangleShape(MultiPath path, Group group, WiresManager manager) {
         super(path, group, manager);
-        init();
     }
 
     @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>() {{
-            add( decorator );
+            add( getPath() );
         }};
     }
 
     @Override
     public Shape getShape() {
-        return rectangle;
+        return getPath();
     }
 
-    protected void init() {
-        rectangle = new Rectangle(org.wirez.basicset.api.Rectangle.WIDTH, org.wirez.basicset.api.Rectangle.HEIGHT).setX(0).setY(0).setStrokeWidth(0);
-        decorator = new Rectangle(org.wirez.basicset.api.Rectangle.WIDTH, org.wirez.basicset.api.Rectangle.HEIGHT).setX(0).setY(0).setStrokeWidth(0).setStrokeAlpha(0).setFillAlpha(0);
-        getGroup().add(decorator);
-        getGroup().add(rectangle);
+    @Override
+    protected void _applyShapeSize(Shape shape, double w, double h, MutationContext mutationContext) {
+        getPath().clear().rect(getPath().getX(), getPath().getY(), w , h).close();
     }
 
     @Override

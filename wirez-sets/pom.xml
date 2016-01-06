@@ -16,6 +16,7 @@
   
   <modules>
     <module>wirez-basic-set</module>
+    <module>wirez-bpmn</module>
   </modules>
 
 </project>

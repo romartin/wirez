@@ -265,6 +265,17 @@
       <artifactId>wirez-basic-set-client</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-bpmn-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-bpmn-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
     
     <!-- UberFire Plugins Extension -->
     <dependency>
@@ -405,6 +416,8 @@
             <compileSourcesArtifact>org.wirez:wirez-client-workbench</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-basic-set-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-basic-set-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-bpmn-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-bpmn-client</compileSourcesArtifact>
 
           </compileSourcesArtifacts>
         </configuration>

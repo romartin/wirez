@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.control;
-
+package org.wirez.core.client.factory.control;
 
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.control.resize.BaseResizeControl;
 import org.wirez.core.client.control.resize.DefaultResizeControl;
+import org.wirez.core.client.control.resize.LienzoResizeControl;
 
-public interface HasResizeControl<S extends Shape, E extends Element> {
+import javax.enterprise.context.Dependent;
 
-    void setResizeControl(BaseResizeControl<S, E> resizeControl);
-
-    BaseResizeControl<S, E> getResizeControl();
+@Dependent
+public class LienzoResizeControlFactory<S extends Shape,  E extends Element> implements ShapeControlFactory<S, LienzoResizeControl<S, E>> {
+    
+    @Override
+    public LienzoResizeControl<S, E> build(S shape) {
+        return new LienzoResizeControl<S, E>();
+    }
     
 }

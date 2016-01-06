@@ -62,7 +62,7 @@ public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>>
     }
 
     protected ShapeControlFactory<?, ?> getResizeControlFactory() {
-        return defaultShapeControlFactories.resizeControlFactory();
+        return defaultShapeControlFactories.defaultResizeControlFactory();
     }
 
     protected ShapeControlFactory<?, ?> getToolboxControlFactory() {

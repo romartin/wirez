@@ -22,7 +22,7 @@ import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import org.wirez.basicset.api.property.RadiusBuilder;
+import org.wirez.basicset.api.property.size.RadiusBuilder;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
@@ -35,28 +35,35 @@ import java.util.Collection;
 
 public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> implements HasRadiusMutation {
 
-    public CircleShape(MultiPath path, Group group, WiresManager manager) {
-        super(path, group, manager);
+    protected Circle circle;
+    
+    public CircleShape(Group group, WiresManager manager) {
+        super(new MultiPath().rect(0,0, org.wirez.basicset.api.Circle.RADIUS * 2, org.wirez.basicset.api.Circle.RADIUS * 2)
+                .setFillAlpha(0)
+                .setStrokeAlpha(0), 
+                group, manager);
+        init();
+    }
+
+    protected void init() {
+        final double radius = org.wirez.basicset.api.Circle.RADIUS;
+        circle = new Circle(radius).setX(radius).setY(radius);
+        this.addChild(circle, WiresLayoutContainer.Layout.CENTER);
+    }
+
+
+    @Override
+    protected Shape getShape() {
+        return circle;
     }
 
     @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>() {{
-            add( getPath() );
+            add( circle );
         }};
     }
-
-    @Override
-    public Shape getShape() {
-        return getPath();
-    }
-
-    @Override
-    public void applyElementSize(Node<ViewContent<org.wirez.basicset.api.Circle>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
-        // Radius.
-        _applyRadius(element, mutationContext);
-    }
-
+    
     @Override
     public void applyElementProperties(Node<ViewContent<org.wirez.basicset.api.Circle>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
@@ -68,7 +75,8 @@ public class CircleShape extends BaseBasicShape<org.wirez.basicset.api.Circle> i
     @Override
     public void applyRadius(double radius, MutationContext mutationContext) {
         if (radius > 0) {
-            getPath().clear().circle(radius).close();
+            circle.setRadius(radius);
+            this.moveChild(circle.getID(), radius, radius);
         }
     }
 

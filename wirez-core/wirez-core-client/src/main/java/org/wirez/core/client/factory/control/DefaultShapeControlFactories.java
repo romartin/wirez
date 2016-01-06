@@ -23,13 +23,18 @@ import javax.inject.Inject;
 public class DefaultShapeControlFactories {
 
     DefaultDragControlFactory dragControlFactory;
-    DefaultResizeControlFactory resizeControlFactory;
+    DefaultResizeControlFactory defaultResizeControlFactory;
+    LienzoResizeControlFactory lienzoResizeControlFactory;
     DefaultToolboxControlFactory toolboxControlFactory;
 
     @Inject
-    public DefaultShapeControlFactories(DefaultDragControlFactory dragControlFactory, DefaultResizeControlFactory resizeControlFactory, DefaultToolboxControlFactory toolboxControlFactory) {
+    public DefaultShapeControlFactories(final DefaultDragControlFactory dragControlFactory, 
+                                        final DefaultResizeControlFactory defaultResizeControlFactory, 
+                                        final LienzoResizeControlFactory lienzoResizeControlFactory,
+                                        final DefaultToolboxControlFactory toolboxControlFactory) {
         this.dragControlFactory = dragControlFactory;
-        this.resizeControlFactory = resizeControlFactory;
+        this.defaultResizeControlFactory = defaultResizeControlFactory;
+        this.lienzoResizeControlFactory = lienzoResizeControlFactory;
         this.toolboxControlFactory = toolboxControlFactory;
     }
 
@@ -37,8 +42,12 @@ public class DefaultShapeControlFactories {
         return dragControlFactory;
     }
 
-    public DefaultResizeControlFactory resizeControlFactory() {
-        return resizeControlFactory;
+    public DefaultResizeControlFactory defaultResizeControlFactory() {
+        return defaultResizeControlFactory;
+    }
+
+    public LienzoResizeControlFactory lienzoResizeControlFactory() {
+        return lienzoResizeControlFactory;
     }
 
     public DefaultToolboxControlFactory toolboxControlFactory() {

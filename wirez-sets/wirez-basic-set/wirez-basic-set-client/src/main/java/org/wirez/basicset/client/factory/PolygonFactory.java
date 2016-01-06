@@ -21,7 +21,6 @@ import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import org.wirez.basicset.api.Polygon;
 import org.wirez.basicset.client.PolygonShape;
-import org.wirez.basicset.client.factory.control.RadiusBasedResizeControlFactory;
 import org.wirez.basicset.client.glyph.PolygonGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
@@ -38,14 +37,10 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class PolygonFactory extends BaseShapeFactory<Polygon, PolygonShape> {
 
-    RadiusBasedResizeControlFactory radiusBasedResizeControlFactory;
-
     @Inject
     public PolygonFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                          final RadiusBasedResizeControlFactory radiusBasedResizeControlFactory,
                           final ShapeGlyphDragHandler shapeGlyphDragHandler) {
         super(defaultShapeControlFactories, shapeGlyphDragHandler);
-        this.radiusBasedResizeControlFactory = radiusBasedResizeControlFactory;
     }
 
     @Override
@@ -64,21 +59,9 @@ public class PolygonFactory extends BaseShapeFactory<Polygon, PolygonShape> {
     }
 
     @Override
-    protected ShapeControlFactory<?, ?> getResizeControlFactory() {
-        return radiusBasedResizeControlFactory;
-    }
-
-    @Override
     public PolygonShape build(final Polygon definition, final CanvasHandler canvasHandler) {
 
-        final double radius = Polygon.RADIUS * 2;
-        MultiPath path = new MultiPath().rect(0, 0, radius, radius).setStrokeAlpha(0);
-
-        path.setDraggable(false);
-
         Group group = new Group();
-
-        group.add(path);
 
         group.setDraggable(true);
 
@@ -86,7 +69,7 @@ public class PolygonFactory extends BaseShapeFactory<Polygon, PolygonShape> {
 
         final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         
-        return new PolygonShape(path, group, baseCanvas.getWiresManager());
+        return new PolygonShape(group, baseCanvas.getWiresManager());
 
     }
 

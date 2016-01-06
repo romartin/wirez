@@ -25,8 +25,6 @@ public interface HasGraphElementMutation<W extends Definition, C extends ViewCon
     
     void applyElementPosition(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
 
-    void applyElementSize(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
-
     void applyElementProperties(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
     
 }

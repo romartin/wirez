@@ -47,7 +47,6 @@ import org.wirez.core.client.WirezClientManager;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.DefaultCanvasSettingsBuilder;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
-import org.wirez.core.client.canvas.command.impl.SetCanvasElementSizeCommand;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;

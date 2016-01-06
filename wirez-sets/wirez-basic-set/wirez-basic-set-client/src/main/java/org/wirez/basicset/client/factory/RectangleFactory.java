@@ -29,6 +29,7 @@ import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.BaseShapeFactory;
+import org.wirez.core.client.factory.control.ShapeControlFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -58,15 +59,14 @@ public class RectangleFactory extends BaseShapeFactory<Rectangle, RectangleShape
     }
 
     @Override
+    protected ShapeControlFactory<?, ?> getResizeControlFactory() {
+        return defaultShapeControlFactories.lienzoResizeControlFactory();
+    }
+
+    @Override
     public RectangleShape build(final Rectangle definition, final CanvasHandler canvasHandler) {
 
-        MultiPath path = new MultiPath().rect(0, 0, Rectangle.WIDTH, Rectangle.HEIGHT).setStrokeAlpha(0);
-
-        path.setDraggable(false);
-
         Group group = new Group();
-
-        group.add(path);
 
         group.setDraggable(true);
 
@@ -74,7 +74,7 @@ public class RectangleFactory extends BaseShapeFactory<Rectangle, RectangleShape
 
         final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         
-        return new RectangleShape(path, group, baseCanvas.getWiresManager());
+        return new RectangleShape(group, baseCanvas.getWiresManager());
 
     }
 

@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package org.wirez.basicset.client.factory.control;
+package org.wirez.basicset.api.property;
 
-import org.wirez.basicset.client.control.RadiusBasedResizeControl;
-import org.wirez.core.client.Shape;
-import org.wirez.core.client.factory.control.ShapeControlFactory;
+import org.wirez.core.api.definition.property.builder.BasePropertyBuilder;
+import org.wirez.core.api.definition.property.type.IntegerType;
 
-import javax.enterprise.context.ApplicationScoped;
-
-@ApplicationScoped
-public class RadiusBasedResizeControlFactory implements ShapeControlFactory<Shape, RadiusBasedResizeControl<Shape>> {
-
-    public RadiusBasedResizeControlFactory() {
+public class PolygonSidesBuilder extends BasePropertyBuilder<Integer> {
+    
+    public static final String PROPERTY_ID = "polygonSides";
+    
+    public PolygonSidesBuilder() {
+        super(PROPERTY_ID, new IntegerType());
+        this.caption("Sides")
+            .description("The polygon sides")
+            .optional(true)
+            .readOnly(false)
+            .publish(true)
+            .defaultValue(5);
     }
-
-    @Override
-    public RadiusBasedResizeControl<Shape> build(final Shape shape) {
-        return new RadiusBasedResizeControl<Shape>();
-    }
+    
 }

@@ -32,20 +32,20 @@ import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 public class UpdateCanvasElementPropertyValueCommand extends BaseCanvasCommand implements CanvasCommand {
 
     Element element;
-    Property property;
+    String propertyId;
     Object value;
     
     public UpdateCanvasElementPropertyValueCommand(final Element element ,
-                                                   final Property property,
+                                                   final String propertyId,
                                                    final Object value) {
         this.element = element;
-        this.property = property;
+        this.propertyId = propertyId;
         this.value = value;
     }
 
     @Override
     protected Command getCommand() {
-        return new UpdateElementPropertyValueCommand(element, property, value);
+        return new UpdateElementPropertyValueCommand(element, propertyId, value);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class UpdateCanvasElementPropertyValueCommand extends BaseCanvasCommand i
 
     @Override
     public String toString() {
-        return "UpdateCanvasElementPropertyValueCommand [element=" + element.getUUID() + ", property=" + property.getId() + ", value=" +  value + "]";
+        return "UpdateCanvasElementPropertyValueCommand [element=" + element.getUUID() + ", property=" + propertyId + ", value=" +  value + "]";
     }
     
 }

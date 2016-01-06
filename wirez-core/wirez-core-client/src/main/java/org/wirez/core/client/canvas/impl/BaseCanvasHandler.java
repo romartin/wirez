@@ -40,6 +40,8 @@ import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.control.*;
+import org.wirez.core.client.control.resize.BaseResizeControl;
+import org.wirez.core.client.control.resize.DefaultResizeControl;
 import org.wirez.core.client.control.toolbox.HasToolboxControl;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.factory.ShapeFactory;
@@ -161,10 +163,10 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                 }
 
                 // RESIZE control.
-                if (control instanceof DefaultResizeControl && shape instanceof HasResizeControl) {
+                if (control instanceof BaseResizeControl && shape instanceof HasResizeControl) {
                     final HasResizeControl hasResizeControl = (HasResizeControl) shape;
-                    hasResizeControl.setResizeControl((DefaultResizeControl) control);
-                    ((DefaultResizeControl) control).setCanvasHandler(this);
+                    hasResizeControl.setResizeControl((BaseResizeControl) control);
+                    ((BaseResizeControl) control).setCanvasHandler(this);
                     control.enable(shape, candidate);
                 }
                 
@@ -198,7 +200,6 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                 if (shape instanceof HasGraphElementMutation) {
                     final HasGraphElementMutation hasGraphElement = (HasGraphElementMutation) shape;
                     hasGraphElement.applyElementPosition(candidate, this, context);
-                    hasGraphElement.applyElementSize(candidate, this, context);
                     hasGraphElement.applyElementProperties(candidate, this, context);
                 }
 
@@ -214,16 +215,6 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         final BaseShape childShape = (BaseShape) canvas.getShape(child.getUUID());
         parentShape.add(childShape);
         
-    }
-
-    public void updateElementSize(final Element element) {
-        final Shape shape = canvas.getShape(element.getUUID());
-
-        final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
-        final MutationContext context = new StaticMutationContext();
-        shapeMutation.applyElementSize(element, this, context);
-        canvas.draw();
-        fireElementUpdated(element);
     }
 
     public void updateElementPosition(final Element element) {

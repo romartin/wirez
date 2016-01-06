@@ -96,11 +96,6 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public void applyElementSize(Edge<ViewContent<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
-        // TODO
-    }
-
-    @Override
     public void applyElementProperties(Edge<ViewContent<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         
         // TODO

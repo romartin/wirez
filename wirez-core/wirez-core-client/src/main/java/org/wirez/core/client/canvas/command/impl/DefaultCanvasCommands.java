@@ -60,15 +60,9 @@ public class DefaultCanvasCommands {
         return new MoveCanvasElementCommand( element, x, y );
     }
 
-    public SetCanvasElementSizeCommand RESIZE( final Element element ,
-                                               final Double w,
-                                               final Double h) {
-        return new SetCanvasElementSizeCommand( element, w, h );
-    }
-
     public UpdateCanvasElementPropertyValueCommand UPDATE_PROPERTY( final Element element ,
-                                                                    final Property property,
+                                                                    final String propertyId,
                                                                     final Object value ) {
-        return new UpdateCanvasElementPropertyValueCommand( element, property, value );
+        return new UpdateCanvasElementPropertyValueCommand( element, propertyId, value );
     }
 }

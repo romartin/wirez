@@ -29,6 +29,8 @@ import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.*;
+import org.wirez.core.client.control.resize.BaseResizeControl;
+import org.wirez.core.client.control.resize.DefaultResizeControl;
 import org.wirez.core.client.control.toolbox.HasToolboxControl;
 import org.wirez.core.client.mutation.*;
 
@@ -40,7 +42,6 @@ import java.util.Collection;
 public abstract class BaseShape<W extends Definition> extends WiresShape implements 
         org.wirez.core.client.Shape<W>,
         HasPositionMutation,
-        HasSizeMutation,
         HasPropertyMutation,
         HasGraphElementMutation<W, ViewContent<W>, org.wirez.core.api.graph.Node<ViewContent<W>, Edge>>,
         HasDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node>,
@@ -50,17 +51,21 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     protected String id;
     protected Text text;
     protected DefaultDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> dragControl;
-    protected DefaultResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> resizeControl;
+    protected BaseResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> resizeControl;
     protected ToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> toolboxControl;
 
 
     public BaseShape(final MultiPath path, final Group group, final WiresManager manager) {
         super(path, group, manager);
+        group.add(path);
+        getPath().setDraggable(false);
     }
 
     public abstract Collection<Shape> getDecorators();
-
-    public abstract Shape getShape();
+    
+    protected Shape getShape() {
+        return getPath();
+    }
     
     @Override
     public BaseShape<W> setId(String id) {
@@ -102,17 +107,6 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void applyElementSize(final org.wirez.core.api.graph.Node<ViewContent<W>, Edge> element,
-                                 final CanvasHandler wirezCanvas,
-                                 final MutationContext mutationContext) {
-        final Bounds.Bound ul = element.getContent().getBounds().getUpperLeft();
-        final Bounds.Bound lr = element.getContent().getBounds().getLowerRight();
-        final double w = lr.getX() - ul.getX();
-        final double h = lr.getY() - ul.getY();
-        applySize(w, h, mutationContext);
-    }
-
-    @Override
     public void applyElementProperties(final org.wirez.core.api.graph.Node<ViewContent<W>, Edge> element,
                                        final CanvasHandler wirezCanvas,
                                        final MutationContext mutationContext) {
@@ -125,17 +119,6 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     @Override
     public void applyPosition(final double x, final double y, final MutationContext mutationContext) {
         getGroup().setX(x).setY(y);
-    }
-
-    @Override
-    public void applySize(final double width, final double height, final MutationContext mutationContext) {
-        _applyShapeSize(getShape(), width, height, mutationContext);
-        final Collection<Shape> decorators = getDecorators();
-        if ( null != decorators ) {
-            for (final Shape decorator : getDecorators()) {
-                _applyShapeSize(decorator, width, height, mutationContext);
-            }
-        }
     }
 
     @Override
@@ -173,11 +156,6 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         applyPropertyValue(NameBuilder.PROPERTY_ID, name, mutationContext);
     }
 
-    protected void _applyShapeSize(final Shape shape, final double w, final double h, MutationContext mutationContext) {
-        shape.getAttributes().setWidth(w);
-        shape.getAttributes().setHeight(h);
-    }
-    
     @Override
     public void destroy() {
         // TODO
@@ -194,12 +172,12 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void setResizeControl(final DefaultResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> resizeControl) {
+    public void setResizeControl(final BaseResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> resizeControl) {
         this.resizeControl = resizeControl;
     }
 
     @Override
-    public DefaultResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> getResizeControl() {
+    public BaseResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> getResizeControl() {
         return resizeControl;
     }
 

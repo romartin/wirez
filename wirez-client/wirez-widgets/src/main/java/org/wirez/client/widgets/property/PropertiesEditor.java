@@ -334,43 +334,13 @@ public class PropertiesEditor implements IsWidget {
             }
         };
 
-        // Element Width
-        final PropertyEditorFieldInfo wField = new PropertyEditorFieldInfo( "Width",
-                Double.toString(w),
-                PropertyEditorType.NATURAL_NUMBER) {
-
-            @Override
-            public void setCurrentStringValue( final String currentStringValue ) {
-                super.setCurrentStringValue( currentStringValue );
-                final Double w = Double.parseDouble(currentStringValue);
-                final double h = getHeight(element);
-                GWT.log("PropertiesEditor  - Setting value [" + w + "] for property [width] in element with id [" + id + "].");
-                executeResize(element, w, h);
-            }
-        };
-
-        // Element Height
-        final PropertyEditorFieldInfo hField = new PropertyEditorFieldInfo( "Height",
-                Double.toString(h),
-                PropertyEditorType.NATURAL_NUMBER) {
-
-            @Override
-            public void setCurrentStringValue( final String currentStringValue ) {
-                super.setCurrentStringValue( currentStringValue );
-                final Double h = Double.parseDouble(currentStringValue);
-                final double w = getWidth(element);
-                GWT.log("PropertiesEditor  - Setting value [" + h + "] for property [height] in element with id [" + id + "].");
-                executeResize(element, w, h);
-            }
-        };
-
-        return result.withField(idField).withField(xField).withField(yField).withField(wField).withField(hField);
+        return result.withField(idField).withField(xField).withField(yField);
     }
     
     private void executeUpdateProperty(final Element<? extends ViewContent<?>> element, 
                                        final Property property,
                                        final Object value) {
-        ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.UPDATE_PROPERTY(element, property, value));
+        ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.UPDATE_PROPERTY(element, property.getId(), value));
     }
 
     private void executeMove(final Element<? extends ViewContent<?>> element,
@@ -379,12 +349,6 @@ public class PropertiesEditor implements IsWidget {
         ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.MOVE(element, x, y));
     }
 
-    private void executeResize(final Element<? extends ViewContent<?>> element,
-                             final double width,
-                             final double height) {
-        ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.RESIZE(element, width, height));
-    }
-    
     private double getWidth(final Element<? extends ViewContent<?>> element) {
         final Bounds.Bound ul = element.getContent().getBounds().getUpperLeft();
         final Bounds.Bound lr = element.getContent().getBounds().getLowerRight();

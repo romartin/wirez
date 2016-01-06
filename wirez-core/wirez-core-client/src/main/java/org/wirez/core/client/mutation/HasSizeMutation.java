@@ -16,6 +16,9 @@
 
 package org.wirez.core.client.mutation;
 
+/**
+ * A shape that its size depends on width and height properties present in the Definition.
+ */
 public interface HasSizeMutation extends HasMutation {
     
     void applySize(double width, double height, MutationContext mutationContext);

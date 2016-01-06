@@ -33,17 +33,17 @@ import java.util.ArrayList;
 public class UpdateElementPropertyValueCommand implements Command {
 
     private Element element;
-    private Property property;
+    private String propertyId;
     private Object value;
 
 
     public UpdateElementPropertyValueCommand(final Element element,
-                                             final Property property,
+                                             final String propertyId,
                                              final Object value) {
         this.element = PortablePreconditions.checkNotNull( "element",
                 element );;
-        this.property = PortablePreconditions.checkNotNull( "property",
-                property );
+        this.propertyId = PortablePreconditions.checkNotNull( "propertyId",
+                propertyId );
         this.value = PortablePreconditions.checkNotNull( "value",
                 value );
     }
@@ -56,19 +56,7 @@ public class UpdateElementPropertyValueCommand implements Command {
 
     @Override
     public CommandResult execute(final RuleManager ruleManager) {
-        final String id = property.getId();
-        Object defaultValue = null;
-        if (property instanceof HasDefaultValue) {
-            defaultValue = ( (HasDefaultValue) property).getDefaultValue();
-        }
-        
-        // If property value is same as the default one for it, do not add it into graph element's properties.
-        if ( (defaultValue == null && value == null) 
-                || (defaultValue != null && defaultValue.equals(value)) ) {
-            element.getProperties().remove(id);
-        } else {
-            element.getProperties().put(id, value);
-        }
+        element.getProperties().put(propertyId, value);
         return new DefaultCommandResult(new ArrayList<RuleViolation>());
     }
     
@@ -80,7 +68,7 @@ public class UpdateElementPropertyValueCommand implements Command {
 
     @Override
     public String toString() {
-        return "UpdateElementPropertyValueCommand [element=" + element.getUUID() + ", property=" + property.getId() + ", value=" + value + "]";
+        return "UpdateElementPropertyValueCommand [element=" + element.getUUID() + ", property=" + propertyId + ", value=" + value + "]";
     }
     
 }

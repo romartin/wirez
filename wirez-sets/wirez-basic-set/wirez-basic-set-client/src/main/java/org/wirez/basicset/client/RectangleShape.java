@@ -21,17 +21,23 @@ import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import org.wirez.basicset.api.property.size.HeightBuilder;
+import org.wirez.basicset.api.property.size.WidthBuilder;
 import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.MutationContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class RectangleShape extends BaseBasicShape<org.wirez.basicset.api.Rectangle> {
+public class RectangleShape extends BaseBasicShape<org.wirez.basicset.api.Rectangle> implements HasSizeMutation {
 
-
-    public RectangleShape(MultiPath path, Group group, WiresManager manager) {
-        super(path, group, manager);
+    public RectangleShape(Group group, WiresManager manager) {
+        super(new MultiPath().rect(0, 0, org.wirez.basicset.api.Rectangle.WIDTH, org.wirez.basicset.api.Rectangle.HEIGHT), group, manager);
     }
 
     @Override
@@ -42,17 +48,30 @@ public class RectangleShape extends BaseBasicShape<org.wirez.basicset.api.Rectan
     }
 
     @Override
-    public Shape getShape() {
-        return getPath();
+    public void applyElementProperties(Node<ViewContent<org.wirez.basicset.api.Rectangle>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+        super.applyElementProperties(element, wirezCanvas, mutationContext);
+        
+        // Size.
+        _applySize(element, mutationContext);
+        
     }
 
-    @Override
-    protected void _applyShapeSize(Shape shape, double w, double h, MutationContext mutationContext) {
-        getPath().clear().rect(getPath().getX(), getPath().getY(), w , h).close();
+    protected RectangleShape _applySize(final Node<ViewContent<org.wirez.basicset.api.Rectangle>, Edge> element, MutationContext mutationContext) {
+        final Integer width = (Integer) element.getProperties().get(WidthBuilder.PROPERTY_ID);
+        final Integer height = (Integer) element.getProperties().get(HeightBuilder.PROPERTY_ID);
+        applySize(width, height, mutationContext);
+        return this;
     }
 
     @Override
     public String toString() {
         return "RectangleShape{}";
+    }
+
+    @Override
+    public void applySize(final double width, final double height, final MutationContext mutationContext) {
+        final double x = getPath().getX();
+        final double y = getPath().getY();
+        getPath().clear().rect(x, y, width, height);
     }
 }

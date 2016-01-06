@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.control;
+package org.wirez.core.client.control.resize;
 
 import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresEvent;
 import com.ait.lienzo.client.core.shape.wires.event.ResizeEvent;
 import com.ait.lienzo.client.core.shape.wires.event.ResizeHandler;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.canvas.command.impl.SetCanvasElementSizeCommand;
+import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
+import org.wirez.core.client.control.BaseShapeControl;
 import org.wirez.core.client.impl.BaseShape;
+import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.StaticMutationContext;
 
-public class DefaultResizeControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E> {
+public class LienzoResizeControl<S extends Shape, E extends Element> extends BaseResizeControl<S, E> {
     
     @Override
     public void enable(final S shape, final E element) {
@@ -35,12 +38,12 @@ public class DefaultResizeControl<S extends Shape, E extends Element> extends Ba
             ( (BaseShape) shape).setResizable(true).addWiresHandler(AbstractWiresEvent.RESIZE, new ResizeHandler() {
                 @Override
                 public void onResizeStart(ResizeEvent resizeEvent) {
-                    doResizeStart(shape, element, resizeEvent.getWidth(), resizeEvent.getHeight());
+                    
                 }
 
                 @Override
                 public void onResizeStep(ResizeEvent resizeEvent) {
-                    doResizeStep(shape, element, resizeEvent.getWidth(), resizeEvent.getHeight());
+                    
                 }
 
                 @Override
@@ -52,27 +55,4 @@ public class DefaultResizeControl<S extends Shape, E extends Element> extends Ba
         
     }
     
-    protected void doResizeStart(final S shape, final E element, final double width, final double height) {
-        
-    }
-
-    protected void doResizeStep(final S shape, final E element, final double width, final double height) {
-        if (shape instanceof HasSizeMutation) {
-            ( (HasSizeMutation) shape).applySize(width, height, new StaticMutationContext());
-        }
-    }
-    
-    protected void doResizeEnd(final S shape, final E element, final double width, final double height) {
-        getCommandManager().execute(new SetCanvasElementSizeCommand(element, width, height));
-    }
-
-    @Override
-    public void disable(final S shape) {
-
-        if (shape instanceof BaseShape) {
-            ((BaseShape) shape).setResizable(false);
-        }
-        
-    }
-
 }

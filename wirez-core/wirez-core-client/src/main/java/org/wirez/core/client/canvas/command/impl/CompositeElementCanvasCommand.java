@@ -34,7 +34,9 @@ public class CompositeElementCanvasCommand implements CanvasCommand {
     CanvasHandler canvasHandler;
     List<Command> commands = new LinkedList<Command>();
     final Element element;
-
+    boolean applyElementPosition = false;
+    boolean applyElementProperties = false;
+    
     public CompositeElementCanvasCommand(final Element element) {
         this.element = element;
     }
@@ -45,12 +47,25 @@ public class CompositeElementCanvasCommand implements CanvasCommand {
         return this;
     }
 
+    public CompositeElementCanvasCommand doApplyElementPosition() {
+        this.applyElementPosition = true;
+        return this;
+    }
+
+    public CompositeElementCanvasCommand doApplyElementProperties() {
+        this.applyElementProperties = true;
+        return this;
+    }
+
     @Override
     public CanvasCommand apply() {
         final BaseCanvasHandler wirezCanvas = (BaseCanvasHandler) canvasHandler;
-        wirezCanvas.updateElementPosition(element);
-        wirezCanvas.updateElementSize(element);
-        wirezCanvas.updateElementProperties(element);
+        if (applyElementPosition) {
+            wirezCanvas.updateElementPosition(element);
+        }
+        if (applyElementProperties) {
+            wirezCanvas.updateElementProperties(element);
+        }
         return this;
     }
 

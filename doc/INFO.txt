@@ -15,6 +15,7 @@
         - magnets, connectors & orthogonal lines -> http://www.screencast.com/users/MarkPr/folders/Jing/media/23630312-615c-4df2-8f4b-2e39574e71f8
     
     - Joe
+        - https://docs.google.com/document/d/1ude4PTuZCmsaXTIJDXRYMUzyktnmgyOuLj_a7mPJDik/edit#heading=h.27jcuoisxdhv
         - https://docs.google.com/document/d/1ude4PTuZCmsaXTIJDXRYMUzyktnmgyOuLj_a7mPJDik/edit#heading=h.vd3008tfh0ss
         - lanes -> https://grapholite.com/Diagrams/Swimlane
         - subprocess on new canvas (when click)
@@ -29,3 +30,7 @@
         
     Graph theory
         - http://blog.athico.com/2015/08/ruleml2015-hybrid-reactive-relational.html
+
+- http://www.eunomia-process.com/
+- https://docs.oracle.com/cd/E18941_01/tutorials/jdtut_11r2_44/images/pi_taskflowcall.gif
+- http://docs.oracle.com/cd/E36909_01/doc.1111/e15176/img/intr_stud_prop_inspect_bpmpd.gif

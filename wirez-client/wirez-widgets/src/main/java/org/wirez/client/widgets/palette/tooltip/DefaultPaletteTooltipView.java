@@ -33,6 +33,7 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
     private static final double PADDING = 20;
     private static final double TRIANGLE_SIZE = 20;
     private static final double ALPHA = 0.8;
+    private static final Shadow SHADOW = new Shadow(ColorName.BLACK.getColor().setA(0.80), 10, 3, 3);
     
     DefaultPaletteTooltip presenter;
     private Layer canvasLayer = new Layer();
@@ -112,7 +113,6 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
                 .setStrokeColor(ColorName.BLACK)
                 .setStrokeAlpha(ALPHA);
         
-        final Shadow shadow = new Shadow(ColorName.BLACK.getColor().setA(0.80), 10, 3, 3);
         final Rectangle rectangle = new Rectangle(width + TRIANGLE_SIZE, height)
                 .setX(TRIANGLE_SIZE)
                 .setY(0)
@@ -122,7 +122,7 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
                 .setStrokeWidth(1)
                 .setStrokeColor(ColorName.BLACK)
                 .setStrokeAlpha(ALPHA)
-                .setShadow(shadow);
+                .setShadow(SHADOW);
 
         final Group decorator = new Group();
         decorator.add(rectangle);

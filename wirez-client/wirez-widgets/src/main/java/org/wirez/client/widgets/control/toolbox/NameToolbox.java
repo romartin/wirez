@@ -76,7 +76,7 @@ public class NameToolbox extends BaseToolbox {
     void onChangeName(final String name) {
         GWT.log("NameContextMenu - Change name to '" + name + "'");
         final CanvasCommandManager commandManager = (CanvasCommandManager) canvasHandler;
-        commandManager.execute(defaultCanvasCommands.UPDATE_PROPERTY(element, new NameBuilder().build(), name));
+        commandManager.execute(defaultCanvasCommands.UPDATE_PROPERTY(element, "name", name));
         view.hide();
     }
     

@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.mutation;
+package org.wirez.basicset.api.property.size;
 
-/**
- * A shape that its size depends on the radius property present in the Definition.
- */
-public interface HasRadiusMutation extends HasMutation {
+import org.wirez.core.api.definition.property.builder.BasePropertyBuilder;
+import org.wirez.core.api.definition.property.type.IntegerType;
+
+public class HeightBuilder extends BasePropertyBuilder<Integer> {
     
-    void applyRadius(double radius, MutationContext mutationContext);
+    public static final String PROPERTY_ID = "height";
+    
+    public HeightBuilder() {
+        super(PROPERTY_ID, new IntegerType());
+        this.caption("Height")
+            .description("The height")
+            .optional(true)
+            .readOnly(false)
+            .publish(true)
+            .defaultValue(50);
+    }
     
 }

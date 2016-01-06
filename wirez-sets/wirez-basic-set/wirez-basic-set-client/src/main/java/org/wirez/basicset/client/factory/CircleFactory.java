@@ -21,7 +21,6 @@ import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import org.wirez.basicset.api.Circle;
 import org.wirez.basicset.client.CircleShape;
-import org.wirez.basicset.client.factory.control.RadiusBasedResizeControlFactory;
 import org.wirez.basicset.client.glyph.CircleGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
@@ -38,14 +37,10 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class CircleFactory extends BaseShapeFactory<Circle, CircleShape> {
     
-    RadiusBasedResizeControlFactory radiusBasedResizeControlFactory;
-    
     @Inject
     public CircleFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                         final RadiusBasedResizeControlFactory radiusBasedResizeControlFactory,
                          final ShapeGlyphDragHandler shapeGlyphDragHandler) {
         super(defaultShapeControlFactories, shapeGlyphDragHandler);
-        this.radiusBasedResizeControlFactory = radiusBasedResizeControlFactory;
     }
 
     @Override
@@ -64,30 +59,17 @@ public class CircleFactory extends BaseShapeFactory<Circle, CircleShape> {
     }
 
     @Override
-    protected ShapeControlFactory<?, ?> getResizeControlFactory() {
-        return radiusBasedResizeControlFactory;
-    }
-    
-    @Override
     public CircleShape build(final Circle definition, final CanvasHandler canvasHandler) {
 
         final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
 
-        final double size = Circle.RADIUS * 2;
-        
-        MultiPath path = new MultiPath().rect(0, 0, size, size).setStrokeAlpha(0);
-
-        path.setDraggable(false);
-
         Group group = new Group();
-
-        group.add(path);
 
         group.setDraggable(true);
 
         group.setEventPropagationMode(EventPropagationMode.FIRST_ANCESTOR);
 
-        CircleShape circleShape = new CircleShape(path, group, baseWirezCanvas.getWiresManager());
+        CircleShape circleShape = new CircleShape(group, baseWirezCanvas.getWiresManager());
 
         return circleShape;
 

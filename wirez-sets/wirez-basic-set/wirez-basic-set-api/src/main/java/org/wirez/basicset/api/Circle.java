@@ -17,10 +17,11 @@
 package org.wirez.basicset.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.basicset.api.property.RadiusBuilder;
+import org.wirez.basicset.api.property.size.RadiusBuilder;
 import org.wirez.basicset.api.property.bgset.BackgroundPropertySetBuilder;
 import org.wirez.basicset.api.property.bgset.BgColorBuilder;
 import org.wirez.basicset.api.property.font.FontPropertySetBuilder;
+import org.wirez.basicset.api.property.size.SizePropertySetBuilder;
 import org.wirez.core.api.definition.DefaultContent;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -39,7 +40,6 @@ public class Circle extends BasicNodeDefinition<Circle> {
 
 
     private final Set<Property> properties = new HashSet<Property>() {{
-        add(new RadiusBuilder().defaultValue(RADIUS).build() );
     }};
 
     private final Set<String> labels = new HashSet<String>() {{
@@ -50,6 +50,10 @@ public class Circle extends BasicNodeDefinition<Circle> {
     private final Set<PropertySet> propertySets = new HashSet<PropertySet>() {{
         add(new DefaultPropertySetBuilder()
                 .withProperty(new NameBuilder().defaultValue("My circle").build())
+                .build()
+        );
+        add (new SizePropertySetBuilder()
+                .withProperty(new RadiusBuilder().defaultValue( RADIUS ).build())
                 .build()
         );
         add (new BackgroundPropertySetBuilder()

@@ -197,17 +197,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String message = "Executed SetConnectionSourceNodeCommand [source=" + sourceUUID + ", magnet=" + mIndex +  "]";
             Logger.log(message);
 
-            CommandResults results = execute(new CompositeElementCanvasCommand(edge) {
-
-                @Override
-                public CanvasCommand apply() {
-                    // Do nothing, lienzo wires do it for us.
-                    return this;
-                }
-
-            }
-            .add(new UpdateElementPropertyValueCommand(edge, new ConnectionSourceMagnetBuilder().build(), mIndex))
-            .add(new SetConnectionSourceNodeCommand(sourceNode, edge)));
+            CommandResults results = execute(new CompositeElementCanvasCommand(edge)
+                .add(new UpdateElementPropertyValueCommand(edge, ConnectionSourceMagnetBuilder.PROPERTY_ID, mIndex))
+                .add(new SetConnectionSourceNodeCommand(sourceNode, edge))
+            );
 
             final boolean isAccept = isAccept(results);
             return isAccept;
@@ -228,17 +221,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String message = "Executed SetConnectionTargetNodeCommand [target=" + targetUUID + ", magnet=" + mIndex +  "]";
             Logger.log(message);
 
-            CommandResults results = execute(new CompositeElementCanvasCommand(edge) {
-
-                @Override
-                public CanvasCommand apply() {
-                    // Do nothing, lienzo wires do it for us.
-                    return this;
-                }
-
-            }
-            .add(new UpdateElementPropertyValueCommand(edge, new ConnectionTargetMagnetBuilder().build(), mIndex))
-            .add(new SetConnectionTargetNodeCommand(targetNode, edge)) );
+            CommandResults results = execute(new CompositeElementCanvasCommand(edge)
+                .add(new UpdateElementPropertyValueCommand(edge, ConnectionTargetMagnetBuilder.PROPERTY_ID, mIndex))
+                .add(new SetConnectionTargetNodeCommand(targetNode, edge))
+            );
             
             final boolean isAccept = isAccept(results);
             GWT.log("ConnectionAccepted=" + isAccept);

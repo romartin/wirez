@@ -24,7 +24,8 @@ import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.basicset.api.Polygon;
-import org.wirez.basicset.api.property.RadiusBuilder;
+import org.wirez.basicset.api.property.PolygonSidesBuilder;
+import org.wirez.basicset.api.property.size.RadiusBuilder;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
@@ -37,12 +38,13 @@ import java.util.Collection;
 
 public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon> implements HasRadiusMutation {
 
-    private static final int SIZE = 5;
-    
     protected RegularPolygon polygon;
 
-    public PolygonShape(MultiPath path, Group group, WiresManager manager) {
-        super(path, group, manager);
+    public PolygonShape(Group group, WiresManager manager) {
+        super(new MultiPath().rect(0, 0, Polygon.RADIUS * 2, Polygon.RADIUS * 2)
+                .setFillAlpha(0)
+                .setStrokeAlpha(0), 
+                group, manager);
         init();
     }
 
@@ -54,15 +56,16 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
     }
 
     @Override
-    public Shape getShape() {
+    protected Shape getShape() {
         return polygon;
     }
 
     protected void init() {
-
-        polygon = new RegularPolygon(SIZE, org.wirez.basicset.api.Polygon.RADIUS)
-            .setX(25)
-            .setY(25)
+        final int sides = org.wirez.basicset.api.Polygon.SIDES;
+        final int radius = org.wirez.basicset.api.Polygon.RADIUS;
+        polygon = new RegularPolygon(sides, radius)
+            .setX(radius)
+            .setY(radius)
             .setStrokeWidth(0)
             .setStrokeAlpha(0)
             .setFillColor(org.wirez.basicset.api.Polygon.COLOR)
@@ -72,22 +75,25 @@ public class PolygonShape extends BaseBasicShape<org.wirez.basicset.api.Polygon>
         this.addChild(polygon, WiresLayoutContainer.Layout.CENTER);
     }
 
-    @Override
-    public void applyElementSize(Node<ViewContent<Polygon>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
-        super.applyElementSize(element, wirezCanvas, mutationContext);
-
-        // Radius.
-        _applyRadius(element, mutationContext);
-    }
-
-    @Override
     public void applyElementProperties(Node<ViewContent<Polygon>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Radius.
         _applyRadius(element, mutationContext);
+        
+        // Sides
+        _applySides(element, mutationContext);
+        
     }
 
+    protected PolygonShape _applySides(final Node<ViewContent<Polygon>, Edge> element, final MutationContext mutationContext) {
+        final Integer sides = (Integer) element.getProperties().get(PolygonSidesBuilder.PROPERTY_ID);
+        if ( null != sides ) {
+            polygon.setSides(sides);
+        }
+        return this;
+    }
+    
     protected PolygonShape _applyRadius(final Node<ViewContent<Polygon>, Edge> element, final MutationContext mutationContext) {
         final Integer radius = (Integer) element.getProperties().get(RadiusBuilder.PROPERTY_ID);
         if ( null != radius ) {

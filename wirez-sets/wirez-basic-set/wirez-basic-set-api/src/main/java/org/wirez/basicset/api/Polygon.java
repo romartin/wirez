@@ -17,10 +17,12 @@
 package org.wirez.basicset.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.basicset.api.property.RadiusBuilder;
+import org.wirez.basicset.api.property.PolygonSidesBuilder;
+import org.wirez.basicset.api.property.size.RadiusBuilder;
 import org.wirez.basicset.api.property.bgset.BackgroundPropertySetBuilder;
 import org.wirez.basicset.api.property.bgset.BgColorBuilder;
 import org.wirez.basicset.api.property.font.FontPropertySetBuilder;
+import org.wirez.basicset.api.property.size.SizePropertySetBuilder;
 import org.wirez.core.api.definition.DefaultContent;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -36,10 +38,10 @@ public class Polygon extends BasicNodeDefinition<Polygon> {
     public static final String ID = "polygon";
     public static final String COLOR = "#ff1a1a";
     public static final int RADIUS = 25;
-
+    public static final int SIDES = 5;
 
     private final Set<Property> properties = new HashSet<Property>() {{
-        add( new RadiusBuilder().defaultValue(RADIUS).build() );
+        add( new PolygonSidesBuilder().defaultValue(SIDES).build() );
     }};
 
     private final Set<String> labels = new HashSet<String>() {{
@@ -50,6 +52,10 @@ public class Polygon extends BasicNodeDefinition<Polygon> {
     private final Set<PropertySet> propertySets = new HashSet<PropertySet>() {{
         add(new DefaultPropertySetBuilder()
                 .withProperty(new NameBuilder().defaultValue("My polygon").build())
+                .build()
+        );
+        add (new SizePropertySetBuilder()
+                .withProperty(new RadiusBuilder().defaultValue( RADIUS ).build())
                 .build()
         );
         add (new BackgroundPropertySetBuilder()

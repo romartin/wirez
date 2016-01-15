@@ -24,6 +24,7 @@ import org.uberfire.ext.properties.editor.model.PropertyEditorCategory;
 import org.uberfire.ext.properties.editor.model.PropertyEditorEvent;
 import org.uberfire.ext.properties.editor.model.PropertyEditorFieldInfo;
 import org.uberfire.ext.properties.editor.model.PropertyEditorType;
+import org.wirez.core.api.definition.DefaultContent;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -122,61 +123,66 @@ public class PropertiesEditor implements IsWidget {
         final String elementId = element.getUUID();
         final Definition wirez = element.getContent().getDefinition();
         
-        final List<PropertyEditorCategory> categories = new ArrayList<PropertyEditorCategory>();
-        final Set<String> processedProperties = new HashSet<String>();
-        
-        // Default element's category.
-        final PropertyEditorCategory elementCategory = buildElementCategory(element); 
-        categories.add(elementCategory);
+        // This editor is for DefaultContent, not type safe properties.
+        if (wirez.getContent() instanceof DefaultContent) {
 
-        // Definition property packages.
-        final Set<PropertySet> propertyPackageSet = wirez.getContent().getPropertySets();
-        if (propertyPackageSet != null) {
-            
-            for (final PropertySet propertyPackage : propertyPackageSet) {
+            final List<PropertyEditorCategory> categories = new ArrayList<PropertyEditorCategory>();
+            final Set<String> processedProperties = new HashSet<String>();
 
-                final boolean isDefaultPropertySet = DefaultPropertySetBuilder.ID.equals(propertyPackage.getId());
-                final PropertyEditorCategory category = isDefaultPropertySet ? elementCategory : new PropertyEditorCategory(propertyPackage.getName());
-                final Collection<Property> properties = propertyPackage.getProperties();
-                if (properties != null) {
-                    for (final Property property : properties) {
-                        final String propertyId = property.getId();
-                        final Object value = element.getProperties().get(propertyId);
-                        // GWT.log("PropertiesEditor  - Building field info with value [" + ( value != null ? value.toString() : null ) + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
-                        final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
-                            @Override
-                            public void onValueChanged(final Object value) {
-                                GWT.log("PropertiesEditor  - Setting value [" + value.toString() + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
-                                executeUpdateProperty(element, property, value);
+            // Default element's category.
+            final PropertyEditorCategory elementCategory = buildElementCategory(element);
+            categories.add(elementCategory);
+
+            // Definition property packages.
+            final Set<PropertySet> propertyPackageSet = ( (DefaultContent) wirez.getContent()).getPropertySets();
+            if (propertyPackageSet != null) {
+
+                for (final PropertySet propertyPackage : propertyPackageSet) {
+
+                    final boolean isDefaultPropertySet = DefaultPropertySetBuilder.ID.equals(propertyPackage.getId());
+                    final PropertyEditorCategory category = isDefaultPropertySet ? elementCategory : new PropertyEditorCategory(propertyPackage.getName());
+                    final Collection<Property> properties = propertyPackage.getProperties();
+                    if (properties != null) {
+                        for (final Property property : properties) {
+                            final String propertyId = property.getId();
+                            final Object value = element.getProperties().get(propertyId);
+                            // GWT.log("PropertiesEditor  - Building field info with value [" + ( value != null ? value.toString() : null ) + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
+                            final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
+                                @Override
+                                public void onValueChanged(final Object value) {
+                                    GWT.log("PropertiesEditor  - Setting value [" + value.toString() + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
+                                    executeUpdateProperty(element, property, value);
+                                }
+                            });
+
+                            if (propFieldInfo != null) {
+                                processedProperties.add(propertyId);
+                                category.withField(propFieldInfo);
                             }
-                        });
 
-                        if (propFieldInfo != null) {
-                            processedProperties.add(propertyId);
-                            category.withField(propFieldInfo);
                         }
-                        
                     }
-                }
 
-                if (!isDefaultPropertySet) {
-                    categories.add(category);
+                    if (!isDefaultPropertySet) {
+                        categories.add(category);
+                    }
+
                 }
 
             }
+
+
+            // Properties (custom) category.
+            categories.add(buildPropertiesCategory(element, processedProperties));
+
+            // Show the categories.
+            view.handle(new PropertyEditorEvent("wirezPropertiesEditorEvent", categories));
+
+            // Editor callback notifications.
+            if ( null != editorCallback ) {
+                editorCallback.onShowElement(element);
+            }
             
-        }
-
-
-        // Properties (custom) category.
-        categories.add(buildPropertiesCategory(element, processedProperties));
-
-        // Show the categories.
-        view.handle(new PropertyEditorEvent("wirezPropertiesEditorEvent", categories));
-        
-        // Editor callback notifications.
-        if ( null != editorCallback ) {
-            editorCallback.onShowElement(element);
         }
         
     }
@@ -186,7 +192,7 @@ public class PropertiesEditor implements IsWidget {
         final String title = element.getContent().getDefinition().getContent().getTitle();
         final PropertyEditorCategory result = new PropertyEditorCategory(title, 1);
         
-        final Set<Property> propertySet = element.getContent().getDefinition().getContent().getProperties();
+        final Set<Property> propertySet =  ( (DefaultContent)element.getContent().getDefinition().getContent() ).getProperties();
         if (propertySet != null) {
             for (final Property property : propertySet) {
                 final String propertyId = property.getId();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.definition;
+package org.wirez.core.api.annotation.definition;
 
-import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.PropertySet;
+import java.lang.annotation.*;
 
-import java.util.Set;
+@Inherited
+@Target(ElementType.TYPE) 
+@Retention(RetentionPolicy.CLASS)
+public @interface Definition {
 
-public interface Content {
+    String identifier();
 
-    String getCategory();
+    String category();
 
-    String getTitle();
+    String title();
 
-    String getDescription();
-
-    Set<String> getLabels();
+    String description();
+    
+    String[] labels();
     
 }

@@ -21,6 +21,7 @@ import org.wirez.basicset.api.property.bgset.BackgroundPropertySetBuilder;
 import org.wirez.basicset.api.property.bgset.BgColorBuilder;
 import org.wirez.basicset.api.property.font.FontPropertySetBuilder;
 import org.wirez.core.api.definition.DefaultContent;
+import org.wirez.core.api.definition.DefaultContentImpl;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnetBuilder;
@@ -56,7 +57,7 @@ public class Connector extends BasicEdgeDefinition<Connector> {
     
     public Connector() {
         super(ID);
-        setContent(new DefaultContent(BasicSetCategories.INSTANCE.CONNECTORS,
+        setContent(new DefaultContentImpl(BasicSetCategories.INSTANCE.CONNECTORS,
                 "Connector",
                 "A connector.",
                 new HashSet<String>(),

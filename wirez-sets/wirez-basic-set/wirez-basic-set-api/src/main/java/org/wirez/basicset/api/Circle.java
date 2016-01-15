@@ -23,6 +23,7 @@ import org.wirez.basicset.api.property.bgset.BgColorBuilder;
 import org.wirez.basicset.api.property.font.FontPropertySetBuilder;
 import org.wirez.basicset.api.property.size.SizePropertySetBuilder;
 import org.wirez.core.api.definition.DefaultContent;
+import org.wirez.core.api.definition.DefaultContentImpl;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
@@ -65,7 +66,7 @@ public class Circle extends BasicNodeDefinition<Circle> {
     
     public Circle() {
         super(ID);
-        setContent(new DefaultContent(BasicSetCategories.INSTANCE.BASIC,
+        setContent(new DefaultContentImpl(BasicSetCategories.INSTANCE.BASIC,
                 "Circle",
                 "A circle.",
                 labels,

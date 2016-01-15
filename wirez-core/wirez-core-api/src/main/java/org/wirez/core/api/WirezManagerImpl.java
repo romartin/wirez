@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+// TODO: Refactor errai bean manager usage to make it available on both backend/client sides.
 @ApplicationScoped
 public class WirezManagerImpl implements WirezManager {
 

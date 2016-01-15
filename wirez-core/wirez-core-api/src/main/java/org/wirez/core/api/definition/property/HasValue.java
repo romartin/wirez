@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,12 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.definition;
+package org.wirez.core.api.definition.property;
 
-import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.PropertySet;
+public interface HasValue<C> {
 
-import java.util.Set;
+    C getValue();
 
-public interface Content {
-
-    String getCategory();
-
-    String getTitle();
-
-    String getDescription();
-
-    Set<String> getLabels();
+    void setValue(C value);
     
 }

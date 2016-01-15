@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class DefaultDefinition<C extends Content> implements Definition<C> {
+public class DefaultDefinition<C extends DefaultContent> implements Definition<C> {
 
     private final String id;
     private C content;

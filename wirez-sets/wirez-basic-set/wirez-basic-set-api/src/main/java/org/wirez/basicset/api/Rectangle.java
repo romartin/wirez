@@ -24,6 +24,7 @@ import org.wirez.basicset.api.property.size.HeightBuilder;
 import org.wirez.basicset.api.property.size.SizePropertySetBuilder;
 import org.wirez.basicset.api.property.size.WidthBuilder;
 import org.wirez.core.api.definition.DefaultContent;
+import org.wirez.core.api.definition.DefaultContentImpl;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
@@ -69,7 +70,7 @@ public class Rectangle extends BasicNodeDefinition<Rectangle> {
     
     public Rectangle() {
         super(ID);
-        setContent(new DefaultContent(BasicSetCategories.INSTANCE.BASIC,
+        setContent(new DefaultContentImpl(BasicSetCategories.INSTANCE.BASIC,
                 "Rectangle",
                 "A rectangle.",
                 labels,

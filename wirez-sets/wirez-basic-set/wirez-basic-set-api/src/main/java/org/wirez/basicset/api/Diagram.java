@@ -18,6 +18,7 @@ package org.wirez.basicset.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.DefaultContent;
+import org.wirez.core.api.definition.DefaultContentImpl;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
@@ -44,7 +45,7 @@ public class Diagram extends BasicDefinition implements DefaultGraphFactory<View
 
     public Diagram() {
         super(ID);
-        setContent(new DefaultContent(BasicSetCategories.INSTANCE.DIAGRAM,
+        setContent(new DefaultContentImpl(BasicSetCategories.INSTANCE.DIAGRAM,
                 "Basic Diagram",
                 "A basic shapes diagram",
                 labels,

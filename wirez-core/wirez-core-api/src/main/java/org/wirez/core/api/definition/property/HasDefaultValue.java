@@ -16,7 +16,7 @@
 
 package org.wirez.core.api.definition.property;
 
-public interface HasDefaultValue<C> {
+public interface HasDefaultValue<C> extends HasValue<C> {
 
     C getDefaultValue();
     

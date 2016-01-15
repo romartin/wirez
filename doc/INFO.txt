@@ -31,6 +31,16 @@
     Graph theory
         - http://blog.athico.com/2015/08/ruleml2015-hybrid-reactive-relational.html
 
-- http://www.eunomia-process.com/
-- https://docs.oracle.com/cd/E18941_01/tutorials/jdtut_11r2_44/images/pi_taskflowcall.gif
-- http://docs.oracle.com/cd/E36909_01/doc.1111/e15176/img/intr_stud_prop_inspect_bpmpd.gif
+- Property editors
+	- http://www.eunomia-process.com/
+	- https://docs.oracle.com/cd/E18941_01/tutorials/jdtut_11r2_44/images/pi_taskflowcall.gif
+	- http://docs.oracle.com/cd/E36909_01/doc.1111/e15176/img/intr_stud_prop_inspect_bpmpd.gif
+
+- Pere forms
+	- forms examples (livespark) -> https://github.com/pefernan/livespark + https://github.com/pefernan/livespark-playground
+    - annotations and pojo requireemnts:	
+        @Field(label="PutoCamp", position=0)
+        import org.jboss.errai.common.client.api.annotations.Portable;
+        import org.jboss.errai.databinding.client.api.Bindable;
+        import org.livespark.formmodeler.model.annotation.FieldDef;
+

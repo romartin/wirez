@@ -16,6 +16,7 @@
 
   <modules>
     <module>wirez-core-api</module>
+    <module>wirez-core-processors</module>
     <module>wirez-core-backend</module>
     <module>wirez-core-client</module>
   </modules>

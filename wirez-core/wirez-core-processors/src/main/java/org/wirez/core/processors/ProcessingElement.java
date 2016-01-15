@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.definition;
+package org.wirez.core.processors;
 
-import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.PropertySet;
+public class ProcessingElement {
 
-import java.util.Set;
+    private final String className;
+    private final String methodName;
 
-public interface Content {
+    public ProcessingElement(String className, String methodName) {
+        this.className = className;
+        this.methodName = methodName;
+    }
 
-    String getCategory();
+    public String getClassName() {
+        return className;
+    }
 
-    String getTitle();
-
-    String getDescription();
-
-    Set<String> getLabels();
+    public String getMethodName() {
+        return methodName;
+    }
     
 }

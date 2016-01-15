@@ -24,63 +24,10 @@ import org.wirez.core.api.definition.property.PropertySet;
 
 import java.util.Set;
 
-@Portable
-public class DefaultContent implements Content {
+public interface DefaultContent extends Content {
 
-    private final String category;
-    private final String title;
-    private final String description;
-    private final Set<String> labels;
-    private final Set<PropertySet> propertySets;
-    private final Set<Property> properties;
+    Set<PropertySet> getPropertySets();
 
-    public DefaultContent(@MapsTo("category") String category,
-                          @MapsTo("title") String title,
-                          @MapsTo("description") String description,
-                          @MapsTo("labels") Set<String> labels,
-                          @MapsTo("propertySets") Set<PropertySet> propertySets,
-                          @MapsTo("properties") Set<Property> properties) {
-        this.category = PortablePreconditions.checkNotNull( "category",
-                category );
-        this.title = PortablePreconditions.checkNotNull( "title",
-                title );
-        this.description = PortablePreconditions.checkNotNull( "description",
-                description );
-        this.labels = PortablePreconditions.checkNotNull( "labels",
-                labels );
-        this.propertySets = PortablePreconditions.checkNotNull( "propertySets",
-                propertySets );
-        this.properties = PortablePreconditions.checkNotNull( "properties",
-                properties );
-    }
-
-    @Override
-    public String getCategory() {
-        return category;
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public Set<String> getLabels() {
-        return labels;
-    }
-
-    @Override
-    public Set<PropertySet> getPropertySets() {
-        return propertySets;
-    }
-
-    @Override
-    public Set<Property> getProperties() {
-        return properties;
-    }
+    Set<Property> getProperties();
+    
 }

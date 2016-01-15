@@ -21,6 +21,8 @@ import org.uberfire.commons.validation.PortablePreconditions;
 public abstract class BaseHasDefaultValueProperty<C> extends BaseProperty implements HasDefaultValue<C> {
 
     protected C defaultValue;
+    protected C value;
+    
 
     public BaseHasDefaultValueProperty(final String id) {
         super(id);
@@ -41,6 +43,16 @@ public abstract class BaseHasDefaultValueProperty<C> extends BaseProperty implem
     @Override
     public C getDefaultValue() {
         return defaultValue;
+    }
+
+    @Override
+    public C getValue() {
+        return value;
+    }
+
+    @Override
+    public void setValue(final C value) {
+        this.value = value;
     }
 
     public BaseHasDefaultValueProperty<C> setDefaultValue(C defaultValue) {

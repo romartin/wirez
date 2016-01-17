@@ -16,11 +16,13 @@
 
 package org.wirez.core.api.annotation.definition;
 
+import org.wirez.core.api.graph.factory.ElementFactory;
+
 import java.lang.annotation.*;
 
 @Inherited
 @Target(ElementType.TYPE) 
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Definition {
 
     String identifier();
@@ -32,5 +34,7 @@ public @interface Definition {
     String description();
     
     String[] labels();
+    
+    Class<? extends ElementFactory> factory();
     
 }

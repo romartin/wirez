@@ -22,7 +22,7 @@ import java.lang.annotation.*;
 
 @Inherited
 @Target(ElementType.TYPE) 
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Property {
 
     String identifier();

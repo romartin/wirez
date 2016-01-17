@@ -67,7 +67,7 @@ public class PropertiesScreen {
             public void onShowElement(Element<? extends ViewContent<?>> element) {
                 if ( null != element ) {
                     String name = (String) element.getProperties().get(NameBuilder.PROPERTY_ID);
-                    name = name != null ? name : element.getContent().getDefinition().getContent().getTitle();
+                    name = name != null ? name : element.getContent().getDefinition().getDefinitionContent().getTitle();
                     changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, name + " Properties"));
                 } else {
                     changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));

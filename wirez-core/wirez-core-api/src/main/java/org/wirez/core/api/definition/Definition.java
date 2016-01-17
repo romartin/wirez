@@ -20,6 +20,6 @@ public interface Definition<C extends Content> {
 
     String getId();
 
-    C getContent();
+    C getDefinitionContent();
     
 }

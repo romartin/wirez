@@ -18,6 +18,7 @@ package ${packageName};
 
 import javax.annotation.Generated;
 import javax.enterprise.context.Dependent;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.HasDefaultValue;
@@ -28,6 +29,7 @@ import org.wirez.core.processors.ProcessingElement;
  */
 @Generated("org.wirez.core.processors.property.PropertyProcessor")
 @Dependent
+@Portable
 public class ${className} ${classHierarchyModifier} ${realClassName}
 <#if defaultValue??>
     , HasDefaultValue<${defaultValue.className}>

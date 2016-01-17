@@ -18,7 +18,7 @@ package org.wirez.core.api.annotation.definition;
 import java.lang.annotation.*;
 
 @Inherited
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface Property {
     

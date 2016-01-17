@@ -44,7 +44,7 @@ public class DefaultDefinition<C extends DefaultContent> implements Definition<C
     }
 
     @Override
-    public C getContent() {
+    public C getDefinitionContent() {
         return content;
     }
 
@@ -53,7 +53,7 @@ public class DefaultDefinition<C extends DefaultContent> implements Definition<C
     }
 
     protected Set<String> buildElementLabels(final Set<String> labels) {
-        final Set<String> defLabels = getContent().getLabels();
+        final Set<String> defLabels = getDefinitionContent().getLabels();
         labels.addAll(defLabels);
         return labels;
     }
@@ -61,14 +61,14 @@ public class DefaultDefinition<C extends DefaultContent> implements Definition<C
     protected Map<String, Object> buildElementProperties(final Map<String, Object> properties) {
         
         // Property set properties.
-        final Set<PropertySet> propertySetSets = getContent().getPropertySets();
+        final Set<PropertySet> propertySetSets = getDefinitionContent().getPropertySets();
         for (final PropertySet propertySet : propertySetSets) {
             final Collection<Property> setProperties = propertySet.getProperties();
             buildElementProperties(properties, setProperties);
         }
 
         // Custom definition properties.
-        final Collection<Property> defProperties = getContent().getProperties();
+        final Collection<Property> defProperties = getDefinitionContent().getProperties();
         buildElementProperties(properties, defProperties);
         
         return properties;

@@ -133,7 +133,7 @@ public class Palette implements IsWidget {
 
             if ( null != definition ) {
 
-                final String category = definition.getContent().getCategory();
+                final String category = definition.getDefinitionContent().getCategory();
                 final String description = factory.getDescription();
                 final ShapeGlyph glyph = factory.getGlyph();
 

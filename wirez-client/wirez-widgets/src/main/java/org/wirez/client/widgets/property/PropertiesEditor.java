@@ -124,7 +124,7 @@ public class PropertiesEditor implements IsWidget {
         final Definition wirez = element.getContent().getDefinition();
         
         // This editor is for DefaultContent, not type safe properties.
-        if (wirez.getContent() instanceof DefaultContent) {
+        if (wirez.getDefinitionContent() instanceof DefaultContent) {
 
             final List<PropertyEditorCategory> categories = new ArrayList<PropertyEditorCategory>();
             final Set<String> processedProperties = new HashSet<String>();
@@ -134,7 +134,7 @@ public class PropertiesEditor implements IsWidget {
             categories.add(elementCategory);
 
             // Definition property packages.
-            final Set<PropertySet> propertyPackageSet = ( (DefaultContent) wirez.getContent()).getPropertySets();
+            final Set<PropertySet> propertyPackageSet = ( (DefaultContent) wirez.getDefinitionContent()).getPropertySets();
             if (propertyPackageSet != null) {
 
                 for (final PropertySet propertyPackage : propertyPackageSet) {
@@ -189,10 +189,10 @@ public class PropertiesEditor implements IsWidget {
 
     private PropertyEditorCategory buildPropertiesCategory(final Element<? extends ViewContent<?>> element,
                                                            final Set<String> processedPropertyIds) {
-        final String title = element.getContent().getDefinition().getContent().getTitle();
+        final String title = element.getContent().getDefinition().getDefinitionContent().getTitle();
         final PropertyEditorCategory result = new PropertyEditorCategory(title, 1);
         
-        final Set<Property> propertySet =  ( (DefaultContent)element.getContent().getDefinition().getContent() ).getProperties();
+        final Set<Property> propertySet =  ( (DefaultContent)element.getContent().getDefinition().getDefinitionContent() ).getProperties();
         if (propertySet != null) {
             for (final Property property : propertySet) {
                 final String propertyId = property.getId();

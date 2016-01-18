@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 
-org.wirez.core.processors.definition.DefinitionProcessor
-org.wirez.core.processors.property.PropertyProcessor
+# org.wirez.core.processors.definition.DefinitionProcessor
+# org.wirez.core.processors.property.PropertyProcessor

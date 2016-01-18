@@ -25,18 +25,4 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Property {
 
-    String identifier();
-
-    Class<? extends PropertyType> type();
-
-    String caption();
-
-    String description();
-    
-    boolean readOnly();
-
-    boolean optional();
-
-    boolean isPublic();
-
 }

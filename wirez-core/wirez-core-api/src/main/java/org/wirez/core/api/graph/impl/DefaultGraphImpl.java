@@ -18,28 +18,34 @@ package org.wirez.core.api.graph.impl;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.uberfire.commons.validation.PortablePreconditions;
+import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
 import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
+import org.wirez.core.api.graph.store.GraphEdgeStore;
+import org.wirez.core.api.graph.store.GraphNodeStore;
 
 import java.util.Map;
 import java.util.Set;
 
 @Portable
 public class DefaultGraphImpl<C> extends ElementImpl<C> implements DefaultGraph<C, Node, Edge> {
-    private final DefaultGraphNodeStore nodeStore;
-    private final DefaultGraphEdgeStore edgeStore;
+    private final GraphNodeStore<Node> nodeStore;
+    private final GraphEdgeStore<Edge> edgeStore;
 
     public DefaultGraphImpl(@MapsTo("uuid") String uuid,
-                            @MapsTo("properties") Map<String, Object> properties,
+                            @MapsTo("properties") Set<Property> properties,
                             @MapsTo("labels") Set<String> labels,
                             @MapsTo("content") C content,
-                            @MapsTo("graphNodeStore") DefaultGraphNodeStore nodeStore,
-                            @MapsTo("graphEdgeStore") DefaultGraphEdgeStore edgeStore) {
+                            @MapsTo("nodeStore") GraphNodeStore<Node> nodeStore,
+                            @MapsTo("edgeStore") GraphEdgeStore<Edge> edgeStore) {
         super(uuid, properties, labels, content);
-        this.nodeStore = nodeStore;
-        this.edgeStore = edgeStore;
+        this.nodeStore = PortablePreconditions.checkNotNull( "nodeStore",
+                nodeStore );
+        this.edgeStore = PortablePreconditions.checkNotNull( "edgeStore",
+                edgeStore );
     }
 
     @Override

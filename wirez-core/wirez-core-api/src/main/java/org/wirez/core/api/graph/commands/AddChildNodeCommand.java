@@ -66,7 +66,7 @@ public class AddChildNodeCommand implements Command {
             final Map<String, Object> properties = new HashMap<>();
             final Set<String> labels = new HashSet<>(1);
             
-            final Edge<ParentChildRelationship, Node> child = new EdgeImpl<>(uuid, properties, labels, new ParentChildRelationship());
+            final Edge<ParentChildRelationship, Node> child = new EdgeImpl<>(uuid, null, labels, new ParentChildRelationship());
             child.setSourceNode(parent);
             child.setTargetNode(candidate);
             target.addNode( candidate );

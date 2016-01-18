@@ -38,8 +38,9 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.handler.DefaultGraphHandler;
+import org.wirez.core.api.util.PropertyUtils;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.WirezClientManager;
+import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.DefaultCanvasListener;
@@ -70,7 +71,7 @@ public class PropertiesEditor implements IsWidget {
         void onShowElement(Element<? extends ViewContent<?>> element);
     }
 
-    WirezClientManager wirezClientManager;
+    ShapeManager wirezClientManager;
     DefaultCanvasCommands defaultCommands;
     DefaultGraphHandler defaultGraphHandler;
     View view;
@@ -80,7 +81,7 @@ public class PropertiesEditor implements IsWidget {
 
     @Inject
     public PropertiesEditor(final View view,
-                            final WirezClientManager wirezClientManager,
+                            final ShapeManager wirezClientManager,
                             final DefaultCanvasCommands defaultCommands,
                             final DefaultGraphHandler defaultGraphHandler) {
         this.view = view;
@@ -145,7 +146,7 @@ public class PropertiesEditor implements IsWidget {
                     if (properties != null) {
                         for (final Property property : properties) {
                             final String propertyId = property.getId();
-                            final Object value = element.getProperties().get(propertyId);
+                            final Object value = PropertyUtils.getValue(element.getProperties(), propertyId);
                             // GWT.log("PropertiesEditor  - Building field info with value [" + ( value != null ? value.toString() : null ) + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
                             final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                                 @Override
@@ -196,7 +197,7 @@ public class PropertiesEditor implements IsWidget {
         if (propertySet != null) {
             for (final Property property : propertySet) {
                 final String propertyId = property.getId();
-                final Object value = element.getProperties().get(propertyId);
+                final Object value = PropertyUtils.getValue(element.getProperties(), propertyId);
                 if (!processedPropertyIds.contains(propertyId)) {
                     final PropertyEditorFieldInfo fieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                         @Override

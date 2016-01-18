@@ -31,6 +31,7 @@ import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.util.PropertyUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -66,7 +67,7 @@ public class PropertiesScreen {
             @Override
             public void onShowElement(Element<? extends ViewContent<?>> element) {
                 if ( null != element ) {
-                    String name = (String) element.getProperties().get(NameBuilder.PROPERTY_ID);
+                    String name = PropertyUtils.getValue(element.getProperties(), NameBuilder.PROPERTY_ID);
                     name = name != null ? name : element.getContent().getDefinition().getDefinitionContent().getTitle();
                     changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, name + " Properties"));
                 } else {

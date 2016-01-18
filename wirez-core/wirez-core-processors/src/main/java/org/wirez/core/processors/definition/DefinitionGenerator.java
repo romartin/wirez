@@ -118,10 +118,9 @@ public class DefinitionGenerator extends AbstractGenerator {
                 classElement.getSimpleName().toString() );
         root.put( "identifier",
                 identifier );
-        root.put( "defName",
-                name );
-        root.put( "properties",
-                properties );
+        
+        
+        // TODO
         
         //Generate code
         final StringWriter sw = new StringWriter();

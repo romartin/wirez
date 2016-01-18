@@ -16,14 +16,15 @@
 
 package org.wirez.core.api.graph.factory;
 
-import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.ViewContent;
 
-import java.util.Map;
 import java.util.Set;
 
-public interface ElementFactory<C, T extends Element<C>> {
+public interface ElementFactory<W extends Definition, T extends Element<ViewContent<W>>> {
     
-    T build(String uuid, Set<String> labels, Map<String, Object> properties);
+    T build(W definition, Set<Property> properties, Set<String> labels);
     
 }

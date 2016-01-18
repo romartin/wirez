@@ -18,7 +18,6 @@ package org.wirez.core.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import java.util.Collection;
@@ -46,9 +45,9 @@ public interface ShapeSet {
     SafeUri getThumbnailUri();
 
     /**
-     * The id of the wirez set.
+     * The id of the definition set.
      */
-    DefinitionSet getDefinitionSet();
+    String getDefinitionSetId();
 
     /**
      * The shape factories available in this set.

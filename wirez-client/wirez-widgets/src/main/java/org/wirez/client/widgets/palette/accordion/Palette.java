@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.uberfire.client.mvp.UberView;
+import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroup;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
@@ -31,10 +32,12 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.WirezClientManager;
+import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.control.HasShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.service.ClientDefinitionServices;
+import org.wirez.core.client.service.ClientRuntimeError;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -59,20 +62,26 @@ public class Palette implements IsWidget {
 
     }
 
-    WirezClientManager wirezClientManager;
+    ShapeManager shapeManager;
+    ClientDefinitionServices clientDefinitionServices;
     Event<AddShapeToCanvasEvent> addShapeToCanvasEvent;
     SyncBeanManager beanManager;
     PaletteTooltip paletteTooltip;
+    ErrorPopupPresenter errorPopupPresenter;
     View view;
     
     @Inject
     public Palette(final View view,
-                   final WirezClientManager wirezClientManager,
+                   final ErrorPopupPresenter errorPopupPresenter,
+                   final ShapeManager shapeManager,
+                   final ClientDefinitionServices clientDefinitionServices,
                    final SyncBeanManager beanManager,
                    final Event<AddShapeToCanvasEvent> addShapeToCanvasEvent,
                    final PaletteTooltip paletteTooltip) {
         this.view = view;
-        this.wirezClientManager = wirezClientManager;
+        this.errorPopupPresenter = errorPopupPresenter;
+        this.shapeManager = shapeManager;
+        this.clientDefinitionServices = clientDefinitionServices;
         this.beanManager = beanManager;
         this.addShapeToCanvasEvent = addShapeToCanvasEvent;
         this.paletteTooltip = paletteTooltip;
@@ -98,13 +107,26 @@ public class Palette implements IsWidget {
     public void show(final int width, final String shapeSetId) {
         clear();
         final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
-        doShow(width, wirezShapeSet);
-        view.setNoCanvasViewVisible(false);
-        view.setGroupsViewVisible(true);
+        final String definitionSetId = wirezShapeSet.getDefinitionSetId();
+        
+        clientDefinitionServices.getDefinitionSet(definitionSetId, new ClientDefinitionServices.ServiceCallback<DefinitionSet>() {
+            @Override
+            public void onSuccess(final DefinitionSet definitionSet) {
+                doShow(width, wirezShapeSet, definitionSet);
+                view.setNoCanvasViewVisible(false);
+                view.setGroupsViewVisible(true);
+            }
+
+            @Override
+            public void onError(final ClientRuntimeError error) {
+                showError(error);
+            }
+        });
+        
     }
     
     private ShapeSet getShapeSet(final String shapeSetId) {
-        final Collection<ShapeSet> sets = wirezClientManager.getShapeSets();
+        final Collection<ShapeSet> sets = shapeManager.getShapeSets();
         for (final ShapeSet set  : sets) {
             if (set.getId().equals(shapeSetId)) {
                 return set;
@@ -117,12 +139,11 @@ public class Palette implements IsWidget {
         view.clear();
     }
 
-    private void doShow(final int width, final ShapeSet wirezShapeSet) {
+    private void doShow(final int width, final ShapeSet wirezShapeSet, final DefinitionSet definitionSet) {
 
         // Clear current palette groups.
         view.clearGroups();
 
-        final DefinitionSet definitionSet = wirezShapeSet.getDefinitionSet();
         final Collection<Definition> definitions = definitionSet.getDefinitions();
         final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
 
@@ -228,6 +249,15 @@ public class Palette implements IsWidget {
     
     private PaletteGroup buildPaletteGroup() {
         return beanManager.lookupBean( PaletteGroup.class ).newInstance();
+    }
+
+    void showError(final ClientRuntimeError error) {
+        final String message = error.getCause() != null ? error.getCause() : error.getMessage();
+        showError(message);
+    }
+
+    void showError(final String message) {
+        errorPopupPresenter.showMessage(message);
     }
     
 }

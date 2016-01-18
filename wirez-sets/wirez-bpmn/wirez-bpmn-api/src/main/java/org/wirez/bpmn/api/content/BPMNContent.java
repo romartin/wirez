@@ -16,13 +16,14 @@
 
 package org.wirez.bpmn.api.content;
 
-import org.jboss.errai.codegen.meta.HasAnnotations;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.definition.Content;
 
 import java.util.Set;
 
+@Portable
 public class BPMNContent implements Content {
 
     private final String category;

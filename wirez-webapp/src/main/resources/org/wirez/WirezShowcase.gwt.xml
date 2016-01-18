@@ -26,7 +26,8 @@
   <inherits name="org.uberfire.ext.plugin.RuntimePluginClient"/>
   <inherits name="org.uberfire.ext.apps.UberfireAppsClient"/>
   <inherits name="org.wirez.client.WirezWorkbench"/>
-  <inherits name="org.wirez.basicset.WirezBasicSetClient"/>
+  <!--<inherits name="org.wirez.basicset.WirezBasicSetClient"/>-->
+  <inherits name="org.wirez.bpmn.WirezBpmnClient"/>
   
   <!-- Specify the application specific style sheet. -->
   <set-property name="user.agent" value="safari"/>

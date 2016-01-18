@@ -33,7 +33,7 @@ import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.workbench.perspectives.WirezPerspective;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.WirezClientManager;
+import org.wirez.core.client.ShapeManager;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -63,7 +63,7 @@ public class CanvasWizardScreen {
     WirezPerspective wirezPerspective;
     
     @Inject
-    WirezClientManager wirezClientManager;
+    ShapeManager wirezClientManager;
 
     private Menus menu = null;
     
@@ -138,7 +138,7 @@ public class CanvasWizardScreen {
         final String shapeSetId = createEmptyDiagramEvent.getShapeSetId();
         final ShapeSet shapeSet = getWirezShapeSet(shapeSetId);
         final String shapSetName = shapeSet.getName();
-        final String wirezSetId = shapeSet.getDefinitionSet().getId();
+        final String wirezSetId = shapeSet.getDefinitionSetId();
         Map<String, String> params = new HashMap<String, String>();
         params.put( "uuid", uuid );
         params.put( "defSetId", wirezSetId );

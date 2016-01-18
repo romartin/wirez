@@ -15,7 +15,7 @@
   <name>Wirez - Default Sets</name>
   
   <modules>
-    <module>wirez-basic-set</module>
+    <!--<module>wirez-basic-set</module>-->
     <module>wirez-bpmn</module>
   </modules>
 

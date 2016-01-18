@@ -16,11 +16,6 @@
 
 package org.wirez.client.workbench.util;
 
-import com.sun.org.apache.xerces.internal.impl.xs.opti.DefaultNode;
-import org.wirez.basicset.api.Circle;
-import org.wirez.basicset.api.Connector;
-import org.wirez.basicset.api.Diagram;
-import org.wirez.basicset.api.Rectangle;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
@@ -39,6 +34,8 @@ public class GraphTests {
 
     public static DefaultGraph connectionsTest2() {
 
+        /*
+        
         // Node1 (rectangle).
         Map<String, Object> parentNodeProperties = new HashMap<>();
         parentNodeProperties.put("name", "Node1");
@@ -102,11 +99,17 @@ public class GraphTests {
         graph.addNode(childNode2);
 
         return graph;
+        
+        */
+        return null;
 
     }
     
     public static DefaultGraph basicTest() {
 
+        /*
+        
+        
         // Parent node (rectangle).
         Map<String, Object> parentNodeProperties = new HashMap<>();
         parentNodeProperties.put("name", "Parent Node");
@@ -152,11 +155,16 @@ public class GraphTests {
         graph.addNode(childNode);
 
         return graph;
+        
+          */
+        return null;
 
     }
     
     public static DefaultGraph childrenTest() {
 
+        /*
+        
         // Parent node (rectangle).
         Map<String, Object> parentNodeProperties = new HashMap<>();
         parentNodeProperties.put("name", "Parent Node");
@@ -212,12 +220,17 @@ public class GraphTests {
         
         return graph;
         
+          */
+        return null;
+        
     }
 
 
 
     public static DefaultGraph childrenTest2() {
 
+        /*
+        
         // Parent node (rectangle).
         Map<String, Object> parentNodeProperties = new HashMap<>();
         parentNodeProperties.put("name", "Parent Node");
@@ -315,6 +328,9 @@ public class GraphTests {
         graph.addNode(childNode2);
 
         return graph;
+        
+        */
+        return null;
 
     }
     

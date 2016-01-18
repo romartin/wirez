@@ -30,6 +30,7 @@ import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnetB
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.util.PropertyUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
@@ -124,8 +125,8 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
-        final Integer _sourceMagnet = (Integer) element.getProperties().get(ConnectionSourceMagnetBuilder.PROPERTY_ID);
-        final Integer _targetMagnet = (Integer) element.getProperties().get(ConnectionTargetMagnetBuilder.PROPERTY_ID);
+        final Integer _sourceMagnet = PropertyUtils.getValue(element.getProperties(), ConnectionSourceMagnetBuilder.PROPERTY_ID);
+        final Integer _targetMagnet = PropertyUtils.getValue(element.getProperties(), ConnectionTargetMagnetBuilder.PROPERTY_ID);
         final int sourceMagnet = _sourceMagnet != null ? _sourceMagnet : 0;
         final int targetMagnet = _targetMagnet != null ? _targetMagnet : 0;
         

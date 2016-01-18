@@ -13,13 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.annotation.property;
+
+package org.wirez.core.api.annotation.graph;
+
+import org.wirez.core.api.graph.Element;
 
 import java.lang.annotation.*;
 
 @Inherited
+@Target(ElementType.TYPE) 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-public @interface DefaultValue {
+public @interface Graph {
 
+    Class<? extends Element> type();
+    
 }

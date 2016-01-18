@@ -16,29 +16,48 @@
 
 package org.wirez.bpmn.api;
 
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.bpmn.api.content.BPMNContent;
-import org.wirez.bpmn.api.property.Executable;
 import org.wirez.bpmn.api.property.Package;
+import org.wirez.core.api.annotation.definition.Property;
+import org.wirez.core.api.annotation.graph.Graph;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.factory.NodeFactory;
+import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.graph.impl.DefaultGraphImpl;
 
+import java.util.HashSet;
 
-@org.wirez.core.api.annotation.definition.Definition(
-        identifier = BPMNDiagram.ID,
-        category = "Diagram",
-        title = "BPMN Diagram",
-        description = "A BPMN diagram",
-        labels = { "all", "diagram"},
-        factory = NodeFactory.class
-)
-public interface BPMNDiagram extends Definition<BPMNContent> {
+@Portable
+@org.wirez.core.api.annotation.definition.Definition
+@Graph( type = DefaultGraph.class )
+public class BPMNDiagram implements Definition<BPMNContent> {
 
-    String ID = "bpmnDiagram";
+    public static final String ID = "bpmnDiagram";
     
-    @org.wirez.core.api.annotation.definition.Property
-    Package packageProperty();
+    private BPMNContent content;
+    private Package thePackage;
+    
+    public BPMNDiagram() {
+        content = new BPMNContent("Diagram", "BPMN Diagram", "A BPMN Diagram", 
+                new HashSet<String>(){{
+                    add( "all" );
+                    add( "diagram" );
+                }});
+        thePackage = new Package();
+    }
 
-    @org.wirez.core.api.annotation.definition.Property
-    Executable executableProperty();
+    @Override
+    public String getId() {
+        return ID;
+    }
 
+    @Override
+    public BPMNContent getDefinitionContent() {
+        return content;
+    }
+    
+    @Property
+    public Package getPackage() {
+        return thePackage;
+    }
 }

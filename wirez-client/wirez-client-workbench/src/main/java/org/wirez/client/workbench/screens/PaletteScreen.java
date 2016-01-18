@@ -29,7 +29,7 @@ import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.palette.accordion.Palette;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.WirezClientManager;
+import org.wirez.core.client.ShapeManager;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -56,7 +56,7 @@ public class PaletteScreen {
     PlaceManager placeManager;
     
     @Inject
-    WirezClientManager wirezClientManager;
+    ShapeManager wirezClientManager;
 
     @Inject
     Event<ChangeTitleWidgetEvent> changeTitleNotification;

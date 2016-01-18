@@ -23,7 +23,7 @@ import org.uberfire.client.mvp.UberView;
 import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.event.CreateEmptyDiagramEvent;
 import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.WirezClientManager;
+import org.wirez.core.client.ShapeManager;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -50,13 +50,13 @@ public class CanvasWizard implements IsWidget {
         
     }
 
-    WirezClientManager wirezClientManager;
+    ShapeManager wirezClientManager;
     Event<CreateEmptyDiagramEvent> createEmptyDiagramEventEvent;
     View view;
     private String selectedShapeSetId;
 
     @Inject
-    public CanvasWizard(final WirezClientManager wirezClientManager, 
+    public CanvasWizard(final ShapeManager wirezClientManager, 
                         final Event<CreateEmptyDiagramEvent> createEmptyDiagramEventEvent,
                         final View view) {
         this.wirezClientManager = wirezClientManager;

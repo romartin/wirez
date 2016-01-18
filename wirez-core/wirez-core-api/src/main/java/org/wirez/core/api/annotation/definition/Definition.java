@@ -25,16 +25,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Definition {
 
-    String identifier();
-
-    String category();
-
-    String title();
-
-    String description();
-    
-    String[] labels();
-    
-    Class<? extends ElementFactory> factory();
     
 }

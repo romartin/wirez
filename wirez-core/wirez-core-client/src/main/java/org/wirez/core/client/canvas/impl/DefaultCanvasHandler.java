@@ -42,7 +42,7 @@ import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.util.Logger;
-import org.wirez.core.client.WirezClientManager;
+import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
@@ -62,13 +62,13 @@ import java.util.Collection;
 @Dependent
 public class DefaultCanvasHandler extends BaseCanvasHandler {
 
-    WirezClientManager wirezClientManager;
+    ShapeManager wirezClientManager;
     DefaultCanvasCommands defaultCanvasCommands;
     DefaultGraphHandler defaultGraphHandler;
     DefaultGraphVisitor defaultGraphVisitor;
     
     @Inject
-    public DefaultCanvasHandler(final WirezClientManager wirezClientManager,
+    public DefaultCanvasHandler(final ShapeManager wirezClientManager,
                                 final Event<NotificationEvent> notificationEvent, 
                                 final DefaultCommandManager commandManager, 
                                 final DefaultRuleManager ruleManager,

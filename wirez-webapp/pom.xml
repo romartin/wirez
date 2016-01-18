@@ -261,7 +261,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <dependency>
+    <!--<dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-basic-set-api</artifactId>
     </dependency>
@@ -270,7 +270,7 @@
       <groupId>org.wirez</groupId>
       <artifactId>wirez-basic-set-client</artifactId>
       <scope>provided</scope>
-    </dependency>
+    </dependency>-->
 
     <dependency>
       <groupId>org.wirez</groupId>
@@ -420,8 +420,8 @@
             <compileSourcesArtifact>org.wirez:wirez-core-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-widgets</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-client-workbench</compileSourcesArtifact>
-            <compileSourcesArtifact>org.wirez:wirez-basic-set-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.wirez:wirez-basic-set-client</compileSourcesArtifact>
+            <!--<compileSourcesArtifact>org.wirez:wirez-basic-set-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-basic-set-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.wirez:wirez-bpmn-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-client</compileSourcesArtifact>
 

@@ -18,6 +18,7 @@ package org.wirez.client.widgets.event;
 
 import org.uberfire.workbench.events.UberFireEvent;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.factory.ShapeFactory;
 

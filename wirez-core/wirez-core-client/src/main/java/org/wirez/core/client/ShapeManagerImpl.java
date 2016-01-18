@@ -18,7 +18,6 @@ package org.wirez.core.client;
 
 import org.jboss.errai.ioc.client.container.IOCBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
-import org.wirez.core.api.WirezManagerImpl;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.factory.ShapeFactory;
 
@@ -30,18 +29,18 @@ import java.util.Collection;
 import java.util.List;
 
 @ApplicationScoped
-public class WirezClientManagerImpl extends WirezManagerImpl implements WirezClientManager {
-    
+public class ShapeManagerImpl implements ShapeManager {
+
+    protected SyncBeanManager beanManager;
     private final List<ShapeSet> shapeSets = new ArrayList<ShapeSet>();
 
     @Inject
-    public WirezClientManagerImpl(final SyncBeanManager beanManager) {
-        super(beanManager);
+    public ShapeManagerImpl(final SyncBeanManager beanManager) {
+        this.beanManager = beanManager;
     }
 
     @PostConstruct
     public void init() {
-        super.init();
         initShapeSets();
     }
 

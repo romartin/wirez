@@ -21,9 +21,11 @@
 
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.wirez.client.WirezWidgets"/>
-	<inherits name="org.wirez.basicset.WirezBasicSetApi"/>
 	<inherits name="org.uberfire.commons.UberfireCommons"/>
 
+	<!--<inherits name="org.wirez.basicset.WirezBasicSetApi"/>-->
+	<inherits name="org.wirez.bpmn.WirezBpmnApi"/>
+	
 	<source path="workbench"/>
 
 </module>

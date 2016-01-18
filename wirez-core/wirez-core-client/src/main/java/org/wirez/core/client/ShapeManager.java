@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api;
+package org.wirez.core.client;
 
-import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.client.factory.ShapeFactory;
 
 import java.util.Collection;
 
-public interface WirezManager {
+public interface ShapeManager {
+    
+    Collection<ShapeSet> getShapeSets();
 
-    Collection<DefinitionSet> getDefinitionSets();
+    ShapeFactory getFactory(Definition definition);
     
 }

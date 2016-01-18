@@ -27,6 +27,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaultset.NameBuilder;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.util.PropertyUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.*;
 import org.wirez.core.client.control.resize.BaseResizeControl;
@@ -152,7 +153,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
 
     protected void _applyElementName(final org.wirez.core.api.graph.Node<ViewContent<W>, Edge> element,
                                      final MutationContext mutationContext) {
-        String name = (String) element.getProperties().get(NameBuilder.PROPERTY_ID);
+        String name = PropertyUtils.getValue(element.getProperties(), NameBuilder.PROPERTY_ID);
         applyPropertyValue(NameBuilder.PROPERTY_ID, name, mutationContext);
     }
 

@@ -33,17 +33,17 @@ import org.wirez.client.widgets.canvas.Canvas;
 import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.client.workbench.util.GraphTests;
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.util.Logger;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.WirezClientManager;
+import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.DefaultCanvasSettingsBuilder;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
@@ -53,6 +53,8 @@ import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.canvas.impl.DefaultCanvasHandler;
 import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.service.ClientDefinitionServices;
+import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.util.CanvasHighlightVisitor;
 
 import javax.annotation.PostConstruct;
@@ -81,7 +83,10 @@ public class CanvasScreen {
     DefaultCanvasHandler canvasHandler;
 
     @Inject
-    WirezClientManager wirezClientManager;
+    ClientDefinitionServices clientDefinitionServices;
+    
+    @Inject
+    ShapeManager wirezClientManager;
 
     @Inject
     DefaultCanvasCommands defaultCanvasCommands;
@@ -112,37 +117,59 @@ public class CanvasScreen {
     public void onStartup(final PlaceRequest placeRequest) {
 
         this.placeRequest = placeRequest;
-        String uuid = placeRequest.getParameter( "uuid", "" );
-        String wirezSetId = placeRequest.getParameter( "defSetId", "" );
-        String shapeSetUUID = placeRequest.getParameter( "shapeSetId", "" );
-        String title = placeRequest.getParameter( "title", "" );
-        String graphTestMode = placeRequest.getParameter( "graphTestMode", "false" );
+        final String uuid = placeRequest.getParameter( "uuid", "" );
+        String defSetId = placeRequest.getParameter( "defSetId", "" );
+        final String shapeSetUUID = placeRequest.getParameter( "shapeSetId", "" );
+        final String title = placeRequest.getParameter( "title", "" );
+        final String graphTestMode = placeRequest.getParameter( "graphTestMode", "false" );
+        final boolean isTestMode = ("true".equals(graphTestMode));
         
-        if ("true".equals(graphTestMode)) {
-
-            final DefinitionSet wirezSet = getDefinitionSet("basicSet");
-            final ShapeSet shapeSet = getShapeSet("basic");
-            final DefaultGraph graph = GraphTests.connectionsTest2();
-            open("graphTests", wirezSet, shapeSet, "Graph Tests", graph);
-            
-        } else {
-
-            final DefinitionSet wirezSet = getDefinitionSet(wirezSetId);
-            final ShapeSet shapeSet = getShapeSet(shapeSetUUID);
-            final DefaultGraphFactory graphFactory = getGraphFactory(wirezSet);
-
-            // For testing...
-            final Map<String, Object> properties = new HashMap<String, Object>();
-
-            final Set<String> labels = new HashSet<>();
-            final DefaultGraph graph = (DefaultGraph) graphFactory.build(uuid, labels, properties);
-
-            open(uuid, wirezSet, shapeSet, title, graph);
-            
+        if (isTestMode) {
+            defSetId = "basicSet";
         }
-      
-        this.menu = makeMenuBar();
+        
+        getDefinitionSet(defSetId, new DefinitionSetRequestCallback() {
+            @Override
+            public void onSuccess(final DefinitionSet definitionSet) {
 
+                if (isTestMode) {
+
+                    final ShapeSet shapeSet = getShapeSet("basic");
+                    final DefaultGraph graph = GraphTests.connectionsTest2();
+                    open("graphTests", definitionSet, shapeSet, "Graph Tests", graph);
+
+                } else {
+
+                    final ShapeSet shapeSet = getShapeSet(shapeSetUUID);
+                    clientDefinitionServices.getGraphElement(definitionSet, new ClientDefinitionServices.ServiceCallback<Definition>() {
+                        @Override
+                        public void onSuccess(final Definition item) {
+                            clientDefinitionServices.buildGraphElement(item, new ClientDefinitionServices.ServiceCallback<Element>() {
+                                @Override
+                                public void onSuccess(final Element item) {
+                                    final DefaultGraph graph = (DefaultGraph) item;
+                                    open(uuid, definitionSet, shapeSet, title, graph);
+                                    CanvasScreen.this.menu = makeMenuBar();
+                                }
+
+                                @Override
+                                public void onError(final ClientRuntimeError error) {
+                                    showError(error);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError(final ClientRuntimeError error) {
+                            showError(error);
+                        }
+                    });
+                    
+                }
+                
+            }
+        });
+        
     }
 
     private void open(String uuid, DefinitionSet definitionSet, ShapeSet shapeSet, String title, Graph graph) {
@@ -308,12 +335,25 @@ public class CanvasScreen {
         };
     }
 
-    private DefinitionSet getDefinitionSet(final String id) {
-        for (final DefinitionSet set : wirezClientManager.getDefinitionSets()) {
-            if (set.getId().equals(id)) {
-                return set;
+    private interface DefinitionSetRequestCallback {
+        void onSuccess ( DefinitionSet definitionSet );
+    }
+    
+    private DefinitionSet getDefinitionSet(final String id, final DefinitionSetRequestCallback callback) {
+        
+        clientDefinitionServices.getDefinitionSet(id, new ClientDefinitionServices.ServiceCallback<DefinitionSet>() {
+            @Override
+            public void onSuccess(final DefinitionSet definitionSet) {
+                callback.onSuccess(definitionSet);
             }
-        }
+
+            @Override
+            public void onError(final ClientRuntimeError error) {
+                showError(error);
+            }
+        });
+        
+        
         return null;
     }
 
@@ -349,6 +389,11 @@ public class CanvasScreen {
         new CanvasHighlightVisitor(canvasHandler).run();
     }
 
+    private void showError(final ClientRuntimeError error) {
+        final String message = error.getCause() != null ? error.getCause() : error.getMessage();
+        showError(message);
+    }
+    
     private void showError(final Throwable throwable) {
         errorPopupPresenter.showMessage( throwable != null ? throwable.getMessage() : "Error");
     }
@@ -387,23 +432,36 @@ public class CanvasScreen {
 
     private void buildShape(final Definition definition, final ShapeFactory factory,
                             final double _x, final double _y) {
-        final Element<?> element = ((ElementFactory) definition).build(UUID.uuid(), new HashSet<String>(), new HashMap<String, Object>());
+        
+        
+        clientDefinitionServices.buildGraphElement(definition, new ClientDefinitionServices.ServiceCallback<Element>() {
+            @Override
+            public void onSuccess(final Element item) {
+                final Element<?> element = (Element<?>) item;
 
-        final double x = _x > -1 ? _x : 100d;
-        final double y = _y > -1 ? _y : 100d;
+                final double x = _x > -1 ? _x : 100d;
+                final double y = _y > -1 ? _y : 100d;
 
-        CanvasCommand command = null;
-        if ( element instanceof Node) {
-            command = defaultCanvasCommands.ADD_NODE((Node) element, factory);
-        } else if ( element instanceof Edge) {
-            command = defaultCanvasCommands.ADD_EDGE((Edge) element, factory);
-        }
+                CanvasCommand command = null;
+                if ( element instanceof Node) {
+                    command = defaultCanvasCommands.ADD_NODE((Node) element, factory);
+                } else if ( element instanceof Edge) {
+                    command = defaultCanvasCommands.ADD_EDGE((Edge) element, factory);
+                }
 
-        // Add, move and resize the shape.
-        if ( null != command ) {
-            canvasHandler.execute(command);
-            canvasHandler.execute(new MoveCanvasElementCommand(element, x, y));
-        }
+                // Add, move and resize the shape.
+                if ( null != command ) {
+                    canvasHandler.execute(command);
+                    canvasHandler.execute(new MoveCanvasElementCommand(element, x, y));
+                }
+            }
+
+            @Override
+            public void onError(final ClientRuntimeError error) {
+                showError(error);
+            }
+        });
+       
 
     }
 

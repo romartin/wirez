@@ -14,35 +14,38 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.factory;
+package org.wirez.core.backend.graph.factory;
 
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.content.ViewContentImpl;
-import org.wirez.core.api.graph.impl.DefaultBound;
-import org.wirez.core.api.graph.impl.DefaultBounds;
-import org.wirez.core.api.graph.impl.EdgeImpl;
+import org.wirez.core.api.graph.factory.NodeFactory;
+import org.wirez.core.api.graph.impl.NodeImpl;
+import org.wirez.core.api.util.UUID;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Map;
 import java.util.Set;
 
 @Dependent
-@Named("edgeFactoryImpl")
-public class EdgeFactoryImpl<W extends Definition> implements EdgeFactory<ViewContent<W>> {
-    
-    @Override
-    public Edge<ViewContent<W>, Node> build(String uuid, Set<String> labels, Map<String, Object> properties) {
-        return new EdgeImpl<ViewContent<W>>(uuid, properties, labels, new ViewContentImpl<>( (W) this, buildBounds()));
-    }
+public class NodeFactoryImpl<W extends Definition> extends BaseElementFactory<W, Node<ViewContent<W>, Edge>> implements NodeFactory<W> {
 
-    // TODO: ??
-    protected Bounds buildBounds() {
-        return new DefaultBounds(new DefaultBound(0d, 0d), new DefaultBound(0d, 0d));
+    @Override
+    public Node<ViewContent<W>, Edge> build(final W definition, final Set<Property> properties, final Set<String> labels) {
+        Node<ViewContent<W>, Edge> node =
+                new NodeImpl<ViewContent<W>>(UUID.uuid(),
+                        properties,
+                        labels,
+                        new ViewContentImpl<>( definition, buildBounds())
+
+                );
+
+        return node;
     }
     
 }

@@ -18,7 +18,9 @@ package org.wirez.core.api.graph.impl;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 
@@ -29,18 +31,22 @@ import java.util.Set;
 public class ElementImpl<C> implements Element<C> {
 
     protected String uuid;
-    protected Map<String, Object> properties;
+    protected Set<Property> properties;
     protected Set<String> labels;
     protected C content;
 
     public ElementImpl(@MapsTo("uuid") String uuid,
-                       @MapsTo("properties") Map<String, Object> properties,
+                       @MapsTo("properties") Set<Property> properties,
                        @MapsTo("labels") Set<String> labels,
                        @MapsTo("content") C content) {
-        this.uuid = uuid;
-        this.properties = properties;
-        this.labels = labels;
-        this.content = content;
+        this.uuid = PortablePreconditions.checkNotNull( "uuid",
+                uuid );
+        this.properties = PortablePreconditions.checkNotNull( "properties",
+                properties );
+        this.labels = PortablePreconditions.checkNotNull( "labels",
+                labels );
+        this.content = PortablePreconditions.checkNotNull( "content",
+                content );
     }
 
     @Override
@@ -49,7 +55,7 @@ public class ElementImpl<C> implements Element<C> {
     }
 
     @Override
-    public Map<String, Object> getProperties() {
+    public Set<Property> getProperties() {
         return properties;
     }
 

@@ -16,10 +16,13 @@
 
 package org.wirez.core.api.graph.processing.visitor;
 
+import org.wirez.core.api.definition.property.HasValue;
+import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
+import org.wirez.core.api.util.PropertyUtils;
 
 import javax.enterprise.context.Dependent;
 import java.util.*;
@@ -170,10 +173,11 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
     
     private void visitProperties(final Element element) {
         if (element != null && propertyVisitor != null) {
-            final Map<String, Object> properties = element.getProperties();
+            final Set<Property> properties = element.getProperties();
             if (properties != null) {
-                for (final Map.Entry<String, Object> entry : properties.entrySet()) {
-                    propertyVisitor.visitProperty(element, entry.getKey(), entry.getValue());
+                for (final Property property : properties) {
+                    Object value = PropertyUtils.getValue(property);
+                    propertyVisitor.visitProperty(element, property.getId(), value);
                 }
             }
         }

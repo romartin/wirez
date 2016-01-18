@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,24 @@
 package org.wirez.core.api;
 
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.factory.ElementFactory;
 
+import java.util.Collection;
 import java.util.Set;
 
-public interface PropertyManager {
+public interface DefinitionManager {
+
+    Collection<DefinitionSet> getDefinitionSets();
+
+    DefinitionSet getDefinitionSet(String id);
     
-    Set<Property> getProperties();
-    
-    Property getProperty(String id);
+    ElementFactory getFactory(Definition definition);
 
     Set<Property> getProperties(Definition definition);
 
-    Property getProperty(Definition definition, String id);
-
+    Class<? extends Element> getGraphElementType(Definition definition);
+    
 }

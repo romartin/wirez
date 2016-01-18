@@ -22,12 +22,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.palette.accordion.group.layout.HorizLayoutBuilder;
 import org.wirez.client.widgets.palette.accordion.group.layout.HorizLayoutSettings;
 import org.wirez.client.widgets.palette.accordion.group.layout.LayoutBuilder;
 import org.wirez.core.client.ShapeGlyph;
-import org.wirez.core.client.WirezClientManager;
+import org.wirez.core.client.ShapeManager;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -60,13 +59,13 @@ public class PaletteGroup implements IsWidget {
         
     }
     
-    WirezClientManager wirezClientManager;
+    ShapeManager wirezClientManager;
     View view;
     LayoutBuilder layoutBuilder;
 
     @Inject
     public PaletteGroup(final View view,
-                        final WirezClientManager wirezClientManager) {
+                        final ShapeManager wirezClientManager) {
         this.view = view;
         this.wirezClientManager = wirezClientManager;
     }

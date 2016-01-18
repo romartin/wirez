@@ -16,9 +16,11 @@
 
 package org.wirez.core.api.graph.factory;
 
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
 
-public interface NodeFactory<C> extends ElementFactory<C, Node<C, Edge>> {
+public interface NodeFactory<W extends Definition> extends ElementFactory<W, Node<ViewContent<W>, Edge>> {
     
 }

@@ -15,19 +15,57 @@
  */
 package org.wirez.client.screens;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import org.jboss.errai.ui.shared.api.annotations.DataField;
+import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchScreen;
+import org.uberfire.lifecycle.OnStartup;
+import org.uberfire.mvp.Command;
+import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.workbench.model.menu.MenuFactory;
+import org.uberfire.workbench.model.menu.Menus;
+import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.client.service.ClientDefinitionServices;
+import org.wirez.core.client.service.ClientRuntimeError;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 @Dependent
 @Templated
 @WorkbenchScreen(identifier="HomeScreen")
 public class HomeScreen extends Composite {
 
+    @Inject
+    @DataField( "testButton" )
+    private Button testButton = new Button();
+
+    @EventHandler( "testButton" )
+    public void doSomethingC1(ClickEvent e) {
+        clientDefinitionServices.buildGraphElement(new BPMNDiagram(), new ClientDefinitionServices.ServiceCallback<Element>() {
+            @Override
+            public void onSuccess(Element item) {
+                GWT.log("item uuid=" + item.getUUID() + " , properties=" + item.getProperties().size());
+            }
+
+            @Override
+            public void onError(ClientRuntimeError error) {
+                GWT.log("Error");
+            }
+        });
+    }
+    
+    @Inject
+    ClientDefinitionServices clientDefinitionServices;
+    
     @WorkbenchPartTitle
     public String getScreenTitle() {
         return "Welcome to UberFire Wirez";

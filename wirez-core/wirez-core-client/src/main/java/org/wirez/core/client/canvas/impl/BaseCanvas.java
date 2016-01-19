@@ -46,6 +46,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     protected WiresManager wiresManager;
     protected List<Shape> shapes = new ArrayList<Shape>();
     protected List<Shape> selectedShapes = new ArrayList<Shape>();
+    protected Layer layer;
 
     @Inject
     public BaseCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent) {
@@ -60,6 +61,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     
     @Override
     public BaseCanvas initialize(final Layer lienzoLayer) {
+        this.layer = lienzoLayer;
         wiresManager = WiresManager.get(lienzoLayer);
         lienzoLayer.addNodeMouseClickHandler(new NodeMouseClickHandler() {
             @Override
@@ -93,6 +95,11 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
             registerConnector((BaseConnector) shape);
         }
         return this;
+    }
+
+    @Override
+    public Layer getLayer() {
+        return layer;
     }
 
     @Override

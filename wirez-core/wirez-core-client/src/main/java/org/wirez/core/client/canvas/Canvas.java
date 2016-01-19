@@ -67,6 +67,8 @@ public interface Canvas {
      */
     Canvas clear();
 
+    Layer getLayer();
+
     /**
      * Shape's available states.
      */

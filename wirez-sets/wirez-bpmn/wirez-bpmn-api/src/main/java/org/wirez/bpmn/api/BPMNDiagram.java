@@ -25,16 +25,19 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.DefaultGraphImpl;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 
 @Portable
-@org.wirez.core.api.annotation.definition.Definition
 @Graph( type = DefaultGraph.class )
+@org.wirez.core.api.annotation.definition.Definition
 public class BPMNDiagram implements Definition<BPMNContent> {
 
     public static final String ID = "bpmnDiagram";
     
     private BPMNContent content;
+    
+    @Inject
     private Package thePackage;
     
     public BPMNDiagram() {
@@ -43,7 +46,7 @@ public class BPMNDiagram implements Definition<BPMNContent> {
                     add( "all" );
                     add( "diagram" );
                 }});
-        thePackage = new Package();
+        // thePackage = new Package();
     }
 
     @Override

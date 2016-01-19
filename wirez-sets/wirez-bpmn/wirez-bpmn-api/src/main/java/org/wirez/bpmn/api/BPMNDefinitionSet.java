@@ -6,18 +6,26 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.rule.Rule;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @ApplicationScoped
 @Portable
 public class BPMNDefinitionSet implements DefinitionSet {
+
+    @Inject
+    BPMNDiagram diagram;
+
+    private final Collection<Definition> DEFINITIONS = new ArrayList<Definition>();
     
-    private final Collection<Definition> DEFINITIONS = new ArrayList<Definition>() {{
-       add( new BPMNDiagram() ); 
-    }};
+    @PostConstruct
+    public void init() {
+        DEFINITIONS.add( diagram );
+    }
     
     @Override
     public String getId() {

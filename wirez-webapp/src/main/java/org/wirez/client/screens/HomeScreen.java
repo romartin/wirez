@@ -31,7 +31,10 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.core.api.definition.property.HasValue;
+import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 
@@ -54,6 +57,13 @@ public class HomeScreen extends Composite {
             @Override
             public void onSuccess(Element item) {
                 GWT.log("item uuid=" + item.getUUID() + " , properties=" + item.getProperties().size());
+                Property property = (Property) item.getProperties().iterator().next();
+                GWT.log("Property=" + property.getId());
+                final String pvalue = ( (ViewContent<BPMNDiagram>) item.getContent()).getDefinition().getPackage().getValue();
+                GWT.log("Property value='" + pvalue + "'");
+                ( (HasValue<String>) property).setValue("newValue");
+                final String pvalue2 = ( (ViewContent<BPMNDiagram>) item.getContent()).getDefinition().getPackage().getValue();
+                GWT.log("Property new value='" + pvalue2 + "'");
             }
 
             @Override

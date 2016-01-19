@@ -20,13 +20,6 @@ public class BPMNDefinitionSet implements DefinitionSet {
     @Inject
     BPMNDiagram diagram;
 
-    private final Collection<Definition> DEFINITIONS = new ArrayList<Definition>();
-    
-    @PostConstruct
-    public void init() {
-        DEFINITIONS.add( diagram );
-    }
-    
     @Override
     public String getId() {
         return "bpmnDefSet";
@@ -42,16 +35,11 @@ public class BPMNDefinitionSet implements DefinitionSet {
         return "THe BPMN definition set";
     }
 
-    @Override
-    public Collection<PropertySet> getPropertySets() {
-        return new ArrayList<>();
+    @org.wirez.core.api.annotation.definitionset.Definition
+    public BPMNDiagram getDiagram() {
+        return diagram;
     }
-
-    @Override
-    public Collection<Definition> getDefinitions() {
-        return DEFINITIONS;
-    }
-
+    
     @Override
     public Collection<Rule> getRules() {
         return new ArrayList<>();

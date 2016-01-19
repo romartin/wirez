@@ -52,49 +52,4 @@ public class DefaultDefinition<C extends DefaultContent> implements Definition<C
         this.content = content;
     }
 
-    protected Set<String> buildElementLabels(final Set<String> labels) {
-        final Set<String> defLabels = getDefinitionContent().getLabels();
-        labels.addAll(defLabels);
-        return labels;
-    }
-    
-    protected Map<String, Object> buildElementProperties(final Map<String, Object> properties) {
-        
-        // Property set properties.
-        final Set<PropertySet> propertySetSets = getDefinitionContent().getPropertySets();
-        for (final PropertySet propertySet : propertySetSets) {
-            final Collection<Property> setProperties = propertySet.getProperties();
-            buildElementProperties(properties, setProperties);
-        }
-
-        // Custom definition properties.
-        final Collection<Property> defProperties = getDefinitionContent().getProperties();
-        buildElementProperties(properties, defProperties);
-        
-        return properties;
-    }
-    
-    protected void buildElementProperties(final Map<String, Object> properties,
-                                          final Collection<Property> defProperties) {
-        
-        for (final Property defProperty : defProperties) {
-            addElementProperty(properties, defProperty);
-        }
-    }
-    
-    protected void addElementProperty(final Map<String, Object> properties,
-                                      final Property property) {
-        final String id = property.getId();
-        
-        if (!properties.containsKey(id)) {
-            
-            if (property instanceof HasDefaultValue) {
-                Object value = ((HasDefaultValue) property).getDefaultValue();
-                properties.put(id, value);
-            }
-            
-        }
-        
-    }
-    
 }

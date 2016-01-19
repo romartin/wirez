@@ -46,7 +46,6 @@ public class BPMNDiagram implements Definition<BPMNContent> {
                     add( "all" );
                     add( "diagram" );
                 }});
-        // thePackage = new Package();
     }
 
     @Override

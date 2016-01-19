@@ -29,6 +29,7 @@ import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
 import org.wirez.client.widgets.palette.tooltip.PaletteTooltip;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.service.definition.DefinitionSetResponse;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.ShapeSet;
@@ -109,10 +110,10 @@ public class Palette implements IsWidget {
         final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
         final String definitionSetId = wirezShapeSet.getDefinitionSetId();
         
-        clientDefinitionServices.getDefinitionSet(definitionSetId, new ClientDefinitionServices.ServiceCallback<DefinitionSet>() {
+        clientDefinitionServices.getDefinitionSet(definitionSetId, new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
             @Override
-            public void onSuccess(final DefinitionSet definitionSet) {
-                doShow(width, wirezShapeSet, definitionSet);
+            public void onSuccess(final DefinitionSetResponse definitionSetResponse) {
+                doShow(width, wirezShapeSet, definitionSetResponse.getDefinitionSet(), definitionSetResponse.getDefinitions());
                 view.setNoCanvasViewVisible(false);
                 view.setGroupsViewVisible(true);
             }
@@ -139,12 +140,11 @@ public class Palette implements IsWidget {
         view.clear();
     }
 
-    private void doShow(final int width, final ShapeSet wirezShapeSet, final DefinitionSet definitionSet) {
+    private void doShow(final int width, final ShapeSet wirezShapeSet, final DefinitionSet definitionSet, final Collection<Definition> definitions) {
 
         // Clear current palette groups.
         view.clearGroups();
 
-        final Collection<Definition> definitions = definitionSet.getDefinitions();
         final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
 
         // Load entries.

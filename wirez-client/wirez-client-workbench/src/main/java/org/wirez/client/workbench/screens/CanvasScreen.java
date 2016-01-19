@@ -39,6 +39,7 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
 import org.wirez.core.api.graph.impl.*;
+import org.wirez.core.api.service.definition.DefinitionSetResponse;
 import org.wirez.core.api.util.Logger;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.Shape;
@@ -192,16 +193,6 @@ public class CanvasScreen {
 
     }
 
-    private DefaultGraphFactory getGraphFactory(final DefinitionSet definitionSet) {
-        Collection<Definition> definitions = definitionSet.getDefinitions();
-        for (final Definition definition : definitions) {
-            if (definition instanceof DefaultGraphFactory) {
-                return (DefaultGraphFactory) definition;
-            }
-        }
-        return null;
-    }
-
     @OnOpen
     public void onOpen() {
 
@@ -341,10 +332,10 @@ public class CanvasScreen {
     
     private DefinitionSet getDefinitionSet(final String id, final DefinitionSetRequestCallback callback) {
         
-        clientDefinitionServices.getDefinitionSet(id, new ClientDefinitionServices.ServiceCallback<DefinitionSet>() {
+        clientDefinitionServices.getDefinitionSet(id, new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
             @Override
-            public void onSuccess(final DefinitionSet definitionSet) {
-                callback.onSuccess(definitionSet);
+            public void onSuccess(final DefinitionSetResponse definitionSetResponse) {
+                callback.onSuccess(definitionSetResponse.getDefinitionSet());
             }
 
             @Override

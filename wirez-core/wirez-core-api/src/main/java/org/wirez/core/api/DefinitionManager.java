@@ -25,11 +25,14 @@ import org.wirez.core.api.graph.factory.ElementFactory;
 import java.util.Collection;
 import java.util.Set;
 
+// TODO: Move annot runtime processing to some ContentManager...?
 public interface DefinitionManager {
 
     Collection<DefinitionSet> getDefinitionSets();
 
     DefinitionSet getDefinitionSet(String id);
+    
+    Collection<Definition> getDefinitions(DefinitionSet definitionSet);
     
     ElementFactory getFactory(Definition definition);
 

@@ -31,7 +31,7 @@ public class DefinitionServiceImpl implements DefinitionService {
     public DefinitionSetResponse getDefinitionSet(final String id) {
         
         final DefinitionSet definitionSet = definitionManager.getDefinitionSet(id);
-        final Collection<Definition> definitions = definitionSet.getDefinitions();
+        final Collection<Definition> definitions = definitionManager.getDefinitions(definitionSet);
         Definition graphDefinition = null;
         for (Definition definition : definitions) {
             Class<? extends Element> elementClass = definitionManager.getGraphElementType(definition);
@@ -41,7 +41,7 @@ public class DefinitionServiceImpl implements DefinitionService {
             }
         }
         
-        return new DefinitionSetResponseImpl(definitionSet, graphDefinition);
+        return new DefinitionSetResponseImpl(definitionSet, graphDefinition, definitions);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class DefinitionServiceImpl implements DefinitionService {
         final Collection<DefinitionSet> definitionSets = definitionManager.getDefinitionSets();
         if ( null != definitionSets ) {
             for (DefinitionSet definitionSet : definitionSets) {
-                final Collection<Definition> definitions = definitionSet.getDefinitions();
+                final Collection<Definition> definitions = definitionManager.getDefinitions(definitionSet);
                 for (Definition definition : definitions) {
                     if (definition.getId().equals(id)) {
                         Class<? extends Element> elementClass = definitionManager.getGraphElementType(definition);

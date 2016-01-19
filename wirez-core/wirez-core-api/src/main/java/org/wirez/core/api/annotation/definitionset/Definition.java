@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wirez.core.api.annotation.definitionset;
 
-package org.wirez.core.api.definition;
+import java.lang.annotation.*;
 
-import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.rule.Rule;
-
-import java.util.Collection;
-
-public interface DefinitionSet {
-
-    String getId();
-
-    String getDomain();
-
-    String getDescription();
-
-    Collection<Rule> getRules();
+@Inherited
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD})
+public @interface Definition {
     
 }

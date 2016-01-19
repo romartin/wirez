@@ -92,6 +92,34 @@ public class BackendDefinitionManager implements DefinitionManager {
     }
 
     @Override
+    public Collection<Definition> getDefinitions(final DefinitionSet definitionSet) {
+        
+        if ( null != definitionSet ) {
+
+            Method[] methods = definitionSet.getClass().getMethods();
+            if ( null != methods ) {
+
+                Collection<Definition> definitions = new ArrayList<>();
+                for (Method method : methods) {
+                    org.wirez.core.api.annotation.definitionset.Definition annotation = method.getAnnotation(org.wirez.core.api.annotation.definitionset.Definition.class);
+                    if ( null != annotation) {
+                        try {
+                            Definition definition  = (Definition) method.invoke(definitionSet);
+                            definitions.add(definition);
+                        } catch (Exception e) {
+                            LOG.error("Error obtaining annotated definitions for DefinitionSet with id " + definitionSet.getId());
+                        }
+                    }
+                }
+                
+                return definitions;
+            }
+        }
+        
+        return null;
+    }
+
+    @Override
     public Set<Property> getProperties(final Definition definition) {
 
         final Set<Property> properties = new HashSet<>();

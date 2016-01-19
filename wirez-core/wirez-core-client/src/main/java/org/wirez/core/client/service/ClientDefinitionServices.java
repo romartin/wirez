@@ -32,14 +32,14 @@ public class ClientDefinitionServices {
         this.definitionService = definitionService;
     }
 
-    public void getDefinitionSet(final String id, final ServiceCallback<DefinitionSet> callback) {
+    public void getDefinitionSet(final String id, final ServiceCallback<DefinitionSetResponse> callback) {
         assert id != null;
         assert callback != null;
         
         definitionService.call(new RemoteCallback<DefinitionSetResponse>() {
             @Override
             public void callback(final DefinitionSetResponse definitionSetResponse) {
-                callback.onSuccess(definitionSetResponse.getDefinitionSet());
+                callback.onSuccess(definitionSetResponse);
             }
         }, new ErrorCallback<Message>() {
             

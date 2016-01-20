@@ -30,11 +30,14 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
+import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.core.api.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 
@@ -50,6 +53,10 @@ public class HomeScreen extends Composite {
     @Inject
     @DataField( "testButton" )
     private Button testButton = new Button();
+
+    @Inject
+    @DataField( "testButton2" )
+    private Button testButton2 = new Button();
 
     @EventHandler( "testButton" )
     public void doSomethingC1(ClickEvent e) {
@@ -72,9 +79,18 @@ public class HomeScreen extends Composite {
             }
         });
     }
+
+    @EventHandler( "testButton2" )
+    public void doSomethingC2(ClickEvent e) {
+        DefinitionSetAdapter adapter = clientDefinitionManager.getDefinitionSetAdapter(BPMNDefinitionSet.class);
+        GWT.log("adapter=" + adapter);
+    }
     
     @Inject
     ClientDefinitionServices clientDefinitionServices;
+
+    @Inject
+    ClientDefinitionManager clientDefinitionManager;
     
     @WorkbenchPartTitle
     public String getScreenTitle() {

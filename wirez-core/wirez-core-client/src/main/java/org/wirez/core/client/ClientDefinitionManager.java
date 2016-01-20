@@ -49,6 +49,8 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
             DefinitionSet definitionSet = defSet.getInstance();
             definitionSets.add(definitionSet);
         }
+        
+        // TODO: Adapter injections not working (should inject the defaul ones from wirez-core-api package...)
 
         // DefinitionSet client adapters.
         Collection<IOCBeanDef<DefinitionSetAdapter>> beanDefSetAdapters = beanManager.lookupBeans(DefinitionSetAdapter.class);

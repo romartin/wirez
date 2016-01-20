@@ -68,9 +68,6 @@ public class HomeScreen extends Composite {
                 GWT.log("Property=" + property.getId());
                 final String pvalue = ( (ViewContent<BPMNDiagram>) item.getContent()).getDefinition().getPackage().getValue();
                 GWT.log("Property value='" + pvalue + "'");
-                ( (HasValue<String>) property).setValue("newValue");
-                final String pvalue2 = ( (ViewContent<BPMNDiagram>) item.getContent()).getDefinition().getPackage().getValue();
-                GWT.log("Property new value='" + pvalue2 + "'");
             }
 
             @Override

@@ -30,7 +30,6 @@ import java.util.HashSet;
 
 @Portable
 @Graph( type = Node.class )
-@org.wirez.core.api.annotation.definition.Definition
 public class StartNoneEvent extends BPMNDefinition {
 
     public static final String ID = "StartNoneEvent";

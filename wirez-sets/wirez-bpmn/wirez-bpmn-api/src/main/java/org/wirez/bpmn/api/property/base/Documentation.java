@@ -24,7 +24,6 @@ import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
-@org.wirez.core.api.annotation.property.Property
 public class Documentation extends BaseProperty {
 
     public static final String ID = "documentation";

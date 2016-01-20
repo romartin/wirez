@@ -4,23 +4,32 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.rule.Rule;
 
 import java.util.Collection;
+import java.util.Set;
 
 @Portable
 public class DefinitionSetResponseImpl implements DefinitionSetResponse {
 
     private final DefinitionSet definitionSet;
     private final Definition graphElement;
-    private final Collection<Definition> definitions;
+    private final Set<Definition> definitions;
+    private final Set<PropertySet> propertySets;
+    private final Collection<Rule> rules;
 
     public DefinitionSetResponseImpl(@MapsTo("definitionSet") DefinitionSet definitionSet,
                                      @MapsTo("graphElement") Definition graphElement,
-                                     @MapsTo("definitions") Collection<Definition> definitions) {
+                                     @MapsTo("definitions") Set<Definition> definitions,
+                                     @MapsTo("propertySets") Set<PropertySet> propertySets,
+                                     @MapsTo("rules") Collection<Rule> rules) {
         this.definitionSet = definitionSet;
         this.graphElement = graphElement;
         this.definitions = definitions;
+        this.propertySets = propertySets;
+        this.rules = rules;
     }
 
     @Override
@@ -34,8 +43,18 @@ public class DefinitionSetResponseImpl implements DefinitionSetResponse {
     }
 
     @Override
-    public Collection<Definition> getDefinitions() {
+    public Set<Definition> getDefinitions() {
         return definitions;
+    }
+
+    @Override
+    public Set<PropertySet> getPropertySets() {
+        return propertySets;
+    }
+
+    @Override
+    public Collection<Rule> getRules() {
+        return rules;
     }
 
 }

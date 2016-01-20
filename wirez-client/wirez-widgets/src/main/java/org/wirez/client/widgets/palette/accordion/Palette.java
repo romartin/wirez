@@ -110,7 +110,7 @@ public class Palette implements IsWidget {
         final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
         final String definitionSetId = wirezShapeSet.getDefinitionSetId();
         
-        clientDefinitionServices.getDefinitionSet(definitionSetId, new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
+        clientDefinitionServices.getDefinitionSetResponse(definitionSetId, new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
             @Override
             public void onSuccess(final DefinitionSetResponse definitionSetResponse) {
                 doShow(width, wirezShapeSet, definitionSetResponse.getDefinitionSet(), definitionSetResponse.getDefinitions());
@@ -154,7 +154,7 @@ public class Palette implements IsWidget {
 
             if ( null != definition ) {
 
-                final String category = definition.getDefinitionContent().getCategory();
+                final String category = definition.getCategory();
                 final String description = factory.getDescription();
                 final ShapeGlyph glyph = factory.getGlyph();
 

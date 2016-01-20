@@ -16,10 +16,18 @@
 
 package org.wirez.core.api.definition;
 
-public interface Definition<C extends Content> {
+import java.util.Set;
+
+public interface Definition {
 
     String getId();
 
-    C getDefinitionContent();
+    String getCategory();
+
+    String getTitle();
+
+    String getDescription();
+
+    Set<String> getLabels();
     
 }

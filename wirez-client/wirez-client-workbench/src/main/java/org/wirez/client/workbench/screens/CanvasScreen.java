@@ -33,15 +33,12 @@ import org.wirez.client.widgets.canvas.Canvas;
 import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.client.workbench.util.GraphTests;
-import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.factory.DefaultGraphFactory;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.service.definition.DefinitionSetResponse;
 import org.wirez.core.api.util.Logger;
-import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.ShapeManager;
@@ -332,7 +329,7 @@ public class CanvasScreen {
     
     private DefinitionSet getDefinitionSet(final String id, final DefinitionSetRequestCallback callback) {
         
-        clientDefinitionServices.getDefinitionSet(id, new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
+        clientDefinitionServices.getDefinitionSetResponse(id, new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
             @Override
             public void onSuccess(final DefinitionSetResponse definitionSetResponse) {
                 callback.onSuccess(definitionSetResponse.getDefinitionSet());

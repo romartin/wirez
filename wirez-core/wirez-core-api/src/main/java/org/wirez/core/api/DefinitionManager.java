@@ -16,28 +16,33 @@
 
 package org.wirez.core.api;
 
+import org.wirez.core.api.adapter.DefinitionAdapter;
+import org.wirez.core.api.adapter.DefinitionSetAdapter;
+import org.wirez.core.api.adapter.PropertyAdapter;
+import org.wirez.core.api.adapter.PropertySetAdapter;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.factory.ElementFactory;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
-// TODO: Move annot runtime processing to some ContentManager...?
 public interface DefinitionManager {
 
     Collection<DefinitionSet> getDefinitionSets();
 
     DefinitionSet getDefinitionSet(String id);
     
-    Collection<Definition> getDefinitions(DefinitionSet definitionSet);
+    DefinitionSetAdapter getDefinitionSetAdapter(Class definitionSetClass);
     
-    ElementFactory getFactory(Definition definition);
-
-    Set<Property> getProperties(Definition definition);
-
-    Class<? extends Element> getGraphElementType(Definition definition);
+    DefinitionAdapter getDefinitionAdapter(Class definitionClass);
+    
+    PropertySetAdapter getPropertySetAdapter(Class propertySetClass);
+    
+    PropertyAdapter getPropertyAdapter(Class propertyClass);
     
 }

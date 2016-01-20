@@ -40,8 +40,4 @@ public class BPMNDefinitionSet implements DefinitionSet {
         return diagram;
     }
     
-    @Override
-    public Collection<Rule> getRules() {
-        return new ArrayList<>();
-    }
 }

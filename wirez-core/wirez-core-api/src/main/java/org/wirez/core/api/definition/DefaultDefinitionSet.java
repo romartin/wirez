@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.definition.property.defaultset;
+package org.wirez.core.api.definition;
 
-import org.wirez.core.api.definition.property.DefaultPropertySet;
-import org.wirez.core.api.definition.property.builder.BasePropertySetBuilder;
+import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.rule.Rule;
 
-public class DefaultPropertySetBuilder extends BasePropertySetBuilder<DefaultPropertySet> {
+import java.util.Collection;
+import java.util.Set;
 
-    public static final String ID = "wirez.default";
-    private static final String NAME = "Element";
-    
-    public DefaultPropertySetBuilder() {
-        super();
-        properties.add( new NameBuilder().build() );
-        propertySet = new DefaultPropertySet(ID, NAME, properties);
-    }
+public interface DefaultDefinitionSet extends DefinitionSet {
+
+    Set<PropertySet> getPropertySets();
+
+    Set<Definition> getDefinitions();
+
+    Collection<Rule> getRules();
 
 }

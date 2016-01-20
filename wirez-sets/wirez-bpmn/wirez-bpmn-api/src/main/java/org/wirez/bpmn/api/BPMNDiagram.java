@@ -17,7 +17,6 @@
 package org.wirez.bpmn.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.bpmn.api.content.BPMNContent;
 import org.wirez.bpmn.api.property.Package;
 import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.graph.Graph;
@@ -31,17 +30,15 @@ import java.util.HashSet;
 @Portable
 @Graph( type = DefaultGraph.class )
 @org.wirez.core.api.annotation.definition.Definition
-public class BPMNDiagram implements Definition<BPMNContent> {
+public class BPMNDiagram extends BPMNDefinition {
 
     public static final String ID = "bpmnDiagram";
-    
-    private BPMNContent content;
     
     @Inject
     private Package thePackage;
     
     public BPMNDiagram() {
-        content = new BPMNContent("Diagram", "BPMN Diagram", "A BPMN Diagram", 
+        super("Diagram", "BPMN Diagram", "A BPMN Diagram",
                 new HashSet<String>(){{
                     add( "all" );
                     add( "diagram" );
@@ -53,13 +50,9 @@ public class BPMNDiagram implements Definition<BPMNContent> {
         return ID;
     }
 
-    @Override
-    public BPMNContent getDefinitionContent() {
-        return content;
-    }
-    
     @Property
     public Package getPackage() {
         return thePackage;
     }
+    
 }

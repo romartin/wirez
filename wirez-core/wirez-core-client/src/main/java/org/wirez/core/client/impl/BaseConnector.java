@@ -25,8 +25,8 @@ import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnetBuilder;
-import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnetBuilder;
+import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnet;
+import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
@@ -125,8 +125,11 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
-        final Integer _sourceMagnet = PropertyUtils.getValue(element.getProperties(), ConnectionSourceMagnetBuilder.PROPERTY_ID);
-        final Integer _targetMagnet = PropertyUtils.getValue(element.getProperties(), ConnectionTargetMagnetBuilder.PROPERTY_ID);
+        
+        final ConnectionSourceMagnet connectionSourceMagnet = (ConnectionSourceMagnet) PropertyUtils.getProperty(element.getProperties(), ConnectionSourceMagnet.ID);
+        final Integer _sourceMagnet = connectionSourceMagnet.getValue();
+        final ConnectionTargetMagnet connectionTargetMagnet  = (ConnectionTargetMagnet) PropertyUtils.getProperty(element.getProperties(), ConnectionTargetMagnet.ID);
+        final Integer _targetMagnet = connectionTargetMagnet.getValue();
         final int sourceMagnet = _sourceMagnet != null ? _sourceMagnet : 0;
         final int targetMagnet = _targetMagnet != null ? _targetMagnet : 0;
         

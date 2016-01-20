@@ -22,8 +22,42 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import java.util.Collection;
 import java.util.Set;
 
-public interface DefaultPropertySet extends PropertySet {
+@Portable
+public class DefaultPropertySetImpl implements DefaultPropertySet {
 
-    Set<Property> getProperties();
+    protected String id;
+    protected String name;
+    protected Set<Property> properties;
+
+    public DefaultPropertySetImpl(@MapsTo("id") String id,
+                                  @MapsTo("name") String name,
+                                  @MapsTo("properties") Set<Property> properties) {
+        this.id = id;
+        this.name = name;
+        this.properties = properties;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Set<Property> getProperties() {
+        return properties;
+    }
 
 }

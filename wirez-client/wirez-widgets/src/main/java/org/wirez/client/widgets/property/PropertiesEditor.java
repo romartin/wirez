@@ -24,11 +24,11 @@ import org.uberfire.ext.properties.editor.model.PropertyEditorCategory;
 import org.uberfire.ext.properties.editor.model.PropertyEditorEvent;
 import org.uberfire.ext.properties.editor.model.PropertyEditorFieldInfo;
 import org.uberfire.ext.properties.editor.model.PropertyEditorType;
-import org.wirez.core.api.definition.DefaultContent;
+import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.property.DefaultPropertySet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.definition.property.defaultset.DefaultPropertySetBuilder;
 import org.wirez.core.api.definition.property.type.BooleanType;
 import org.wirez.core.api.definition.property.type.ColorType;
 import org.wirez.core.api.definition.property.type.IntegerType;
@@ -122,11 +122,13 @@ public class PropertiesEditor implements IsWidget {
         assert element != null;
         
         final String elementId = element.getUUID();
-        final Definition wirez = element.getContent().getDefinition();
+        final Definition definition = element.getContent().getDefinition();
         
         // This editor is for DefaultContent, not type safe properties.
-        if (wirez.getDefinitionContent() instanceof DefaultContent) {
+        if (definition instanceof DefaultDefinition) {
 
+            DefaultDefinition defaultDefinition = (DefaultDefinition) definition;
+            
             final List<PropertyEditorCategory> categories = new ArrayList<PropertyEditorCategory>();
             final Set<String> processedProperties = new HashSet<String>();
 
@@ -135,14 +137,14 @@ public class PropertiesEditor implements IsWidget {
             categories.add(elementCategory);
 
             // Definition property packages.
-            final Set<PropertySet> propertyPackageSet = ( (DefaultContent) wirez.getDefinitionContent()).getPropertySets();
+            final Set<PropertySet> propertyPackageSet = defaultDefinition.getPropertySets();
             if (propertyPackageSet != null) {
 
                 for (final PropertySet propertyPackage : propertyPackageSet) {
 
-                    final boolean isDefaultPropertySet = DefaultPropertySetBuilder.ID.equals(propertyPackage.getId());
-                    final PropertyEditorCategory category = isDefaultPropertySet ? elementCategory : new PropertyEditorCategory(propertyPackage.getName());
-                    final Collection<Property> properties = propertyPackage.getProperties();
+                    final DefaultPropertySet defaultPropertySet = (DefaultPropertySet) propertyPackage;
+                    final PropertyEditorCategory category = new PropertyEditorCategory(propertyPackage.getName());
+                    final Collection<Property> properties = defaultPropertySet.getProperties();
                     if (properties != null) {
                         for (final Property property : properties) {
                             final String propertyId = property.getId();
@@ -164,9 +166,6 @@ public class PropertiesEditor implements IsWidget {
                         }
                     }
 
-                    if (!isDefaultPropertySet) {
-                        categories.add(category);
-                    }
 
                 }
 
@@ -190,10 +189,10 @@ public class PropertiesEditor implements IsWidget {
 
     private PropertyEditorCategory buildPropertiesCategory(final Element<? extends ViewContent<?>> element,
                                                            final Set<String> processedPropertyIds) {
-        final String title = element.getContent().getDefinition().getDefinitionContent().getTitle();
+        final String title = element.getContent().getDefinition().getTitle();
         final PropertyEditorCategory result = new PropertyEditorCategory(title, 1);
         
-        final Set<Property> propertySet =  ( (DefaultContent)element.getContent().getDefinition().getDefinitionContent() ).getProperties();
+        final Set<Property> propertySet =  ( (DefaultDefinition) element.getContent().getDefinition() ).getProperties();
         if (propertySet != null) {
             for (final Property property : propertySet) {
                 final String propertyId = property.getId();

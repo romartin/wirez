@@ -8,6 +8,7 @@ import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.service.definition.DefinitionResponse;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.service.definition.DefinitionSetResponse;
 
@@ -32,7 +33,7 @@ public class ClientDefinitionServices {
         this.definitionService = definitionService;
     }
 
-    public void getDefinitionSet(final String id, final ServiceCallback<DefinitionSetResponse> callback) {
+    public void getDefinitionSetResponse(final String id, final ServiceCallback<DefinitionSetResponse> callback) {
         assert id != null;
         assert callback != null;
         
@@ -51,6 +52,28 @@ public class ClientDefinitionServices {
             }
             
         }).getDefinitionSet(id);
+        
+    }
+
+    public void getDefinitionResponse(final String id, final ServiceCallback<DefinitionResponse> callback) {
+        assert id != null;
+        assert callback != null;
+
+        definitionService.call(new RemoteCallback<DefinitionResponse>() {
+            @Override
+            public void callback(final DefinitionResponse definitionSetResponse) {
+                callback.onSuccess(definitionSetResponse);
+            }
+        }, new ErrorCallback<Message>() {
+
+
+            @Override
+            public boolean error(final Message message, final Throwable throwable) {
+                callback.onError( new ClientRuntimeError(message.toString(), throwable) );
+                return false;
+            }
+
+        }).getDefinition(id);
         
     }
     

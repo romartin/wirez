@@ -17,26 +17,44 @@
 package org.wirez.bpmn.api.property;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.annotation.property.DefaultValue;
+import org.wirez.core.api.annotation.property.Value;
 import org.wirez.core.api.definition.property.BaseHasDefaultValueProperty;
+import org.wirez.core.api.definition.property.BaseProperty;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
 @org.wirez.core.api.annotation.property.Property
-public class Package extends BaseHasDefaultValueProperty<String> {
+public class Package extends BaseProperty {
 
     public static final String ID = "package";
 
     public static final String DEFAULT_VALUE = "/defaultPackage/defaultPackage";
 
+    private String value = DEFAULT_VALUE;
+    
     public Package() {
-        super(ID, "Package", "The diagram's package", false, false, true, DEFAULT_VALUE);
-        this.setValue("");
+        super(ID, "Package", "The diagram's package", false, false, true);
     }
 
     @Override
     public PropertyType getType() {
         return new StringType();
+    }
+
+    @DefaultValue
+    public String getDefaultValue() {
+        return DEFAULT_VALUE;
+    }
+    
+    @Value
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
     
 }

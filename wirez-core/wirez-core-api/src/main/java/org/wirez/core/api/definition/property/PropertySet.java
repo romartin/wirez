@@ -24,5 +24,4 @@ public interface PropertySet {
     
     String getName();
     
-    Collection<Property> getProperties();
 }

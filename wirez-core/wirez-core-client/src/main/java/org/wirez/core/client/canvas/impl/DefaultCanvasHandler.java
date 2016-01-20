@@ -23,8 +23,8 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
 import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnetBuilder;
-import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnetBuilder;
+import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnet;
+import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnet;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
@@ -42,6 +42,7 @@ import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.util.Logger;
+import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasSettings;
@@ -52,6 +53,8 @@ import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.impl.BaseShape;
+import org.wirez.core.client.service.ClientDefinitionServices;
+import org.wirez.core.client.service.ClientRuntimeError;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -63,12 +66,14 @@ import java.util.Collection;
 public class DefaultCanvasHandler extends BaseCanvasHandler {
 
     ShapeManager wirezClientManager;
+    ClientDefinitionManager clientDefinitionManager;
     DefaultCanvasCommands defaultCanvasCommands;
     DefaultGraphHandler defaultGraphHandler;
     DefaultGraphVisitor defaultGraphVisitor;
     
     @Inject
     public DefaultCanvasHandler(final ShapeManager wirezClientManager,
+                                final ClientDefinitionManager clientDefinitionManager,
                                 final Event<NotificationEvent> notificationEvent, 
                                 final DefaultCommandManager commandManager, 
                                 final DefaultRuleManager ruleManager,
@@ -77,6 +82,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                                 final DefaultGraphVisitor defaultGraphVisitor) {
         super(notificationEvent, commandManager, ruleManager);
         this.wirezClientManager = wirezClientManager;
+        this.clientDefinitionManager = clientDefinitionManager;
         this.defaultCanvasCommands = defaultCanvasCommands;
         this.defaultGraphHandler = defaultGraphHandler;
         this.defaultGraphVisitor = defaultGraphVisitor;
@@ -96,29 +102,52 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         defaultGraphHandler.initialize((DefaultGraph) settings.getGraph());
 
         // Load the rules to apply for this graph.
-        loadRules(settings.getDefinitionSet());
+        loadRules(settings.getDefinitionSet(), new org.uberfire.mvp.Command() {
+            @Override
+            public void execute() {
+                // Build the shapes that represents the graph on canvas.
+                drawGraph();
 
-        // Build the shapes that represents the graph on canvas.
-        drawGraph();
+                // Draw it.
+                canvas.draw();
 
-        // Draw it.
-        canvas.draw();
+            }
+        }, new org.uberfire.mvp.Command() {
+            @Override
+            public void execute() {
+                // Do nothing
+            }
+        });
         
         return this;
     }
 
-    private void loadRules(final DefinitionSet definitionSet) {
-        Collection<Rule> rules = definitionSet.getRules();
-        ruleManager.clearRules();
-        if (rules != null) {
-            for (final Rule rule : rules) {
-                ruleManager.addRule(rule);
-            }
-        }
+    private void loadRules(final DefinitionSet definitionSet, final org.uberfire.mvp.Command sucessCallback, final org.uberfire.mvp.Command errorCallback) {
 
-        final WiresManager wiresManager = getBaseCanvas().getWiresManager();
-        wiresManager.setConnectionAcceptor(CONNECTION_ACCEPTOR);
-        wiresManager.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
+        clientDefinitionManager.getRules(definitionSet, new ClientDefinitionServices.ServiceCallback<Collection<Rule>>() {
+            @Override
+            public void onSuccess(final Collection<Rule> rules) {
+                
+                if (rules != null) {
+                    for (final Rule rule : rules) {
+                        ruleManager.addRule(rule);
+                    }
+                }
+
+                final WiresManager wiresManager = getBaseCanvas().getWiresManager();
+                wiresManager.setConnectionAcceptor(CONNECTION_ACCEPTOR);
+                wiresManager.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
+                sucessCallback.execute();
+            }
+
+            @Override
+            public void onError(final ClientRuntimeError error) {
+                // TODO
+                GWT.log("[ERROR] - DefaultCanvasHander");
+                errorCallback.execute();
+            }
+        });
+        
     }
     
     /*
@@ -198,7 +227,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             Logger.log(message);
 
             CommandResults results = execute(new CompositeElementCanvasCommand(edge)
-                .add(new UpdateElementPropertyValueCommand(edge, ConnectionSourceMagnetBuilder.PROPERTY_ID, mIndex))
+                .add(new UpdateElementPropertyValueCommand(edge, ConnectionSourceMagnet.ID, mIndex))
                 .add(new SetConnectionSourceNodeCommand(sourceNode, edge))
             );
 
@@ -222,7 +251,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             Logger.log(message);
 
             CommandResults results = execute(new CompositeElementCanvasCommand(edge)
-                .add(new UpdateElementPropertyValueCommand(edge, ConnectionTargetMagnetBuilder.PROPERTY_ID, mIndex))
+                .add(new UpdateElementPropertyValueCommand(edge, ConnectionTargetMagnet.ID, mIndex))
                 .add(new SetConnectionTargetNodeCommand(targetNode, edge))
             );
             

@@ -27,29 +27,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-@Portable
-public class DefaultDefinition<C extends DefaultContent> implements Definition<C> {
+public interface DefaultDefinition extends Definition {
 
-    private final String id;
-    private C content;
+    Set<PropertySet> getPropertySets();
 
-    public DefaultDefinition(@MapsTo("id") String id) {
-        this.id = PortablePreconditions.checkNotNull( "id",
-                id );
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public C getDefinitionContent() {
-        return content;
-    }
-
-    public void setContent(C content) {
-        this.content = content;
-    }
-
+    Set<Property> getProperties();
+    
 }

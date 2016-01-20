@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,9 @@ import org.wirez.core.api.definition.property.PropertySet;
 import java.util.Set;
 
 @Portable
-public class DefaultContentImpl implements DefaultContent {
+public class DefaultDefinitionImpl implements DefaultDefinition {
 
+    private final String id;
     private final String category;
     private final String title;
     private final String description;
@@ -34,12 +35,15 @@ public class DefaultContentImpl implements DefaultContent {
     private final Set<PropertySet> propertySets;
     private final Set<Property> properties;
 
-    public DefaultContentImpl(@MapsTo("category") String category,
-                              @MapsTo("title") String title,
-                              @MapsTo("description") String description,
-                              @MapsTo("labels") Set<String> labels,
-                              @MapsTo("propertySets") Set<PropertySet> propertySets,
-                              @MapsTo("properties") Set<Property> properties) {
+    public DefaultDefinitionImpl(@MapsTo("id") String id,
+                                 @MapsTo("category") String category,
+                                 @MapsTo("title") String title,
+                                 @MapsTo("description") String description,
+                                 @MapsTo("labels") Set<String> labels,
+                                 @MapsTo("propertySets") Set<PropertySet> propertySets,
+                                 @MapsTo("properties") Set<Property> properties) {
+        this.id = PortablePreconditions.checkNotNull( "id",
+                id );
         this.category = PortablePreconditions.checkNotNull( "category",
                 category );
         this.title = PortablePreconditions.checkNotNull( "title",
@@ -52,6 +56,11 @@ public class DefaultContentImpl implements DefaultContent {
                 propertySets );
         this.properties = PortablePreconditions.checkNotNull( "properties",
                 properties );
+    }
+
+    @Override
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -83,4 +92,5 @@ public class DefaultContentImpl implements DefaultContent {
     public Set<Property> getProperties() {
         return properties;
     }
+
 }

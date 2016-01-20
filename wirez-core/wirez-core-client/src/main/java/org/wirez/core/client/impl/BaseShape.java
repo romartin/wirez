@@ -24,7 +24,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.defaultset.NameBuilder;
+import org.wirez.core.api.definition.property.defaultset.Name;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.PropertyUtils;
@@ -127,7 +127,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
                                    final Object value, 
                                    final MutationContext mutationContext) {
         
-        if (NameBuilder.PROPERTY_ID.equals(propertyId)) {
+        if (Name.ID.equals(propertyId)) {
             final String name = (String) value;
             if ( name != null ) {
                 if ( text == null ) {
@@ -153,8 +153,9 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
 
     protected void _applyElementName(final org.wirez.core.api.graph.Node<ViewContent<W>, Edge> element,
                                      final MutationContext mutationContext) {
-        String name = PropertyUtils.getValue(element.getProperties(), NameBuilder.PROPERTY_ID);
-        applyPropertyValue(NameBuilder.PROPERTY_ID, name, mutationContext);
+        final Name nameProperty = (Name) PropertyUtils.getProperty(element.getProperties(), Name.ID);
+        String name = nameProperty.getValue();
+        applyPropertyValue(Name.ID, name, mutationContext);
     }
 
     @Override

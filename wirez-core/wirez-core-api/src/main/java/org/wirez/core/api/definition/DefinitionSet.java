@@ -29,6 +29,5 @@ public interface DefinitionSet {
 
     String getDescription();
 
-    Collection<Rule> getRules();
     
 }

@@ -19,15 +19,20 @@ package org.wirez.core.backend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.BaseDefinitionManager;
-import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.adapter.DefinitionAdapter;
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.adapter.PropertyAdapter;
 import org.wirez.core.api.adapter.PropertySetAdapter;
+import org.wirez.core.api.adapter.impl.DefaultDefinitionAdapter;
+import org.wirez.core.api.adapter.impl.DefaultDefinitionSetAdapter;
+import org.wirez.core.api.adapter.impl.DefaultPropertyAdapter;
+import org.wirez.core.api.adapter.impl.DefaultPropertySetAdapter;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.backend.adapter.AnnotatedDefinitionAdapter;
+import org.wirez.core.backend.adapter.AnnotatedDefinitionSetAdapter;
+import org.wirez.core.backend.adapter.AnnotatedPropertyAdapter;
+import org.wirez.core.backend.adapter.AnnotatedPropertySetAdapter;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -65,7 +70,8 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
     @PostConstruct
     public void init() {
         initDefinitionSets();
-        initAdapters();
+        // initAdapters();
+        initAdaptersTEMP();
     }
 
     private void initDefinitionSets() {
@@ -74,6 +80,7 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
         }
     }
 
+    // TODO: Adapter injection not working - should inject two instances for each adapter: the default and the annotated ones.
     private void initAdapters() {
         for (DefinitionSetAdapter definitionSetAdapter : definitionSetAdapterInstances) {
             definitionSetAdapters.add(definitionSetAdapter);
@@ -87,6 +94,18 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
         for (PropertyAdapter propertyAdapter : propertyAdapterInstances) {
             propertyAdapters.add(propertyAdapter);
         }
+    }
+
+    // TODO: Remove when injections working.
+    private void initAdaptersTEMP() {
+        definitionSetAdapters.add(new DefaultDefinitionSetAdapter());
+        definitionSetAdapters.add(new AnnotatedDefinitionSetAdapter());
+        definitionAdapters.add(new DefaultDefinitionAdapter());
+        definitionAdapters.add(new AnnotatedDefinitionAdapter(new AnnotatedPropertyAdapter()));
+        propertySetAdapters.add(new DefaultPropertySetAdapter());
+        propertySetAdapters.add(new AnnotatedPropertySetAdapter());
+        propertyAdapters.add(new DefaultPropertyAdapter());
+        propertyAdapters.add(new AnnotatedPropertyAdapter());
     }
 
 }

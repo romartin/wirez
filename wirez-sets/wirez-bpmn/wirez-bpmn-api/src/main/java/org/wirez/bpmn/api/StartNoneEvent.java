@@ -19,10 +19,9 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.bpmn.api.property.base.BPMNBaseSet;
 import org.wirez.bpmn.api.property.diagram.DiagramSet;
-import org.wirez.bpmn.api.property.diagram.Package;
-import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.definition.PropertySet;
 import org.wirez.core.api.annotation.graph.Graph;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import javax.annotation.PostConstruct;
@@ -30,43 +29,35 @@ import javax.inject.Inject;
 import java.util.HashSet;
 
 @Portable
-@Graph( type = DefaultGraph.class )
+@Graph( type = Node.class )
 @org.wirez.core.api.annotation.definition.Definition
-public class BPMNDiagram extends BPMNDefinition {
+public class StartNoneEvent extends BPMNDefinition {
 
-    public static final String ID = "bpmnDiagram";
-
+    public static final String ID = "StartNoneEvent";
+    
     @Inject
     private BPMNBaseSet bpmnBaseSet;
     
-    @Inject
-    private DiagramSet diagramSet;
-    
-    public BPMNDiagram() {
-        super("Diagram", "BPMN Diagram", "BPMN Diagram",
+    public StartNoneEvent() {
+        super("Start Events", "Start Event", "Untyped start event",
                 new HashSet<String>(){{
                     add( "all" );
                     add( "diagram" );
                 }});
     }
-    
+
     @PostConstruct
     public void init() {
-        getBpmnBaseSet().getNameProperty().setValue("My diagram");
+        getBpmnBaseSet().getNameProperty().setValue("My start event");
     }
-
     @Override
     public String getId() {
         return ID;
     }
     
     @PropertySet
-    public DiagramSet getDiagramSet() {
-        return diagramSet;
-    }
-
-    @PropertySet
     public BPMNBaseSet getBpmnBaseSet() {
         return bpmnBaseSet;
     }
+    
 }

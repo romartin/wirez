@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.api.property;
+package org.wirez.bpmn.api.property.diagram;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.annotation.property.DefaultValue;

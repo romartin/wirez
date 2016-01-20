@@ -20,6 +20,9 @@ public class BPMNDefinitionSet implements DefinitionSet {
     @Inject
     BPMNDiagram diagram;
 
+    @Inject
+    StartNoneEvent startNoneEvent;
+
     @Override
     public String getId() {
         return "bpmnDefSet";
@@ -38,6 +41,11 @@ public class BPMNDefinitionSet implements DefinitionSet {
     @org.wirez.core.api.annotation.definitionset.Definition
     public BPMNDiagram getDiagram() {
         return diagram;
+    }
+
+    @org.wirez.core.api.annotation.definitionset.Definition
+    public StartNoneEvent getStartNoneEvent() {
+        return startNoneEvent;
     }
     
 }

@@ -14,6 +14,8 @@ import org.wirez.core.api.graph.factory.EdgeFactory;
 import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.factory.NodeFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.registry.RuleRegistry;
+import org.wirez.core.api.rule.Rule;
 import org.wirez.core.backend.graph.factory.DefaultGraphFactoryImpl;
 import org.wirez.core.backend.graph.factory.EdgeFactoryImpl;
 import org.wirez.core.backend.graph.factory.NodeFactoryImpl;
@@ -21,10 +23,7 @@ import org.wirez.core.backend.graph.factory.NodeFactoryImpl;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 // TODO: ElementFactory's injection not working.
 @ApplicationScoped
@@ -33,13 +32,15 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedDefinitionAdapter.class);
 
     AnnotatedPropertyAdapter propertyAdapter;
+    RuleRegistry<Rule> ruleRuleRegistry;
     DefaultGraphFactory graphFactory;
     NodeFactory nodeFactory;
     EdgeFactory edgeFactory;
 
     @Inject
-    public AnnotatedDefinitionAdapter(AnnotatedPropertyAdapter propertyAdapter) {
+    public AnnotatedDefinitionAdapter(AnnotatedPropertyAdapter propertyAdapter, RuleRegistry<Rule> ruleRuleRegistry) {
         this.propertyAdapter = propertyAdapter;
+        this.ruleRuleRegistry = ruleRuleRegistry;
         this.graphFactory = new DefaultGraphFactoryImpl();
         this.nodeFactory = new NodeFactoryImpl();
         this.edgeFactory = new EdgeFactoryImpl();
@@ -52,9 +53,28 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
     }
 
     @Override
-    public Set<PropertySet> getPropertySets(final Definition pojo) {
-        // TODO
-        return null;
+    public Set<PropertySet> getPropertySets(final Definition definition) {
+        Set<PropertySet> result = null;
+
+        if ( null != definition ) {
+            Method[] methods = definition.getClass().getMethods();
+            if ( null != methods ) {
+                result = new HashSet<>();
+                for (Method method : methods) {
+                    org.wirez.core.api.annotation.definition.PropertySet annotation = method.getAnnotation(org.wirez.core.api.annotation.definition.PropertySet.class);
+                    if ( null != annotation) {
+                        try {
+                            PropertySet propertySet = (PropertySet) method.invoke(definition);
+                            result.add(propertySet);
+                        } catch (Exception e) {
+                            LOG.error("Error obtaining annotated property sets for Definition with id " + definition.getId());
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
@@ -80,6 +100,12 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
         }
         
         return result;
+    }
+
+    // Rules are generated at compile time by the default annotation processor and available at runtime in the RuleRegistry
+    @Override
+    public Collection<Rule> getRules(Definition pojo) {
+        return ruleRuleRegistry.getRules(pojo);
     }
 
     @Override

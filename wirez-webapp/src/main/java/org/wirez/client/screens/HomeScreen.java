@@ -17,6 +17,7 @@ package org.wirez.client.screens;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -35,8 +36,12 @@ import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.registry.RuleRegistry;
+import org.wirez.core.api.rule.Rule;
+import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -44,6 +49,8 @@ import org.wirez.core.client.service.ClientRuntimeError;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.Set;
 
 @Dependent
 @Templated
@@ -62,21 +69,56 @@ public class HomeScreen extends Composite {
     public void doSomethingC1(ClickEvent e) {
         clientDefinitionServices.buildGraphElement(new BPMNDiagram(), new ClientDefinitionServices.ServiceCallback<Element>() {
             @Override
-            public void onSuccess(Element item) {
-                GWT.log("item uuid=" + item.getUUID() + " , properties=" + item.getProperties().size());
-                Property property = (Property) item.getProperties().iterator().next();
-                GWT.log("Property=" + property.getId());
-                final String pvalue = ( (ViewContent<BPMNDiagram>) item.getContent()).getDefinition().getDiagramSet().getPackage().getValue();
-                GWT.log("Property value='" + pvalue + "'");
+            public void onSuccess(Element element) {
+                BPMNDiagram definitionSet = ((ViewContent<BPMNDiagram>) element.getContent()).getDefinition();
+                
+                GWT.log("Element uuid=" + element.getUUID() + " , properties=" + element.getProperties().size());
+                
+                if (ruleRuleRegistry.containsRules(definitionSet)) {
+                    Collection<Rule> rules = ruleRuleRegistry.getRules(definitionSet);
+                    for (Rule rule : rules ) {
+                        GWT.log("Element rule name=" + rule.getName());
+                    }
+                    
+                } else {
+                    GWT.log("No rules");
+                }
+
+                clientDefinitionManager.getPropertySets(definitionSet, new ClientDefinitionServices.ServiceCallback<Set<PropertySet>>() {
+                    @Override
+                    public void onSuccess(final Set<PropertySet> propertySets) {
+                        
+                        if ( null != propertySets ) {
+                            for (PropertySet propertySet : propertySets) {
+                                GWT.log("Element propertyset id=" + propertySet.getPropertySetId());
+                            }
+                        } else {
+                            GWT.log("No propertysets");
+                        }
+
+                        
+                        
+                    }
+
+                    @Override
+                    public void onError(ClientRuntimeError error) {
+                        showError(error.getMessage());
+                    }
+                });
+                
             }
 
             @Override
             public void onError(ClientRuntimeError error) {
-                GWT.log("Error");
+                showError(error.getMessage());
             }
         });
     }
 
+    private void showError(final String message) {
+        Window.alert(message);
+    }
+    
     @EventHandler( "testButton2" )
     public void doSomethingC2(ClickEvent e) {
         DefinitionSetAdapter adapter = clientDefinitionManager.getDefinitionSetAdapter(BPMNDefinitionSet.class);
@@ -88,6 +130,9 @@ public class HomeScreen extends Composite {
 
     @Inject
     ClientDefinitionManager clientDefinitionManager;
+    
+    @Inject
+    RuleRegistry<Rule> ruleRuleRegistry;
     
     @WorkbenchPartTitle
     public String getScreenTitle() {

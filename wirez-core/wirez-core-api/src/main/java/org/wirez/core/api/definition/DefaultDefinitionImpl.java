@@ -21,6 +21,7 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.rule.Rule;
 
 import java.util.Set;
 
@@ -34,6 +35,7 @@ public class DefaultDefinitionImpl implements DefaultDefinition {
     private final Set<String> labels;
     private final Set<PropertySet> propertySets;
     private final Set<Property> properties;
+    private final Set<Rule> rules;
 
     public DefaultDefinitionImpl(@MapsTo("id") String id,
                                  @MapsTo("category") String category,
@@ -41,7 +43,8 @@ public class DefaultDefinitionImpl implements DefaultDefinition {
                                  @MapsTo("description") String description,
                                  @MapsTo("labels") Set<String> labels,
                                  @MapsTo("propertySets") Set<PropertySet> propertySets,
-                                 @MapsTo("properties") Set<Property> properties) {
+                                 @MapsTo("properties") Set<Property> properties,
+                                 @MapsTo("rules")  Set<Rule> rules) {
         this.id = PortablePreconditions.checkNotNull( "id",
                 id );
         this.category = PortablePreconditions.checkNotNull( "category",
@@ -56,6 +59,8 @@ public class DefaultDefinitionImpl implements DefaultDefinition {
                 propertySets );
         this.properties = PortablePreconditions.checkNotNull( "properties",
                 properties );
+        this.rules = PortablePreconditions.checkNotNull( "rules",
+                rules );
     }
 
     @Override
@@ -91,6 +96,11 @@ public class DefaultDefinitionImpl implements DefaultDefinition {
     @Override
     public Set<Property> getProperties() {
         return properties;
+    }
+
+    @Override
+    public Set<Rule> getRules() {
+        return rules;
     }
 
 }

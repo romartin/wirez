@@ -23,12 +23,13 @@ import org.wirez.core.api.adapter.DefinitionAdapter;
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.adapter.PropertyAdapter;
 import org.wirez.core.api.adapter.PropertySetAdapter;
-import org.wirez.core.api.adapter.impl.DefaultDefinitionAdapter;
-import org.wirez.core.api.adapter.impl.DefaultDefinitionSetAdapter;
-import org.wirez.core.api.adapter.impl.DefaultPropertyAdapter;
-import org.wirez.core.api.adapter.impl.DefaultPropertySetAdapter;
-import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.adapter.shared.DefaultDefinitionAdapter;
+import org.wirez.core.api.adapter.shared.DefaultDefinitionSetAdapter;
+import org.wirez.core.api.adapter.shared.DefaultPropertyAdapter;
+import org.wirez.core.api.adapter.shared.DefaultPropertySetAdapter;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.registry.RuleRegistry;
+import org.wirez.core.api.rule.Rule;
 import org.wirez.core.backend.adapter.AnnotatedDefinitionAdapter;
 import org.wirez.core.backend.adapter.AnnotatedDefinitionSetAdapter;
 import org.wirez.core.backend.adapter.AnnotatedPropertyAdapter;
@@ -36,12 +37,8 @@ import org.wirez.core.backend.adapter.AnnotatedPropertySetAdapter;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @ApplicationScoped
 public class BackendDefinitionManager extends BaseDefinitionManager {
@@ -53,18 +50,21 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
     Instance<DefinitionAdapter> definitionAdapterInstances;
     Instance<PropertySetAdapter> propertySetAdapterInstances;
     Instance<PropertyAdapter> propertyAdapterInstances;
+    RuleRegistry<Rule> ruleRuleRegistry;
     
     @Inject
     public BackendDefinitionManager(Instance<DefinitionSet> definitionSetInstances, 
                                     Instance<DefinitionSetAdapter> definitionSetAdapterInstances, 
                                     Instance<DefinitionAdapter> definitionAdapterInstances, 
                                     Instance<PropertySetAdapter> propertySetAdapterInstances, 
-                                    Instance<PropertyAdapter> propertyAdapterInstances) {
+                                    Instance<PropertyAdapter> propertyAdapterInstances,
+                                    RuleRegistry<Rule> ruleRuleRegistry) {
         this.definitionSetInstances = definitionSetInstances;
         this.definitionSetAdapterInstances = definitionSetAdapterInstances;
         this.definitionAdapterInstances = definitionAdapterInstances;
         this.propertySetAdapterInstances = propertySetAdapterInstances;
         this.propertyAdapterInstances = propertyAdapterInstances;
+        this.ruleRuleRegistry = ruleRuleRegistry;
     }
 
     @PostConstruct
@@ -99,9 +99,9 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
     // TODO: Remove when injections working.
     private void initAdaptersTEMP() {
         definitionSetAdapters.add(new DefaultDefinitionSetAdapter());
-        definitionSetAdapters.add(new AnnotatedDefinitionSetAdapter());
+        definitionSetAdapters.add(new AnnotatedDefinitionSetAdapter(ruleRuleRegistry));
         definitionAdapters.add(new DefaultDefinitionAdapter());
-        definitionAdapters.add(new AnnotatedDefinitionAdapter(new AnnotatedPropertyAdapter()));
+        definitionAdapters.add(new AnnotatedDefinitionAdapter(new AnnotatedPropertyAdapter(), ruleRuleRegistry));
         propertySetAdapters.add(new DefaultPropertySetAdapter());
         propertySetAdapters.add(new AnnotatedPropertySetAdapter());
         propertyAdapters.add(new DefaultPropertyAdapter());

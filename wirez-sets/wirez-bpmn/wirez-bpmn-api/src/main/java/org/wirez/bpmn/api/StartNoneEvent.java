@@ -17,12 +17,10 @@
 package org.wirez.bpmn.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.bpmn.api.property.base.BPMNBaseSet;
-import org.wirez.bpmn.api.property.diagram.DiagramSet;
+import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.core.api.annotation.definition.PropertySet;
 import org.wirez.core.api.annotation.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -35,7 +33,7 @@ public class StartNoneEvent extends BPMNDefinition {
     public static final String ID = "StartNoneEvent";
     
     @Inject
-    private BPMNBaseSet bpmnBaseSet;
+    private BPMNGeneral bpmnBaseSet;
     
     public StartNoneEvent() {
         super("Start Events", "Start Event", "Untyped start event",
@@ -47,7 +45,7 @@ public class StartNoneEvent extends BPMNDefinition {
 
     @PostConstruct
     public void init() {
-        getBpmnBaseSet().getNameProperty().setValue("My start event");
+        getBpmnBaseSet().getName().setValue("My start event");
     }
     @Override
     public String getId() {
@@ -55,7 +53,7 @@ public class StartNoneEvent extends BPMNDefinition {
     }
     
     @PropertySet
-    public BPMNBaseSet getBpmnBaseSet() {
+    public BPMNGeneral getBpmnBaseSet() {
         return bpmnBaseSet;
     }
     

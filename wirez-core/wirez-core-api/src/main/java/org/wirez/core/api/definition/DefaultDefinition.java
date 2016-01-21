@@ -22,6 +22,7 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.definition.property.HasDefaultValue;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.rule.Rule;
 
 import java.util.Collection;
 import java.util.Map;
@@ -32,5 +33,7 @@ public interface DefaultDefinition extends Definition {
     Set<PropertySet> getPropertySets();
 
     Set<Property> getProperties();
+    
+    Set<Rule> getRules();
     
 }

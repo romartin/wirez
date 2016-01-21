@@ -18,17 +18,28 @@ package ${packageName};
 
 import javax.annotation.Generated;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.annotation.PostConstruct;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.rule.impl.DefaultContainmentRule;
+import org.wirez.core.api.registry.RuleRegistry;
+import org.wirez.core.api.rule.Rule;
 import java.util.HashSet;
 
 /*
  * WARNING! This class is generated. Do not modify.
  */
 @Generated("org.wirez.core.processors.rule.RuleProcessor")
-@Dependent
+@ApplicationScoped
 @Portable
 public class ${className} extends DefaultContainmentRule {
+
+    @Inject
+    transient RuleRegistry<Rule> ruleRegistry;
+    
+    @Inject
+    ${ruleDefinitionId} definition;
 
     public ${className}() {
         super("${ruleName}", "${ruleDefinitionId}", new HashSet<String>() {{
@@ -36,6 +47,11 @@ public class ${className} extends DefaultContainmentRule {
                     add( ${role} );
                 </#list>
             }});
+    }
+
+    @PostConstruct
+    public void init() {
+        ruleRegistry.addRule(this, definition);
     }
 
 }

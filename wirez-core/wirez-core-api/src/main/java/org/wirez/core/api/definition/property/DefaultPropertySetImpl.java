@@ -38,7 +38,7 @@ public class DefaultPropertySetImpl implements DefaultPropertySet {
     }
 
     @Override
-    public String getId() {
+    public String getPropertySetId() {
         return id;
     }
 
@@ -47,7 +47,7 @@ public class DefaultPropertySetImpl implements DefaultPropertySet {
     }
 
     @Override
-    public String getName() {
+    public String getPropertySetName() {
         return name;
     }
 

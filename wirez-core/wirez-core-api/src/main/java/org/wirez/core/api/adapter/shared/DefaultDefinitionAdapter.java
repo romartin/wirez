@@ -1,4 +1,4 @@
-package org.wirez.core.api.adapter.impl;
+package org.wirez.core.api.adapter.shared;
 
 import org.wirez.core.api.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.DefaultDefinition;
@@ -7,9 +7,11 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.factory.ElementFactory;
+import org.wirez.core.api.rule.Rule;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +34,16 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefini
         Set<Property> result = null;
         if ( null != pojo ) {
             result = pojo.getProperties();
+        }
+
+        return result;
+    }
+
+    @Override
+    public Collection<Rule> getRules(DefaultDefinition pojo) {
+        Set<Rule> result = null;
+        if ( null != pojo ) {
+            result = pojo.getRules();
         }
 
         return result;

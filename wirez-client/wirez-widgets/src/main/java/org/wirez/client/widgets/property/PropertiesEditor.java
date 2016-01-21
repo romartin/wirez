@@ -143,7 +143,7 @@ public class PropertiesEditor implements IsWidget {
                 for (final PropertySet propertyPackage : propertyPackageSet) {
 
                     final DefaultPropertySet defaultPropertySet = (DefaultPropertySet) propertyPackage;
-                    final PropertyEditorCategory category = new PropertyEditorCategory(propertyPackage.getName());
+                    final PropertyEditorCategory category = new PropertyEditorCategory(propertyPackage.getPropertySetName());
                     final Collection<Property> properties = defaultPropertySet.getProperties();
                     if (properties != null) {
                         for (final Property property : properties) {

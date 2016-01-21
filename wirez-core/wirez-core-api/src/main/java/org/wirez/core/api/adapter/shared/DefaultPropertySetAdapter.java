@@ -1,4 +1,4 @@
-package org.wirez.core.api.adapter.impl;
+package org.wirez.core.api.adapter.shared;
 
 import org.wirez.core.api.adapter.Adapter;
 import org.wirez.core.api.adapter.PropertySetAdapter;

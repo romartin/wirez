@@ -17,8 +17,8 @@
 package org.wirez.bpmn.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.bpmn.api.property.base.BPMNBaseSet;
 import org.wirez.bpmn.api.property.diagram.DiagramSet;
+import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.core.api.annotation.definition.PropertySet;
 import org.wirez.core.api.annotation.graph.Graph;
 import org.wirez.core.api.annotation.rule.CanContain;
@@ -36,7 +36,7 @@ public class BPMNDiagram extends BPMNDefinition {
     public static final String ID = "bpmnDiagram";
 
     @Inject
-    private BPMNBaseSet bpmnBaseSet;
+    private BPMNGeneral bpmnGeneral;
     
     @Inject
     private DiagramSet diagramSet;
@@ -51,7 +51,7 @@ public class BPMNDiagram extends BPMNDefinition {
     
     @PostConstruct
     public void init() {
-        getBpmnBaseSet().getNameProperty().setValue("My diagram");
+        getGeneral().getName().setValue("My diagram");
     }
 
     @Override
@@ -65,7 +65,7 @@ public class BPMNDiagram extends BPMNDefinition {
     }
 
     @PropertySet
-    public BPMNBaseSet getBpmnBaseSet() {
-        return bpmnBaseSet;
+    public BPMNGeneral getGeneral() {
+        return bpmnGeneral;
     }
 }

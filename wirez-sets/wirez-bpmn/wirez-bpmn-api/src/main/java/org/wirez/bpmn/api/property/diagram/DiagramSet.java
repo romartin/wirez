@@ -19,12 +19,12 @@ public class DiagramSet implements PropertySet {
     private Executable executable;
     
     @Override
-    public String getId() {
+    public String getPropertySetId() {
         return ID;
     }
 
     @Override
-    public String getName() {
+    public String getPropertySetName() {
         return NAME;
     }
 

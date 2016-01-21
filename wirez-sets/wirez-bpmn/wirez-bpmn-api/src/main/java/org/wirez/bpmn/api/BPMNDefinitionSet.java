@@ -1,6 +1,8 @@
 package org.wirez.bpmn.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.bpmn.api.property.diagram.DiagramSet;
+import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -22,6 +24,12 @@ public class BPMNDefinitionSet implements DefinitionSet {
 
     @Inject
     StartNoneEvent startNoneEvent;
+    
+    @Inject
+    DiagramSet diagramSet;
+    
+    @Inject
+    BPMNGeneral bpmnGeneral;
 
     @Override
     public String getId() {
@@ -46,6 +54,16 @@ public class BPMNDefinitionSet implements DefinitionSet {
     @org.wirez.core.api.annotation.definitionset.Definition
     public StartNoneEvent getStartNoneEvent() {
         return startNoneEvent;
+    }
+
+    @org.wirez.core.api.annotation.definitionset.PropertySet
+    public DiagramSet getDiagramProperties() {
+        return diagramSet;
+    }
+
+    @org.wirez.core.api.annotation.definitionset.PropertySet
+    public BPMNGeneral getGeneralProperties() {
+        return bpmnGeneral;
     }
     
 }

@@ -35,6 +35,8 @@ import java.util.HashSet;
 public class StartNoneEvent extends BPMNDefinition {
 
     public static final String ID = "StartNoneEvent";
+    public static final String COLOR = "@0000CC";
+    public static final Integer RADIUS = 25;
     
     @Inject
     private BPMNGeneral bpmnBaseSet;
@@ -59,7 +61,8 @@ public class StartNoneEvent extends BPMNDefinition {
     @PostConstruct
     public void init() {
         getGeneralSet().getName().setValue("My start event");
-        getBackgroundSet().getBgColor().setValue("#0000CC");
+        getBackgroundSet().getBgColor().setValue(COLOR);
+        getRadius().setValue(RADIUS);
     }
     @Override
     public String getId() {

@@ -18,6 +18,6 @@ package org.wirez.core.client.mutation;
 
 public enum MutationType {
     
-    STATIC, ANIMATION;
+    STATIC, ANIMATED;
     
 }

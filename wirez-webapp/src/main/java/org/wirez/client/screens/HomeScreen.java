@@ -45,6 +45,7 @@ import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.registry.RuleRegistry;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.service.definition.DefinitionSetResponse;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -145,13 +146,26 @@ public class HomeScreen extends Composite {
     }
 
     private void showError(final String message) {
+        GWT.log(message);
         Window.alert(message);
     }
     
     @EventHandler( "testButton2" )
     public void doSomethingC2(ClickEvent e) {
-        DefinitionSetAdapter adapter = clientDefinitionManager.getDefinitionSetAdapter(BPMNDefinitionSet.class);
-        GWT.log("adapter=" + adapter);
+        
+        
+        clientDefinitionServices.getDefinitionSetResponse("bpmnDefSet", new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
+            @Override
+            public void onSuccess(DefinitionSetResponse item) {
+                GWT.log("Response OK");
+            }
+
+            @Override
+            public void onError(ClientRuntimeError error) {
+                showError(error.getMessage());
+            }
+        });
+        
     }
     
     @Inject

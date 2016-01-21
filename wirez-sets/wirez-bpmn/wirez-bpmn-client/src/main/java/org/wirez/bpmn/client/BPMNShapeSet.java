@@ -18,6 +18,8 @@ package org.wirez.bpmn.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
+import org.wirez.bpmn.client.factory.StartNoneEventShapeFactory;
+import org.wirez.bpmn.client.factory.TaskShapeFactory;
 import org.wirez.bpmn.client.resources.BPMNImageResources;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.Shape;
@@ -37,17 +39,24 @@ public class BPMNShapeSet implements ShapeSet {
     public static final String ID = "basic";
 
     BPMNDefinitionSet bpmnDefinitionSet;
+    StartNoneEventShapeFactory startNoneEventShapeFactory;
+    TaskShapeFactory taskShapeFactory;
     private List<ShapeFactory<? extends Definition, ? extends Shape>> factories;
 
     @Inject
-    public BPMNShapeSet( final BPMNDefinitionSet bpmnDefinitionSet) {
+    public BPMNShapeSet( final BPMNDefinitionSet bpmnDefinitionSet,
+                         final StartNoneEventShapeFactory startNoneEventShapeFactory,
+                         final TaskShapeFactory taskShapeFactory) {
         this.bpmnDefinitionSet = bpmnDefinitionSet;
+        this.startNoneEventShapeFactory = startNoneEventShapeFactory;
+        this.taskShapeFactory = taskShapeFactory;
     }
 
     @PostConstruct
     public void init() {
         factories = new LinkedList<ShapeFactory<? extends Definition, ? extends Shape>>() {{
-            
+            add( startNoneEventShapeFactory );
+            add( taskShapeFactory );
         }};
     }
 

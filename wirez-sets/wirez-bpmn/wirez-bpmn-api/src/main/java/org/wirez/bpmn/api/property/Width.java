@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.api.property.diagram;
+package org.wirez.bpmn.api.property;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.annotation.property.DefaultValue;
@@ -24,16 +24,16 @@ import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
-public class Package extends BaseProperty {
+public class Width extends BaseProperty {
 
-    public static final String ID = "package";
+    public static final String ID = "width";
 
-    public static final String DEFAULT_VALUE = "/defaultPackage/defaultPackage";
+    public static final Integer DEFAULT_VALUE = 50;
 
-    private String value = DEFAULT_VALUE;
+    private Integer value = DEFAULT_VALUE;
     
-    public Package() {
-        super(ID, "Package", "The diagram's package", false, false, true);
+    public Width() {
+        super(ID, "Width", "The width", false, false, true);
     }
 
     @Override
@@ -42,16 +42,16 @@ public class Package extends BaseProperty {
     }
 
     @DefaultValue
-    public String getDefaultValue() {
+    public Integer getDefaultValue() {
         return DEFAULT_VALUE;
     }
     
     @Value
-    public String getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
     

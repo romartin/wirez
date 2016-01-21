@@ -17,7 +17,8 @@
 package org.wirez.bpmn.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.bpmn.api.property.Radius;
+import org.wirez.bpmn.api.property.Height;
+import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
@@ -35,6 +36,9 @@ import java.util.HashSet;
 public class Task extends BPMNDefinition {
 
     public static final String ID = "Task";
+    public static final String COLOR = "#00CC00";
+    public static final Integer WIDTH = 100;
+    public static final Integer HEIGHT = 100;
     
     @Inject
     private BPMNGeneral bpmnBaseSet;
@@ -44,7 +48,14 @@ public class Task extends BPMNDefinition {
 
     @Inject
     private FontSet fontSet;
-    
+
+    @Inject
+    private Width width;
+
+    @Inject
+    private Height height;
+
+
     public Task() {
         super("Activities", "Task", "A task is a unit of work - the job to be performed",
                 new HashSet<String>(){{
@@ -58,8 +69,11 @@ public class Task extends BPMNDefinition {
     @PostConstruct
     public void init() {
         getGeneralSet().getName().setValue("My task");
-        getBackgroundSet().getBgColor().setValue("#fafad2");
+        getBackgroundSet().getBgColor().setValue(COLOR);
         getBackgroundSet().getBorderSize().setValue(3);
+        getWidth().setValue(WIDTH);
+        getHeight().setValue(HEIGHT);
+        
     }
     @Override
     public String getId() {
@@ -79,5 +93,15 @@ public class Task extends BPMNDefinition {
     @PropertySet
     public FontSet getFontSet() {
         return fontSet;
+    }
+
+    @Property
+    public Width getWidth() {
+        return width;
+    }
+
+    @Property
+    public Height getHeight() {
+        return height;
     }
 }

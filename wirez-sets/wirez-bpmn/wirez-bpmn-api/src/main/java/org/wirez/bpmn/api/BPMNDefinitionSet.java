@@ -1,21 +1,12 @@
 package org.wirez.bpmn.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.bpmn.api.property.diagram.DiagramSet;
-import org.wirez.bpmn.api.property.general.BPMNGeneral;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.rule.Rule;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
 
-@ApplicationScoped
 @Portable
 public class BPMNDefinitionSet implements DefinitionSet {
 

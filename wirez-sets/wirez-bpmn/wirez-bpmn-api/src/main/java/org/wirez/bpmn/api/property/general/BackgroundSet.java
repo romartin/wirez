@@ -3,7 +3,6 @@ package org.wirez.bpmn.api.property.general;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.annotation.propertyset.Property;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.definition.property.defaultset.Name;
 
 import javax.inject.Inject;
 

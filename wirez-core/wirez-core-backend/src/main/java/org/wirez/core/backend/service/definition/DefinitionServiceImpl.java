@@ -5,6 +5,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.adapter.Adapter;
 import org.wirez.core.api.adapter.DefinitionAdapter;
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
+import org.wirez.core.api.adapter.PropertySetAdapter;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
@@ -91,7 +92,21 @@ public class DefinitionServiceImpl implements DefinitionService {
             Definition definition = response.getDefinition();
             final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter(definition.getClass());
             ElementFactory elementFactory = definitionAdapter.getElementFactory(definition);
+            
+            // Cache on element properties the annotated Property's on the definition.
             Set<Property> properties = definitionAdapter.getProperties(definition);
+
+            // And properties on each definition's annotated PropertySet.
+            Set<PropertySet> propertySets = definitionAdapter.getPropertySets(definition);
+            if ( null != propertySets && !propertySets.isEmpty() ) {
+                for (PropertySet propertySet : propertySets) {
+                    PropertySetAdapter propertySetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
+                    Set<Property> setProperties = propertySetAdapter.getProperties(propertySet);
+                    if( null != setProperties ) {
+                        properties.addAll(setProperties);
+                    }
+                }
+            }
             Set<String> labels = definition.getLabels();
             Element<ViewContent<?>> element = elementFactory.build(definition, properties, labels);;
             return element;

@@ -21,7 +21,7 @@ import org.wirez.core.api.definition.property.builder.BasePropertySetBuilder;
 
 public class BackgroundPropertySetBuilder extends BasePropertySetBuilder<DefaultPropertySet> {
 
-    private static final String ID = "basicset.background";
+    private static final String ID = "basicset.<<<";
     private static final String NAME = "Background";
     
     public BackgroundPropertySetBuilder() {

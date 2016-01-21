@@ -53,6 +53,12 @@ public abstract class SharedRuleRegistry implements RuleRegistry<Rule> {
         return definitionSetRules.get(definitionSet.getId());
     }
 
+    // TODO
+    @Override
+    public Collection<Rule> getAllRules(final DefinitionSet definitionSet) {
+        return null;
+    }
+
     @Override
     public Collection<Rule> getItems() {
         throw new UnsupportedOperationException("Use concrete RuleRegistry methods for now");

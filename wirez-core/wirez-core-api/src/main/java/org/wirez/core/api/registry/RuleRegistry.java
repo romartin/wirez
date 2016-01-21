@@ -18,6 +18,14 @@ public interface RuleRegistry<R extends Rule> extends Registry<Rule> {
 
     Collection<R> getRules(Definition definition);
 
+    /**
+     * Gets the rules specified in the given Definition Set (not visit children ones).
+     */
     Collection<R> getRules(DefinitionSet definitionSet);
-    
+
+    /**
+     * Gets the rules specified in the given Definition Set and the ones found on any of its children.
+     */
+    Collection<R> getAllRules(DefinitionSet definitionSet);
+
 }

@@ -32,9 +32,9 @@ import java.util.HashSet;
 
 @Portable
 @Graph( type = Node.class )
-public class StartNoneEvent extends BPMNDefinition {
+public class Task extends BPMNDefinition {
 
-    public static final String ID = "StartNoneEvent";
+    public static final String ID = "Task";
     
     @Inject
     private BPMNGeneral bpmnBaseSet;
@@ -45,30 +45,25 @@ public class StartNoneEvent extends BPMNDefinition {
     @Inject
     private FontSet fontSet;
     
-    @Inject
-    private Radius radius;
-    
-    public StartNoneEvent() {
-        super("Start Events", "Start Event", "Untyped start event",
+    public Task() {
+        super("Activities", "Task", "A task is a unit of work - the job to be performed",
                 new HashSet<String>(){{
                     add( "all" );
-                    add( "diagram" );
+                    add( "sequence_start" );
+                    add( "sequence_end" );
+                    // TODO
                 }});
     }
 
     @PostConstruct
     public void init() {
-        getGeneralSet().getName().setValue("My start event");
-        getBackgroundSet().getBgColor().setValue("#0000CC");
+        getGeneralSet().getName().setValue("My task");
+        getBackgroundSet().getBgColor().setValue("#fafad2");
+        getBackgroundSet().getBorderSize().setValue(3);
     }
     @Override
     public String getId() {
         return ID;
-    }
-
-    @Property
-    public Radius getRadius() {
-        return radius;
     }
 
     @PropertySet

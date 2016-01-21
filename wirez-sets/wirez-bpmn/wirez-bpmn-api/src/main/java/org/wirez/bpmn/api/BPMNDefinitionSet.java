@@ -24,13 +24,10 @@ public class BPMNDefinitionSet implements DefinitionSet {
 
     @Inject
     StartNoneEvent startNoneEvent;
-    
-    @Inject
-    DiagramSet diagramSet;
-    
-    @Inject
-    BPMNGeneral bpmnGeneral;
 
+    @Inject
+    Task task;
+    
     @Override
     public String getId() {
         return "bpmnDefSet";
@@ -56,14 +53,9 @@ public class BPMNDefinitionSet implements DefinitionSet {
         return startNoneEvent;
     }
 
-    @org.wirez.core.api.annotation.definitionset.PropertySet
-    public DiagramSet getDiagramProperties() {
-        return diagramSet;
+    @org.wirez.core.api.annotation.definitionset.Definition
+    public Task getTask() {
+        return task;
     }
 
-    @org.wirez.core.api.annotation.definitionset.PropertySet
-    public BPMNGeneral getGeneralProperties() {
-        return bpmnGeneral;
-    }
-    
 }

@@ -33,7 +33,10 @@ import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.bpmn.api.StartNoneEvent;
+import org.wirez.bpmn.api.Task;
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -67,19 +70,43 @@ public class HomeScreen extends Composite {
 
     @EventHandler( "testButton" )
     public void doSomethingC1(ClickEvent e) {
-        clientDefinitionServices.buildGraphElement(new BPMNDiagram(), new ClientDefinitionServices.ServiceCallback<Element>() {
+        
+        log(new BPMNDiagram(), new Command() {
+            @Override
+            public void execute() {
+                log(new StartNoneEvent(), new Command() {
+                    @Override
+                    public void execute() {
+                        log(new Task(), new Command() {
+                            @Override
+                            public void execute() {
+                                
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        
+    }
+    
+    private void log(final Definition definition, final Command callback) {
+        GWT.log("****************************************************************");
+        GWT.log("           " + definition.getTitle());
+        GWT.log("****************************************************************");
+        clientDefinitionServices.buildGraphElement(definition, new ClientDefinitionServices.ServiceCallback<Element>() {
             @Override
             public void onSuccess(Element element) {
-                BPMNDiagram definitionSet = ((ViewContent<BPMNDiagram>) element.getContent()).getDefinition();
-                
+                Definition definitionSet = ((ViewContent<Definition>) element.getContent()).getDefinition();
+
                 GWT.log("Element uuid=" + element.getUUID() + " , properties=" + element.getProperties().size());
-                
+
                 if (ruleRuleRegistry.containsRules(definitionSet)) {
                     Collection<Rule> rules = ruleRuleRegistry.getRules(definitionSet);
                     for (Rule rule : rules ) {
                         GWT.log("Element rule name=" + rule.getName());
                     }
-                    
+
                 } else {
                     GWT.log("No rules");
                 }
@@ -87,7 +114,7 @@ public class HomeScreen extends Composite {
                 clientDefinitionManager.getPropertySets(definitionSet, new ClientDefinitionServices.ServiceCallback<Set<PropertySet>>() {
                     @Override
                     public void onSuccess(final Set<PropertySet> propertySets) {
-                        
+
                         if ( null != propertySets ) {
                             for (PropertySet propertySet : propertySets) {
                                 GWT.log("Element propertyset id=" + propertySet.getPropertySetId());
@@ -96,7 +123,8 @@ public class HomeScreen extends Composite {
                             GWT.log("No propertysets");
                         }
 
-                        
+
+                        callback.execute();
                         
                     }
 
@@ -105,12 +133,13 @@ public class HomeScreen extends Composite {
                         showError(error.getMessage());
                     }
                 });
-                
+
             }
 
             @Override
             public void onError(ClientRuntimeError error) {
                 showError(error.getMessage());
+                
             }
         });
     }

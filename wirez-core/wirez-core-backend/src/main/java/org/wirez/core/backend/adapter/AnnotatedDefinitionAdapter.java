@@ -16,9 +16,6 @@ import org.wirez.core.api.graph.factory.NodeFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.registry.RuleRegistry;
 import org.wirez.core.api.rule.Rule;
-import org.wirez.core.backend.graph.factory.DefaultGraphFactoryImpl;
-import org.wirez.core.backend.graph.factory.EdgeFactoryImpl;
-import org.wirez.core.backend.graph.factory.NodeFactoryImpl;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -33,17 +30,21 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
     AnnotatedPropertyAdapter propertyAdapter;
     RuleRegistry<Rule> ruleRuleRegistry;
-    DefaultGraphFactory graphFactory;
-    NodeFactory nodeFactory;
-    EdgeFactory edgeFactory;
+    DefaultGraphFactory<? extends Definition> graphFactory;
+    NodeFactory<? extends Definition> nodeFactory;
+    EdgeFactory<? extends Definition> edgeFactory;
 
     @Inject
-    public AnnotatedDefinitionAdapter(AnnotatedPropertyAdapter propertyAdapter, RuleRegistry<Rule> ruleRuleRegistry) {
+    public AnnotatedDefinitionAdapter(AnnotatedPropertyAdapter propertyAdapter, 
+                                      RuleRegistry<Rule> ruleRuleRegistry,
+                                      DefaultGraphFactory<? extends Definition> graphFactory,
+                                      NodeFactory<? extends Definition> nodeFactory,
+                                      EdgeFactory<? extends Definition> edgeFactory) {
         this.propertyAdapter = propertyAdapter;
         this.ruleRuleRegistry = ruleRuleRegistry;
-        this.graphFactory = new DefaultGraphFactoryImpl();
-        this.nodeFactory = new NodeFactoryImpl();
-        this.edgeFactory = new EdgeFactoryImpl();
+        this.graphFactory = graphFactory;
+        this.nodeFactory = nodeFactory;
+        this.edgeFactory = edgeFactory;
     }
 
     

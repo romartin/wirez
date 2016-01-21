@@ -9,38 +9,41 @@
  *  
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * DefaultDefinitionITHOUT DefaultDefinitionARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
-package org.wirez.core.backend.graph.factory;
+package org.wirez.core.client.graph.factory;
 
-import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.content.ViewContentImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
-import org.wirez.core.api.graph.factory.EdgeFactory;
-import org.wirez.core.api.graph.impl.EdgeImpl;
+import org.wirez.core.api.graph.factory.NodeFactory;
+import org.wirez.core.api.graph.impl.NodeImpl;
 import org.wirez.core.api.util.UUID;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import java.util.Set;
 
-@Dependent
-public class EdgeFactoryImpl<W extends Definition> extends BaseElementFactory<W, Edge<ViewContent<W>, Node>> implements EdgeFactory<W> {
+@ApplicationScoped
+public class NodeFactoryImpl extends BaseElementFactory<DefaultDefinition, Node<ViewContent<DefaultDefinition>, Edge>> implements NodeFactory<DefaultDefinition> {
 
     @Override
-    public Edge<ViewContent<W>, Node> build(W definition, Set<Property> properties, Set<String> labels) {
-        Edge<ViewContent<W>, Node> edge =
-                new EdgeImpl<ViewContent<W>>( UUID.uuid(),
+    public Node<ViewContent<DefaultDefinition>, Edge> build(final DefaultDefinition definition, final Set<Property> properties, final Set<String> labels) {
+        Node<ViewContent<DefaultDefinition>, Edge> node =
+                new NodeImpl<ViewContent<DefaultDefinition>>(UUID.uuid(),
                         properties,
                         labels,
-                        new ViewContentImpl<>( definition, buildBounds()));
-        
-        return edge;
+                        new ViewContentImpl<>( definition, buildBounds())
+
+                );
+
+        return node;
     }
+    
 }

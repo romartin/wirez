@@ -1,6 +1,5 @@
 package org.wirez.core.api.adapter.shared;
 
-import org.wirez.core.api.adapter.Adapter;
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.definition.DefaultDefinitionSet;
 import org.wirez.core.api.definition.Definition;
@@ -8,7 +7,6 @@ import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.rule.Rule;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
 import java.util.Collection;
 import java.util.Set;
 

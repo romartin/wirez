@@ -25,4 +25,10 @@ public class DefaultPropertySetAdapter implements PropertySetAdapter<DefaultProp
         
         return result;
     }
+
+    @Override
+    public int getPriority() {
+        return 1;
+    }
+    
 }

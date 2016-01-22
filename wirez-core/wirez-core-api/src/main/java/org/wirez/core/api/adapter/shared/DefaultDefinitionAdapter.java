@@ -112,5 +112,10 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefini
     public boolean accepts(final Class pojoClass) {
         return pojoClass.equals(DefaultDefinition.class); 
     }
+
+    @Override
+    public int getPriority() {
+        return 1;
+    }
     
 }

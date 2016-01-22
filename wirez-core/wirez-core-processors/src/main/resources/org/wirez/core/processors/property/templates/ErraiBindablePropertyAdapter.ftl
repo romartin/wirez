@@ -84,5 +84,9 @@ public class ${className} implements PropertyAdapter<Property> {
         return propValueFieldNames.containsKey(pojoClass);
     }
 
+    @Override
+    public int getPriority() {
+        return 0;
+    }
 
 }

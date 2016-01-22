@@ -81,4 +81,10 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
     public Collection<Rule> getRules(DefinitionSet pojo) {
         return ruleRuleRegistry.getRules(pojo);
     }
+
+    @Override
+    public int getPriority() {
+        return 100;
+    }
+    
 }

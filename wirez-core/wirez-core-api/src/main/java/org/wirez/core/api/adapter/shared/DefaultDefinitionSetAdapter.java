@@ -47,4 +47,10 @@ public class DefaultDefinitionSetAdapter implements DefinitionSetAdapter<Default
 
         return result;
     }
+
+    @Override
+    public int getPriority() {
+        return 1;
+    }
+    
 }

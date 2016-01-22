@@ -77,4 +77,9 @@ public class AnnotatedPropertyAdapter implements PropertyAdapter<Property> {
         return !pojoClass.equals(DefaultProperty.class);
     }
     
+    @Override
+    public int getPriority() {
+        return 100;
+    }
+    
 }

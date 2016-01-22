@@ -61,6 +61,7 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
             DefinitionSetAdapter definitionSet = defSet.getInstance();
             definitionSetAdapters.add(definitionSet);
         }
+        sortAdapters(definitionAdapters);
 
         // Definition client adapters.
         Collection<IOCBeanDef<DefinitionAdapter>> beanDefAdapters = beanManager.lookupBeans(DefinitionAdapter.class);
@@ -68,20 +69,23 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
             DefinitionAdapter definitionSet = defSet.getInstance();
             definitionAdapters.add(definitionSet);
         }
-
+        sortAdapters(definitionAdapters);
+        
         // PropertySet client adapters.
         Collection<IOCBeanDef<PropertySetAdapter>> beanPropSetAdapters = beanManager.lookupBeans(PropertySetAdapter.class);
         for (IOCBeanDef<PropertySetAdapter> defSet : beanPropSetAdapters) {
             PropertySetAdapter definitionSet = defSet.getInstance();
             propertySetAdapters.add(definitionSet);
         }
-
+        sortAdapters(propertySetAdapters);
+        
         // Property client adapters.
         Collection<IOCBeanDef<PropertyAdapter>> beanPropAdapters = beanManager.lookupBeans(PropertyAdapter.class);
         for (IOCBeanDef<PropertyAdapter> defSet : beanPropAdapters) {
             PropertyAdapter definitionSet = defSet.getInstance();
             propertyAdapters.add(definitionSet);
         }
+        sortAdapters(propertyAdapters);
         
     }
 

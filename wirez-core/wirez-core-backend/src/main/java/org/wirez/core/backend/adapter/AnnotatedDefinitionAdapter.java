@@ -170,4 +170,10 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
         
         return null;
     }
+
+    @Override
+    public int getPriority() {
+        return 100;
+    }
+    
 }

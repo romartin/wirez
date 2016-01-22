@@ -79,15 +79,19 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
         for (DefinitionSetAdapter definitionSetAdapter : definitionSetAdapterInstances) {
             definitionSetAdapters.add(definitionSetAdapter);
         }
+        sortAdapters(definitionSetAdapters);
         for (DefinitionAdapter definitionAdapter : definitionAdapterInstances) {
             definitionAdapters.add(definitionAdapter);
         }
+        sortAdapters(definitionAdapters);
         for (PropertySetAdapter propertySetAdapter : propertySetAdapterInstances) {
             propertySetAdapters.add(propertySetAdapter);
         }
+        sortAdapters(propertySetAdapters);
         for (PropertyAdapter propertyAdapter : propertyAdapterInstances) {
             propertyAdapters.add(propertyAdapter);
         }
+        sortAdapters(propertyAdapters);
     }
 
 }

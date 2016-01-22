@@ -18,19 +18,14 @@ package org.wirez.core.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wirez.core.api.adapter.DefinitionAdapter;
-import org.wirez.core.api.adapter.DefinitionSetAdapter;
-import org.wirez.core.api.adapter.PropertyAdapter;
-import org.wirez.core.api.adapter.PropertySetAdapter;
+import org.wirez.core.api.adapter.*;
 import org.wirez.core.api.definition.DefinitionSet;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public abstract class BaseDefinitionManager implements DefinitionManager {
 
@@ -101,6 +96,14 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
         return definitionSets;
     }
 
-    
+    protected static <T extends Adapter> void sortAdapters(List<T> adapters) {
+        Collections.sort(adapters, new Comparator<T>() {
+            @Override
+            public int compare(T o1, T o2) {
+                return o1.getPriority() - o2.getPriority();
+            }
+        });
+    }
+
 }
 

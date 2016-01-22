@@ -48,5 +48,10 @@ public class AnnotatedPropertySetAdapter implements PropertySetAdapter<PropertyS
     public boolean accepts(Class pojoClass) {
         return !pojoClass.equals(DefaultPropertySet.class);
     }
+
+    @Override
+    public int getPriority() {
+        return 100;
+    }
     
 }

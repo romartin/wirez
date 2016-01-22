@@ -45,5 +45,9 @@ public class DefaultPropertyAdapter implements PropertyAdapter<Property> {
         return pojoClass.equals(Property.class);
     }
 
+    @Override
+    public int getPriority() {
+        return 1;
+    }
 
 }

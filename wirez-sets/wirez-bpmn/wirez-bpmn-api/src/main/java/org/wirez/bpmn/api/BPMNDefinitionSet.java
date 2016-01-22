@@ -1,22 +1,24 @@
 package org.wirez.bpmn.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.annotation.definitionset.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Portable
 public class BPMNDefinitionSet implements DefinitionSet {
 
     @Inject
+    @Definition
     BPMNDiagram diagram;
 
     @Inject
+    @Definition
     StartNoneEvent startNoneEvent;
 
     @Inject
+    @Definition
     Task task;
     
     @Override
@@ -34,19 +36,27 @@ public class BPMNDefinitionSet implements DefinitionSet {
         return "THe BPMN definition set";
     }
 
-    @org.wirez.core.api.annotation.definitionset.Definition
     public BPMNDiagram getDiagram() {
         return diagram;
     }
 
-    @org.wirez.core.api.annotation.definitionset.Definition
     public StartNoneEvent getStartNoneEvent() {
         return startNoneEvent;
     }
 
-    @org.wirez.core.api.annotation.definitionset.Definition
     public Task getTask() {
         return task;
     }
 
+    public void setDiagram(BPMNDiagram diagram) {
+        this.diagram = diagram;
+    }
+
+    public void setStartNoneEvent(StartNoneEvent startNoneEvent) {
+        this.startNoneEvent = startNoneEvent;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
 }

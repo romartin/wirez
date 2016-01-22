@@ -1,24 +1,29 @@
 package org.wirez.bpmn.api.property.general;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.api.annotation.propertyset.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 
 import javax.inject.Inject;
 
 @Portable
+@Bindable
 public class FontSet implements PropertySet {
 
     public static final String ID = "font";
     public static final String NAME = "Font";
 
     @Inject
+    @Property
     private FontColor fontColor;
 
     @Inject
+    @Property
     private FontSize fontSize;
     
     @Inject
+    @Property
     private FontBorderSize fontBorderSize;
 
     @Override
@@ -31,18 +36,27 @@ public class FontSet implements PropertySet {
         return NAME;
     }
 
-    @Property
     public FontColor getFontColor() {
         return fontColor;
     }
 
-    @Property
     public FontSize getFontSize() {
         return fontSize;
     }
 
-    @Property
     public FontBorderSize getFontBorderSize() {
         return fontBorderSize;
+    }
+
+    public void setFontColor(FontColor fontColor) {
+        this.fontColor = fontColor;
+    }
+
+    public void setFontSize(FontSize fontSize) {
+        this.fontSize = fontSize;
+    }
+
+    public void setFontBorderSize(FontBorderSize fontBorderSize) {
+        this.fontBorderSize = fontBorderSize;
     }
 }

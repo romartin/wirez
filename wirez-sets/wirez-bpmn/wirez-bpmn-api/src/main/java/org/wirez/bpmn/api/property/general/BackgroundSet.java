@@ -13,12 +13,15 @@ public class BackgroundSet implements PropertySet {
     public static final String NAME = "Background";
 
     @Inject
+    @Property
     private BgColor bgColor;
 
     @Inject
+    @Property
     private BorderColor borderColor;
     
     @Inject
+    @Property
     private BorderSize borderSize;
 
     @Override
@@ -31,19 +34,27 @@ public class BackgroundSet implements PropertySet {
         return NAME;
     }
 
-    @Property
     public BgColor getBgColor() {
         return bgColor;
     }
 
-    @Property
     public BorderColor getBorderColor() {
         return borderColor;
     }
 
-    @Property
     public BorderSize getBorderSize() {
         return borderSize;
     }
-    
+
+    public void setBgColor(BgColor bgColor) {
+        this.bgColor = bgColor;
+    }
+
+    public void setBorderColor(BorderColor borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    public void setBorderSize(BorderSize borderSize) {
+        this.borderSize = borderSize;
+    }
 }

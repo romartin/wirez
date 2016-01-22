@@ -1,6 +1,7 @@
 package org.wirez.core.api.definition.property.defaultset;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.api.definition.property.HasDefaultValue;
 import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
@@ -43,11 +44,6 @@ public class Name implements Property, HasDefaultValue<String>, HasValue<String>
 
     @Override
     public boolean isOptional() {
-        return true;
-    }
-
-    @Override
-    public boolean isPublic() {
         return true;
     }
 

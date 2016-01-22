@@ -19,6 +19,7 @@ import org.wirez.core.api.rule.Rule;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -58,14 +59,15 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
         Set<PropertySet> result = null;
 
         if ( null != definition ) {
-            Method[] methods = definition.getClass().getMethods();
-            if ( null != methods ) {
+            Field[] fields = definition.getClass().getDeclaredFields();
+            if ( null != fields ) {
                 result = new HashSet<>();
-                for (Method method : methods) {
-                    org.wirez.core.api.annotation.definition.PropertySet annotation = method.getAnnotation(org.wirez.core.api.annotation.definition.PropertySet.class);
+                for (Field field : fields) {
+                    org.wirez.core.api.annotation.definition.PropertySet annotation = field.getAnnotation(org.wirez.core.api.annotation.definition.PropertySet.class);
                     if ( null != annotation) {
                         try {
-                            PropertySet propertySet = (PropertySet) method.invoke(definition);
+                            field.setAccessible(true);
+                            PropertySet propertySet = (PropertySet) field.get(definition);
                             result.add(propertySet);
                         } catch (Exception e) {
                             LOG.error("Error obtaining annotated property sets for Definition with id " + definition.getId());
@@ -83,14 +85,15 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
         Set<Property> result = null;
 
         if ( null != definition ) {
-            Method[] methods = definition.getClass().getMethods();
-            if ( null != methods ) {
+            Field[] fields = definition.getClass().getDeclaredFields();
+            if ( null != fields ) {
                 result = new HashSet<>();
-                for (Method method : methods) {
-                    org.wirez.core.api.annotation.definition.Property annotation = method.getAnnotation(org.wirez.core.api.annotation.definition.Property.class);
+                for (Field field : fields) {
+                    org.wirez.core.api.annotation.definition.Property annotation = field.getAnnotation(org.wirez.core.api.annotation.definition.Property.class);
                     if ( null != annotation) {
                         try {
-                            Property property = (Property) method.invoke(definition);
+                            field.setAccessible(true);
+                            Property property = (Property) field.get(definition);
                             result.add(property);
                         } catch (Exception e) {
                             LOG.error("Error obtaining annotated properties for Definition with id " + definition.getId());

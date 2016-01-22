@@ -17,6 +17,7 @@
 package org.wirez.bpmn.api.property.general;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.api.annotation.property.DefaultValue;
 import org.wirez.core.api.annotation.property.Value;
 import org.wirez.core.api.definition.property.BaseProperty;
@@ -24,18 +25,21 @@ import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
+@Bindable
 public class BorderColor extends BaseProperty {
 
     public static final String ID = "borderColor";
 
+    @DefaultValue
     public static final String DEFAULT_VALUE = "#000000";
 
+    @Value
     private String value = DEFAULT_VALUE;
     
     public BorderColor() {
         super(ID, 
                 "Border Color", "The Border Color.", 
-                false, false, true);
+                false, false);
     }
 
     @Override
@@ -43,12 +47,10 @@ public class BorderColor extends BaseProperty {
         return new StringType();
     }
 
-    @DefaultValue
     public String getDefaultValue() {
         return DEFAULT_VALUE;
     }
     
-    @Value
     public String getValue() {
         return value;
     }

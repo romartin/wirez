@@ -1,6 +1,7 @@
 package org.wirez.core.api.adapter.shared;
 
 import org.wirez.core.api.adapter.PropertyAdapter;
+import org.wirez.core.api.definition.property.HasDefaultValue;
 import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 
@@ -17,6 +18,17 @@ public class DefaultPropertyAdapter implements PropertyAdapter<Property> {
             result = hasValue.getValue();
         }
         
+        return result;
+    }
+
+    @Override
+    public Object getDefaultValue(final Property pojo) {
+        Object result = null;
+        if ( null != pojo ) {
+            HasDefaultValue hasValue = (HasDefaultValue) pojo;
+            result = hasValue.getDefaultValue();
+        }
+
         return result;
     }
 

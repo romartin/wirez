@@ -17,6 +17,7 @@
 package org.wirez.bpmn.api.property.diagram;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.api.annotation.property.DefaultValue;
 import org.wirez.core.api.annotation.property.Value;
 import org.wirez.core.api.definition.property.BaseProperty;
@@ -24,16 +25,19 @@ import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
+@Bindable
 public class Executable extends BaseProperty {
 
     public static final String ID = "executable";
 
+    @DefaultValue
     public static final Boolean DEFAULT_VALUE = true;
 
+    @Value
     private Boolean value = DEFAULT_VALUE;
     
     public Executable() {
-        super(ID, "executable", "Is executable", false, false, true);
+        super(ID, "executable", "Is executable", false, false);
     }
 
     @Override
@@ -41,12 +45,10 @@ public class Executable extends BaseProperty {
         return new StringType();
     }
 
-    @DefaultValue
     public Boolean getDefaultValue() {
         return DEFAULT_VALUE;
     }
     
-    @Value
     public Boolean getValue() {
         return value;
     }

@@ -12,9 +12,14 @@ import org.wirez.core.api.rule.Rule;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @ApplicationScoped
@@ -36,27 +41,8 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
 
     @Override
     public Set<PropertySet> getPropertySets(DefinitionSet definitionSet) {
-        Set<PropertySet> result = null;
-
-        if ( null != definitionSet ) {
-            Method[] methods = definitionSet.getClass().getMethods();
-            if ( null != methods ) {
-                result = new HashSet<>();
-                for (Method method : methods) {
-                    org.wirez.core.api.annotation.definitionset.PropertySet annotation = method.getAnnotation(org.wirez.core.api.annotation.definitionset.PropertySet.class);
-                    if ( null != annotation) {
-                        try {
-                            PropertySet propertySet = (PropertySet) method.invoke(definitionSet);
-                            result.add(propertySet);
-                        } catch (Exception e) {
-                            LOG.error("Error obtaining annotated property sets for DefinitionSet with id " + definitionSet.getId());
-                        }
-                    }
-                }
-            }
-        }
-
-        return result;
+        // TODO
+        return null;
     }
 
     @Override
@@ -65,15 +51,16 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
 
         if ( null != definitionSet ) {
 
-            Method[] methods = definitionSet.getClass().getMethods();
-            if ( null != methods ) {
+            Field[] fields = definitionSet.getClass().getDeclaredFields();
+            if ( null != fields ) {
 
                 Set<Definition> definitions = new HashSet<>();
-                for (Method method : methods) {
-                    org.wirez.core.api.annotation.definitionset.Definition annotation = method.getAnnotation(org.wirez.core.api.annotation.definitionset.Definition.class);
+                for (Field field: fields) {
+                    org.wirez.core.api.annotation.definitionset.Definition annotation = field.getAnnotation(org.wirez.core.api.annotation.definitionset.Definition.class);
                     if ( null != annotation) {
                         try {
-                            Definition definition  = (Definition) method.invoke(definitionSet);
+                            field.setAccessible(true);
+                            Definition definition  = (Definition) field.get(definitionSet);
                             definitions.add(definition);
                         } catch (Exception e) {
                             LOG.error("Error obtaining annotated definitions for DefinitionSet with id " + definitionSet.getId());
@@ -83,6 +70,7 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
 
                 result = definitions;
             }
+            
         }
         
         return result;

@@ -8,6 +8,7 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,14 +23,15 @@ public class AnnotatedPropertySetAdapter implements PropertySetAdapter<PropertyS
         Set<Property> result = null;
 
         if ( null != propertySet ) {
-            Method[] methods = propertySet.getClass().getMethods();
-            if ( null != methods ) {
+            Field[] fields = propertySet.getClass().getDeclaredFields();
+            if ( null != fields ) {
                 result = new HashSet<>();
-                for (Method method : methods) {
-                    org.wirez.core.api.annotation.propertyset.Property annotation = method.getAnnotation(org.wirez.core.api.annotation.propertyset.Property.class);
+                for (Field field : fields) {
+                    org.wirez.core.api.annotation.propertyset.Property annotation = field.getAnnotation(org.wirez.core.api.annotation.propertyset.Property.class);
                     if ( null != annotation) {
                         try {
-                            Property property = (Property) method.invoke(propertySet);
+                            field.setAccessible(true);
+                            Property property = (Property) field.get(propertySet);
                             result.add(property);
                         } catch (Exception e) {
                             LOG.error("Error obtaining annotated properties for PropertySet with id " + propertySet.getPropertySetId());

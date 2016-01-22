@@ -33,9 +33,8 @@ public abstract class BaseHasDefaultValuesProperty<C> extends BaseProperty imple
                                         final String description,
                                         final boolean isReadOnly,
                                         final boolean isOptional,
-                                        final boolean isPublic,
                                         final Collection<C> defaultValues) {
-        super(id, caption, description, isReadOnly, isOptional, isPublic);
+        super(id, caption, description, isReadOnly, isOptional);
         this.defaultValues = PortablePreconditions.checkNotNull( "defaultValues",
                 defaultValues );
     }

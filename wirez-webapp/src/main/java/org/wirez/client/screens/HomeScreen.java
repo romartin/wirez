@@ -46,6 +46,7 @@ import org.wirez.core.api.registry.RuleRegistry;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.service.definition.DefinitionSetResponse;
+import org.wirez.core.api.util.PropertyUtils;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -152,17 +153,30 @@ public class HomeScreen extends Composite {
     
     @EventHandler( "testButton2" )
     public void doSomethingC2(ClickEvent e) {
-        
-        
-        clientDefinitionServices.getDefinitionSetResponse("bpmnDefSet", new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
+
+
+        clientDefinitionServices.buildGraphElement(new Task(), new ClientDefinitionServices.ServiceCallback<Element>() {
             @Override
-            public void onSuccess(DefinitionSetResponse item) {
-                GWT.log("Response OK");
+            public void onSuccess(Element element) {
+                Task task = ((ViewContent<Task>) element.getContent()).getDefinition();
+                GWT.log("Element uuid=" + element.getUUID() + " , properties=" + element.getProperties().size());
+                String name = (String) PropertyUtils.getValue(element.getProperties(), "name");
+                GWT.log("Element name=" + name );
+                PropertyUtils.setValue(element.getProperties(), "name", "New name setted");
+                String newName = (String) PropertyUtils.getValue(element.getProperties(), "name");
+                GWT.log("Element newName=" + newName );
+                GWT.log("Element newNameTyped=" + task.getGeneral().getName().getValue() );
+
+                task.getGeneral().getName().setValue("New name setted TYPED");
+                String newNameTyped = (String) PropertyUtils.getValue(element.getProperties(), "name");
+                GWT.log("Element newNameTYPED=" + newNameTyped );
+                GWT.log("Element newNameTYPED=" + task.getGeneral().getName().getValue() );
             }
 
             @Override
             public void onError(ClientRuntimeError error) {
                 showError(error.getMessage());
+
             }
         });
         

@@ -36,9 +36,11 @@ public class BPMNDiagram extends BPMNDefinition {
     public static final String ID = "bpmnDiagram";
 
     @Inject
-    private BPMNGeneral bpmnGeneral;
+    @PropertySet
+    private BPMNGeneral general;
     
     @Inject
+    @PropertySet
     private DiagramSet diagramSet;
     
     public BPMNDiagram() {
@@ -59,13 +61,19 @@ public class BPMNDiagram extends BPMNDefinition {
         return ID;
     }
     
-    @PropertySet
     public DiagramSet getDiagramSet() {
         return diagramSet;
     }
 
-    @PropertySet
     public BPMNGeneral getGeneral() {
-        return bpmnGeneral;
+        return general;
+    }
+
+    public void setGeneral(final BPMNGeneral general) {
+        this.general = general;
+    }
+
+    public void setDiagramSet(final DiagramSet diagramSet) {
+        this.diagramSet = diagramSet;
     }
 }

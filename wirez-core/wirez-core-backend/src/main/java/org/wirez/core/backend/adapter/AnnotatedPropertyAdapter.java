@@ -7,6 +7,7 @@ import org.wirez.core.api.definition.property.DefaultProperty;
 import org.wirez.core.api.definition.property.Property;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 @ApplicationScoped
@@ -20,13 +21,14 @@ public class AnnotatedPropertyAdapter implements PropertyAdapter<Property> {
         Object result = null;
 
         if ( null != property ) {
-            Method[] methods = property.getClass().getMethods();
-            if ( null != methods ) {
-                for (Method method : methods) {
-                    org.wirez.core.api.annotation.property.Value annotation = method.getAnnotation(org.wirez.core.api.annotation.property.Value.class);
+            Field[] fields = property.getClass().getDeclaredFields();
+            if ( null != fields ) {
+                for (Field field : fields) {
+                    org.wirez.core.api.annotation.property.Value annotation = field.getAnnotation(org.wirez.core.api.annotation.property.Value.class);
                     if ( null != annotation) {
                         try {
-                            result = method.invoke(property);
+                            field.setAccessible(true);
+                            result = field.get(property);
                         } catch (Exception e) {
                             LOG.error("Error obtaining annotated value for Property with id " + property.getId());
                         }
@@ -35,6 +37,32 @@ public class AnnotatedPropertyAdapter implements PropertyAdapter<Property> {
             }
         }
         
+        return result;
+        
+    }
+
+    @Override
+    public Object getDefaultValue(Property property) {
+
+        Object result = null;
+
+        if ( null != property ) {
+            Field[] fields = property.getClass().getDeclaredFields();
+            if ( null != fields ) {
+                for (Field field : fields) {
+                    org.wirez.core.api.annotation.property.DefaultValue annotation = field.getAnnotation(org.wirez.core.api.annotation.property.DefaultValue.class);
+                    if ( null != annotation) {
+                        try {
+                            field.setAccessible(true);
+                            result = field.get(property);
+                        } catch (Exception e) {
+                            LOG.error("Error obtaining annotated default value for Property with id " + property.getId());
+                        }
+                    }
+                }
+            }
+        }
+
         return result;
         
     }

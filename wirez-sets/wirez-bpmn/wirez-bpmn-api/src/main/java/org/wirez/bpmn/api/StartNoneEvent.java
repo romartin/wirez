@@ -39,15 +39,19 @@ public class StartNoneEvent extends BPMNDefinition {
     public static final Integer RADIUS = 25;
     
     @Inject
-    private BPMNGeneral bpmnBaseSet;
+    @PropertySet
+    private BPMNGeneral general;
 
     @Inject
+    @PropertySet
     private BackgroundSet backgroundSet;
 
     @Inject
+    @PropertySet
     private FontSet fontSet;
     
     @Inject
+    @Property
     private Radius radius;
     
     public StartNoneEvent() {
@@ -60,7 +64,7 @@ public class StartNoneEvent extends BPMNDefinition {
 
     @PostConstruct
     public void init() {
-        getGeneralSet().getName().setValue("My start event");
+        getGeneral().getName().setValue("My start event");
         getBackgroundSet().getBgColor().setValue(COLOR);
         getRadius().setValue(RADIUS);
     }
@@ -69,23 +73,35 @@ public class StartNoneEvent extends BPMNDefinition {
         return ID;
     }
 
-    @Property
     public Radius getRadius() {
         return radius;
     }
 
-    @PropertySet
-    public BPMNGeneral getGeneralSet() {
-        return bpmnBaseSet;
+    public BPMNGeneral getGeneral() {
+        return general;
     }
 
-    @PropertySet
     public BackgroundSet getBackgroundSet() {
         return backgroundSet;
     }
 
-    @PropertySet
     public FontSet getFontSet() {
         return fontSet;
+    }
+
+    public void setGeneral(BPMNGeneral general) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet(BackgroundSet backgroundSet) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setFontSet(FontSet fontSet) {
+        this.fontSet = fontSet;
+    }
+
+    public void setRadius(Radius radius) {
+        this.radius = radius;
     }
 }

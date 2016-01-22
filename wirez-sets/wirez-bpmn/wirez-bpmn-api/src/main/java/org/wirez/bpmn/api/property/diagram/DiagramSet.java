@@ -13,9 +13,11 @@ public class DiagramSet implements PropertySet {
     public static final String NAME = "BPMN Diagram";
 
     @Inject
+    @Property
     private Package thePackage;
 
     @Inject
+    @Property
     private Executable executable;
     
     @Override
@@ -28,14 +30,19 @@ public class DiagramSet implements PropertySet {
         return NAME;
     }
 
-    @Property
     public Package getPackage() {
         return thePackage;
     }
 
-    @Property
     public Executable getExecutable() {
         return executable;
     }
-    
+
+    public void setThePackage(Package thePackage) {
+        this.thePackage = thePackage;
+    }
+
+    public void setExecutable(Executable executable) {
+        this.executable = executable;
+    }
 }

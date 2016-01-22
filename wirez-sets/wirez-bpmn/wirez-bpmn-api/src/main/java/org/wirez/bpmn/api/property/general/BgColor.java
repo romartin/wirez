@@ -17,6 +17,7 @@
 package org.wirez.bpmn.api.property.general;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.api.annotation.property.DefaultValue;
 import org.wirez.core.api.annotation.property.Value;
 import org.wirez.core.api.definition.property.BaseProperty;
@@ -24,18 +25,21 @@ import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
+@Bindable
 public class BgColor extends BaseProperty {
 
     public static final String ID = "bgColor";
 
+    @DefaultValue
     public static final String DEFAULT_VALUE = "#ffffff";
 
+    @Value
     private String value = DEFAULT_VALUE;
     
     public BgColor() {
         super(ID, 
                 "Background Color", "The Background Color.", 
-                false, false, true);
+                false, false);
     }
 
     @Override
@@ -43,12 +47,10 @@ public class BgColor extends BaseProperty {
         return new StringType();
     }
 
-    @DefaultValue
     public String getDefaultValue() {
         return DEFAULT_VALUE;
     }
     
-    @Value
     public String getValue() {
         return value;
     }

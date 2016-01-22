@@ -1,5 +1,7 @@
 package org.wirez.core.api.util;
 
+import org.jboss.errai.databinding.client.HasProperties;
+import org.jboss.errai.databinding.client.api.DataBinder;
 import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 
@@ -34,6 +36,9 @@ public class PropertyUtils {
 
             if ( property instanceof HasValue) {
                 return (T) ( (HasValue) property).getValue();
+            } else {
+                HasProperties hasProperties = (HasProperties) DataBinder.forType(property.getClass()).getModel();
+                return (T) hasProperties.get("value");
             }
 
         }
@@ -49,6 +54,9 @@ public class PropertyUtils {
 
             if ( property instanceof HasValue ) {
                 ( (HasValue<T>) property).setValue(value);
+            } else {
+                HasProperties hasProperties = (HasProperties) DataBinder.forType(property.getClass()).getModel();
+                hasProperties.set("value", value);
             }
 
         }

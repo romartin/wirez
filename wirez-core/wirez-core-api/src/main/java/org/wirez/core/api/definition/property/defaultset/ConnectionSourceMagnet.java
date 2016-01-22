@@ -46,11 +46,6 @@ public class ConnectionSourceMagnet implements Property, HasDefaultValue<Integer
         return true;
     }
 
-    @Override
-    public boolean isPublic() {
-        return true;
-    }
-
     public Integer getValue() {
         return value;
     }

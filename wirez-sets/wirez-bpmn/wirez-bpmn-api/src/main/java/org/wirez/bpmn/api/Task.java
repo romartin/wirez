@@ -41,18 +41,23 @@ public class Task extends BPMNDefinition {
     public static final Integer HEIGHT = 100;
     
     @Inject
-    private BPMNGeneral bpmnBaseSet;
+    @PropertySet
+    private BPMNGeneral general;
 
     @Inject
+    @PropertySet
     private BackgroundSet backgroundSet;
 
     @Inject
+    @PropertySet
     private FontSet fontSet;
 
     @Inject
+    @Property
     private Width width;
 
     @Inject
+    @Property
     private Height height;
 
 
@@ -68,7 +73,7 @@ public class Task extends BPMNDefinition {
 
     @PostConstruct
     public void init() {
-        getGeneralSet().getName().setValue("My task");
+        getGeneral().getName().setValue("My task");
         getBackgroundSet().getBgColor().setValue(COLOR);
         getBackgroundSet().getBorderSize().setValue(3);
         getWidth().setValue(WIDTH);
@@ -80,28 +85,43 @@ public class Task extends BPMNDefinition {
         return ID;
     }
 
-    @PropertySet
-    public BPMNGeneral getGeneralSet() {
-        return bpmnBaseSet;
+    public BPMNGeneral getGeneral() {
+        return general;
     }
 
-    @PropertySet
     public BackgroundSet getBackgroundSet() {
         return backgroundSet;
     }
 
-    @PropertySet
     public FontSet getFontSet() {
         return fontSet;
     }
 
-    @Property
     public Width getWidth() {
         return width;
     }
 
-    @Property
     public Height getHeight() {
         return height;
+    }
+
+    public void setGeneral(BPMNGeneral general) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet(BackgroundSet backgroundSet) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setFontSet(FontSet fontSet) {
+        this.fontSet = fontSet;
+    }
+
+    public void setWidth(Width width) {
+        this.width = width;
+    }
+
+    public void setHeight(Height height) {
+        this.height = height;
     }
 }

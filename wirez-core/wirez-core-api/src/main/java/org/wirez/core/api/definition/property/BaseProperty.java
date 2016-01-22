@@ -25,7 +25,6 @@ public abstract class BaseProperty implements Property {
     protected String description;
     protected boolean isReadOnly;
     protected boolean isOptional;
-    protected boolean isPublic;
 
     public BaseProperty(final String id) {
         this.id = PortablePreconditions.checkNotNull( "id",
@@ -36,8 +35,7 @@ public abstract class BaseProperty implements Property {
                         final String caption,
                         final String description,
                         final boolean isReadOnly,
-                        final boolean isOptional,
-                        final boolean isPublic) {
+                        final boolean isOptional) {
         this.id = PortablePreconditions.checkNotNull( "id",
                                                       id );
         this.caption = PortablePreconditions.checkNotNull( "caption",
@@ -46,7 +44,6 @@ public abstract class BaseProperty implements Property {
                                                                description );
         this.isReadOnly = isReadOnly;
         this.isOptional = isOptional;
-        this.isPublic = isPublic;
     }
 
     @Override
@@ -74,11 +71,6 @@ public abstract class BaseProperty implements Property {
         return isOptional;
     }
 
-    @Override
-    public boolean isPublic() {
-        return isPublic;
-    }
-
     public BaseProperty setCaption(String caption) {
         this.caption = caption;
         return this;
@@ -97,10 +89,6 @@ public abstract class BaseProperty implements Property {
     public BaseProperty setOptional(boolean optional) {
         isOptional = optional;
         return this;
-    }
-
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
     }
 
     @Override
@@ -162,7 +150,6 @@ public abstract class BaseProperty implements Property {
                 ", description='" + description + '\'' +
                 ", isReadOnly=" + isReadOnly +
                 ", isOptional=" + isOptional +
-                ", isPublic=" + isPublic +
                 '}';
     }
 

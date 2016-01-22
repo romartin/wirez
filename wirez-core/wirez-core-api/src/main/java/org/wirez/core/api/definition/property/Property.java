@@ -33,6 +33,4 @@ public interface Property {
 
     boolean isOptional();
     
-    boolean isPublic();
-    
 }

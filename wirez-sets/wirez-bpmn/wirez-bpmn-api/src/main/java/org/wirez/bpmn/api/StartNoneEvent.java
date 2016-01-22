@@ -17,10 +17,12 @@
 package org.wirez.bpmn.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
+import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.definition.PropertySet;
 import org.wirez.core.api.annotation.graph.Graph;
@@ -31,6 +33,8 @@ import javax.inject.Inject;
 import java.util.HashSet;
 
 @Portable
+@Bindable
+@Definition
 @Graph( type = Node.class )
 public class StartNoneEvent extends BPMNDefinition {
 

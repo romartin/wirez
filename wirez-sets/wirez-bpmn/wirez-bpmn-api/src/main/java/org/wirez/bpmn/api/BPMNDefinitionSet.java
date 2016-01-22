@@ -1,12 +1,15 @@
 package org.wirez.bpmn.api;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.api.annotation.definitionset.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 
 import javax.inject.Inject;
 
 @Portable
+@Bindable
+@org.wirez.core.api.annotation.definitionset.DefinitionSet
 public class BPMNDefinitionSet implements DefinitionSet {
 
     @Inject

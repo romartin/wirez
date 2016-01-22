@@ -18,7 +18,6 @@ package org.wirez.core.processors.rule;
 
 import org.uberfire.annotations.processors.AbstractErrorAbsorbingProcessor;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.processors.property.PropertyGenerator;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;

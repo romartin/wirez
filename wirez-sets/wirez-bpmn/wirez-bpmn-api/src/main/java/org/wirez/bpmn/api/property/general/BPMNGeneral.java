@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 @Portable
 @Bindable
+@org.wirez.core.api.annotation.propertyset.PropertySet
 public class BPMNGeneral implements PropertySet {
 
     public static final String ID = "bpmnGeneral";

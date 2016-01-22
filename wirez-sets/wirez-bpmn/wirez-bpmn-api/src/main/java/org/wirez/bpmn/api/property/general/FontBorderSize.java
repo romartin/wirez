@@ -19,6 +19,7 @@ package org.wirez.bpmn.api.property.general;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.api.annotation.property.DefaultValue;
+import org.wirez.core.api.annotation.property.Property;
 import org.wirez.core.api.annotation.property.Value;
 import org.wirez.core.api.definition.property.BaseProperty;
 import org.wirez.core.api.definition.property.PropertyType;
@@ -26,6 +27,7 @@ import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
 @Bindable
+@Property
 public class FontBorderSize extends BaseProperty {
 
     public static final String ID = "fontBorderSize";

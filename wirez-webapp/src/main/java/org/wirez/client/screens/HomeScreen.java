@@ -20,6 +20,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import org.jboss.errai.databinding.client.HasProperties;
+import org.jboss.errai.databinding.client.api.DataBinder;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -35,6 +37,7 @@ import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.api.Task;
+import org.wirez.bpmn.api.property.Width;
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.HasValue;
@@ -160,7 +163,11 @@ public class HomeScreen extends Composite {
             public void onSuccess(Element element) {
                 Task task = ((ViewContent<Task>) element.getContent()).getDefinition();
                 GWT.log("Element uuid=" + element.getUUID() + " , properties=" + element.getProperties().size());
-                String name = (String) PropertyUtils.getValue(element.getProperties(), "name");
+
+
+                // DataBinder<Task> taskDataBinder = DataBinder.forModel(task);
+
+                /*String name = (String) PropertyUtils.getValue(element.getProperties(), "name");
                 GWT.log("Element name=" + name );
                 PropertyUtils.setValue(element.getProperties(), "name", "New name setted");
                 String newName = (String) PropertyUtils.getValue(element.getProperties(), "name");
@@ -170,7 +177,8 @@ public class HomeScreen extends Composite {
                 task.getGeneral().getName().setValue("New name setted TYPED");
                 String newNameTyped = (String) PropertyUtils.getValue(element.getProperties(), "name");
                 GWT.log("Element newNameTYPED=" + newNameTyped );
-                GWT.log("Element newNameTYPED=" + task.getGeneral().getName().getValue() );
+                GWT.log("Element newNameTYPED=" + task.getGeneral().getName().getValue() );*/
+                
             }
 
             @Override

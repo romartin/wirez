@@ -18,45 +18,72 @@ package org.wirez.core.processors.property;
 
 import org.uberfire.annotations.processors.AbstractErrorAbsorbingProcessor;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
+import org.wirez.core.processors.GeneratorUtils;
+import org.wirez.core.processors.ProcessingContext;
+import org.wirez.core.processors.ProcessingElement;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.PackageElement;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @SupportedAnnotationTypes({PropertyProcessor.ANNOTATION_PROPERTY})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class PropertyProcessor extends AbstractErrorAbsorbingProcessor {
 
+    public static final String CLASS_NAME = "ErraiBindablePropertyAdapter";
     public static final String ANNOTATION_PROPERTY = "org.wirez.core.api.annotation.property.Property";
     public static final String ANNOTATION_DEFAULT_VALUE = "org.wirez.core.api.annotation.property.DefaultValue";
+    public static final String ANNOTATION_VALUE = "org.wirez.core.api.annotation.property.Value";
 
-    private final PropertyGenerator propertyGenerator;
-
+    private final ProcessingContext processingContext = ProcessingContext.getInstance();
+    private ErraiBindablePropertyAdapterWritter adapterGenerator;
+    
     public PropertyProcessor() {
-        PropertyGenerator pg = null;
+        ErraiBindablePropertyAdapterWritter pg = null;
         try {
-            pg = new PropertyGenerator();
+            pg = new ErraiBindablePropertyAdapterWritter();
         } catch (Throwable t) {
             rememberInitializationError(t);
         }
-        propertyGenerator = pg;
+        adapterGenerator = pg;
     }
 
     @Override
     protected boolean processWithExceptions(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+        final Messager messager = processingEnv.getMessager();
         
-        //We don't have any post-processing
         if ( roundEnv.processingOver() ) {
-            return false;
+
+            try {
+                
+                final String packageName = getCommonPackageName(processingContext.getValueFieldNames().keySet());
+                final String className = packageName + "." + CLASS_NAME;
+                messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + className);
+
+                final StringBuffer ruleClassCode = adapterGenerator.generate(packageName, CLASS_NAME,
+                        processingContext.getValueFieldNames(), processingContext.getDefaultValueFieldNames(), messager);
+
+                writeCode( packageName,
+                        CLASS_NAME,
+                        ruleClassCode );
+                
+            } catch ( GenerationException ge ) {
+                final String msg = ge.getMessage();
+                processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg);
+            }
+            
+            return true;
         }
 
         //If prior processing threw an error exit
@@ -64,7 +91,6 @@ public class PropertyProcessor extends AbstractErrorAbsorbingProcessor {
             return false;
         }
 
-        final Messager messager = processingEnv.getMessager();
         final Elements elementUtils = processingEnv.getElementUtils();
 
         for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_PROPERTY) ) ) {
@@ -75,34 +101,76 @@ public class PropertyProcessor extends AbstractErrorAbsorbingProcessor {
                 TypeElement classElement = (TypeElement) e;
                 PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
 
-                messager.printMessage(Diagnostic.Kind.NOTE, "Discovered property class [" + classElement.getSimpleName() + "]");
+                String propertyClassName = packageElement.getQualifiedName().toString() + "." + classElement.getSimpleName();
+                
+                List<VariableElement> variableElements = ElementFilter.fieldsIn( classElement.getEnclosedElements() );
+                for (VariableElement variableElement : variableElements) {
 
-                final String packageName = packageElement.getQualifiedName().toString();
-                final String classNameActivity = classElement.getSimpleName() + "Property";
+                    // Value.
+                    if ( GeneratorUtils.getAnnotation( elementUtils, variableElement, PropertyProcessor.ANNOTATION_VALUE ) != null ) {
+                        final TypeMirror fieldReturnType = variableElement.asType();
+                        final String fieldReturnTypeName = GeneratorUtils.getTypeMirrorDeclaredName(fieldReturnType);
+                        final String fieldName = variableElement.getSimpleName().toString();
 
-                try {
-                    //Try generating code for each required class
-                    messager.printMessage( Diagnostic.Kind.NOTE, "Generating code for [" + classNameActivity + "]" );
-                    final StringBuffer propertyClassCode = propertyGenerator.generate( packageName,
-                            packageElement,
-                            classNameActivity,
-                            classElement,
-                            processingEnv );
+                        processingContext.addValueFieldName(propertyClassName, fieldName);
+                        messager.printMessage(Diagnostic.Kind.WARNING, "Discovered property value for class [" + propertyClassName + "] at field [" + fieldName + "] of return type [" + fieldReturnTypeName + "]");
+                        
+                    }
 
-                    writeCode( packageName,
-                            classNameActivity,
-                            propertyClassCode );
+                    // Default Value.
+                    if ( GeneratorUtils.getAnnotation( elementUtils, variableElement, PropertyProcessor.ANNOTATION_DEFAULT_VALUE ) != null ) {
+                        final TypeMirror fieldReturnType = variableElement.asType();
+                        final String fieldReturnTypeName = GeneratorUtils.getTypeMirrorDeclaredName(fieldReturnType);
+                        final String fieldName = variableElement.getSimpleName().toString();
 
-                } catch ( GenerationException ge ) {
-                    final String msg = ge.getMessage();
-                    processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg, classElement );
+                        processingContext.addDefaultValueFieldName(propertyClassName, fieldName);
+                        messager.printMessage(Diagnostic.Kind.WARNING, "Discovered property default value for class [" + propertyClassName + "] at field [" + fieldName + "] of return type [" + fieldReturnTypeName + "]");
+
+                    }
+
                 }
+                
 
             }
         }
 
         return true;
     }
-    
-    
+
+    private static String getCommonPackageName(Set<String> packageNames) {
+        StringBuilder result = new StringBuilder();
+        boolean end = false;
+        int pos = 0;
+        while (!end) {
+            Character c = null;
+            for (String packageName : packageNames) {
+                if (packageName.length() >= pos) {
+                    char _c = packageName.charAt(pos);
+                    if ( null == c ) {
+                        c = _c;
+                    } else if ( c != _c ) {
+                        end = true;
+                        break;
+                    }
+                }
+            }
+            
+            if ( !end ) {
+                result.append(c);
+                pos++;
+            }
+        }
+        
+        if (result.length() > 0) {
+            String pName = result.toString();
+            while (pName.endsWith(".")) {
+                pName = pName.substring(0, pName.length() - 1);
+            }
+            
+            return pName;
+        }
+        
+        throw new RuntimeException("Cannot find common package name.");
+    }
+
 }

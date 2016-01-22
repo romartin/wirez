@@ -1,12 +1,15 @@
 package org.wirez.bpmn.api.property.diagram;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.api.annotation.propertyset.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 
 import javax.inject.Inject;
 
 @Portable
+@Bindable
+@org.wirez.core.api.annotation.propertyset.PropertySet
 public class DiagramSet implements PropertySet {
     
     public static final String ID = "diagramSet";

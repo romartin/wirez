@@ -26,12 +26,14 @@ import org.wirez.core.api.rule.RuleManager;
 /**
  * A Command to add a DefaultEdge to a Graph
  */
-public class AddEdgeCommand implements Command {
+public class AddEdgeCommand extends AbstractCommand {
 
     private DefaultGraph target;
     private Edge edge;
 
-    public AddEdgeCommand(DefaultGraph target, Edge edge) {
+    public AddEdgeCommand(final GraphCommandFactory commandFactory,
+                          DefaultGraph target, Edge edge) {
+        super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );;
         this.edge = PortablePreconditions.checkNotNull( "edge",
@@ -59,7 +61,7 @@ public class AddEdgeCommand implements Command {
 
     @Override
     public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = new DeleteEdgeCommand( target, edge );
+        final Command undoCommand = commandFactory.deleteEdgeCommand( target, edge );
         return undoCommand.execute( ruleManager );
     }
 

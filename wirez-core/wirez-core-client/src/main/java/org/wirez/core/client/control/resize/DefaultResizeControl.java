@@ -23,16 +23,26 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
+import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.control.BaseShapeControl;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.StaticMutationContext;
 
-public class DefaultResizeControl<S extends Shape, E extends Element> extends BaseResizeControl<S, E> {
-    
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
+@Dependent
+public class DefaultResizeControl extends BaseResizeControl<Shape, Element> {
+
+    @Inject
+    public DefaultResizeControl(DefaultCanvasCommands defaultCanvasCommands) {
+        super(defaultCanvasCommands);
+    }
+
     @Override
-    public void enable(final S shape, final E element) {
+    public void enable(final Shape shape, final Element element) {
         
         if (shape instanceof BaseShape) {
             ( (BaseShape) shape).setResizable(true).addWiresHandler(AbstractWiresEvent.RESIZE, new ResizeHandler() {

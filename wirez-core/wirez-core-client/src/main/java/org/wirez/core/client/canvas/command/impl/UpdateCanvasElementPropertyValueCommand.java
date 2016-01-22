@@ -20,6 +20,7 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
@@ -35,9 +36,11 @@ public class UpdateCanvasElementPropertyValueCommand extends BaseCanvasCommand i
     String propertyId;
     Object value;
     
-    public UpdateCanvasElementPropertyValueCommand(final Element element ,
+    public UpdateCanvasElementPropertyValueCommand(final GraphCommandFactory commandFactory, 
+                                                   final Element element ,
                                                    final String propertyId,
                                                    final Object value) {
+        super(commandFactory);
         this.element = element;
         this.propertyId = propertyId;
         this.value = value;
@@ -45,7 +48,7 @@ public class UpdateCanvasElementPropertyValueCommand extends BaseCanvasCommand i
 
     @Override
     protected Command getCommand() {
-        return new UpdateElementPropertyValueCommand(element, propertyId, value);
+        return commandFactory.updateElementPropertyValueCommand(element, propertyId, value);
     }
 
     @Override

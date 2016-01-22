@@ -20,6 +20,7 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.commands.DeleteEdgeCommand;
+import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
@@ -33,13 +34,14 @@ public class DeleteCanvasEdgeCommand extends BaseCanvasCommand {
 
     Edge candidate;
 
-    public DeleteCanvasEdgeCommand(final Edge candidate) {
+    public DeleteCanvasEdgeCommand(final GraphCommandFactory commandFactory, final Edge candidate) {
+        super(commandFactory);
         this.candidate = candidate;
     }
 
     @Override
     protected Command getCommand() {
-        return new DeleteEdgeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
+        return commandFactory.deleteEdgeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
     }
 
     @Override

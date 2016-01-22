@@ -18,13 +18,19 @@ package org.wirez.core.client.canvas.command;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.CanvasHandler;
 
 public abstract class BaseCanvasCommand implements CanvasCommand {
 
     protected CanvasHandler canvasHandler;
+    protected GraphCommandFactory commandFactory;
     protected Command command;
+
+    public BaseCanvasCommand(GraphCommandFactory commandFactory) {
+        this.commandFactory = commandFactory;
+    }
 
     protected abstract Command getCommand();
     

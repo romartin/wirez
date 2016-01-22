@@ -440,7 +440,7 @@ public class CanvasScreen {
                 // Add, move and resize the shape.
                 if ( null != command ) {
                     canvasHandler.execute(command);
-                    canvasHandler.execute(new MoveCanvasElementCommand(element, x, y));
+                    canvasHandler.execute( defaultCanvasCommands.MOVE(element, x ,y) );
                 }
             }
 

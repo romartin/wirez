@@ -21,35 +21,40 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 @ApplicationScoped
 public class DefaultCanvasCommands {
 
+    @Inject
+    GraphCommandFactory commandFactory;
+    
     public ClearCanvasCommand CLEAR() {
-        return new ClearCanvasCommand( );
+        return new ClearCanvasCommand( commandFactory );
     }
 
     public AddCanvasNodeCommand ADD_NODE(final Node node, final ShapeFactory factory ) {
-        return new AddCanvasNodeCommand( node, factory );
+        return new AddCanvasNodeCommand( commandFactory, node, factory );
     }
 
     public DeleteCanvasNodeCommand DELETE_NODE(final Node node) {
-        return new DeleteCanvasNodeCommand( node );
+        return new DeleteCanvasNodeCommand( commandFactory, node );
     }
     
     public AddCanvasEdgeCommand ADD_EDGE(final Edge edge, final ShapeFactory factory ) {
-        return new AddCanvasEdgeCommand( edge, factory );
+        return new AddCanvasEdgeCommand( commandFactory, edge, factory );
     }
 
     public DeleteCanvasEdgeCommand DELETE_EDGE(final Edge edge) {
-        return new DeleteCanvasEdgeCommand( edge );
+        return new DeleteCanvasEdgeCommand( commandFactory, edge );
     }
 
     public AddCanvasChildNodeCommand ADD_CHILD(final Node parent, Node child, final ShapeFactory factory ) {
-        return new AddCanvasChildNodeCommand( parent, child, factory );
+        return new AddCanvasChildNodeCommand( commandFactory, parent, child, factory );
     }
     
     // TODO: Remove parent command.
@@ -57,12 +62,20 @@ public class DefaultCanvasCommands {
     public MoveCanvasElementCommand MOVE( final Element element ,
                                           final Double x,
                                           final Double y ) {
-        return new MoveCanvasElementCommand( element, x, y );
+        return new MoveCanvasElementCommand( commandFactory, element, x, y );
     }
 
     public UpdateCanvasElementPropertyValueCommand UPDATE_PROPERTY( final Element element ,
                                                                     final String propertyId,
                                                                     final Object value ) {
-        return new UpdateCanvasElementPropertyValueCommand( element, propertyId, value );
+        return new UpdateCanvasElementPropertyValueCommand( commandFactory, element, propertyId, value );
+    }
+
+    public CompositeElementCanvasCommand COMPOSITE_COMMAND ( final Element element ) {
+        return new CompositeElementCanvasCommand( commandFactory, element);
+    }
+
+    public GraphCommandFactory getCommandFactory() {
+        return commandFactory;
     }
 }

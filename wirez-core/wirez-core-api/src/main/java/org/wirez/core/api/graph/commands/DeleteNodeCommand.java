@@ -32,13 +32,15 @@ import java.util.List;
 /**
  * A Command to delete a DefaultNode from a DefaultGraph
  */
-public class DeleteNodeCommand implements Command {
+public class DeleteNodeCommand extends AbstractCommand {
 
     private DefaultGraph target;
     private Node candidate;
 
-    public DeleteNodeCommand(final DefaultGraph target,
+    public DeleteNodeCommand(final GraphCommandFactory commandFactory,
+                             final DefaultGraph target,
                              final Node candidate ) {
+        super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",
                                                           target );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
@@ -101,8 +103,7 @@ public class DeleteNodeCommand implements Command {
 
     @Override
     public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = new AddNodeCommand( target,
-                candidate );
+        final Command undoCommand = commandFactory.addNodeCommand( target, candidate );
         return undoCommand.execute( ruleManager );
     }
 

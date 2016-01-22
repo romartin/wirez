@@ -34,9 +34,9 @@ import org.wirez.core.api.util.PropertyUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
-import org.wirez.core.client.control.DefaultDragControl;
+import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.HasDragControl;
-import org.wirez.core.client.control.ToolboxControl;
+import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.control.toolbox.HasToolboxControl;
 import org.wirez.core.client.mutation.*;
 
@@ -51,8 +51,8 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
 
     protected String id;
     protected Group group;
-    protected DefaultDragControl<Shape<W>, Edge> dragControl;
-    protected ToolboxControl<Shape<W>, Edge> toolboxControl;
+    protected BaseDragControl<Shape<W>, Edge> dragControl;
+    protected BaseToolboxControl<Shape<W>, Edge> toolboxControl;
 
     public BaseConnector(AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
         super(line, head, tail, manager);
@@ -180,22 +180,22 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public void setDragControl(final DefaultDragControl<Shape<W>, Edge> dragControl) {
+    public void setDragControl(final BaseDragControl<Shape<W>, Edge> dragControl) {
         this.dragControl = dragControl;
     }
 
     @Override
-    public DefaultDragControl<Shape<W>, Edge> getDragControl() {
+    public BaseDragControl<Shape<W>, Edge> getDragControl() {
         return dragControl;
     }
 
     @Override
-    public void setToolboxControl(ToolboxControl<Shape<W>, Edge> toolboxControl) {
+    public void setToolboxControl(BaseToolboxControl<Shape<W>, Edge> toolboxControl) {
         this.toolboxControl = toolboxControl;
     }
 
     @Override
-    public ToolboxControl<Shape<W>, Edge> getToolboxControl() {
+    public BaseToolboxControl<Shape<W>, Edge> getToolboxControl() {
         return toolboxControl;
     }
     

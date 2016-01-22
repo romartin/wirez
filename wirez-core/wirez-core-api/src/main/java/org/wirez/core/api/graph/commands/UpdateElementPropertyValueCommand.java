@@ -16,6 +16,7 @@
 package org.wirez.core.api.graph.commands;
 
 import org.uberfire.commons.validation.PortablePreconditions;
+import org.wirez.core.api.adapter.PropertyAdapter;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
@@ -30,16 +31,22 @@ import java.util.ArrayList;
 /**
  * A Command to update an element's property.
  */
-public class UpdateElementPropertyValueCommand implements Command {
+public class UpdateElementPropertyValueCommand extends AbstractCommand {
 
+    private PropertyAdapter adapter;
     private Element element;
     private String propertyId;
     private Object value;
 
 
-    public UpdateElementPropertyValueCommand(final Element element,
+    public UpdateElementPropertyValueCommand(final GraphCommandFactory commandFactory,
+                                             final PropertyAdapter adapter,
+                                             final Element element,
                                              final String propertyId,
                                              final Object value) {
+        super(commandFactory);
+        this.adapter = PortablePreconditions.checkNotNull( "adapter",
+                adapter );;
         this.element = PortablePreconditions.checkNotNull( "element",
                 element );;
         this.propertyId = PortablePreconditions.checkNotNull( "propertyId",
@@ -56,7 +63,8 @@ public class UpdateElementPropertyValueCommand implements Command {
 
     @Override
     public CommandResult execute(final RuleManager ruleManager) {
-        PropertyUtils.setValue(element.getProperties(), propertyId, value);
+        final Property p = PropertyUtils.getProperty(element.getProperties(), propertyId);
+        adapter.setValue(p, value);
         return new DefaultCommandResult(new ArrayList<RuleViolation>());
     }
     

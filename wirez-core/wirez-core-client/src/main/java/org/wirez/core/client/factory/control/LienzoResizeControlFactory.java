@@ -22,13 +22,21 @@ import org.wirez.core.client.control.resize.DefaultResizeControl;
 import org.wirez.core.client.control.resize.LienzoResizeControl;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 @Dependent
-public class LienzoResizeControlFactory<S extends Shape,  E extends Element> implements ShapeControlFactory<S, LienzoResizeControl<S, E>> {
-    
+public class LienzoResizeControlFactory implements ShapeControlFactory<Shape, LienzoResizeControl> {
+
+    LienzoResizeControl resizeControl;
+
+    @Inject
+    public LienzoResizeControlFactory(LienzoResizeControl resizeControl) {
+        this.resizeControl = resizeControl;
+    }
+
     @Override
-    public LienzoResizeControl<S, E> build(S shape) {
-        return new LienzoResizeControl<S, E>();
+    public LienzoResizeControl build(Shape shape) {
+        return resizeControl;
     }
     
 }

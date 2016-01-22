@@ -226,9 +226,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String message = "Executed SetConnectionSourceNodeCommand [source=" + sourceUUID + ", magnet=" + mIndex +  "]";
             Logger.log(message);
 
-            CommandResults results = execute(new CompositeElementCanvasCommand(edge)
-                .add(new UpdateElementPropertyValueCommand(edge, ConnectionSourceMagnet.ID, mIndex))
-                .add(new SetConnectionSourceNodeCommand(sourceNode, edge))
+            CommandResults results = execute(
+                    defaultCanvasCommands.COMPOSITE_COMMAND(edge)
+                            .add( defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand( edge, ConnectionSourceMagnet.ID, mIndex ) )
+                            .add ( defaultCanvasCommands.getCommandFactory().setConnectionSourceNodeCommand( sourceNode, edge ) )
             );
 
             final boolean isAccept = isAccept(results);
@@ -250,9 +251,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String message = "Executed SetConnectionTargetNodeCommand [target=" + targetUUID + ", magnet=" + mIndex +  "]";
             Logger.log(message);
 
-            CommandResults results = execute(new CompositeElementCanvasCommand(edge)
-                .add(new UpdateElementPropertyValueCommand(edge, ConnectionTargetMagnet.ID, mIndex))
-                .add(new SetConnectionTargetNodeCommand(targetNode, edge))
+            CommandResults results = execute(
+                    defaultCanvasCommands.COMPOSITE_COMMAND(edge)
+                            .add( defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand( edge, ConnectionTargetMagnet.ID, mIndex ) )
+                            .add ( defaultCanvasCommands.getCommandFactory().setConnectionTargetNodeCommand( targetNode, edge ) )
             );
             
             final boolean isAccept = isAccept(results);
@@ -269,10 +271,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final BaseShape outNode = (BaseShape) shape;
             final BaseShape inNode = tail.getMagnet() != null ? (BaseShape) tail.getMagnet().getMagnets().getWiresShape() : null;
 
-            final boolean isAllowed = allow(new BaseCanvasCommand() {
+            final boolean isAllowed = allow(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
                 protected Command getCommand() {
-                    return new SetConnectionSourceNodeCommand(defaultGraphHandler.getNode(outNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
+                    return commandFactory.setConnectionSourceNodeCommand(defaultGraphHandler.getNode(outNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
                 }
 
                 @Override
@@ -302,10 +304,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final BaseShape inNode = (BaseShape) shape;
             final BaseShape outNode = head.getMagnet() != null ? (BaseShape) head.getMagnet().getMagnets().getWiresShape() : null;
 
-            final boolean isAllowed = allow(new BaseCanvasCommand() {
+            final boolean isAllowed = allow(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
                 protected Command getCommand() {
-                    return new SetConnectionTargetNodeCommand(defaultGraphHandler.getNode(inNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
+                    return commandFactory.setConnectionTargetNodeCommand(defaultGraphHandler.getNode(inNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
                 }
 
                 @Override
@@ -353,10 +355,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final Node parentNode = defaultGraphHandler.getNode(parent.getId());
             final Node childNode = defaultGraphHandler.getNode(child.getId());
 
-            final boolean isAllowed = allow(new BaseCanvasCommand() {
+            final boolean isAllowed = allow(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
                 protected Command getCommand() {
-                    return  new AddChildNodeCommand(graph, parentNode, childNode);
+                    return commandFactory.addChildNodeCommand(graph, parentNode, childNode);
                 }
 
                 @Override
@@ -390,10 +392,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String message = "Executed AddChildNodeCommand [parent=" + parentNode.getUUID() + ", child=" + childNode.getUUID() + "]";
             GWT.log(message);
             
-            CommandResults results = execute(new BaseCanvasCommand() {
+            CommandResults results = execute(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
                 protected Command getCommand() {
-                    return new AddChildNodeCommand(graph, parentNode, childNode);
+                    return commandFactory.addChildNodeCommand(graph, parentNode, childNode);
                 }
 
                 @Override

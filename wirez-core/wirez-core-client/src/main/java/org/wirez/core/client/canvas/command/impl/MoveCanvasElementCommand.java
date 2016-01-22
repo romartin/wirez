@@ -19,6 +19,7 @@ package org.wirez.core.client.canvas.command.impl;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.commands.UpdateElementPositionCommand;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
@@ -34,9 +35,11 @@ public class MoveCanvasElementCommand extends BaseCanvasCommand implements Canva
     Double x;
     Double y;
     
-    public MoveCanvasElementCommand(final Element element ,
+    public MoveCanvasElementCommand(final GraphCommandFactory commandFactory, 
+                                    final Element element ,
                                     final Double x,
                                     final Double y) {
+        super(commandFactory);
         this.element = element;
         this.x = x;
         this.y = y;
@@ -44,7 +47,7 @@ public class MoveCanvasElementCommand extends BaseCanvasCommand implements Canva
 
     @Override
     protected Command getCommand() {
-        return new UpdateElementPositionCommand(element, x, y);
+        return commandFactory.updateElementPositionCommand(element, x, y);
     }
 
     @Override

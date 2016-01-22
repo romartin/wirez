@@ -33,16 +33,18 @@ import java.util.ArrayList;
 /**
  * A Command to update an element's bounds.
  */
-public class UpdateElementPositionCommand implements Command {
+public class UpdateElementPositionCommand extends AbstractCommand {
 
     private Element element;
     private Double x;
     private Double y;
 
 
-    public UpdateElementPositionCommand(final Element element,
+    public UpdateElementPositionCommand(final GraphCommandFactory commandFactory,
+                                        final Element element,
                                         final Double x,
                                         final Double y) {
+        super(commandFactory);
         this.element = PortablePreconditions.checkNotNull( "element",
                 element );;
         this.x = PortablePreconditions.checkNotNull( "x",

@@ -35,15 +35,17 @@ import java.util.*;
 /**
  * A Command to add a DefaultNode to a DefaultGraph
  */
-public class AddChildNodeCommand implements Command {
+public class AddChildNodeCommand extends AbstractCommand {
 
     private DefaultGraph target;
     private Node parent;
     private Node candidate;
 
-    public AddChildNodeCommand(final DefaultGraph target,
+    public AddChildNodeCommand(final GraphCommandFactory commandFactory, 
+                               final DefaultGraph target,
                                final Node parent,
                                final Node candidate ) {
+        super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );
         this.parent = PortablePreconditions.checkNotNull( "parent",

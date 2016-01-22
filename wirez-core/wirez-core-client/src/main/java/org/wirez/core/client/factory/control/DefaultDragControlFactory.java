@@ -21,13 +21,21 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.control.DefaultDragControl;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 @Dependent
-public class DefaultDragControlFactory<S extends Shape, E extends Element> implements ShapeControlFactory<S, DefaultDragControl<S, E>> {
-    
+public class DefaultDragControlFactory implements ShapeControlFactory<Shape, DefaultDragControl> {
+
+    DefaultDragControl defaultDragControl;
+
+    @Inject
+    public DefaultDragControlFactory(DefaultDragControl defaultDragControl) {
+        this.defaultDragControl = defaultDragControl;
+    }
+
     @Override
-    public DefaultDragControl<S, E> build(S shape) {
-        return new DefaultDragControl<S, E>();
+    public DefaultDragControl build(Shape shape) {
+        return defaultDragControl;
     }
     
 }

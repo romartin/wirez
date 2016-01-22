@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.control;
+package org.wirez.core.client.control.toolbox;
 
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickHandler;
@@ -24,18 +24,26 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.control.BaseShapeControl;
 import org.wirez.core.client.control.toolbox.Toolbox;
 
-public class ToolboxControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E> implements IsWidget {
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
-    final Toolbox<E> toolbox;
+@Dependent
+public class ToolboxControl extends BaseToolboxControl<Shape, Element> implements IsWidget {
 
-    public ToolboxControl(Toolbox<E> toolbox) {
+    final Toolbox<Element> toolbox;
+
+    @Inject
+    public ToolboxControl(DefaultCanvasCommands defaultCanvasCommands, Toolbox<Element> toolbox) {
+        super(defaultCanvasCommands);
         this.toolbox = toolbox;
     }
 
     @Override
-    public void enable(final S shape, final E element) {
+    public void enable(final Shape shape, final Element element) {
         
         toolbox.initialize(canvasHandler);
         
@@ -52,7 +60,7 @@ public class ToolboxControl<S extends Shape, E extends Element> extends BaseShap
     }
     
     @Override
-    public void disable(final S shape) {
+    public void disable(final Shape shape) {
         
         toolbox.hide();
         

@@ -23,14 +23,21 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
+import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.control.BaseShapeControl;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.StaticMutationContext;
 
+import javax.inject.Inject;
+
 public abstract class BaseResizeControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E> {
-    
+
+    public BaseResizeControl(DefaultCanvasCommands defaultCanvasCommands) {
+        super(defaultCanvasCommands);
+    }
+
     protected void doResizeStart(final S shape, final E element, final double width, final double height) {
         
     }
@@ -47,22 +54,18 @@ public abstract class BaseResizeControl<S extends Shape, E extends Element> exte
     protected void doResizeEnd(final S shape, final E element, final double width, final double height) {
         
         if (shape instanceof HasSizeMutation) {
-            
-            getCommandManager().execute(
-                    new CompositeElementCanvasCommand(element)
-                            .add(new UpdateElementPropertyValueCommand(element, "width", (int) width ))
-                            .add(new UpdateElementPropertyValueCommand(element, "height" , (int) height ))
-                            .doApplyElementProperties()
-            );
+            getCommandManager().execute( defaultCanvasCommands.COMPOSITE_COMMAND(element)
+                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "width", (int) width ) )
+                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "height" , (int) height ) )
+                    .doApplyElementProperties());
             
         } else if (shape instanceof HasRadiusMutation) {
 
             final double radius = getRadius(width, height);
-            getCommandManager().execute(
-                    new CompositeElementCanvasCommand(element)
-                            .add(new UpdateElementPropertyValueCommand(element, "radius" , (int) radius ))
-                            .doApplyElementProperties()
-            );
+            
+            getCommandManager().execute( defaultCanvasCommands.COMPOSITE_COMMAND(element)
+                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "radius", (int) radius ) )
+                    .doApplyElementProperties());
             
         }
         

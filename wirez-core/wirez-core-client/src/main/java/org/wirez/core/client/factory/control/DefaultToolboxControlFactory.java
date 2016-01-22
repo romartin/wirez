@@ -16,27 +16,25 @@
 
 package org.wirez.core.client.factory.control;
 
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.control.ToolboxControl;
-import org.wirez.core.client.control.toolbox.Toolbox;
+import org.wirez.core.client.control.toolbox.ToolboxControl;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class DefaultToolboxControlFactory<S extends Shape, E extends Element> implements ShapeControlFactory<S, ToolboxControl<S, E>> {
-    
-    Toolbox toolbox;
+public class DefaultToolboxControlFactory implements ShapeControlFactory<Shape, ToolboxControl> {
+
+    ToolboxControl toolboxControl;
 
     @Inject
-    public DefaultToolboxControlFactory(Toolbox toolbox) {
-        this.toolbox = toolbox;
+    public DefaultToolboxControlFactory(ToolboxControl toolboxControl) {
+        this.toolboxControl = toolboxControl;
     }
 
     @Override
-    public ToolboxControl<S, E> build(S shape) {
-        return new ToolboxControl<S, E>(toolbox);
+    public ToolboxControl build(Shape shape) {
+        return toolboxControl;
     }
     
 }

@@ -33,15 +33,17 @@ import java.util.LinkedList;
 /**
  * A Command to set the incoming connection for a DefaultEdge in a Graph.
  */
-public class SetConnectionTargetNodeCommand implements Command {
+public class SetConnectionTargetNodeCommand extends AbstractCommand {
 
     private Node<? extends ViewContent<?>, Edge> targetNode;
     private Node<? extends ViewContent<?>, Edge> lastTargetNode;
     private Node<? extends ViewContent<?>, Edge> sourceNode;
     private Edge<? extends ViewContent<?>, Node> edge;
 
-    public SetConnectionTargetNodeCommand(final Node<? extends ViewContent<?>, Edge> targetNode,
+    public SetConnectionTargetNodeCommand(final GraphCommandFactory commandFactory,
+                                          final Node<? extends ViewContent<?>, Edge> targetNode,
                                           final Edge<? extends ViewContent<?>, Node> edge) {
+        super(commandFactory);
         this.edge = PortablePreconditions.checkNotNull( "edge",
                 edge );;
         this.targetNode = PortablePreconditions.checkNotNull( "targetNode",

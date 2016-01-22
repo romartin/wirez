@@ -20,6 +20,7 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.AddChildNodeCommand;
+import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
@@ -36,7 +37,8 @@ public class AddCanvasChildNodeCommand extends BaseCanvasCommand {
     Node candidate;
     ShapeFactory factory;
 
-    public AddCanvasChildNodeCommand(final Node parent, final Node candidate, final ShapeFactory factory ) {
+    public AddCanvasChildNodeCommand(final GraphCommandFactory commandFactory, final Node parent, final Node candidate, final ShapeFactory factory ) {
+        super(commandFactory);
         this.parent = parent;
         this.candidate = candidate;
         this.factory = factory;
@@ -44,7 +46,7 @@ public class AddCanvasChildNodeCommand extends BaseCanvasCommand {
 
     @Override
     public Command getCommand() {
-        return new AddChildNodeCommand((DefaultGraph) canvasHandler.getGraph(), parent, candidate);
+        return commandFactory.addChildNodeCommand((DefaultGraph) canvasHandler.getGraph(), parent, candidate);
     }
 
     @Override

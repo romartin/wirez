@@ -18,12 +18,11 @@ package org.wirez.core.client.control.toolbox;
 
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.control.ToolboxControl;
 
 public interface HasToolboxControl<S extends Shape, E extends Element> {
 
-    void setToolboxControl(ToolboxControl<S, E> toolboxControl);
+    void setToolboxControl(BaseToolboxControl<S, E> toolboxControl);
 
-    ToolboxControl<S, E> getToolboxControl();
+    BaseToolboxControl<S, E> getToolboxControl();
     
 }

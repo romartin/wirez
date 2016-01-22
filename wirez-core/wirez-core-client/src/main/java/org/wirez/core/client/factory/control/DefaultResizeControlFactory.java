@@ -21,13 +21,21 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.control.resize.DefaultResizeControl;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 @Dependent
-public class DefaultResizeControlFactory<S extends Shape,  E extends Element> implements ShapeControlFactory<S, DefaultResizeControl<S, E>> {
+public class DefaultResizeControlFactory implements ShapeControlFactory<Shape, DefaultResizeControl> {
+
+    DefaultResizeControl defaultResizeControl;
     
+    @Inject
+    public DefaultResizeControlFactory(DefaultResizeControl defaultResizeControl) {
+        this.defaultResizeControl = defaultResizeControl;
+    }
+
     @Override
-    public DefaultResizeControl<S, E> build(S shape) {
-        return new DefaultResizeControl<S, E>();
+    public DefaultResizeControl build(Shape shape) {
+        return defaultResizeControl;
     }
     
 }

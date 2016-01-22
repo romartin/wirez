@@ -22,13 +22,23 @@ import com.ait.lienzo.client.core.shape.wires.event.DragHandler;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
 import org.wirez.core.client.impl.BaseShape;
 
-public class DefaultDragControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E>  {
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
+@Dependent
+public class DefaultDragControl extends BaseDragControl<Shape, Element>  {
+
+    @Inject
+    public DefaultDragControl(DefaultCanvasCommands defaultCanvasCommands) {
+        super(defaultCanvasCommands);
+    }
 
     @Override
-    public void enable(final S shape, final E element) {
+    public void enable(final Shape shape, final Element element) {
         
         if (shape instanceof BaseShape) {
             ( (BaseShape) shape).setDraggable(true).addWiresHandler(AbstractWiresEvent.DRAG, new DragHandler() {
@@ -47,7 +57,7 @@ public class DefaultDragControl<S extends Shape, E extends Element> extends Base
                     final double[] xy = getContainerXY(shape);
                     GWT.log("DragControl#onDragEnd [node=" + element.getUUID() + "]  [x=" + dragEvent.getX() + "] [y=" + dragEvent.getY() + "]");
                     GWT.log("DragControl#onDragEnd [shape=" + shape.getId() + "]  [x=" + xy[0]  + "] [y=" + xy[1] + "]");
-                    getCommandManager().execute(new MoveCanvasElementCommand(element, xy[0], xy[1]));
+                    getCommandManager().execute( defaultCanvasCommands.MOVE(element, xy[0], xy[1]) );
                 }
             });
         }
@@ -60,7 +70,7 @@ public class DefaultDragControl<S extends Shape, E extends Element> extends Base
     }
     
     @Override
-    public void disable(final S shape) {
+    public void disable(final Shape shape) {
 
         if (shape instanceof BaseShape) {
             ((BaseShape) shape).setDraggable(false);

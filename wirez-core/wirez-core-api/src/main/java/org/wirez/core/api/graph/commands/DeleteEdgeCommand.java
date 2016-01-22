@@ -33,13 +33,15 @@ import java.util.Collection;
 /**
  * A Command to delete a DefaultEdge from a Graph
  */
-public class DeleteEdgeCommand implements Command {
+public class DeleteEdgeCommand extends AbstractCommand {
 
     private DefaultGraph<?, Node, Edge> graph;
     private Edge<? extends ViewContent, Node> edge;
 
-    public DeleteEdgeCommand(final DefaultGraph<? extends Definition, Node, Edge> graph,
+    public DeleteEdgeCommand(final GraphCommandFactory commandFactory,
+                             final DefaultGraph<? extends Definition, Node, Edge> graph,
                              final Edge<? extends ViewContent, Node> edge) {
+        super(commandFactory);
         this.graph = PortablePreconditions.checkNotNull( "graph",
                 graph );;
         this.edge = PortablePreconditions.checkNotNull( "edge",
@@ -99,7 +101,7 @@ public class DeleteEdgeCommand implements Command {
 
     @Override
     public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = new AddEdgeCommand( graph, edge );
+        final Command undoCommand = commandFactory.addEdgeCommand( graph, edge );
         return undoCommand.execute( ruleManager );
     }
 

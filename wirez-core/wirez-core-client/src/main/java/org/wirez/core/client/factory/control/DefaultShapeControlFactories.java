@@ -16,6 +16,9 @@
 
 package org.wirez.core.client.factory.control;
 
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.client.Shape;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 

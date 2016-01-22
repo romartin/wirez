@@ -25,11 +25,13 @@ import org.wirez.core.api.rule.RuleManager;
 /**
  * A Command to clear all elements in a graph
  */
-public class ClearGraphCommand implements Command {
+public class ClearGraphCommand extends AbstractCommand {
 
     private DefaultGraph target;
 
-    public ClearGraphCommand(DefaultGraph target) {
+    public ClearGraphCommand(final GraphCommandFactory commandFactory,
+                             DefaultGraph target) {
+        super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );;
     }

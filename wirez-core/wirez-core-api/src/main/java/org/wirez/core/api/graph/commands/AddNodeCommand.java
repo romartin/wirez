@@ -31,13 +31,15 @@ import java.util.LinkedList;
 /**
  * A Command to add a DefaultNode to a DefaultGraph
  */
-public class AddNodeCommand implements Command {
+public class AddNodeCommand extends AbstractCommand {
 
     private DefaultGraph target;
     private Node candidate;
 
-    public AddNodeCommand(final DefaultGraph target,
+    public AddNodeCommand(final GraphCommandFactory commandFactory,
+                          final DefaultGraph target,
                           final Node candidate ) {
+        super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",
                                                           target );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
@@ -72,8 +74,7 @@ public class AddNodeCommand implements Command {
 
     @Override
     public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = new DeleteNodeCommand( target,
-                candidate );
+        final Command undoCommand = commandFactory.deleteNodeCommand( target, candidate );
         return undoCommand.execute( ruleManager );
     }
 

@@ -21,8 +21,8 @@ import org.wirez.core.client.Shape;
 
 public interface HasDragControl<S extends Shape, E extends Element> {
 
-    void setDragControl(DefaultDragControl<S, E> dragControl);
-    
-    DefaultDragControl<S, E> getDragControl();
+    void setDragControl(BaseDragControl<S, E> dragControl);
+
+    BaseDragControl<S, E> getDragControl();
     
 }

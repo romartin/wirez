@@ -19,6 +19,7 @@ package org.wirez.core.client.canvas.command.impl;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.commands.ClearGraphCommand;
+import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
@@ -30,12 +31,14 @@ import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
  */
 public class ClearCanvasCommand extends BaseCanvasCommand {
 
-    public ClearCanvasCommand( ) {
+    public ClearCanvasCommand(final GraphCommandFactory commandFactory) {
+        super(commandFactory);
+
     }
 
     @Override
     protected Command getCommand() {
-        return new ClearGraphCommand( (DefaultGraph) canvasHandler.getGraph() );
+        return commandFactory.clearGraphCommand( (DefaultGraph) canvasHandler.getGraph() );
     }
 
     @Override

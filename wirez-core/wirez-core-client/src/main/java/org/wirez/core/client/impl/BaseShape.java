@@ -32,6 +32,7 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.*;
 import org.wirez.core.client.control.resize.BaseResizeControl;
 import org.wirez.core.client.control.resize.DefaultResizeControl;
+import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.control.toolbox.HasToolboxControl;
 import org.wirez.core.client.mutation.*;
 
@@ -51,9 +52,9 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
 
     protected String id;
     protected Text text;
-    protected DefaultDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> dragControl;
+    protected BaseDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> dragControl;
     protected BaseResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> resizeControl;
-    protected ToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> toolboxControl;
+    protected BaseToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> toolboxControl;
 
 
     public BaseShape(final MultiPath path, final Group group, final WiresManager manager) {
@@ -164,12 +165,12 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void setDragControl(final DefaultDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> dragControl) {
+    public void setDragControl(final BaseDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> dragControl) {
         this.dragControl = dragControl;
     }
 
     @Override
-    public DefaultDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> getDragControl() {
+    public BaseDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> getDragControl() {
         return dragControl;
     }
 
@@ -184,12 +185,12 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void setToolboxControl(ToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> toolboxControl) {
+    public void setToolboxControl(BaseToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> toolboxControl) {
         this.toolboxControl = toolboxControl;
     }
 
     @Override
-    public ToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> getToolboxControl() {
+    public BaseToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> getToolboxControl() {
         return toolboxControl;
     }
 

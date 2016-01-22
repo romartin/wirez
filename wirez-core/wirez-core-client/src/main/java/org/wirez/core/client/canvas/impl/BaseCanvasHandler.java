@@ -41,8 +41,9 @@ import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.control.*;
 import org.wirez.core.client.control.resize.BaseResizeControl;
-import org.wirez.core.client.control.resize.DefaultResizeControl;
+import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.control.toolbox.HasToolboxControl;
+import org.wirez.core.client.control.toolbox.ToolboxControl;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
@@ -157,7 +158,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                 // DRAG control.
                 if (control instanceof DefaultDragControl && shape instanceof HasDragControl) {
                     final HasDragControl hasDragControl = (HasDragControl) shape;
-                    hasDragControl.setDragControl((DefaultDragControl) control);
+                    hasDragControl.setDragControl((BaseDragControl) control);
                     ((DefaultDragControl) control).setCanvasHandler(this);
                     control.enable(shape, candidate);
                 }
@@ -173,7 +174,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                 // Toolbox.
                 if (control instanceof ToolboxControl && shape instanceof HasToolboxControl) {
                     final HasToolboxControl hasToolboxControl = (HasToolboxControl) shape;
-                    hasToolboxControl.setToolboxControl((ToolboxControl) control);
+                    hasToolboxControl.setToolboxControl((BaseToolboxControl) control);
                     ((ToolboxControl) control).setCanvasHandler(this);
                     control.enable(shape, candidate);
                 }

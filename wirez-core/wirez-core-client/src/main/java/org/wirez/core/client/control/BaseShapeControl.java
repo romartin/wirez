@@ -20,10 +20,19 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
+import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+
+import javax.inject.Inject;
 
 public abstract class BaseShapeControl<S extends Shape, E extends Element> implements ShapeControl<S, E>, HasCanvasHandler {
     
     protected CanvasHandler canvasHandler;
+    protected DefaultCanvasCommands defaultCanvasCommands;
+
+    @Inject
+    public BaseShapeControl(DefaultCanvasCommands defaultCanvasCommands) {
+        this.defaultCanvasCommands = defaultCanvasCommands;
+    }
 
     @Override
     public void setCanvasHandler(final CanvasHandler canvasHandler) {

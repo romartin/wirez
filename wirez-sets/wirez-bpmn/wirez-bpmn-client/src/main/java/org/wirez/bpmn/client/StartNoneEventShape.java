@@ -93,7 +93,7 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
 
     @Override
     public String toString() {
-        return "CircleShape{}";
+        return "StartNoneEventShape{}";
     }
 
     

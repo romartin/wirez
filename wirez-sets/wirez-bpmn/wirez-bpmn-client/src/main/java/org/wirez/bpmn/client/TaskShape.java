@@ -67,7 +67,7 @@ public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
 
     @Override
     public String toString() {
-        return "RectangleShape{}";
+        return "TaskShape{}";
     }
 
     @Override

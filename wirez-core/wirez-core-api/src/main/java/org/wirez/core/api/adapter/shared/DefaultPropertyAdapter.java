@@ -21,6 +21,14 @@ public class DefaultPropertyAdapter implements PropertyAdapter<Property> {
     }
 
     @Override
+    public void setValue(final Property pojo, final Object value) {
+        if ( null != pojo ) {
+            HasValue hasValue = (HasValue) pojo;
+            ((HasValue) pojo).setValue(value);
+        }
+    }
+
+    @Override
     public boolean accepts(final Class pojoClass) {
         return pojoClass.equals(Property.class);
     }

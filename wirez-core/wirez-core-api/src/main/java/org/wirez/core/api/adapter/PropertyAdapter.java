@@ -9,4 +9,6 @@ public interface PropertyAdapter<T extends Property> extends Adapter<T> {
 
     Object getValue(T pojo);
     
+    void setValue(T pojo, Object value);
+    
 }

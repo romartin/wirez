@@ -40,6 +40,11 @@ public class AnnotatedPropertyAdapter implements PropertyAdapter<Property> {
     }
 
     @Override
+    public void setValue(final Property pojo, final Object value) {
+        // TODO
+    }
+
+    @Override
     public boolean accepts(Class pojoClass) {
         return !pojoClass.equals(DefaultProperty.class);
     }

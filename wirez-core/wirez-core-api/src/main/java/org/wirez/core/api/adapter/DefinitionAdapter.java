@@ -18,8 +18,6 @@ public interface DefinitionAdapter<T extends Definition> extends Adapter<T> {
 
     Set<Property> getProperties(T pojo);
 
-    Collection<Rule> getRules(T pojo);
-
     Map<Property, Object> getPropertiesValues(T pojo);
 
     Class<? extends Element> getGraphElementType(T pojo);

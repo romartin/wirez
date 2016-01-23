@@ -57,16 +57,6 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefini
     }
 
     @Override
-    public Collection<Rule> getRules(DefaultDefinition pojo) {
-        Set<Rule> result = null;
-        if ( null != pojo ) {
-            result = pojo.getRules();
-        }
-
-        return result;
-    }
-
-    @Override
     public Map<Property, Object> getPropertiesValues(final DefaultDefinition pojo) {
         Map<Property, Object> result = null;
         if ( null != pojo ) {

@@ -19,15 +19,11 @@ package org.wirez.core.backend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.BaseDefinitionManager;
-import org.wirez.core.api.adapter.DefinitionAdapter;
-import org.wirez.core.api.adapter.DefinitionSetAdapter;
-import org.wirez.core.api.adapter.PropertyAdapter;
-import org.wirez.core.api.adapter.PropertySetAdapter;
+import org.wirez.core.api.adapter.*;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.registry.RuleRegistry;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.backend.adapter.AnnotatedPropertySetAdapter;
 
@@ -43,24 +39,24 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
 
     Instance<DefinitionSet> definitionSetInstances;
     Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances;
+    Instance<DefinitionSetRuleAdapter<? extends DefinitionSet>> definitionSetRuleAdapterInstances;
     Instance<DefinitionAdapter<? extends Definition>> definitionAdapterInstances;
     Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances;
     Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances;
-    RuleRegistry<Rule> ruleRuleRegistry;
     
     @Inject
     public BackendDefinitionManager(Instance<DefinitionSet> definitionSetInstances, 
-                                    Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances, 
+                                    Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances,
+                                    Instance<DefinitionSetRuleAdapter<? extends DefinitionSet>> definitionSetRuleAdapterInstances,
                                     Instance<DefinitionAdapter<? extends Definition>> definitionAdapterInstances, 
                                     Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances, 
-                                    Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances,
-                                    RuleRegistry<Rule> ruleRuleRegistry) {
+                                    Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances) {
         this.definitionSetInstances = definitionSetInstances;
         this.definitionSetAdapterInstances = definitionSetAdapterInstances;
+        this.definitionSetRuleAdapterInstances = definitionSetRuleAdapterInstances;
         this.definitionAdapterInstances = definitionAdapterInstances;
         this.propertySetAdapterInstances = propertySetAdapterInstances;
         this.propertyAdapterInstances = propertyAdapterInstances;
-        this.ruleRuleRegistry = ruleRuleRegistry;
     }
 
     @PostConstruct
@@ -80,6 +76,10 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
             definitionSetAdapters.add(definitionSetAdapter);
         }
         sortAdapters(definitionSetAdapters);
+        for (DefinitionSetRuleAdapter definitionSetRuleAdapter : definitionSetRuleAdapterInstances) {
+            definitionSetRuleAdapters.add(definitionSetRuleAdapter);
+        }
+        sortAdapters(definitionSetRuleAdapters);
         for (DefinitionAdapter definitionAdapter : definitionAdapterInstances) {
             definitionAdapters.add(definitionAdapter);
         }

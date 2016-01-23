@@ -1,20 +1,13 @@
 package org.wirez.core.client;
 
-import org.jboss.errai.common.client.api.ErrorCallback;
-import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.container.IOCBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.BaseDefinitionManager;
-import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.adapter.DefinitionAdapter;
-import org.wirez.core.api.adapter.DefinitionSetAdapter;
-import org.wirez.core.api.adapter.PropertyAdapter;
-import org.wirez.core.api.adapter.PropertySetAdapter;
+import org.wirez.core.api.adapter.*;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.registry.RuleRegistry;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.service.definition.DefinitionResponse;
 import org.wirez.core.api.service.definition.DefinitionSetResponse;
@@ -31,16 +24,13 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     
     SyncBeanManager beanManager;
     ClientDefinitionServices clientDefinitionServices;
-    RuleRegistry<Rule> ruleRegistry;
     private Collection<DefinitionSet> definitionSets = new ArrayList<>();
     
     @Inject
     public ClientDefinitionManager(final SyncBeanManager beanManager,
-                                   final ClientDefinitionServices clientDefinitionServices,
-                                   final RuleRegistry<Rule> ruleRegistry) {
+                                   final ClientDefinitionServices clientDefinitionServices) {
         this.beanManager = beanManager;
         this.clientDefinitionServices = clientDefinitionServices;
-        this.ruleRegistry = ruleRegistry;
     }
     
     @PostConstruct
@@ -53,8 +43,6 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
             definitionSets.add(definitionSet);
         }
         
-        // TODO: Adapter injections not working (should inject the defaul ones from wirez-core-api package...) - lookup beans for DefinitionSetAdapter<? extends DefinitionSet>,  etc
-
         // DefinitionSet client adapters.
         Collection<IOCBeanDef<DefinitionSetAdapter>> beanDefSetAdapters = beanManager.lookupBeans(DefinitionSetAdapter.class);
         for (IOCBeanDef<DefinitionSetAdapter> defSet : beanDefSetAdapters) {
@@ -62,6 +50,14 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
             definitionSetAdapters.add(definitionSet);
         }
         sortAdapters(definitionAdapters);
+
+        // DefinitionSetRule client adapters.
+        Collection<IOCBeanDef<DefinitionSetRuleAdapter>> beanDefSetRuleAdapters = beanManager.lookupBeans(DefinitionSetRuleAdapter.class);
+        for (IOCBeanDef<DefinitionSetRuleAdapter> defSet : beanDefSetRuleAdapters) {
+            DefinitionSetRuleAdapter definitionSet = defSet.getInstance();
+            definitionSetRuleAdapters.add(definitionSet);
+        }
+        sortAdapters(definitionSetRuleAdapters);
 
         // Definition client adapters.
         Collection<IOCBeanDef<DefinitionAdapter>> beanDefAdapters = beanManager.lookupBeans(DefinitionAdapter.class);
@@ -164,55 +160,27 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void getRules(final DefinitionSet definitionSet,
                                 final ClientDefinitionServices.ServiceCallback<Collection<Rule>> callback) {
 
-        if (ruleRegistry.containsRules(definitionSet)) {
+        DefinitionSetRuleAdapter definitionSetAdapter = getDefinitionSetRuleAdapter(definitionSet.getClass());
+
+        if ( null != definitionSetAdapter ) {
             
-            callback.onSuccess(ruleRegistry.getRules(definitionSet));
-        } else {
-
-            DefinitionSetAdapter definitionSetAdapter = getDefinitionSetAdapter(definitionSet.getClass());
-
-            if ( null != definitionSetAdapter ) {
-                
-                callback.onSuccess(definitionSetAdapter.getRules(definitionSet));
-                
-            } else {
-                
-                getDefinitionSetResponse(definitionSet.getId(), new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
-
-                    @Override
-                    public void onSuccess(final DefinitionSetResponse item) {
-                        callback.onSuccess(item.getRules());
-                    }
-
-                    @Override
-                    public void onError(final ClientRuntimeError error) {
-                        callback.onError(error);
-                    }
-                });
-                
-            }
-            
-        }
-
-    }
-
-    public void getRules(final Definition definition,
-                         final ClientDefinitionServices.ServiceCallback<Collection<Rule>> callback) {
-
-        if (ruleRegistry.containsRules(definition)) {
-
-            callback.onSuccess(ruleRegistry.getRules(definition));
+            callback.onSuccess(definitionSetAdapter.getRules(definitionSet));
             
         } else {
+            
+            getDefinitionSetResponse(definitionSet.getId(), new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
 
-            DefinitionAdapter definitionAdapter = getDefinitionAdapter(definition.getClass());
+                @Override
+                public void onSuccess(final DefinitionSetResponse item) {
+                    callback.onSuccess(item.getRules());
+                }
 
-            if ( null != definitionAdapter ) {
-                
-                callback.onSuccess(definitionAdapter.getRules(definition));
-                
-            }
-
+                @Override
+                public void onError(final ClientRuntimeError error) {
+                    callback.onError(error);
+                }
+            });
+            
         }
 
     }

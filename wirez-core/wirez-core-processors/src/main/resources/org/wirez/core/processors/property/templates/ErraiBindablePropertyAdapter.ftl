@@ -26,7 +26,7 @@ import javax.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
 import java.util.Map;
 
-@Generated("org.wirez.core.processors.property.PropertyProcessor")
+@Generated("org.wirez.core.processors.property.ErraiBindablePropertyAdapterGenerator")
 @ApplicationScoped
 public class ${className} implements PropertyAdapter<Property> {
 

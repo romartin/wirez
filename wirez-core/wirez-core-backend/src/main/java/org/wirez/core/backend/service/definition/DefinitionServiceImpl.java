@@ -2,10 +2,7 @@ package org.wirez.core.backend.service.definition;
 
 import org.jboss.errai.bus.server.annotations.Service;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.adapter.Adapter;
-import org.wirez.core.api.adapter.DefinitionAdapter;
-import org.wirez.core.api.adapter.DefinitionSetAdapter;
-import org.wirez.core.api.adapter.PropertySetAdapter;
+import org.wirez.core.api.adapter.*;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
@@ -33,9 +30,10 @@ public class DefinitionServiceImpl implements DefinitionService {
         
         final DefinitionSet definitionSet = definitionManager.getDefinitionSet(id);
         final DefinitionSetAdapter adapter = definitionManager.getDefinitionSetAdapter(definitionSet.getClass());
+        final DefinitionSetRuleAdapter ruleAdapter = definitionManager.getDefinitionSetRuleAdapter(definitionSet.getClass());
         final Set<Definition> definitions = adapter.getDefinitions(definitionSet);
         final Set<PropertySet> propertySets = adapter.getPropertySets(definitionSet);
-        final Collection<Rule> rules = adapter.getRules(definitionSet);
+        final Collection<Rule> rules = ruleAdapter.getRules(definitionSet);
         
         Definition graphDefinition = null;
         for (Definition definition : definitions) {

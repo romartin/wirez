@@ -45,7 +45,6 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.registry.RuleRegistry;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.service.definition.DefinitionSetResponse;
@@ -106,15 +105,7 @@ public class HomeScreen extends Composite {
 
                 GWT.log("Element uuid=" + element.getUUID() + " , properties=" + element.getProperties().size());
 
-                if (ruleRuleRegistry.containsRules(definitionSet)) {
-                    Collection<Rule> rules = ruleRuleRegistry.getRules(definitionSet);
-                    for (Rule rule : rules ) {
-                        GWT.log("Element rule name=" + rule.getName());
-                    }
-
-                } else {
-                    GWT.log("No rules");
-                }
+                
 
                 clientDefinitionManager.getPropertySets(definitionSet, new ClientDefinitionServices.ServiceCallback<Set<PropertySet>>() {
                     @Override
@@ -195,9 +186,6 @@ public class HomeScreen extends Composite {
 
     @Inject
     ClientDefinitionManager clientDefinitionManager;
-    
-    @Inject
-    RuleRegistry<Rule> ruleRuleRegistry;
     
     @WorkbenchPartTitle
     public String getScreenTitle() {

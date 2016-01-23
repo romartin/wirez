@@ -31,6 +31,7 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
 
     protected final List<DefinitionSet> definitionSets = new ArrayList<DefinitionSet>();
     protected final List<DefinitionSetAdapter> definitionSetAdapters = new ArrayList<DefinitionSetAdapter>();
+    protected final List<DefinitionSetRuleAdapter> definitionSetRuleAdapters = new ArrayList<DefinitionSetRuleAdapter>();
     protected final List<DefinitionAdapter> definitionAdapters = new ArrayList<DefinitionAdapter>();
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
     protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();
@@ -50,6 +51,17 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     @Override
     public DefinitionSetAdapter getDefinitionSetAdapter(Class definitionSetClass) {
         for (DefinitionSetAdapter adapter : definitionSetAdapters) {
+            if ( adapter.accepts(definitionSetClass) ) {
+                return adapter;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public DefinitionSetRuleAdapter getDefinitionSetRuleAdapter(Class definitionSetClass) {
+        for (DefinitionSetRuleAdapter adapter : definitionSetRuleAdapters) {
             if ( adapter.accepts(definitionSetClass) ) {
                 return adapter;
             }

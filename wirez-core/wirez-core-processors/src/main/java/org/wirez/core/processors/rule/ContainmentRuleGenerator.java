@@ -21,8 +21,8 @@ import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.uberfire.relocated.freemarker.template.Template;
 import org.uberfire.relocated.freemarker.template.TemplateException;
 import org.wirez.core.processors.GeneratorUtils;
+import org.wirez.core.processors.MainProcessor;
 import org.wirez.core.processors.ProcessingElement;
-import org.wirez.core.processors.property.PropertyProcessor;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -49,9 +49,9 @@ public class ContainmentRuleGenerator extends AbstractGenerator  {
         //Extract required information
         final TypeElement classElement = (TypeElement) element;
         final boolean isInterface = classElement.getKind().isInterface();
-        final String annotationName = RuleProcessor.ANNOTATION_CAN_CONTAIN;
+        final String annotationName = MainProcessor.ANNOTATION_RULE_CAN_CONTAIN;
         final String ruleName = className;
-        final String ruleDefinitionId = className.substring(0, ( className.length() - RuleProcessor.SUFFIX_CONTAINMENT_RULE.length()) );
+        final String ruleDefinitionId = className.substring(0, ( className.length() - MainProcessor.RULE_CONTAINMENT_SUFFIX_CLASSNAME.length()) );
         
         List<String> roles = null;
 

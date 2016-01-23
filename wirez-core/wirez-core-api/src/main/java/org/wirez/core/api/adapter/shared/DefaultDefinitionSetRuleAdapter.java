@@ -1,6 +1,7 @@
 package org.wirez.core.api.adapter.shared;
 
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
+import org.wirez.core.api.adapter.DefinitionSetRuleAdapter;
 import org.wirez.core.api.definition.DefaultDefinitionSet;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
@@ -12,7 +13,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @ApplicationScoped
-public class DefaultDefinitionSetAdapter implements DefinitionSetAdapter<DefaultDefinitionSet> {
+public class DefaultDefinitionSetRuleAdapter implements DefinitionSetRuleAdapter<DefaultDefinitionSet> {
 
     @Override
     public boolean accepts(final Class pojoClass) {
@@ -20,29 +21,13 @@ public class DefaultDefinitionSetAdapter implements DefinitionSetAdapter<Default
     }
 
     @Override
-    public Set<PropertySet> getPropertySets(DefaultDefinitionSet pojo) {
-        Set<PropertySet> result = null;
+    public Collection<Rule> getRules(final DefaultDefinitionSet pojo) {
+        Collection<Rule> result = null;
         if ( null != pojo ) {
-            result = pojo.getPropertySets();
+            result = pojo.getRules();
         }
 
         return result;
-    }
-
-    @Override
-    public Set<Definition> getDefinitions(DefaultDefinitionSet pojo) {
-        Set<Definition> result = null;
-        if ( null != pojo ) {
-            result = pojo.getDefinitions();
-        }
-        
-        return result;
-    }
-
-    @Override
-    public Set<Property> getAllProperties(DefaultDefinitionSet pojo) {
-        // TODO
-        return null;
     }
 
     @Override

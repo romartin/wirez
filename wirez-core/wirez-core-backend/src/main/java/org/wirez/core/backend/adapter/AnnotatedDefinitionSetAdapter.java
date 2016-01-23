@@ -8,7 +8,6 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.registry.RuleRegistry;
 import org.wirez.core.api.rule.Rule;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -30,9 +29,6 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
 
     @Inject
     AnnotatedDefinitionAdapter annotatedDefinitionAdapter;
-
-    @Inject
-    RuleRegistry<Rule> ruleRuleRegistry;
 
     @Override
     public boolean accepts(Class pojoClass) {
@@ -74,12 +70,6 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
         }
         
         return result;
-    }
-
-    // Rules are generated at compile time by the default annotation processor and available at runtime in the RuleRegistry
-    @Override
-    public Collection<Rule> getRules(DefinitionSet pojo) {
-        return ruleRuleRegistry.getRules(pojo);
     }
 
     @Override

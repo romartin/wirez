@@ -37,12 +37,12 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.*;
 
-public class ErraiBindablePropertyAdapterWritter {
+public class ErraiBindablePropertyAdapterGenerator {
 
     private static ExceptionInInitializerError INITIALIZER_EXCEPTION = null;
     private Configuration config;
 
-    public ErraiBindablePropertyAdapterWritter() {
+    public ErraiBindablePropertyAdapterGenerator() {
         try {
             this.config = new Configuration();
             this.config.setClassForTemplateLoading(this.getClass(), "templates");

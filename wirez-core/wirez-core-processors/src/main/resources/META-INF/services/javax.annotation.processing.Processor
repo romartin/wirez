@@ -14,5 +14,4 @@
 # limitations under the License.
 #
 
-org.wirez.core.processors.property.PropertyProcessor
-org.wirez.core.processors.rule.RuleProcessor
+org.wirez.core.processors.MainProcessor

@@ -34,6 +34,4 @@ public interface DefaultDefinition extends Definition {
 
     Set<Property> getProperties();
     
-    Set<Rule> getRules();
-    
 }

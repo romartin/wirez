@@ -14,7 +14,6 @@ import org.wirez.core.api.graph.factory.EdgeFactory;
 import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.factory.NodeFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.registry.RuleRegistry;
 import org.wirez.core.api.rule.Rule;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -33,9 +32,6 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
     @Inject
     AnnotatedPropertySetAdapter propertySetAdapter;
-
-    @Inject
-    RuleRegistry<Rule> ruleRuleRegistry;
 
     @Inject
     DefaultGraphFactory<? extends Definition> graphFactory;
@@ -101,12 +97,6 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
         }
         
         return result;
-    }
-
-    // Rules are generated at compile time by the default annotation processor and available at runtime in the RuleRegistry
-    @Override
-    public Collection<Rule> getRules(Definition pojo) {
-        return ruleRuleRegistry.getRules(pojo);
     }
 
     @Override

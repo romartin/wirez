@@ -29,15 +29,15 @@ public class DefinitionServiceImpl implements DefinitionService {
     public DefinitionSetResponse getDefinitionSet(final String id) {
         
         final DefinitionSet definitionSet = definitionManager.getDefinitionSet(id);
-        final DefinitionSetAdapter adapter = definitionManager.getDefinitionSetAdapter(definitionSet.getClass());
-        final DefinitionSetRuleAdapter ruleAdapter = definitionManager.getDefinitionSetRuleAdapter(definitionSet.getClass());
+        final DefinitionSetAdapter adapter = definitionManager.getDefinitionSetAdapter(definitionSet);
+        final DefinitionSetRuleAdapter ruleAdapter = definitionManager.getDefinitionSetRuleAdapter(definitionSet);
         final Set<Definition> definitions = adapter.getDefinitions(definitionSet);
         final Set<PropertySet> propertySets = adapter.getPropertySets(definitionSet);
         final Collection<Rule> rules = ruleAdapter.getRules(definitionSet);
         
         Definition graphDefinition = null;
         for (Definition definition : definitions) {
-            Class<? extends Element> elementClass = definitionManager.getDefinitionAdapter(definition.getClass()).getGraphElementType(definition);
+            Class<? extends Element> elementClass = definitionManager.getDefinitionAdapter(definition).getGraphElementType(definition);
             Class<? extends Element> graphClass = DefaultGraph.class;
             if ( elementClass.equals( graphClass ) ) {
                 graphDefinition = definition;
@@ -55,20 +55,20 @@ public class DefinitionServiceImpl implements DefinitionService {
         if ( null != definitionSets ) {
             for (DefinitionSet definitionSet : definitionSets) {
 
-                final DefinitionSetAdapter adapter = definitionManager.getDefinitionSetAdapter(definitionSet.getClass());
+                final DefinitionSetAdapter adapter = definitionManager.getDefinitionSetAdapter(definitionSet);
                 final Set<Definition> definitions = adapter.getDefinitions(definitionSet);
                 
                 for (Definition definition : definitions) {
                     if (definition.getId().equals(id)) {
                         
-                        final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter(definition.getClass());
+                        final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter(definition);
                         Class<? extends Element> elementClass = definitionAdapter.getGraphElementType(definition);
                         Map<Property, Object> properties = definitionAdapter.getPropertiesValues(definition);
                         Map<PropertySet, Set<Property>> propertySetSetMap = new HashMap<>();
                         final Set<PropertySet> propertySets = definitionAdapter.getPropertySets(definition);
                         if ( null != propertySets ) {
                             for (PropertySet propertySet : propertySets) {
-                                PropertySetAdapter pSetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
+                                PropertySetAdapter pSetAdapter = definitionManager.getPropertySetAdapter(propertySet);
                                 Set<Property> pSetProperties = pSetAdapter.getProperties(propertySet);
                                 pSetProperties = pSetProperties != null ? pSetProperties : new HashSet<Property>();
                                 propertySetSetMap.put(propertySet, pSetProperties);
@@ -91,7 +91,7 @@ public class DefinitionServiceImpl implements DefinitionService {
         if ( null != response ) {
             
             Definition definition = response.getDefinition();
-            final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter(definition.getClass());
+            final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter(definition);
             ElementFactory elementFactory = definitionAdapter.getElementFactory(definition);
             
             // Cache on element properties the annotated Property's on the definition.
@@ -101,7 +101,7 @@ public class DefinitionServiceImpl implements DefinitionService {
             Set<PropertySet> propertySets = definitionAdapter.getPropertySets(definition);
             if ( null != propertySets && !propertySets.isEmpty() ) {
                 for (PropertySet propertySet : propertySets) {
-                    PropertySetAdapter propertySetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
+                    PropertySetAdapter propertySetAdapter = definitionManager.getPropertySetAdapter(propertySet);
                     Set<Property> setProperties = propertySetAdapter.getProperties(propertySet);
                     if( null != setProperties ) {
                         properties.addAll(setProperties);

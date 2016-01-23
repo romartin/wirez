@@ -49,9 +49,9 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public DefinitionSetAdapter getDefinitionSetAdapter(Class definitionSetClass) {
+    public DefinitionSetAdapter getDefinitionSetAdapter(Object pojo) {
         for (DefinitionSetAdapter adapter : definitionSetAdapters) {
-            if ( adapter.accepts(definitionSetClass) ) {
+            if ( adapter.accepts(pojo) ) {
                 return adapter;
             }
         }
@@ -60,9 +60,9 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public DefinitionSetRuleAdapter getDefinitionSetRuleAdapter(Class definitionSetClass) {
+    public DefinitionSetRuleAdapter getDefinitionSetRuleAdapter(Object pojo) {
         for (DefinitionSetRuleAdapter adapter : definitionSetRuleAdapters) {
-            if ( adapter.accepts(definitionSetClass) ) {
+            if ( adapter.accepts(pojo) ) {
                 return adapter;
             }
         }
@@ -71,9 +71,9 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public DefinitionAdapter getDefinitionAdapter(Class definitionClass) {
+    public DefinitionAdapter getDefinitionAdapter(Object pojo) {
         for (DefinitionAdapter adapter : definitionAdapters) {
-            if ( adapter.accepts(definitionClass) ) {
+            if ( adapter.accepts(pojo) ) {
                 return adapter;
             }
         }
@@ -82,9 +82,9 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public PropertySetAdapter getPropertySetAdapter(Class propertySetClass) {
+    public PropertySetAdapter getPropertySetAdapter(Object pojo) {
         for (PropertySetAdapter adapter : propertySetAdapters) {
-            if ( adapter.accepts(propertySetClass) ) {
+            if ( adapter.accepts(pojo) ) {
                 return adapter;
             }
         }
@@ -93,9 +93,9 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public PropertyAdapter getPropertyAdapter(Class propertyClass) {
+    public PropertyAdapter getPropertyAdapter(Object pojo) {
         for (PropertyAdapter adapter : propertyAdapters) {
-            if ( adapter.accepts(propertyClass) ) {
+            if ( adapter.accepts(pojo) ) {
                 return adapter;
             }
         }

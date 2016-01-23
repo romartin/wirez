@@ -90,7 +90,7 @@ public class SharedGraphCommandFactory implements GraphCommandFactory {
     
     
     protected PropertyAdapter getPropertyAdapter(final Property property) {
-        return definitionManager.getPropertyAdapter(property.getClass());
+        return definitionManager.getPropertyAdapter(property);
     }
     
 }

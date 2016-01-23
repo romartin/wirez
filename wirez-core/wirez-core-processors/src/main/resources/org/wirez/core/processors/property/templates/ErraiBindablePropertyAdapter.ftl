@@ -80,8 +80,9 @@ public class ${className} implements PropertyAdapter<Property> {
     }
 
     @Override
-    public boolean accepts(final Class pojoClass) {
-        return propValueFieldNames.containsKey(pojoClass);
+    public boolean accepts(final Object pojo) {
+        return propValueFieldNames.containsKey(pojo.getClass());
+
     }
 
     @Override

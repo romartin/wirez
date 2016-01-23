@@ -16,10 +16,10 @@ import java.util.Set;
 public class DefaultDefinitionSetRuleAdapter implements DefinitionSetRuleAdapter<DefaultDefinitionSet> {
 
     @Override
-    public boolean accepts(final Class pojoClass) {
-        return pojoClass.equals(DefaultDefinitionSet.class);
+    public boolean accepts(final Object pojo) {
+        return pojo instanceof DefaultDefinitionSet;
     }
-
+    
     @Override
     public Collection<Rule> getRules(final DefaultDefinitionSet pojo) {
         Collection<Rule> result = null;

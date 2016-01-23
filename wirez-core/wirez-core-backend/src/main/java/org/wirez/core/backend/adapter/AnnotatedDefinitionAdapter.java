@@ -68,8 +68,8 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
     }
 
     @Override
-    public boolean accepts(Class pojoClass) {
-        return !pojoClass.equals(DefaultDefinition.class);
+    public boolean accepts(Object pojo) {
+        return ( ! ( pojo instanceof DefaultDefinition ) );
     }
 
     @Override
@@ -204,7 +204,7 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
     
     private PropertySetAdapter getPropertySetAdapter(PropertySet propertySet) {
         for (PropertySetAdapter propertySetAdapter : propertySetAdapters) {
-            if (propertySetAdapter.accepts( propertySet.getClass() )) {
+            if (propertySetAdapter.accepts( propertySet )) {
                 return propertySetAdapter;
             }
         }
@@ -213,7 +213,7 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
     private PropertyAdapter getPropertyAdapter(Property property) {
         for (PropertyAdapter propertySetAdapter : propertyAdapters) {
-            if (propertySetAdapter.accepts( property.getClass() )) {
+            if (propertySetAdapter.accepts( property )) {
                 return propertySetAdapter;
             }
         }

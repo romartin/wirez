@@ -8,7 +8,7 @@ import org.wirez.core.api.definition.property.Property;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class DefaultHasValuePropertyAdapter implements PropertyAdapter<Property> {
+public class HasValuePropertyAdapter implements PropertyAdapter<Property> {
     
     @Override
     public Object getValue(final Property pojo) {
@@ -40,15 +40,14 @@ public class DefaultHasValuePropertyAdapter implements PropertyAdapter<Property>
         }
     }
 
-    // TODO: Find an alternative for being able to return HasValue.class.isAssignableFrom(pojoClass) (GWT not emulated)
     @Override
-    public boolean accepts(final Class pojoClass) {
-        return true;
+    public boolean accepts(final Object pojo) {
+        return pojo instanceof HasValue;
     }
 
     @Override
     public int getPriority() {
-        return 200;
+        return 1;
     }
 
 }

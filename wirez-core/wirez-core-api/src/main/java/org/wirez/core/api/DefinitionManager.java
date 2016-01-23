@@ -34,15 +34,15 @@ public interface DefinitionManager {
 
     DefinitionSet getDefinitionSet(String id);
     
-    DefinitionSetAdapter getDefinitionSetAdapter(Class definitionSetClass);
+    DefinitionSetAdapter getDefinitionSetAdapter(Object pojo);
     
-    DefinitionSetRuleAdapter getDefinitionSetRuleAdapter(Class definitionSetClass);
+    DefinitionSetRuleAdapter getDefinitionSetRuleAdapter(Object pojo);
     
-    DefinitionAdapter getDefinitionAdapter(Class definitionClass);
+    DefinitionAdapter getDefinitionAdapter(Object pojo);
     
-    PropertySetAdapter getPropertySetAdapter(Class propertySetClass);
+    PropertySetAdapter getPropertySetAdapter(Object pojo);
     
-    PropertyAdapter getPropertyAdapter(Class propertyClass);
+    PropertyAdapter getPropertyAdapter(Object pojo);
     
     
 }

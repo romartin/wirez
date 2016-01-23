@@ -1,6 +1,7 @@
 package org.wirez.core.api.adapter.shared;
 
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
+import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.DefaultDefinitionSet;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
@@ -15,10 +16,10 @@ import java.util.Set;
 public class DefaultDefinitionSetAdapter implements DefinitionSetAdapter<DefaultDefinitionSet> {
 
     @Override
-    public boolean accepts(final Class pojoClass) {
-        return pojoClass.equals(DefaultDefinitionSet.class);
+    public boolean accepts(final Object pojo) {
+        return pojo instanceof DefaultDefinitionSet;
     }
-
+    
     @Override
     public Set<PropertySet> getPropertySets(DefaultDefinitionSet pojo) {
         Set<PropertySet> result = null;

@@ -3,6 +3,7 @@ package org.wirez.core.backend.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.adapter.PropertyAdapter;
+import org.wirez.core.api.definition.DefaultDefinitionSet;
 import org.wirez.core.api.definition.property.DefaultProperty;
 import org.wirez.core.api.definition.property.Property;
 
@@ -73,8 +74,8 @@ public class AnnotatedPropertyAdapter implements PropertyAdapter<Property> {
     }
 
     @Override
-    public boolean accepts(Class pojoClass) {
-        return !pojoClass.equals(DefaultProperty.class);
+    public boolean accepts(Object pojo) {
+        return ( ! ( pojo instanceof DefaultProperty) );
     }
     
     @Override

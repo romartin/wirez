@@ -46,8 +46,8 @@ public class ${className} implements DefinitionSetRuleAdapter<${defSetClassName}
     }
 
     @Override
-    public boolean accepts(final Class pojoClass) {
-        return pojoClass.equals(${defSetClassName}.class);
+    public boolean accepts(final Object pojo) {
+        return pojo instanceof ${defSetClassName};
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.wirez.core.backend.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
+import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.DefaultDefinitionSet;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
@@ -31,8 +32,8 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
     AnnotatedDefinitionAdapter annotatedDefinitionAdapter;
 
     @Override
-    public boolean accepts(Class pojoClass) {
-        return !pojoClass.equals(DefaultDefinitionSet.class);
+    public boolean accepts(Object pojo) {
+        return ( ! ( pojo instanceof DefaultDefinitionSet ) );
     }
 
     @Override

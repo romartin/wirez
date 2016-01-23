@@ -11,8 +11,8 @@ import java.util.Set;
 public class DefaultPropertySetAdapter implements PropertySetAdapter<DefaultPropertySet> {
 
     @Override
-    public boolean accepts(final Class pojoClass) {
-        return pojoClass.equals(DefaultPropertySet.class);
+    public boolean accepts(final Object pojo) {
+        return pojo instanceof DefaultPropertySet;
     }
 
 

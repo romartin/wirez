@@ -112,7 +112,7 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void getPropertySets(final DefinitionSet definitionSet,
                                 final ClientDefinitionServices.ServiceCallback<Set<PropertySet>> callback) {
         
-        DefinitionSetAdapter definitionSetAdapter = getDefinitionSetAdapter(definitionSet.getClass());
+        DefinitionSetAdapter definitionSetAdapter = getDefinitionSetAdapter(definitionSet);
         
         if ( null != definitionSetAdapter ) {
             callback.onSuccess(definitionSetAdapter.getPropertySets(definitionSet));
@@ -136,7 +136,7 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void getDefinitions(final DefinitionSet definitionSet,
                                final ClientDefinitionServices.ServiceCallback<Set<Definition>> callback) {
 
-        DefinitionSetAdapter definitionSetAdapter = getDefinitionSetAdapter(definitionSet.getClass());
+        DefinitionSetAdapter definitionSetAdapter = getDefinitionSetAdapter(definitionSet);
 
         if ( null != definitionSetAdapter ) {
             callback.onSuccess(definitionSetAdapter.getPropertySets(definitionSet));
@@ -160,7 +160,7 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void getRules(final DefinitionSet definitionSet,
                                 final ClientDefinitionServices.ServiceCallback<Collection<Rule>> callback) {
 
-        DefinitionSetRuleAdapter definitionSetAdapter = getDefinitionSetRuleAdapter(definitionSet.getClass());
+        DefinitionSetRuleAdapter definitionSetAdapter = getDefinitionSetRuleAdapter(definitionSet);
 
         if ( null != definitionSetAdapter ) {
             
@@ -188,7 +188,7 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void getPropertySets(final Definition definition,
                                 final ClientDefinitionServices.ServiceCallback<Set<PropertySet>> callback) {
 
-        DefinitionAdapter definitionAdapter = getDefinitionAdapter(definition.getClass());
+        DefinitionAdapter definitionAdapter = getDefinitionAdapter(definition);
 
         if ( null != definitionAdapter ) {
             callback.onSuccess(definitionAdapter.getPropertySets(definition));
@@ -212,7 +212,7 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void getPropertyValues(final Definition definition,
                                 final ClientDefinitionServices.ServiceCallback<Map<Property, Object>> callback) {
 
-        DefinitionAdapter definitionAdapter = getDefinitionAdapter(definition.getClass());
+        DefinitionAdapter definitionAdapter = getDefinitionAdapter(definition);
 
         if ( null != definitionAdapter ) {
             callback.onSuccess(definitionAdapter.getPropertiesValues(definition));
@@ -236,7 +236,7 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void getProperties(final Definition definition,
                               final ClientDefinitionServices.ServiceCallback<Set<Property>> callback) {
 
-        DefinitionAdapter definitionAdapter = getDefinitionAdapter(definition.getClass());
+        DefinitionAdapter definitionAdapter = getDefinitionAdapter(definition);
 
         if ( null != definitionAdapter ) {
             callback.onSuccess(definitionAdapter.getProperties(definition));
@@ -260,7 +260,7 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void getProperties(final PropertySet propertySet,
                               final ClientDefinitionServices.ServiceCallback<Set<Property>> callback) {
 
-        PropertySetAdapter definitionAdapter = getPropertySetAdapter(propertySet.getClass());
+        PropertySetAdapter definitionAdapter = getPropertySetAdapter(propertySet);
 
         if ( null != definitionAdapter ) {
             callback.onSuccess(definitionAdapter.getProperties(propertySet));

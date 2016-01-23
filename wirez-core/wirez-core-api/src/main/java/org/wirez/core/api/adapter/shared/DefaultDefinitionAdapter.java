@@ -99,8 +99,8 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefini
     }
 
     @Override
-    public boolean accepts(final Class pojoClass) {
-        return pojoClass.equals(DefaultDefinition.class); 
+    public boolean accepts(final Object pojo) {
+        return pojo instanceof DefaultDefinition;
     }
 
     @Override

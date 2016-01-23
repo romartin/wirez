@@ -3,6 +3,7 @@ package org.wirez.core.backend.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.adapter.PropertySetAdapter;
+import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.property.DefaultPropertySet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -45,10 +46,10 @@ public class AnnotatedPropertySetAdapter implements PropertySetAdapter<PropertyS
     }
 
     @Override
-    public boolean accepts(Class pojoClass) {
-        return !pojoClass.equals(DefaultPropertySet.class);
+    public boolean accepts(Object pojo) {
+        return ( ! ( pojo instanceof DefaultPropertySet) );
     }
-
+    
     @Override
     public int getPriority() {
         return 100;

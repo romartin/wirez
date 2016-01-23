@@ -391,9 +391,10 @@ public class PropertiesEditor implements IsWidget {
     void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
         checkNotNull("event", event);
         final Canvas.ShapeState state = event.getState();
-        final Shape shape = event.getShape();
         final DefaultGraph defaultGraph = (DefaultGraph) this.canvasHandler.getGraph();
+        final Shape shape = event.getShape();
         if ( shape != null ) {
+            // If shape exist, show the properties for the underlying model element.
             final String shapeUUID = shape.getId();
             final Element<? extends ViewContent<?>> element = defaultGraphHandler.initialize(defaultGraph).get(shapeUUID);
             if (element != null && Canvas.ShapeState.SELECTED.equals(state)) {
@@ -402,6 +403,9 @@ public class PropertiesEditor implements IsWidget {
             } else if (Canvas.ShapeState.DESELECTED.equals(state)) {
                 view.clear();
             }
+        } else {
+            // If shape is null means no shape selected, so show the properties for the underlying graph.
+            show(defaultGraph);
         }
         
     }

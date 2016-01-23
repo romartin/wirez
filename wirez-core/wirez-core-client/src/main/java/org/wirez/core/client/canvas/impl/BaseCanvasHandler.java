@@ -124,11 +124,12 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                 @Override
                 public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
 
+                    final boolean isSelected = selectionManager.isSelected(shape);
+
                     if (!nodeMouseClickEvent.isShiftKeyDown()) {
                         selectionManager.clearSelection();
                     }
 
-                    final boolean isSelected = selectionManager.isSelected(shape);
                     if (isSelected) {
                         GWT.log("Deselect [shape=" + shape.getId() + "]");
                         selectionManager.deselect(shape);
@@ -353,12 +354,4 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         return (BaseCanvas) canvas;
     }
 
-    void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
-        checkNotNull("event", event);
-        final Canvas.ShapeState state = event.getState();
-        final Shape shape = event.getShape();
-        if ( null == shape ) {
-            fireCanvasClear();
-        }
-    }
 }

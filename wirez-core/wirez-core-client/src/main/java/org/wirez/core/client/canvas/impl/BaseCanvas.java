@@ -65,6 +65,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
             @Override
             public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
                 clearSelection();
+                fireCanvasSelected();
             }
         });
         return this;
@@ -215,7 +216,6 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         }
         selectedShapes.clear();
         draw();
-        fireCanvasSelected();
         return this;
     }
 

@@ -62,8 +62,8 @@ public class WirezPerspective {
         notificationsPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         notificationsPanel.setMinWidth( 400 );
         notificationsPanel.setWidth( 400 );
-        notificationsPanel.setMinHeight( 250 );
-        notificationsPanel.setHeight( 250 );
+        notificationsPanel.setMinHeight( 100 );
+        notificationsPanel.setHeight( 100);
         notificationsPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(NotificationsScreen.SCREEN_ID ) ) );
 
         perspective.getRoot().insertChild( CompassPosition.WEST,

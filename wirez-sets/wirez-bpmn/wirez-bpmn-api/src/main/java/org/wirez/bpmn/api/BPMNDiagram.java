@@ -34,7 +34,7 @@ import java.util.HashSet;
 @Bindable
 @Definition
 @Graph( type = DefaultGraph.class )
-@CanContain( roles = {"all", "diagram"} )
+// @CanContain( roles = {"all", "diagram"} )
 public class BPMNDiagram extends BPMNDefinition {
 
     public static final String ID = "bpmnDiagram";

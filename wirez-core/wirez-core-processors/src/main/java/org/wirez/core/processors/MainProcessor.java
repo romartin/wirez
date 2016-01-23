@@ -271,6 +271,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         try {
 
             final String defSetId = processingContext.getDefinitionSet().getId();
+            // Ensure visible on both backend and client sides.
             final String packageName = "org.wirez.core.api.adapter.rule." + defSetId.toLowerCase();
             final String className = defSetId + RULE_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
@@ -296,6 +297,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         try {
 
             final String defSetId = processingContext.getDefinitionSet().getId();
+            // Ensure only visible on client side.
             final String packageName = "org.wirez.core.client.adapter.property." + defSetId.toLowerCase();
             final String className = defSetId + PROPERTY_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;

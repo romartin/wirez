@@ -40,14 +40,15 @@ public class DefaultHasValuePropertyAdapter implements PropertyAdapter<Property>
         }
     }
 
+    // TODO: Find an alternative for being able to return HasValue.class.isAssignableFrom(pojoClass) (GWT not emulated)
     @Override
     public boolean accepts(final Class pojoClass) {
-        return HasValue.class.isAssignableFrom(pojoClass);
+        return true;
     }
 
     @Override
     public int getPriority() {
-        return 1;
+        return 200;
     }
 
 }

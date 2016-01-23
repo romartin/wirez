@@ -33,11 +33,11 @@ public class EdgeImpl<C> extends ElementImpl<C> implements Edge<C, Node> {
     private Node sourceNode;
     private Node targetNode;
 
-    public EdgeImpl(@MapsTo("id") String id,
+    public EdgeImpl(@MapsTo("uuid") String uuid,
                     @MapsTo("properties") Set<Property> properties,
                     @MapsTo("labels") Set<String> labels,
                     @MapsTo("content") C content) {
-        super(id, properties, labels, content);
+        super(uuid, properties, labels, content);
     }
     
     @Override

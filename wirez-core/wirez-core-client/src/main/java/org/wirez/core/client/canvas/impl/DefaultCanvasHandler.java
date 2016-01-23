@@ -23,8 +23,6 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
 import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.definition.property.defaultset.ConnectionSourceMagnet;
-import org.wirez.core.api.definition.property.defaultset.ConnectionTargetMagnet;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
@@ -228,7 +226,6 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
             CommandResults results = execute(
                     defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                            .add( defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand( edge, ConnectionSourceMagnet.ID, mIndex ) )
                             .add ( defaultCanvasCommands.getCommandFactory().setConnectionSourceNodeCommand( sourceNode, edge ) )
             );
 
@@ -253,7 +250,6 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
             CommandResults results = execute(
                     defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                            .add( defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand( edge, ConnectionTargetMagnet.ID, mIndex ) )
                             .add ( defaultCanvasCommands.getCommandFactory().setConnectionTargetNodeCommand( targetNode, edge ) )
             );
             

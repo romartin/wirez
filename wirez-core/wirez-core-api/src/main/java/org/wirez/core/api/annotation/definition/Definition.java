@@ -15,11 +15,15 @@
  */
 package org.wirez.core.api.annotation.definition;
 
+import org.wirez.core.api.graph.Element;
+
 import java.lang.annotation.*;
 
 @Inherited
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface Definition {
+
+    Class<? extends Element> type();
     
 }

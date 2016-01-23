@@ -71,7 +71,9 @@ public class CompositeElementCanvasCommand implements CanvasCommand {
     }
 
     public CompositeElementCanvasCommand add(final Command command) {
-        commands.add(command);
+        if ( null != command ) {
+            commands.add(command);
+        }
         return this;
     }
     

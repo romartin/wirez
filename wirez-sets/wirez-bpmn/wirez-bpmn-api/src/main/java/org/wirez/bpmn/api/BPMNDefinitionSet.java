@@ -23,6 +23,10 @@ public class BPMNDefinitionSet implements DefinitionSet {
     @Inject
     @Definition
     Task task;
+
+    @Inject
+    @Definition
+    SequenceFlow sequenceFlow;
     
     @Override
     public String getId() {
@@ -61,5 +65,13 @@ public class BPMNDefinitionSet implements DefinitionSet {
 
     public void setTask(Task task) {
         this.task = task;
+    }
+
+    public SequenceFlow getSequenceFlow() {
+        return sequenceFlow;
+    }
+
+    public void setSequenceFlow(SequenceFlow sequenceFlow) {
+        this.sequenceFlow = sequenceFlow;
     }
 }

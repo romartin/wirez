@@ -22,8 +22,7 @@ import org.wirez.bpmn.api.property.diagram.DiagramSet;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.PropertySet;
-import org.wirez.core.api.annotation.graph.Graph;
-import org.wirez.core.api.annotation.rule.CanContain;
+import org.wirez.core.api.definition.BaseDefinition;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import javax.annotation.PostConstruct;
@@ -32,10 +31,9 @@ import java.util.HashSet;
 
 @Portable
 @Bindable
-@Definition
-@Graph( type = DefaultGraph.class )
+@Definition( type = DefaultGraph.class )
 // @CanContain( roles = {"all", "diagram"} )
-public class BPMNDiagram extends BPMNDefinition {
+public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "bpmnDiagram";
 

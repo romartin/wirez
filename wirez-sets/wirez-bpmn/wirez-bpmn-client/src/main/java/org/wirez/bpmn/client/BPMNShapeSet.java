@@ -18,6 +18,7 @@ package org.wirez.bpmn.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
+import org.wirez.bpmn.client.factory.SequenceFlowShapeFactory;
 import org.wirez.bpmn.client.factory.StartNoneEventShapeFactory;
 import org.wirez.bpmn.client.factory.TaskShapeFactory;
 import org.wirez.bpmn.client.resources.BPMNImageResources;
@@ -41,15 +42,18 @@ public class BPMNShapeSet implements ShapeSet {
     BPMNDefinitionSet bpmnDefinitionSet;
     StartNoneEventShapeFactory startNoneEventShapeFactory;
     TaskShapeFactory taskShapeFactory;
+    SequenceFlowShapeFactory sequenceFlowShapeFactory;
     private List<ShapeFactory<? extends Definition, ? extends Shape>> factories;
 
     @Inject
     public BPMNShapeSet( final BPMNDefinitionSet bpmnDefinitionSet,
                          final StartNoneEventShapeFactory startNoneEventShapeFactory,
-                         final TaskShapeFactory taskShapeFactory) {
+                         final TaskShapeFactory taskShapeFactory,
+                         final SequenceFlowShapeFactory sequenceFlowShapeFactory) {
         this.bpmnDefinitionSet = bpmnDefinitionSet;
         this.startNoneEventShapeFactory = startNoneEventShapeFactory;
         this.taskShapeFactory = taskShapeFactory;
+        this.sequenceFlowShapeFactory = sequenceFlowShapeFactory;
     }
 
     @PostConstruct
@@ -57,6 +61,7 @@ public class BPMNShapeSet implements ShapeSet {
         factories = new LinkedList<ShapeFactory<? extends Definition, ? extends Shape>>() {{
             add( startNoneEventShapeFactory );
             add( taskShapeFactory );
+            add( sequenceFlowShapeFactory );
         }};
     }
 

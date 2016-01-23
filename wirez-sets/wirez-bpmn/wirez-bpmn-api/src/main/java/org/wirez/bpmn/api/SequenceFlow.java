@@ -27,6 +27,7 @@ import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.definition.PropertySet;
 import org.wirez.core.api.definition.BaseDefinition;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 
 import javax.annotation.PostConstruct;
@@ -35,13 +36,11 @@ import java.util.HashSet;
 
 @Portable
 @Bindable
-@Definition( type = Node.class )
-public class Task extends BaseDefinition implements BPMNDefinition {
+@Definition( type = Edge.class )
+public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
 
-    public static final String ID = "Task";
-    public static final String COLOR = "#00CC00";
-    public static final Integer WIDTH = 100;
-    public static final Integer HEIGHT = 100;
+    public static final String ID = "SequenceFlow";
+    public static final String COLOR = "#000000";
     
     @Inject
     @PropertySet
@@ -55,32 +54,19 @@ public class Task extends BaseDefinition implements BPMNDefinition {
     @PropertySet
     private FontSet fontSet;
 
-    @Inject
-    @Property
-    private Width width;
-
-    @Inject
-    @Property
-    private Height height;
-
-
-    public Task() {
-        super("Activities", "Task", "A task is a unit of work - the job to be performed",
+    public SequenceFlow() {
+        super("Connecting Objects", "Sequence Flow", "A Sequence Flow",
                 new HashSet<String>(){{
                     add( "all" );
-                    add( "sequence_start" );
-                    add( "sequence_end" );
-                    // TODO
+                    add( "ConnectingObjectsMorph" );
                 }});
     }
 
     @PostConstruct
     public void init() {
-        getGeneral().getName().setValue("My task");
+        getGeneral().getName().setValue("My sequence flow");
         getBackgroundSet().getBgColor().setValue(COLOR);
         getBackgroundSet().getBorderSize().setValue(3);
-        getWidth().setValue(WIDTH);
-        getHeight().setValue(HEIGHT);
         
     }
     @Override
@@ -100,14 +86,6 @@ public class Task extends BaseDefinition implements BPMNDefinition {
         return fontSet;
     }
 
-    public Width getWidth() {
-        return width;
-    }
-
-    public Height getHeight() {
-        return height;
-    }
-
     public void setGeneral(BPMNGeneral general) {
         this.general = general;
     }
@@ -120,11 +98,4 @@ public class Task extends BaseDefinition implements BPMNDefinition {
         this.fontSet = fontSet;
     }
 
-    public void setWidth(Width width) {
-        this.width = width;
-    }
-
-    public void setHeight(Height height) {
-        this.height = height;
-    }
 }

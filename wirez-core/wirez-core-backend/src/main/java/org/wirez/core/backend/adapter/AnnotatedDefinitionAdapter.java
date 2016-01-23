@@ -10,6 +10,7 @@ import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
@@ -170,7 +171,7 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
         Class<? extends Element> result = null;
 
         if ( null != definition ) {
-            org.wirez.core.api.annotation.graph.Graph annotation = definition.getClass().getAnnotation(org.wirez.core.api.annotation.graph.Graph.class);
+            org.wirez.core.api.annotation.definition.Definition annotation = definition.getClass().getAnnotation(org.wirez.core.api.annotation.definition.Definition.class);
             result = annotation.type();
         }
         
@@ -188,7 +189,7 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
                 return graphFactory;
             } else if (item.equals(Node.class)) {
                 return nodeFactory;
-            } else if (item.equals(Node.class)) {
+            } else if (item.equals(Edge.class)) {
                 return edgeFactory;
             }
 

@@ -25,7 +25,7 @@ import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.definition.PropertySet;
-import org.wirez.core.api.annotation.graph.Graph;
+import org.wirez.core.api.definition.BaseDefinition;
 import org.wirez.core.api.graph.Node;
 
 import javax.annotation.PostConstruct;
@@ -34,9 +34,8 @@ import java.util.HashSet;
 
 @Portable
 @Bindable
-@Definition
-@Graph( type = Node.class )
-public class StartNoneEvent extends BPMNDefinition {
+@Definition( type = Node.class )
+public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "StartNoneEvent";
     public static final String COLOR = "@0000CC";

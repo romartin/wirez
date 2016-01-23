@@ -18,7 +18,7 @@ package org.wirez.core.api.annotation.propertyset;
 import java.lang.annotation.*;
 
 @Inherited
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface PropertySet {
     

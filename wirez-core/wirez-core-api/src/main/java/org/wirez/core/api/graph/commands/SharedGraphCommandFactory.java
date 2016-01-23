@@ -85,7 +85,7 @@ public class SharedGraphCommandFactory implements GraphCommandFactory {
                                                                                final Object value) {
         final Property p = PropertyUtils.getProperty(element.getProperties(), propertyId);
         PropertyAdapter adapter = getPropertyAdapter(p);
-        return new UpdateElementPropertyValueCommand(this, adapter, element, propertyId, value);
+        return adapter != null ? new UpdateElementPropertyValueCommand(this, adapter, element, propertyId, value) : null;
     }
     
     

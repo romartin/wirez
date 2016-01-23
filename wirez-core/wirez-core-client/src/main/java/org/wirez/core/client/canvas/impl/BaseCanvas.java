@@ -87,32 +87,20 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
     @Override
     public Canvas addShape(final Shape shape) {
-        try {
-            BaseShape baseShape = (BaseShape) shape;
-            registerShape(baseShape);
-        } catch (ClassCastException e) {
-            try {
-                BaseConnector baseConnector = (BaseConnector) shape;
-                registerConnector(baseConnector);
-            } catch (ClassCastException e1) {
-                throw new RuntimeException("BaseCanvas - Cannot register wirez shape as it's not a base shape neither a base connector.");
-            }
+        if (shape instanceof BaseShape) {
+            registerShape((BaseShape) shape);
+        } else {
+            registerConnector((BaseConnector) shape);
         }
         return this;
     }
 
     @Override
     public Canvas deleteShape(final Shape shape) {
-        try {
-            BaseShape baseShape = (BaseShape) shape;
-            deregisterShape(baseShape);
-        } catch (ClassCastException e) {
-            try {
-                BaseConnector baseConnector = (BaseConnector) shape;
-                deregisterConnector(baseConnector);
-            } catch (ClassCastException e1) {
-                throw new RuntimeException("BaseCanvas - Cannot deregister wirez shape as it's not a base shape neither a base connector.");
-            }
+        if (shape instanceof BaseShape) {
+            deregisterShape((BaseShape) shape);
+        } else {
+            deregisterConnector((BaseConnector) shape);
         }
         return this;
     }

@@ -26,13 +26,9 @@ import org.wirez.core.api.rule.Rule;
 import java.util.Set;
 
 @Portable
-public class DefaultDefinitionImpl implements DefaultDefinition {
+public class DefaultDefinitionImpl extends BaseDefinition implements DefaultDefinition {
 
     private final String id;
-    private final String category;
-    private final String title;
-    private final String description;
-    private final Set<String> labels;
     private final Set<PropertySet> propertySets;
     private final Set<Property> properties;
 
@@ -43,16 +39,9 @@ public class DefaultDefinitionImpl implements DefaultDefinition {
                                  @MapsTo("labels") Set<String> labels,
                                  @MapsTo("propertySets") Set<PropertySet> propertySets,
                                  @MapsTo("properties") Set<Property> properties) {
+        super(category, title, description, labels);
         this.id = PortablePreconditions.checkNotNull( "id",
                 id );
-        this.category = PortablePreconditions.checkNotNull( "category",
-                category );
-        this.title = PortablePreconditions.checkNotNull( "title",
-                title );
-        this.description = PortablePreconditions.checkNotNull( "description",
-                description );
-        this.labels = PortablePreconditions.checkNotNull( "labels",
-                labels );
         this.propertySets = PortablePreconditions.checkNotNull( "propertySets",
                 propertySets );
         this.properties = PortablePreconditions.checkNotNull( "properties",
@@ -62,26 +51,6 @@ public class DefaultDefinitionImpl implements DefaultDefinition {
     @Override
     public String getId() {
         return id;
-    }
-
-    @Override
-    public String getCategory() {
-        return category;
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public Set<String> getLabels() {
-        return labels;
     }
 
     @Override

@@ -137,6 +137,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
                 } else {
                     text.setText(name);
                 }
+                text.moveToTop();
             } else {
                 this.removeChild(text);
             }

@@ -21,46 +21,4 @@ public class PropertyUtils {
         return null;
     }
 
-    // TODO
-    public static <T> T getValue(final Set<Property> properties, final String id) {
-        
-        Property property = getProperty(properties, id);
-        return getValue(property);
-        
-    }
-
-    // TODO
-    public static <T> T getValue(Property property) {
-
-        if ( null != property ) {
-
-            if ( property instanceof HasValue) {
-                return (T) ( (HasValue) property).getValue();
-            } else {
-                HasProperties hasProperties = (HasProperties) DataBinder.forType(property.getClass()).getModel();
-                return (T) hasProperties.get("value");
-            }
-
-        }
-
-        return null;
-    }
-
-    // TODO
-    public static <T> void setValue(final Set<Property> properties, final String id, final T value) {
-        Property property = getProperty(properties, id);
-
-        if ( null != property ) {
-
-            if ( property instanceof HasValue ) {
-                ( (HasValue<T>) property).setValue(value);
-            } else {
-                HasProperties hasProperties = (HasProperties) DataBinder.forType(property.getClass()).getModel();
-                hasProperties.set("value", value);
-            }
-
-        }
-
-    }
-    
 }

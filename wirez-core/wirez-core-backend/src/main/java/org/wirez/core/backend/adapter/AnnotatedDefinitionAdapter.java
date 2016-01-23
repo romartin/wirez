@@ -23,32 +23,29 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-// TODO: ElementFactory's injection not working.
 @ApplicationScoped
 public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedDefinitionAdapter.class);
 
+    @Inject
     AnnotatedPropertyAdapter propertyAdapter;
-    RuleRegistry<Rule> ruleRuleRegistry;
-    DefaultGraphFactory<? extends Definition> graphFactory;
-    NodeFactory<? extends Definition> nodeFactory;
-    EdgeFactory<? extends Definition> edgeFactory;
 
     @Inject
-    public AnnotatedDefinitionAdapter(AnnotatedPropertyAdapter propertyAdapter, 
-                                      RuleRegistry<Rule> ruleRuleRegistry,
-                                      DefaultGraphFactory<? extends Definition> graphFactory,
-                                      NodeFactory<? extends Definition> nodeFactory,
-                                      EdgeFactory<? extends Definition> edgeFactory) {
-        this.propertyAdapter = propertyAdapter;
-        this.ruleRuleRegistry = ruleRuleRegistry;
-        this.graphFactory = graphFactory;
-        this.nodeFactory = nodeFactory;
-        this.edgeFactory = edgeFactory;
-    }
+    AnnotatedPropertySetAdapter propertySetAdapter;
 
-    
+    @Inject
+    RuleRegistry<Rule> ruleRuleRegistry;
+
+    @Inject
+    DefaultGraphFactory<? extends Definition> graphFactory;
+
+    @Inject
+    NodeFactory<? extends Definition> nodeFactory;
+
+    @Inject
+    EdgeFactory<? extends Definition> edgeFactory;
+
     @Override
     public boolean accepts(Class pojoClass) {
         return !pojoClass.equals(DefaultDefinition.class);
@@ -117,9 +114,23 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
         if ( null != pojo ) {
 
-            Set<Property> properties = getProperties(pojo);
-
-            if ( null != properties && !properties.isEmpty() ) {
+            final Set<Property> properties = new HashSet<>();
+            final Set<Property> _properties = getProperties(pojo);
+            if ( null != _properties ) {
+                properties.addAll(_properties);
+            }
+            
+            final Set<PropertySet> propertySets = getPropertySets(pojo);
+            if ( null != propertySets && !propertySets.isEmpty() ) {
+                for (PropertySet propertySet : propertySets) {
+                    final Set<Property> psProps = propertySetAdapter.getProperties(propertySet);
+                    if ( null != psProps ) {
+                        properties.addAll(psProps);
+                    }
+                }
+            }
+            
+            if ( !properties.isEmpty() ) {
 
                 final Map<Property, Object> result = new HashMap<>(properties.size());
 
@@ -135,7 +146,7 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
             
         }
         
-        return null;
+        return new HashMap<>();
     }
 
     @Override

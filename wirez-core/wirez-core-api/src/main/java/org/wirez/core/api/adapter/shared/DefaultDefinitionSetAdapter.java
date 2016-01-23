@@ -3,6 +3,7 @@ package org.wirez.core.api.adapter.shared;
 import org.wirez.core.api.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.definition.DefaultDefinitionSet;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.rule.Rule;
 
@@ -46,6 +47,12 @@ public class DefaultDefinitionSetAdapter implements DefinitionSetAdapter<Default
         }
 
         return result;
+    }
+
+    @Override
+    public Set<Property> getAllProperties(DefaultDefinitionSet pojo) {
+        // TODO
+        return null;
     }
 
     @Override

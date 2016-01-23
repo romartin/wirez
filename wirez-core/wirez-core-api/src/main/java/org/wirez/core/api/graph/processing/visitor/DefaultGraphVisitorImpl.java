@@ -176,8 +176,12 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
             final Set<Property> properties = element.getProperties();
             if (properties != null) {
                 for (final Property property : properties) {
-                    Object value = PropertyUtils.getValue(property);
-                    propertyVisitor.visitProperty(element, property.getId(), value);
+                    // TODO
+                    if (property instanceof HasValue) {
+                        HasValue hasValue = (HasValue) property;
+                        propertyVisitor.visitProperty(element, property.getId(), hasValue.getValue());
+                        
+                    }
                 }
             }
         }

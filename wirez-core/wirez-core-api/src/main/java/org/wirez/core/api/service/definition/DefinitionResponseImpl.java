@@ -16,12 +16,12 @@ public class DefinitionResponseImpl implements DefinitionResponse {
     private final Definition definition;
     private final String elementClass;
     private final Map<Property, Object> properties;
-    private final Set<PropertySet> propertySets;
+    private final Map<PropertySet, Set<Property>> propertySets;
 
     public DefinitionResponseImpl(@MapsTo("definition") Definition definition,
                                   @MapsTo("elementClass") String elementClass,
                                   @MapsTo("properties") Map<Property, Object> properties,
-                                  @MapsTo("propertySets") Set<PropertySet> propertySets) {
+                                  @MapsTo("propertySets") Map<PropertySet, Set<Property>> propertySets) {
         this.definition = definition;
         this.elementClass = elementClass;
         this.properties = properties;
@@ -44,7 +44,7 @@ public class DefinitionResponseImpl implements DefinitionResponse {
     }
 
     @Override
-    public Set<PropertySet> getPropertySets() {
+    public Map<PropertySet, Set<Property>> getPropertySets() {
         return propertySets;
     }
 

@@ -24,6 +24,7 @@ import org.uberfire.ext.properties.editor.model.PropertyEditorCategory;
 import org.uberfire.ext.properties.editor.model.PropertyEditorEvent;
 import org.uberfire.ext.properties.editor.model.PropertyEditorFieldInfo;
 import org.uberfire.ext.properties.editor.model.PropertyEditorType;
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.DefaultPropertySet;
@@ -38,7 +39,9 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.handler.DefaultGraphHandler;
+import org.wirez.core.api.service.definition.DefinitionResponse;
 import org.wirez.core.api.util.PropertyUtils;
+import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.Canvas;
@@ -47,6 +50,8 @@ import org.wirez.core.client.canvas.DefaultCanvasListener;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
+import org.wirez.core.client.service.ClientDefinitionServices;
+import org.wirez.core.client.service.ClientRuntimeError;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -71,6 +76,7 @@ public class PropertiesEditor implements IsWidget {
         void onShowElement(Element<? extends ViewContent<?>> element);
     }
 
+    ClientDefinitionServices clientDefinitionServices;
     ShapeManager wirezClientManager;
     DefaultCanvasCommands defaultCommands;
     DefaultGraphHandler defaultGraphHandler;
@@ -80,10 +86,13 @@ public class PropertiesEditor implements IsWidget {
     private EditorCallback editorCallback;
 
     @Inject
-    public PropertiesEditor(final View view,
+    public PropertiesEditor(final ClientDefinitionServices clientDefinitionServices,
+                            final ClientDefinitionManager clientDefinitionManager,
+                            final View view,
                             final ShapeManager wirezClientManager,
                             final DefaultCanvasCommands defaultCommands,
                             final DefaultGraphHandler defaultGraphHandler) {
+        this.clientDefinitionServices = clientDefinitionServices;
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.defaultCommands = defaultCommands;
@@ -124,32 +133,27 @@ public class PropertiesEditor implements IsWidget {
         final String elementId = element.getUUID();
         final Definition definition = element.getContent().getDefinition();
         
-        // This editor is for DefaultContent, not type safe properties.
-        if (definition instanceof DefaultDefinition) {
+        final List<PropertyEditorCategory> categories = new ArrayList<PropertyEditorCategory>();
+        final Set<String> processedProperties = new HashSet<String>();
 
-            DefaultDefinition defaultDefinition = (DefaultDefinition) definition;
-            
-            final List<PropertyEditorCategory> categories = new ArrayList<PropertyEditorCategory>();
-            final Set<String> processedProperties = new HashSet<String>();
+        // Default element's category.
+        final PropertyEditorCategory elementCategory = buildElementCategory(element);
+        categories.add(elementCategory);
 
-            // Default element's category.
-            final PropertyEditorCategory elementCategory = buildElementCategory(element);
-            categories.add(elementCategory);
+        // Definition property packages.
 
-            // Definition property packages.
-            final Set<PropertySet> propertyPackageSet = defaultDefinition.getPropertySets();
-            if (propertyPackageSet != null) {
-
+        clientDefinitionServices.getDefinitionResponse(definition.getId(), new ClientDefinitionServices.ServiceCallback<DefinitionResponse>() {
+            @Override
+            public void onSuccess(final DefinitionResponse definitionResponse) {
+                final Set<PropertySet> propertyPackageSet = definitionResponse.getPropertySets().keySet();
                 for (final PropertySet propertyPackage : propertyPackageSet) {
-
-                    final DefaultPropertySet defaultPropertySet = (DefaultPropertySet) propertyPackage;
+                    final Set<Property> properties = definitionResponse.getPropertySets().get(propertyPackage);
+                    
                     final PropertyEditorCategory category = new PropertyEditorCategory(propertyPackage.getPropertySetName());
-                    final Collection<Property> properties = defaultPropertySet.getProperties();
                     if (properties != null) {
                         for (final Property property : properties) {
                             final String propertyId = property.getId();
-                            final Object value = PropertyUtils.getValue(element.getProperties(), propertyId);
-                            // GWT.log("PropertiesEditor  - Building field info with value [" + ( value != null ? value.toString() : null ) + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
+                            final Object value = definitionResponse.getProperties().get(property);
                             final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                                 @Override
                                 public void onValueChanged(final Object value) {
@@ -165,43 +169,53 @@ public class PropertiesEditor implements IsWidget {
 
                         }
                     }
+                    
+                    categories.add(category);
 
+                    PropertyEditorCategory pCategory = buildPropertiesCategory(element, processedProperties, definitionResponse.getProperties());
 
+                    categories.add(pCategory);
+
+                    // Show the categories.
+                    view.handle(new PropertyEditorEvent("wirezPropertiesEditorEvent", categories));
+
+                    // Editor callback notifications.
+                    if ( null != editorCallback ) {
+                        editorCallback.onShowElement(element);
+                    }
                 }
-
             }
 
-
-            // Properties (custom) category.
-            categories.add(buildPropertiesCategory(element, processedProperties));
-
-            // Show the categories.
-            view.handle(new PropertyEditorEvent("wirezPropertiesEditorEvent", categories));
-
-            // Editor callback notifications.
-            if ( null != editorCallback ) {
-                editorCallback.onShowElement(element);
+            @Override
+            public void onError(ClientRuntimeError error) {
+                showError(error);
             }
-            
-        }
+        });
+        
+        
         
     }
 
+    private void showError(ClientRuntimeError error) {
+        GWT.log("ERROR - " + error.getMessage() );
+    }
+
     private PropertyEditorCategory buildPropertiesCategory(final Element<? extends ViewContent<?>> element,
-                                                           final Set<String> processedPropertyIds) {
-        final String title = element.getContent().getDefinition().getTitle();
+                                                           final Set<String> processedPropertyIds,
+                                                           final Map<Property, Object> propertySet) {
+        final Definition definition = element.getContent().getDefinition();
+        final String title = definition.getTitle();
         final PropertyEditorCategory result = new PropertyEditorCategory(title, 1);
-        
-        final Set<Property> propertySet =  ( (DefaultDefinition) element.getContent().getDefinition() ).getProperties();
+
         if (propertySet != null) {
-            for (final Property property : propertySet) {
-                final String propertyId = property.getId();
-                final Object value = PropertyUtils.getValue(element.getProperties(), propertyId);
-                if (!processedPropertyIds.contains(propertyId)) {
+            for (final Map.Entry<Property, Object> entry : propertySet.entrySet()) {
+                final Property property = entry.getKey();
+                final Object value = entry.getValue();
+                if (!processedPropertyIds.contains(property.getId())) {
                     final PropertyEditorFieldInfo fieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                         @Override
                         public void onValueChanged(final Object value) {
-                            GWT.log("PropertiesEditor  - Setting value [" + value.toString() + "] for property [" + propertyId + "] in element with id [" + element.getUUID() + "].");
+                            GWT.log("PropertiesEditor  - Setting value [" + value.toString() + "] for property [" + property.getId() + "] in element with id [" + element.getUUID() + "].");
                             executeUpdateProperty(element, property, value);
                         }
                     });
@@ -212,7 +226,7 @@ public class PropertiesEditor implements IsWidget {
                 }
             }
         }
-        
+
         return result;
         
     }

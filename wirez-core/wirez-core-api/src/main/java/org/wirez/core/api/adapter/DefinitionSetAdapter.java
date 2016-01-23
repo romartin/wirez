@@ -17,4 +17,6 @@ public interface DefinitionSetAdapter<T extends DefinitionSet> extends Adapter<T
 
     Collection<Rule> getRules(T pojo);
     
+    Set<Property> getAllProperties(T pojo);
+    
 }

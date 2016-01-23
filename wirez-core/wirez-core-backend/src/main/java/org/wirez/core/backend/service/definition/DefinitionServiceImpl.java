@@ -19,20 +19,14 @@ import org.wirez.core.api.service.definition.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @ApplicationScoped
 public class DefinitionServiceImpl implements DefinitionService {
 
-    DefinitionManager definitionManager;
-
     @Inject
-    public DefinitionServiceImpl(final DefinitionManager definitionManager) {
-        this.definitionManager = definitionManager;
-    }
+    DefinitionManager definitionManager;
 
     @Override
     public DefinitionSetResponse getDefinitionSet(final String id) {
@@ -70,10 +64,19 @@ public class DefinitionServiceImpl implements DefinitionService {
                     if (definition.getId().equals(id)) {
                         
                         final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter(definition.getClass());
-                        final Set<PropertySet> propertySets = definitionAdapter.getPropertySets(definition);
                         Class<? extends Element> elementClass = definitionAdapter.getGraphElementType(definition);
                         Map<Property, Object> properties = definitionAdapter.getPropertiesValues(definition);
-                        return new DefinitionResponseImpl(definition, elementClass.getName(), properties, propertySets);
+                        Map<PropertySet, Set<Property>> propertySetSetMap = new HashMap<>();
+                        final Set<PropertySet> propertySets = definitionAdapter.getPropertySets(definition);
+                        if ( null != propertySets ) {
+                            for (PropertySet propertySet : propertySets) {
+                                PropertySetAdapter pSetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
+                                Set<Property> pSetProperties = pSetAdapter.getProperties(propertySet);
+                                pSetProperties = pSetProperties != null ? pSetProperties : new HashSet<Property>();
+                                propertySetSetMap.put(propertySet, pSetProperties);
+                            }
+                        }
+                        return new DefinitionResponseImpl(definition, elementClass.getName(), properties, propertySetSetMap);
                     }
                 }
             }

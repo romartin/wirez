@@ -6,6 +6,7 @@ import org.wirez.core.api.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.definition.DefaultDefinitionSet;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.registry.RuleRegistry;
 import org.wirez.core.api.rule.Rule;
@@ -27,12 +28,11 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedDefinitionSetAdapter.class);
 
-    RuleRegistry<Rule> ruleRuleRegistry;
+    @Inject
+    AnnotatedDefinitionAdapter annotatedDefinitionAdapter;
 
     @Inject
-    public AnnotatedDefinitionSetAdapter(RuleRegistry<Rule> ruleRuleRegistry) {
-        this.ruleRuleRegistry = ruleRuleRegistry;
-    }
+    RuleRegistry<Rule> ruleRuleRegistry;
 
     @Override
     public boolean accepts(Class pojoClass) {
@@ -41,8 +41,8 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
 
     @Override
     public Set<PropertySet> getPropertySets(DefinitionSet definitionSet) {
-        // TODO
-        return null;
+        // Not supported right now.
+        return new HashSet<>();
     }
 
     @Override
@@ -80,6 +80,22 @@ public class AnnotatedDefinitionSetAdapter implements DefinitionSetAdapter<Defin
     @Override
     public Collection<Rule> getRules(DefinitionSet pojo) {
         return ruleRuleRegistry.getRules(pojo);
+    }
+
+    @Override
+    public Set<Property> getAllProperties(DefinitionSet pojo) {
+        final Set<Property> result = new HashSet<>();
+        Set<Definition> definitions = getDefinitions(pojo);
+        if ( null != definitions ) {
+            for (Definition definition : definitions) {
+                Set<Property> defProperties = annotatedDefinitionAdapter.getProperties(definition);
+                if ( null != defProperties && !defProperties.isEmpty() ) {
+                    result.addAll(defProperties);
+                }
+            }
+        }
+        
+        return result;
     }
 
     @Override

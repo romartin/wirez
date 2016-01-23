@@ -17,6 +17,6 @@ public interface DefinitionResponse {
 
     Map<Property, Object> getProperties();
 
-    Set<PropertySet> getPropertySets();
+    Map<PropertySet, Set<Property>> getPropertySets();
 
 }

@@ -229,7 +229,7 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
 
                 @Override
                 public void onSuccess(final DefinitionResponse item) {
-                    callback.onSuccess(item.getPropertySets());
+                    callback.onSuccess(item.getPropertySets().keySet());
                 }
 
                 @Override
@@ -285,6 +285,19 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
                     callback.onError(error);
                 }
             });
+        }
+
+    }
+
+    public void getProperties(final PropertySet propertySet,
+                              final ClientDefinitionServices.ServiceCallback<Set<Property>> callback) {
+
+        PropertySetAdapter definitionAdapter = getPropertySetAdapter(propertySet.getClass());
+
+        if ( null != definitionAdapter ) {
+            callback.onSuccess(definitionAdapter.getProperties(propertySet));
+        }  else {
+            // TODO
         }
 
     }

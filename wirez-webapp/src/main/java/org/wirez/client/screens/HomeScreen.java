@@ -149,6 +149,22 @@ public class HomeScreen extends Composite {
     public void doSomethingC2(ClickEvent e) {
 
 
+        clientDefinitionManager.getRules(new BPMNDefinitionSet(), new ClientDefinitionServices.ServiceCallback<Collection<Rule>>() {
+            @Override
+            public void onSuccess(Collection<Rule> rules) {
+                GWT.log("RULES size = " + rules.size() );
+            }
+
+            @Override
+            public void onError(ClientRuntimeError error) {
+                showError(error.getMessage());
+            }
+        });
+        
+        if (true) {
+            return;
+        }
+        
         clientDefinitionServices.buildGraphElement(new Task(), new ClientDefinitionServices.ServiceCallback<Element>() {
             @Override
             public void onSuccess(Element element) {

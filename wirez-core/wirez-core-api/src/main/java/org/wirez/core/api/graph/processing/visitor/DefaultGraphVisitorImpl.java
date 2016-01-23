@@ -16,6 +16,9 @@
 
 package org.wirez.core.api.graph.processing.visitor;
 
+import org.jboss.errai.ioc.client.container.SyncBeanManager;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.adapter.PropertyAdapter;
 import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.*;
@@ -25,11 +28,15 @@ import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.util.PropertyUtils;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import java.util.*;
 
 @Dependent
 public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
 
+    @Inject
+    DefinitionManager definitionManager;
+    
     private DefaultGraph graph;
     private DefaultGraphVisitorCallback visitorCallback;
     private GraphVisitorPolicy policy;
@@ -52,6 +59,12 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
     @Override
     public DefaultGraphVisitorImpl setPropertiesVisitorCallback(DefaultGraphVisitorCallback.PropertyVisitorCallback callback) {
         this.propertyVisitor = callback;
+        return this;
+    }
+
+    // For quick development and testing... remove later
+    public DefaultGraphVisitorImpl setDefinitionManager(DefinitionManager definitionManager) {
+        this.definitionManager = definitionManager;
         return this;
     }
 
@@ -172,16 +185,15 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
     }
     
     private void visitProperties(final Element element) {
-        if (element != null && propertyVisitor != null) {
+        if (element != null && propertyVisitor != null && definitionManager != null) {
             final Set<Property> properties = element.getProperties();
             if (properties != null) {
                 for (final Property property : properties) {
-                    // TODO
-                    if (property instanceof HasValue) {
-                        HasValue hasValue = (HasValue) property;
-                        propertyVisitor.visitProperty(element, property.getId(), hasValue.getValue());
-                        
-                    }
+                    PropertyAdapter adapter = definitionManager.getPropertyAdapter(property);
+                    if ( null != adapter ) {
+                        final Object value = adapter.getValue(property);
+                        propertyVisitor.visitProperty(element, property.getId(), value);
+                    } 
                 }
             }
         }

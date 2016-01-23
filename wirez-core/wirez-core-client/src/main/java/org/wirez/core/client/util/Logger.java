@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.util;
+package org.wirez.core.client.util;
 
 import com.google.gwt.core.client.GWT;
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
@@ -24,6 +25,7 @@ import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.graph.processing.visitor.*;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.client.ClientDefinitionManager;
 
 import java.util.List;
 
@@ -160,7 +162,9 @@ public class Logger {
     };
 
     public static void log(final DefaultGraph graph) {
+        final DefinitionManager definitionManager = ClientDefinitionManager.get();
         new DefaultGraphVisitorImpl()
+                .setDefinitionManager(definitionManager)
                 .setBoundsVisitorCallback(new DefaultGraphVisitorCallback.BoundsVisitorCallback() {
                     @Override
                     public void visitBounds(Element<? extends ViewContent> element, Bounds.Bound ul, Bounds.Bound lr) {
@@ -168,7 +172,6 @@ public class Logger {
                         log(" Bound LR [x=" + lr.getX() + ", y=" + lr.getY() + "]");
                     }
                 })
-
                 .setPropertiesVisitorCallback(new DefaultGraphVisitorCallback.PropertyVisitorCallback() {
                     @Override
                     public void visitProperty(Element element, String key, Object value) {
@@ -181,7 +184,10 @@ public class Logger {
     }
 
     public static void resume(final DefaultGraph graph) {
-        new DefaultGraphVisitorImpl().visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
+        final DefinitionManager definitionManager = ClientDefinitionManager.get();
+        new DefaultGraphVisitorImpl()
+                .setDefinitionManager(definitionManager)
+                .visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
     }
     
     public static void log(final String message) {

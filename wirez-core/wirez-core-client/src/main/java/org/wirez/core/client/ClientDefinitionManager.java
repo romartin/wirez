@@ -1,5 +1,6 @@
 package org.wirez.core.client;
 
+import org.jboss.errai.ioc.client.container.IOC;
 import org.jboss.errai.ioc.client.container.IOCBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.BaseDefinitionManager;
@@ -25,6 +26,13 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     SyncBeanManager beanManager;
     ClientDefinitionServices clientDefinitionServices;
     private Collection<DefinitionSet> definitionSets = new ArrayList<>();
+
+    // Remove later...
+    public static ClientDefinitionManager get() {
+        Collection<IOCBeanDef<ClientDefinitionManager>> beans = IOC.getBeanManager().lookupBeans(ClientDefinitionManager.class);
+        IOCBeanDef<ClientDefinitionManager> beanDef = beans.iterator().next();
+        return beanDef.getInstance();
+    }
     
     @Inject
     public ClientDefinitionManager(final SyncBeanManager beanManager,

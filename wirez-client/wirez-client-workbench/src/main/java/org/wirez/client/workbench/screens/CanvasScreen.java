@@ -38,13 +38,12 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.service.definition.DefinitionSetResponse;
-import org.wirez.core.api.util.Logger;
+import org.wirez.core.client.util.Logger;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.DefaultCanvasSettingsBuilder;
-import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
@@ -121,7 +120,9 @@ public class CanvasScreen {
         final String title = placeRequest.getParameter( "title", "" );
         final String graphTestMode = placeRequest.getParameter( "graphTestMode", "false" );
         final boolean isTestMode = ("true".equals(graphTestMode));
-        
+
+        CanvasScreen.this.menu = makeMenuBar();
+
         if (isTestMode) {
             defSetId = "basicSet";
         }
@@ -147,7 +148,6 @@ public class CanvasScreen {
                                 public void onSuccess(final Element item) {
                                     final DefaultGraph graph = (DefaultGraph) item;
                                     open(uuid, definitionSet, shapeSet, title, graph);
-                                    CanvasScreen.this.menu = makeMenuBar();
                                 }
 
                                 @Override

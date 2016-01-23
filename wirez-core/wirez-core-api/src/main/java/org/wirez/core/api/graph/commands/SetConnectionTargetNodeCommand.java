@@ -25,7 +25,6 @@ import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.Logger;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -50,10 +49,6 @@ public class SetConnectionTargetNodeCommand extends AbstractCommand {
                 targetNode);;
         this.lastTargetNode = edge.getTargetNode();
         this.sourceNode = edge.getSourceNode();
-        Logger.log("SetConnectionTargetNodeCommand - Edge=" + this.edge.getUUID());
-        Logger.log("SetConnectionTargetNodeCommand - Target node=" + ( this.targetNode != null ? this.targetNode.getUUID() : "null") );
-        Logger.log("SetConnectionTargetNodeCommand - Last target node=" +  ( this.lastTargetNode != null ? this.lastTargetNode.getUUID() : "null"));
-        Logger.log("SetConnectionTargetNodeCommand - Source node=" +  ( this.sourceNode != null ? this.sourceNode.getUUID() : "null"));
     }
     
     @Override

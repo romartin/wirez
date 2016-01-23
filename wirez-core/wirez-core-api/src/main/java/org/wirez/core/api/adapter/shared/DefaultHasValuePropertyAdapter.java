@@ -8,7 +8,7 @@ import org.wirez.core.api.definition.property.Property;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class DefaultPropertyAdapter implements PropertyAdapter<Property> {
+public class DefaultHasValuePropertyAdapter implements PropertyAdapter<Property> {
     
     @Override
     public Object getValue(final Property pojo) {
@@ -42,7 +42,7 @@ public class DefaultPropertyAdapter implements PropertyAdapter<Property> {
 
     @Override
     public boolean accepts(final Class pojoClass) {
-        return pojoClass.equals(Property.class);
+        return HasValue.class.isAssignableFrom(pojoClass);
     }
 
     @Override

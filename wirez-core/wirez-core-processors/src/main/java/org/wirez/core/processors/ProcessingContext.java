@@ -7,7 +7,7 @@ import java.util.*;
 public class ProcessingContext {
 
     private static ProcessingContext context;
-    private String definitionSetClassName;
+    private ProcessingEntity definitionSet;
     private static final List<ProcessingEntity> rules = new ArrayList<>();
     private static final Map<String, String> propertyValueFieldNames = new HashMap<>();
     private static final Map<String, String> propertyDefaultValueFieldNames = new HashMap<>();
@@ -39,15 +39,15 @@ public class ProcessingContext {
         return propertyDefaultValueFieldNames;
     }
 
-    public String getDefinitionSetClassName() {
-        return definitionSetClassName;
+    public ProcessingEntity getDefinitionSet() {
+        return definitionSet;
     }
 
-    public void setDefinitionSetClassName(String definitionSetClassName) {
-        if ( null != this.definitionSetClassName ) {
+    public void setDefinitionSet(String packageName, String className) {
+        if ( null != this.definitionSet ) {
             throw new RuntimeException("Only a single definition set allowed for a single processing.");
         }
-        this.definitionSetClassName = definitionSetClassName;
+        this.definitionSet = new ProcessingEntity(packageName + "." + className, className);
     }
 
     public void addRule(String className, String id) {

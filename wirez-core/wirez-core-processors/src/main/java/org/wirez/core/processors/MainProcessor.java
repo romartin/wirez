@@ -61,8 +61,8 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     public static final String ANNOTATION_RULE_PERMITTED_CONNECTION = "org.wirez.core.api.annotation.rule.PermittedConnection";
 
     public static final String RULE_CONTAINMENT_SUFFIX_CLASSNAME = "ContainmentRule";
-    public static final String PROPERTY_ADAPTER_CLASSNAME = "ErraiBindablePropertyAdapter";
-    public static final String RULE_ADAPTER_CLASSNAME = "GeneratedDefinitionSetRuleAdapter";
+    public static final String PROPERTY_ADAPTER_CLASSNAME = "PropertyAdapter";
+    public static final String RULE_ADAPTER_CLASSNAME = "RuleAdapter";
 
     private final ProcessingContext processingContext = ProcessingContext.getInstance();
     private final ContainmentRuleGenerator containmentRuleGenerator;
@@ -144,7 +144,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             messager.printMessage(Diagnostic.Kind.NOTE, "Discovered definition set class [" + classElement.getSimpleName() + "]");
             final String packageName = packageElement.getQualifiedName().toString();
             final String className = classElement.getSimpleName().toString();
-            processingContext.setDefinitionSetClassName(packageName + "." + className);
+            processingContext.setDefinitionSet(packageName, className);
         }
 
         return true;
@@ -270,16 +270,17 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         final Messager messager = processingEnv.getMessager();
         try {
 
-            // TODO: final String packageName = getCommonPackageEntitiesName(processingContext.getRules());
-            final String packageName = "org.wirez.bpmn.api.rule";
-            final String className = packageName + "." + RULE_ADAPTER_CLASSNAME;
-            messager.printMessage(Diagnostic.Kind.WARNING, "Starting RuleAdapter generation for class named " + className);
+            final String defSetId = processingContext.getDefinitionSet().getId();
+            final String packageName = "org.wirez.core.api.adapter.rule." + defSetId.toLowerCase();
+            final String className = defSetId + RULE_ADAPTER_CLASSNAME;
+            final String classFQName = packageName + "." + className;
+            messager.printMessage(Diagnostic.Kind.WARNING, "Starting RuleAdapter generation for class named " + classFQName);
 
-            final StringBuffer ruleClassCode = ruleAdapterGenerator.generate(packageName, RULE_ADAPTER_CLASSNAME, 
-                    processingContext.getDefinitionSetClassName(), processingContext.getRules(), messager);
+            final StringBuffer ruleClassCode = ruleAdapterGenerator.generate(packageName, className, 
+                    processingContext.getDefinitionSet().getClassName(), processingContext.getRules(), messager);
 
             writeCode( packageName,
-                    RULE_ADAPTER_CLASSNAME,
+                    className,
                     ruleClassCode );
 
         } catch ( GenerationException ge ) {
@@ -294,15 +295,17 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         final Messager messager = processingEnv.getMessager();
         try {
 
-            final String packageName = getCommonPackageName(processingContext.getValueFieldNames().keySet());
-            final String className = packageName + "." + PROPERTY_ADAPTER_CLASSNAME;
-            messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + className);
+            final String defSetId = processingContext.getDefinitionSet().getId();
+            final String packageName = "org.wirez.core.client.adapter.property." + defSetId.toLowerCase();
+            final String className = defSetId + PROPERTY_ADAPTER_CLASSNAME;
+            final String classFQName = packageName + "." + className;
+            messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
 
-            final StringBuffer ruleClassCode = propertyAdapterGenerator.generate(packageName, PROPERTY_ADAPTER_CLASSNAME,
+            final StringBuffer ruleClassCode = propertyAdapterGenerator.generate(packageName, className,
                     processingContext.getValueFieldNames(), processingContext.getDefaultValueFieldNames(), messager);
 
             writeCode( packageName,
-                    PROPERTY_ADAPTER_CLASSNAME,
+                    className,
                     ruleClassCode );
 
         } catch ( GenerationException ge ) {
@@ -313,48 +316,4 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    private static String getCommonPackageEntitiesName(Collection<ProcessingEntity> entities) {
-        Set<String> names = new HashSet<>(entities.size());
-        for (ProcessingEntity entity : entities) {
-            names.add(entity.getClassName());
-        }
-        return getCommonPackageName(names);
-    }
-    
-    private static String getCommonPackageName(Set<String> packageNames) {
-        StringBuilder result = new StringBuilder();
-        boolean end = false;
-        int pos = 0;
-        while (!end) {
-            Character c = null;
-            for (String packageName : packageNames) {
-                if (packageName.length() > pos ) {
-                    char _c = packageName.charAt(pos);
-                    if ( null == c ) {
-                        c = _c;
-                    } else if ( c != _c ) {
-                        end = true;
-                        break;
-                    }
-                }
-            }
-
-            if ( !end ) {
-                result.append(c);
-                pos++;
-            }
-        }
-
-        if (result.length() > 0) {
-            String pName = result.toString();
-            while (pName.endsWith(".")) {
-                pName = pName.substring(0, pName.length() - 1);
-            }
-
-            return pName;
-        }
-
-        throw new RuntimeException("Cannot find common package name.");
-    }
-    
 }

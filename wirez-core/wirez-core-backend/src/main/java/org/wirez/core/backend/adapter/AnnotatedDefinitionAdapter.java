@@ -2,7 +2,10 @@ package org.wirez.core.backend.adapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.wirez.core.api.BaseDefinitionManager;
 import org.wirez.core.api.adapter.DefinitionAdapter;
+import org.wirez.core.api.adapter.PropertyAdapter;
+import org.wirez.core.api.adapter.PropertySetAdapter;
 import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
@@ -16,7 +19,9 @@ import org.wirez.core.api.graph.factory.NodeFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.Rule;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -28,10 +33,10 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedDefinitionAdapter.class);
 
     @Inject
-    AnnotatedPropertyAdapter propertyAdapter;
+    Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances;
 
     @Inject
-    AnnotatedPropertySetAdapter propertySetAdapter;
+    Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances;
 
     @Inject
     DefaultGraphFactory<? extends Definition> graphFactory;
@@ -41,6 +46,26 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
     @Inject
     EdgeFactory<? extends Definition> edgeFactory;
+
+    protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
+    protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();
+
+    @PostConstruct
+    public void init() {
+        initAdapters();
+    }
+
+    private void initAdapters() {
+        for (PropertySetAdapter propertySetAdapter : propertySetAdapterInstances) {
+            propertySetAdapters.add(propertySetAdapter);
+        }
+        BaseDefinitionManager.sortAdapters(propertySetAdapters);
+        
+        for (PropertyAdapter propertyAdapter : propertyAdapterInstances) {
+            propertyAdapters.add(propertyAdapter);
+        }
+        BaseDefinitionManager.sortAdapters(propertyAdapters);
+    }
 
     @Override
     public boolean accepts(Class pojoClass) {
@@ -113,7 +138,7 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
             final Set<PropertySet> propertySets = getPropertySets(pojo);
             if ( null != propertySets && !propertySets.isEmpty() ) {
                 for (PropertySet propertySet : propertySets) {
-                    final Set<Property> psProps = propertySetAdapter.getProperties(propertySet);
+                    final Set<Property> psProps = getPropertySetAdapter(propertySet).getProperties(propertySet);
                     if ( null != psProps ) {
                         properties.addAll(psProps);
                     }
@@ -126,7 +151,7 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
                 for (final Property property : properties) {
                     
-                    Object value = propertyAdapter.getValue(property);
+                    Object value = getPropertyAdapter(property).getValue(property);
                     result.put(property, value);
 
                 }
@@ -175,6 +200,24 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
     @Override
     public int getPriority() {
         return 100;
+    }
+    
+    private PropertySetAdapter getPropertySetAdapter(PropertySet propertySet) {
+        for (PropertySetAdapter propertySetAdapter : propertySetAdapters) {
+            if (propertySetAdapter.accepts( propertySet.getClass() )) {
+                return propertySetAdapter;
+            }
+        }
+        return null;
+    }
+
+    private PropertyAdapter getPropertyAdapter(Property property) {
+        for (PropertyAdapter propertySetAdapter : propertyAdapters) {
+            if (propertySetAdapter.accepts( property.getClass() )) {
+                return propertySetAdapter;
+            }
+        }
+        return null;
     }
     
 }

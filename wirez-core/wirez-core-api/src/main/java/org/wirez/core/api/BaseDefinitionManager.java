@@ -108,7 +108,7 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
         return definitionSets;
     }
 
-    protected static <T extends Adapter> void sortAdapters(List<T> adapters) {
+    public static <T extends Adapter> void sortAdapters(List<T> adapters) {
         Collections.sort(adapters, new Comparator<T>() {
             @Override
             public int compare(T o1, T o2) {

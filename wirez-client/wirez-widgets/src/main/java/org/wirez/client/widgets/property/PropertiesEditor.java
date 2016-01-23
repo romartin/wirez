@@ -171,18 +171,19 @@ public class PropertiesEditor implements IsWidget {
                     }
                     
                     categories.add(category);
+                    
+                }
 
-                    PropertyEditorCategory pCategory = buildPropertiesCategory(element, processedProperties, definitionResponse.getProperties());
+                PropertyEditorCategory pCategory = buildPropertiesCategory(element, processedProperties, definitionResponse.getProperties());
 
-                    categories.add(pCategory);
+                categories.add(pCategory);
 
-                    // Show the categories.
-                    view.handle(new PropertyEditorEvent("wirezPropertiesEditorEvent", categories));
+                // Show the categories.
+                view.handle(new PropertyEditorEvent("wirezPropertiesEditorEvent", categories));
 
-                    // Editor callback notifications.
-                    if ( null != editorCallback ) {
-                        editorCallback.onShowElement(element);
-                    }
+                // Editor callback notifications.
+                if ( null != editorCallback ) {
+                    editorCallback.onShowElement(element);
                 }
             }
 

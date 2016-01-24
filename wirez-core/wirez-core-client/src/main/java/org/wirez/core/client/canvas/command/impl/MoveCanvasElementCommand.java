@@ -61,14 +61,18 @@ public class MoveCanvasElementCommand extends BaseCanvasCommand implements Canva
     public CommandResult execute(final RuleManager ruleManager) {
         return super.execute(ruleManager);
     }
-    
-    @Override
-    public CommandResult undo(RuleManager ruleManager) {
-        final CommandResult result = super.execute(ruleManager);
-        // TODO
-        return result;
-    }
 
+    @Override
+    public CommandResult undo(final RuleManager ruleManager) {
+        super.undo(ruleManager);
+        UpdateElementPositionCommand oldCommand = (UpdateElementPositionCommand) command;
+        final double oldX = oldCommand.getOldX();
+        final double oldY  = oldCommand.getOldY();
+        final MoveCanvasElementCommand undoCommand = new MoveCanvasElementCommand( commandFactory, element, oldX, oldY );
+        return executeUndoCommand(undoCommand, ruleManager);
+
+    }
+    
     @Override
     public String toString() {
         return "MoveCanvasElementCommand [element=" + element.getUUID() + ", x=" + x + ", y=" +  y + "]";

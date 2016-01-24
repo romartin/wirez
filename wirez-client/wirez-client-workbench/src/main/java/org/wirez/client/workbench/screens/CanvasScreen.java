@@ -36,6 +36,7 @@ import org.wirez.client.workbench.util.GraphTests;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.service.definition.DefinitionSetResponse;
 import org.wirez.core.client.util.Logger;

@@ -25,6 +25,7 @@ import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommand;
+import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 
 import java.util.LinkedList;
@@ -107,7 +108,23 @@ public class CompositeElementCanvasCommand implements CanvasCommand {
 
     @Override
     public CommandResult undo(final RuleManager ruleManager) {
-        // TODO
-        return null;
+        final List<RuleViolation> violations = new LinkedList<RuleViolation>();
+        for (final Command command : commands) {
+
+            CommandResult result = null;
+            if (command instanceof CanvasCommand) {
+                CanvasCommand canvasCommand = (CanvasCommand) command;
+                CanvasCommandManager commandManager = (CanvasCommandManager) canvasHandler;
+                result = commandManager.execute(ruleManager, canvasCommand).results().iterator().next();
+            } else {
+                result = command.undo(ruleManager);
+            }
+            
+            for (RuleViolation violation : result.getRuleViolations()) {
+                violations.add(violation);
+            }
+        }
+
+        return new DefaultCommandResult(violations);
     }
 }

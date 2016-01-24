@@ -38,6 +38,8 @@ public class UpdateElementPositionCommand extends AbstractCommand {
     private Element element;
     private Double x;
     private Double y;
+    private Double oldX;
+    private Double oldY;
 
 
     public UpdateElementPositionCommand(final GraphCommandFactory commandFactory,
@@ -64,6 +66,9 @@ public class UpdateElementPositionCommand extends AbstractCommand {
         final Bounds bounds = ((ViewContent) element.getContent()).getBounds();
         final Bounds.Bound ul = bounds.getUpperLeft();
         final Bounds.Bound lr = bounds.getLowerRight();
+        this.oldX = ul.getX();
+        this.oldY = ul.getY();
+                
         final double w = lr.getX() - ul.getX();
         final double h = lr.getY() - ul.getY();
 
@@ -78,8 +83,16 @@ public class UpdateElementPositionCommand extends AbstractCommand {
     
     @Override
     public CommandResult undo(RuleManager ruleManager) {
-        // TODO
-        return new DefaultCommandResult(new ArrayList<RuleViolation>());
+        final Command undoCommand = commandFactory.updateElementPositionCommand( element, oldX, oldY);
+        return undoCommand.execute( ruleManager );
+    }
+
+    public Double getOldX() {
+        return oldX;
+    }
+
+    public Double getOldY() {
+        return oldY;
     }
 
     @Override

@@ -60,13 +60,7 @@ public class AddCanvasChildNodeCommand extends BaseCanvasCommand {
     public CommandResult execute(final RuleManager ruleManager) {
         return super.execute(ruleManager);
     }
-    
-    @Override
-    public CommandResult undo(final RuleManager ruleManager) {
-        // TODO
-        return super.undo(ruleManager);
-    }
-    
+
     @Override
     public String toString() {
         return "AddCanvasChildNodeCommand [parent=" + parent + ", candidate=" + candidate.getUUID() + ", factory=" + factory + "]";

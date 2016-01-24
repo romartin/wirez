@@ -19,7 +19,6 @@ package org.wirez.core.client.canvas.command.impl;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.commands.AddEdgeCommand;
 import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
@@ -61,8 +60,9 @@ public class AddCanvasEdgeCommand extends BaseCanvasCommand {
     
     @Override
     public CommandResult undo(final RuleManager ruleManager) {
-        // TODO
-        return super.undo(ruleManager);
+        super.undo(ruleManager);
+        final DeleteCanvasEdgeCommand undoCommand = new DeleteCanvasEdgeCommand( commandFactory, candidate, factory );
+        return executeUndoCommand(undoCommand, ruleManager);
     }
     
     @Override

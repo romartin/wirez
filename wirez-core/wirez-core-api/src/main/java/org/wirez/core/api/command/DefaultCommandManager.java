@@ -23,6 +23,8 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Default implementation of a CommandManager
@@ -31,6 +33,8 @@ import java.util.Iterator;
 public class DefaultCommandManager implements CommandManager<Command> {
 
     Event<NotificationEvent> notificationEvent;
+    
+    private final Stack<Command> commandHistory = new Stack<Command>();
 
     @Inject
     public DefaultCommandManager(final Event<NotificationEvent> notificationEvent) {
@@ -56,6 +60,7 @@ public class DefaultCommandManager implements CommandManager<Command> {
         final DefaultCommandResults results = new DefaultCommandResults();
         for (final Command command : commands) {
             final CommandResult result = command.execute( ruleManager );
+            commandHistory.push(command);
             results.getItems().add(result);
         }
         return results;
@@ -63,8 +68,15 @@ public class DefaultCommandManager implements CommandManager<Command> {
     
     @Override
     public CommandResults undo( final RuleManager ruleManager ) {
-        // TODO
-        return null;
+        final DefaultCommandResults results = new DefaultCommandResults();
+        
+        Command command = commandHistory.isEmpty() ? null : commandHistory.pop();
+        if ( null != command ) {
+            final CommandResult result = command.undo( ruleManager );
+            results.getItems().add(result);
+        }
+        
+        return results;
     }
 
 }

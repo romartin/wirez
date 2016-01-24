@@ -18,7 +18,6 @@ package org.wirez.core.client.canvas.command.impl;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.commands.AddNodeCommand;
 import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
@@ -57,13 +56,14 @@ public class AddCanvasNodeCommand extends BaseCanvasCommand {
     public CommandResult execute(final RuleManager ruleManager) {
         return super.execute(ruleManager);
     }
-    
+
     @Override
     public CommandResult undo(final RuleManager ruleManager) {
-        // TODO
-        return super.undo(ruleManager);
+        super.undo(ruleManager);
+        final DeleteCanvasNodeCommand undoCommand = new DeleteCanvasNodeCommand( commandFactory, candidate, factory );
+        return executeUndoCommand(undoCommand, ruleManager);
     }
-    
+
     @Override
     public String toString() {
         return "AddCanvasNodeCommand [node=" + candidate.getUUID() + ", factory=" + factory + "]";

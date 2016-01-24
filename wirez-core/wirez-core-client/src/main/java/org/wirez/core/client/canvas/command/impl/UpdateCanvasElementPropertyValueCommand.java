@@ -18,7 +18,6 @@ package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
@@ -59,17 +58,20 @@ public class UpdateCanvasElementPropertyValueCommand extends BaseCanvasCommand i
     }
 
     @Override
+    public CommandResult undo(final RuleManager ruleManager) {
+        super.undo(ruleManager);
+        UpdateElementPropertyValueCommand oldCommand = (UpdateElementPropertyValueCommand) command;
+        final Object oldValue = oldCommand.getOldValue();
+        final UpdateCanvasElementPropertyValueCommand undoCommand = new UpdateCanvasElementPropertyValueCommand( commandFactory, element, propertyId, oldValue );
+        return executeUndoCommand(undoCommand, ruleManager);
+
+    }
+    
+    @Override
     public CommandResult execute(final RuleManager ruleManager) {
         return super.execute(ruleManager);
     }
     
-    @Override
-    public CommandResult undo(RuleManager ruleManager) {
-        final CommandResult result = super.execute(ruleManager);
-        // TODO
-        return result;
-    }
-
     @Override
     public String toString() {
         return "UpdateCanvasElementPropertyValueCommand [element=" + element.getUUID() + ", property=" + propertyId + ", value=" +  value + "]";

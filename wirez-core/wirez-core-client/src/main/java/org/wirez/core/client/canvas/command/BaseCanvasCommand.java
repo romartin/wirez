@@ -18,6 +18,7 @@ package org.wirez.core.client.canvas.command;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -55,4 +56,14 @@ public abstract class BaseCanvasCommand implements CanvasCommand {
     public CommandResult undo(final RuleManager ruleManager) {
         return command.undo(ruleManager);
     }
+    
+    // Do not use ( (CanvasCommandManager) canvasHandler).execute ( command ) as it will be registered on the command history, 
+    // and this is undo command that has not to be registered in the history.
+    protected CommandResult executeUndoCommand(final BaseCanvasCommand canvasCommand, final RuleManager ruleManager) {
+        canvasCommand.setCanvas(canvasHandler);
+        CommandResult result = canvasCommand.execute(ruleManager);
+        canvasCommand.apply();
+        return result;
+    }
+    
 }

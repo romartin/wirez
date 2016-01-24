@@ -18,13 +18,13 @@ package org.wirez.core.client.canvas.command.impl;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.commands.DeleteNodeCommand;
 import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
+import org.wirez.core.client.factory.ShapeFactory;
 
 /**
  * A Command to delete a DefaultNode from a Graph and delete the corresponding canvas shapes.
@@ -32,10 +32,12 @@ import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 public class DeleteCanvasNodeCommand extends BaseCanvasCommand {
 
     Node candidate;
-
-    public DeleteCanvasNodeCommand(final GraphCommandFactory commandFactory, final Node candidate) {
+    ShapeFactory shapeFactory;
+            
+    public DeleteCanvasNodeCommand(final GraphCommandFactory commandFactory, final Node candidate, final ShapeFactory shapeFactory) {
         super(commandFactory);
         this.candidate = candidate;
+        this.shapeFactory = shapeFactory;
     }
 
     @Override
@@ -53,11 +55,12 @@ public class DeleteCanvasNodeCommand extends BaseCanvasCommand {
     public CommandResult execute(final RuleManager ruleManager) {
         return super.execute(ruleManager);
     }
-    
+
     @Override
     public CommandResult undo(final RuleManager ruleManager) {
-        // TODO
-        return super.undo(ruleManager);
+        super.undo(ruleManager);
+        final AddCanvasNodeCommand undoCommand = new AddCanvasNodeCommand( commandFactory, candidate, shapeFactory );
+        return executeUndoCommand(undoCommand, ruleManager);
     }
     
     @Override

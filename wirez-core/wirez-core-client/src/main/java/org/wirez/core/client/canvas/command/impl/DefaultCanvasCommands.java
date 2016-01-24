@@ -22,6 +22,8 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.GraphCommandFactory;
+import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -33,6 +35,9 @@ public class DefaultCanvasCommands {
     @Inject
     GraphCommandFactory commandFactory;
     
+    @Inject
+    ShapeManager shapeManager;
+    
     public ClearCanvasCommand CLEAR() {
         return new ClearCanvasCommand( commandFactory );
     }
@@ -42,7 +47,8 @@ public class DefaultCanvasCommands {
     }
 
     public DeleteCanvasNodeCommand DELETE_NODE(final Node node) {
-        return new DeleteCanvasNodeCommand( commandFactory, node );
+        final ShapeFactory factory = shapeManager.getFactory( ( (ViewContent) node.getContent()).getDefinition());
+        return new DeleteCanvasNodeCommand( commandFactory, node, factory );
     }
     
     public AddCanvasEdgeCommand ADD_EDGE(final Edge edge, final ShapeFactory factory ) {
@@ -50,7 +56,8 @@ public class DefaultCanvasCommands {
     }
 
     public DeleteCanvasEdgeCommand DELETE_EDGE(final Edge edge) {
-        return new DeleteCanvasEdgeCommand( commandFactory, edge );
+        final ShapeFactory factory = shapeManager.getFactory( ( (ViewContent) edge.getContent()).getDefinition());
+        return new DeleteCanvasEdgeCommand( commandFactory, edge, factory );
     }
 
     public AddCanvasChildNodeCommand ADD_CHILD(final Node parent, Node child, final ShapeFactory factory ) {

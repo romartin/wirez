@@ -52,13 +52,13 @@ public class ClearCanvasCommand extends BaseCanvasCommand {
     public CommandResult execute(final RuleManager ruleManager) {
         return super.execute(ruleManager);
     }
-    
+
     @Override
-    public CommandResult undo(final RuleManager ruleManager) {
-        // TODO
-        return super.undo(ruleManager);
+    public CommandResult undo(RuleManager ruleManager) {
+        super.undo(ruleManager);
+        throw new UnsupportedOperationException("Clear canvas not implemented yet.");
     }
-    
+
     @Override
     public String toString() {
         return "ClearCanvasCommand [canvas=" + canvasHandler.getSettings().getUUID() + "]";

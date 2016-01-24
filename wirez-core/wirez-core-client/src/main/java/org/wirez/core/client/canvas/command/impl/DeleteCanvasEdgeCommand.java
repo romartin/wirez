@@ -19,13 +19,13 @@ package org.wirez.core.client.canvas.command.impl;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.commands.DeleteEdgeCommand;
 import org.wirez.core.api.graph.commands.GraphCommandFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
+import org.wirez.core.client.factory.ShapeFactory;
 
 /**
  * A Command to delete a DefaultNode from a Graph and delete the corresponding canvas shapes.
@@ -33,10 +33,12 @@ import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 public class DeleteCanvasEdgeCommand extends BaseCanvasCommand {
 
     Edge candidate;
-
-    public DeleteCanvasEdgeCommand(final GraphCommandFactory commandFactory, final Edge candidate) {
+    ShapeFactory shapeFactory;
+    
+    public DeleteCanvasEdgeCommand(final GraphCommandFactory commandFactory, final Edge candidate, final ShapeFactory shapeFactory) {
         super(commandFactory);
         this.candidate = candidate;
+        this.shapeFactory = shapeFactory;
     }
 
     @Override
@@ -54,13 +56,14 @@ public class DeleteCanvasEdgeCommand extends BaseCanvasCommand {
     public CommandResult execute(final RuleManager ruleManager) {
         return super.execute(ruleManager);
     }
-    
+
     @Override
     public CommandResult undo(final RuleManager ruleManager) {
-        // TODO
-        return super.undo(ruleManager);
+        super.undo(ruleManager);
+        final AddCanvasEdgeCommand undoCommand = new AddCanvasEdgeCommand( commandFactory, candidate, shapeFactory );
+        return executeUndoCommand(undoCommand, ruleManager);
     }
-    
+
     @Override
     public String toString() {
         return "DeleteCanvasEdgeCommand [edge=" + candidate.getUUID() + "]";

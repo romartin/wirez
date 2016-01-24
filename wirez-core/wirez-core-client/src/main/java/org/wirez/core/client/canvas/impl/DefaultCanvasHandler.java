@@ -58,14 +58,14 @@ import java.util.Collection;
 @Dependent
 public class DefaultCanvasHandler extends BaseCanvasHandler {
 
-    ShapeManager wirezClientManager;
+    ShapeManager shapeManager;
     ClientDefinitionManager clientDefinitionManager;
     DefaultCanvasCommands defaultCanvasCommands;
     DefaultGraphHandler defaultGraphHandler;
     DefaultGraphVisitor defaultGraphVisitor;
     
     @Inject
-    public DefaultCanvasHandler(final ShapeManager wirezClientManager,
+    public DefaultCanvasHandler(final ShapeManager shapeManager,
                                 final ClientDefinitionManager clientDefinitionManager,
                                 final Event<NotificationEvent> notificationEvent, 
                                 final DefaultCommandManager commandManager, 
@@ -74,7 +74,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                                 final DefaultGraphHandler defaultGraphHandler,
                                 final DefaultGraphVisitor defaultGraphVisitor) {
         super(notificationEvent, commandManager, ruleManager);
-        this.wirezClientManager = wirezClientManager;
+        this.shapeManager = shapeManager;
         this.clientDefinitionManager = clientDefinitionManager;
         this.defaultCanvasCommands = defaultCanvasCommands;
         this.defaultGraphHandler = defaultGraphHandler;
@@ -153,7 +153,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
         @Override
         public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
-            final ShapeFactory factory = wirezClientManager.getFactory(node.getContent().getDefinition());
+            final ShapeFactory factory = shapeManager.getFactory(node.getContent().getDefinition());
             defaultCanvasCommands.ADD_NODE(node, factory)
                     .setCanvas(DefaultCanvasHandler.this)
                     .apply();
@@ -161,7 +161,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
         @Override
         public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
-            final ShapeFactory factory = wirezClientManager.getFactory(edge.getContent().getDefinition());
+            final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
             defaultCanvasCommands.ADD_EDGE( edge, factory )
                     .setCanvas(DefaultCanvasHandler.this)
                     .apply();
@@ -174,7 +174,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final Object content = child.getContent();
             if (content instanceof ViewContent) {
                 final ViewContent viewContent = (ViewContent) content;
-                final ShapeFactory factory = wirezClientManager.getFactory(viewContent.getDefinition());
+                final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
                 defaultCanvasCommands.ADD_CHILD( parent, child, factory )
                         .setCanvas(DefaultCanvasHandler.this)
                         .apply();

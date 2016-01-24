@@ -37,6 +37,7 @@ public class UpdateElementPropertyValueCommand extends AbstractCommand {
     private Element element;
     private String propertyId;
     private Object value;
+    private Object oldValue;
 
 
     public UpdateElementPropertyValueCommand(final GraphCommandFactory commandFactory,
@@ -64,14 +65,19 @@ public class UpdateElementPropertyValueCommand extends AbstractCommand {
     @Override
     public CommandResult execute(final RuleManager ruleManager) {
         final Property p = PropertyUtils.getProperty(element.getProperties(), propertyId);
+        oldValue = adapter.getValue(p);
         adapter.setValue(p, value);
         return new DefaultCommandResult(new ArrayList<RuleViolation>());
     }
     
     @Override
     public CommandResult undo(RuleManager ruleManager) {
-        // TODO
-        return new DefaultCommandResult(new ArrayList<RuleViolation>());
+        final Command undoCommand = commandFactory.updateElementPropertyValueCommand( element, propertyId, oldValue );
+        return undoCommand.execute( ruleManager );
+    }
+
+    public Object getOldValue() {
+        return oldValue;
     }
 
     @Override

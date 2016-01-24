@@ -331,15 +331,23 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     public CommandResults execute(final RuleManager ruleManager,
                                   final CanvasCommand... commands) {
 
-        // TODO: Join results.
-        CommandResults results = null;
+        // Initialize commands.
         for (final CanvasCommand command : commands) {
             command.setCanvas(this);
-            results = commandManager.execute(ruleManager, command);
-            // TODO: Check errors.
-            command.apply();
-            final CanvasCommandExecutionNotification notification = new CanvasCommandExecutionNotification(getSettings().getTitle(), command, results);
-            notificationEvent.fire(new NotificationEvent(notification));
+        }
+
+        // If multiple commands, execute them in batch.
+        CommandResults results = commandManager.execute(ruleManager, commands);
+
+        // TODO: Check errors.
+        final boolean hasErrors = false;
+        if (!hasErrors) {
+            // Update canvas state.
+            for (final CanvasCommand command : commands) {
+                command.apply();
+                final CanvasCommandExecutionNotification notification = new CanvasCommandExecutionNotification(getSettings().getTitle(), command, results);
+                notificationEvent.fire(new NotificationEvent(notification));
+            }
         }
 
         return results;

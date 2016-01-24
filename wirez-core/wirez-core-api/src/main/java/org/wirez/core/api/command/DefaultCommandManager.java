@@ -34,7 +34,7 @@ public class DefaultCommandManager implements CommandManager<Command> {
 
     Event<NotificationEvent> notificationEvent;
     
-    private final Stack<Command> commandHistory = new Stack<Command>();
+    private final Stack<Stack<Command>> commandHistory = new Stack<Stack<Command>>();
 
     @Inject
     public DefaultCommandManager(final Event<NotificationEvent> notificationEvent) {
@@ -57,23 +57,41 @@ public class DefaultCommandManager implements CommandManager<Command> {
         PortablePreconditions.checkNotNull( "commands",
                                             commands );
 
+        final int size = commands.length;
         final DefaultCommandResults results = new DefaultCommandResults();
+        final Stack<Command> commandStack = new Stack<>();
         for (final Command command : commands) {
             final CommandResult result = command.execute( ruleManager );
-            commandHistory.push(command);
+                commandStack.push(command);
             results.getItems().add(result);
         }
+        commandHistory.push(commandStack);
         return results;
     }
     
     @Override
     public CommandResults undo( final RuleManager ruleManager ) {
-        final DefaultCommandResults results = new DefaultCommandResults();
         
-        Command command = commandHistory.isEmpty() ? null : commandHistory.pop();
-        if ( null != command ) {
-            final CommandResult result = command.undo( ruleManager );
-            results.getItems().add(result);
+        Stack<Command> commandStack = commandHistory.isEmpty() ? null : commandHistory.pop();
+        if ( null != commandStack ) {
+            return undo( commandStack, ruleManager );
+        }
+        
+        return new DefaultCommandResults();
+    }
+
+    private CommandResults undo( final Stack<Command> commandStack, final RuleManager ruleManager ) {
+        final DefaultCommandResults results = new DefaultCommandResults();
+
+        if (!commandStack.isEmpty()) {
+            
+            final int size = commandStack.size();
+            for ( int x = 0; x < size; x++) {
+                Command undoCommand  = commandStack.pop();
+                final CommandResult undoResult = undoCommand.undo(ruleManager);
+                results.results.add(undoResult);
+            }
+            
         }
         
         return results;

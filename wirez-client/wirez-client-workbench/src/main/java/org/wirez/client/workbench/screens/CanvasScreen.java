@@ -39,6 +39,7 @@ import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.service.definition.DefinitionSetResponse;
+import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
 import org.wirez.core.client.util.Logger;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
@@ -436,13 +437,13 @@ public class CanvasScreen {
                     command = defaultCanvasCommands.ADD_NODE((Node) element, factory);
                 } else if ( element instanceof Edge) {
                     command = defaultCanvasCommands.ADD_EDGE((Edge) element, factory);
+                } else {
+                    throw new RuntimeException("Unrecognized element type for " + element);
                 }
 
-                // Add, move and resize the shape.
-                if ( null != command ) {
-                    canvasHandler.execute(command);
-                    canvasHandler.execute( defaultCanvasCommands.MOVE(element, x ,y) );
-                }
+                // Execute both add element and move commands in batch, so undo will be done in batch as well.
+                MoveCanvasElementCommand moveCanvasElementCommand = defaultCanvasCommands.MOVE(element, x ,y);
+                canvasHandler.execute(command, moveCanvasElementCommand);
             }
 
             @Override

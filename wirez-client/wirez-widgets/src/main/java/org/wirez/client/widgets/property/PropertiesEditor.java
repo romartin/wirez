@@ -77,6 +77,7 @@ public class PropertiesEditor implements IsWidget {
     }
 
     ClientDefinitionServices clientDefinitionServices;
+    DefinitionManager definitionManager;
     ShapeManager wirezClientManager;
     DefaultCanvasCommands defaultCommands;
     DefaultGraphHandler defaultGraphHandler;
@@ -88,12 +89,13 @@ public class PropertiesEditor implements IsWidget {
 
     @Inject
     public PropertiesEditor(final ClientDefinitionServices clientDefinitionServices,
-                            final ClientDefinitionManager clientDefinitionManager,
+                            final DefinitionManager definitionManager,
                             final View view,
                             final ShapeManager wirezClientManager,
                             final DefaultCanvasCommands defaultCommands,
                             final DefaultGraphHandler defaultGraphHandler) {
         this.clientDefinitionServices = clientDefinitionServices;
+        this.definitionManager = definitionManager;
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.defaultCommands = defaultCommands;
@@ -154,9 +156,10 @@ public class PropertiesEditor implements IsWidget {
                     
                     final PropertyEditorCategory category = new PropertyEditorCategory(propertyPackage.getPropertySetName());
                     if (properties != null) {
-                        for (final Property property : properties) {
-                            final String propertyId = property.getId();
-                            final Object value = definitionResponse.getProperties().get(property);
+                        for (final Property _property : properties) {
+                            final String propertyId = _property.getId();
+                            final Property property = PropertyUtils.getProperty(element.getProperties(), propertyId);
+                            final Object value = definitionManager.getPropertyAdapter(property).getValue(property);
                             final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                                 @Override
                                 public void onValueChanged(final Object value) {
@@ -213,8 +216,9 @@ public class PropertiesEditor implements IsWidget {
 
         if (propertySet != null) {
             for (final Map.Entry<Property, Object> entry : propertySet.entrySet()) {
-                final Property property = entry.getKey();
-                final Object value = entry.getValue();
+                final Property _property = entry.getKey();
+                final Property property = PropertyUtils.getProperty(element.getProperties(), _property.getId());
+                final Object value = definitionManager.getPropertyAdapter(property).getValue(property);
                 if (!processedPropertyIds.contains(property.getId())) {
                     final PropertyEditorFieldInfo fieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                         @Override

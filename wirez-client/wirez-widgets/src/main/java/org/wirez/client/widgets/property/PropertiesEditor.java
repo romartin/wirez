@@ -84,6 +84,7 @@ public class PropertiesEditor implements IsWidget {
     private CanvasHandler canvasHandler;
     private DefaultCanvasListener canvasListener;
     private EditorCallback editorCallback;
+    private String elementUUID;
 
     @Inject
     public PropertiesEditor(final ClientDefinitionServices clientDefinitionServices,
@@ -129,6 +130,8 @@ public class PropertiesEditor implements IsWidget {
     @SuppressWarnings("unchecked")
     protected void show(final Element<? extends ViewContent<?>> element) {
         assert element != null;
+        
+        this.elementUUID = element.getUUID();
         
         final String elementId = element.getUUID();
         final Definition definition = element.getContent().getDefinition();
@@ -384,8 +387,23 @@ public class PropertiesEditor implements IsWidget {
     
     public void clear() {
         removeCanvasListener();
+        doClear();   
+    }
+    
+    private void doClear() {
         canvasHandler = null;
+        elementUUID = null;
         view.clear();
+    }
+    
+    private void showDefault() {
+        final DefaultGraph defaultGraph = (DefaultGraph) PropertiesEditor.this.canvasHandler.getGraph();
+        if ( null != defaultGraph) {
+            this.elementUUID = defaultGraph.getUUID();
+            show(defaultGraph);
+        } else {
+            doClear();
+        }
     }
 
     void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
@@ -405,7 +423,7 @@ public class PropertiesEditor implements IsWidget {
             }
         } else {
             // If shape is null means no shape selected, so show the properties for the underlying graph.
-            show(defaultGraph);
+            showDefault();
         }
         
     }
@@ -422,21 +440,25 @@ public class PropertiesEditor implements IsWidget {
             @Override
             public void onElementModified(final Element _element) {
                 super.onElementModified(_element);
-                show(_element);
+                final String _elementUUID = _element.getUUID();
+                if (PropertiesEditor.this.elementUUID != null 
+                        && PropertiesEditor.this.elementUUID.equals(_elementUUID)) {
+                    show(_element);
+                }
             }
 
             @Override
-            public void onElementDeleted(final Element element) {
-
+            public void onElementDeleted(final Element _element) {
+                final String _elementUUID = _element.getUUID();
+                if (PropertiesEditor.this.elementUUID != null
+                        && PropertiesEditor.this.elementUUID.equals(_elementUUID)) {
+                    showDefault();
+                }
             }
 
             @Override
             public void onClear() {
-                view.clear();
-                final DefaultGraph defaultGraph = (DefaultGraph) PropertiesEditor.this.canvasHandler.getGraph();
-                if ( null != defaultGraph) {
-                    show(defaultGraph);
-                }
+                showDefault();
             }
         };
         canvasHandler.addListener(canvasListener);

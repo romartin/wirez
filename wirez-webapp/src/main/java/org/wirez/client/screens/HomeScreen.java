@@ -75,20 +75,10 @@ public class HomeScreen extends Composite {
     @EventHandler( "testButton" )
     public void doSomethingC1(ClickEvent e) {
         
-        log(new BPMNDiagram(), new Command() {
+        log(new Task(), new Command() {
             @Override
             public void execute() {
-                log(new StartNoneEvent(), new Command() {
-                    @Override
-                    public void execute() {
-                        log(new Task(), new Command() {
-                            @Override
-                            public void execute() {
-                                
-                            }
-                        });
-                    }
-                });
+                
             }
         });
         
@@ -102,33 +92,14 @@ public class HomeScreen extends Composite {
             @Override
             public void onSuccess(Element element) {
                 Definition definitionSet = ((ViewContent<Definition>) element.getContent()).getDefinition();
-
-                GWT.log("Element uuid=" + element.getUUID() + " , properties=" + element.getProperties().size());
-
                 
-
-                clientDefinitionManager.getPropertySets(definitionSet, new ClientDefinitionServices.ServiceCallback<Set<PropertySet>>() {
-                    @Override
-                    public void onSuccess(final Set<PropertySet> propertySets) {
-
-                        if ( null != propertySets ) {
-                            for (PropertySet propertySet : propertySets) {
-                                GWT.log("Element propertyset id=" + propertySet.getPropertySetId());
-                            }
-                        } else {
-                            GWT.log("No propertysets");
-                        }
-
-
-                        callback.execute();
-                        
-                    }
-
-                    @Override
-                    public void onError(ClientRuntimeError error) {
-                        showError(error.getMessage());
-                    }
-                });
+                GWT.log("Element uuid=" + element.getUUID() + " , properties=" + element.getProperties().size());
+                final Property property = PropertyUtils.getProperty(element.getProperties(), "bgColor");
+                Object value = clientDefinitionManager.getPropertyAdapter(property).getValue(property);
+                GWT.log("Element BgColor -> " + value);
+                final Task task = (Task) definitionSet;
+                Object pojoVlaue = task.getBackgroundSet().getBgColor().getValue();
+                GWT.log("POJO BgColor -> " + pojoVlaue);
 
             }
 

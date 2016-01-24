@@ -49,7 +49,7 @@ public class ${className} implements PropertyAdapter<Property> {
         if ( null != pojo ) {
             Class pojoClass = pojo.getClass();
             String valueFieldName = propValueFieldNames.get(pojoClass);
-            HasProperties hasProperties = (HasProperties) DataBinder.forType(pojoClass).getModel();
+            HasProperties hasProperties = (HasProperties) DataBinder.forModel(pojo).getModel();
             result = hasProperties.get(valueFieldName);
         }
 
@@ -62,7 +62,7 @@ public class ${className} implements PropertyAdapter<Property> {
         if ( null != pojo ) {
             Class pojoClass = pojo.getClass();
             String valueFieldName = propDefaultValueFieldNames.get(pojoClass);
-            HasProperties hasProperties = (HasProperties) DataBinder.forType(pojoClass).getModel();
+            HasProperties hasProperties = (HasProperties) DataBinder.forModel(pojo).getModel();
             result = hasProperties.get(valueFieldName);
         }
     
@@ -74,7 +74,7 @@ public class ${className} implements PropertyAdapter<Property> {
         if ( null != pojo ) {
             Class pojoClass = pojo.getClass();
             String valueFieldName = propValueFieldNames.get(pojoClass);
-            HasProperties hasProperties = (HasProperties) DataBinder.forType(pojoClass).getModel();
+            HasProperties hasProperties = (HasProperties) DataBinder.forModel(pojo).getModel();
             hasProperties.set(valueFieldName, value);
         }
     }

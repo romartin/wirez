@@ -13,7 +13,7 @@ GITHUB_WIREZ_BRANCH=wirez
 GITHUB_LIENZO_CORE=https://github.com/romartin/lienzo-core.git
 GITHUB_LIENZO_CORE_BRANCH=wirez
 GITHUB_JBPM_DESIGNER=https://github.com/romartin/jbpm-designer.git
-GITHUB_JBPM_DESIGNER_BRANCH=wirez
+GITHUB_JBPM_DESIGNER_BRANCH=master
 
 LIENZO_CORE_PATH=lienzo-core-wirez
 JBPM_DESIGNER_PATH=jbpm-designer-wirez

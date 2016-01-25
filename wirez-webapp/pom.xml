@@ -274,17 +274,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!--<dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-basic-set-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-basic-set-client</artifactId>
-      <scope>provided</scope>
-    </dependency>-->
-
     <dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-bpmn-api</artifactId>
@@ -435,8 +424,6 @@
             <compileSourcesArtifact>org.wirez:wirez-lienzo-extensions</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-widgets</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-client-workbench</compileSourcesArtifact>
-            <!--<compileSourcesArtifact>org.wirez:wirez-basic-set-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.wirez:wirez-basic-set-client</compileSourcesArtifact>-->
             <compileSourcesArtifact>org.wirez:wirez-bpmn-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-client</compileSourcesArtifact>
 

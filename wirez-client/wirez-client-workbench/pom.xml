@@ -83,12 +83,6 @@
       <artifactId>wirez-widgets</artifactId>
     </dependency>
 
-    <!-- TODO:  Remove, just for testing. -->
-    <!--<dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-basic-set-api</artifactId>
-    </dependency>-->
-
     <dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-bpmn-api</artifactId>

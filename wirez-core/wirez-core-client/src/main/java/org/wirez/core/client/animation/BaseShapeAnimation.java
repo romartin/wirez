@@ -58,11 +58,33 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
         return this;
     }
 
-    protected void onClose() {
+    protected void onStart() {
+
+        if (shape instanceof BaseShape) {
+            ((BaseShape) shape).beforeMutations();
+        }
 
     }
     
+    protected void onClose() {
+
+        if (shape instanceof BaseShape) {
+            ((BaseShape) shape).afterMutations();
+        }
+        
+    }
+    
     protected com.ait.lienzo.client.core.animation.AnimationCallback animationCallback = new com.ait.lienzo.client.core.animation.AnimationCallback() {
+
+        @Override
+        public void onStart(IAnimation animation, IAnimationHandle handle) {
+            super.onStart(animation, handle);
+            BaseShapeAnimation.this.onStart();
+            if ( null != callback ) {
+                callback.onStart();
+            }
+        }
+
         @Override
         public void onClose(IAnimation animation, IAnimationHandle handle) {
             super.onClose(animation, handle);

@@ -23,6 +23,7 @@ import org.wirez.core.api.annotation.property.Property;
 import org.wirez.core.api.annotation.property.Value;
 import org.wirez.core.api.definition.property.BaseProperty;
 import org.wirez.core.api.definition.property.PropertyType;
+import org.wirez.core.api.definition.property.type.ColorType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
@@ -46,7 +47,7 @@ public class BgColor extends BaseProperty {
 
     @Override
     public PropertyType getType() {
-        return new StringType();
+        return new ColorType();
     }
 
     public String getDefaultValue() {

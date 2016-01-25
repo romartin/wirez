@@ -118,6 +118,16 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         // TODO
     }
 
+    @Override
+    public void beforeMutations() {
+        
+    }
+
+    @Override
+    public void afterMutations() {
+
+    }
+
     protected Shape<W> _applyConnections(final Edge<ViewContent<W>, Node> element, final CanvasHandler canvasHandler) {
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();

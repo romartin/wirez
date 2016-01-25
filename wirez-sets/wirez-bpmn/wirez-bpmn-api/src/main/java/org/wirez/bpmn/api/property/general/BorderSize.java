@@ -23,6 +23,7 @@ import org.wirez.core.api.annotation.property.Property;
 import org.wirez.core.api.annotation.property.Value;
 import org.wirez.core.api.definition.property.BaseProperty;
 import org.wirez.core.api.definition.property.PropertyType;
+import org.wirez.core.api.definition.property.type.IntegerType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
@@ -44,7 +45,7 @@ public class BorderSize extends BaseProperty {
 
     @Override
     public PropertyType getType() {
-        return new StringType();
+        return new IntegerType();
     }
 
     public Integer getDefaultValue() {

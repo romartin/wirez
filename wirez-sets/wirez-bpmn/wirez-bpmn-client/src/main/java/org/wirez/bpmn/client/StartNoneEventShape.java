@@ -41,7 +41,7 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
     
     public StartNoneEventShape(Group group, WiresManager manager) {
         super(new MultiPath().rect(0,0, StartNoneEvent.RADIUS * 2, StartNoneEvent.RADIUS * 2)
-                .setFillAlpha(0)
+                .setFillAlpha(0.001)
                 .setStrokeAlpha(0), 
                 group, manager);
         init();

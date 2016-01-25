@@ -20,4 +20,8 @@ public interface HasMutation {
     
     boolean accepts(MutationType type);
     
+    void beforeMutations();
+    
+    void afterMutations();
+    
 }

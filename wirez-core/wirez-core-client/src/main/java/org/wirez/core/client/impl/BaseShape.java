@@ -143,11 +143,25 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         
     }
 
+    @Override
+    public void beforeMutations() {
+        
+    }
+
+    @Override
+    public void afterMutations() {
+
+        // Ensure top primitives in the layer
+        getPath().moveToTop();
+        getText().moveToTop();
+        
+    }
+
     protected Text buildText(String text) {
         return new Text(text).setFontSize(14).setFillColor(ColorName.BLACK).setStrokeWidth(1).moveToTop();
     }
 
-    protected Text getText() {
+    public Text getText() {
         return text;
     }
 

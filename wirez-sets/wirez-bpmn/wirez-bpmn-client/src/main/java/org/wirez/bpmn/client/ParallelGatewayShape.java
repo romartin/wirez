@@ -42,7 +42,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
 
     public ParallelGatewayShape(Group group, WiresManager manager) {
         super(new MultiPath().rect(0, 0, ParallelGateway.RADIUS * 2, ParallelGateway.RADIUS * 2)
-                .setFillAlpha(0)
+                .setFillAlpha(0.001)
                 .setStrokeAlpha(0), 
                 group, manager);
         init();

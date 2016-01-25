@@ -186,7 +186,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         // Add the shapes on canvas and fire events.
         canvas.addShape(shape);
         canvas.draw();
-        fireElementAdded(candidate);
+        afterElementAdded(candidate);
     }
 
     public void applyElementMutation(final Element candidate) {
@@ -203,6 +203,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                     final HasGraphElementMutation hasGraphElement = (HasGraphElementMutation) shape;
                     hasGraphElement.applyElementPosition(candidate, this, context);
                     hasGraphElement.applyElementProperties(candidate, this, context);
+                    afterElementUpdated(candidate, hasGraphElement);
                 }
 
             }
@@ -226,7 +227,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         final MutationContext context = new StaticMutationContext();
         shapeMutation.applyElementPosition(element, this, context);
         canvas.draw();
-        fireElementUpdated(element);
+        afterElementUpdated(element, shapeMutation);
     }
 
     public void updateElementProperties(final Element element) {
@@ -236,7 +237,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         final MutationContext context = new StaticMutationContext();
         shapeMutation.applyElementProperties(element, this, context);
         canvas.draw();
-        fireElementUpdated(element);
+        afterElementUpdated(element, shapeMutation);
     }
 
     public void deregister(final Element element) {
@@ -245,7 +246,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         // TODO: Delete connector connections to the node being deleted?
         canvas.deleteShape(shape);
         canvas.draw();
-        fireElementDeleted(element);
+        afterElementDeleted(element);
 
     }
     
@@ -266,6 +267,24 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         assert listener != null;
         listeners.add(listener);
         return this;
+    }
+    
+    protected void afterElementAdded(final Element element) {
+
+        fireElementAdded(element);
+        
+    }
+
+    protected void afterElementDeleted(final Element element) {
+
+        fireElementDeleted(element);
+    }
+
+    protected void afterElementUpdated(final Element element, final HasGraphElementMutation elementMutation) {
+
+        elementMutation.afterMutations();
+        
+        fireElementUpdated(element);
     }
 
     public void fireElementAdded(final Element element) {

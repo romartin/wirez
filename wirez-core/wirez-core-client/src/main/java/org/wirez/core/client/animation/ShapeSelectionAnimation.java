@@ -69,7 +69,6 @@ public class ShapeSelectionAnimation extends BaseShapeAnimation {
         if ( null != decorators && !decorators.isEmpty() ) {
             for( final com.ait.lienzo.client.core.shape.Shape decorator : decorators ) {
                 decorator.setStrokeWidth(strokeWidth).setStrokeColor(color).setStrokeAlpha(0);
-                decorator.moveToTop();
                 decorator.animate(animationTweener, AnimationProperties.toPropertyList(STROKE_ALPHA(1)), 
                         getDuration(), animationCallback);
             }

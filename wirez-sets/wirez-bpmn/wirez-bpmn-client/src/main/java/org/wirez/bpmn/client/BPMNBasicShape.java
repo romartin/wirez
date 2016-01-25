@@ -18,10 +18,9 @@ package org.wirez.bpmn.client;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.MultiPath;
+import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import org.wirez.bpmn.api.property.general.BgColor;
-import org.wirez.bpmn.api.property.general.BorderColor;
-import org.wirez.bpmn.api.property.general.BorderSize;
+import org.wirez.bpmn.api.property.general.*;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
@@ -76,12 +75,14 @@ public abstract class BPMNBasicShape<W extends Definition> extends BaseShape<W> 
     }
 
     protected BPMNBasicShape<W> _applyFont(Node<ViewContent<W>, Edge> element) {
-        // TODO
-        /*final Text text = super.getText();
+        final Text text = super.getText();
         if ( null != text ) {
-            final String color = (String) element.getProperties().get(FontColorBuilder.PROPERTY_ID);
-            final Integer size = (Integer) element.getProperties().get(FontSizeBuilder.PROPERTY_ID);
-            final Integer borderSize = (Integer) element.getProperties().get(FontBorderSizeBuilder.PROPERTY_ID);
+            final FontColor fontColor  = (FontColor) ElementUtils.getProperty(element, FontColor.ID);
+            final FontSize fontSize = (FontSize) ElementUtils.getProperty(element, FontSize.ID);
+            final FontBorderSize fontBorderSize = (FontBorderSize) ElementUtils.getProperty(element, FontBorderSize.ID);
+            final String color = fontColor.getValue();
+            final Integer size = fontSize.getValue();
+            final Integer borderSize = fontBorderSize.getValue();
             if (color != null && color.trim().length() > 0) {
                 text.setStrokeColor(color);
             }
@@ -92,7 +93,7 @@ public abstract class BPMNBasicShape<W extends Definition> extends BaseShape<W> 
                 text.setStrokeWidth(borderSize);
             }
 
-        }*/
+        }
 
         return this;
     }

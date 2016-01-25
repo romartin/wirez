@@ -54,7 +54,7 @@ public class SequenceFlowShapeFactory extends BaseShapeFactory<SequenceFlow, Seq
 
     @Override
     public String getDescription() {
-        return "A connector";
+        return "A sequence flow";
     }
 
     @Override

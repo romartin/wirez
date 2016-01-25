@@ -53,7 +53,7 @@ public class StartNoneEventShapeFactory extends BaseShapeFactory<StartNoneEvent,
 
     @Override
     public String getDescription() {
-        return "A circle";
+        return "An start none event";
     }
 
     @Override

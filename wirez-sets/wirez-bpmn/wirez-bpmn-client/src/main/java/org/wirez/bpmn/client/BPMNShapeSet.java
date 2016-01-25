@@ -18,6 +18,7 @@ package org.wirez.bpmn.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
+import org.wirez.bpmn.client.factory.ParallelGatewayShapeFactory;
 import org.wirez.bpmn.client.factory.SequenceFlowShapeFactory;
 import org.wirez.bpmn.client.factory.StartNoneEventShapeFactory;
 import org.wirez.bpmn.client.factory.TaskShapeFactory;
@@ -43,17 +44,21 @@ public class BPMNShapeSet implements ShapeSet {
     StartNoneEventShapeFactory startNoneEventShapeFactory;
     TaskShapeFactory taskShapeFactory;
     SequenceFlowShapeFactory sequenceFlowShapeFactory;
+    ParallelGatewayShapeFactory parallelGatewayShapeFactory;
+    
     private List<ShapeFactory<? extends Definition, ? extends Shape>> factories;
 
     @Inject
     public BPMNShapeSet( final BPMNDefinitionSet bpmnDefinitionSet,
                          final StartNoneEventShapeFactory startNoneEventShapeFactory,
                          final TaskShapeFactory taskShapeFactory,
-                         final SequenceFlowShapeFactory sequenceFlowShapeFactory) {
+                         final SequenceFlowShapeFactory sequenceFlowShapeFactory,
+                         final ParallelGatewayShapeFactory parallelGatewayShapeFactory) {
         this.bpmnDefinitionSet = bpmnDefinitionSet;
         this.startNoneEventShapeFactory = startNoneEventShapeFactory;
         this.taskShapeFactory = taskShapeFactory;
         this.sequenceFlowShapeFactory = sequenceFlowShapeFactory;
+        this.parallelGatewayShapeFactory = parallelGatewayShapeFactory;
     }
 
     @PostConstruct
@@ -62,6 +67,7 @@ public class BPMNShapeSet implements ShapeSet {
             add( startNoneEventShapeFactory );
             add( taskShapeFactory );
             add( sequenceFlowShapeFactory );
+            add( parallelGatewayShapeFactory );
         }};
     }
 

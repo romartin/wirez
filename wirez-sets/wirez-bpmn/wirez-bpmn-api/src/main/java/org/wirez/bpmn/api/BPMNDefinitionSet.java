@@ -27,6 +27,10 @@ public class BPMNDefinitionSet implements DefinitionSet {
     @Inject
     @Definition
     SequenceFlow sequenceFlow;
+
+    @Inject
+    @Definition
+    ParallelGateway parallelGateway;
     
     @Override
     public String getId() {
@@ -73,5 +77,13 @@ public class BPMNDefinitionSet implements DefinitionSet {
 
     public void setSequenceFlow(SequenceFlow sequenceFlow) {
         this.sequenceFlow = sequenceFlow;
+    }
+
+    public ParallelGateway getParallelGateway() {
+        return parallelGateway;
+    }
+
+    public void setParallelGateway(ParallelGateway parallelGateway) {
+        this.parallelGateway = parallelGateway;
     }
 }

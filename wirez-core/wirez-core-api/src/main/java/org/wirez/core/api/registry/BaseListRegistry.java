@@ -5,18 +5,36 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class SharedListRegistry<T> implements Registry<T> {
+public abstract class BaseListRegistry<T> implements Registry<T> {
 
     protected final List<T> items = new ArrayList<T>();
 
     protected abstract String getItemId(T item);
     
-    protected void add(final T item) {
+    public void add(final T item) {
         items.add(item);
     }
 
-    protected void remove(final T item) {
+    public void remove(final T item) {
         items.remove(item);
+    }
+
+    @Override
+    public T get(String uuid) {
+        if ( null != uuid ) {
+            for (T item : items) {
+                final String id = getItemId(item);
+                if ( id.equals(uuid) ) {
+                    return item;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean contains(final T item) {
+        return items.contains(item);
     }
 
     @Override

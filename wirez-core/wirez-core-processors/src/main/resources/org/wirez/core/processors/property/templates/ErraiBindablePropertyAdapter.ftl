@@ -16,10 +16,7 @@
 
 package ${packageName};
 
-import org.jboss.errai.databinding.client.HasProperties;
-import org.jboss.errai.databinding.client.api.DataBinder;
-import org.wirez.core.api.adapter.PropertyAdapter;
-import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.adapter.generated.GeneratedDefinitionSetPropertyAdapter;
 
 import javax.annotation.Generated;
 import javax.enterprise.context.ApplicationScoped;
@@ -28,7 +25,7 @@ import java.util.Map;
 
 @Generated("org.wirez.core.processors.property.ErraiBindablePropertyAdapterGenerator")
 @ApplicationScoped
-public class ${className} implements PropertyAdapter<Property> {
+public class ${className} extends GeneratedDefinitionSetPropertyAdapter {
 
     private static final Map<Class, String> propValueFieldNames = new HashMap<Class, String>(${valuePropNamesSize}) {{
         <#list valuePropNames as valuePropName>
@@ -44,50 +41,13 @@ public class ${className} implements PropertyAdapter<Property> {
     }};
 
     @Override
-    public Object getValue(final Property pojo) {
-        Object result = null;
-        if ( null != pojo ) {
-            Class pojoClass = pojo.getClass();
-            String valueFieldName = propValueFieldNames.get(pojoClass);
-            HasProperties hasProperties = (HasProperties) DataBinder.forModel(pojo).getModel();
-            result = hasProperties.get(valueFieldName);
-        }
-
-        return result;
+    protected Map<Class, String> getPropertyValueFieldNames() {
+        return propValueFieldNames;
     }
-
-    @Override
-    public Object getDefaultValue(final Property pojo) {
-        Object result = null;
-        if ( null != pojo ) {
-            Class pojoClass = pojo.getClass();
-            String valueFieldName = propDefaultValueFieldNames.get(pojoClass);
-            HasProperties hasProperties = (HasProperties) DataBinder.forModel(pojo).getModel();
-            result = hasProperties.get(valueFieldName);
-        }
     
-        return result;
-    }
-
     @Override
-    public void setValue(final Property pojo, final Object value) {
-        if ( null != pojo ) {
-            Class pojoClass = pojo.getClass();
-            String valueFieldName = propValueFieldNames.get(pojoClass);
-            HasProperties hasProperties = (HasProperties) DataBinder.forModel(pojo).getModel();
-            hasProperties.set(valueFieldName, value);
-        }
-    }
-
-    @Override
-    public boolean accepts(final Object pojo) {
-        return propValueFieldNames.containsKey(pojo.getClass());
-
-    }
-
-    @Override
-    public int getPriority() {
-        return 0;
+    protected Map<Class, String> getPropertyDefaultValueFieldNames() {
+        return propDefaultValueFieldNames;
     }
 
 }

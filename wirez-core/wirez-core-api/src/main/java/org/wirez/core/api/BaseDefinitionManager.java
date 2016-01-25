@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.adapter.*;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.registry.DefinitionSetRegistry;
+import org.wirez.core.api.registry.DiagramRegistry;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -29,23 +31,29 @@ import java.util.*;
 
 public abstract class BaseDefinitionManager implements DefinitionManager {
 
-    protected final List<DefinitionSet> definitionSets = new ArrayList<DefinitionSet>();
+    DefinitionSetRegistry definitionSetRegistry;
+    DiagramRegistry diagramRegistry;
+    
     protected final List<DefinitionSetAdapter> definitionSetAdapters = new ArrayList<DefinitionSetAdapter>();
     protected final List<DefinitionSetRuleAdapter> definitionSetRuleAdapters = new ArrayList<DefinitionSetRuleAdapter>();
     protected final List<DefinitionAdapter> definitionAdapters = new ArrayList<DefinitionAdapter>();
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
     protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();
 
+    public BaseDefinitionManager(final DefinitionSetRegistry definitionSetRegistry, 
+                                 final DiagramRegistry diagramRegistry) {
+        this.definitionSetRegistry = definitionSetRegistry;
+        this.diagramRegistry = diagramRegistry;
+    }
+
     @Override
-    public DefinitionSet getDefinitionSet(final String id) {
-        if (null != id) {
-            for (DefinitionSet definitionSet : definitionSets) {
-                if (definitionSet.getId().equals(id)) {
-                    return definitionSet;
-                }
-            }
-        }
-        return null;
+    public DefinitionSetRegistry getDefinitionSetRegistry() {
+        return definitionSetRegistry;
+    }
+
+    @Override
+    public DiagramRegistry getDiagramRegistry() {
+        return diagramRegistry;
     }
 
     @Override
@@ -101,11 +109,6 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
         }
 
         return null;
-    }
-
-    @Override
-    public Collection<DefinitionSet> getDefinitionSets() {
-        return definitionSets;
     }
 
     public static <T extends Adapter> void sortAdapters(List<T> adapters) {

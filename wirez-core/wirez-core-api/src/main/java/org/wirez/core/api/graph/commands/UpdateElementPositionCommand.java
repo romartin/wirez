@@ -27,6 +27,7 @@ import org.wirez.core.api.graph.impl.DefaultBound;
 import org.wirez.core.api.graph.impl.DefaultBounds;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.util.ElementUtils;
 
 import java.util.ArrayList;
 
@@ -63,14 +64,12 @@ public class UpdateElementPositionCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(final RuleManager ruleManager) {
-        final Bounds bounds = ((ViewContent) element.getContent()).getBounds();
-        final Bounds.Bound ul = bounds.getUpperLeft();
-        final Bounds.Bound lr = bounds.getLowerRight();
-        this.oldX = ul.getX();
-        this.oldY = ul.getY();
-                
-        final double w = lr.getX() - ul.getX();
-        final double h = lr.getY() - ul.getY();
+        final Double[] oldPosition = ElementUtils.getPosition((ViewContent) element.getContent());
+        final Double[] oldSize = ElementUtils.getSize((ViewContent) element.getContent());
+        this.oldX = oldPosition[0];
+        this.oldY = oldPosition[1];
+        final double w = oldSize[0];
+        final double h = oldSize[1];
 
         GWT.log("Moving element bounds to [" + x + "," + y + "] [" + ( x + w ) + "," + ( y + h ) + "]");
         final DefaultBounds newBounds = new DefaultBounds(

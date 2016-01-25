@@ -6,9 +6,9 @@ import org.wirez.core.api.graph.Element;
 @Remote
 public interface DefinitionService {
 
-    DefinitionSetResponse getDefinitionSet(String id);
+    DefinitionSetServiceResponse getDefinitionSet(String id);
 
-    DefinitionResponse getDefinition(String id);
+    DefinitionServiceResponse getDefinition(String id);
     
     Element buildGraphElement(String definitionId);
     

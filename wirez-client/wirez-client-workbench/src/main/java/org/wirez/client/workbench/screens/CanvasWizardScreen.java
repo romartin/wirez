@@ -16,6 +16,7 @@
 
 package org.wirez.client.workbench.screens;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.uberfire.client.annotations.*;
 import org.uberfire.client.mvp.PlaceManager;
@@ -79,19 +80,16 @@ public class CanvasWizardScreen {
 
     private Menus makeMenuBar() {
         return MenuFactory
-                .newTopLevelMenu("Load test process")
-                .respondsWith(getLoadTestProcessCommand())
+                .newTopLevelMenu("Test button")
+                .respondsWith(getTestButtonCommand())
                 .endMenu()
                 .build();
     }
 
-    private Command getLoadTestProcessCommand() {
+    private Command getTestButtonCommand() {
         return new Command() {
             public void execute() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put( "graphTestMode", "true" );
-                PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );
-                placeManager.goTo(placeRequest);
+                Window.alert("This is a test");
             }
         };
     }
@@ -134,13 +132,11 @@ public class CanvasWizardScreen {
     void onCreateEmptyDiagramEvent(@Observes CreateEmptyDiagramEvent createEmptyDiagramEvent) {
         checkNotNull("createEmptyDiagramEvent", createEmptyDiagramEvent);
 
-        final String uuid = UUID.uuid();
         final String shapeSetId = createEmptyDiagramEvent.getShapeSetId();
         final ShapeSet shapeSet = getWirezShapeSet(shapeSetId);
         final String shapSetName = shapeSet.getName();
         final String wirezSetId = shapeSet.getDefinitionSetId();
         Map<String, String> params = new HashMap<String, String>();
-        params.put( "uuid", uuid );
         params.put( "defSetId", wirezSetId );
         params.put( "shapeSetId", shapeSetId );
         params.put( "title", "New " + shapSetName + " diagram" );

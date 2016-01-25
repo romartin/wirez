@@ -25,9 +25,7 @@ import org.uberfire.ext.properties.editor.model.PropertyEditorEvent;
 import org.uberfire.ext.properties.editor.model.PropertyEditorFieldInfo;
 import org.uberfire.ext.properties.editor.model.PropertyEditorType;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.DefaultPropertySet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.type.BooleanType;
@@ -39,9 +37,8 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.handler.DefaultGraphHandler;
-import org.wirez.core.api.service.definition.DefinitionResponse;
-import org.wirez.core.api.util.PropertyUtils;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.api.service.definition.DefinitionServiceResponse;
+import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.Canvas;
@@ -52,6 +49,7 @@ import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
+import org.wirez.core.client.service.ServiceCallback;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -147,9 +145,9 @@ public class PropertiesEditor implements IsWidget {
 
         // Definition property packages.
 
-        clientDefinitionServices.getDefinitionResponse(definition.getId(), new ClientDefinitionServices.ServiceCallback<DefinitionResponse>() {
+        clientDefinitionServices.getDefinitionResponse(definition.getId(), new ServiceCallback<DefinitionServiceResponse>() {
             @Override
-            public void onSuccess(final DefinitionResponse definitionResponse) {
+            public void onSuccess(final DefinitionServiceResponse definitionResponse) {
                 final Set<PropertySet> propertyPackageSet = definitionResponse.getPropertySets().keySet();
                 for (final PropertySet propertyPackage : propertyPackageSet) {
                     final Set<Property> properties = definitionResponse.getPropertySets().get(propertyPackage);
@@ -158,7 +156,7 @@ public class PropertiesEditor implements IsWidget {
                     if (properties != null) {
                         for (final Property _property : properties) {
                             final String propertyId = _property.getId();
-                            final Property property = PropertyUtils.getProperty(element.getProperties(), propertyId);
+                            final Property property = ElementUtils.getProperty(element, propertyId);
                             final Object value = definitionManager.getPropertyAdapter(property).getValue(property);
                             final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                                 @Override
@@ -217,7 +215,7 @@ public class PropertiesEditor implements IsWidget {
         if (propertySet != null) {
             for (final Map.Entry<Property, Object> entry : propertySet.entrySet()) {
                 final Property _property = entry.getKey();
-                final Property property = PropertyUtils.getProperty(element.getProperties(), _property.getId());
+                final Property property = ElementUtils.getProperty(element, _property.getId());
                 final Object value = definitionManager.getPropertyAdapter(property).getValue(property);
                 if (!processedPropertyIds.contains(property.getId())) {
                     final PropertyEditorFieldInfo fieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {

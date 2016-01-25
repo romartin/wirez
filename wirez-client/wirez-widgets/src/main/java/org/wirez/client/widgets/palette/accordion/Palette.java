@@ -29,7 +29,7 @@ import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
 import org.wirez.client.widgets.palette.tooltip.PaletteTooltip;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.service.definition.DefinitionSetResponse;
+import org.wirez.core.api.service.definition.DefinitionSetServiceResponse;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.ShapeSet;
@@ -39,6 +39,7 @@ import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
+import org.wirez.core.client.service.ServiceCallback;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -110,9 +111,9 @@ public class Palette implements IsWidget {
         final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
         final String definitionSetId = wirezShapeSet.getDefinitionSetId();
         
-        clientDefinitionServices.getDefinitionSetResponse(definitionSetId, new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
+        clientDefinitionServices.getDefinitionSetResponse(definitionSetId, new ServiceCallback<DefinitionSetServiceResponse>() {
             @Override
-            public void onSuccess(final DefinitionSetResponse definitionSetResponse) {
+            public void onSuccess(final DefinitionSetServiceResponse definitionSetResponse) {
                 doShow(width, wirezShapeSet, definitionSetResponse.getDefinitionSet(), definitionSetResponse.getDefinitions());
                 view.setNoCanvasViewVisible(false);
                 view.setGroupsViewVisible(true);

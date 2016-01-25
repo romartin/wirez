@@ -9,7 +9,7 @@ import org.wirez.core.api.graph.factory.ElementFactory;
 import java.util.Map;
 import java.util.Set;
 
-public interface DefinitionResponse {
+public interface DefinitionServiceResponse {
 
     Definition getDefinition();
     

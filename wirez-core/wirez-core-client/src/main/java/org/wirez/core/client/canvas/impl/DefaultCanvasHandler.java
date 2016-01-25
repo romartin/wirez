@@ -35,6 +35,7 @@ import org.wirez.core.api.graph.processing.visitor.DefaultGraphVisitor;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.Rule;
+import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.Logger;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
@@ -117,7 +118,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
     private void loadRules(final DefinitionSet definitionSet, final org.uberfire.mvp.Command sucessCallback, final org.uberfire.mvp.Command errorCallback) {
 
-        clientDefinitionManager.getRules(definitionSet, new ClientDefinitionServices.ServiceCallback<Collection<Rule>>() {
+        clientDefinitionManager.getRules(definitionSet, new ServiceCallback<Collection<Rule>>() {
             @Override
             public void onSuccess(final Collection<Rule> rules) {
                 

@@ -2,7 +2,10 @@ package org.wirez.core.backend.service.definition;
 
 import org.jboss.errai.bus.server.annotations.Service;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.adapter.*;
+import org.wirez.core.api.adapter.DefinitionAdapter;
+import org.wirez.core.api.adapter.DefinitionSetAdapter;
+import org.wirez.core.api.adapter.DefinitionSetRuleAdapter;
+import org.wirez.core.api.adapter.PropertySetAdapter;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
@@ -26,9 +29,9 @@ public class DefinitionServiceImpl implements DefinitionService {
     DefinitionManager definitionManager;
 
     @Override
-    public DefinitionSetResponse getDefinitionSet(final String id) {
+    public DefinitionSetServiceResponse getDefinitionSet(final String id) {
         
-        final DefinitionSet definitionSet = definitionManager.getDefinitionSet(id);
+        final DefinitionSet definitionSet = definitionManager.getDefinitionSetRegistry().get(id);
         final DefinitionSetAdapter adapter = definitionManager.getDefinitionSetAdapter(definitionSet);
         final DefinitionSetRuleAdapter ruleAdapter = definitionManager.getDefinitionSetRuleAdapter(definitionSet);
         final Set<Definition> definitions = adapter.getDefinitions(definitionSet);
@@ -44,14 +47,14 @@ public class DefinitionServiceImpl implements DefinitionService {
             }
         }
 
-        return new DefinitionSetResponseImpl(definitionSet, graphDefinition, definitions, propertySets, rules);
+        return new DefinitionSetServiceResponseImpl(definitionSet, graphDefinition, definitions, propertySets, rules);
         
     }
 
     @Override
-    public DefinitionResponse getDefinition(final String id) {
+    public DefinitionServiceResponse getDefinition(final String id) {
 
-        final Collection<DefinitionSet> definitionSets = definitionManager.getDefinitionSets();
+        final Collection<DefinitionSet> definitionSets = definitionManager.getDefinitionSetRegistry().getItems();
         if ( null != definitionSets ) {
             for (DefinitionSet definitionSet : definitionSets) {
 
@@ -74,7 +77,7 @@ public class DefinitionServiceImpl implements DefinitionService {
                                 propertySetSetMap.put(propertySet, pSetProperties);
                             }
                         }
-                        return new DefinitionResponseImpl(definition, elementClass.getName(), properties, propertySetSetMap);
+                        return new DefinitionServiceResponseImpl(definition, elementClass.getName(), properties, propertySetSetMap);
                     }
                 }
             }
@@ -83,10 +86,11 @@ public class DefinitionServiceImpl implements DefinitionService {
         return null;
     }
 
+    // TODO: Clone definition pojos.
     @Override
     public Element buildGraphElement(final String definitionId) {
         
-        DefinitionResponse response = getDefinition(definitionId);
+        DefinitionServiceResponse response = getDefinition(definitionId);
         
         if ( null != response ) {
             

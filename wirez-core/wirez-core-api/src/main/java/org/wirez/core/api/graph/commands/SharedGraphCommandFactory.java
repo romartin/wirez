@@ -9,10 +9,9 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.util.PropertyUtils;
+import org.wirez.core.api.util.ElementUtils;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 @ApplicationScoped
@@ -83,7 +82,7 @@ public class SharedGraphCommandFactory implements GraphCommandFactory {
     public UpdateElementPropertyValueCommand updateElementPropertyValueCommand(final Element element,
                                                                                final String propertyId,
                                                                                final Object value) {
-        final Property p = PropertyUtils.getProperty(element.getProperties(), propertyId);
+        final Property p = ElementUtils.getProperty(element, propertyId);
         PropertyAdapter adapter = getPropertyAdapter(p);
         return adapter != null ? new UpdateElementPropertyValueCommand(this, adapter, element, propertyId, value) : null;
     }

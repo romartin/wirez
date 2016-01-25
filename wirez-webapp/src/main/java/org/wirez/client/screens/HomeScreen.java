@@ -20,44 +20,31 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import org.jboss.errai.databinding.client.HasProperties;
-import org.jboss.errai.databinding.client.api.DataBinder;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchScreen;
-import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
-import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.workbench.model.menu.MenuFactory;
-import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
-import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.api.Task;
-import org.wirez.bpmn.api.property.Width;
-import org.wirez.core.api.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.HasValue;
+import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.registry.DefinitionSetRegistry;
 import org.wirez.core.api.rule.Rule;
-import org.wirez.core.api.rule.RuleManager;
-import org.wirez.core.api.service.definition.DefinitionSetResponse;
-import org.wirez.core.api.util.PropertyUtils;
+import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
+import org.wirez.core.client.service.ServiceCallback;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.Set;
 
 @Dependent
 @Templated
@@ -74,13 +61,9 @@ public class HomeScreen extends Composite {
 
     @EventHandler( "testButton" )
     public void doSomethingC1(ClickEvent e) {
-        
-        log(new Task(), new Command() {
-            @Override
-            public void execute() {
                 
-            }
-        });
+        Collection<DefinitionSet> definitionSets = definitionSetRegistry.getItems();
+        GWT.log(definitionSets.size() + "");
         
     }
     
@@ -88,13 +71,13 @@ public class HomeScreen extends Composite {
         GWT.log("****************************************************************");
         GWT.log("           " + definition.getTitle());
         GWT.log("****************************************************************");
-        clientDefinitionServices.buildGraphElement(definition, new ClientDefinitionServices.ServiceCallback<Element>() {
+        clientDefinitionServices.buildGraphElement(definition, new ServiceCallback<Element>() {
             @Override
             public void onSuccess(Element element) {
                 Definition definitionSet = ((ViewContent<Definition>) element.getContent()).getDefinition();
                 
                 GWT.log("Element uuid=" + element.getUUID() + " , properties=" + element.getProperties().size());
-                final Property property = PropertyUtils.getProperty(element.getProperties(), "bgColor");
+                final Property property = ElementUtils.getProperty(element, "bgColor");
                 Object value = clientDefinitionManager.getPropertyAdapter(property).getValue(property);
                 GWT.log("Element BgColor -> " + value);
                 final Task task = (Task) definitionSet;
@@ -120,7 +103,7 @@ public class HomeScreen extends Composite {
     public void doSomethingC2(ClickEvent e) {
 
 
-        clientDefinitionManager.getRules(new BPMNDefinitionSet(), new ClientDefinitionServices.ServiceCallback<Collection<Rule>>() {
+        clientDefinitionManager.getRules(new BPMNDefinitionSet(), new ServiceCallback<Collection<Rule>>() {
             @Override
             public void onSuccess(Collection<Rule> rules) {
                 GWT.log("RULES size = " + rules.size() );
@@ -136,36 +119,6 @@ public class HomeScreen extends Composite {
             return;
         }
         
-        clientDefinitionServices.buildGraphElement(new Task(), new ClientDefinitionServices.ServiceCallback<Element>() {
-            @Override
-            public void onSuccess(Element element) {
-                Task task = ((ViewContent<Task>) element.getContent()).getDefinition();
-                GWT.log("Element uuid=" + element.getUUID() + " , properties=" + element.getProperties().size());
-
-
-                // DataBinder<Task> taskDataBinder = DataBinder.forModel(task);
-
-                /*String name = (String) PropertyUtils.getValue(element.getProperties(), "name");
-                GWT.log("Element name=" + name );
-                PropertyUtils.setValue(element.getProperties(), "name", "New name setted");
-                String newName = (String) PropertyUtils.getValue(element.getProperties(), "name");
-                GWT.log("Element newName=" + newName );
-                GWT.log("Element newNameTyped=" + task.getGeneral().getName().getValue() );
-
-                task.getGeneral().getName().setValue("New name setted TYPED");
-                String newNameTyped = (String) PropertyUtils.getValue(element.getProperties(), "name");
-                GWT.log("Element newNameTYPED=" + newNameTyped );
-                GWT.log("Element newNameTYPED=" + task.getGeneral().getName().getValue() );*/
-                
-            }
-
-            @Override
-            public void onError(ClientRuntimeError error) {
-                showError(error.getMessage());
-
-            }
-        });
-        
     }
     
     @Inject
@@ -173,6 +126,9 @@ public class HomeScreen extends Composite {
 
     @Inject
     ClientDefinitionManager clientDefinitionManager;
+    
+    @Inject
+    DefinitionSetRegistry definitionSetRegistry;
     
     @WorkbenchPartTitle
     public String getScreenTitle() {

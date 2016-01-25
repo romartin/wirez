@@ -27,7 +27,7 @@ import org.wirez.bpmn.api.property.Radius;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.util.PropertyUtils;
+import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.MutationContext;
@@ -83,7 +83,7 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
     }
 
     protected StartNoneEventShape _applyRadius(final Node<ViewContent<StartNoneEvent>, Edge> element, MutationContext mutationContext) {
-        final Radius radiusProperty  = (Radius) PropertyUtils.getProperty(element.getProperties(), Radius.ID);
+        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
         final Integer radius = radiusProperty.getValue();
         if ( null != radius ) {
             applyRadius(radius, mutationContext);

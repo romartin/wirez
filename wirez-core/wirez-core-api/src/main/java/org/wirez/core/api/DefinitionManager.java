@@ -23,6 +23,8 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.factory.ElementFactory;
+import org.wirez.core.api.registry.DefinitionSetRegistry;
+import org.wirez.core.api.registry.DiagramRegistry;
 
 import java.util.Collection;
 import java.util.Map;
@@ -30,9 +32,9 @@ import java.util.Set;
 
 public interface DefinitionManager {
 
-    Collection<DefinitionSet> getDefinitionSets();
-
-    DefinitionSet getDefinitionSet(String id);
+    DefinitionSetRegistry getDefinitionSetRegistry();
+    
+    DiagramRegistry getDiagramRegistry();
     
     DefinitionSetAdapter getDefinitionSetAdapter(Object pojo);
     

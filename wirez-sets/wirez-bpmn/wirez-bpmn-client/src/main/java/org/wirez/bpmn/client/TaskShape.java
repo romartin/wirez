@@ -26,7 +26,7 @@ import org.wirez.bpmn.api.property.Width;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.util.PropertyUtils;
+import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.MutationContext;
@@ -57,8 +57,8 @@ public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
     }
 
     protected TaskShape _applySize(final Node<ViewContent<Task>, Edge> element, MutationContext mutationContext) {
-        final Width widthProperty  = (Width) PropertyUtils.getProperty(element.getProperties(), Width.ID);
-        final Height heightProperty  = (Height) PropertyUtils.getProperty(element.getProperties(), Height.ID);
+        final Width widthProperty  = (Width) ElementUtils.getProperty(element, Width.ID);
+        final Height heightProperty  = (Height) ElementUtils.getProperty(element, Height.ID);
         final Integer width = widthProperty.getValue();
         final Integer height = heightProperty.getValue();
         applySize(width, height, mutationContext);

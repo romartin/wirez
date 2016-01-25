@@ -26,7 +26,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.util.PropertyUtils;
+import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.MutationContext;
@@ -53,7 +53,7 @@ public abstract class BPMNBasicShape<W extends Definition> extends BaseShape<W> 
     }
 
     protected BPMNBasicShape<W> _applyFillColor(Node<ViewContent<W>, Edge> element) {
-        final BgColor bgColor = (BgColor) PropertyUtils.getProperty(element.getProperties(), BgColor.ID);
+        final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.ID);
         final String color = bgColor.getValue();
         if (color != null && color.trim().length() > 0) {
             getShape().setFillColor(color);
@@ -62,8 +62,8 @@ public abstract class BPMNBasicShape<W extends Definition> extends BaseShape<W> 
     }
 
     protected BPMNBasicShape<W> _applyBorders(Node<ViewContent<W>, Edge> element) {
-        final BorderColor borderColor  = (BorderColor) PropertyUtils.getProperty(element.getProperties(), BorderColor.ID);
-        final BorderSize borderSize = (BorderSize) PropertyUtils.getProperty(element.getProperties(), BorderSize.ID);
+        final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.ID);
+        final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.ID);
         final String color = borderColor.getValue();
         final Integer width = borderSize.getValue();
         if (color != null && color.trim().length() > 0) {

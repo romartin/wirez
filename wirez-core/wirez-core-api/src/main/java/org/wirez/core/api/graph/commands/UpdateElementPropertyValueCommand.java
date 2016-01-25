@@ -24,7 +24,7 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.PropertyUtils;
+import org.wirez.core.api.util.ElementUtils;
 
 import java.util.ArrayList;
 
@@ -64,7 +64,7 @@ public class UpdateElementPropertyValueCommand extends AbstractCommand {
 
     @Override
     public CommandResult execute(final RuleManager ruleManager) {
-        final Property p = PropertyUtils.getProperty(element.getProperties(), propertyId);
+        final Property p = ElementUtils.getProperty(element, propertyId);
         oldValue = adapter.getValue(p);
         adapter.setValue(p, value);
         return new DefaultCommandResult(new ArrayList<RuleViolation>());

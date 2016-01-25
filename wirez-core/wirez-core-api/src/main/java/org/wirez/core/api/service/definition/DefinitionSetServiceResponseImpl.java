@@ -5,14 +5,13 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.rule.Rule;
 
 import java.util.Collection;
 import java.util.Set;
 
 @Portable
-public class DefinitionSetResponseImpl implements DefinitionSetResponse {
+public class DefinitionSetServiceResponseImpl implements DefinitionSetServiceResponse {
 
     private final DefinitionSet definitionSet;
     private final Definition graphElement;
@@ -20,11 +19,11 @@ public class DefinitionSetResponseImpl implements DefinitionSetResponse {
     private final Set<PropertySet> propertySets;
     private final Collection<Rule> rules;
 
-    public DefinitionSetResponseImpl(@MapsTo("definitionSet") DefinitionSet definitionSet,
-                                     @MapsTo("graphElement") Definition graphElement,
-                                     @MapsTo("definitions") Set<Definition> definitions,
-                                     @MapsTo("propertySets") Set<PropertySet> propertySets,
-                                     @MapsTo("rules") Collection<Rule> rules) {
+    public DefinitionSetServiceResponseImpl(@MapsTo("definitionSet") DefinitionSet definitionSet,
+                                            @MapsTo("graphElement") Definition graphElement,
+                                            @MapsTo("definitions") Set<Definition> definitions,
+                                            @MapsTo("propertySets") Set<PropertySet> propertySets,
+                                            @MapsTo("rules") Collection<Rule> rules) {
         this.definitionSet = definitionSet;
         this.graphElement = graphElement;
         this.definitions = definitions;

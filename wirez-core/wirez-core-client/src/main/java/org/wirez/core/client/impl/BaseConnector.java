@@ -28,7 +28,6 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.util.PropertyUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;

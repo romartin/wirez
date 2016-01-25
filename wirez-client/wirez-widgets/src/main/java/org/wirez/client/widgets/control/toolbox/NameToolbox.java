@@ -19,10 +19,9 @@ package org.wirez.client.widgets.control.toolbox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.defaultset.Name;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.util.PropertyUtils;
+import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.control.toolbox.BaseToolbox;
@@ -30,7 +29,6 @@ import org.wirez.core.client.control.toolbox.BaseToolbox;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import java.util.Set;
 
 @Dependent
 public class NameToolbox extends BaseToolbox {
@@ -61,7 +59,7 @@ public class NameToolbox extends BaseToolbox {
     @Override
     public void show(final Element element, final double x, final double y) {
         this.element = element;
-        final Name nameProperty = (Name) PropertyUtils.getProperty(element.getProperties(), Name.ID);
+        final Name nameProperty = (Name) ElementUtils.getProperty(element, Name.ID);
         final String name = nameProperty.getValue();
         GWT.log("Showing NameToolbox at [" + x + "," + y + "]");
         view.show(name, x, y);

@@ -4,13 +4,12 @@ import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.service.definition.DefinitionResponse;
+import org.wirez.core.api.service.definition.DefinitionServiceResponse;
 import org.wirez.core.api.service.definition.DefinitionService;
-import org.wirez.core.api.service.definition.DefinitionSetResponse;
+import org.wirez.core.api.service.definition.DefinitionSetServiceResponse;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,14 +17,6 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class ClientDefinitionServices {
     
-    public interface ServiceCallback<T> {
-
-        void onSuccess ( T item );
-
-        void onError ( ClientRuntimeError error );
-
-    }
-
     Caller<DefinitionService> definitionService;
 
     @Inject
@@ -33,13 +24,13 @@ public class ClientDefinitionServices {
         this.definitionService = definitionService;
     }
 
-    public void getDefinitionSetResponse(final String id, final ServiceCallback<DefinitionSetResponse> callback) {
+    public void getDefinitionSetResponse(final String id, final ServiceCallback<DefinitionSetServiceResponse> callback) {
         assert id != null;
         assert callback != null;
         
-        definitionService.call(new RemoteCallback<DefinitionSetResponse>() {
+        definitionService.call(new RemoteCallback<DefinitionSetServiceResponse>() {
             @Override
-            public void callback(final DefinitionSetResponse definitionSetResponse) {
+            public void callback(final DefinitionSetServiceResponse definitionSetResponse) {
                 callback.onSuccess(definitionSetResponse);
             }
         }, new ErrorCallback<Message>() {
@@ -55,13 +46,13 @@ public class ClientDefinitionServices {
         
     }
 
-    public void getDefinitionResponse(final String id, final ServiceCallback<DefinitionResponse> callback) {
+    public void getDefinitionResponse(final String id, final ServiceCallback<DefinitionServiceResponse> callback) {
         assert id != null;
         assert callback != null;
 
-        definitionService.call(new RemoteCallback<DefinitionResponse>() {
+        definitionService.call(new RemoteCallback<DefinitionServiceResponse>() {
             @Override
-            public void callback(final DefinitionResponse definitionSetResponse) {
+            public void callback(final DefinitionServiceResponse definitionSetResponse) {
                 callback.onSuccess(definitionSetResponse);
             }
         }, new ErrorCallback<Message>() {
@@ -103,10 +94,10 @@ public class ClientDefinitionServices {
         assert definitionSet != null;
         assert callback != null;
 
-        definitionService.call(new RemoteCallback<DefinitionSetResponse>() {
+        definitionService.call(new RemoteCallback<DefinitionSetServiceResponse>() {
 
             @Override
-            public void callback(final DefinitionSetResponse response) {
+            public void callback(final DefinitionSetServiceResponse response) {
 
                 callback.onSuccess( response.getGraphElement() );
             }

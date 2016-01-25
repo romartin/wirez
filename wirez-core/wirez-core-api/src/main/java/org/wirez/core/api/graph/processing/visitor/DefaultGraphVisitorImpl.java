@@ -16,16 +16,13 @@
 
 package org.wirez.core.api.graph.processing.visitor;
 
-import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.adapter.PropertyAdapter;
-import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
-import org.wirez.core.api.util.PropertyUtils;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;

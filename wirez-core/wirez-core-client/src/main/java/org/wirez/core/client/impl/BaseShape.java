@@ -27,11 +27,10 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaultset.Name;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.util.PropertyUtils;
+import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.*;
 import org.wirez.core.client.control.resize.BaseResizeControl;
-import org.wirez.core.client.control.resize.DefaultResizeControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.control.toolbox.HasToolboxControl;
 import org.wirez.core.client.mutation.*;
@@ -101,10 +100,9 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     public void applyElementPosition(final org.wirez.core.api.graph.Node<ViewContent<W>, Edge> element,
                                      final CanvasHandler wirezCanvas,
                                      final MutationContext mutationContext) {
-        final Bounds.Bound ul = element.getContent().getBounds().getUpperLeft();
-        final Bounds.Bound lr = element.getContent().getBounds().getLowerRight();
-        final double x = ul.getX();
-        final double y = ul.getY();
+        final Double[] position = ElementUtils.getPosition(element.getContent());
+        final double x = position[0];
+        final double y = position[1];
         applyPosition(x, y, mutationContext);
     }
 
@@ -155,7 +153,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
 
     protected void _applyElementName(final org.wirez.core.api.graph.Node<ViewContent<W>, Edge> element,
                                      final MutationContext mutationContext) {
-        final Name nameProperty = (Name) PropertyUtils.getProperty(element.getProperties(), Name.ID);
+        final Name nameProperty = (Name) ElementUtils.getProperty(element, Name.ID);
         String name = nameProperty.getValue();
         applyPropertyValue(Name.ID, name, mutationContext);
     }

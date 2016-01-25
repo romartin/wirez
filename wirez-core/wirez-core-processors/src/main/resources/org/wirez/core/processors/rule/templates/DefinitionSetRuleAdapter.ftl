@@ -16,7 +16,7 @@
 
 package ${packageName};
 
-import org.wirez.core.api.adapter.DefinitionSetRuleAdapter;
+import org.wirez.core.api.adapter.generated.GeneratedDefinitionSetRuleAdapter;
 import org.wirez.core.api.rule.Rule;
 
 import javax.annotation.Generated;
@@ -29,7 +29,7 @@ import java.util.Set;
 
 @Generated("org.wirez.core.processors.rule.DefinitionSetRuleAdapterGenerator")
 @ApplicationScoped
-public class ${className} implements DefinitionSetRuleAdapter<${defSetClassName}> {
+public class ${className} extends GeneratedDefinitionSetRuleAdapter<${defSetClassName}> {
 
     <#list rules as rule>
         @Inject
@@ -51,13 +51,8 @@ public class ${className} implements DefinitionSetRuleAdapter<${defSetClassName}
     }
 
     @Override
-    public Collection<Rule> getRules(final ${defSetClassName} pojo) {
+    protected Collection<Rule> getRules() {
         return rules;
-    }
-
-    @Override
-    public int getPriority() {
-        return 1;
     }
 
 }

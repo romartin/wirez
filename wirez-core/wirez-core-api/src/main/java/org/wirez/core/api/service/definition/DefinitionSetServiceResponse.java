@@ -9,7 +9,7 @@ import org.wirez.core.api.rule.Rule;
 import java.util.Collection;
 import java.util.Set;
 
-public interface DefinitionSetResponse {
+public interface DefinitionSetServiceResponse {
     
     DefinitionSet getDefinitionSet();
     

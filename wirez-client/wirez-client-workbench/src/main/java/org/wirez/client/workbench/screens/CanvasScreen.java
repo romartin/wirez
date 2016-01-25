@@ -35,11 +35,15 @@ import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.client.workbench.util.GraphTests;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
-import org.wirez.core.api.service.definition.DefinitionSetResponse;
+import org.wirez.core.api.registry.DefinitionSetRegistry;
+import org.wirez.core.api.service.definition.DefinitionSetServiceResponse;
+import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
+import org.wirez.core.client.service.ClientDiagramServices;
+import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.Logger;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
@@ -82,7 +86,13 @@ public class CanvasScreen {
     DefaultCanvasHandler canvasHandler;
 
     @Inject
+    ClientDefinitionManager clientDefinitionManager;
+    
+    @Inject
     ClientDefinitionServices clientDefinitionServices;
+    
+    @Inject
+    ClientDiagramServices clientDiagramServices;
     
     @Inject
     ShapeManager wirezClientManager;
@@ -112,68 +122,73 @@ public class CanvasScreen {
 
     }
 
+    /**
+     * Expected settings:
+     * - existing diagram
+     *      - uuid
+     * - new diagram
+     *      - defSetId
+     *      - shapeSetId
+     *      - title
+     */
     @OnStartup
     public void onStartup(final PlaceRequest placeRequest) {
 
         this.placeRequest = placeRequest;
         final String uuid = placeRequest.getParameter( "uuid", "" );
-        String defSetId = placeRequest.getParameter( "defSetId", "" );
-        final String shapeSetUUID = placeRequest.getParameter( "shapeSetId", "" );
-        final String title = placeRequest.getParameter( "title", "" );
-        final String graphTestMode = placeRequest.getParameter( "graphTestMode", "false" );
-        final boolean isTestMode = ("true".equals(graphTestMode));
 
         CanvasScreen.this.menu = makeMenuBar();
-
-        if (isTestMode) {
-            defSetId = "basicSet";
-        }
         
-        getDefinitionSet(defSetId, new DefinitionSetRequestCallback() {
-            @Override
-            public void onSuccess(final DefinitionSet definitionSet) {
+        
+        
+        final boolean isCreate = uuid == null || uuid.trim().length() == 0;
+        
+        if (isCreate) {
 
-                if (isTestMode) {
+            final String defSetId = placeRequest.getParameter( "defSetId", "" );
+            final String shapeSetUUID = placeRequest.getParameter( "shapeSetId", "" );
+            final String title = placeRequest.getParameter( "title", "" );
 
-                    final ShapeSet shapeSet = getShapeSet("basic");
-                    final DefaultGraph graph = GraphTests.connectionsTest2();
-                    open("graphTests", definitionSet, shapeSet, "Graph Tests", graph);
-
-                } else {
-
-                    final ShapeSet shapeSet = getShapeSet(shapeSetUUID);
-                    clientDefinitionServices.getGraphElement(definitionSet, new ClientDefinitionServices.ServiceCallback<Definition>() {
-                        @Override
-                        public void onSuccess(final Definition item) {
-                            clientDefinitionServices.buildGraphElement(item, new ClientDefinitionServices.ServiceCallback<Element>() {
-                                @Override
-                                public void onSuccess(final Element item) {
-                                    final DefaultGraph graph = (DefaultGraph) item;
-                                    open(uuid, definitionSet, shapeSet, title, graph);
-                                }
-
-                                @Override
-                                public void onError(final ClientRuntimeError error) {
-                                    showError(error);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onError(final ClientRuntimeError error) {
-                            showError(error);
-                        }
-                    });
-                    
+            clientDiagramServices.create(defSetId, shapeSetUUID, title, new ServiceCallback<Diagram>() {
+                @Override
+                public void onSuccess(final Diagram diagram) {
+                    open(diagram);
                 }
-                
-            }
-        });
+
+                @Override
+                public void onError(final ClientRuntimeError error) {
+                    showError(error);
+                }
+            });
+            
+        } else {
+         
+            clientDiagramServices.get(uuid, new ServiceCallback<Diagram>() {
+                @Override
+                public void onSuccess(final Diagram diagram) {
+                    open(diagram);
+                }
+
+                @Override
+                public void onError(final ClientRuntimeError error) {
+                    showError(error);
+                }
+            });
+            
+        }
         
     }
 
-    private void open(String uuid, DefinitionSet definitionSet, ShapeSet shapeSet, String title, Graph graph) {
+    private void open(final Diagram diagram) {
 
+        final DefinitionSetRegistry definitionSetRegistry = clientDefinitionManager.getDefinitionSetRegistry();
+        final String uuid = diagram.getUUID();
+        final String defSetId = diagram.getSettings().getDefinitionSetId();
+        final DefinitionSet definitionSet = definitionSetRegistry.get(defSetId);
+        final ShapeSet shapeSet = getShapeSet(diagram.getSettings().getShapeSetId());
+        final String title = diagram.getSettings().getTitle();
+        final Graph graph = diagram.getGraph();
+        
         CanvasScreen.this.title = title;
         changeTitleNotificationEvent.fire(new ChangeTitleWidgetEvent(placeRequest, this.title));
 
@@ -329,24 +344,6 @@ public class CanvasScreen {
         void onSuccess ( DefinitionSet definitionSet );
     }
     
-    private DefinitionSet getDefinitionSet(final String id, final DefinitionSetRequestCallback callback) {
-        
-        clientDefinitionServices.getDefinitionSetResponse(id, new ClientDefinitionServices.ServiceCallback<DefinitionSetResponse>() {
-            @Override
-            public void onSuccess(final DefinitionSetResponse definitionSetResponse) {
-                callback.onSuccess(definitionSetResponse.getDefinitionSet());
-            }
-
-            @Override
-            public void onError(final ClientRuntimeError error) {
-                showError(error);
-            }
-        });
-        
-        
-        return null;
-    }
-
     private ShapeSet getShapeSet(final String id) {
         for (final ShapeSet set : wirezClientManager.getShapeSets()) {
             if (set.getId().equals(id)) {
@@ -424,7 +421,7 @@ public class CanvasScreen {
                             final double _x, final double _y) {
         
         
-        clientDefinitionServices.buildGraphElement(definition, new ClientDefinitionServices.ServiceCallback<Element>() {
+        clientDefinitionServices.buildGraphElement(definition, new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element item) {
                 final Element<?> element = (Element<?>) item;

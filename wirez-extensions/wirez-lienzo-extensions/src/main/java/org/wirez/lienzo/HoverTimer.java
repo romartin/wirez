@@ -1,4 +1,4 @@
-package org.wirez.core.client.util.lienzo;
+package org.wirez.lienzo;
 
 
 import com.ait.lienzo.client.core.event.NodeMouseEnterEvent;

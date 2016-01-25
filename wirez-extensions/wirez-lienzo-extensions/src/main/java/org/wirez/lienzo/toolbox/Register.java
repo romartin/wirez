@@ -1,4 +1,4 @@
-package org.wirez.core.client.util.lienzo.toolbox;
+package org.wirez.lienzo.toolbox;
 
 interface Register {
     HoverToolbox register();

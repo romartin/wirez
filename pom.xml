@@ -39,6 +39,7 @@
   <modules>
     <module>wirez-bom</module>
     <module>wirez-deps</module>
+    <module>wirez-extensions</module>
     <module>wirez-core</module>
     <module>wirez-client</module>
     <module>wirez-sets</module>

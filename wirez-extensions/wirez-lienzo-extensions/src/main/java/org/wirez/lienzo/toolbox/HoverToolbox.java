@@ -1,4 +1,4 @@
-package org.wirez.core.client.util.lienzo.toolbox;
+package org.wirez.lienzo.toolbox;
 
 import com.ait.lienzo.client.core.animation.AnimationCallback;
 import com.ait.lienzo.client.core.animation.AnimationProperties;
@@ -12,7 +12,7 @@ import com.ait.lienzo.client.core.types.Point2DArray;
 import com.ait.lienzo.client.core.util.Geometry;
 import com.ait.lienzo.shared.core.types.Direction;
 import com.google.gwt.core.client.GWT;
-import org.wirez.core.client.util.lienzo.HoverTimer;
+import org.wirez.lienzo.HoverTimer;
 
 import java.util.ArrayList;
 import java.util.List;

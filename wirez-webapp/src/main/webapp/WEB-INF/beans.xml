@@ -33,6 +33,7 @@
     <exclude name="org.wirez.basicset.client.**"/>
     <exclude name="org.wirez.bpmn.client.**"/>
     <exclude name="org.wirez.client.**"/>
+    <exclude name="org.wirez.lienzo.**"/>
     
     <!-- Lienzo. -->
     <exclude name="com.ait.lienzo.**"/>

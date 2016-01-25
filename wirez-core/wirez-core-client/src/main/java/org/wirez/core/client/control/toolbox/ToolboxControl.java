@@ -27,10 +27,8 @@ import com.google.gwt.user.client.ui.Widget;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
-import org.wirez.core.client.control.BaseShapeControl;
-import org.wirez.core.client.control.toolbox.Toolbox;
-import org.wirez.core.client.util.lienzo.toolbox.HoverToolbox;
-import org.wirez.core.client.util.lienzo.toolbox.HoverToolboxButton;
+import org.wirez.lienzo.toolbox.HoverToolbox;
+import org.wirez.lienzo.toolbox.HoverToolboxButton;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;

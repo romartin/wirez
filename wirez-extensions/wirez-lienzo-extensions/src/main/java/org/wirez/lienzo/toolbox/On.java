@@ -1,4 +1,4 @@
-package org.wirez.core.client.util.lienzo.toolbox;
+package org.wirez.lienzo.toolbox;
 
 import com.ait.lienzo.shared.core.types.Direction;
 

@@ -39,6 +39,7 @@ import java.util.Collection;
 public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implements HasRadiusMutation {
 
     protected RegularPolygon polygon;
+    protected RegularPolygon decorator;
 
     public ParallelGatewayShape(Group group, WiresManager manager) {
         super(new MultiPath().rect(0, 0, ParallelGateway.RADIUS * 2, ParallelGateway.RADIUS * 2)
@@ -51,7 +52,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
     @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>() {{
-            add( polygon );
+            add( decorator );
         }};
     }
 
@@ -70,8 +71,16 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
             .setFillColor(ParallelGateway.COLOR)
             .setFillAlpha(0.50)
             .setStrokeColor(ColorName.BLACK);
+        decorator = new RegularPolygon(4, radius)
+                .setX(radius)
+                .setY(radius)
+                .setStrokeWidth(0)
+                .setStrokeAlpha(0)
+                .setFillAlpha(0)
+                .setStrokeAlpha(0);
 
         this.addChild(polygon, WiresLayoutContainer.Layout.CENTER);
+        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
     }
 
     public void applyElementProperties(Node<ViewContent<ParallelGateway>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
@@ -95,6 +104,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
     public void applyRadius(final double radius, final MutationContext mutationContext) {
         if (radius > 0) {
             _applyParallelGatewayRadius(polygon, radius);
+            _applyParallelGatewayRadius(decorator, radius);
         }
     }
 

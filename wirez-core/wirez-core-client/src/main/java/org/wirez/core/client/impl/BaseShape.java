@@ -152,7 +152,6 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     public void afterMutations() {
 
         // Ensure top primitives in the layer
-        getPath().moveToTop();
         getText().moveToTop();
         
     }

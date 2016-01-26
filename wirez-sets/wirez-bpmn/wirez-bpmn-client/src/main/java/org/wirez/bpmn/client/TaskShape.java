@@ -18,7 +18,9 @@ package org.wirez.bpmn.client;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.MultiPath;
+import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Shape;
+import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.api.property.Height;
@@ -36,14 +38,22 @@ import java.util.Collection;
 
 public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
 
+    private Rectangle decorator;
+    
     public TaskShape(Group group, WiresManager manager) {
         super(new MultiPath().rect(0, 0, Task.WIDTH, Task.HEIGHT), group, manager);
+        init();
+    }
+
+    private void init() {
+        decorator = new Rectangle(Task.WIDTH, Task.HEIGHT).setX(0).setY(0).setFillAlpha(0).setStrokeAlpha(0);
+        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
     }
 
     @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>() {{
-            add( getPath() );
+            add( decorator );
         }};
     }
 
@@ -75,5 +85,8 @@ public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
         final double x = getPath().getX();
         final double y = getPath().getY();
         getPath().clear().rect(x, y, width, height);
+        decorator.setWidth(width);
+        decorator.setHeight(height);
     }
+    
 }

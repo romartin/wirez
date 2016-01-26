@@ -38,6 +38,7 @@ import java.util.Collection;
 public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implements HasRadiusMutation {
 
     protected Circle circle;
+    protected Circle decorator;
     
     public StartNoneEventShape(Group group, WiresManager manager) {
         super(new MultiPath().rect(0,0, StartNoneEvent.RADIUS * 2, StartNoneEvent.RADIUS * 2)
@@ -51,6 +52,8 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
         final double radius = StartNoneEvent.RADIUS;
         circle = new Circle(radius).setX(radius).setY(radius);
         this.addChild(circle, WiresLayoutContainer.Layout.CENTER);
+        decorator = new Circle(radius).setX(radius).setY(radius).setFillAlpha(0).setStrokeAlpha(0);
+        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
     }
 
 
@@ -62,7 +65,7 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
     @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>() {{
-            add( circle );
+            add( decorator );
         }};
     }
     
@@ -78,7 +81,9 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
     public void applyRadius(double radius, MutationContext mutationContext) {
         if (radius > 0) {
             circle.setRadius(radius);
+            decorator.setRadius(radius);
             this.moveChild(circle.getID(), radius, radius);
+            this.moveChild(decorator.getID(), radius, radius);
         }
     }
 

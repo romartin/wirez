@@ -42,6 +42,8 @@ import java.util.List;
 
 public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
+    private static final long ANIMATION_SELECTION_DURATION = 250;
+    
     Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent;
     protected WiresManager wiresManager;
     protected List<Shape> shapes = new ArrayList<Shape>();
@@ -215,18 +217,22 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     }
 
     protected void selectShape(final Shape shape) {
-        new ShapeSelectionAnimation(shape).setDuration(500).run();
+        new ShapeSelectionAnimation(shape)
+                .setDuration(ANIMATION_SELECTION_DURATION)
+                .run();
     }
 
     protected void deselectShape(final Shape shape) {
         final boolean isConnector = shape instanceof BaseConnector;
-        new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK).setDuration(500).run();
+        new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK)
+                .setDuration(ANIMATION_SELECTION_DURATION)
+                .run();
     }
 
     protected BaseCanvas updateViewShapesState() {
         final List<Shape> shapes = getShapes();
         for (final Shape shape : shapes) {
-            final boolean isSelected = selectedShapes.isEmpty() || selectedShapes.contains( shape );
+            final boolean isSelected = !selectedShapes.isEmpty() && selectedShapes.contains(shape);
             if (isSelected) {
                 selectShape(shape);
             } else {

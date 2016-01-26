@@ -22,6 +22,9 @@ import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.types.Shadow;
+import com.ait.lienzo.shared.core.types.Color;
+import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
@@ -38,10 +41,13 @@ import java.util.Collection;
 
 public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
 
+    private static final Shadow SHADOW = new Shadow(Color.fromColorString(Task.COLOR).setA(0.80), 10, -10, -10);
+
     private Rectangle decorator;
     
     public TaskShape(Group group, WiresManager manager) {
         super(new MultiPath().rect(0, 0, Task.WIDTH, Task.HEIGHT), group, manager);
+        
         init();
     }
 

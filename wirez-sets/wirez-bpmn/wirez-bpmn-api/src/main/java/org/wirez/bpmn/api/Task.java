@@ -39,7 +39,7 @@ import java.util.HashSet;
 public class Task extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "Task";
-    public static final String COLOR = "#00CC00";
+    public static final String COLOR = "#dfeff8";
     public static final Integer WIDTH = 100;
     public static final Integer HEIGHT = 100;
     
@@ -78,7 +78,7 @@ public class Task extends BaseDefinition implements BPMNDefinition {
     public void init() {
         getGeneral().getName().setValue("My task");
         getBackgroundSet().getBgColor().setValue(COLOR);
-        getBackgroundSet().getBorderSize().setValue(3);
+        getBackgroundSet().getBorderSize().setValue(1);
         getWidth().setValue(WIDTH);
         getHeight().setValue(HEIGHT);
         

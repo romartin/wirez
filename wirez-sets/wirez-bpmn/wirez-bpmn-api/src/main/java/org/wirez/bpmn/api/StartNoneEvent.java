@@ -38,7 +38,7 @@ import java.util.HashSet;
 public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "StartNoneEvent";
-    public static final String COLOR = "#0000CC";
+    public static final String COLOR = "#3eb870";
     public static final Integer RADIUS = 25;
     
     @Inject

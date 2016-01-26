@@ -30,7 +30,7 @@ import javax.annotation.PostConstruct;
 
 public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPaletteTooltip.View {
 
-    private static final double PADDING = 20;
+    private static final double PADDING = 50;
     private static final double TRIANGLE_SIZE = 20;
     private static final double ALPHA = 0.8;
     private static final Shadow SHADOW = new Shadow(ColorName.BLACK.getColor().setA(0.80), 10, 3, 3);
@@ -60,12 +60,16 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
         reset();
 
         final IPrimitive<?> glyph = (IPrimitive<?>) _glyph.copy();
-        final Text descText = new Text(text).setFontSize(10);
-        final double descTextBbW = 80;
-        final double descTextBbH = 30;
+        final Text descText = new Text(text)
+                .setFontSize(10)
+                .setFontFamily("Verdana");
+
+        final BoundingBox descTextBB = descText.getBoundingBox();
+        final double descTextBbW = descTextBB.getWidth();
+        final double descTextBbH = descTextBB.getHeight();
         
         final double dw = ( descTextBbW >  width ? ( descTextBbW + PADDING ) : ( width + PADDING ) ); 
-        final double dh = height + descTextBbH + PADDING + 10;
+        final double dh = height + descTextBbH + PADDING;
         final IPrimitive<?> decorator = buildDecorator(dw, dh);
         final double w = dw + ( TRIANGLE_SIZE * 2);
         final double h = dh;
@@ -85,7 +89,7 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
         glyph.setY(PADDING / 2);
 
         descText.setX( TRIANGLE_SIZE + ( w / 2) - (descTextBbW / 2) );
-        descText.setY(height + descTextBbH + 5);
+        descText.setY(glyph.getY() + height + descTextBbH + 5);
         
         
         this.getElement().getStyle().setLeft(x, Style.Unit.PX);
@@ -107,22 +111,18 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
         final double h2 = height / 2;
         final double s2 = TRIANGLE_SIZE / 2;
         final Triangle triangle = new Triangle(new Point2D(0, h2), new Point2D(TRIANGLE_SIZE, h2 + s2), new Point2D(TRIANGLE_SIZE, h2 - s2))
-                .setFillColor(ColorName.WHITE)
+                .setFillColor(ColorName.LIGHTGREY)
                 .setFillAlpha(ALPHA)
-                .setStrokeWidth(1)
-                .setStrokeColor(ColorName.BLACK)
-                .setStrokeAlpha(ALPHA);
+                .setStrokeAlpha(0);
         
         final Rectangle rectangle = new Rectangle(width + TRIANGLE_SIZE, height)
                 .setX(TRIANGLE_SIZE)
                 .setY(0)
                 .setCornerRadius(10)
-                .setFillColor(ColorName.WHITE)
+                .setFillColor(ColorName.LIGHTGREY)
                 .setFillAlpha(ALPHA)
-                .setStrokeWidth(1)
-                .setStrokeColor(ColorName.BLACK)
-                .setStrokeAlpha(ALPHA)
-                .setShadow(SHADOW);
+                .setStrokeAlpha(0);
+                //.setShadow(SHADOW);
 
         final Group decorator = new Group();
         decorator.add(rectangle);

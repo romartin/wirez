@@ -77,12 +77,17 @@ public abstract class BPMNBasicShape<W extends Definition> extends BaseShape<W> 
     protected BPMNBasicShape<W> _applyFont(Node<ViewContent<W>, Edge> element) {
         final Text text = super.getText();
         if ( null != text ) {
+            final FontFamily fontFamily = (FontFamily) ElementUtils.getProperty(element, FontFamily.ID);
             final FontColor fontColor  = (FontColor) ElementUtils.getProperty(element, FontColor.ID);
             final FontSize fontSize = (FontSize) ElementUtils.getProperty(element, FontSize.ID);
             final FontBorderSize fontBorderSize = (FontBorderSize) ElementUtils.getProperty(element, FontBorderSize.ID);
+            final String family = fontFamily.getValue();
             final String color = fontColor.getValue();
             final Integer size = fontSize.getValue();
             final Integer borderSize = fontBorderSize.getValue();
+            if (family != null && family.trim().length() > 0) {
+                text.setFontFamily(family);
+            }
             if (color != null && color.trim().length() > 0) {
                 text.setStrokeColor(color);
             }

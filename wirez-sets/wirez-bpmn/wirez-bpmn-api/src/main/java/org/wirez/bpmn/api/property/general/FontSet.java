@@ -17,6 +17,10 @@ public class FontSet implements PropertySet {
 
     @Inject
     @Property
+    FontFamily fontFamily;
+    
+    @Inject
+    @Property
     private FontColor fontColor;
 
     @Inject
@@ -35,6 +39,14 @@ public class FontSet implements PropertySet {
     @Override
     public String getPropertySetName() {
         return NAME;
+    }
+
+    public FontFamily getFontFamily() {
+        return fontFamily;
+    }
+
+    public void setFontFamily(FontFamily fontFamily) {
+        this.fontFamily = fontFamily;
     }
 
     public FontColor getFontColor() {

@@ -20,10 +20,12 @@
              xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
 
   <ui:style>
-    
+    .accordion {
+      margin-bottom: 0;
+    }
   </ui:style>
 
-  <b:PanelGroup ui:field="accordion">
+  <b:PanelGroup ui:field="accordion" addStyleNames="{style.accordion}">
     <b:Panel>
       <b:PanelHeader ui:field="panelHeader">
         <b:Heading size="H4">

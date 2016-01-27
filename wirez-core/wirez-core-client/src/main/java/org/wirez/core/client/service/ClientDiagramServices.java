@@ -5,8 +5,7 @@ import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.service.diagram.DiagramService;
-import org.wirez.core.api.service.diagram.DiagramServiceResponse;
+import org.wirez.core.api.service.diagram.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -36,11 +35,11 @@ public class ClientDiagramServices {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
             }
-        }).create(defSetId, shapeSetId, title);
+        }).create(new DiagramServiceCreateRequestImpl(defSetId, shapeSetId, title));
         
     }
 
-    public void get(final String uuid,
+    public void load(final String uuid,
                    final ServiceCallback<Diagram> callback) {
 
         diagramService.call(new RemoteCallback<DiagramServiceResponse>() {
@@ -54,7 +53,7 @@ public class ClientDiagramServices {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
             }
-        }).load(uuid);
+        }).load(new DiagramServiceLoadRequestImpl(uuid));
 
     }
 
@@ -72,7 +71,7 @@ public class ClientDiagramServices {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
             }
-        }).save(diagram);
+        }).save(new DiagramServiceSaveRequestImpl(diagram));
 
     }
 
@@ -90,7 +89,7 @@ public class ClientDiagramServices {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
             }
-        }).delete(uuid);
+        }).delete(new DiagramServiceDeleteRequestImpl(uuid));
 
     }
     

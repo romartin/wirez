@@ -162,7 +162,7 @@ public class CanvasScreen {
             
         } else {
          
-            clientDiagramServices.get(uuid, new ServiceCallback<Diagram>() {
+            clientDiagramServices.load(uuid, new ServiceCallback<Diagram>() {
                 @Override
                 public void onSuccess(final Diagram diagram) {
                     open(diagram);

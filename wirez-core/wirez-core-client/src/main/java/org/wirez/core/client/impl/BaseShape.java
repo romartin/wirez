@@ -35,7 +35,6 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.*;
 import org.wirez.core.client.control.resize.BaseResizeControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
-import org.wirez.core.client.control.toolbox.HasToolboxControl;
 import org.wirez.core.client.mutation.*;
 
 import java.util.Collection;
@@ -47,10 +46,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         org.wirez.core.client.Shape<W>,
         HasPositionMutation,
         HasPropertyMutation,
-        HasGraphElementMutation<W, ViewContent<W>, org.wirez.core.api.graph.Node<ViewContent<W>, Edge>>,
-        HasDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node>,
-        HasResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node>,
-        HasToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> {
+        HasGraphElementMutation<W, ViewContent<W>, org.wirez.core.api.graph.Node<ViewContent<W>, Edge>> {
 
     protected String id;
     protected Text text;
@@ -63,6 +59,9 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         super(path, group, manager);
         group.add(path);
         getPath().setDraggable(false);
+        text = buildText("");
+        this.addChild(text, WiresLayoutContainer.Layout.CENTER);
+        text.moveToTop();
     }
 
     public abstract Collection<Shape> getDecorators();
@@ -132,22 +131,11 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         if (Name.ID.equals(propertyId)) {
             final String name = (String) value;
             if ( name != null ) {
-                if ( text == null ) {
-                    text = buildText(name);
-                    text.addNodeMouseClickHandler(new NodeMouseClickHandler() {
-                        @Override
-                        public void onNodeMouseClick(NodeMouseClickEvent nodeMouseClickEvent) {
-                            GWT.log("CLICKED ON TEXT!");
-                        }
-                    });
-                    this.addChild(text, WiresLayoutContainer.Layout.CENTER);
-                } else {
-                    text.setText(name);
-                }
-                text.moveToTop();
+                text.setText(name);
             } else {
-                this.removeChild(text);
+                text.setText("");
             }
+            text.moveToTop();
         }
         
     }
@@ -183,36 +171,6 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     @Override
     public void destroy() {
         // TODO
-    }
-
-    @Override
-    public void setDragControl(final BaseDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> dragControl) {
-        this.dragControl = dragControl;
-    }
-
-    @Override
-    public BaseDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> getDragControl() {
-        return dragControl;
-    }
-
-    @Override
-    public void setResizeControl(final BaseResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> resizeControl) {
-        this.resizeControl = resizeControl;
-    }
-
-    @Override
-    public BaseResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> getResizeControl() {
-        return resizeControl;
-    }
-
-    @Override
-    public void setToolboxControl(BaseToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> toolboxControl) {
-        this.toolboxControl = toolboxControl;
-    }
-
-    @Override
-    public BaseToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> getToolboxControl() {
-        return toolboxControl;
     }
 
     @Override

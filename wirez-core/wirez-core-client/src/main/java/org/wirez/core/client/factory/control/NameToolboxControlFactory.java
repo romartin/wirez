@@ -17,23 +17,24 @@
 package org.wirez.core.client.factory.control;
 
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.control.toolbox.NameToolboxControl;
 import org.wirez.core.client.control.toolbox.ToolboxControl;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class DefaultToolboxControlFactory implements ShapeControlFactory<Shape, ToolboxControl> {
+public class NameToolboxControlFactory implements ShapeControlFactory<Shape, NameToolboxControl> {
 
-    ToolboxControl toolboxControl;
+    NameToolboxControl toolboxControl;
 
     @Inject
-    public DefaultToolboxControlFactory(ToolboxControl toolboxControl) {
+    public NameToolboxControlFactory(NameToolboxControl toolboxControl) {
         this.toolboxControl = toolboxControl;
     }
 
     @Override
-    public ToolboxControl build(Shape shape) {
+    public NameToolboxControl build(Shape shape) {
         return toolboxControl;
     }
     

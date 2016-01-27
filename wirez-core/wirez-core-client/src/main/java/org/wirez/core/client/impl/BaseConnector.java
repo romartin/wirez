@@ -32,9 +32,7 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.control.BaseDragControl;
-import org.wirez.core.client.control.HasDragControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
-import org.wirez.core.client.control.toolbox.HasToolboxControl;
 import org.wirez.core.client.mutation.*;
 
 public abstract class BaseConnector<W extends Definition> extends WiresConnector implements
@@ -42,9 +40,7 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         HasPositionMutation,
         HasSizeMutation,
         HasPropertyMutation,
-        HasGraphElementMutation<W, ViewContent<W>, Edge<ViewContent<W>, Node>>,
-        HasDragControl<Shape<W>, Edge>,
-        HasToolboxControl<Shape<W>, Edge> {
+        HasGraphElementMutation<W, ViewContent<W>, Edge<ViewContent<W>, Node>> {
 
     protected String id;
     protected Group group;
@@ -185,24 +181,4 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
 
     }
 
-    @Override
-    public void setDragControl(final BaseDragControl<Shape<W>, Edge> dragControl) {
-        this.dragControl = dragControl;
-    }
-
-    @Override
-    public BaseDragControl<Shape<W>, Edge> getDragControl() {
-        return dragControl;
-    }
-
-    @Override
-    public void setToolboxControl(BaseToolboxControl<Shape<W>, Edge> toolboxControl) {
-        this.toolboxControl = toolboxControl;
-    }
-
-    @Override
-    public BaseToolboxControl<Shape<W>, Edge> getToolboxControl() {
-        return toolboxControl;
-    }
-    
 }

@@ -16,9 +16,6 @@
 
 package org.wirez.core.client.factory.control;
 
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.client.Shape;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -28,17 +25,20 @@ public class DefaultShapeControlFactories {
     DefaultDragControlFactory dragControlFactory;
     DefaultResizeControlFactory defaultResizeControlFactory;
     LienzoResizeControlFactory lienzoResizeControlFactory;
-    DefaultToolboxControlFactory toolboxControlFactory;
+    ToolboxControlFactory toolboxControlFactory;
+    NameToolboxControlFactory nameToolboxControlFactory;
 
     @Inject
     public DefaultShapeControlFactories(final DefaultDragControlFactory dragControlFactory, 
                                         final DefaultResizeControlFactory defaultResizeControlFactory, 
                                         final LienzoResizeControlFactory lienzoResizeControlFactory,
-                                        final DefaultToolboxControlFactory toolboxControlFactory) {
+                                        final ToolboxControlFactory toolboxControlFactory,
+                                        final NameToolboxControlFactory nameToolboxControlFactory) {
         this.dragControlFactory = dragControlFactory;
         this.defaultResizeControlFactory = defaultResizeControlFactory;
         this.lienzoResizeControlFactory = lienzoResizeControlFactory;
         this.toolboxControlFactory = toolboxControlFactory;
+        this.nameToolboxControlFactory = nameToolboxControlFactory;
     }
 
     public DefaultDragControlFactory dragControlFactory() {
@@ -53,7 +53,11 @@ public class DefaultShapeControlFactories {
         return lienzoResizeControlFactory;
     }
 
-    public DefaultToolboxControlFactory toolboxControlFactory() {
+    public ToolboxControlFactory toolboxControlFactory() {
         return toolboxControlFactory;
+    }
+
+    public NameToolboxControlFactory nameToolboxControlFactory() {
+        return nameToolboxControlFactory;
     }
 }

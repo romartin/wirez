@@ -40,11 +40,6 @@ import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.control.*;
-import org.wirez.core.client.control.resize.BaseResizeControl;
-import org.wirez.core.client.control.toolbox.BaseToolboxControl;
-import org.wirez.core.client.control.toolbox.HasToolboxControl;
-import org.wirez.core.client.control.toolbox.ToolboxControl;
-import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
@@ -156,29 +151,16 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                     canvas.addControl(controlWidget);
                 }
                 
-                // DRAG control.
-                if (control instanceof DefaultDragControl && shape instanceof HasDragControl) {
-                    final HasDragControl hasDragControl = (HasDragControl) shape;
-                    hasDragControl.setDragControl((BaseDragControl) control);
-                    ((DefaultDragControl) control).setCanvasHandler(this);
-                    control.enable(shape, candidate);
-                }
-
-                // RESIZE control.
-                if (control instanceof BaseResizeControl && shape instanceof HasResizeControl) {
-                    final HasResizeControl hasResizeControl = (HasResizeControl) shape;
-                    hasResizeControl.setResizeControl((BaseResizeControl) control);
-                    ((BaseResizeControl) control).setCanvasHandler(this);
-                    control.enable(shape, candidate);
+                // Controls that execute commands on the canvas require the canvas handler instance.
+                if (control instanceof HasCanvasHandler) {
+                    final HasCanvasHandler hasCanvasHandler = (HasCanvasHandler) control;
+                    hasCanvasHandler.setCanvasHandler(this);
+                            
                 }
                 
-                // Toolbox.
-                if (control instanceof ToolboxControl && shape instanceof HasToolboxControl) {
-                    final HasToolboxControl hasToolboxControl = (HasToolboxControl) shape;
-                    hasToolboxControl.setToolboxControl((BaseToolboxControl) control);
-                    ((ToolboxControl) control).setCanvasHandler(this);
-                    control.enable(shape, candidate);
-                }
+                // Enable the stateful control.
+                control.enable(shape, candidate);
+                
             }
 
         }

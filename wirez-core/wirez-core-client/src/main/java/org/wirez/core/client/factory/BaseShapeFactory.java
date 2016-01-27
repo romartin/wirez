@@ -49,6 +49,7 @@ public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>>
             add( getDragControlFactory() );
             add( getResizeControlFactory() );
             add( getToolboxControlFactory() );
+            add( getNameToolboxControlFactory() );
         }};
     }
 
@@ -67,6 +68,10 @@ public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>>
 
     protected ShapeControlFactory<?, ?> getToolboxControlFactory() {
         return defaultShapeControlFactories.toolboxControlFactory();
+    }
+
+    protected ShapeControlFactory<?, ?> getNameToolboxControlFactory() {
+        return defaultShapeControlFactories.nameToolboxControlFactory();
     }
 
     @Override

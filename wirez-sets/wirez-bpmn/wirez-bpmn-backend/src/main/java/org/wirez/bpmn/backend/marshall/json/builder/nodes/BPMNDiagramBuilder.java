@@ -1,41 +1,31 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes;
 
-import org.uberfire.ext.wirez.bpmn.api.BPMNDiagram;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
-import org.uberfire.ext.wirez.core.api.graph.DefaultEdge;
-import org.uberfire.ext.wirez.core.api.graph.DefaultGraph;
-import org.uberfire.ext.wirez.core.api.graph.DefaultNode;
-import org.uberfire.ext.wirez.core.api.graph.Element;
-import org.uberfire.ext.wirez.core.api.impl.graph.DefaultBound;
-import org.uberfire.ext.wirez.core.api.impl.graph.DefaultBounds;
+import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.service.definition.DefinitionService;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-public class BPMNDiagramBuilder extends AbstractObjectBuilder<BPMNDiagram, DefaultGraph<BPMNDiagram, DefaultNode, DefaultEdge>> {
+public class BPMNDiagramBuilder extends AbstractObjectBuilder<BPMNDiagram, DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge>> {
 
-    public BPMNDiagramBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
-        super(wiresFactory);
+    public BPMNDiagramBuilder(BPMNGraphObjectBuilderFactory bpmnBuilderFactory) {
+        super(bpmnBuilderFactory);
     }
 
     @Override
-    public DefaultGraph<BPMNDiagram, DefaultNode, DefaultEdge> build(BuilderContext context) {
-        // TODO: properties.
-        final Map<String, Object> properties = new HashMap<String, Object>();
+    public DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge> build(GraphObjectBuilder.BuilderContext context) {
+
+        DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
+        DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge> result = 
+                (DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge>) definitionService.buildGraphElement(BPMNDiagram.ID);
         
-        // TODO: bounds.
-        final Element.Bounds bounds = 
-                new DefaultBounds(
-                        new DefaultBound(100d, 100d),
-                        new DefaultBound(100d, 100d)
-                );
-
-
-        DefaultGraph<BPMNDiagram, DefaultNode, DefaultEdge> result = BPMNDiagram.INSTANCE.build(nodeId, properties, bounds);
         context.init(result);
         
         StartNoneEventBuilder startProcessNodeBuilder = getStartProcessNode(context);
@@ -43,7 +33,7 @@ public class BPMNDiagramBuilder extends AbstractObjectBuilder<BPMNDiagram, Defau
             throw new RuntimeException("No start process event found!");
         }
 
-        DefaultNode startProcessNode = startProcessNodeBuilder.build(context);
+        Node startProcessNode = startProcessNodeBuilder.build(context);
         result.addNode(startProcessNode);
 
         return result;

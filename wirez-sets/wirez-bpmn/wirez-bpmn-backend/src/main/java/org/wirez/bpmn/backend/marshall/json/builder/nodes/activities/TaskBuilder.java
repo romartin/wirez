@@ -1,40 +1,28 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes.activities;
 
-import org.uberfire.ext.wirez.bpmn.api.Task;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.NodeObjectBuilder;
-import org.uberfire.ext.wirez.core.api.graph.DefaultEdge;
-import org.uberfire.ext.wirez.core.api.graph.DefaultNode;
-import org.uberfire.ext.wirez.core.api.graph.Element;
-import org.uberfire.ext.wirez.core.api.impl.graph.DefaultBound;
-import org.uberfire.ext.wirez.core.api.impl.graph.DefaultBounds;
+import org.wirez.bpmn.api.Task;
+import org.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.NodeObjectBuilder;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.service.definition.DefinitionService;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class TaskBuilder extends AbstractObjectBuilder<Task, DefaultNode<Task, DefaultEdge>> implements NodeObjectBuilder<Task> {
+public class TaskBuilder extends AbstractObjectBuilder<Task, Node<ViewContent<Task>, Edge>> implements NodeObjectBuilder<Task> {
 
     public TaskBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
         super(wiresFactory);
     }
 
     @Override
-    public DefaultNode<Task, DefaultEdge> build(BuilderContext context) {
-        // TODO: Node Properties.
-        final Map<String, Object> properties = new HashMap<String, Object>();
+    public Node<ViewContent<Task>, Edge> build(BuilderContext context) {
 
-        // TODO: bounds.
-        final Element.Bounds bounds =
-                new DefaultBounds(
-                        new DefaultBound(150d, 200d),
-                        new DefaultBound(100d, 150d)
-                );
+        DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
 
-        DefaultNode result = Task.INSTANCE.build(nodeId, properties, bounds);
+        Node result = (Node) definitionService.buildGraphElement(Task.ID);
         
-        // TODO: Node Properties.
 
         // Outgoing connections.
         if (outgoingNodeIds != null && !outgoingNodeIds.isEmpty()) {
@@ -44,7 +32,7 @@ public class TaskBuilder extends AbstractObjectBuilder<Task, DefaultNode<Task, D
                     throw new RuntimeException("No edge for " + outgoingNodeId);
                 }
 
-                DefaultEdge edge = (DefaultEdge) outgoingNodeBuilder.build(context);
+                Edge edge = (Edge) outgoingNodeBuilder.build(context);
                 result.getOutEdges().add(edge);
                 edge.setSourceNode(result);
 

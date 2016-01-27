@@ -13,10 +13,10 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.jboss.drools.DroolsPackage;
 import org.jboss.drools.impl.DroolsPackageImpl;
 import org.jboss.drools.util.DroolsResourceFactoryImpl;
-import org.uberfire.ext.wirez.bpmn.backend.legacy.Bpmn2JsonMarshaller;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.BPMNGraphGenerator;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.uberfire.ext.wirez.core.api.graph.DefaultGraph;
+import org.wirez.bpmn.backend.legacy.Bpmn2JsonMarshaller;
+import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphGenerator;
+import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;

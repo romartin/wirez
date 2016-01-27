@@ -1,9 +1,10 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
-import org.uberfire.ext.wirez.bpmn.api.BPMNWirez;
-import org.uberfire.ext.wirez.core.api.graph.DefaultEdge;
-import org.uberfire.ext.wirez.core.api.graph.DefaultNode;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
 
-public interface EdgeObjectBuilder<W extends BPMNWirez> extends GraphObjectBuilder<W, DefaultEdge<W, DefaultNode>> {
+public interface EdgeObjectBuilder<W extends Definition> extends GraphObjectBuilder<W, Edge<ViewContent<W>, Node>> {
     
 }

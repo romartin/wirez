@@ -1,11 +1,12 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
-import org.uberfire.ext.wirez.bpmn.api.BPMNWirez;
-import org.uberfire.ext.wirez.core.api.graph.Element;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.ViewContent;
 
 import java.util.Map;
 
-public class BootstrapObjectBuilder<W extends BPMNWirez, T extends Element<W>> extends AbstractObjectBuilder<W, T> {
+public class BootstrapObjectBuilder<W extends Definition, T extends Element<ViewContent<W>>> extends AbstractObjectBuilder<W, T> {
 
     public BootstrapObjectBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
         super(wiresFactory);

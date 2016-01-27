@@ -26,6 +26,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-bpmn-api</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-bus</artifactId>
     </dependency>

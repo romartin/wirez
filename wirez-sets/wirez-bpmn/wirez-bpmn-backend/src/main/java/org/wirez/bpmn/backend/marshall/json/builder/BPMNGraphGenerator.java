@@ -1,11 +1,11 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.codehaus.jackson.*;
-import org.uberfire.ext.wirez.bpmn.api.BPMNDiagram;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
-import org.uberfire.ext.wirez.core.api.graph.DefaultEdge;
-import org.uberfire.ext.wirez.core.api.graph.DefaultGraph;
-import org.uberfire.ext.wirez.core.api.graph.DefaultNode;
+import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -131,15 +131,15 @@ public class BPMNGraphGenerator extends JsonGenerator {
     
     final GraphObjectBuilder.BuilderContext<BPMNDiagram> builderContext = new GraphObjectBuilder.BuilderContext<BPMNDiagram>() {
 
-        DefaultGraph<BPMNDiagram, DefaultNode, DefaultEdge> graph;
+        DefaultGraph<BPMNDiagram, Node, Edge> graph;
 
         @Override
-        public void init(final DefaultGraph<BPMNDiagram, DefaultNode, DefaultEdge> graph) {
+        public void init(final DefaultGraph<BPMNDiagram, Node, Edge> graph) {
             this.graph = graph;
         }
 
         @Override
-        public DefaultGraph<BPMNDiagram, DefaultNode, DefaultEdge> getGraph() {
+        public DefaultGraph<BPMNDiagram, Node, Edge> getGraph() {
             return graph;
         }
 

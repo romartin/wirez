@@ -15,10 +15,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.uberfire.ext.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.uberfire.ext.wirez.core.api.graph.DefaultGraph;
-import org.uberfire.ext.wirez.core.backend.util.WirezBackendUtils;
+import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
+import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,14 +56,14 @@ public class Bpmn2MarshallerTest {
         Bpmn2UnMarshaller parser = new Bpmn2UnMarshaller(bpmnWiresFactory);
         parser.setProfile(new DefaultProfileImpl());
         Collection<DefaultGraph> bpmnGraphs = parser.unmarshall(definitions, null);
-        WirezBackendUtils.log(bpmnGraphs);
-        WirezBackendUtils.log("BPMN2 load test finished!");
+        log(bpmnGraphs);
+        log("BPMN2 load test finished!");
     }
 
     protected Definitions parseDefinitions() throws IOException {
         InputStream inputStream = null;
         try {
-            WirezBackendUtils.log("Starting BPMN2 load test...");
+            log("Starting BPMN2 load test...");
             XMLResource outResource = (XMLResource) resourceSet.createResource( URI.createURI( "inputStream://dummyUriWithValidSuffix.xml" ) );
             inputStream = Bpmn2MarshallerTest.class.getClassLoader().getResourceAsStream( "test.bpmn2" );
             outResource.getDefaultLoadOptions().put( XMLResource.OPTION_ENCODING, "UTF-8" );
@@ -94,5 +93,13 @@ public class Bpmn2MarshallerTest {
         String json = parser.marshall(definitions, null);
         logger.log(json);
         logger.log("BPMN2 load test finished!");*/
+    }
+    
+    private void log(String message) {
+        System.out.println(message);
+    }
+
+    private void log(Collection<DefaultGraph> graphs) {
+        // TODO
     }
 }

@@ -1,16 +1,17 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 
-import org.uberfire.ext.wirez.bpmn.api.BPMNWirez;
-import org.uberfire.ext.wirez.core.api.graph.DefaultEdge;
-import org.uberfire.ext.wirez.core.api.graph.DefaultGraph;
-import org.uberfire.ext.wirez.core.api.graph.DefaultNode;
-import org.uberfire.ext.wirez.core.api.graph.Element;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import java.util.Collection;
 
-public interface GraphObjectBuilder<W extends BPMNWirez, T extends Element<W>> {
-
+public interface GraphObjectBuilder<W extends Definition, T extends Element<ViewContent<W>>> {
+    
     GraphObjectBuilder<W, T> nodeId(String nodeId);
 
     GraphObjectBuilder<W, T> stencil(String stencilId);
@@ -23,11 +24,11 @@ public interface GraphObjectBuilder<W extends BPMNWirez, T extends Element<W>> {
     
     T build(BuilderContext context);
     
-    interface BuilderContext<W extends BPMNWirez> {
+    interface BuilderContext<W extends Definition> {
 
-        void init(DefaultGraph<W, DefaultNode, DefaultEdge> graph);
+        void init(DefaultGraph<W, Node, Edge> graph);
 
-        DefaultGraph<W, DefaultNode, DefaultEdge> getGraph();
+        DefaultGraph<W, Node, Edge> getGraph();
         
         Collection<GraphObjectBuilder<?, ?>> getBuilders();
         

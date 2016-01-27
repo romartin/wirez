@@ -1,37 +1,27 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes.events;
 
-import org.uberfire.ext.wirez.bpmn.api.StartNoneEvent;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.NodeObjectBuilder;
-import org.uberfire.ext.wirez.core.api.graph.DefaultEdge;
-import org.uberfire.ext.wirez.core.api.graph.DefaultNode;
-import org.uberfire.ext.wirez.core.api.graph.Element;
-import org.uberfire.ext.wirez.core.api.impl.graph.DefaultBound;
-import org.uberfire.ext.wirez.core.api.impl.graph.DefaultBounds;
+import org.wirez.bpmn.api.StartNoneEvent;
+import org.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.NodeObjectBuilder;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.service.definition.DefinitionService;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class StartNoneEventBuilder extends AbstractObjectBuilder<StartNoneEvent, DefaultNode<StartNoneEvent, DefaultEdge>> implements NodeObjectBuilder<StartNoneEvent> {
+public class StartNoneEventBuilder extends AbstractObjectBuilder<StartNoneEvent, Node<ViewContent<StartNoneEvent>, Edge>> implements NodeObjectBuilder<StartNoneEvent> {
     
     public StartNoneEventBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
         super(wiresFactory);
     }
 
     @Override
-    public DefaultNode build(GraphObjectBuilder.BuilderContext context) {
-        // TODO: Node Properties.
-        final Map<String, Object> properties = new HashMap<String, Object>();
+    public Node build(GraphObjectBuilder.BuilderContext context) {
 
-        // TODO: bounds.
-        final Element.Bounds bounds =
-                new DefaultBounds(
-                        new DefaultBound(70d, 200d),
-                        new DefaultBound(20d, 150d)
-                );
-        DefaultNode result = StartNoneEvent.INSTANCE.build(nodeId, properties, bounds);
+        DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
+        
+        Node result = (Node) definitionService.buildGraphElement(StartNoneEvent.ID);
         
         // Outgoing connections.
         if (outgoingNodeIds != null && !outgoingNodeIds.isEmpty()) {
@@ -41,7 +31,7 @@ public class StartNoneEventBuilder extends AbstractObjectBuilder<StartNoneEvent,
                     throw new RuntimeException("No edge for " + outgoingNodeId);
                 }
 
-                DefaultEdge edge = (DefaultEdge) outgoingNodeBuilder.build(context);
+                Edge edge = (Edge) outgoingNodeBuilder.build(context);
                 result.getOutEdges().add(edge);
                 edge.setSourceNode(result);
                 

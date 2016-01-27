@@ -30,7 +30,7 @@
     <version.com.googlecode.jtype>0.1.1</version.com.googlecode.jtype>
     <version.de.benediktmeurer.gwt-slf4j>0.0.2</version.de.benediktmeurer.gwt-slf4j>
     <version.org.jbpm.jbpm-bpmn2-emfextmodel>6.3.0.Final</version.org.jbpm.jbpm-bpmn2-emfextmodel>
-
+    
   </properties>
 
   <dependencyManagement>
@@ -163,6 +163,14 @@
         <version>${version.com.ahomeit.lienzo.charts}</version>
       </dependency>
 
+      <!-- Testing. -->
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>${version.org.mockito}</version>
+      </dependency>
+      
+      
     </dependencies>
 
   </dependencyManagement>

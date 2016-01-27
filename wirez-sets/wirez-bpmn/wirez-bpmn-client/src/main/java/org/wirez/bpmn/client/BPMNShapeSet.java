@@ -18,10 +18,7 @@ package org.wirez.bpmn.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
-import org.wirez.bpmn.client.factory.ParallelGatewayShapeFactory;
-import org.wirez.bpmn.client.factory.SequenceFlowShapeFactory;
-import org.wirez.bpmn.client.factory.StartNoneEventShapeFactory;
-import org.wirez.bpmn.client.factory.TaskShapeFactory;
+import org.wirez.bpmn.client.factory.*;
 import org.wirez.bpmn.client.resources.BPMNImageResources;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.Shape;
@@ -41,6 +38,7 @@ public class BPMNShapeSet implements ShapeSet {
     public static final String ID = "basic";
 
     StartNoneEventShapeFactory startNoneEventShapeFactory;
+    EndNoneEventShapeFactory endNoneEventShapeFactory;
     TaskShapeFactory taskShapeFactory;
     SequenceFlowShapeFactory sequenceFlowShapeFactory;
     ParallelGatewayShapeFactory parallelGatewayShapeFactory;
@@ -49,10 +47,12 @@ public class BPMNShapeSet implements ShapeSet {
 
     @Inject
     public BPMNShapeSet( final StartNoneEventShapeFactory startNoneEventShapeFactory,
+                         final EndNoneEventShapeFactory endNoneEventShapeFactory,
                          final TaskShapeFactory taskShapeFactory,
                          final SequenceFlowShapeFactory sequenceFlowShapeFactory,
                          final ParallelGatewayShapeFactory parallelGatewayShapeFactory) {
         this.startNoneEventShapeFactory = startNoneEventShapeFactory;
+        this.endNoneEventShapeFactory = endNoneEventShapeFactory;
         this.taskShapeFactory = taskShapeFactory;
         this.sequenceFlowShapeFactory = sequenceFlowShapeFactory;
         this.parallelGatewayShapeFactory = parallelGatewayShapeFactory;
@@ -62,6 +62,7 @@ public class BPMNShapeSet implements ShapeSet {
     public void init() {
         factories = new LinkedList<ShapeFactory<? extends Definition, ? extends Shape>>() {{
             add( startNoneEventShapeFactory );
+            add( endNoneEventShapeFactory );
             add( taskShapeFactory );
             add( sequenceFlowShapeFactory );
             add( parallelGatewayShapeFactory );

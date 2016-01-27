@@ -1,11 +1,12 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
-import org.uberfire.ext.wirez.bpmn.api.BPMNWirez;
-import org.uberfire.ext.wirez.core.api.graph.Element;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.ViewContent;
 
 import java.util.*;
 
-public abstract class AbstractObjectBuilder<W extends BPMNWirez, T extends Element<W>> implements GraphObjectBuilder<W, T> {
+public abstract class AbstractObjectBuilder<W extends Definition, T extends Element<ViewContent<W>>> implements GraphObjectBuilder<W, T> {
 
     protected String nodeId;
     protected Map<String, String> properties;

@@ -1,40 +1,31 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes.events;
 
-import org.uberfire.ext.wirez.bpmn.api.EndNoneEvent;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
-import org.uberfire.ext.wirez.bpmn.backend.marshall.json.builder.NodeObjectBuilder;
-import org.uberfire.ext.wirez.core.api.graph.DefaultEdge;
-import org.uberfire.ext.wirez.core.api.graph.DefaultNode;
-import org.uberfire.ext.wirez.core.api.graph.Element;
-import org.uberfire.ext.wirez.core.api.impl.graph.DefaultBound;
-import org.uberfire.ext.wirez.core.api.impl.graph.DefaultBounds;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.wirez.bpmn.api.EndNoneEvent;
+import org.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.NodeObjectBuilder;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.service.definition.DefinitionService;
 
-public class EndNoneEventBuilder extends AbstractObjectBuilder<EndNoneEvent, DefaultNode<EndNoneEvent, DefaultEdge>> implements NodeObjectBuilder<EndNoneEvent> {
+public class EndNoneEventBuilder extends AbstractObjectBuilder<EndNoneEvent, Node<ViewContent<EndNoneEvent>, Edge>> implements NodeObjectBuilder<EndNoneEvent> {
     
     public EndNoneEventBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
         super(wiresFactory);
     }
     
     @Override
-    public DefaultNode<EndNoneEvent, DefaultEdge> build(final GraphObjectBuilder.BuilderContext context) {
-        // TODO: Node Properties.
-        final Map<String, Object> properties = new HashMap<String, Object>();
+    public Node<ViewContent<EndNoneEvent>, Edge> build(final GraphObjectBuilder.BuilderContext context) {
+        DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
 
-        // TODO: bounds.
-        final Element.Bounds bounds =
-                new DefaultBounds(
-                        new DefaultBound(250d, 200d),
-                        new DefaultBound(200d, 150d)
-                );
+        Node result = (Node) definitionService.buildGraphElement(EndNoneEvent.ID);
         
         // No outgoing connections expected.
         
-        return EndNoneEvent.INSTANCE.build(nodeId, properties, bounds);
+        return result;
     }
 
     @Override

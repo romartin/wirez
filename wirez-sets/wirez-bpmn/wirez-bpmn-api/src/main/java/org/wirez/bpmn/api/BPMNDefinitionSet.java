@@ -22,7 +22,10 @@ public class BPMNDefinitionSet implements DefinitionSet {
     private StartNoneEvent startNoneEvent;
 
     @Definition
-    private Task task;
+    EndNoneEvent endNoneEvent;
+
+    @Definition
+    Task task;
 
     @Definition
     private SequenceFlow sequenceFlow;
@@ -79,6 +82,14 @@ public class BPMNDefinitionSet implements DefinitionSet {
 
     public void setStartNoneEvent(StartNoneEvent startNoneEvent) {
         this.startNoneEvent = startNoneEvent;
+    }
+
+    public EndNoneEvent getEndNoneEvent() {
+        return endNoneEvent;
+    }
+
+    public void setEndNoneEvent(EndNoneEvent endNoneEvent) {
+        this.endNoneEvent = endNoneEvent;
     }
 
     public void setTask(Task task) {

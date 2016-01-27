@@ -65,8 +65,6 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         group = new Group();
     }
 
-    public abstract com.ait.lienzo.client.core.shape.Shape getShape();
-
     @Override
     public Shape<W> setId(final String id) {
         this.id = id;
@@ -79,7 +77,12 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public com.ait.lienzo.client.core.shape.Node getShapeNode() {
+    public com.ait.lienzo.client.core.shape.Shape getShape() {
+        return getDecoratableLine();
+    }
+
+    @Override
+    public com.ait.lienzo.client.core.shape.Node getShapeContainer() {
         return getDecoratableLine();
     }
 

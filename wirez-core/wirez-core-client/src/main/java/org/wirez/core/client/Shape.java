@@ -33,10 +33,16 @@ public interface Shape<W extends Definition> {
     Shape<W> setId(String id);
 
     /**
-     * The main shape's node. All handlers and controls provided by wirez will be attached to this node. 
-     * Usually it returns the parent Group of all shapes that conform this wirez shape.
+     * The lienzo shape. All built-in handlers and controls provided by wirez will be attached to it and will mutate it.
+     * Usually it should return the wires shape's multipath, if it is lienzo wires based.
      */
-    Node getShapeNode();
+    com.ait.lienzo.client.core.shape.Shape getShape();
+
+    /**
+     * The shape's container, which must determinate, at least, the absolute position in the canvas.
+     * Usually it should return the wires shape's group, if it is lienzo wires based.
+     */
+    Node getShapeContainer();
 
     /**
      * Destroy the shape and any related components.

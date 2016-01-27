@@ -65,8 +65,8 @@ public class DefaultDragControl extends BaseDragControl<Shape, Element>  {
     }
 
     protected double[] getContainerXY(final Shape shape) {
-        return new double[] { shape.getShapeNode().getAttributes().getX(),
-                shape.getShapeNode().getAttributes().getY()};
+        return new double[] { shape.getShapeContainer().getAttributes().getX(),
+                shape.getShapeContainer().getAttributes().getY()};
     }
     
     @Override

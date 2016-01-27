@@ -58,17 +58,17 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
 
 
     @Override
-    protected Shape getShape() {
-        return circle;
-    }
-
-    @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>() {{
             add( decorator );
         }};
     }
-    
+
+    @Override
+    public Shape getShape() {
+        return circle;
+    }
+
     @Override
     public void applyElementProperties(Node<ViewContent<StartNoneEvent>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);

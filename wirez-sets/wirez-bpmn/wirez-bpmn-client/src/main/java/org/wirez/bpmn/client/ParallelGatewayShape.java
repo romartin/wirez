@@ -57,7 +57,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
     }
 
     @Override
-    protected Shape getShape() {
+    public Shape getShape() {
         return polygon;
     }
 

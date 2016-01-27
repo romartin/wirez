@@ -43,11 +43,6 @@ public abstract class BPMNBasicConnector<W extends Definition> extends BaseConne
     }
 
     @Override
-    public Shape getShape() {
-        return getDecoratableLine();
-    }
-
-    @Override
     public void applyElementProperties(Edge<ViewContent<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         super.applyElementProperties(element, canvasHandler, mutationContext);
 

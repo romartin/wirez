@@ -45,7 +45,7 @@ public class DefaultResizeControl extends BaseResizeControl<Shape, Element> {
     public void enable(final Shape shape, final Element element) {
         
         if (shape instanceof BaseShape) {
-            ( (BaseShape) shape).setResizable(true).addWiresHandler(AbstractWiresEvent.RESIZE, new ResizeHandler() {
+            ( (BaseShape) shape).setResizable(shape.getShape(), true).addWiresHandler(AbstractWiresEvent.RESIZE, new ResizeHandler() {
                 @Override
                 public void onResizeStart(ResizeEvent resizeEvent) {
                     doResizeStart(shape, element, resizeEvent.getWidth(), resizeEvent.getHeight());

@@ -24,6 +24,7 @@ public class HoverToolboxButton {
         this.clickHandler = clickHandler;
         Geometry.setScaleToFit(shape, BUTTON_SIZE, BUTTON_SIZE);
         shape.addNodeMouseClickHandler(clickHandler);
+        shape.moveToTop();
         this.shape = shape;
     }
 

@@ -16,6 +16,8 @@
 
 package org.wirez.core.client.impl;
 
+import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
+import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.shape.Node;
 import com.ait.lienzo.client.core.shape.Shape;
@@ -23,6 +25,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.ColorName;
+import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaultset.Name;
 import org.wirez.core.api.graph.*;
@@ -64,10 +67,6 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
 
     public abstract Collection<Shape> getDecorators();
     
-    protected Shape getShape() {
-        return getPath();
-    }
-    
     @Override
     public BaseShape<W> setId(String id) {
         this.id = id;
@@ -80,10 +79,14 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public Node getShapeNode() {
-        return getGroup();
+    public Shape getShape() {
+        return getPath();
     }
 
+    @Override
+    public Node getShapeContainer() {
+        return getGroup();
+    }
 
     /*
         ****************************************************************************************
@@ -131,6 +134,12 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
             if ( name != null ) {
                 if ( text == null ) {
                     text = buildText(name);
+                    text.addNodeMouseClickHandler(new NodeMouseClickHandler() {
+                        @Override
+                        public void onNodeMouseClick(NodeMouseClickEvent nodeMouseClickEvent) {
+                            GWT.log("CLICKED ON TEXT!");
+                        }
+                    });
                     this.addChild(text, WiresLayoutContainer.Layout.CENTER);
                 } else {
                     text.setText(name);

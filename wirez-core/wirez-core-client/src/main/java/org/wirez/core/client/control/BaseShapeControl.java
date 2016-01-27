@@ -40,8 +40,8 @@ public abstract class BaseShapeControl<S extends Shape, E extends Element> imple
     }
 
     protected double[] getContainerXY(final Shape shape) {
-        return new double[] { shape.getShapeNode().getAttributes().getX(),
-                shape.getShapeNode().getAttributes().getY()};
+        return new double[] { shape.getShapeContainer().getAttributes().getX(),
+                shape.getShapeContainer().getAttributes().getY()};
     }
     
     protected CanvasCommandManager getCommandManager() {

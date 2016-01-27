@@ -114,13 +114,13 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         final Definition wirez = ( (ViewContent) candidate.getContent()).getDefinition();
         final Shape shape = factory.build(wirez, this);
 
+        // Set the same identifier as the graph element's one.
         shape.setId(candidate.getUUID());
-
 
         // Selection handling.
         if (canvas instanceof SelectionManager) {
             final SelectionManager<Shape> selectionManager = (SelectionManager<Shape>) canvas;
-            shape.getShapeNode().addNodeMouseClickHandler(new NodeMouseClickHandler() {
+            shape.getShape().addNodeMouseClickHandler(new NodeMouseClickHandler() {
                 @Override
                 public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
 

@@ -9,13 +9,16 @@ public class SettingsImpl implements Settings {
     private final String title;
     private final String defSetId;
     private final String shapeSetId;
+    private final String path;
 
     public SettingsImpl(@MapsTo("title")  String title,
                         @MapsTo("defSetId")  String defSetId,
-                        @MapsTo("shapeSetId")  String shapeSetId) {
+                        @MapsTo("shapeSetId")  String shapeSetId,
+                        @MapsTo("path")  String path) {
         this.title = title;
         this.defSetId = defSetId;
         this.shapeSetId = shapeSetId;
+        this.path = path;
     }
 
     @Override
@@ -32,5 +35,10 @@ public class SettingsImpl implements Settings {
     public String getShapeSetId() {
         return shapeSetId;
     }
-    
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
 }

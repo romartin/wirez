@@ -8,4 +8,6 @@ public interface Settings {
     
     String getShapeSetId();
     
+    String getPath();
+    
 }

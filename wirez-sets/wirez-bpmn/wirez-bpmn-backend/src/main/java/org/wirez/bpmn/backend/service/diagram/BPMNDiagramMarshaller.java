@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 //TODO
 @Dependent
-public class BPMNDiagramMarshaller implements DiagramMarshaller<Settings> {
+public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Settings> {
     
     
     @Override

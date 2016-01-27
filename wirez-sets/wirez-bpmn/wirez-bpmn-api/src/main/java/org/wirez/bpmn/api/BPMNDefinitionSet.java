@@ -14,7 +14,7 @@ import javax.inject.Inject;
 public class BPMNDefinitionSet implements DefinitionSet {
 
     public static final String ID = "bpmnDefSet";
-    
+
     @Definition
     private BPMNDiagram diagram;
 

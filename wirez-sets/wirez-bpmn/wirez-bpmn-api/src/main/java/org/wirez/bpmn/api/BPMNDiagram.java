@@ -37,7 +37,7 @@ import java.util.Set;
 // @CanContain( roles = {"all", "diagram"} )
 public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
 
-    public static final String ID = "bpmnDiagram";
+    public static final String ID = "BPMNDiagram";
 
     @PropertySet
     private BPMNGeneral general;

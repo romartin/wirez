@@ -39,7 +39,7 @@ public class ClientDiagramServices {
         
     }
 
-    public void load(final String uuid,
+    public void load(final String path,
                    final ServiceCallback<Diagram> callback) {
 
         diagramService.call(new RemoteCallback<DiagramServiceResponse>() {
@@ -53,7 +53,7 @@ public class ClientDiagramServices {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
             }
-        }).load(new DiagramServiceLoadRequestImpl(uuid));
+        }).load(new DiagramServiceLoadRequestImpl(path));
 
     }
 

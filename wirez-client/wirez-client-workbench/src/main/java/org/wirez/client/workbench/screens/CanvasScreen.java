@@ -113,7 +113,6 @@ public class CanvasScreen {
 
     private Menus menu = null;
     private PlaceRequest placeRequest;
-    private String uuid;
     private String title = "Canvas Screen";
 
     @PostConstruct
@@ -124,7 +123,7 @@ public class CanvasScreen {
     /**
      * Expected settings:
      * - existing diagram
-     *      - uuid
+     *      - path
      * - new diagram
      *      - defSetId
      *      - shapeSetId
@@ -134,13 +133,13 @@ public class CanvasScreen {
     public void onStartup(final PlaceRequest placeRequest) {
 
         this.placeRequest = placeRequest;
-        final String uuid = placeRequest.getParameter( "uuid", "" );
+        final String path = placeRequest.getParameter( "path", "" );
 
         CanvasScreen.this.menu = makeMenuBar();
         
         
         
-        final boolean isCreate = uuid == null || uuid.trim().length() == 0;
+        final boolean isCreate = path == null || path.trim().length() == 0;
         
         if (isCreate) {
 
@@ -162,7 +161,7 @@ public class CanvasScreen {
             
         } else {
          
-            clientDiagramServices.load(uuid, new ServiceCallback<Diagram>() {
+            clientDiagramServices.load(path, new ServiceCallback<Diagram>() {
                 @Override
                 public void onSuccess(final Diagram diagram) {
                     open(diagram);

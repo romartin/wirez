@@ -35,7 +35,7 @@ import java.util.List;
 @ApplicationScoped
 public class BPMNShapeSet implements ShapeSet {
 
-    public static final String ID = "basic";
+    public static final String ID = "BPMNShapeSet";
 
     StartNoneEventShapeFactory startNoneEventShapeFactory;
     EndNoneEventShapeFactory endNoneEventShapeFactory;

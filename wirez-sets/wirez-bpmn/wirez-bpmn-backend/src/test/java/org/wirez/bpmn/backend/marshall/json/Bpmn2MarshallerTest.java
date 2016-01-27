@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.jboss.drools.DroolsPackage;
 import org.jboss.drools.util.DroolsResourceFactoryImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -27,6 +28,7 @@ import java.util.Map;
 
 import static org.mockito.Mockito.spy;
 
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class Bpmn2MarshallerTest {
 

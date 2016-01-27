@@ -80,7 +80,7 @@ public class CanvasWizardScreen {
 
     private Menus makeMenuBar() {
         return MenuFactory
-                .newTopLevelMenu("Test button")
+                .newTopLevelMenu("Load bpmn test process")
                 .respondsWith(getTestButtonCommand())
                 .endMenu()
                 .build();
@@ -89,7 +89,11 @@ public class CanvasWizardScreen {
     private Command getTestButtonCommand() {
         return new Command() {
             public void execute() {
-                Window.alert("This is a test");
+                final String path = "org/wirez/bpmn/backend/examples/wirez-bpmn-test.bpmn2";
+                Map<String, String> params = new HashMap<String, String>();
+                params.put( "path", path );
+                PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );
+                placeManager.goTo(placeRequest);
             }
         };
     }

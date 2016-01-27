@@ -16,6 +16,11 @@
   <dependencies>
 
     <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-core-api</artifactId>
+    </dependency>
+    
+    <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-bus</artifactId>
     </dependency>
@@ -109,9 +114,11 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
 
+    <!-- Testing scope. -->
     <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-core-api</artifactId>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

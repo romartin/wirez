@@ -54,7 +54,7 @@ public class ClientDiagramServices {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
             }
-        }).get(uuid);
+        }).load(uuid);
 
     }
 

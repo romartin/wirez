@@ -48,6 +48,11 @@
       <artifactId>wirez-bpmn-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-bpmn-backend</artifactId>
+    </dependency>
+    
     <!-- GWT. -->
 
     <dependency>

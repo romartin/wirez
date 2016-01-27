@@ -281,6 +281,11 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
+      <artifactId>wirez-bpmn-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
       <artifactId>wirez-bpmn-client</artifactId>
       <scope>provided</scope>
     </dependency>

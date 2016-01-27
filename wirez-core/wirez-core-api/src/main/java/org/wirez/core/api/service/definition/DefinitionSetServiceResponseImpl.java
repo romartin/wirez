@@ -6,12 +6,14 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.rule.Rule;
+import org.wirez.core.api.service.ResponseStatus;
+import org.wirez.core.api.service.ServiceResponseImpl;
 
 import java.util.Collection;
 import java.util.Set;
 
 @Portable
-public class DefinitionSetServiceResponseImpl implements DefinitionSetServiceResponse {
+public class DefinitionSetServiceResponseImpl extends ServiceResponseImpl implements DefinitionSetServiceResponse {
 
     private final DefinitionSet definitionSet;
     private final Definition graphElement;
@@ -19,11 +21,13 @@ public class DefinitionSetServiceResponseImpl implements DefinitionSetServiceRes
     private final Set<PropertySet> propertySets;
     private final Collection<Rule> rules;
 
-    public DefinitionSetServiceResponseImpl(@MapsTo("definitionSet") DefinitionSet definitionSet,
+    public DefinitionSetServiceResponseImpl(@MapsTo("responseStatus") ResponseStatus responseStatus,
+                                            @MapsTo("definitionSet") DefinitionSet definitionSet,
                                             @MapsTo("graphElement") Definition graphElement,
                                             @MapsTo("definitions") Set<Definition> definitions,
                                             @MapsTo("propertySets") Set<PropertySet> propertySets,
                                             @MapsTo("rules") Collection<Rule> rules) {
+        super(responseStatus);
         this.definitionSet = definitionSet;
         this.graphElement = graphElement;
         this.definitions = definitions;

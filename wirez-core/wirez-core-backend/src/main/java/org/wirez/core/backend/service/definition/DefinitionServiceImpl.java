@@ -15,6 +15,7 @@ import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.Rule;
+import org.wirez.core.api.service.ResponseStatus;
 import org.wirez.core.api.service.definition.*;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -47,13 +48,12 @@ public class DefinitionServiceImpl implements DefinitionService {
             }
         }
 
-        return new DefinitionSetServiceResponseImpl(definitionSet, graphDefinition, definitions, propertySets, rules);
+        return new DefinitionSetServiceResponseImpl(ResponseStatus.SUCCESS, definitionSet, graphDefinition, definitions, propertySets, rules);
         
     }
 
     @Override
     public DefinitionServiceResponse getDefinition(final String id) {
-
 
         Definition definition = (Definition) definitionManager.getModelFactory(id).build(id);
         final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter(definition);
@@ -70,7 +70,7 @@ public class DefinitionServiceImpl implements DefinitionService {
             }
         }
         
-        return new DefinitionServiceResponseImpl(definition, elementClass.getName(), properties, propertySetSetMap);
+        return new DefinitionServiceResponseImpl(ResponseStatus.SUCCESS, definition, elementClass.getName(), properties, propertySetSetMap);
     }
 
     // TODO: Clone definition pojos.

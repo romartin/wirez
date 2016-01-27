@@ -60,7 +60,7 @@ public class DiagramServiceImpl implements DiagramService {
     }
 
     @Override
-    public DiagramServiceResponse get(final String uuid) {
+    public DiagramServiceResponse load(final String uuid) {
         assert uuid != null;
         final Diagram diagram = (Diagram) diagramRegistry.get(uuid);
         return new DiagramServiceResponseImpl(diagram);

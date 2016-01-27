@@ -29,6 +29,7 @@
     <version.com.googlecode.jsonsimple>1.1.1</version.com.googlecode.jsonsimple>
     <version.com.googlecode.jtype>0.1.1</version.com.googlecode.jtype>
     <version.de.benediktmeurer.gwt-slf4j>0.0.2</version.de.benediktmeurer.gwt-slf4j>
+    <version.org.jbpm.jbpm-bpmn2-emfextmodel>6.3.0.Final</version.org.jbpm.jbpm-bpmn2-emfextmodel>
 
   </properties>
 
@@ -142,6 +143,13 @@
         <type>jar</type>
       </dependency>
 
+      <!-- jbpm-designer backend required deps. -->
+      <dependency>
+        <groupId>org.jbpm</groupId>
+        <artifactId>jbpm-bpmn2-emfextmodel</artifactId>
+        <version>${version.org.jbpm.jbpm-bpmn2-emfextmodel}</version>
+      </dependency>
+      
       <!-- Lienzo. -->
       <dependency>
         <groupId>com.ahome-it</groupId>

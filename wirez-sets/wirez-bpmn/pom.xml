@@ -31,6 +31,7 @@
   
   <modules>
     <module>wirez-bpmn-api</module>
+    <module>wirez-bpmn-backend</module>
     <module>wirez-bpmn-client</module>
   </modules>
 

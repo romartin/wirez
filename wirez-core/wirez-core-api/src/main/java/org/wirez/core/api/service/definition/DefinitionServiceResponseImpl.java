@@ -5,22 +5,26 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.service.ResponseStatus;
+import org.wirez.core.api.service.ServiceResponseImpl;
 
 import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class DefinitionServiceResponseImpl implements DefinitionServiceResponse {
+public class DefinitionServiceResponseImpl extends ServiceResponseImpl implements DefinitionServiceResponse {
 
     private final Definition definition;
     private final String elementClass;
     private final Map<Property, Object> properties;
     private final Map<PropertySet, Set<Property>> propertySets;
 
-    public DefinitionServiceResponseImpl(@MapsTo("definition") Definition definition,
+    public DefinitionServiceResponseImpl(@MapsTo("responseStatus") ResponseStatus responseStatus,
+                                         @MapsTo("definition") Definition definition,
                                          @MapsTo("elementClass") String elementClass,
                                          @MapsTo("properties") Map<Property, Object> properties,
                                          @MapsTo("propertySets") Map<PropertySet, Set<Property>> propertySets) {
+        super(responseStatus);
         this.definition = definition;
         this.elementClass = elementClass;
         this.properties = properties;

@@ -5,11 +5,12 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.rule.Rule;
+import org.wirez.core.api.service.ServiceResponse;
 
 import java.util.Collection;
 import java.util.Set;
 
-public interface DefinitionSetServiceResponse {
+public interface DefinitionSetServiceResponse extends ServiceResponse {
     
     DefinitionSet getDefinitionSet();
     

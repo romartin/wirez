@@ -15,28 +15,57 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.factory.DefaultGraphFactory;
+import org.wirez.core.api.graph.factory.EdgeFactory;
+import org.wirez.core.api.graph.factory.NodeFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.service.definition.DefinitionService;
+import org.wirez.core.api.service.definition.DefinitionServiceResponse;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.*;
 
-@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class Bpmn2MarshallerTest {
 
+    @Mock
+    DefaultGraphFactory<? extends Definition> graphFactory;
+
+    @Mock
+    NodeFactory<? extends Definition> nodeFactory;
+
+    @Mock
+    EdgeFactory<? extends Definition> edgeFactory;
+
+    @Mock
+    DefinitionManager definitionManager;
+
+    @Mock
+    DefinitionService definitionService;
+
+    @InjectMocks
     BPMNGraphObjectBuilderFactory bpmnWiresFactory;
+    
     private ResourceSet resourceSet;
     
     @Before
     public void setup() {
+
         resourceSet = new ResourceSetImpl();
 
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put
@@ -48,8 +77,18 @@ public class Bpmn2MarshallerTest {
         resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap()
                 .put( Resource.Factory.Registry.DEFAULT_EXTENSION, new Bpmn2ResourceFactoryImpl() );
         resourceSet.getPackageRegistry().put( "http://www.omg.org/spec/BPMN/20100524/MODEL", Bpmn2Package.eINSTANCE );
+
         
-        bpmnWiresFactory = spy(new BPMNGraphObjectBuilderFactory());
+        doAnswer(new Answer<DefinitionServiceResponse>() {
+            @Override
+            public DefinitionServiceResponse answer(InvocationOnMock invocationOnMock) throws Throwable {
+                final String defId = (String) invocationOnMock.getArguments()[0];
+                
+                DefinitionServiceResponse definitionServiceResponse = mock(DefinitionServiceResponse.class);
+                // TODO
+                return null;
+            }
+        }).when(definitionService).getDefinition(anyString());
     }
 
     @Test

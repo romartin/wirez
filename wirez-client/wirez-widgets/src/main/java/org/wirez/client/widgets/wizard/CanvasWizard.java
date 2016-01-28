@@ -16,60 +16,62 @@
 
 package org.wirez.client.widgets.wizard;
 
-import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.uberfire.client.mvp.UberView;
-import org.uberfire.mvp.Command;
-import org.wirez.client.widgets.event.CreateEmptyDiagramEvent;
-import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.ShapeManager;
+import org.wirez.client.widgets.wizard.screen.HomeWizardScreen;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.Collection;
 
 @Dependent
 public class CanvasWizard implements IsWidget {
 
     public interface View extends UberView<CanvasWizard> {
-    
-        View setHeading(String title);
+
+        View setScreenWidget(IsWidget widget);
         
-        View addItem(String name, String description, SafeUri thumbnailUri, boolean isSelected, Command clickHandler);
+        View setBackButtonText(String caption);
+
+        View setBackButtonVisible(boolean isEnabled);
+
+        View setNextButtonText(String caption);
         
-        View showEmptyView();
-        
-        View setActionButtonText(String caption);
-        
-        View setActionButtonEnabled(boolean isEnabled);
+        View setNextButtonVisible(boolean isEnabled);
         
         View clear();
         
     }
 
-    ShapeManager wirezClientManager;
-    Event<CreateEmptyDiagramEvent> createEmptyDiagramEventEvent;
+    HomeWizardScreen homeWizardScreen;
     View view;
-    private String selectedShapeSetId;
+    
+    private CanvasWizardScreen.Callback screenCallback;
 
     @Inject
-    public CanvasWizard(final ShapeManager wirezClientManager, 
-                        final Event<CreateEmptyDiagramEvent> createEmptyDiagramEventEvent,
+    public CanvasWizard(final HomeWizardScreen homeWizardScreen, 
                         final View view) {
-        this.wirezClientManager = wirezClientManager;
-        this.createEmptyDiagramEventEvent = createEmptyDiagramEventEvent;
+        this.homeWizardScreen = homeWizardScreen;
         this.view = view;
     }
     
     @PostConstruct
     public void init() {
         view.init(this);
-        view.setHeading("Choose a diagram:");
-        view.setActionButtonText("Create");
-        view.setActionButtonEnabled(false);
+        navigate(homeWizardScreen);
+    }
+    
+    private void updateScreenViews(final CanvasWizardScreen screen) {
+        view.clear();
+        screenCallback = screen.getCallback();
+        view.setNextButtonText(screen.getNextButtonText() != null ? screen.getNextButtonText() : "");
+        view.setNextButtonVisible(screen.getNextButtonText() != null);
+        view.setBackButtonText(screen.getBackButtonText() != null ? screen.getBackButtonText() : "");
+        view.setBackButtonVisible(screen.getBackButtonText() != null);
+        view.setScreenWidget(screen);
+        screen.show();
     }
 
     @Override
@@ -77,47 +79,21 @@ public class CanvasWizard implements IsWidget {
         return view.asWidget();
     }
     
-    public void show() {
-        view.clear();
-        final Collection<ShapeSet> shapeSets = wirezClientManager.getShapeSets();
-        if (shapeSets == null || shapeSets.isEmpty()) {
-            view.showEmptyView();
-        } else {
-            for (final ShapeSet shapeSet : shapeSets) {
-                final String uuid = shapeSet.getId();
-                final String name = shapeSet.getName();
-                final String description = shapeSet.getDescription();
-                final SafeUri thumbnailUri = shapeSet.getThumbnailUri();
-                final boolean isSelected = selectedShapeSetId == null || selectedShapeSetId.equals(uuid);
-                view.addItem(name, description, thumbnailUri, isSelected, 
-                        new Command() {
-                            @Override
-                            public void execute() {
-                                CanvasWizard.this.onShapeSetSelected(uuid);
-                            }
-                        });
-                view.setActionButtonEnabled(selectedShapeSetId != null);
-                
-            }
-        }
-        
+    public void navigate(final CanvasWizardScreen screen) {
+        updateScreenViews(screen);
     }
     
     public void clear() {
-        selectedShapeSetId = null;
-        view.setActionButtonEnabled(false);
-        view.clear();
+        navigate(homeWizardScreen);
     }
 
-    private void onShapeSetSelected(final String shapeSetId) {
-        selectedShapeSetId = shapeSetId;
-        show();
+
+    void onNextButtonClick() {
+        screenCallback.onNextButtonClick(this);
     }
 
-    void onActionButtonClick() {
-        assert selectedShapeSetId != null;
-        createEmptyDiagramEventEvent.fire(new CreateEmptyDiagramEvent(selectedShapeSetId));
-        clear();
-        show();
+    void onBackButtonClick() {
+        screenCallback.onNextButtonClick(this);
     }
+    
 }

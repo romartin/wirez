@@ -74,7 +74,6 @@ public class CanvasWizardScreen {
 
     @OnStartup
     public void onStartup(final PlaceRequest placeRequest) {
-        wizard.show();
         this.menu = makeMenuBar();
     }
 

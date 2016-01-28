@@ -21,8 +21,6 @@ public class HomeWizardScreen extends BaseWizardScreen implements CanvasWizardSc
     NewDiagramWizardScreen newDiagramWizardScreen;
     View view;
     
-    private boolean isLoad = false;
-
     @Inject
     public HomeWizardScreen(final LoadDiagramWizardScreen loadDiagramWizardScreen, 
                             final NewDiagramWizardScreen newDiagramWizardScreen, 
@@ -36,32 +34,20 @@ public class HomeWizardScreen extends BaseWizardScreen implements CanvasWizardSc
     public void init() {
         view.init(this);
     }
-    
-    @Override
-    public Callback getCallback() {
-        return new Callback() {
-            @Override
-            public void onNextButtonClick(final CanvasWizard canvasWizard) {
-                
-                if (isLoad) {
-                    canvasWizard.navigate(loadDiagramWizardScreen);
-                } else {
-                    canvasWizard.navigate(newDiagramWizardScreen);
-                }
-            }
 
-            @Override
-            public void onBackButtonClick(final CanvasWizard canvasWizard) {
-                canvasWizard.clear();
-            }
-        };
+    @Override
+    public String getNextButtonText() {
+        return null;
     }
 
     @Override
-    public CanvasWizardScreen show() {
-        view.clear();
-        isLoad = false;
-        return this;
+    public String getBackButtonText() {
+        return null;
+    }
+
+    @Override
+    public Callback getCallback() {
+        return null;
     }
 
     @Override
@@ -70,11 +56,11 @@ public class HomeWizardScreen extends BaseWizardScreen implements CanvasWizardSc
     }
 
     void onLoadButtonClick() {
-        this.isLoad = true;
+        wizard.navigate(loadDiagramWizardScreen);
     }
 
     void onNewButtonClick() {
-        this.isLoad = false;
+        wizard.navigate(newDiagramWizardScreen);
     }
     
 }

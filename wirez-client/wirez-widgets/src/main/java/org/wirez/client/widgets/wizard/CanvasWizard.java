@@ -71,7 +71,7 @@ public class CanvasWizard implements IsWidget {
         view.setBackButtonText(screen.getBackButtonText() != null ? screen.getBackButtonText() : "");
         view.setBackButtonVisible(screen.getBackButtonText() != null);
         view.setScreenWidget(screen);
-        screen.show();
+        screen.show(this);
     }
 
     @Override
@@ -89,11 +89,13 @@ public class CanvasWizard implements IsWidget {
 
 
     void onNextButtonClick() {
-        screenCallback.onNextButtonClick(this);
+        assert screenCallback != null;
+        screenCallback.onNextButtonClick();
     }
 
     void onBackButtonClick() {
-        screenCallback.onNextButtonClick(this);
+        assert screenCallback != null;
+        screenCallback.onBackButtonClick();
     }
     
 }

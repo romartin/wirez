@@ -41,10 +41,10 @@ public class HomeWizardScreenView extends Composite implements HomeWizardScreen.
     HorizontalPanel mainPanel;
 
     @UiField
-    Jumbotron newDiagramButton;
+    Button newDiagramButton;
 
     @UiField
-    Jumbotron loadDiagramButton;
+    Button loadDiagramButton;
 
     HomeWizardScreen presenter;
 

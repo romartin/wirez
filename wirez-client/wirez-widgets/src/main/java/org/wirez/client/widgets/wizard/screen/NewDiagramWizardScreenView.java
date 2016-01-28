@@ -48,9 +48,6 @@ public class NewDiagramWizardScreenView extends Composite implements NewDiagramW
     @UiField
     HorizontalPanel itemsPanel;
 
-    @UiField
-    Button actionButton;
-
     NewDiagramWizardScreen presenter;
 
     @Override
@@ -116,27 +113,10 @@ public class NewDiagramWizardScreenView extends Composite implements NewDiagramW
     }
 
     @Override
-    public NewDiagramWizardScreen.View setActionButtonText(final String caption) {
-        actionButton.setText(caption);
-        actionButton.setTitle(caption);
-        return this;
-    }
-
-    @Override
-    public NewDiagramWizardScreen.View setActionButtonEnabled(final boolean isEnabled) {
-        actionButton.setEnabled(isEnabled);
-        return this;
-    }
-
-    @Override
     public NewDiagramWizardScreen.View clear() {
         emptyViewPanel.setVisible(false);
         itemsPanel.clear();
         return this;
     }
 
-    @UiHandler("actionButton")
-    public void onActionbuttonClick(ClickEvent event) {
-        presenter.onActionButtonClick();
-    }
 }

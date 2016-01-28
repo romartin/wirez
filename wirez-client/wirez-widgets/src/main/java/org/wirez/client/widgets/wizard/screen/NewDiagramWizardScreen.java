@@ -28,10 +28,6 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
 
         View showEmptyView();
 
-        View setActionButtonText(String caption);
-
-        View setActionButtonEnabled(boolean isEnabled);
-
         View clear();
         
     }
@@ -39,7 +35,6 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
     ShapeManager wirezClientManager;
     Event<CreateEmptyDiagramEvent> createEmptyDiagramEventEvent;
     View view;
-    private String selectedShapeSetId;
 
     @Inject
     public NewDiagramWizardScreen(final ShapeManager wirezClientManager, 
@@ -54,24 +49,22 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
     public void init() {
         view.init(this);
         view.setHeading("Choose a diagram:");
-        view.setActionButtonText("Create");
-        view.setActionButtonEnabled(false);
     }
 
     @Override
     public String getNextButtonText() {
-        return "Create";
+        return null;
     }
 
     private final Callback callback = new Callback() {
         @Override
-        public void onNextButtonClick(final CanvasWizard canvasWizard) {
-            canvasWizard.clear();
+        public void onNextButtonClick() {
+            
         }
 
         @Override
-        public void onBackButtonClick(final CanvasWizard canvasWizard) {
-            canvasWizard.clear();
+        public void onBackButtonClick() {
+            wizard.clear();
         }
     };
     
@@ -80,7 +73,10 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
         return callback;
     }
 
-    public CanvasWizardScreen show() {
+    @Override
+    protected void doShow() {
+        super.doShow();
+
         view.clear();
         final Collection<ShapeSet> shapeSets = wirezClientManager.getShapeSets();
         if (shapeSets == null || shapeSets.isEmpty()) {
@@ -91,38 +87,26 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
                 final String name = shapeSet.getName();
                 final String description = shapeSet.getDescription();
                 final SafeUri thumbnailUri = shapeSet.getThumbnailUri();
-                final boolean isSelected = selectedShapeSetId == null || selectedShapeSetId.equals(uuid);
-                view.addItem(name, description, thumbnailUri, isSelected,
+                view.addItem(name, description, thumbnailUri, true,
                         new Command() {
                             @Override
                             public void execute() {
                                 NewDiagramWizardScreen.this.onShapeSetSelected(uuid);
                             }
                         });
-                view.setActionButtonEnabled(selectedShapeSetId != null);
 
             }
         }
-
-        return this;
     }
 
     public void clear() {
-        selectedShapeSetId = null;
-        view.setActionButtonEnabled(false);
         view.clear();
     }
 
     private void onShapeSetSelected(final String shapeSetId) {
-        selectedShapeSetId = shapeSetId;
-        show();
-    }
-
-    void onActionButtonClick() {
-        assert selectedShapeSetId != null;
-        createEmptyDiagramEventEvent.fire(new CreateEmptyDiagramEvent(selectedShapeSetId));
+        createEmptyDiagramEventEvent.fire(new CreateEmptyDiagramEvent(shapeSetId));
         clear();
-        show();
+        doShow();
     }
 
     @Override

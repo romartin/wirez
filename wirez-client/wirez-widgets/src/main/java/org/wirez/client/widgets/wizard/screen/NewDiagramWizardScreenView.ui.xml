@@ -35,8 +35,6 @@
 
     <g:HorizontalPanel ui:field="itemsPanel" width="100%"/>
 
-    <b:Button ui:field="actionButton" type="SUCCESS"/>
-
   </g:VerticalPanel>
 
 </ui:UiBinder>

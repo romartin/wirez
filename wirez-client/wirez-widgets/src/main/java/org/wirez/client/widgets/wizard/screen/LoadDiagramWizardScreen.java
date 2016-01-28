@@ -28,25 +28,25 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
     public void init() {
         view.init(this);
     }
-    
+
+    @Override
+    public String getNextButtonText() {
+        return "Load";
+    }
+
     @Override
     public Callback getCallback() {
         return new Callback() {
             @Override
-            public void onNextButtonClick(final CanvasWizard canvasWizard) {
-                
+            public void onNextButtonClick() {
+                // TODO
             }
 
             @Override
-            public void onBackButtonClick(final CanvasWizard canvasWizard) {
-                canvasWizard.clear();
+            public void onBackButtonClick() {
+                wizard.clear();
             }
         };
-    }
-
-    @Override
-    public CanvasWizardScreen show() {
-        return this;
     }
 
     @Override

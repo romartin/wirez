@@ -1,14 +1,15 @@
 package org.wirez.client.widgets.wizard;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import org.wirez.core.client.canvas.Canvas;
 
 public interface CanvasWizardScreen extends IsWidget {
     
     interface Callback {
         
-        void onNextButtonClick(CanvasWizard canvasWizard);
+        void onNextButtonClick();
 
-        void onBackButtonClick(CanvasWizard canvasWizard);
+        void onBackButtonClick();
         
     }
     
@@ -18,6 +19,6 @@ public interface CanvasWizardScreen extends IsWidget {
 
     Callback getCallback();
 
-    CanvasWizardScreen show();
+    CanvasWizardScreen show(CanvasWizard wizard);
     
 }

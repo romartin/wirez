@@ -26,14 +26,12 @@ import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.mvp.Command;
-import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.api.Task;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.registry.DefinitionSetRegistry;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.ClientDefinitionManager;
@@ -62,8 +60,6 @@ public class HomeScreen extends Composite {
     @EventHandler( "testButton" )
     public void doSomethingC1(ClickEvent e) {
                 
-        Collection<DefinitionSet> definitionSets = definitionSetRegistry.getItems();
-        GWT.log(definitionSets.size() + "");
         
     }
     
@@ -103,21 +99,6 @@ public class HomeScreen extends Composite {
     public void doSomethingC2(ClickEvent e) {
 
 
-        clientDefinitionManager.getRules(new BPMNDefinitionSet(), new ServiceCallback<Collection<Rule>>() {
-            @Override
-            public void onSuccess(Collection<Rule> rules) {
-                GWT.log("RULES size = " + rules.size() );
-            }
-
-            @Override
-            public void onError(ClientRuntimeError error) {
-                showError(error.getMessage());
-            }
-        });
-        
-        if (true) {
-            return;
-        }
         
     }
     
@@ -126,9 +107,6 @@ public class HomeScreen extends Composite {
 
     @Inject
     ClientDefinitionManager clientDefinitionManager;
-    
-    @Inject
-    DefinitionSetRegistry definitionSetRegistry;
     
     @WorkbenchPartTitle
     public String getScreenTitle() {

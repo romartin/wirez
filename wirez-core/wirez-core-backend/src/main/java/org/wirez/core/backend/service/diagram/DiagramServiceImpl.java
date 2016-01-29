@@ -62,7 +62,7 @@ public class DiagramServiceImpl implements DiagramService {
     @Override
     public DiagramServiceResponse get(final String uuid) {
         assert uuid != null;
-        final Diagram diagram = diagramRegistry.get(uuid);
+        final Diagram diagram = (Diagram) diagramRegistry.get(uuid);
         return new DiagramServiceResponseImpl(diagram);
     }
 
@@ -81,7 +81,7 @@ public class DiagramServiceImpl implements DiagramService {
     @Override
     public Diagram delete(final String uuid) {
         assert uuid != null;
-        final Diagram diagram = diagramRegistry.get(uuid);
+        final Diagram diagram = (Diagram) diagramRegistry.get(uuid);
         if ( null != diagram ) {
             diagramRegistry.remove(diagram);
             return diagram;

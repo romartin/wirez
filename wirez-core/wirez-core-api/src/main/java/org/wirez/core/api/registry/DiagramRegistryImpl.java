@@ -5,7 +5,7 @@ import org.wirez.core.api.diagram.Diagram;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class DiagramRegistryImpl extends BaseListRegistry<Diagram> implements DiagramRegistry {
+public class DiagramRegistryImpl extends BaseListRegistry<Diagram> implements DiagramRegistry<Diagram> {
     
     @Override
     protected String getItemId(final Diagram item) {

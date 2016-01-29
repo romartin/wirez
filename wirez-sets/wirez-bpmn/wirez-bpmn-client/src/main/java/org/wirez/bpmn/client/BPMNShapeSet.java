@@ -40,7 +40,6 @@ public class BPMNShapeSet implements ShapeSet {
 
     public static final String ID = "basic";
 
-    BPMNDefinitionSet bpmnDefinitionSet;
     StartNoneEventShapeFactory startNoneEventShapeFactory;
     TaskShapeFactory taskShapeFactory;
     SequenceFlowShapeFactory sequenceFlowShapeFactory;
@@ -49,12 +48,10 @@ public class BPMNShapeSet implements ShapeSet {
     private List<ShapeFactory<? extends Definition, ? extends Shape>> factories;
 
     @Inject
-    public BPMNShapeSet( final BPMNDefinitionSet bpmnDefinitionSet,
-                         final StartNoneEventShapeFactory startNoneEventShapeFactory,
+    public BPMNShapeSet( final StartNoneEventShapeFactory startNoneEventShapeFactory,
                          final TaskShapeFactory taskShapeFactory,
                          final SequenceFlowShapeFactory sequenceFlowShapeFactory,
                          final ParallelGatewayShapeFactory parallelGatewayShapeFactory) {
-        this.bpmnDefinitionSet = bpmnDefinitionSet;
         this.startNoneEventShapeFactory = startNoneEventShapeFactory;
         this.taskShapeFactory = taskShapeFactory;
         this.sequenceFlowShapeFactory = sequenceFlowShapeFactory;
@@ -93,7 +90,7 @@ public class BPMNShapeSet implements ShapeSet {
 
     @Override
     public String getDefinitionSetId() {
-        return bpmnDefinitionSet.getId();
+        return BPMNDefinitionSet.ID;
     }
 
     @Override

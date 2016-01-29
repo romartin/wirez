@@ -24,10 +24,8 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.registry.DefinitionSetRegistry;
+import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.registry.DiagramRegistry;
-import org.wirez.core.api.rule.Rule;
-import org.wirez.core.backend.adapter.AnnotatedPropertySetAdapter;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -39,6 +37,7 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackendDefinitionManager.class);
 
+    Instance<ModelFactory<?>> modelBuilderInstances;
     Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances;
     Instance<DefinitionSetRuleAdapter<? extends DefinitionSet>> definitionSetRuleAdapterInstances;
     Instance<DefinitionAdapter<? extends Definition>> definitionAdapterInstances;
@@ -46,14 +45,15 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
     Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances;
     
     @Inject
-    public BackendDefinitionManager(DefinitionSetRegistry definitionSetRegistry,
-                                    DiagramRegistry diagramRegistry,
+    public BackendDefinitionManager(DiagramRegistry diagramRegistry,
+                                    Instance<ModelFactory<?>> modelBuilderInstances,
                                     Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances,
                                     Instance<DefinitionSetRuleAdapter<? extends DefinitionSet>> definitionSetRuleAdapterInstances,
                                     Instance<DefinitionAdapter<? extends Definition>> definitionAdapterInstances, 
                                     Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances, 
                                     Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances) {
-        super(definitionSetRegistry, diagramRegistry);
+        super(diagramRegistry);
+        this.modelBuilderInstances = modelBuilderInstances;
         this.definitionSetAdapterInstances = definitionSetAdapterInstances;
         this.definitionSetRuleAdapterInstances = definitionSetRuleAdapterInstances;
         this.definitionAdapterInstances = definitionAdapterInstances;
@@ -63,9 +63,16 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
 
     @PostConstruct
     public void init() {
+        initModelFactories();
         initAdapters();
     }
 
+    private void initModelFactories() {
+        for (ModelFactory<?> modelBuilder : modelBuilderInstances) {
+            modelFactories.add(modelBuilder);
+        }
+    }
+    
     private void initAdapters() {
         for (DefinitionSetAdapter definitionSetAdapter : definitionSetAdapterInstances) {
             definitionSetAdapters.add(definitionSetAdapter);

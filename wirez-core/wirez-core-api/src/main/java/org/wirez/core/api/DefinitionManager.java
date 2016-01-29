@@ -17,23 +17,13 @@
 package org.wirez.core.api;
 
 import org.wirez.core.api.adapter.*;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.factory.ElementFactory;
-import org.wirez.core.api.registry.DefinitionSetRegistry;
+import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.registry.DiagramRegistry;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 
 public interface DefinitionManager {
 
-    DefinitionSetRegistry getDefinitionSetRegistry();
-    
+    ModelFactory getModelFactory(String id);
+
     DiagramRegistry getDiagramRegistry();
     
     DefinitionSetAdapter getDefinitionSetAdapter(Object pojo);

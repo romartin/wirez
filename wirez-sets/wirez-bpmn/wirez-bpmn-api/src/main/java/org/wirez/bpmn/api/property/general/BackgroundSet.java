@@ -1,7 +1,9 @@
 package org.wirez.bpmn.api.property.general;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.api.BPMNPropertySet;
 import org.wirez.core.api.annotation.propertyset.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 
@@ -10,22 +12,28 @@ import javax.inject.Inject;
 @Portable
 @Bindable
 @org.wirez.core.api.annotation.propertyset.PropertySet
-public class BackgroundSet implements PropertySet {
+public class BackgroundSet implements BPMNPropertySet {
 
     public static final String ID = "background";
     public static final String NAME = "Background";
 
-    @Inject
     @Property
     private BgColor bgColor;
 
-    @Inject
     @Property
     private BorderColor borderColor;
     
-    @Inject
     @Property
     private BorderSize borderSize;
+
+    public BackgroundSet() {
+    }
+
+    public BackgroundSet(@MapsTo("borderColor") BorderColor borderColor,
+                         @MapsTo("borderSize") BorderSize borderSize) {
+        this.borderColor = borderColor;
+        this.borderSize = borderSize;
+    }
 
     @Override
     public String getPropertySetId() {

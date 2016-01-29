@@ -16,6 +16,7 @@
 
 package org.wirez.bpmn.api;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.property.diagram.DiagramSet;
@@ -28,6 +29,7 @@ import org.wirez.core.api.graph.impl.DefaultGraph;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.Set;
 
 @Portable
 @Bindable
@@ -37,14 +39,13 @@ public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "bpmnDiagram";
 
-    @Inject
     @PropertySet
     private BPMNGeneral general;
     
-    @Inject
     @PropertySet
     private DiagramSet diagramSet;
-    
+
+
     public BPMNDiagram() {
         super("Diagram", "BPMN Diagram", "BPMN Diagram",
                 new HashSet<String>(){{
@@ -52,9 +53,16 @@ public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
                     add( "diagram" );
                 }});
     }
-    
-    @PostConstruct
-    public void init() {
+
+    public BPMNDiagram(@MapsTo("general") BPMNGeneral general,
+                       @MapsTo("diagramSet") DiagramSet diagramSet) {
+        this();
+        this.general = general;
+        this.diagramSet = diagramSet;
+        init();
+    }
+
+    private void init() {
         getGeneral().getName().setValue("My diagram");
     }
 

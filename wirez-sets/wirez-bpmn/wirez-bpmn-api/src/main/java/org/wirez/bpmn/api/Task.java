@@ -16,6 +16,7 @@
 
 package org.wirez.bpmn.api;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.property.Height;
@@ -32,6 +33,7 @@ import org.wirez.core.api.graph.Node;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.Set;
 
 @Portable
 @Bindable
@@ -43,26 +45,20 @@ public class Task extends BaseDefinition implements BPMNDefinition {
     public static final Integer WIDTH = 100;
     public static final Integer HEIGHT = 100;
     
-    @Inject
     @PropertySet
     private BPMNGeneral general;
 
-    @Inject
     @PropertySet
     private BackgroundSet backgroundSet;
 
-    @Inject
     @PropertySet
     private FontSet fontSet;
 
-    @Inject
     @Property
     private Width width;
 
-    @Inject
     @Property
     private Height height;
-
 
     public Task() {
         super("Activities", "Task", "A task is a unit of work - the job to be performed",
@@ -74,8 +70,21 @@ public class Task extends BaseDefinition implements BPMNDefinition {
                 }});
     }
 
-    @PostConstruct
-    public void init() {
+    public Task(@MapsTo("general") BPMNGeneral general,
+                @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                @MapsTo("fontSet") FontSet fontSet,
+                @MapsTo("width") Width width,
+                @MapsTo("height") Height height) {
+        this();
+        this.general = general;
+        this.backgroundSet = backgroundSet;
+        this.fontSet = fontSet;
+        this.width = width;
+        this.height = height;
+        init();
+    }
+
+    private void init() {
         getGeneral().getName().setValue("My task");
         getBackgroundSet().getBgColor().setValue(COLOR);
         getBackgroundSet().getBorderSize().setValue(1);
@@ -108,23 +117,4 @@ public class Task extends BaseDefinition implements BPMNDefinition {
         return height;
     }
 
-    public void setGeneral(BPMNGeneral general) {
-        this.general = general;
-    }
-
-    public void setBackgroundSet(BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet(FontSet fontSet) {
-        this.fontSet = fontSet;
-    }
-
-    public void setWidth(Width width) {
-        this.width = width;
-    }
-
-    public void setHeight(Height height) {
-        this.height = height;
-    }
 }

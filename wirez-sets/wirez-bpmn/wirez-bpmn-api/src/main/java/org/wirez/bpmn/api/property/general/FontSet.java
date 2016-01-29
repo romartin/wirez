@@ -1,7 +1,9 @@
 package org.wirez.bpmn.api.property.general;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.api.BPMNPropertySet;
 import org.wirez.core.api.annotation.propertyset.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 
@@ -10,26 +12,35 @@ import javax.inject.Inject;
 @Portable
 @Bindable
 @org.wirez.core.api.annotation.propertyset.PropertySet
-public class FontSet implements PropertySet {
+public class FontSet implements BPMNPropertySet {
 
     public static final String ID = "font";
     public static final String NAME = "Font";
 
-    @Inject
     @Property
-    FontFamily fontFamily;
+    private FontFamily fontFamily;
     
-    @Inject
     @Property
     private FontColor fontColor;
 
-    @Inject
     @Property
     private FontSize fontSize;
     
-    @Inject
     @Property
     private FontBorderSize fontBorderSize;
+
+    public FontSet() {
+    }
+
+    public FontSet(@MapsTo("fontFamily") FontFamily fontFamily,
+                   @MapsTo("fontColor") FontColor fontColor,
+                   @MapsTo("fontSize") FontSize fontSize,
+                   @MapsTo("fontBorderSize") FontBorderSize fontBorderSize) {
+        this.fontFamily = fontFamily;
+        this.fontColor = fontColor;
+        this.fontSize = fontSize;
+        this.fontBorderSize = fontBorderSize;
+    }
 
     @Override
     public String getPropertySetId() {

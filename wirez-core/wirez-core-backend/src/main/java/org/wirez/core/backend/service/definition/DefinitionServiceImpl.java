@@ -31,7 +31,7 @@ public class DefinitionServiceImpl implements DefinitionService {
     @Override
     public DefinitionSetServiceResponse getDefinitionSet(final String id) {
         
-        final DefinitionSet definitionSet = definitionManager.getDefinitionSetRegistry().get(id);
+        final DefinitionSet definitionSet = (DefinitionSet) definitionManager.getModelFactory(id).build(id);
         final DefinitionSetAdapter adapter = definitionManager.getDefinitionSetAdapter(definitionSet);
         final DefinitionSetRuleAdapter ruleAdapter = definitionManager.getDefinitionSetRuleAdapter(definitionSet);
         final Set<Definition> definitions = adapter.getDefinitions(definitionSet);
@@ -54,32 +54,19 @@ public class DefinitionServiceImpl implements DefinitionService {
     @Override
     public DefinitionServiceResponse getDefinition(final String id) {
 
-        final Collection<DefinitionSet> definitionSets = definitionManager.getDefinitionSetRegistry().getItems();
-        if ( null != definitionSets ) {
-            for (DefinitionSet definitionSet : definitionSets) {
 
-                final DefinitionSetAdapter adapter = definitionManager.getDefinitionSetAdapter(definitionSet);
-                final Set<Definition> definitions = adapter.getDefinitions(definitionSet);
-                
-                for (Definition definition : definitions) {
-                    if (definition.getId().equals(id)) {
-                        
-                        final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter(definition);
-                        Class<? extends Element> elementClass = definitionAdapter.getGraphElementType(definition);
-                        Map<Property, Object> properties = definitionAdapter.getPropertiesValues(definition);
-                        Map<PropertySet, Set<Property>> propertySetSetMap = new HashMap<>();
-                        final Set<PropertySet> propertySets = definitionAdapter.getPropertySets(definition);
-                        if ( null != propertySets ) {
-                            for (PropertySet propertySet : propertySets) {
-                                PropertySetAdapter pSetAdapter = definitionManager.getPropertySetAdapter(propertySet);
-                                Set<Property> pSetProperties = pSetAdapter.getProperties(propertySet);
-                                pSetProperties = pSetProperties != null ? pSetProperties : new HashSet<Property>();
-                                propertySetSetMap.put(propertySet, pSetProperties);
-                            }
-                        }
-                        return new DefinitionServiceResponseImpl(definition, elementClass.getName(), properties, propertySetSetMap);
-                    }
-                }
+        Definition definition = (Definition) definitionManager.getModelFactory(id).build(id);
+        final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter(definition);
+        Class<? extends Element> elementClass = definitionAdapter.getGraphElementType(definition);
+        Map<Property, Object> properties = definitionAdapter.getPropertiesValues(definition);
+        Map<PropertySet, Set<Property>> propertySetSetMap = new HashMap<>();
+        final Set<PropertySet> propertySets = definitionAdapter.getPropertySets(definition);
+        if ( null != propertySets ) {
+            for (PropertySet propertySet : propertySets) {
+                PropertySetAdapter pSetAdapter = definitionManager.getPropertySetAdapter(propertySet);
+                Set<Property> pSetProperties = pSetAdapter.getProperties(propertySet);
+                pSetProperties = pSetProperties != null ? pSetProperties : new HashSet<Property>();
+                propertySetSetMap.put(propertySet, pSetProperties);
             }
         }
         

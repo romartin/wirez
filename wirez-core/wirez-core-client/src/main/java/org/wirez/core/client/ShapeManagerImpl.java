@@ -16,7 +16,7 @@
 
 package org.wirez.core.client;
 
-import org.jboss.errai.ioc.client.container.IOCBeanDef;
+import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.factory.ShapeFactory;
@@ -46,8 +46,8 @@ public class ShapeManagerImpl implements ShapeManager {
 
     private void initShapeSets() {
         shapeSets.clear();
-        Collection<IOCBeanDef<ShapeSet>> beanDefs = beanManager.lookupBeans(ShapeSet.class);
-        for (IOCBeanDef<ShapeSet> beanDef : beanDefs) {
+        Collection<SyncBeanDef<ShapeSet>> beanDefs = beanManager.lookupBeans(ShapeSet.class);
+        for (SyncBeanDef<ShapeSet> beanDef : beanDefs) {
             ShapeSet shapeSet = beanDef.getInstance();
             shapeSets.add(shapeSet);
         }

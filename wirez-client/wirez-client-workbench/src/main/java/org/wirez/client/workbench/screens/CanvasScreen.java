@@ -38,7 +38,6 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.impl.*;
-import org.wirez.core.api.registry.DefinitionSetRegistry;
 import org.wirez.core.api.service.definition.DefinitionSetServiceResponse;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
@@ -181,10 +180,9 @@ public class CanvasScreen {
 
     private void open(final Diagram diagram) {
 
-        final DefinitionSetRegistry definitionSetRegistry = clientDefinitionManager.getDefinitionSetRegistry();
         final String uuid = diagram.getUUID();
         final String defSetId = diagram.getSettings().getDefinitionSetId();
-        final DefinitionSet definitionSet = definitionSetRegistry.get(defSetId);
+        final DefinitionSet definitionSet = (DefinitionSet) clientDefinitionManager.getModelFactory(defSetId).build(defSetId);
         final ShapeSet shapeSet = getShapeSet(diagram.getSettings().getShapeSetId());
         final String title = diagram.getSettings().getTitle();
         final Graph graph = diagram.getGraph();

@@ -16,44 +16,41 @@
 
 package org.wirez.core.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wirez.core.api.adapter.*;
-import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.registry.DefinitionSetRegistry;
+import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.registry.DiagramRegistry;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 import java.util.*;
 
 public abstract class BaseDefinitionManager implements DefinitionManager {
 
-    DefinitionSetRegistry definitionSetRegistry;
     DiagramRegistry diagramRegistry;
-    
+
+    protected final List<ModelFactory> modelFactories = new ArrayList<ModelFactory>();
     protected final List<DefinitionSetAdapter> definitionSetAdapters = new ArrayList<DefinitionSetAdapter>();
     protected final List<DefinitionSetRuleAdapter> definitionSetRuleAdapters = new ArrayList<DefinitionSetRuleAdapter>();
     protected final List<DefinitionAdapter> definitionAdapters = new ArrayList<DefinitionAdapter>();
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
     protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();
 
-    public BaseDefinitionManager(final DefinitionSetRegistry definitionSetRegistry, 
-                                 final DiagramRegistry diagramRegistry) {
-        this.definitionSetRegistry = definitionSetRegistry;
+    public BaseDefinitionManager(final DiagramRegistry diagramRegistry) {
         this.diagramRegistry = diagramRegistry;
-    }
-
-    @Override
-    public DefinitionSetRegistry getDefinitionSetRegistry() {
-        return definitionSetRegistry;
     }
 
     @Override
     public DiagramRegistry getDiagramRegistry() {
         return diagramRegistry;
+    }
+
+    @Override
+    public ModelFactory getModelFactory(final String id) {
+        for (final ModelFactory builder : modelFactories) {
+            if ( builder.accepts( id ) ) {
+                return builder;
+            }
+        }
+        
+        return null;
     }
 
     @Override

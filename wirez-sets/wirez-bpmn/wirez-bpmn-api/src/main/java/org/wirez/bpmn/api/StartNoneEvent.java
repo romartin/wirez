@@ -16,6 +16,7 @@
 
 package org.wirez.bpmn.api;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.property.Radius;
@@ -31,6 +32,7 @@ import org.wirez.core.api.graph.Node;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.Set;
 
 @Portable
 @Bindable
@@ -41,22 +43,18 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
     public static final String COLOR = "#3eb870";
     public static final Integer RADIUS = 25;
     
-    @Inject
     @PropertySet
     private BPMNGeneral general;
 
-    @Inject
     @PropertySet
     private BackgroundSet backgroundSet;
 
-    @Inject
     @PropertySet
     private FontSet fontSet;
     
-    @Inject
     @Property
     private Radius radius;
-    
+
     public StartNoneEvent() {
         super("Start Events", "Start Event", "Untyped start event",
                 new HashSet<String>(){{
@@ -64,9 +62,20 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
                     add( "diagram" );
                 }});
     }
+    
+    public StartNoneEvent(@MapsTo("general") BPMNGeneral general,
+                          @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                          @MapsTo("fontSet") FontSet fontSet,
+                          @MapsTo("radius") Radius radius) {
+        this();
+        this.general = general;
+        this.backgroundSet = backgroundSet;
+        this.fontSet = fontSet;
+        this.radius = radius;
+        init();
+    }
 
-    @PostConstruct
-    public void init() {
+    private void init() {
         getGeneral().getName().setValue("My start event");
         getBackgroundSet().getBgColor().setValue(COLOR);
         getRadius().setValue(RADIUS);
@@ -92,19 +101,4 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
         return fontSet;
     }
 
-    public void setGeneral(BPMNGeneral general) {
-        this.general = general;
-    }
-
-    public void setBackgroundSet(BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet(FontSet fontSet) {
-        this.fontSet = fontSet;
-    }
-
-    public void setRadius(Radius radius) {
-        this.radius = radius;
-    }
 }

@@ -1,7 +1,9 @@
 package org.wirez.bpmn.api.property.diagram;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.api.BPMNPropertySet;
 import org.wirez.core.api.annotation.propertyset.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 
@@ -10,19 +12,27 @@ import javax.inject.Inject;
 @Portable
 @Bindable
 @org.wirez.core.api.annotation.propertyset.PropertySet
-public class DiagramSet implements PropertySet {
+public class DiagramSet implements BPMNPropertySet {
     
     public static final String ID = "diagramSet";
     public static final String NAME = "BPMN Diagram";
 
-    @Inject
     @Property
     private Package thePackage;
 
-    @Inject
     @Property
     private Executable executable;
-    
+
+    public DiagramSet() {
+        
+    }
+
+    public DiagramSet(@MapsTo("thePackage") Package thePackage,
+                      @MapsTo("executable") Executable executable) {
+        this.thePackage = thePackage;
+        this.executable = executable;
+    }
+
     @Override
     public String getPropertySetId() {
         return ID;

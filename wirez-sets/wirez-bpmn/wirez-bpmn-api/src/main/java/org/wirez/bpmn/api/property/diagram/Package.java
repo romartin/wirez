@@ -18,6 +18,7 @@ package org.wirez.bpmn.api.property.diagram;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.api.BPMNProperty;
 import org.wirez.core.api.annotation.property.DefaultValue;
 import org.wirez.core.api.annotation.property.Property;
 import org.wirez.core.api.annotation.property.Value;
@@ -28,7 +29,7 @@ import org.wirez.core.api.definition.property.type.StringType;
 @Portable
 @Bindable
 @Property
-public class Package extends BaseProperty {
+public class Package extends BaseProperty implements BPMNProperty {
 
     public static final String ID = "package";
 
@@ -36,10 +37,11 @@ public class Package extends BaseProperty {
     public static final String DEFAULT_VALUE = "/defaultPackage/defaultPackage";
 
     @Value
-    private String value = DEFAULT_VALUE;
+    private String value;
     
     public Package() {
         super(ID, "Package", "The diagram's package", false, false);
+        setValue(DEFAULT_VALUE);
     }
 
     @Override

@@ -16,6 +16,7 @@
 
 package org.wirez.bpmn.api;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.property.Height;
@@ -33,6 +34,7 @@ import org.wirez.core.api.graph.Node;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.Set;
 
 @Portable
 @Bindable
@@ -43,26 +45,22 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
     public static final String COLOR = "#f0e68c";
     public static final Integer RADIUS = 50;
     
-    @Inject
     @PropertySet
     private BPMNGeneral general;
 
-    @Inject
     @PropertySet
     private BackgroundSet backgroundSet;
 
-    @Inject
     @PropertySet
     private FontSet fontSet;
 
-    @Inject
     @Property
     private Radius radius;
 
     public ParallelGateway() {
         super("Gateways", "Parallel Gateway", "When used to split the sequence flow, " +
-                "all outgoing branches are activated simultaneously. " +
-                "When merging parallel branches it waits for all incoming branches to complete before triggering the outgoing flow",
+                        "all outgoing branches are activated simultaneously. " +
+                        "When merging parallel branches it waits for all incoming branches to complete before triggering the outgoing flow",
                 new HashSet<String>(){{
                     add( "all" );
                     add( "sequence_start" );
@@ -71,8 +69,19 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
                 }});
     }
 
-    @PostConstruct
-    public void init() {
+    public ParallelGateway(@MapsTo("general") BPMNGeneral general,
+                           @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                           @MapsTo("fontSet") FontSet fontSet,
+                           @MapsTo("radius") Radius radius) {
+        this();
+        this.general = general;
+        this.backgroundSet = backgroundSet;
+        this.fontSet = fontSet;
+        this.radius = radius;
+        init();
+    }
+
+    private void init() {
         getGeneral().getName().setValue("My gateway");
         getBackgroundSet().getBgColor().setValue(COLOR);
         getBackgroundSet().getBorderSize().setValue(3);
@@ -96,23 +105,8 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
         return fontSet;
     }
 
-    public void setGeneral(BPMNGeneral general) {
-        this.general = general;
-    }
-
-    public void setBackgroundSet(BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet(FontSet fontSet) {
-        this.fontSet = fontSet;
-    }
-
     public Radius getRadius() {
         return radius;
     }
 
-    public void setRadius(Radius radius) {
-        this.radius = radius;
-    }
 }

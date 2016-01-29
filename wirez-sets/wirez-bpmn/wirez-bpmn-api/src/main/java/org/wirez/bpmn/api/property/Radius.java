@@ -18,6 +18,7 @@ package org.wirez.bpmn.api.property;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.api.BPMNProperty;
 import org.wirez.core.api.annotation.property.DefaultValue;
 import org.wirez.core.api.annotation.property.Property;
 import org.wirez.core.api.annotation.property.Value;
@@ -29,7 +30,7 @@ import org.wirez.core.api.definition.property.type.StringType;
 @Portable
 @Bindable
 @Property
-public class Radius extends BaseProperty {
+public class Radius extends BaseProperty implements BPMNProperty {
 
     public static final String ID = "radius";
 
@@ -37,10 +38,11 @@ public class Radius extends BaseProperty {
     public static final Integer DEFAULT_VALUE = 25;
 
     @Value
-    private Integer value = DEFAULT_VALUE;
+    private Integer value;
     
     public Radius() {
         super(ID, "Radius", "The radius", false, false);
+        setValue(DEFAULT_VALUE);
     }
 
     @Override

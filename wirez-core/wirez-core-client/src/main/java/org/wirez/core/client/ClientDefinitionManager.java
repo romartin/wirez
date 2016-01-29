@@ -1,7 +1,8 @@
 package org.wirez.core.client;
 
 import org.jboss.errai.ioc.client.container.IOC;
-import org.jboss.errai.ioc.client.container.IOCBeanDef;
+import org.jboss.errai.ioc.client.container.SyncBeanDef;
+import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.BaseDefinitionManager;
 import org.wirez.core.api.adapter.*;
@@ -9,7 +10,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.registry.DefinitionSetRegistry;
+import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.registry.DiagramRegistry;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.service.definition.DefinitionServiceResponse;
@@ -31,17 +32,16 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
 
     // Remove later...
     public static ClientDefinitionManager get() {
-        Collection<IOCBeanDef<ClientDefinitionManager>> beans = IOC.getBeanManager().lookupBeans(ClientDefinitionManager.class);
-        IOCBeanDef<ClientDefinitionManager> beanDef = beans.iterator().next();
+        Collection<SyncBeanDef<ClientDefinitionManager>> beans = IOC.getBeanManager().lookupBeans(ClientDefinitionManager.class);
+        SyncBeanDef<ClientDefinitionManager> beanDef = beans.iterator().next();
         return beanDef.getInstance();
     }
     
     @Inject
-    public ClientDefinitionManager(final DefinitionSetRegistry definitionSetRegistry,
-                                   final DiagramRegistry diagramRegistry,
+    public ClientDefinitionManager(final DiagramRegistry diagramRegistry,
                                    final SyncBeanManager beanManager,
                                    final ClientDefinitionServices clientDefinitionServices) {
-        super(definitionSetRegistry, diagramRegistry);
+        super(diagramRegistry);
         this.beanManager = beanManager;
         this.clientDefinitionServices = clientDefinitionServices;
     }
@@ -49,41 +49,48 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     @PostConstruct
     public void init() {
 
+        // Client side model builders.
+        Collection<SyncBeanDef<ModelFactory>> modelBuilderDefs = beanManager.lookupBeans(ModelFactory.class);
+        for (SyncBeanDef<ModelFactory> modelBuilder : modelBuilderDefs) {
+            ModelFactory modelBuilderObject = modelBuilder.getInstance();
+            modelFactories.add(modelBuilderObject);
+        }
+        
         // DefinitionSet client adapters.
-        Collection<IOCBeanDef<DefinitionSetAdapter>> beanDefSetAdapters = beanManager.lookupBeans(DefinitionSetAdapter.class);
-        for (IOCBeanDef<DefinitionSetAdapter> defSet : beanDefSetAdapters) {
+        Collection<SyncBeanDef<DefinitionSetAdapter>> beanDefSetAdapters = beanManager.lookupBeans(DefinitionSetAdapter.class);
+        for (SyncBeanDef<DefinitionSetAdapter> defSet : beanDefSetAdapters) {
             DefinitionSetAdapter definitionSet = defSet.getInstance();
             definitionSetAdapters.add(definitionSet);
         }
         sortAdapters(definitionAdapters);
 
         // DefinitionSetRule client adapters.
-        Collection<IOCBeanDef<DefinitionSetRuleAdapter>> beanDefSetRuleAdapters = beanManager.lookupBeans(DefinitionSetRuleAdapter.class);
-        for (IOCBeanDef<DefinitionSetRuleAdapter> defSet : beanDefSetRuleAdapters) {
+        Collection<SyncBeanDef<DefinitionSetRuleAdapter>> beanDefSetRuleAdapters = beanManager.lookupBeans(DefinitionSetRuleAdapter.class);
+        for (SyncBeanDef<DefinitionSetRuleAdapter> defSet : beanDefSetRuleAdapters) {
             DefinitionSetRuleAdapter definitionSet = defSet.getInstance();
             definitionSetRuleAdapters.add(definitionSet);
         }
         sortAdapters(definitionSetRuleAdapters);
 
         // Definition client adapters.
-        Collection<IOCBeanDef<DefinitionAdapter>> beanDefAdapters = beanManager.lookupBeans(DefinitionAdapter.class);
-        for (IOCBeanDef<DefinitionAdapter> defSet : beanDefAdapters) {
+        Collection<SyncBeanDef<DefinitionAdapter>> beanDefAdapters = beanManager.lookupBeans(DefinitionAdapter.class);
+        for (SyncBeanDef<DefinitionAdapter> defSet : beanDefAdapters) {
             DefinitionAdapter definitionSet = defSet.getInstance();
             definitionAdapters.add(definitionSet);
         }
         sortAdapters(definitionAdapters);
         
         // PropertySet client adapters.
-        Collection<IOCBeanDef<PropertySetAdapter>> beanPropSetAdapters = beanManager.lookupBeans(PropertySetAdapter.class);
-        for (IOCBeanDef<PropertySetAdapter> defSet : beanPropSetAdapters) {
+        Collection<SyncBeanDef<PropertySetAdapter>> beanPropSetAdapters = beanManager.lookupBeans(PropertySetAdapter.class);
+        for (SyncBeanDef<PropertySetAdapter> defSet : beanPropSetAdapters) {
             PropertySetAdapter definitionSet = defSet.getInstance();
             propertySetAdapters.add(definitionSet);
         }
         sortAdapters(propertySetAdapters);
         
         // Property client adapters.
-        Collection<IOCBeanDef<PropertyAdapter>> beanPropAdapters = beanManager.lookupBeans(PropertyAdapter.class);
-        for (IOCBeanDef<PropertyAdapter> defSet : beanPropAdapters) {
+        Collection<SyncBeanDef<PropertyAdapter>> beanPropAdapters = beanManager.lookupBeans(PropertyAdapter.class);
+        for (SyncBeanDef<PropertyAdapter> defSet : beanPropAdapters) {
             PropertyAdapter definitionSet = defSet.getInstance();
             propertyAdapters.add(definitionSet);
         }

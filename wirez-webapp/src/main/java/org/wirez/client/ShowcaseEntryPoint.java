@@ -28,7 +28,6 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
-import org.wirez.core.api.registry.DefinitionSetRegistry;
 
 import javax.inject.Inject;
 
@@ -49,27 +48,13 @@ public class ShowcaseEntryPoint {
     @Inject
     private ActivityManager activityManager;
     
-    @Inject
-    private BPMNDefinitionSet bpmnDefinitionSet;
-
-    @Inject
-    private DefinitionSetRegistry definitionSetRegistry;
-    
-    
     @AfterInitialization
     public void startApp() {
         setupMenu();
         hideLoadingPopup();
 
-        fixBpmn();
-        
         // Default perspective.
         placeManager.goTo( new DefaultPlaceRequest( "HomePerspective" ) );
-    }
-
-    // TODO: Remove when DefinitionSetRegistry cdi discovery works.
-    private void fixBpmn() {
-        definitionSetRegistry.add(bpmnDefinitionSet);
     }
 
     private void setupMenu() {

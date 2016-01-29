@@ -18,6 +18,7 @@ package org.wirez.bpmn.api.property.general;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.api.BPMNProperty;
 import org.wirez.core.api.annotation.property.DefaultValue;
 import org.wirez.core.api.annotation.property.Property;
 import org.wirez.core.api.annotation.property.Value;
@@ -29,7 +30,7 @@ import org.wirez.core.api.definition.property.type.StringType;
 @Portable
 @Bindable
 @Property
-public class FontFamily extends BaseProperty {
+public class FontFamily extends BaseProperty implements BPMNProperty {
 
     public static final String ID = "fontFamily";
 
@@ -37,12 +38,13 @@ public class FontFamily extends BaseProperty {
     public static final String DEFAULT_VALUE = "Verdana";
 
     @Value
-    private String value = DEFAULT_VALUE;
+    private String value;
     
     public FontFamily() {
         super(ID, 
                 "Font Family", "The font family.", 
                 false, false);
+        setValue(DEFAULT_VALUE);
     }
 
     @Override

@@ -18,6 +18,7 @@ package org.wirez.bpmn.api.property.general;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.api.BPMNProperty;
 import org.wirez.core.api.annotation.property.DefaultValue;
 import org.wirez.core.api.annotation.property.Property;
 import org.wirez.core.api.annotation.property.Value;
@@ -29,7 +30,7 @@ import org.wirez.core.api.definition.property.type.StringType;
 @Portable
 @Bindable
 @Property
-public class FontSize extends BaseProperty {
+public class FontSize extends BaseProperty implements BPMNProperty {
 
     public static final String ID = "fontSize";
 
@@ -37,10 +38,11 @@ public class FontSize extends BaseProperty {
     public static final Integer DEFAULT_VALUE = 8;
 
     @Value
-    private Integer value = DEFAULT_VALUE;
+    private Integer value;
     
     public FontSize() {
         super(ID, "Font size", "The font size", false, false);
+        setValue(DEFAULT_VALUE);
     }
 
     @Override

@@ -18,6 +18,7 @@ package org.wirez.bpmn.api.property.general;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.api.BPMNProperty;
 import org.wirez.core.api.annotation.property.DefaultValue;
 import org.wirez.core.api.annotation.property.Property;
 import org.wirez.core.api.annotation.property.Value;
@@ -28,7 +29,7 @@ import org.wirez.core.api.definition.property.type.StringType;
 @Portable
 @Bindable
 @Property
-public class Documentation extends BaseProperty {
+public class Documentation extends BaseProperty implements BPMNProperty {
 
     public static final String ID = "documentation";
 
@@ -36,13 +37,14 @@ public class Documentation extends BaseProperty {
     public static final String DEFAULT_VALUE = "";
 
     @Value
-    private String value = DEFAULT_VALUE;
+    private String value;
     
     public Documentation() {
         super(ID, 
                 "Documentation", "This attribute is used to annotate the BPMN element, " +
                 "such as descriptions and other documentation", 
                 false, false);
+        setValue(DEFAULT_VALUE);
     }
 
     @Override

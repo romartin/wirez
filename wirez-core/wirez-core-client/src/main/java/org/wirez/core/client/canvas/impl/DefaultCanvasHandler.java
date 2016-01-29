@@ -60,7 +60,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
 
-// TODO: Implement SelectionManager<Element>
+// TODO: Implement SelectionManager<Element> ?
 @Dependent
 public class DefaultCanvasHandler extends BaseCanvasHandler {
 
@@ -135,7 +135,9 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
                 final WiresManager wiresManager = getBaseCanvas().getWiresManager();
                 wiresManager.setConnectionAcceptor(CONNECTION_ACCEPTOR);
-                wiresManager.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
+                // TODO: wiresManager.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
+                // - Wires containment is not working fine...
+                // - When dragging a shape over the canvas, containment acceptor is constantly firing and it seems that parent/child shapes are not right.
                 sucessCallback.execute();
             }
 
@@ -160,6 +162,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         @Override
         public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
             final ShapeFactory factory = shapeManager.getFactory(node.getContent().getDefinition());
+
+            // Add the node shape into the canvas.
             defaultCanvasCommands.ADD_NODE(node, factory)
                     .setCanvas(DefaultCanvasHandler.this)
                     .apply();
@@ -169,29 +173,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
             final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
             
-            // Add the shape into the canvas.
+            // Add the edge shape into the canvas.
             defaultCanvasCommands.ADD_EDGE( edge, factory )
                     .setCanvas(DefaultCanvasHandler.this)
                     .apply();
-            
-           /* // Configure source and target node connections, if any.
-            Node sourceNode = edge.getSourceNode();
-            Node targetNode = edge.getTargetNode();
-            if ( null != sourceNode && null != targetNode) {
-                final String sourceUUID = sourceNode.getUUID();
-                final String targetUUID = targetNode.getUUID();
-                WiresShape sourceShape = (WiresShape) canvas.getShape(sourceUUID);
-                WiresShape targetShape = (WiresShape) canvas.getShape(targetUUID);
-                // TODO: Use the given concrete magent indexes.
-                connect(getSettings().getCanvas().getLayer(), 
-                        sourceShape.getMagnets(), 3, 
-                        targetShape.getMagnets(), 7, 
-                        getBaseCanvas().getWiresManager(), 
-                        true, 
-                        false);
-                
-            }*/
-
         }
 
         @Override
@@ -222,35 +207,6 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
     
     private void drawGraph() {
         defaultGraphVisitor.visit(graph, DRAW_VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_LAST);
-    }
-
-    private void connect(Layer layer, MagnetManager.Magnets headMagnets, int headMagnetsIndex, MagnetManager.Magnets tailMagnets, int tailMagnetsIndex, WiresManager wires_manager,
-                         final boolean tailArrow, final boolean headArrow)
-    {
-        WiresMagnet m0_1 = headMagnets.getMagnet(headMagnetsIndex);
-
-        WiresMagnet m1_1 = tailMagnets.getMagnet(tailMagnetsIndex);
-
-        double x0 = m0_1.getControl().getX();
-
-        double y0 = m0_1.getControl().getY();
-
-        double x1 = m1_1.getControl().getX();
-
-        double y1 = m1_1.getControl().getY();
-
-        OrthogonalPolyLine line = createLine(x0, y0, (x0 + ((x1 - x0) / 2)), (y0 + ((y1 - y0) / 2)), x1, y1);
-
-        WiresConnector connector = wires_manager.createConnector(m0_1, m1_1, line,
-                headArrow ? new SimpleArrow(20, 0.75) : null,
-                tailArrow ? new SimpleArrow(20, 0.75) : null);
-
-        connector.getDecoratableLine().setStrokeWidth(5).setStrokeColor("#0000CC");
-    }
-
-    private final OrthogonalPolyLine createLine(final double... points)
-    {
-        return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
     }
     
     /*
@@ -438,6 +394,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
             final String message = "Executed AddChildNodeCommand [parent=" + parentNode.getUUID() + ", child=" + childNode.getUUID() + "]";
             GWT.log(message);
+            
             
             CommandResults results = execute(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override

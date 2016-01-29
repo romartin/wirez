@@ -45,8 +45,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
     
     private ResourceSet resourceSet;
     
-    @PostConstruct
-    public void init() {
+    private void initResourceSet() {
 
         resourceSet = new ResourceSetImpl();
 
@@ -97,6 +96,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
 
     protected Definitions parseDefinitions(final InputStream inputStream) throws IOException {
         try {
+            initResourceSet();
             XMLResource outResource = (XMLResource) resourceSet.createResource( URI.createURI( "inputStream://dummyUriWithValidSuffix.xml" ) );
             outResource.getDefaultLoadOptions().put( XMLResource.OPTION_ENCODING, "UTF-8" );
             outResource.setEncoding( "UTF-8" );

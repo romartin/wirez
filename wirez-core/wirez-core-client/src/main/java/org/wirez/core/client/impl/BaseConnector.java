@@ -174,10 +174,10 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
 
         // TODO: Update the connector decorator in order to modify head & tail decorators (connector direction)
        OrthogonalPolyLine line = createLine(x0, y0, (x0 + ((x1 - x0) / 2)), (y0 + ((y1 - y0) / 2)), x1, y1);
-        this.setDecorator(
+        /*this.setDecorator(
                 line, 
                 headArrow ? new SimpleArrow(20, 0.75) : null,
-                tailArrow ? new SimpleArrow(20, 0.75) : null);
+                tailArrow ? new SimpleArrow(20, 0.75) : null);*/
 
     }
 

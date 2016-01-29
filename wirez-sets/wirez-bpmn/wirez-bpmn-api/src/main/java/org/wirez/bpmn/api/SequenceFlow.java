@@ -94,4 +94,15 @@ public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
         return fontSet;
     }
 
+    public void setGeneral(BPMNGeneral general) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet(BackgroundSet backgroundSet) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setFontSet(FontSet fontSet) {
+        this.fontSet = fontSet;
+    }
 }

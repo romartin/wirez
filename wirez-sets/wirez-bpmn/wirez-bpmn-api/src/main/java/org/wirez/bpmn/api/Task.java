@@ -117,4 +117,23 @@ public class Task extends BaseDefinition implements BPMNDefinition {
         return height;
     }
 
+    public void setGeneral(BPMNGeneral general) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet(BackgroundSet backgroundSet) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setFontSet(FontSet fontSet) {
+        this.fontSet = fontSet;
+    }
+
+    public void setWidth(Width width) {
+        this.width = width;
+    }
+
+    public void setHeight(Height height) {
+        this.height = height;
+    }
 }

@@ -16,6 +16,7 @@
 
 package org.wirez.bpmn.api;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.property.Radius;
@@ -41,19 +42,15 @@ public class EndNoneEvent extends BaseDefinition implements BPMNDefinition {
     public static final String COLOR = "#ff0000";
     public static final Integer RADIUS = 25;
     
-    @Inject
     @PropertySet
     private BPMNGeneral general;
 
-    @Inject
     @PropertySet
     private BackgroundSet backgroundSet;
 
-    @Inject
     @PropertySet
     private FontSet fontSet;
     
-    @Inject
     @Property
     private Radius radius;
     
@@ -65,7 +62,18 @@ public class EndNoneEvent extends BaseDefinition implements BPMNDefinition {
                 }});
     }
 
-    @PostConstruct
+    public EndNoneEvent(@MapsTo("general") BPMNGeneral general,
+                          @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                          @MapsTo("fontSet") FontSet fontSet,
+                          @MapsTo("radius") Radius radius) {
+        this();
+        this.general = general;
+        this.backgroundSet = backgroundSet;
+        this.fontSet = fontSet;
+        this.radius = radius;
+        init();
+    }
+
     public void init() {
         getGeneral().getName().setValue("My end event");
         getBackgroundSet().getBgColor().setValue(COLOR);

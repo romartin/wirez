@@ -39,7 +39,7 @@ public class DiagramServiceImpl implements DiagramService {
     DefinitionService definitionService;
     
     @Inject
-    DiagramRegistry diagramRegistry;
+    DiagramRegistry<Diagram> diagramRegistry;
 
 
     @Override

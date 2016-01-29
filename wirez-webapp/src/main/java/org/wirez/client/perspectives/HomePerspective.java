@@ -16,9 +16,16 @@
 package org.wirez.client.perspectives;
 
 import com.google.gwt.user.client.ui.FlowPanel;
+import org.uberfire.client.annotations.Perspective;
 import org.uberfire.client.annotations.WorkbenchPanel;
 import org.uberfire.client.annotations.WorkbenchPerspective;
 import org.uberfire.client.util.Layouts;
+import org.uberfire.client.workbench.panels.impl.MultiListWorkbenchPanelPresenter;
+import org.uberfire.mvp.impl.DefaultPlaceRequest;
+import org.uberfire.workbench.model.PerspectiveDefinition;
+import org.uberfire.workbench.model.impl.PartDefinitionImpl;
+import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
+import org.wirez.client.workbench.screens.CanvasWizardScreen;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -26,15 +33,14 @@ import javax.inject.Inject;
 
 @ApplicationScoped
 @WorkbenchPerspective(identifier = "HomePerspective", isDefault = true)
-public class HomePerspective extends FlowPanel {
+public class HomePerspective {
 
-    @Inject
-    @WorkbenchPanel(parts = "HomeScreen")
-    FlowPanel homeScreen;
-
-    @PostConstruct
-    void doLayout() {
-        Layouts.setToFillParent(homeScreen);
-        add(homeScreen);
+    @Perspective
+    public PerspectiveDefinition buildPerspective() {
+        PerspectiveDefinition perspective = new PerspectiveDefinitionImpl(MultiListWorkbenchPanelPresenter.class.getName());
+        perspective.setName("Home");
+        perspective.getRoot().addPart( new PartDefinitionImpl( new DefaultPlaceRequest( "HomeScreen" ) ) );
+        return perspective;
     }
+    
 }

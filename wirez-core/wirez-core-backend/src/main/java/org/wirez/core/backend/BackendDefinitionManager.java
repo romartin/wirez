@@ -24,6 +24,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.registry.DiagramRegistry;
 
@@ -45,7 +46,7 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
     Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances;
     
     @Inject
-    public BackendDefinitionManager(DiagramRegistry diagramRegistry,
+    public BackendDefinitionManager(DiagramRegistry<? extends Diagram> diagramRegistry,
                                     Instance<ModelFactory<?>> modelBuilderInstances,
                                     Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances,
                                     Instance<DefinitionSetRuleAdapter<? extends DefinitionSet>> definitionSetRuleAdapterInstances,

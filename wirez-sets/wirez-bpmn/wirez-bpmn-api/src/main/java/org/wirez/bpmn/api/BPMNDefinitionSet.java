@@ -22,10 +22,10 @@ public class BPMNDefinitionSet implements DefinitionSet {
     private StartNoneEvent startNoneEvent;
 
     @Definition
-    EndNoneEvent endNoneEvent;
+    private EndNoneEvent endNoneEvent;
 
     @Definition
-    Task task;
+    private Task task;
 
     @Definition
     private SequenceFlow sequenceFlow;
@@ -39,11 +39,13 @@ public class BPMNDefinitionSet implements DefinitionSet {
 
     public BPMNDefinitionSet(@MapsTo("diagram") BPMNDiagram diagram,
                              @MapsTo("startNoneEvent") StartNoneEvent startNoneEvent,
+                             @MapsTo("endNoneEvent") EndNoneEvent endNoneEvent,
                              @MapsTo("task") Task task,
                              @MapsTo("sequenceFlow") SequenceFlow sequenceFlow,
                              @MapsTo("parallelGateway") ParallelGateway parallelGateway) {
         this.diagram = diagram;
         this.startNoneEvent = startNoneEvent;
+        this.endNoneEvent = endNoneEvent;
         this.task = task;
         this.sequenceFlow = sequenceFlow;
         this.parallelGateway = parallelGateway;

@@ -30,6 +30,7 @@ import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.event.CreateEmptyDiagramEvent;
+import org.wirez.client.widgets.event.LoadDiagramEvent;
 import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.workbench.perspectives.WirezPerspective;
 import org.wirez.core.api.util.UUID;
@@ -88,11 +89,7 @@ public class CanvasWizardScreen {
     private Command getTestButtonCommand() {
         return new Command() {
             public void execute() {
-                final String path = "org/wirez/bpmn/backend/examples/wirez-bpmn-test.bpmn2";
-                Map<String, String> params = new HashMap<String, String>();
-                params.put( "path", path );
-                PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );
-                placeManager.goTo(placeRequest);
+               
             }
         };
     }
@@ -143,6 +140,17 @@ public class CanvasWizardScreen {
         params.put( "defSetId", wirezSetId );
         params.put( "shapeSetId", shapeSetId );
         params.put( "title", "New " + shapSetName + " diagram" );
+
+        PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );
+        placeManager.goTo(placeRequest);
+    }
+
+    void onLoadDiagramEvent(@Observes LoadDiagramEvent loadDiagramEvent) {
+        checkNotNull("loadDiagramEvent", loadDiagramEvent);
+
+        final String path = loadDiagramEvent.getPath();
+        Map<String, String> params = new HashMap<String, String>();
+        params.put( "path", path );
 
         PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );
         placeManager.goTo(placeRequest);

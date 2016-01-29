@@ -20,10 +20,20 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.wirez.bpmn.api.*;
+import org.wirez.bpmn.api.property.Height;
+import org.wirez.bpmn.api.property.Radius;
+import org.wirez.bpmn.api.property.Width;
+import org.wirez.bpmn.api.property.diagram.DiagramSet;
+import org.wirez.bpmn.api.property.diagram.Executable;
+import org.wirez.bpmn.api.property.diagram.Package;
+import org.wirez.bpmn.api.property.general.*;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.property.defaultset.Name;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
 import org.wirez.core.api.graph.factory.EdgeFactory;
 import org.wirez.core.api.graph.factory.NodeFactory;
@@ -79,16 +89,60 @@ public class Bpmn2MarshallerTest {
         resourceSet.getPackageRegistry().put( "http://www.omg.org/spec/BPMN/20100524/MODEL", Bpmn2Package.eINSTANCE );
 
         
-        doAnswer(new Answer<DefinitionServiceResponse>() {
+        doAnswer(new Answer<Element>() {
             @Override
-            public DefinitionServiceResponse answer(InvocationOnMock invocationOnMock) throws Throwable {
+            public Element answer(InvocationOnMock invocationOnMock) throws Throwable {
                 final String defId = (String) invocationOnMock.getArguments()[0];
+
+                BPMNDefinition bpmnDefinition = null;
                 
-                DefinitionServiceResponse definitionServiceResponse = mock(DefinitionServiceResponse.class);
+                if ( BPMNDiagram.ID.equals(defId) ) {
+                    bpmnDefinition = new BPMNDiagram(
+                            new BPMNGeneral(new Name(), new Documentation()),
+                            new DiagramSet(new Package(), new Executable())
+                    );
+                } else if ( StartNoneEvent.ID.equals(defId) ) {
+                    bpmnDefinition = new StartNoneEvent(
+                            new BPMNGeneral(new Name(), new Documentation()),
+                            new BackgroundSet(new BgColor() , new BorderColor(), new BorderSize()),
+                            new FontSet(new FontFamily(), new FontColor() , new FontSize() , new FontBorderSize() ),
+                            new Radius()
+                    );
+                } else if ( EndNoneEvent.ID.equals(defId) ) {
+                    bpmnDefinition = new EndNoneEvent(
+                            new BPMNGeneral(new Name(), new Documentation()),
+                            new BackgroundSet(new BgColor() , new BorderColor(), new BorderSize()),
+                            new FontSet(new FontFamily(), new FontColor() , new FontSize() , new FontBorderSize() ),
+                            new Radius()
+                    );
+                } else if ( Task.ID.equals(defId) ) {
+                    bpmnDefinition = new Task(
+                            new BPMNGeneral(new Name(), new Documentation()),
+                            new BackgroundSet(new BgColor() , new BorderColor(), new BorderSize()),
+                            new FontSet(new FontFamily(), new FontColor() , new FontSize() , new FontBorderSize() ),
+                            new Width(),
+                            new Height()
+                    );
+                } else if ( ParallelGateway.ID.equals(defId) ) {
+                    bpmnDefinition = new ParallelGateway(
+                            new BPMNGeneral(new Name(), new Documentation()),
+                            new BackgroundSet(new BgColor() , new BorderColor(), new BorderSize()),
+                            new FontSet(new FontFamily(), new FontColor() , new FontSize() , new FontBorderSize() ),
+                            new Radius()
+                    );
+                } else if ( SequenceFlow.ID.equals(defId) ) {
+                    bpmnDefinition = new SequenceFlow(
+                            new BPMNGeneral(new Name(), new Documentation()),
+                            new BackgroundSet(new BgColor() , new BorderColor(), new BorderSize()),
+                            new FontSet(new FontFamily(), new FontColor() , new FontSize() , new FontBorderSize() )
+                    );
+                }
+
                 // TODO
+                
                 return null;
             }
-        }).when(definitionService).getDefinition(anyString());
+        }).when(definitionService).buildGraphElement(anyString());
     }
 
     @Test

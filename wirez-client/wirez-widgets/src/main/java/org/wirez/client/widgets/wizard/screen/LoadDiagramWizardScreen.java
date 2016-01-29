@@ -2,13 +2,19 @@ package org.wirez.client.widgets.wizard.screen;
 
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
+import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.mvp.impl.DefaultPlaceRequest;
+import org.wirez.client.widgets.event.LoadDiagramEvent;
 import org.wirez.client.widgets.wizard.BaseWizardScreen;
 import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.widgets.wizard.CanvasWizardScreen;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 
 @Dependent
 public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasWizardScreen {
@@ -17,10 +23,12 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
         
     }
     
+    Event<LoadDiagramEvent> loadDiagramEventEvent;
     View view;
 
     @Inject
-    public LoadDiagramWizardScreen(final View view) {
+    public LoadDiagramWizardScreen(final Event<LoadDiagramEvent> loadDiagramEventEvent, final View view) {
+        this.loadDiagramEventEvent = loadDiagramEventEvent;
         this.view = view;
     }
 
@@ -39,7 +47,8 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
         return new Callback() {
             @Override
             public void onNextButtonClick() {
-                // TODO
+                final String path = "org/wirez/bpmn/backend/examples/wirez-bpmn-test.bpmn2";
+                loadDiagramEventEvent.fire(new LoadDiagramEvent(path));
             }
 
             @Override

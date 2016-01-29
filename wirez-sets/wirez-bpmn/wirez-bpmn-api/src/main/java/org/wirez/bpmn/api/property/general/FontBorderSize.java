@@ -38,11 +38,10 @@ public class FontBorderSize extends BaseProperty implements BPMNProperty {
     public static final Integer DEFAULT_VALUE = 1;
 
     @Value
-    private Integer value;
+    private Integer value = DEFAULT_VALUE;
     
     public FontBorderSize() {
         super(ID, "Font border size", "The font border size", false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

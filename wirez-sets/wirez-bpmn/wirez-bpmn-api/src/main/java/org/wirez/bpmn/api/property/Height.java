@@ -38,11 +38,10 @@ public class Height extends BaseProperty implements BPMNProperty {
     public static final Integer DEFAULT_VALUE = 50;
 
     @Value
-    private Integer value;
+    private Integer value = DEFAULT_VALUE;
     
     public Height() {
         super(ID, "Height", "The height", false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

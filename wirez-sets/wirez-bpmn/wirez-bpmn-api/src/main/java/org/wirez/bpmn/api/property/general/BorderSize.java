@@ -38,11 +38,10 @@ public class BorderSize extends BaseProperty implements BPMNProperty {
     public static final Integer DEFAULT_VALUE = 1;
 
     @Value
-    private Integer value;
+    private Integer value = DEFAULT_VALUE;
     
     public BorderSize() {
         super(ID, "Border size", "The border size", false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

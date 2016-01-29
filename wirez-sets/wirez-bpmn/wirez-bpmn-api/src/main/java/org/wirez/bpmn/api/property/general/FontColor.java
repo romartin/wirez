@@ -38,13 +38,12 @@ public class FontColor extends BaseProperty implements BPMNProperty {
     public static final String DEFAULT_VALUE = "#000000";
 
     @Value
-    private String value;
+    private String value = DEFAULT_VALUE;
     
     public FontColor() {
         super(ID, 
                 "Font Color", "The font Color.", 
                 false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

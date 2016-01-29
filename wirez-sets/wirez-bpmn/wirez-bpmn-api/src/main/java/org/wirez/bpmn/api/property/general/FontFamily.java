@@ -38,13 +38,12 @@ public class FontFamily extends BaseProperty implements BPMNProperty {
     public static final String DEFAULT_VALUE = "Verdana";
 
     @Value
-    private String value;
+    private String value = DEFAULT_VALUE;
     
     public FontFamily() {
         super(ID, 
                 "Font Family", "The font family.", 
                 false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

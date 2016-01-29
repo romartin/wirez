@@ -38,11 +38,10 @@ public class Executable extends BaseProperty implements BPMNProperty {
     public static final Boolean DEFAULT_VALUE = true;
 
     @Value
-    private Boolean value;
+    private Boolean value = DEFAULT_VALUE;
     
     public Executable() {
         super(ID, "executable", "Is executable", false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

@@ -37,11 +37,10 @@ public class Package extends BaseProperty implements BPMNProperty {
     public static final String DEFAULT_VALUE = "/defaultPackage/defaultPackage";
 
     @Value
-    private String value;
+    private String value = DEFAULT_VALUE;
     
     public Package() {
         super(ID, "Package", "The diagram's package", false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

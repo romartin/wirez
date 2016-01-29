@@ -38,13 +38,12 @@ public class BgColor extends BaseProperty implements BPMNProperty {
     public static final String DEFAULT_VALUE = "#ffffff";
 
     @Value
-    private String value;
+    private String value = DEFAULT_VALUE;
     
     public BgColor() {
         super(ID, 
                 "Background Color", "The Background Color.", 
                 false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

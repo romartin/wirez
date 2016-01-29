@@ -43,7 +43,7 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
             return buildTask();
         }
         if (StartNoneEvent.ID.equals(id)) {
-            return buildBPMNDiagram();
+            return buildStartNoneEvent();
         }
         if (SequenceFlow.ID.equals(id)) {
             return buildSequenceFlow();

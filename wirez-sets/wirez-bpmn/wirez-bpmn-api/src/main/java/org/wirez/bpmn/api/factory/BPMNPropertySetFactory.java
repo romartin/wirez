@@ -38,7 +38,7 @@ public class BPMNPropertySetFactory implements PropertySetFactory<BPMNPropertySe
             return buildDiagramSet();
         }
         if (BackgroundSet.ID.equals(id)) {
-            return buildGeneralSet();
+            return buildBackgroundSet();
         }
         if (FontSet.ID.equals(id)) {
             return buildFontSet();
@@ -48,20 +48,26 @@ public class BPMNPropertySetFactory implements PropertySetFactory<BPMNPropertySe
     }
 
     public BPMNGeneral buildGeneralSet() {
-        return new BPMNGeneral(new Name(), bpmnPropertyFactory.buildDocumentation());
+        return new BPMNGeneral(new Name(), 
+                bpmnPropertyFactory.buildDocumentation());
     }
 
     public DiagramSet buildDiagramSet() {
-        return new DiagramSet(bpmnPropertyFactory.buildPackage(), bpmnPropertyFactory.buildExecutable());
+        return new DiagramSet(bpmnPropertyFactory.buildPackage(), 
+                bpmnPropertyFactory.buildExecutable());
     }
 
     public BackgroundSet buildBackgroundSet() {
-        return new BackgroundSet(bpmnPropertyFactory.buildBorderColor(), bpmnPropertyFactory.buildBorderSize());
+        return new BackgroundSet(bpmnPropertyFactory.buildBgColor(), 
+                bpmnPropertyFactory.buildBorderColor(), 
+                bpmnPropertyFactory.buildBorderSize());
     }
 
     public FontSet buildFontSet() {
-        return new FontSet(bpmnPropertyFactory.buildFontFamily(), bpmnPropertyFactory.buildFontColor(),
-                bpmnPropertyFactory.buildFontSize(), bpmnPropertyFactory.buildFontBorderSize());
+        return new FontSet(bpmnPropertyFactory.buildFontFamily(), 
+                bpmnPropertyFactory.buildFontColor(),
+                bpmnPropertyFactory.buildFontSize(), 
+                bpmnPropertyFactory.buildFontBorderSize());
     }
     
 }

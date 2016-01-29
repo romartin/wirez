@@ -29,8 +29,10 @@ public class BackgroundSet implements BPMNPropertySet {
     public BackgroundSet() {
     }
 
-    public BackgroundSet(@MapsTo("borderColor") BorderColor borderColor,
+    public BackgroundSet(@MapsTo("bgColor") BgColor bgColor,
+                         @MapsTo("borderColor") BorderColor borderColor,
                          @MapsTo("borderSize") BorderSize borderSize) {
+        this.bgColor = bgColor;
         this.borderColor = borderColor;
         this.borderSize = borderSize;
     }

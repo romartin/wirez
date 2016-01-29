@@ -38,13 +38,12 @@ public class BorderColor extends BaseProperty implements BPMNProperty {
     public static final String DEFAULT_VALUE = "#000000";
 
     @Value
-    private String value;
+    private String value = DEFAULT_VALUE;
     
     public BorderColor() {
         super(ID, 
                 "Border Color", "The Border Color.", 
                 false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

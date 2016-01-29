@@ -38,11 +38,10 @@ public class FontSize extends BaseProperty implements BPMNProperty {
     public static final Integer DEFAULT_VALUE = 8;
 
     @Value
-    private Integer value;
+    private Integer value = DEFAULT_VALUE;
     
     public FontSize() {
         super(ID, "Font size", "The font size", false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

@@ -38,11 +38,10 @@ public class Radius extends BaseProperty implements BPMNProperty {
     public static final Integer DEFAULT_VALUE = 25;
 
     @Value
-    private Integer value;
+    private Integer value = DEFAULT_VALUE;
     
     public Radius() {
         super(ID, "Radius", "The radius", false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

@@ -70,7 +70,7 @@ public class DefinitionServiceImpl implements DefinitionService {
             }
         }
         
-        return null;
+        return new DefinitionServiceResponseImpl(definition, elementClass.getName(), properties, propertySetSetMap);
     }
 
     // TODO: Clone definition pojos.

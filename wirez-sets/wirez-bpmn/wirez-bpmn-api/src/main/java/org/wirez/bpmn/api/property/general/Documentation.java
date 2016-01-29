@@ -37,14 +37,13 @@ public class Documentation extends BaseProperty implements BPMNProperty {
     public static final String DEFAULT_VALUE = "";
 
     @Value
-    private String value;
+    private String value = DEFAULT_VALUE;
     
     public Documentation() {
         super(ID, 
                 "Documentation", "This attribute is used to annotate the BPMN element, " +
                 "such as descriptions and other documentation", 
                 false, false);
-        setValue(DEFAULT_VALUE);
     }
 
     @Override

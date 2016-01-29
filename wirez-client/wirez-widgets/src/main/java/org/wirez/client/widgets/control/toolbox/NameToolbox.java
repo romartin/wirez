@@ -19,7 +19,7 @@ package org.wirez.client.widgets.control.toolbox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.wirez.core.api.definition.property.defaultset.Name;
+import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;

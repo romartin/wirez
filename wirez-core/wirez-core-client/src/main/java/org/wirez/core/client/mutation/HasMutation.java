@@ -16,12 +16,15 @@
 
 package org.wirez.core.client.mutation;
 
+import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.CanvasHandler;
+
 public interface HasMutation {
     
     boolean accepts(MutationType type);
     
-    void beforeMutations();
+    void beforeMutations(Canvas canvas);
     
-    void afterMutations();
+    void afterMutations(Canvas canvas);
     
 }

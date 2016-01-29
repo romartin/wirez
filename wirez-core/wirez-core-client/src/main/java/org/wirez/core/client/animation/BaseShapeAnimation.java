@@ -19,6 +19,8 @@ package org.wirez.core.client.animation;
 import com.ait.lienzo.client.core.animation.IAnimation;
 import com.ait.lienzo.client.core.animation.IAnimationHandle;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.impl.BaseShape;
 
@@ -30,6 +32,7 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
     public static final long ANIMATION_DURATION = 500;
     
     final Shape shape;
+    Canvas canvas;
     AnimationCallback callback;
     long duration;
 
@@ -40,6 +43,12 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
 
     public AnimationCallback getCallback() {
         return callback;
+    }
+
+    @Override
+    public BaseShapeAnimation setCanvas(final Canvas canvas) {
+        this.canvas = canvas;
+        return this;
     }
 
     @Override
@@ -61,7 +70,9 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
     protected void onStart() {
 
         if (shape instanceof BaseShape) {
-            ((BaseShape) shape).beforeMutations();
+            ((BaseShape) shape).beforeMutations(canvas);
+        } else if (shape instanceof BaseConnector) {
+            ((BaseConnector) shape).beforeMutations(canvas);
         }
 
     }
@@ -69,7 +80,9 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
     protected void onClose() {
 
         if (shape instanceof BaseShape) {
-            ((BaseShape) shape).afterMutations();
+            ((BaseShape) shape).afterMutations(canvas);
+        }else if (shape instanceof BaseConnector) {
+            ((BaseConnector) shape).afterMutations(canvas);
         }
         
     }
@@ -99,9 +112,7 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
         if ( shape instanceof BaseShape) {
             return ( (BaseShape) shape).getDecorators();
         } else if ( shape instanceof BaseConnector) {
-            Collection<com.ait.lienzo.client.core.shape.Shape> decorators = new ArrayList<com.ait.lienzo.client.core.shape.Shape>(1);
-            decorators.add( ( (BaseConnector) shape).getShape() );
-            return decorators;
+            return ( (BaseConnector) shape).getDecorators();
         }
         return null;
     }

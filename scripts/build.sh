@@ -47,10 +47,10 @@ function build() {
 		exit 1
 	fi
 
-	if [ -d "$JBPM_DESIGNER_PATH" ]; then
-		echo "[ERROR] - Jbpm designer path already exists."
-		exit 1
-	fi
+	# if [ -d "$JBPM_DESIGNER_PATH" ]; then
+	# 	echo "[ERROR] - Jbpm designer path already exists."
+	# 	exit 1
+	# fi
 
 	if [ -d "$WIREZ_PATH" ]; then
 		echo "[ERROR] - Wirez path already exists."
@@ -59,7 +59,7 @@ function build() {
 
 	cloneAndbuildModule $GITHUB_LIENZO_CORE $GITHUB_LIENZO_CORE_BRANCH $LIENZO_CORE_PATH
 
-	cloneAndbuildModule $GITHUB_JBPM_DESIGNER $GITHUB_JBPM_DESIGNER_BRANCH $JBPM_DESIGNER_PATH
+	# cloneAndbuildModule $GITHUB_JBPM_DESIGNER $GITHUB_JBPM_DESIGNER_BRANCH $JBPM_DESIGNER_PATH
 
 	cloneAndbuildModule $GITHUB_WIREZ $GITHUB_WIREZ_BRANCH $WIREZ_PATH
 	
@@ -75,10 +75,10 @@ function update() {
 		exit 1
 	fi
 
-	if [ ! -d "$JBPM_DESIGNER_PATH" ]; then
-		echo "[ERROR] - Jbpm designer path does not exist."
-		exit 1
-	fi
+	# if [ ! -d "$JBPM_DESIGNER_PATH" ]; then
+	# 	echo "[ERROR] - Jbpm designer path does not exist."
+	# 	exit 1
+	# fi
 
 	if [ ! -d "$WIREZ_PATH" ]; then
 		echo "[ERROR] - Wirez path does not exist."
@@ -87,7 +87,7 @@ function update() {
 
 	updateModule $LIENZO_CORE_PATH
 
-	updateModule $JBPM_DESIGNER_PATH
+	# updateModule $JBPM_DESIGNER_PATH
 
 	updateModule $WIREZ_PATH
 	

@@ -5,8 +5,6 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNPropertySet;
 import org.wirez.core.api.annotation.propertyset.Property;
-import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.definition.property.defaultset.Name;
 
 import javax.inject.Inject;
 

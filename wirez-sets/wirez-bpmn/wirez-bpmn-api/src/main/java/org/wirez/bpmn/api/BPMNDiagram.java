@@ -59,11 +59,11 @@ public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
         this();
         this.general = general;
         this.diagramSet = diagramSet;
-        init();
     }
 
-    private void init() {
+    public BPMNDiagram buildDefaults() {
         getGeneral().getName().setValue("My diagram");
+        return this;
     }
 
     @Override

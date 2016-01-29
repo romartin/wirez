@@ -264,7 +264,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
 
     protected void afterElementUpdated(final Element element, final HasGraphElementMutation elementMutation) {
 
-        elementMutation.afterMutations();
+        elementMutation.afterMutations(getBaseCanvas());
         
         fireElementUpdated(element);
     }

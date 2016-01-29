@@ -218,6 +218,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
     protected void selectShape(final Shape shape) {
         new ShapeSelectionAnimation(shape)
+                .setCanvas(BaseCanvas.this)
                 .setDuration(ANIMATION_SELECTION_DURATION)
                 .run();
     }
@@ -225,6 +226,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     protected void deselectShape(final Shape shape) {
         final boolean isConnector = shape instanceof BaseConnector;
         new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK)
+                .setCanvas(BaseCanvas.this)
                 .setDuration(ANIMATION_SELECTION_DURATION)
                 .run();
     }

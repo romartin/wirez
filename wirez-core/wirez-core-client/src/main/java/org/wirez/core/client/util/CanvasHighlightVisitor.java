@@ -75,7 +75,9 @@ public class CanvasHighlightVisitor {
     private void animate(final int index, final Command callback) {
         if (index < shapes.size()) {
             final Shape shape = shapes.get(index);
-            new ShapeHighlightAnimation(shape).setColor(ColorName.BLUE).setCallback(new ShapeAnimation.AnimationCallback() {
+            new ShapeHighlightAnimation(shape)
+                    .setColor(ColorName.BLUE)
+                    .setCallback(new ShapeAnimation.AnimationCallback() {
                 @Override
                 public void onStart() {
                     
@@ -91,7 +93,9 @@ public class CanvasHighlightVisitor {
                     animate(index + 1, callback);
                 }
                 
-            }).setDuration(500).run();
+            }).setDuration(500)
+                    .setCanvas(canvasHandler.getSettings().getCanvas())
+                    .run();
             
         } else {
             

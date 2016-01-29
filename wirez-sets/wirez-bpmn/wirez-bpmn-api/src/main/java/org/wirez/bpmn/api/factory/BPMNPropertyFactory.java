@@ -7,7 +7,7 @@ import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.diagram.Executable;
 import org.wirez.bpmn.api.property.diagram.Package;
 import org.wirez.bpmn.api.property.general.*;
-import org.wirez.core.api.definition.property.defaultset.Name;
+import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.factory.DefinitionSetFactory;
 import org.wirez.core.api.factory.PropertyFactory;
 
@@ -42,7 +42,10 @@ public class BPMNPropertyFactory implements PropertyFactory<BPMNProperty> {
 
     @Override
     public BPMNProperty build(final String id) {
-
+        
+        if (Name.ID.equals(id)) {
+            return buildName();
+        }
         if (Executable.ID.equals(id)) {
             return buildExecutable();
         }
@@ -84,6 +87,10 @@ public class BPMNPropertyFactory implements PropertyFactory<BPMNProperty> {
         }
         
         throw new RuntimeException("Instance expected to be build here.");
+    }
+
+    public org.wirez.bpmn.api.property.general.Name buildName() {
+        return new org.wirez.bpmn.api.property.general.Name();
     }
 
     public Executable buildExecutable() {

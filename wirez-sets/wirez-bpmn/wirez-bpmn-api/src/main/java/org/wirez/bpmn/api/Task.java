@@ -81,17 +81,17 @@ public class Task extends BaseDefinition implements BPMNDefinition {
         this.fontSet = fontSet;
         this.width = width;
         this.height = height;
-        init();
     }
 
-    private void init() {
+    public Task buildDefaults() {
         getGeneral().getName().setValue("My task");
         getBackgroundSet().getBgColor().setValue(COLOR);
         getBackgroundSet().getBorderSize().setValue(1);
         getWidth().setValue(WIDTH);
         getHeight().setValue(HEIGHT);
-        
+        return this;
     }
+    
     @Override
     public String getId() {
         return ID;

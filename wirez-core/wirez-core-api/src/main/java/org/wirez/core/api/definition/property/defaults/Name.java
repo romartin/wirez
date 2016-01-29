@@ -1,4 +1,4 @@
-package org.wirez.core.api.definition.property.defaultset;
+package org.wirez.core.api.definition.property.defaults;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -8,9 +8,7 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
-@Portable
-@Bindable
-public class Name implements Property, HasDefaultValue<String>, HasValue<String> {
+public abstract class Name implements Property, HasDefaultValue<String>, HasValue<String> {
 
     public static final String ID = "name";
 

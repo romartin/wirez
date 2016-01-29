@@ -3,7 +3,7 @@ package org.wirez.bpmn.api.factory;
 import org.wirez.bpmn.api.BPMNPropertySet;
 import org.wirez.bpmn.api.property.diagram.DiagramSet;
 import org.wirez.bpmn.api.property.general.*;
-import org.wirez.core.api.definition.property.defaultset.Name;
+import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.factory.PropertySetFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -48,7 +48,7 @@ public class BPMNPropertySetFactory implements PropertySetFactory<BPMNPropertySe
     }
 
     public BPMNGeneral buildGeneralSet() {
-        return new BPMNGeneral(new Name(), 
+        return new BPMNGeneral(bpmnPropertyFactory.buildName(), 
                 bpmnPropertyFactory.buildDocumentation());
     }
 

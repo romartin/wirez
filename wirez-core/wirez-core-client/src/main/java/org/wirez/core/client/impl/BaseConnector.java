@@ -28,11 +28,14 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.mutation.*;
+
+import java.util.Collection;
 
 public abstract class BaseConnector<W extends Definition> extends WiresConnector implements
         Shape<W>,
@@ -60,6 +63,8 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         group = new Group();
     }
 
+    public abstract Collection<com.ait.lienzo.client.core.shape.Shape> getDecorators();
+    
     @Override
     public Shape<W> setId(final String id) {
         this.id = id;
@@ -117,12 +122,12 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public void beforeMutations() {
+    public void beforeMutations(final Canvas canvas) {
         
     }
 
     @Override
-    public void afterMutations() {
+    public void afterMutations(final Canvas canvas) {
 
     }
 

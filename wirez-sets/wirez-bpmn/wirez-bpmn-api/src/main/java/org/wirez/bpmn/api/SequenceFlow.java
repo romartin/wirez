@@ -68,15 +68,15 @@ public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
-        init();
     }
 
-    private void init() {
+    public SequenceFlow buildDefaults() {
         getGeneral().getName().setValue("My sequence flow");
         getBackgroundSet().getBgColor().setValue(COLOR);
         getBackgroundSet().getBorderSize().setValue(3);
-        
+        return this;
     }
+    
     @Override
     public String getId() {
         return ID;

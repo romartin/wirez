@@ -4,6 +4,10 @@ import org.wirez.bpmn.api.*;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.Width;
+import org.wirez.bpmn.api.property.diagram.DiagramSet;
+import org.wirez.bpmn.api.property.general.BPMNGeneral;
+import org.wirez.bpmn.api.property.general.BackgroundSet;
+import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.core.api.factory.DefinitionFactory;
 import org.wirez.core.api.factory.DefinitionSetFactory;
 
@@ -60,41 +64,47 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
     
     public Task buildTask() {
         return new Task(bpmnPropertySetFactory.buildGeneralSet(),
-                bpmnPropertySetFactory.buildBackgroundSet(),
-                bpmnPropertySetFactory.buildFontSet(),
-                bpmnPropertyFactory.buildWidth(),
-                bpmnPropertyFactory.buildHeight());
+                    bpmnPropertySetFactory.buildBackgroundSet(),
+                    bpmnPropertySetFactory.buildFontSet(),
+                    bpmnPropertyFactory.buildWidth(),
+                    bpmnPropertyFactory.buildHeight())
+                .buildDefaults();
     }
 
     public StartNoneEvent buildStartNoneEvent() {
         return new StartNoneEvent(bpmnPropertySetFactory.buildGeneralSet(),
-                bpmnPropertySetFactory.buildBackgroundSet(),
-                bpmnPropertySetFactory.buildFontSet(),
-                bpmnPropertyFactory.buildRadius());
+                    bpmnPropertySetFactory.buildBackgroundSet(),
+                    bpmnPropertySetFactory.buildFontSet(),
+                    bpmnPropertyFactory.buildRadius())
+                .buildDefaults();
     }
     
 
     public EndNoneEvent buildEndNoneEvent() {
         return new EndNoneEvent(bpmnPropertySetFactory.buildGeneralSet(),
-                bpmnPropertySetFactory.buildBackgroundSet(),
-                bpmnPropertySetFactory.buildFontSet(),
-                bpmnPropertyFactory.buildRadius());
+                    bpmnPropertySetFactory.buildBackgroundSet(),
+                    bpmnPropertySetFactory.buildFontSet(),
+                    bpmnPropertyFactory.buildRadius())
+                .buildDefaults();
     }
     public SequenceFlow buildSequenceFlow() {
         return new SequenceFlow(bpmnPropertySetFactory.buildGeneralSet(),
-                bpmnPropertySetFactory.buildBackgroundSet(), 
-                bpmnPropertySetFactory.buildFontSet());
+                    bpmnPropertySetFactory.buildBackgroundSet(), 
+                    bpmnPropertySetFactory.buildFontSet())
+                .buildDefaults();
     }
 
     public ParallelGateway buildParallelGateway() {
         return new ParallelGateway(bpmnPropertySetFactory.buildGeneralSet(),
-                bpmnPropertySetFactory.buildBackgroundSet(),
-                bpmnPropertySetFactory.buildFontSet(),
-                bpmnPropertyFactory.buildRadius());
+                    bpmnPropertySetFactory.buildBackgroundSet(),
+                    bpmnPropertySetFactory.buildFontSet(),
+                    bpmnPropertyFactory.buildRadius())
+                .buildDefaults();
     }
 
     public BPMNDiagram buildBPMNDiagram() {
         return new BPMNDiagram(bpmnPropertySetFactory.buildGeneralSet(),
-                bpmnPropertySetFactory.buildDiagramSet());
+                    bpmnPropertySetFactory.buildDiagramSet())
+                .buildDefaults();
     }
 }

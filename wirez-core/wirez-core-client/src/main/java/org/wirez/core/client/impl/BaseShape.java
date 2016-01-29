@@ -27,10 +27,11 @@ import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.defaultset.Name;
+import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.*;
 import org.wirez.core.client.control.resize.BaseResizeControl;
@@ -141,12 +142,12 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void beforeMutations() {
+    public void beforeMutations(final Canvas canvas) {
         
     }
 
     @Override
-    public void afterMutations() {
+    public void afterMutations(final Canvas canvas) {
 
         // Ensure top primitives in the layer
         getText().moveToTop();

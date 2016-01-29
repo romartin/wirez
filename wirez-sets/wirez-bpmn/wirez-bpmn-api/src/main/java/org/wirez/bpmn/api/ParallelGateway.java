@@ -44,6 +44,7 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
     public static final String ID = "ParallelGateway";
     public static final String COLOR = "#f0e68c";
     public static final Integer RADIUS = 50;
+    public static final Integer BORDER_SIZE = 3;
     
     @PropertySet
     private BPMNGeneral general;
@@ -78,16 +79,16 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.radius = radius;
-        init();
     }
 
-    private void init() {
+    public ParallelGateway buildDefaults() {
         getGeneral().getName().setValue("My gateway");
         getBackgroundSet().getBgColor().setValue(COLOR);
         getBackgroundSet().getBorderSize().setValue(3);
         getRadius().setValue(RADIUS);
-        
+        return this;
     }
+    
     @Override
     public String getId() {
         return ID;

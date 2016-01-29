@@ -17,19 +17,50 @@
 package org.wirez.bpmn.client;
 
 import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
+import com.ait.lienzo.client.core.shape.DecoratableLine;
 import com.ait.lienzo.client.core.shape.Decorator;
+import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.bpmn.api.SequenceFlow;
+import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.CanvasHandler;
+
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> {
 
+    DecoratableLine decorator;
+    
     public SequenceFlowShape(final AbstractDirectionalMultiPointShape<?> line, 
                           final Decorator<?> head, 
                           final Decorator<?> tail, 
                           final WiresManager manager) {
         super(line, head, tail, manager);
+        // buildDecorator();
     }
 
+    @Override
+    public Collection<Shape> getDecorators() {
+        return new LinkedList<Shape>() {{
+            add( getDecoratableLine() );
+        }};
+    }
+
+    @Override
+    public void afterMutations(final Canvas canvas) {
+        super.afterMutations(canvas);
+        // TODO: Clone the main line and use it as decorator.
+        // buildDecorator();
+        // canvas.getLayer().add(decorator);
+    }
+    
+    private void buildDecorator() {
+        if ( null != decorator ) {
+            decorator.removeFromParent();
+        }
+        decorator = getDecoratableLine().copy();
+    }
 
     @Override
     public String toString() {

@@ -32,7 +32,6 @@ import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.defaultset.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
 import org.wirez.core.api.graph.factory.EdgeFactory;

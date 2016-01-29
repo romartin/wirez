@@ -28,7 +28,7 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.property.PropertiesEditor;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
-import org.wirez.core.api.definition.property.defaultset.Name;
+import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.ElementUtils;

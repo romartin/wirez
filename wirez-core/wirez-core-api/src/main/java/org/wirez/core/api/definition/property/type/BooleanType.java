@@ -21,7 +21,7 @@ import org.wirez.core.api.definition.property.PropertyType;
 @Portable
 public class BooleanType implements PropertyType {
 
-    private static final String name = "java.lang.Boolean";
+    public static final String name = "java.lang.Boolean";
 
     @Override
     public String getName() {

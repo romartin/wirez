@@ -20,15 +20,6 @@ import javax.inject.Inject;
 public class BPMNGraphObjectBuilderFactory {
 
     @Inject
-    DefaultGraphFactory<? extends Definition> graphFactory;
-
-    @Inject
-    NodeFactory<? extends Definition> nodeFactory;
-
-    @Inject
-    EdgeFactory<? extends Definition> edgeFactory;
-    
-    @Inject
     DefinitionManager definitionManager;
     
     @Inject
@@ -56,19 +47,7 @@ public class BPMNGraphObjectBuilderFactory {
             return new SequenceFlowBuilder(this);
         }
         
-        throw new RuntimeException("No builder for stencil '" + id + "'.");
-    }
-
-    public DefaultGraphFactory<? extends Definition> getGraphFactory() {
-        return graphFactory;
-    }
-
-    public NodeFactory<? extends Definition> getNodeFactory() {
-        return nodeFactory;
-    }
-
-    public EdgeFactory<? extends Definition> getEdgeFactory() {
-        return edgeFactory;
+        throw new RuntimeException("No builder for definition '" + id + "'.");
     }
 
     public DefinitionManager getDefinitionManager() {

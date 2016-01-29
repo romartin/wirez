@@ -21,7 +21,7 @@ import org.wirez.core.api.definition.property.PropertyType;
 @Portable
 public class StringType implements PropertyType {
 
-    private static final String name = "java.lang.String";
+    public static final String name = "java.lang.String";
 
     @Override
     public String getName() {

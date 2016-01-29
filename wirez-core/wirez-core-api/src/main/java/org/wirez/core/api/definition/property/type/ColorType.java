@@ -21,7 +21,7 @@ import org.wirez.core.api.definition.property.PropertyType;
 @Portable
 public class ColorType implements PropertyType {
 
-    private static final String name = "wirez.Color";
+    public static final String name = "wirez.Color";
 
     @Override
     public String getName() {

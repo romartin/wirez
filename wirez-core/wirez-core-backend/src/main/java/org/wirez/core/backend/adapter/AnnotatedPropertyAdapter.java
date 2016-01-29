@@ -69,8 +69,26 @@ public class AnnotatedPropertyAdapter implements PropertyAdapter<Property> {
     }
 
     @Override
-    public void setValue(final Property pojo, final Object value) {
-        // TODO
+    public void setValue(final Property property, final Object value) {
+
+        if ( null != property ) {
+            Field[] fields = property.getClass().getDeclaredFields();
+            if ( null != fields ) {
+                for (Field field : fields) {
+                    org.wirez.core.api.annotation.property.Value annotation = field.getAnnotation(org.wirez.core.api.annotation.property.Value.class);
+                    if ( null != annotation) {
+                        try {
+                            field.setAccessible(true);
+                            field.set(property, value);
+                        } catch (Exception e) {
+                            LOG.error("Error setting value for Property with id [" + property.getId() + "] " +
+                                    "and value [" + ( value != null ? value.toString() : "null" ) + "]");
+                        }
+                    }
+                }
+            }
+        }
+        
     }
 
     @Override

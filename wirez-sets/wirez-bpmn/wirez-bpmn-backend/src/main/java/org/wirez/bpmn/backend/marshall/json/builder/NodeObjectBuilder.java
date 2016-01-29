@@ -5,6 +5,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 
-public interface NodeObjectBuilder<W extends Definition> extends GraphObjectBuilder<W, Node<ViewContent<W>, Edge>> {
+public interface NodeObjectBuilder<W extends Definition, T extends Node<ViewContent<W>, Edge>> 
+        extends GraphObjectBuilder<W, T> {
     
 }

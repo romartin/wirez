@@ -21,7 +21,7 @@ import org.wirez.core.api.definition.property.PropertyType;
 @Portable
 public class IntegerType implements PropertyType {
 
-    private static final String name = "java.lang.Integer";
+    public static final String name = "java.lang.Integer";
 
     @Override
     public String getName() {

@@ -16,13 +16,12 @@
 
 package org.wirez.core.client.impl;
 
-import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
-import com.ait.lienzo.client.core.shape.Decorator;
-import com.ait.lienzo.client.core.shape.Group;
+import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.shape.wires.MagnetManager;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.types.Point2DArray;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
@@ -98,7 +97,7 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         // TODO
 
         // Magnet connections.
-        // _applyConnections(element, canvasHandler);
+        _applyConnections(element, canvasHandler);
         
     }
 
@@ -131,7 +130,8 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
-        
+
+        // TODO: Use the given concrete magent indexes.
         final int sourceMagnet = 0;
         final int targetMagnet = 0;
         
@@ -173,12 +173,17 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         double y1 = m1_1.getControl().getY();
 
         // TODO: Update the connector decorator in order to modify head & tail decorators (connector direction)
-       /* OrthogonalPolyLine line = createLine(x0, y0, (x0 + ((x1 - x0) / 2)), (y0 + ((y1 - y0) / 2)), x1, y1);
+       OrthogonalPolyLine line = createLine(x0, y0, (x0 + ((x1 - x0) / 2)), (y0 + ((y1 - y0) / 2)), x1, y1);
         this.setDecorator(
                 line, 
                 headArrow ? new SimpleArrow(20, 0.75) : null,
-                tailArrow ? new SimpleArrow(20, 0.75) : null);*/
+                tailArrow ? new SimpleArrow(20, 0.75) : null);
 
+    }
+
+    private final OrthogonalPolyLine createLine(final double... points)
+    {
+        return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
     }
 
 }

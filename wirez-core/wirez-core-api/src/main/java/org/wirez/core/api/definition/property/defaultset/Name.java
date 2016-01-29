@@ -9,6 +9,7 @@ import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
+@Bindable
 public class Name implements Property, HasDefaultValue<String>, HasValue<String> {
 
     public static final String ID = "name";

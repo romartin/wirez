@@ -31,6 +31,7 @@ import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.*;
@@ -65,8 +66,6 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         text.moveToTop();
     }
 
-    public abstract Collection<Shape> getDecorators();
-    
     @Override
     public BaseShape<W> setId(String id) {
         this.id = id;

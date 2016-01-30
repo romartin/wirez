@@ -18,6 +18,7 @@ package org.wirez.core.client.animation;
 
 import com.ait.lienzo.client.core.animation.AnimationProperties;
 import com.ait.lienzo.client.core.animation.AnimationTweener;
+import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.lienzo.shared.core.types.IColor;
 import org.wirez.core.client.Shape;
 
@@ -29,12 +30,19 @@ public class ShapeDeSelectionAnimation extends BaseShapeAnimation {
 
     private double strokeWidth;
     private double strokeAlpha;
-    private IColor color;
+    private String color;
 
     public ShapeDeSelectionAnimation(final Shape shape,
                                      final double strokeWidth,
                                      final double strokeAlpha,
                                      final IColor color) {
+        this(shape, strokeWidth, strokeAlpha, color.getColorString());
+    }
+
+    public ShapeDeSelectionAnimation(final Shape shape,
+                                     final double strokeWidth,
+                                     final double strokeAlpha,
+                                     final String color) {
         super(shape);
         this.strokeWidth = strokeWidth;
         this.strokeAlpha = strokeAlpha;
@@ -46,7 +54,7 @@ public class ShapeDeSelectionAnimation extends BaseShapeAnimation {
         final Collection<com.ait.lienzo.client.core.shape.Shape> decorators = getDecorators();
         if ( null != decorators && !decorators.isEmpty() ) {
             for( final com.ait.lienzo.client.core.shape.Shape decorator : decorators ) {
-                decorator.setStrokeWidth(strokeWidth).setStrokeColor(color);
+                decorator.setStrokeWidth(strokeWidth).setStrokeColor("");
                 decorator.animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(STROKE_ALPHA(strokeAlpha)), 
                         getDuration(), animationCallback);
             }

@@ -43,15 +43,14 @@ public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "SequenceFlow";
     public static final String COLOR = "#000000";
+    public static final String BORDER_COLOR = "#000000";
+    public static final Integer BORDER_SIZE = 3;
     
     @PropertySet
     private BPMNGeneral general;
 
     @PropertySet
     private BackgroundSet backgroundSet;
-
-    @PropertySet
-    private FontSet fontSet;
 
     public SequenceFlow() {
         super("Connecting Objects", "Sequence Flow", "A Sequence Flow",
@@ -62,18 +61,17 @@ public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
     }
     
     public SequenceFlow(@MapsTo("general") BPMNGeneral general,
-                        @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                        @MapsTo("fontSet") FontSet fontSet) {
+                        @MapsTo("backgroundSet") BackgroundSet backgroundSet) {
         this();
         this.general = general;
         this.backgroundSet = backgroundSet;
-        this.fontSet = fontSet;
     }
 
     public SequenceFlow buildDefaults() {
         getGeneral().getName().setValue("My sequence flow");
         getBackgroundSet().getBgColor().setValue(COLOR);
-        getBackgroundSet().getBorderSize().setValue(3);
+        getBackgroundSet().getBorderSize().setValue(BORDER_SIZE);
+        getBackgroundSet().getBorderColor().setValue(BORDER_COLOR);
         return this;
     }
     
@@ -90,10 +88,6 @@ public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
         return backgroundSet;
     }
 
-    public FontSet getFontSet() {
-        return fontSet;
-    }
-
     public void setGeneral(BPMNGeneral general) {
         this.general = general;
     }
@@ -102,7 +96,4 @@ public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
         this.backgroundSet = backgroundSet;
     }
 
-    public void setFontSet(FontSet fontSet) {
-        this.fontSet = fontSet;
-    }
 }

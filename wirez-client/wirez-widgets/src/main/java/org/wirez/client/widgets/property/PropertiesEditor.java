@@ -44,6 +44,7 @@ import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.DefaultCanvasListener;
+import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
@@ -410,17 +411,17 @@ public class PropertiesEditor implements IsWidget {
 
     void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
         checkNotNull("event", event);
-        final Canvas.ShapeState state = event.getState();
+        final ShapeState state = event.getState();
         final DefaultGraph defaultGraph = (DefaultGraph) this.canvasHandler.getGraph();
         final Shape shape = event.getShape();
         if ( shape != null ) {
             // If shape exist, show the properties for the underlying model element.
             final String shapeUUID = shape.getId();
             final Element<? extends ViewContent<?>> element = defaultGraphHandler.initialize(defaultGraph).get(shapeUUID);
-            if (element != null && Canvas.ShapeState.SELECTED.equals(state)) {
+            if (element != null && ShapeState.SELECTED.equals(state)) {
                 GWT.log("PropertiesEditor  - Showing properties for node [" + element.getUUID() + "]");
                 show(element);
-            } else if (Canvas.ShapeState.DESELECTED.equals(state)) {
+            } else if (ShapeState.DESELECTED.equals(state)) {
                 view.clear();
             }
         } else {

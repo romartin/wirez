@@ -69,10 +69,4 @@ public interface Canvas {
 
     Layer getLayer();
 
-    /**
-     * Shape's available states.
-     */
-    public enum ShapeState {
-        SELECTED, DESELECTED;
-    }
 }

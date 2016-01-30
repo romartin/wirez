@@ -27,6 +27,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -63,8 +64,6 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         group = new Group();
     }
 
-    public abstract Collection<com.ait.lienzo.client.core.shape.Shape> getDecorators();
-    
     @Override
     public Shape<W> setId(final String id) {
         this.id = id;
@@ -101,9 +100,6 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         
         // TODO
 
-        // Magnet connections.
-        _applyConnections(element, canvasHandler);
-        
     }
 
     @Override
@@ -131,7 +127,7 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
 
     }
 
-    protected Shape<W> _applyConnections(final Edge<ViewContent<W>, Node> element, final CanvasHandler canvasHandler) {
+    public Shape<W> applyConnections(final Edge<ViewContent<W>, Node> element, final CanvasHandler canvasHandler) {
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();

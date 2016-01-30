@@ -28,11 +28,13 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.mutation.MutationContext;
 
-public abstract class BPMNBasicConnector<W extends Definition> extends BaseConnector<W> {
+public abstract class BPMNBasicConnector<W extends Definition> 
+        extends BaseConnector<W> {
 
 
     public BPMNBasicConnector(final AbstractDirectionalMultiPointShape<?> line, 
@@ -52,8 +54,6 @@ public abstract class BPMNBasicConnector<W extends Definition> extends BaseConne
         // Apply border styles.
         _applyBorders(element);
 
-        // Apply font styles.
-        _applyFont(element);
     }
 
     protected BPMNBasicConnector<W> _applyFillColor(Edge<ViewContent<W>, Node> element) {
@@ -79,26 +79,4 @@ public abstract class BPMNBasicConnector<W extends Definition> extends BaseConne
         return this;
     }
 
-    protected BPMNBasicConnector<W> _applyFont(Edge<ViewContent<W>, Node> element) {
-        // TODO
-        /*final Text text = super.getText();
-        if ( null != text ) {
-            final String color = (String) element.getProperties().get(FontColorBuilder.PROPERTY_ID);
-            final Integer size = (Integer) element.getProperties().get(FontSizeBuilder.PROPERTY_ID);
-            final Integer borderSize = (Integer) element.getProperties().get(FontBorderSizeBuilder.PROPERTY_ID);
-            if (color != null && color.trim().length() > 0) {
-                text.setStrokeColor(color);
-            }
-            if (size != null && size > 0) {
-                text.setFontSize(size);
-            }
-            if (borderSize != null && borderSize > 0) {
-                text.setStrokeWidth(borderSize);
-            }
-
-        }*/
-
-        return this;
-    }
-    
 }

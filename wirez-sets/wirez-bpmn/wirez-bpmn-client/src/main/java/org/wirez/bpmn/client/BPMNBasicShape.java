@@ -26,11 +26,14 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.MutationContext;
 
-public abstract class BPMNBasicShape<W extends Definition> extends BaseShape<W> {
+public abstract class BPMNBasicShape<W extends Definition> 
+        extends BaseShape<W>
+        implements HasDecorators {
 
     public BPMNBasicShape(MultiPath path, Group group, WiresManager manager) {
         super(path, group, manager);

@@ -24,14 +24,17 @@ import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.util.UUID;
+import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.impl.BaseShape;
+import org.wirez.core.client.mutation.HasCanvasStateMutation;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -42,7 +45,7 @@ import java.util.List;
 
 public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
-    private static final long ANIMATION_SELECTION_DURATION = 250;
+    public static final long ANIMATION_SELECTION_DURATION = 250;
     
     Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent;
     protected WiresManager wiresManager;
@@ -217,18 +220,30 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     }
 
     protected void selectShape(final Shape shape) {
-        new ShapeSelectionAnimation(shape)
-                .setCanvas(BaseCanvas.this)
-                .setDuration(ANIMATION_SELECTION_DURATION)
-                .run();
+        
+        if (shape instanceof HasCanvasStateMutation) {
+            final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
+            canvasStateMutation.applyState(ShapeState.SELECTED);
+        } else if (shape instanceof HasDecorators) {
+            new ShapeSelectionAnimation(shape)
+                    .setCanvas(BaseCanvas.this)
+                    .setDuration(ANIMATION_SELECTION_DURATION)
+                    .run();
+        }
     }
 
     protected void deselectShape(final Shape shape) {
         final boolean isConnector = shape instanceof BaseConnector;
-        new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK)
-                .setCanvas(BaseCanvas.this)
-                .setDuration(ANIMATION_SELECTION_DURATION)
-                .run();
+
+        if (shape instanceof HasCanvasStateMutation) {
+            final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
+            canvasStateMutation.applyState(ShapeState.DESELECTED);
+        } else if (shape instanceof HasDecorators) {
+            new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK)
+                    .setCanvas(BaseCanvas.this)
+                    .setDuration(ANIMATION_SELECTION_DURATION)
+                    .run();
+        }
     }
 
     protected BaseCanvas updateViewShapesState() {

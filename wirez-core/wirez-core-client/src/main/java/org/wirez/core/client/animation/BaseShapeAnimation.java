@@ -18,6 +18,7 @@ package org.wirez.core.client.animation;
 
 import com.ait.lienzo.client.core.animation.IAnimation;
 import com.ait.lienzo.client.core.animation.IAnimationHandle;
+import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -109,10 +110,8 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
     };
 
     public Collection<com.ait.lienzo.client.core.shape.Shape> getDecorators() {
-        if ( shape instanceof BaseShape) {
-            return ( (BaseShape) shape).getDecorators();
-        } else if ( shape instanceof BaseConnector) {
-            return ( (BaseConnector) shape).getDecorators();
+        if ( shape instanceof HasDecorators) {
+            return ( (HasDecorators) shape).getDecorators();
         }
         return null;
     }

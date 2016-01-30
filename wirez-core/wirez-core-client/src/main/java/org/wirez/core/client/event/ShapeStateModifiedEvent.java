@@ -19,6 +19,7 @@ package org.wirez.core.client.event;
 import org.uberfire.workbench.events.UberFireEvent;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
 
 /**
@@ -28,11 +29,11 @@ public class ShapeStateModifiedEvent implements UberFireEvent {
     
     private Canvas canvas;
     private Shape shape;
-    private Canvas.ShapeState state;
+    private ShapeState state;
 
     public ShapeStateModifiedEvent(final Canvas canvas,
                                    final Shape shape,
-                                   final Canvas.ShapeState state) {
+                                   final ShapeState state) {
         this.canvas = canvas;
         this.shape = shape;
         this.state = state;
@@ -46,7 +47,7 @@ public class ShapeStateModifiedEvent implements UberFireEvent {
         return shape;
     }
 
-    public Canvas.ShapeState getState() {
+    public ShapeState getState() {
         return state;
     }
 

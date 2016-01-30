@@ -21,16 +21,26 @@ import com.ait.lienzo.client.core.shape.DecoratableLine;
 import com.ait.lienzo.client.core.shape.Decorator;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.shared.core.types.ColorName;
+import com.ait.lienzo.shared.core.types.IColor;
 import org.wirez.bpmn.api.SequenceFlow;
+import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
+import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.ShapeState;
+import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.mutation.HasCanvasStateMutation;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> {
+public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> implements HasCanvasStateMutation {
 
     DecoratableLine decorator;
+
+    private double strokeWidth;
+    private String color;
     
     public SequenceFlowShape(final AbstractDirectionalMultiPointShape<?> line, 
                           final Decorator<?> head, 
@@ -41,27 +51,10 @@ public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> {
     }
 
     @Override
-    public Collection<Shape> getDecorators() {
-        return new LinkedList<Shape>() {{
-            add( getDecoratableLine() );
-        }};
-    }
-
-    @Override
     public void afterMutations(final Canvas canvas) {
         super.afterMutations(canvas);
-        // TODO: Clone the main line and use it as decorator.
-        // buildDecorator();
-        // canvas.getLayer().add(decorator);
     }
     
-    private void buildDecorator() {
-        if ( null != decorator ) {
-            decorator.removeFromParent();
-        }
-        decorator = getDecoratableLine().copy();
-    }
-
     @Override
     public String toString() {
         return "SequenceFlowShape{}";
@@ -71,4 +64,20 @@ public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> {
     public void destroy() {
 
     }
+
+    @Override
+    public void applyState(final ShapeState shapeState) {
+        if (ShapeState.SELECTED.equals(shapeState)) {
+            this.strokeWidth = getDecoratableLine().getStrokeWidth();
+            this.color = getDecoratableLine().getStrokeColor();
+            new ShapeSelectionAnimation(this)
+                    .setDuration(BaseCanvas.ANIMATION_SELECTION_DURATION)
+                    .run();
+        } else if (ShapeState.DESELECTED.equals(shapeState)) {
+            new ShapeDeSelectionAnimation(this, this.strokeWidth, 1, this.color)
+                    .setDuration(BaseCanvas.ANIMATION_SELECTION_DURATION)
+                    .run();
+        }
+    }
+    
 }

@@ -89,8 +89,7 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
     }
     public SequenceFlow buildSequenceFlow() {
         return new SequenceFlow(bpmnPropertySetFactory.buildGeneralSet(),
-                    bpmnPropertySetFactory.buildBackgroundSet(), 
-                    bpmnPropertySetFactory.buildFontSet())
+                    bpmnPropertySetFactory.buildBackgroundSet())
                 .buildDefaults();
     }
 

@@ -26,6 +26,7 @@ import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
 import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.impl.BaseConnector;
 
 /**
  * A Command to add a DefaultEdge to a Graph and add the corresponding canvas shapes.
@@ -50,6 +51,9 @@ public class AddCanvasEdgeCommand extends BaseCanvasCommand {
     public CanvasCommand apply() {
         ( (BaseCanvasHandler) canvasHandler).register(factory, candidate);
         ( (BaseCanvasHandler) canvasHandler).applyElementMutation(candidate);
+        final String uuid = candidate.getUUID();
+        BaseConnector connector = (BaseConnector) canvasHandler.getSettings().getCanvas().getShape(uuid);
+        connector.applyConnections(candidate, canvasHandler);
         return this;
     }
 

@@ -19,12 +19,16 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
     protected String nodeId;
     protected Map<String, String> properties;
     protected Set<String> outgoingNodeIds;
+    protected Double[] boundUL;
+    protected Double[] boundLR;
     protected BPMNGraphObjectBuilderFactory bpmnGraphFactory;
             
     public AbstractObjectBuilder(BPMNGraphObjectBuilderFactory bpmnGraphFactory) {
         this.bpmnGraphFactory = bpmnGraphFactory;
         properties = new HashMap<String, String>();
         outgoingNodeIds = new LinkedHashSet<String>();
+        boundUL = null;
+        boundLR = null;
     }
 
     @Override
@@ -47,6 +51,18 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
 
     @Override
     public GraphObjectBuilder<W, T> stencil(String stencilId) {
+        return this;
+    }
+
+    @Override
+    public GraphObjectBuilder<W, T> boundUL(Double x, Double y) {
+        this.boundUL = new Double[] { x, y };
+        return this;
+    }
+
+    @Override
+    public GraphObjectBuilder<W, T> boundLR(Double x, Double y) {
+        this.boundLR  = new Double[] { x, y };
         return this;
     }
 

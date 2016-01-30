@@ -184,6 +184,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
      - stencil -> Delegates to stencil object parser
      - childShapes -> Delegates to other root object parsers
      - outgoing -> Delegates to outgoing object parser
+     - bounds -> Delegates to bounds object parser
      */
     final class RootObjectParser implements GraphObjectParser {
         
@@ -202,6 +203,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
                 nodeBuilders.push(bpmnGraphBuilderFactory.bootstrapBuilder());
             } else if ("outgoing".equals(fieldName)) {
                 parsers.push(new OutgoingObjectParser());
+            } else if ("bounds".equals(fieldName)) {
+                parsers.push(new BoundsObjectParser());
             } else {
                 parsers.push(new DummyObjectParser());
             }
@@ -336,6 +339,82 @@ public class BPMNGraphGenerator extends JsonGenerator {
             if ("resourceId".equals(fieldName)) {
                 nodeBuilders.peek().out(o.toString());
             }
+        }
+
+        @Override
+        public void writeStartArray() {
+
+        }
+
+        @Override
+        public void writeEndArray() {
+
+        }
+    }
+
+    final class BoundsObjectParser implements GraphObjectParser {
+
+        String fieldName;
+        boolean isLR = false;
+        boolean isUL = false;
+        boolean end = false;
+        Double ulX;
+        Double ulY;
+        Double lrX;
+        Double lrY;
+        
+        @Override
+        public void writeStartObject() {
+            if ("lowerRight".equals(fieldName)) {
+                isLR = true;
+            }
+            if ("upperLeft".equals(fieldName)) {
+                isUL = true;
+            }
+        }
+
+        @Override
+        public void writeEndObject() {
+            
+            if (end) {
+                nodeBuilders.peek().boundLR(ulX, ulY);
+                nodeBuilders.peek().boundUL(lrX, lrY);
+                parsers.pop();
+            }
+            
+            if ( isLR && isUL ) {
+                end = true;   
+            }
+
+        }
+
+        @Override
+        public void writeFieldName(String s) {
+            this.fieldName = s;
+        }
+
+        @Override
+        public void writeObject(Object o) {
+            String value = o.toString();
+            Double d = Double.valueOf(value);
+
+            if ("x".equals(fieldName)) {
+                if ( isUL ) {
+                    ulX = d;
+                }
+                if ( isLR ) {
+                    lrX = d;
+                }
+            }
+            if ("y".equals(fieldName)) {
+                if ( isUL ) {
+                    ulY = d;
+                }
+                if ( isLR ) {
+                    lrY = d;
+                }
+            }
+            
         }
 
         @Override

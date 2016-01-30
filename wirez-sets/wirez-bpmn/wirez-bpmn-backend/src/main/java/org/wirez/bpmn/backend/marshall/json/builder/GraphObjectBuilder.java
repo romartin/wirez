@@ -19,6 +19,10 @@ public interface GraphObjectBuilder<W extends Definition, T extends Element<View
     GraphObjectBuilder<W, T> property(String key, String value);
 
     GraphObjectBuilder<W, T> out(String nodeId);
+
+    GraphObjectBuilder<W, T> boundUL(Double x, Double y);
+
+    GraphObjectBuilder<W, T> boundLR(Double x, Double y);
     
     // TODO: Bounds, etc
     

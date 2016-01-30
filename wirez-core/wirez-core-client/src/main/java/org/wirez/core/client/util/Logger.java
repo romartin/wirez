@@ -17,6 +17,7 @@
 package org.wirez.core.client.util;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.*;
@@ -26,6 +27,7 @@ import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.graph.processing.visitor.*;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.service.ClientRuntimeError;
 
 import java.util.List;
 
@@ -33,6 +35,29 @@ import java.util.List;
  * Just for development use.
  */
 public class Logger {
+    
+    public static void logError(final ClientRuntimeError error) {
+        final String message = error.getMessage();
+        final Throwable t1 = error.getThrowable();
+        final Throwable t2 = t1 != null ? t1.getCause() : null;
+        
+        if ( null != t2 ) {
+            logError( t2 );
+        } else if ( null != t1 ) {
+            logError( t1 );
+        } else {
+            logError( message );
+        }
+    }
+
+    public static void logError(final Throwable throwable) {
+        logError( throwable.getMessage() );
+    }
+    
+    public static void logError(final String message) {
+        GWT.log("[ERROR] " + message);
+        Window.alert("[ERROR] " + message);
+    }
 
     public static void logCommandResults(final Iterable<CommandResult> results) {
         if (results == null) {

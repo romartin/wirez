@@ -6,6 +6,8 @@ public interface DefinitionSetServices {
     
     boolean accepts ( String path );
     
+    String getFileExtension();
+    
     DiagramMarshaller getDiagramMarshaller();
     
 }

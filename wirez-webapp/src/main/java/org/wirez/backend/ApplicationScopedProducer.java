@@ -21,6 +21,7 @@ import org.jboss.errai.security.shared.service.AuthenticationService;
 import org.uberfire.backend.server.IOWatchServiceNonDotImpl;
 import org.uberfire.io.IOService;
 import org.uberfire.io.impl.IOServiceDotFileImpl;
+import org.uberfire.io.impl.IOServiceNio2WrapperImpl;
 import org.uberfire.security.authz.AuthorizationManager;
 import org.uberfire.security.impl.authz.RuntimeAuthorizationManager;
 
@@ -44,7 +45,7 @@ public class ApplicationScopedProducer {
 
     @PostConstruct
     public void setup() {
-        ioService  = new IOServiceDotFileImpl( watchService );
+        ioService  = new IOServiceNio2WrapperImpl("1", watchService );
     }
 
     @Produces

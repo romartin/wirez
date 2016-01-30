@@ -20,7 +20,17 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
   <g:FlowPanel ui:field='mainPanel'>
-    <g:HTML text="Load Diagram Screen View"/>
+
+    <g:VerticalPanel ui:field="diagramsPanel">
+      
+    </g:VerticalPanel>
+    
+    <g:FlowPanel ui:field="emptyPanel">
+      
+      <b:Heading size="H3" text="No diagrams"/>
+      
+    </g:FlowPanel>
+    
   </g:FlowPanel>
 
 </ui:UiBinder>

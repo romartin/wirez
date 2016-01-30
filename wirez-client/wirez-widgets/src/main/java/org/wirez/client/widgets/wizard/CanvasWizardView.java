@@ -87,6 +87,12 @@ public class CanvasWizardView extends Composite implements CanvasWizard.View {
     }
 
     @Override
+    public CanvasWizard.View setNextButtonEnabled(boolean isEnabled) {
+        nextButton.setEnabled(isEnabled);
+        return this;
+    }
+
+    @Override
     public CanvasWizard.View clear() {
         screenPanel.clear();
         return this;

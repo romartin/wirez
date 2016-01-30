@@ -9,6 +9,7 @@ import org.wirez.core.api.service.diagram.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Collection;
 
 @ApplicationScoped
 public class ClientDiagramServices {
@@ -18,6 +19,24 @@ public class ClientDiagramServices {
     @Inject
     public ClientDiagramServices(Caller<DiagramService> diagramService) {
         this.diagramService = diagramService;
+    }
+
+    public void search(final String query,
+                       final ServiceCallback<Collection<Diagram>> callback) {
+
+        diagramService.call(new RemoteCallback<DiagramsServiceResponse>() {
+            @Override
+            public void callback(final DiagramsServiceResponse response) {
+                callback.onSuccess(response.getDiagrams());
+            }
+        }, new ErrorCallback<Message>() {
+            @Override
+            public boolean error(final Message message, final Throwable throwable) {
+                callback.onError(new ClientRuntimeError(throwable));
+                return false;
+            }
+        }).search(new DiagramServiceSearchRequestImpl( query ));
+
     }
     
     public void create(final String defSetId,

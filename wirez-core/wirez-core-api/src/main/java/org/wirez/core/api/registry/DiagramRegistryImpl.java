@@ -22,4 +22,5 @@ public class DiagramRegistryImpl<D extends Diagram> extends BaseListRegistry<D> 
         }
         throw new RuntimeException("Diagram with uuid [" + diagram.getUUID() + "] cannot be updated as it does not exist.");
     }
+    
 }

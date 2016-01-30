@@ -9,6 +9,8 @@ import org.wirez.core.api.service.ServiceResponse;
 @Remote
 public interface DiagramService {
 
+    DiagramsServiceResponse search(DiagramServiceSearchRequest request);
+    
     DiagramServiceResponse create(DiagramServiceCreateRequest request);
 
     DiagramServiceResponse load(DiagramServiceLoadRequest request);

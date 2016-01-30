@@ -81,7 +81,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             final String uuid = UUID.uuid();
             // TODO
             final Diagram<Settings> diagram = new DiagramImpl( uuid, bpmnGraphs.iterator().next(), 
-                    new SettingsImpl("BPMN Loaded process", BPMNDefinitionSet.ID, "BPMNShapeSet", TEST_PATH));
+                    new SettingsImpl("BPMN Loaded process", BPMNDefinitionSet.ID, "BPMNShapeSet"));
 
             LOG.info("BPMN process loading finished successfully.");
 

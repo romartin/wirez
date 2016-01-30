@@ -10,12 +10,18 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class BPMNBackendServices implements DefinitionSetServices {
 
+    public static final String EXTENSION = "bpmn";
     @Inject
     BPMNDiagramMarshaller bpmnDiagramMarshaller;
     
     @Override
     public boolean accepts(final String path) {
-        return true;
+        return path != null && path.toLowerCase().endsWith(EXTENSION);
+    }
+
+    @Override
+    public String getFileExtension() {
+        return EXTENSION;
     }
 
     @Override

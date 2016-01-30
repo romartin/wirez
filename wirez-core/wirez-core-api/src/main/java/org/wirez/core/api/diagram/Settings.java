@@ -10,4 +10,6 @@ public interface Settings {
     
     String getPath();
     
+    void setPath( String path );
+    
 }

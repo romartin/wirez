@@ -40,6 +40,8 @@ public class CanvasWizard implements IsWidget {
         View setNextButtonText(String caption);
         
         View setNextButtonVisible(boolean isEnabled);
+
+        View setNextButtonEnabled(boolean isEnabled);
         
         View clear();
         
@@ -72,6 +74,10 @@ public class CanvasWizard implements IsWidget {
         view.setBackButtonVisible(screen.getBackButtonText() != null);
         view.setScreenWidget(screen);
         screen.show(this);
+    }
+    
+    public void setNextButtonEnabled(boolean isEnabled) {
+        view.setNextButtonEnabled( isEnabled );
     }
 
     @Override

@@ -65,6 +65,7 @@ public class LoadDiagramWizardScreenView extends Composite implements LoadDiagra
     @Override
     public LoadDiagramWizardScreen.View add(final String title, final String path) {
         emptyPanel.setVisible(false);
+        diagramsPanel.setVisible(true);
         insertDiagramEntry( title, path );
         return this;
     }
@@ -81,7 +82,9 @@ public class LoadDiagramWizardScreenView extends Composite implements LoadDiagra
         final FlowPanel panel = new FlowPanel();
         panel.getElement().getStyle().setWidth(100, Style.Unit.PCT);
         panel.getElement().getStyle().setMargin(15, Style.Unit.PX);
-        panel.getElement().getStyle().setBackgroundColor( "#bebcbc" );
+        panel.getElement().getStyle().setPadding(20, Style.Unit.PX);
+        panel.getElement().getStyle().setBackgroundColor( "#f2f2f2" );
+        panel.getElement().getStyle().setCursor(Style.Cursor.POINTER);
         final Heading heading = new Heading(HeadingSize.H3);
         heading.setText( title );
         heading.addDomHandler(new ClickHandler() {
@@ -90,7 +93,7 @@ public class LoadDiagramWizardScreenView extends Composite implements LoadDiagra
                 presenter.onItemClick( path );
             }
         }, ClickEvent.getType());
-        
+        panel.add( heading );
         diagramsPanel.add( panel );
     }
 

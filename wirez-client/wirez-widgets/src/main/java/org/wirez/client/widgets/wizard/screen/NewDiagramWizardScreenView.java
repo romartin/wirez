@@ -70,6 +70,7 @@ public class NewDiagramWizardScreenView extends Composite implements NewDiagramW
                                      final Command clickHandler) {
 
         final VerticalPanel panel = new VerticalPanel();
+        panel.getElement().getStyle().setCursor(Style.Cursor.POINTER);
         panel.setVerticalAlignment(HasAlignment.ALIGN_MIDDLE);
         panel.getElement().getStyle().setMargin(50, Style.Unit.PX);
         panel.setHeight("100%");

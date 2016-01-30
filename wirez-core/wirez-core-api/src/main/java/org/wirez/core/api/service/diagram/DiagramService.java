@@ -9,6 +9,12 @@ import org.wirez.core.api.service.ServiceResponse;
 @Remote
 public interface DiagramService {
 
+    /**
+     * Registers the provided application's definitions from WEB-INF/definitions into the VFS in use to make them
+     * available.
+     */
+    ServiceResponse registerAppDefinitions();
+    
     DiagramsServiceResponse search(DiagramServiceSearchRequest request);
     
     DiagramServiceResponse create(DiagramServiceCreateRequest request);

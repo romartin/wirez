@@ -24,6 +24,7 @@ import org.uberfire.io.impl.IOServiceDotFileImpl;
 import org.uberfire.io.impl.IOServiceNio2WrapperImpl;
 import org.uberfire.security.authz.AuthorizationManager;
 import org.uberfire.security.impl.authz.RuntimeAuthorizationManager;
+import org.wirez.core.api.service.diagram.DiagramService;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -40,12 +41,16 @@ public class ApplicationScopedProducer {
 
     @Inject
     private AuthenticationService authenticationService;
+    
+    @Inject
+    private DiagramService diagramService;
 
     private IOService ioService;
 
     @PostConstruct
     public void setup() {
         ioService  = new IOServiceNio2WrapperImpl("1", watchService );
+        diagramService.registerAppDefinitions();
     }
 
     @Produces

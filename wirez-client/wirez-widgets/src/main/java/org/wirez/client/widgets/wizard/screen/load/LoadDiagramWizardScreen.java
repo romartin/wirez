@@ -104,7 +104,7 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
                 // Clear to home screen.
                 wizard.clear();
 
-                // final String path = "org/wirez/bpmn/backend/examples/wirez-bpmn-test.bpmn2";
+                // Fire the load diagram event for others.
                 loadDiagramEventEvent.fire(new LoadDiagramEvent( selectedPath ));
                 
             }

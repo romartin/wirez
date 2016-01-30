@@ -1,5 +1,6 @@
 package org.wirez.core.backend.service.diagram;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.errai.bus.server.annotations.Service;
@@ -90,70 +91,13 @@ public class DiagramServiceImpl implements DiagramService {
             definitionSetServices.add(definitionSetService);
         }
         initFileSystem();
-        deployAppDiagrams();
     }
 
-    private void deployAppDiagrams() {
-        ServletContext servletContext = RpcContext.getHttpSession().getServletContext();
-        
-        if ( null != servletContext ) {
-
-            String dir = servletContext.getRealPath(APP_DIAGRAMS_PATH);
-            if (dir != null && new File(dir).exists()) {
-                dir = dir.replaceAll("\\\\", "/");
-                findAndDeployDiagrams( dir );
-            }
-            
-        } else {
-            
-            LOG.warn("No servlet context available. Cannot deploy app diagrams.");
-            
-        }
-        
+    @Override
+    public ServiceResponse registerAppDefinitions() {
+        deployAppDiagrams( APP_DIAGRAMS_PATH );
+        return new ServiceResponseImpl(ResponseStatus.SUCCESS);
     }
-    
-    private void findAndDeployDiagrams(String directory) {
-
-        if (!StringUtils.isBlank(directory)) {
-            // Look for data sets deploy
-            File[] files = new File(directory).listFiles(_deployFilter);
-            if (files != null) {
-                for (File f : files) {
-                    try {
-                        
-                        String name = f.getName();
-                        
-                        if ( isAccepted( name) ) {
-                            
-                            // Read & parse the data set.
-                            FileInputStream fis = new FileInputStream(f);
-                            Diagram diagram = doLoad(name, fis);
-
-                            if ( null != diagram ) {
-
-                                // Add into registry cache.
-                                diagramRegistry.add( diagram );
-
-                            }
-                            
-                        }
-                                
-                    } catch (Exception e) {
-                        
-                        LOG.error("Error loading app default diagrams.", e);
-                        
-                    }
-                }
-            }
-        }
-        
-    }
-
-    FilenameFilter _deployFilter = new FilenameFilter() {
-        public boolean accept(File dir, String name) {
-            return true;
-        }
-    };
 
     // TODO: Search query & pagination.
     @Override
@@ -244,6 +188,7 @@ public class DiagramServiceImpl implements DiagramService {
 
         final Diagram diagram = request.getDiagram();
 
+        // Update registry, if necessary.
         if (diagramRegistry.contains(diagram)) {
             diagramRegistry.update(diagram);
         } else {
@@ -308,21 +253,6 @@ public class DiagramServiceImpl implements DiagramService {
 
     }
     
-    private Diagram doLoad(final String fileName, InputStream is) {
-
-        // Obtain the concrete definition set service for this kind of diagram.
-        DefinitionSetServices services = getServices( fileName );
-
-        if ( null != services ) {
-
-            return doLoad( fileName, services, is );
-
-        }
-
-        throw new UnsupportedOperationException( "Diagram format not supported [" + fileName + "]" );
-
-    }
-
     private Diagram doLoad(String fileName, DefinitionSetServices services, InputStream is) {
 
         if ( null != services ) {
@@ -357,6 +287,96 @@ public class DiagramServiceImpl implements DiagramService {
         }
         this.root = fileSystem.getRootDirectories().iterator().next();
     }
+
+    private void deployAppDiagrams(String path) {
+        ServletContext servletContext = RpcContext.getHttpSession().getServletContext();
+
+        if ( null != servletContext ) {
+
+            String dir = servletContext.getRealPath( path );
+            if (dir != null && new File(dir).exists()) {
+                dir = dir.replaceAll("\\\\", "/");
+                findAndDeployDiagrams( dir );
+            }
+
+        } else {
+
+            LOG.warn("No servlet context available. Cannot deploy the application diagrams.");
+
+        }
+
+    }
+
+    private void findAndDeployDiagrams(String directory) {
+
+        if (!StringUtils.isBlank(directory)) {
+            // Look for data sets deploy
+            File[] files = new File(directory).listFiles(_deployFilter);
+            if (files != null) {
+                for (File f : files) {
+                    try {
+
+                        String name = f.getName();
+
+                        if ( isAccepted( name) ) {
+
+                            // Register it into VFS storage.
+                            registerIntoVFS(f);
+
+                            // Delete file after added into app's vfs.
+                            f.delete();
+                            
+                        }
+
+                    } catch (Exception e) {
+
+                        LOG.error("Error loading the application default diagrams.", e);
+
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void registerIntoVFS(File file) {
+        String name = file.getName();
+        Path actualPath = getDiagramsPath().resolve( name );
+        boolean exists = ioService.exists( actualPath );
+
+        if ( !exists ) {
+
+            ioService.startBatch(fileSystem);
+
+            try {
+
+                String content = FileUtils.readFileToString( file );
+                Path diagramPath = getDiagramsPath().resolve( file.getName() );
+                ioService.write( diagramPath, content );
+
+            } catch (Exception e) {
+
+                LOG.error("Error registering diagram into app's VFS", e);
+
+            } finally {
+
+                ioService.endBatch();
+
+            }
+            
+        } else {
+            
+            LOG.warn("Diagram [" + name + "] already exists on VFS storage. This file should not be longer present here.");
+            
+        }
+
+    }
+
+    FilenameFilter _deployFilter = new FilenameFilter() {
+        public boolean accept(File dir, String name) {
+            return true;
+        }
+    };
 
     protected Path getDiagramsPath() {
         return root.resolve(VFS_DIAGRAMS_PATH);

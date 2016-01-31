@@ -58,11 +58,11 @@ public class CanvasView extends Composite implements Canvas.View {
         Line line1 = new Line( 0,
                                0,
                                0,
-                               0 ).setStrokeColor( ColorName.BLUE ).setAlpha( 0.5 ); // primary lines
+                               0 ).setStrokeColor( ColorName.BLUE ).setAlpha( 0.2 ); // primary lines
         Line line2 = new Line( 0,
                                0,
                                0,
-                               0 ).setStrokeColor( ColorName.GREEN ).setAlpha( 0.5 ); // secondary dashed-lines
+                               0 ).setStrokeColor( ColorName.GREEN ).setAlpha( 0.2 ); // secondary dashed-lines
         line2.setDashArray( 2,
                             2 );
     

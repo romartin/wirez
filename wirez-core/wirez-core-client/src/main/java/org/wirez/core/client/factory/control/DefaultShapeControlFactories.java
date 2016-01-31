@@ -26,19 +26,16 @@ public class DefaultShapeControlFactories {
     DefaultResizeControlFactory defaultResizeControlFactory;
     LienzoResizeControlFactory lienzoResizeControlFactory;
     ToolboxControlFactory toolboxControlFactory;
-    NameToolboxControlFactory nameToolboxControlFactory;
 
     @Inject
     public DefaultShapeControlFactories(final DefaultDragControlFactory dragControlFactory, 
                                         final DefaultResizeControlFactory defaultResizeControlFactory, 
                                         final LienzoResizeControlFactory lienzoResizeControlFactory,
-                                        final ToolboxControlFactory toolboxControlFactory,
-                                        final NameToolboxControlFactory nameToolboxControlFactory) {
+                                        final ToolboxControlFactory toolboxControlFactory) {
         this.dragControlFactory = dragControlFactory;
         this.defaultResizeControlFactory = defaultResizeControlFactory;
         this.lienzoResizeControlFactory = lienzoResizeControlFactory;
         this.toolboxControlFactory = toolboxControlFactory;
-        this.nameToolboxControlFactory = nameToolboxControlFactory;
     }
 
     public DefaultDragControlFactory dragControlFactory() {
@@ -57,7 +54,4 @@ public class DefaultShapeControlFactories {
         return toolboxControlFactory;
     }
 
-    public NameToolboxControlFactory nameToolboxControlFactory() {
-        return nameToolboxControlFactory;
-    }
 }

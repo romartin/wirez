@@ -17,6 +17,8 @@ package org.wirez.client.widgets.control.toolbox;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -24,6 +26,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.TextBox;
 
 public class NameToolboxView extends Composite implements NameToolbox.View {
@@ -40,6 +43,9 @@ public class NameToolboxView extends Composite implements NameToolbox.View {
     @UiField
     TextBox nameBox;
     
+    @UiField
+    Icon closeButton;
+    
     private NameToolbox presenter;
     
     @Override
@@ -53,6 +59,12 @@ public class NameToolboxView extends Composite implements NameToolbox.View {
             public void onValueChange(final ValueChangeEvent<String> event) {
                 final String name = event.getValue();
                 presenter.onChangeName(name);
+            }
+        });
+        closeButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(final ClickEvent event) {
+                presenter.onClose();
             }
         });
     }

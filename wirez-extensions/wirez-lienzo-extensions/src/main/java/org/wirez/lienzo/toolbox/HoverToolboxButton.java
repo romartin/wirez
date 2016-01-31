@@ -2,12 +2,16 @@ package org.wirez.lienzo.toolbox;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
+import com.ait.lienzo.client.core.shape.Group;
+import com.ait.lienzo.client.core.shape.IPrimitive;
+import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.util.Geometry;
+import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
 
 public class HoverToolboxButton {
-    private final Shape<?> shape;
+    private final IPrimitive<?> primitive;
     public static final double BUTTON_SIZE = 16;
     private final NodeMouseClickHandler clickHandler;
 
@@ -22,13 +26,27 @@ public class HoverToolboxButton {
 
     public HoverToolboxButton(Shape<?> shape, NodeMouseClickHandler clickHandler) {
         this.clickHandler = clickHandler;
-        Geometry.setScaleToFit(shape, BUTTON_SIZE, BUTTON_SIZE);
-        shape.addNodeMouseClickHandler(clickHandler);
-        shape.moveToTop();
-        this.shape = shape;
+        this.primitive = build(shape, BUTTON_SIZE, BUTTON_SIZE);
     }
 
-    public Shape<?> getShape() {
-        return shape;
+    public IPrimitive<?> getShape() {
+        return primitive;
+    }
+    
+    private IPrimitive<?> build(final Shape<?> shape, final double width, final double height) {
+        final Group group = new Group();
+
+        Geometry.setScaleToFit(shape, width, height);
+        group.add( shape );
+        
+        final Rectangle decorator = new Rectangle(width, height)
+                .setFillColor(ColorName.LIGHTGREY)
+                .setFillAlpha(0.3)
+                .setStrokeWidth(0.2)
+                .setCornerRadius(10);
+        decorator.addNodeMouseClickHandler(clickHandler);
+        group.add( decorator.moveToTop() );
+        
+        return group;
     }
 }

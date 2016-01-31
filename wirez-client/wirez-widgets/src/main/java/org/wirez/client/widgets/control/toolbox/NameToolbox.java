@@ -82,4 +82,8 @@ public class NameToolbox extends BaseToolbox {
         view.hide();
     }
     
+    void onClose() {
+        this.hide();   
+    }
+    
 }

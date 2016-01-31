@@ -28,12 +28,18 @@
     .jumbotron {
       padding: 5px;
     }
+    .closeButton {
+      margin-left: 5px;
+    }
   </ui:style>
 
   <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
 
     <b:Jumbotron addStyleNames="{style.jumbotron}">
-      <b:TextBox ui:field="nameBox"/>
+      <g:HorizontalPanel>
+        <b:TextBox ui:field="nameBox"/>
+        <b:Icon ui:field="closeButton" type="REMOVE" size="LARGE" addStyleNames="{style.closeButton}"/>
+      </g:HorizontalPanel>
     </b:Jumbotron>
     
   </g:FlowPanel>

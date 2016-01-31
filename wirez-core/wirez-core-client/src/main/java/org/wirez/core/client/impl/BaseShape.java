@@ -16,8 +16,7 @@
 
 package org.wirez.core.client.impl;
 
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
+import com.ait.lienzo.client.core.event.*;
 import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.shape.Node;
 import com.ait.lienzo.client.core.shape.Shape;
@@ -153,8 +152,9 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         
     }
 
-    protected Text buildText(String text) {
-        return new Text(text).setFontSize(14).setFillColor(ColorName.BLACK).setStrokeWidth(1).moveToTop();
+    protected Text buildText(String _text) {
+        Text text = new Text(_text).setFontSize(14).setFillColor(ColorName.BLACK).setStrokeWidth(1);
+        return text.moveToTop();
     }
 
     public Text getText() {

@@ -11,7 +11,9 @@ import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.client.core.types.Point2DArray;
 import com.ait.lienzo.client.core.util.Geometry;
 import com.ait.lienzo.shared.core.types.Direction;
+import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.lienzo.HoverTimer;
 
 import java.util.ArrayList;
@@ -23,6 +25,7 @@ public class HoverToolbox {
     private final Direction corner;
     private final Direction towards;
     private final List<HoverToolboxButton> buttons;
+    private final HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
 
     private final HoverTimer hoverTimer = new HoverTimer(new HoverTimer.Actions() {
         @Override
@@ -51,14 +54,23 @@ public class HoverToolbox {
                 hoverToolboxButton.getShape().setX(position.getX());
                 hoverToolboxButton.getShape().setY(position.getY());
                 hoverToolboxButton.getShape().animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 500, new AnimationCallback());
-                hoverToolboxButton.getShape().addNodeMouseEnterHandler(hoverTimer);
-                hoverToolboxButton.getShape().addNodeMouseExitHandler(hoverTimer);
+                HandlerRegistration hr1 = hoverToolboxButton.getShape().addNodeMouseEnterHandler(hoverTimer);
+                HandlerRegistration hr2 = hoverToolboxButton.getShape().addNodeMouseExitHandler(hoverTimer);
+                handlerRegistrationManager.register(hr1);
+                handlerRegistrationManager.register(hr2);
                 this.shape.getGroup().add(hoverToolboxButton.getShape());
                 this.shape.getWiresLayer().getLayer().batch();
             }
 
             showing = true;
         }
+    }
+    
+    public void remove() {
+        for (final HoverToolboxButton button : buttons) {
+            button.getShape().removeFromParent();
+        }
+        handlerRegistrationManager.removeHandler();
     }
 
     private Point2D anchorFor(Direction direction) {
@@ -140,7 +152,9 @@ public class HoverToolbox {
                     @Override
                     public void onClose(IAnimation animation, IAnimationHandle handle) {
                         button.getShape().removeFromParent();
-                        HoverToolbox.this.shape.getWiresLayer().getLayer().batch();
+                        if ( null != HoverToolbox.this.shape)  {
+                            HoverToolbox.this.shape.getWiresLayer().getLayer().batch();
+                        }
                     }
                 });
             }

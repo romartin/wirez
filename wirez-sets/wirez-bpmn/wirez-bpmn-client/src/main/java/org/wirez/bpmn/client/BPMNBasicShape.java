@@ -108,6 +108,7 @@ public abstract class BPMNBasicShape<W extends Definition>
                 text.setStrokeWidth(borderSize);
             }
 
+            text.moveToTop();
         }
 
         return this;

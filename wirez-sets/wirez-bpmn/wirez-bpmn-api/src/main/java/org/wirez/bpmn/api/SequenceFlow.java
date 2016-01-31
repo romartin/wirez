@@ -52,7 +52,7 @@ public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
     public static final String ID = "SequenceFlow";
     public static final String COLOR = "#000000";
     public static final String BORDER_COLOR = "#000000";
-    public static final Integer BORDER_SIZE = 3;
+    public static final Double BORDER_SIZE = 3d;
     
     @PropertySet
     private BPMNGeneral general;

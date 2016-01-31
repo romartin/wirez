@@ -41,7 +41,7 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "StartNoneEvent";
     public static final String COLOR = "#3eb870";
-    public static final Integer RADIUS = 25;
+    public static final Double RADIUS = 25d;
     
     @PropertySet
     private BPMNGeneral general;

@@ -21,6 +21,7 @@ import com.ait.lienzo.client.core.shape.RegularPolygon;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.ParallelGateway;
 import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.util.ShapeUtils;
 
 public class ParallelGatewayGlyph implements ShapeGlyph {
 
@@ -31,13 +32,11 @@ public class ParallelGatewayGlyph implements ShapeGlyph {
     public ParallelGatewayGlyph() {
         
         final RegularPolygon polygon = new RegularPolygon(4, RADIUS)
-                .setX(25)
-                .setY(25)
-                .setStrokeWidth(0)
-                .setStrokeAlpha(0)
-                .setFillColor(ParallelGateway.COLOR)
-                .setFillAlpha(0.50)
-                .setStrokeColor(ColorName.BLACK);
+                .setX(RADIUS)
+                .setY(RADIUS)
+                .setStrokeWidth(0.5)
+                .setFillGradient(ShapeUtils.getLinearGradient(ParallelGateway.COLOR, "#FFFFFF", RADIUS * 2, RADIUS * 2))
+                .setFillAlpha(0.50);
         
         group.add(polygon);
     }

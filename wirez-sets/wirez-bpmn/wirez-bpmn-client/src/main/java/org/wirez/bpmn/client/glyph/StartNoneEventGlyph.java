@@ -20,14 +20,20 @@ import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.Group;
 import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.util.ShapeUtils;
 
 public class StartNoneEventGlyph implements ShapeGlyph {
 
     public static final StartNoneEventGlyph INSTANCE = new StartNoneEventGlyph();
+    private static final double RADIUS = 25;
     private Group group = new Group();
 
     public StartNoneEventGlyph() {
-        final Circle circle = new Circle(25).setX(25).setY(25).setFillColor(StartNoneEvent.COLOR);
+        final Circle circle = new Circle(RADIUS)
+                .setX(RADIUS)
+                .setY(RADIUS)
+                .setStrokeWidth(0.5)
+                .setFillGradient(ShapeUtils.getLinearGradient(StartNoneEvent.COLOR, "#FFFFFF", RADIUS * 2, RADIUS * 2));
         group.add(circle);
     }
 
@@ -38,11 +44,11 @@ public class StartNoneEventGlyph implements ShapeGlyph {
 
     @Override
     public double getWidth() {
-        return 50;
+        return RADIUS * 2;
     }
 
     @Override
     public double getHeight() {
-        return 50;
+        return RADIUS * 2;
     }
 }

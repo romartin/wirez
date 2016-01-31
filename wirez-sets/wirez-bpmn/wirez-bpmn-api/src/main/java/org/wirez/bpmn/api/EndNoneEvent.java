@@ -40,7 +40,7 @@ public class EndNoneEvent extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "EndNoneEvent";
     public static final String COLOR = "#ff0000";
-    public static final Integer RADIUS = 25;
+    public static final Double RADIUS = 25d;
     
     @PropertySet
     private BPMNGeneral general;

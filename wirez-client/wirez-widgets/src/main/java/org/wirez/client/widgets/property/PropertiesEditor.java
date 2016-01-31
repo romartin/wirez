@@ -28,10 +28,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.definition.property.type.BooleanType;
-import org.wirez.core.api.definition.property.type.ColorType;
-import org.wirez.core.api.definition.property.type.IntegerType;
-import org.wirez.core.api.definition.property.type.StringType;
+import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
@@ -248,6 +245,8 @@ public class PropertiesEditor implements IsWidget {
         } else if (property.getType() instanceof ColorType) {
             type = PropertyEditorType.COLOR;
         } else if (property.getType() instanceof IntegerType) {
+            type = PropertyEditorType.NATURAL_NUMBER;
+        } else if (property.getType() instanceof DoubleType) {
             type = PropertyEditorType.NATURAL_NUMBER;
         } else if (property.getType() instanceof BooleanType) {
             type = PropertyEditorType.BOOLEAN;

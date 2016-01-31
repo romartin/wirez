@@ -69,7 +69,7 @@ public abstract class BPMNBasicConnector<W extends Definition>
         final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.ID);
         final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.ID);
         final String color = borderColor.getValue();
-        final Integer width = borderSize.getValue();
+        final Double width = borderSize.getValue();
         if (color != null && color.trim().length() > 0) {
             getShape().setStrokeColor(color);
         }

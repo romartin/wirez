@@ -5,10 +5,7 @@ import org.jboss.errai.databinding.client.api.DataBinder;
 import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertyType;
-import org.wirez.core.api.definition.property.type.BooleanType;
-import org.wirez.core.api.definition.property.type.ColorType;
-import org.wirez.core.api.definition.property.type.IntegerType;
-import org.wirez.core.api.definition.property.type.StringType;
+import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
@@ -31,6 +28,10 @@ public class ElementUtils {
 
         if (IntegerType.name.equals(type.getName())) {
             return Integer.parseInt(raw);
+        }
+
+        if (DoubleType.name.equals(type.getName())) {
+            return Double.parseDouble(raw);
         }
 
         if (BooleanType.name.equals(type.getName())) {

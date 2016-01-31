@@ -24,6 +24,7 @@ import org.wirez.core.api.annotation.property.Property;
 import org.wirez.core.api.annotation.property.Value;
 import org.wirez.core.api.definition.property.BaseProperty;
 import org.wirez.core.api.definition.property.PropertyType;
+import org.wirez.core.api.definition.property.type.DoubleType;
 import org.wirez.core.api.definition.property.type.IntegerType;
 import org.wirez.core.api.definition.property.type.StringType;
 
@@ -35,10 +36,10 @@ public class FontBorderSize extends BaseProperty implements BPMNProperty {
     public static final String ID = "fontBorderSize";
 
     @DefaultValue
-    public static final Integer DEFAULT_VALUE = 1;
+    public static final Double DEFAULT_VALUE = 0.5d;
 
     @Value
-    private Integer value = DEFAULT_VALUE;
+    private Double value = DEFAULT_VALUE;
     
     public FontBorderSize() {
         super(ID, "Font border size", "The font border size", false, false);
@@ -46,18 +47,18 @@ public class FontBorderSize extends BaseProperty implements BPMNProperty {
 
     @Override
     public PropertyType getType() {
-        return new IntegerType();
+        return new DoubleType();
     }
 
-    public Integer getDefaultValue() {
+    public Double getDefaultValue() {
         return DEFAULT_VALUE;
     }
     
-    public Integer getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Double value) {
         this.value = value;
     }
     

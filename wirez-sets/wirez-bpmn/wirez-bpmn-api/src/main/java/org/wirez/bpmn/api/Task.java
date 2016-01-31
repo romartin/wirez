@@ -42,8 +42,9 @@ public class Task extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "Task";
     public static final String COLOR = "#dfeff8";
-    public static final Integer WIDTH = 100;
-    public static final Integer HEIGHT = 100;
+    public static final Double WIDTH = 100d;
+    public static final Double HEIGHT = 100d;
+    public static final Double BORDER_SIZE = 0.5d;
     
     @PropertySet
     private BPMNGeneral general;
@@ -86,7 +87,7 @@ public class Task extends BaseDefinition implements BPMNDefinition {
     public Task buildDefaults() {
         getGeneral().getName().setValue("My task");
         getBackgroundSet().getBgColor().setValue(COLOR);
-        getBackgroundSet().getBorderSize().setValue(1);
+        getBackgroundSet().getBorderSize().setValue(BORDER_SIZE);
         getWidth().setValue(WIDTH);
         getHeight().setValue(HEIGHT);
         return this;

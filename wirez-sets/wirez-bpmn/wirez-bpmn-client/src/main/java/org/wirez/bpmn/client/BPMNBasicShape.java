@@ -20,6 +20,8 @@ import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.types.BoundingBox;
+import com.ait.lienzo.client.core.types.LinearGradient;
 import org.wirez.bpmn.api.property.general.*;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
@@ -30,6 +32,7 @@ import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.util.ShapeUtils;
 
 public abstract class BPMNBasicShape<W extends Definition> 
         extends BaseShape<W>
@@ -58,7 +61,11 @@ public abstract class BPMNBasicShape<W extends Definition>
         final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.ID);
         final String color = bgColor.getValue();
         if (color != null && color.trim().length() > 0) {
-            getShape().setFillColor(color);
+            final BoundingBox bb = getShape().getBoundingBox();
+            final double w = bb.getWidth();
+            final double h = bb.getHeight();
+            final LinearGradient gradient = ShapeUtils.getLinearGradient(color, "#FFFFFF", w, h);
+            getShape().setFillGradient(gradient);
         }
         return this;
     }
@@ -67,7 +74,7 @@ public abstract class BPMNBasicShape<W extends Definition>
         final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.ID);
         final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.ID);
         final String color = borderColor.getValue();
-        final Integer width = borderSize.getValue();
+        final Double width = borderSize.getValue();
         if (color != null && color.trim().length() > 0) {
             getShape().setStrokeColor(color);
         }
@@ -86,8 +93,8 @@ public abstract class BPMNBasicShape<W extends Definition>
             final FontBorderSize fontBorderSize = (FontBorderSize) ElementUtils.getProperty(element, FontBorderSize.ID);
             final String family = fontFamily.getValue();
             final String color = fontColor.getValue();
-            final Integer size = fontSize.getValue();
-            final Integer borderSize = fontBorderSize.getValue();
+            final Double size = fontSize.getValue();
+            final Double borderSize = fontBorderSize.getValue();
             if (family != null && family.trim().length() > 0) {
                 text.setFontFamily(family);
             }

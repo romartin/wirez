@@ -20,6 +20,7 @@ import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import org.wirez.bpmn.api.Task;
 import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.util.ShapeUtils;
 
 public class TaskGlyph implements ShapeGlyph {
 
@@ -29,7 +30,9 @@ public class TaskGlyph implements ShapeGlyph {
     private Group group = new Group();
 
     public TaskGlyph() {
-        final Rectangle rectangle = new Rectangle(WIDTH, HEIGHT).setFillColor(Task.COLOR);
+        final Rectangle rectangle = new Rectangle(WIDTH, HEIGHT)
+                .setStrokeWidth(0.5)
+                .setFillGradient(ShapeUtils.getLinearGradient(Task.COLOR, "#FFFFFF", WIDTH, HEIGHT));
         group.add(rectangle);
     }
 

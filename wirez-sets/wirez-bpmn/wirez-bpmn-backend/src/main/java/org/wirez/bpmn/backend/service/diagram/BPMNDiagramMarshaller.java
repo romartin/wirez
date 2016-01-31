@@ -17,10 +17,13 @@ import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.diagram.SettingsImpl;
+import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.service.diagram.DiagramMarshaller;
 import org.wirez.core.api.util.UUID;
@@ -79,9 +82,16 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             parser.setProfile(new DefaultProfileImpl());
             Collection<DefaultGraph> bpmnGraphs = parser.unmarshall(definitions, null);
             final String uuid = UUID.uuid();
-            // TODO
-            final Diagram<Settings> diagram = new DiagramImpl( uuid, bpmnGraphs.iterator().next(), 
-                    new SettingsImpl("BPMN Loaded process", BPMNDefinitionSet.ID, "BPMNShapeSet"));
+            final Graph graph = bpmnGraphs.iterator().next();
+            final Definition graphDefinition = ( (ViewContent) graph.getContent() ).getDefinition();
+            String title = graphDefinition.getTitle();
+            
+            if ( title == null || title.trim().length() == 0 ) {
+                title = "Untitled BPMN diagram";
+            }
+            
+            final Diagram<Settings> diagram = new DiagramImpl( uuid, graph, 
+                    new SettingsImpl(title, BPMNDefinitionSet.ID, "BPMNShapeSet"));
 
             LOG.info("BPMN process loading finished successfully.");
 

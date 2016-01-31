@@ -16,12 +16,7 @@
 
 package org.wirez.core.client.canvas.impl;
 
-import com.ait.lienzo.client.core.shape.Layer;
-import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
-import com.ait.lienzo.client.core.shape.SimpleArrow;
 import com.ait.lienzo.client.core.shape.wires.*;
-import com.ait.lienzo.client.core.types.Point2DArray;
-import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
@@ -39,9 +34,6 @@ import org.wirez.core.api.graph.processing.visitor.DefaultGraphVisitor;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.Rule;
-import org.wirez.core.client.Shape;
-import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.Logger;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -52,8 +44,9 @@ import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.impl.BaseShape;
-import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
+import org.wirez.core.client.service.ServiceCallback;
+import org.wirez.core.client.util.Logger;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -135,16 +128,14 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
                 final WiresManager wiresManager = getBaseCanvas().getWiresManager();
                 wiresManager.setConnectionAcceptor(CONNECTION_ACCEPTOR);
-                // TODO: wiresManager.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
-                // - Wires containment is not working fine...
-                // - When dragging a shape over the canvas, containment acceptor is constantly firing and it seems that parent/child shapes are not right.
+                wiresManager.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
+                
                 sucessCallback.execute();
             }
 
             @Override
             public void onError(final ClientRuntimeError error) {
-                // TODO
-                GWT.log("[ERROR] - DefaultCanvasHander");
+                Logger.logError( error );
                 errorCallback.execute();
             }
         });
@@ -261,7 +252,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             );
             
             final boolean isAccept = isAccept(results);
-            GWT.log("ConnectionAccepted=" + isAccept);
+            Logger.log("ConnectionAccepted=" + isAccept);
             return isAccept;
         }
 
@@ -329,7 +320,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String inUUID = inNode != null ? inNode.getId() : null;
             final String message = "TailConnectionAllowed  [out=" + outUUID + "] [in=" + inUUID + "] [isAllowed=" + isAllowed + "]";
             Logger.log(message);
-            GWT.log("ConnectionAllowed=" + isAllowed);
+            Logger.log("ConnectionAllowed=" + isAllowed);
 
             return isAllowed;
         }
@@ -389,13 +380,16 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
             final BaseShape parent = (BaseShape) wiresContainer;
             final BaseShape child = (BaseShape) wiresShape;
-            final Node parentNode = defaultGraphHandler.getNode(parent.getId());
-            final Node childNode = defaultGraphHandler.getNode(child.getId());
 
-            final String message = "Executed AddChildNodeCommand [parent=" + parentNode.getUUID() + ", child=" + childNode.getUUID() + "]";
-            GWT.log(message);
+            final String parentUUID = parent != null ? parent.getId() : null;
+            final String childUUID = child != null ? child.getId() : null;
+
+            final String message = "Executed AddChildNodeCommand [parent=" + parentUUID + ", child=" + childUUID + "]";
+            Logger.log(message);
             
-            
+            final Node parentNode = defaultGraphHandler.getNode(parentUUID);
+            final Node childNode = defaultGraphHandler.getNode(childUUID);
+
             CommandResults results = execute(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
                 protected Command getCommand() {

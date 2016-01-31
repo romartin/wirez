@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.uberfire.annotations.processors.AbstractErrorAbsorbingProcessor;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.wirez.core.processors.property.ErraiBindablePropertyAdapterGenerator;
+import org.wirez.core.processors.rule.ConnectionRuleGenerator;
 import org.wirez.core.processors.rule.ContainmentRuleGenerator;
 import org.wirez.core.processors.rule.DefinitionSetRuleAdapterGenerator;
 
@@ -61,16 +62,19 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     public static final String ANNOTATION_RULE_PERMITTED_CONNECTION = "org.wirez.core.api.annotation.rule.PermittedConnection";
 
     public static final String RULE_CONTAINMENT_SUFFIX_CLASSNAME = "ContainmentRule";
+    public static final String RULE_CONNECTION_SUFFIX_CLASSNAME = "ConnectionRule";
     public static final String PROPERTY_ADAPTER_CLASSNAME = "PropertyAdapter";
     public static final String RULE_ADAPTER_CLASSNAME = "RuleAdapter";
 
     private final ProcessingContext processingContext = ProcessingContext.getInstance();
     private final ContainmentRuleGenerator containmentRuleGenerator;
+    private final ConnectionRuleGenerator connectionRuleGenerator;
     private ErraiBindablePropertyAdapterGenerator propertyAdapterGenerator;
     private DefinitionSetRuleAdapterGenerator ruleAdapterGenerator;
     
     public MainProcessor() {
         ContainmentRuleGenerator ruleGenerator = null;
+        ConnectionRuleGenerator connectionRuleGenerator = null;
         ErraiBindablePropertyAdapterGenerator propertyAdapter = null;
         DefinitionSetRuleAdapterGenerator ruleAdapter = null;
         
@@ -78,12 +82,14 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             ruleGenerator = new ContainmentRuleGenerator();
             propertyAdapter = new ErraiBindablePropertyAdapterGenerator();
             ruleAdapter = new DefinitionSetRuleAdapterGenerator();
+            connectionRuleGenerator = new ConnectionRuleGenerator();
         } catch (Throwable t) {
             rememberInitializationError(t);
         }
-        containmentRuleGenerator = ruleGenerator;
-        propertyAdapterGenerator = propertyAdapter;
-        ruleAdapterGenerator = ruleAdapter;
+        this.containmentRuleGenerator = ruleGenerator;
+        this.connectionRuleGenerator = connectionRuleGenerator;
+        this.propertyAdapterGenerator = propertyAdapter;
+        this.ruleAdapterGenerator = ruleAdapter;
     }
 
     @Override
@@ -127,7 +133,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         }
 
         for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CONNECTION) ) ) {
-            processConnectionRules(set, e, roundEnv);
+            // TODO: processConnectionRules(set, e, roundEnv);
         }
         
 
@@ -217,7 +223,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             TypeElement classElement = (TypeElement) e;
             PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
 
-            messager.printMessage(Diagnostic.Kind.NOTE, "Discovered containment rule class [" + classElement.getSimpleName() + "]");
+            messager.printMessage(Diagnostic.Kind.NOTE, "Discovered containment rule for class [" + classElement.getSimpleName() + "]");
 
             final String packageName = packageElement.getQualifiedName().toString();
             final String classNameActivity = classElement.getSimpleName() + RULE_CONTAINMENT_SUFFIX_CLASSNAME;
@@ -256,7 +262,42 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     protected boolean processConnectionRules(Set<? extends TypeElement> set, Element element, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
-        return false;
+        final boolean isIface = element.getKind() == ElementKind.INTERFACE;
+        final boolean isClass = element.getKind() == ElementKind.CLASS;
+        if (isIface || isClass) {
+
+            TypeElement classElement = (TypeElement) element;
+            PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
+
+            messager.printMessage(Diagnostic.Kind.NOTE, "Discovered connection rule for class [" + classElement.getSimpleName() + "]");
+
+            final String packageName = packageElement.getQualifiedName().toString();
+            final String classNameActivity = classElement.getSimpleName() + RULE_CONNECTION_SUFFIX_CLASSNAME;
+
+            try {
+
+                //Try generating code for each required class
+                messager.printMessage( Diagnostic.Kind.NOTE, "Generating code for [" + classNameActivity + "]" );
+                final StringBuffer ruleClassCode = connectionRuleGenerator.generate( packageName,
+                        packageElement,
+                        classNameActivity,
+                        classElement,
+                        processingEnv );
+
+                writeCode( packageName,
+                        classNameActivity,
+                        ruleClassCode );
+
+                processingContext.addRule(packageName + "." + classNameActivity, StringUtils.uncapitalize(classNameActivity));
+
+            } catch ( GenerationException ge ) {
+                final String msg = ge.getMessage();
+                processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg, classElement );
+            }
+
+        }
+
+        return true;
 
     }
 

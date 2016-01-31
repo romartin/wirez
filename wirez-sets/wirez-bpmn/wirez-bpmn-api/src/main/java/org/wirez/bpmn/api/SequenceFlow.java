@@ -27,6 +27,8 @@ import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.definition.PropertySet;
+import org.wirez.core.api.annotation.rule.Connection;
+import org.wirez.core.api.annotation.rule.PermittedConnection;
 import org.wirez.core.api.definition.BaseDefinition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
@@ -39,6 +41,12 @@ import java.util.Set;
 @Portable
 @Bindable
 @Definition( type = Edge.class )
+@Connection( permittedConnections = {
+    @PermittedConnection( startRole = "sequence_start", endRole = "sequence_end" ),
+    @PermittedConnection( startRole = "choreography_sequence_start", endRole = "choreography_sequence_end" ),
+    @PermittedConnection( startRole = "Exclusive_Eventbased_Gateway", endRole = "FromEventbasedGateway" ),
+    @PermittedConnection( startRole = "EventbasedGateway", endRole = "FromEventbasedGateway" )
+} )
 public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "SequenceFlow";

@@ -48,6 +48,11 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
     }
 
     @Override
+    protected WiresLayoutContainer.Layout getTextPosition() {
+        return WiresLayoutContainer.Layout.BOTTOM;
+    }
+
+    @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>() {{
             add( decorator );
@@ -91,7 +96,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
         gwTypeIcon.removeAll();
 
         final double lineSize = radius / 2;
-        final double lineAlpha = 0.2;
+        final double lineAlpha = 0.8;
         Line hLine = new Line( 0 , 0, lineSize, 0).setY(lineSize / 2);
         hLine.setStrokeWidth(5);
         hLine.setStrokeAlpha(lineAlpha);

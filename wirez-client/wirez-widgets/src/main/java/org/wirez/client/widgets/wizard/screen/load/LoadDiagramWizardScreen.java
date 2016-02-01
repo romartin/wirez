@@ -1,5 +1,6 @@
 package org.wirez.client.widgets.wizard.screen.load;
 
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.uberfire.mvp.PlaceRequest;
@@ -9,10 +10,14 @@ import org.wirez.client.widgets.wizard.BaseWizardScreen;
 import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.widgets.wizard.CanvasWizardScreen;
 import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.diagram.Settings;
+import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.Logger;
+import org.wirez.core.client.util.ShapeUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -29,12 +34,13 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
         
         View showEmpty();
         
-        View add(String title, String path);
+        View add(String title, String path, SafeUri thumbUri);
         
         View clear();
         
     }
 
+    ShapeManager shapeManager;
     ClientDiagramServices clientDiagramServices;
     Event<LoadDiagramEvent> loadDiagramEventEvent;
     View view;
@@ -42,9 +48,11 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
     private String selectedPath = null;
 
     @Inject
-    public LoadDiagramWizardScreen(final ClientDiagramServices clientDiagramServices,
+    public LoadDiagramWizardScreen(final ShapeManager shapeManager,
+                                   final ClientDiagramServices clientDiagramServices,
                                    final Event<LoadDiagramEvent> loadDiagramEventEvent, 
                                    final View view) {
+        this.shapeManager = shapeManager;
         this.clientDiagramServices = clientDiagramServices;
         this.loadDiagramEventEvent = loadDiagramEventEvent;
         this.view = view;
@@ -79,7 +87,7 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
                 } else {
                     
                     for (final Diagram diagram : items) {
-                        view.add( diagram.getSettings().getTitle(), diagram.getSettings().getPath() );
+                        addEntry( diagram );
                     }
                     
                 }
@@ -92,6 +100,14 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
                 Logger.logError( error );
             }
         });
+    }
+    
+    private void addEntry(final Diagram diagram) {
+        assert diagram != null;
+        Settings settings = diagram.getSettings();
+        final Collection<ShapeSet> shapeSets = shapeManager.getShapeSets();
+        final SafeUri thumbUri = ShapeUtils.getShapeSet(shapeSets, settings.getShapeSetId()).getThumbnailUri();
+        view.add( settings.getTitle(), settings.getPath(), thumbUri );
     }
 
     @Override

@@ -1,6 +1,9 @@
 package org.wirez.core.client.util;
 
 import com.ait.lienzo.client.core.types.LinearGradient;
+import org.wirez.core.client.ShapeSet;
+
+import java.util.Collection;
 
 public class ShapeUtils {
     
@@ -14,5 +17,19 @@ public class ShapeUtils {
         linearGradient.addColorStop(0, startColor );
         
         return linearGradient;
+    }
+    
+    public static ShapeSet getShapeSet(final Collection<ShapeSet> shapeSets, final String id) {
+        if ( null != id && null != shapeSets ) {
+            
+            for (final ShapeSet shapeSet : shapeSets) {
+                if (id.equals(shapeSet.getId())) {
+                    return shapeSet;
+                }
+            }
+            
+        }
+        
+        return null;
     }
 }

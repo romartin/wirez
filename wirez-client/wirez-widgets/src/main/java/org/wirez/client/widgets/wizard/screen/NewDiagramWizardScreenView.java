@@ -18,8 +18,7 @@ package org.wirez.client.widgets.wizard.screen;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -72,12 +71,14 @@ public class NewDiagramWizardScreenView extends Composite implements NewDiagramW
         final VerticalPanel panel = new VerticalPanel();
         panel.getElement().getStyle().setCursor(Style.Cursor.POINTER);
         panel.setVerticalAlignment(HasAlignment.ALIGN_MIDDLE);
-        panel.getElement().getStyle().setMargin(50, Style.Unit.PX);
+        panel.getElement().getStyle().setMargin(25, Style.Unit.PX);
         panel.setHeight("100%");
-
+        
+        
         final org.gwtbootstrap3.client.ui.Image image = new org.gwtbootstrap3.client.ui.Image(thumbnailUri);
         image.getElement().getStyle().setCursor(Style.Cursor.POINTER);
         final double alpha = isSelected ? 1 : 0.2;
+        image.getElement().getStyle().setPadding(25, Style.Unit.PX);
         image.getElement().setAttribute("style", "filter: alpha(opacity=5);opacity: " + alpha);
         image.addClickHandler(new ClickHandler() {
             @Override
@@ -100,6 +101,22 @@ public class NewDiagramWizardScreenView extends Composite implements NewDiagramW
         labelPanel.setHorizontalAlignment(HasAlignment.ALIGN_CENTER);
         labelPanel.add(label);
 
+        // Mouse over / out handlers.
+        panel.addDomHandler(new MouseOverHandler() {
+            @Override
+            public void onMouseOver(MouseOverEvent event) {
+                panel.getElement().getStyle().setBackgroundColor("#f2f2f2");
+                label.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
+            }
+        }, MouseOverEvent.getType());
+        panel.addDomHandler(new MouseOutHandler() {
+            @Override
+            public void onMouseOut(MouseOutEvent event) {
+                panel.getElement().getStyle().setBackgroundColor("#FFFFFF");
+                label.getElement().getStyle().setFontWeight(Style.FontWeight.NORMAL);
+            }
+        }, MouseOutEvent.getType());
+        
         panel.add(popover);
         panel.add(labelPanel);
         itemsPanel.add(panel);

@@ -57,6 +57,10 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
         this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
     }
 
+    @Override
+    protected WiresLayoutContainer.Layout getTextPosition() {
+        return WiresLayoutContainer.Layout.BOTTOM;
+    }
 
     @Override
     public Collection<Shape> getDecorators() {

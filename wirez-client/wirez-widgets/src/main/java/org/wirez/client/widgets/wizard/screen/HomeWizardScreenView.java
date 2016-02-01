@@ -38,9 +38,6 @@ public class HomeWizardScreenView extends Composite implements HomeWizardScreen.
     private static ViewBinder uiBinder = GWT.create( ViewBinder.class );
 
     @UiField
-    HorizontalPanel mainPanel;
-
-    @UiField
     Button newDiagramButton;
 
     @UiField

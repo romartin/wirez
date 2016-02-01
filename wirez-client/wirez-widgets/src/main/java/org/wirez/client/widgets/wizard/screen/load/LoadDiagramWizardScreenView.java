@@ -20,17 +20,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 
 public class LoadDiagramWizardScreenView extends Composite implements LoadDiagramWizardScreen.View {
 
+    private static final double ENTRY_HEIGHT = 50;
+    private static final String IMAGE_SIZE = "35px";
+    
     interface ViewBinder extends UiBinder<Widget, LoadDiagramWizardScreenView> {
 
     }
@@ -63,10 +64,10 @@ public class LoadDiagramWizardScreenView extends Composite implements LoadDiagra
     }
 
     @Override
-    public LoadDiagramWizardScreen.View add(final String title, final String path) {
+    public LoadDiagramWizardScreen.View add(final String title, final String path, final SafeUri thumbUri) {
         emptyPanel.setVisible(false);
         diagramsPanel.setVisible(true);
-        insertDiagramEntry( title, path );
+        insertDiagramEntry( title, path, thumbUri );
         return this;
     }
 
@@ -78,23 +79,36 @@ public class LoadDiagramWizardScreenView extends Composite implements LoadDiagra
         return this;
     }
     
-    private void insertDiagramEntry(final String title, final String path) {
-        final FlowPanel panel = new FlowPanel();
+    private void insertDiagramEntry(final String title, final String path, final SafeUri thumbUri) {
+        
+        final HorizontalPanel panel = new HorizontalPanel();
         panel.getElement().getStyle().setWidth(100, Style.Unit.PCT);
+        panel.getElement().getStyle().setHeight(ENTRY_HEIGHT, Style.Unit.PCT);
         panel.getElement().getStyle().setMargin(15, Style.Unit.PX);
-        panel.getElement().getStyle().setPadding(20, Style.Unit.PX);
+        panel.getElement().getStyle().setPadding(15, Style.Unit.PX);
         panel.getElement().getStyle().setBackgroundColor( "#f2f2f2" );
         panel.getElement().getStyle().setCursor(Style.Cursor.POINTER);
+
+        final org.gwtbootstrap3.client.ui.Image image = new org.gwtbootstrap3.client.ui.Image(thumbUri);
+        image.getElement().getStyle().setCursor(Style.Cursor.POINTER);
+        image.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
+        image.getElement().getStyle().setMarginTop(5, Style.Unit.PX);
+        image.setSize(IMAGE_SIZE, IMAGE_SIZE);
+        panel.add( image );
+        
         final Heading heading = new Heading(HeadingSize.H3);
         heading.setText( title );
-        heading.addDomHandler(new ClickHandler() {
+        panel.add( heading );
+        
+        panel.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
                 presenter.onItemClick( path );
             }
         }, ClickEvent.getType());
-        panel.add( heading );
+        
         diagramsPanel.add( panel );
+        
     }
 
     

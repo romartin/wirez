@@ -19,9 +19,16 @@
              xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
+  <ui:style>
+    .diagramsPanel {
+      height: 100px;
+      width: 600px;
+    }
+  </ui:style>
+  
   <g:FlowPanel ui:field='mainPanel'>
 
-    <g:VerticalPanel ui:field="diagramsPanel">
+    <g:VerticalPanel ui:field="diagramsPanel" verticalAlignment="ALIGN_MIDDLE" addStyleNames="{style.diagramsPanel}">
       
     </g:VerticalPanel>
     

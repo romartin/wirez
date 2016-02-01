@@ -20,6 +20,12 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
   <ui:style>
+    .mainPanel {
+      margin: 50px;
+    }
+    .actionsPanel {
+      margin-top: 25px;
+    }
     .button {
       cursor: pointer;
       margin: 20px;
@@ -28,12 +34,19 @@
       height: 150px;
     }
   </ui:style>
-  <g:HorizontalPanel ui:field='mainPanel'>
 
-    <b:Button ui:field="newDiagramButton" text="New diagram" addStyleNames="{style.button}"/>
+  <g:VerticalPanel addStyleNames="{style.mainPanel}">
 
-    <b:Button ui:field="loadDiagramButton" text="Load diagram" addStyleNames="{style.button}"/>
+    <b:Heading size="H1" text="Choose an action: "/>
 
-  </g:HorizontalPanel>
+    <g:HorizontalPanel width="100%" addStyleNames="{style.actionsPanel}">
+
+      <b:Button ui:field="newDiagramButton" text="New diagram" addStyleNames="{style.button}" title="Create a diagram from scatch"/>
+  
+      <b:Button ui:field="loadDiagramButton" text="Load diagram" addStyleNames="{style.button}" title="Load an existing diagram"/>
+  
+    </g:HorizontalPanel>
+
+  </g:VerticalPanel>
 
 </ui:UiBinder>

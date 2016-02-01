@@ -32,15 +32,15 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
         
     }
 
-    ShapeManager wirezClientManager;
+    ShapeManager shapeManager;
     Event<CreateEmptyDiagramEvent> createEmptyDiagramEventEvent;
     View view;
 
     @Inject
-    public NewDiagramWizardScreen(final ShapeManager wirezClientManager, 
+    public NewDiagramWizardScreen(final ShapeManager shapeManager, 
                                   final Event<CreateEmptyDiagramEvent> createEmptyDiagramEventEvent, 
                                   final View view) {
-        this.wirezClientManager = wirezClientManager;
+        this.shapeManager = shapeManager;
         this.createEmptyDiagramEventEvent = createEmptyDiagramEventEvent;
         this.view = view;
     }
@@ -48,7 +48,7 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
     @PostConstruct
     public void init() {
         view.init(this);
-        view.setHeading("Choose a diagram:");
+        view.setHeading("Choose the type:");
     }
 
     @Override
@@ -78,7 +78,7 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
         super.doShow();
 
         view.clear();
-        final Collection<ShapeSet> shapeSets = wirezClientManager.getShapeSets();
+        final Collection<ShapeSet> shapeSets = shapeManager.getShapeSets();
         if (shapeSets == null || shapeSets.isEmpty()) {
             view.showEmptyView();
         } else {

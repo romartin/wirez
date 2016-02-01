@@ -41,8 +41,8 @@ public class HoverToolboxButton {
         
         final Rectangle decorator = new Rectangle(width, height)
                 .setFillColor(ColorName.LIGHTGREY)
-                .setFillAlpha(0.3)
-                .setStrokeWidth(0.2)
+                .setFillAlpha(0.2)
+                .setStrokeWidth(0)
                 .setCornerRadius(10);
         decorator.addNodeMouseClickHandler(clickHandler);
         group.add( decorator.moveToTop() );

@@ -79,21 +79,9 @@ public class CanvasWizardScreen {
     }
 
     private Menus makeMenuBar() {
-        return MenuFactory
-                .newTopLevelMenu("Load bpmn test process")
-                .respondsWith(getTestButtonCommand())
-                .endMenu()
-                .build();
+        return null;
     }
 
-    private Command getTestButtonCommand() {
-        return new Command() {
-            public void execute() {
-               
-            }
-        };
-    }
-    
     @OnOpen
     public void onOpen() {
 

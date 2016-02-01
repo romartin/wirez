@@ -55,13 +55,12 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     protected BaseResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> resizeControl;
     protected BaseToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> toolboxControl;
 
-
     public BaseShape(final MultiPath path, final Group group, final WiresManager manager) {
         super(path, group, manager);
         group.add(path);
         getPath().setDraggable(false);
         text = buildText("");
-        this.addChild(text, WiresLayoutContainer.Layout.CENTER);
+        this.addChild(text, getTextPosition());
         text.moveToTop();
     }
 
@@ -155,6 +154,10 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     protected Text buildText(String _text) {
         Text text = new Text(_text).setFontSize(14).setFillColor(ColorName.BLACK).setStrokeWidth(1);
         return text.moveToTop();
+    }
+
+    protected WiresLayoutContainer.Layout getTextPosition() {
+        return WiresLayoutContainer.Layout.CENTER;
     }
 
     public Text getText() {

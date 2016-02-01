@@ -57,6 +57,11 @@
       <artifactId>lienzo-core</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.ahome-it</groupId>
+      <artifactId>ahome-tooling-nativetools</artifactId>
+    </dependency>
+
   </dependencies>
 
 </project>

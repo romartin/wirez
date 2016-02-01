@@ -36,6 +36,9 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class SequenceFlowShapeFactory extends BaseShapeFactory<SequenceFlow, SequenceFlowShape> {
 
+    public SequenceFlowShapeFactory() {
+    }
+    
     @Inject
     public SequenceFlowShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
                             final ShapeGlyphDragHandler shapeGlyphDragHandler) {

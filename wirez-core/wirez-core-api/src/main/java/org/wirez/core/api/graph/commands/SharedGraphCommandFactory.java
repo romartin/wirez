@@ -19,6 +19,9 @@ public class SharedGraphCommandFactory implements GraphCommandFactory {
 
     DefinitionManager definitionManager;
 
+    public SharedGraphCommandFactory() {
+    }
+
     @Inject
     public SharedGraphCommandFactory(DefinitionManager definitionManager) {
         this.definitionManager = definitionManager;

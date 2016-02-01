@@ -35,6 +35,11 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class ParallelGatewayShapeFactory extends BaseShapeFactory<ParallelGateway, ParallelGatewayShape> {
 
+    
+    public ParallelGatewayShapeFactory() {
+        
+    }
+    
     @Inject
     public ParallelGatewayShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
                           final ShapeGlyphDragHandler shapeGlyphDragHandler) {

@@ -36,6 +36,9 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class TaskShapeFactory extends BaseShapeFactory<Task, TaskShape> {
 
+    public TaskShapeFactory() {
+    }
+    
     @Inject
     public TaskShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
                             final ShapeGlyphDragHandler shapeGlyphDragHandler) {

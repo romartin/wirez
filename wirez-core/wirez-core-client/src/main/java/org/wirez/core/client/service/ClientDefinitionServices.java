@@ -19,6 +19,9 @@ public class ClientDefinitionServices {
     
     Caller<DefinitionService> definitionService;
 
+    public ClientDefinitionServices() {
+    }
+
     @Inject
     public ClientDefinitionServices(Caller<DefinitionService> definitionService) {
         this.definitionService = definitionService;

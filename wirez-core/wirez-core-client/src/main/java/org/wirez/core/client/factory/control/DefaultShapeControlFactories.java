@@ -27,6 +27,9 @@ public class DefaultShapeControlFactories {
     LienzoResizeControlFactory lienzoResizeControlFactory;
     ToolboxControlFactory toolboxControlFactory;
 
+    public DefaultShapeControlFactories() {
+    }
+
     @Inject
     public DefaultShapeControlFactories(final DefaultDragControlFactory dragControlFactory, 
                                         final DefaultResizeControlFactory defaultResizeControlFactory, 

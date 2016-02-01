@@ -45,6 +45,9 @@ public class BPMNShapeSet implements ShapeSet {
     
     private List<ShapeFactory<? extends Definition, ? extends Shape>> factories;
 
+    public BPMNShapeSet() {
+    }
+
     @Inject
     public BPMNShapeSet( final StartNoneEventShapeFactory startNoneEventShapeFactory,
                          final EndNoneEventShapeFactory endNoneEventShapeFactory,

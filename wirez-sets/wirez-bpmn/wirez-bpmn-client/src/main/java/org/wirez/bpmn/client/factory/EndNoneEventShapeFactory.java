@@ -38,6 +38,9 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class EndNoneEventShapeFactory extends BaseShapeFactory<EndNoneEvent, EndNoneEventShape> {
     
+    public EndNoneEventShapeFactory() {
+    }
+    
     @Inject
     public EndNoneEventShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
                                     final ShapeGlyphDragHandler shapeGlyphDragHandler) {

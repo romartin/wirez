@@ -16,6 +16,9 @@ public class ClientDiagramServices {
     
     Caller<DiagramService> diagramService;
 
+    public ClientDiagramServices() {
+    }
+
     @Inject
     public ClientDiagramServices(Caller<DiagramService> diagramService) {
         this.diagramService = diagramService;

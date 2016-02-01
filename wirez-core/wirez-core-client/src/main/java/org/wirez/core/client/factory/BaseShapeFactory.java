@@ -36,6 +36,9 @@ public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>>
     protected Collection<ShapeControlFactory<?, ?>> DEFAULT_FACTORIES;
     protected ShapeGlyphDragHandler shapeGlyphDragHandler;
 
+    public BaseShapeFactory() {
+    }
+
     @Inject
     public BaseShapeFactory(DefaultShapeControlFactories defaultShapeControlFactories,
                             ShapeGlyphDragHandler shapeGlyphDragHandler) {

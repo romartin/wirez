@@ -29,6 +29,9 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefini
     NodeFactory<? extends Definition> nodeFactory;
     EdgeFactory<? extends Definition> edgeFactory;
 
+    public DefaultDefinitionAdapter() {
+    }
+
     @Inject
     public DefaultDefinitionAdapter(DefaultGraphFactory<? extends Definition> graphFactory, NodeFactory<? extends Definition> nodeFactory, EdgeFactory<? extends Definition> edgeFactory) {
         this.graphFactory = graphFactory;

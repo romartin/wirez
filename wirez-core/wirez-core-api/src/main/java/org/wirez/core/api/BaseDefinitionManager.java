@@ -34,6 +34,9 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
     protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();
 
+    public BaseDefinitionManager() {
+    }
+
     public BaseDefinitionManager(final DiagramRegistry<? extends Diagram> diagramRegistry) {
         this.diagramRegistry = diagramRegistry;
     }

@@ -23,6 +23,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CanContain {
 
+    String id() default "";
+    
     String[] roles();
     
 }

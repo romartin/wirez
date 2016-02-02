@@ -4,6 +4,9 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.api.annotation.definitionset.Definition;
+import org.wirez.core.api.annotation.rule.EdgeOccurrences;
+import org.wirez.core.api.annotation.rule.EdgeType;
+import org.wirez.core.api.annotation.rule.Occurrences;
 import org.wirez.core.api.definition.DefinitionSet;
 
 import javax.inject.Inject;
@@ -11,6 +14,8 @@ import javax.inject.Inject;
 @Portable
 @Bindable
 @org.wirez.core.api.annotation.definitionset.DefinitionSet
+@EdgeOccurrences(type = EdgeType.INCOMING, role = "Startevents_all", edgeRole = "SequenceFlow", max = 0)
+@EdgeOccurrences(type = EdgeType.OUTGOING, role = "Endevents_all", edgeRole = "SequenceFlow", max = 0)
 public class BPMNDefinitionSet implements DefinitionSet {
 
     public static final String ID = "bpmnDefSet";

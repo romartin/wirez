@@ -19,12 +19,12 @@ package org.wirez.core.api.annotation.rule;
 import java.lang.annotation.*;
 
 @Inherited
-@Target(ElementType.METHOD) 
+@Target(ElementType.TYPE) 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Connector {
+public @interface CanConnect {
 
-    long minOccurrences();
+    String id() default "";
 
-    long maxOccurrences();
+    PermittedConnection[] value();
     
 }

@@ -56,10 +56,9 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     public static final String ANNOTATION_PROPERTY_DEFAULT_VALUE = "org.wirez.core.api.annotation.property.DefaultValue";
     public static final String ANNOTATION_PROPERTY_VALUE = "org.wirez.core.api.annotation.property.Value";
     public static final String ANNOTATION_RULE_CAN_CONTAIN = "org.wirez.core.api.annotation.rule.CanContain";
-    public static final String ANNOTATION_RULE_CARDINALITY = "org.wirez.core.api.annotation.rule.Cardinality";
-    public static final String ANNOTATION_RULE_CONNECTION = "org.wirez.core.api.annotation.rule.Connection";
-    public static final String ANNOTATION_RULE_CONNECTOR = "org.wirez.core.api.annotation.rule.Connector";
-    public static final String ANNOTATION_RULE_PERMITTED_CONNECTION = "org.wirez.core.api.annotation.rule.PermittedConnection";
+    public static final String ANNOTATION_RULE_OCCURRENCES = "org.wirez.core.api.annotation.rule.Occurrences";
+    public static final String ANNOTATION_RULE_CAN_CONNECT = "org.wirez.core.api.annotation.rule.CanConnect";
+    public static final String ANNOTATION_RULE_EDGE_OCCURRENCES = "org.wirez.core.api.annotation.rule.EdgeOccurrences";
 
     public static final String RULE_CONTAINMENT_SUFFIX_CLASSNAME = "ContainmentRule";
     public static final String RULE_CONNECTION_SUFFIX_CLASSNAME = "ConnectionRule";
@@ -128,6 +127,9 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             processContainmentRules(set, e, roundEnv);
         }
 
+        // https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html
+        // https://blog.idrsolutions.com/2015/03/java-8-repeating-annotation-explained-in-5-minutes/
+        
         for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CARDINALITY) ) ) {
             processCardinalityRules(set, e, roundEnv);
         }

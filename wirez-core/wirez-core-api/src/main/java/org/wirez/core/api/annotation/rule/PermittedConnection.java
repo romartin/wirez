@@ -19,8 +19,8 @@ package org.wirez.core.api.annotation.rule;
 import java.lang.annotation.*;
 
 @Inherited
-@Target(ElementType.METHOD) 
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(CanConnect.class)
 public @interface PermittedConnection {
 
     String startRole();

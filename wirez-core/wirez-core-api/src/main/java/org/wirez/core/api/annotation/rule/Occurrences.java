@@ -21,14 +21,16 @@ import java.lang.annotation.*;
 @Inherited
 @Target(ElementType.TYPE) 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Cardinality {
+public @interface Occurrences {
 
-    long minOccurrences();
-
-    long maxOccurrences();
+    String id() default "";
     
-    Connector[] incomingConnectionRules();
+    String role();
+    
+    int min() default -1;
 
-    Connector[] outgoingConnectionRules();
+    int max() default -1;
+    
+    EdgeOccurrences[] value();
     
 }

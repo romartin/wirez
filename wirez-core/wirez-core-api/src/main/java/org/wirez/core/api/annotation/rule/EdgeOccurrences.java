@@ -16,13 +16,24 @@
 
 package org.wirez.core.api.annotation.rule;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 @Inherited
-@Target(ElementType.TYPE) 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Connection {
+@Repeatable(Occurrences.class)
+public @interface EdgeOccurrences {
 
-    PermittedConnection[] permittedConnections();
+    EdgeType type();
+    
+    String role();
+
+    String edgeRole();
+
+    int min() default -1;
+    
+    int max() default -1;
     
 }

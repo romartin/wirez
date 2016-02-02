@@ -23,6 +23,7 @@ import org.uberfire.relocated.freemarker.template.Template;
 import org.uberfire.relocated.freemarker.template.TemplateException;
 import org.wirez.core.processors.ProcessingElement;
 import org.wirez.core.processors.ProcessingEntity;
+import org.wirez.core.processors.ProcessingRule;
 
 import javax.annotation.processing.Messager;
 import javax.tools.Diagnostic;
@@ -56,7 +57,7 @@ public class DefinitionSetRuleAdapterGenerator {
 
     public StringBuffer generate(String packageName, String className,
                                  String defSetClassName,
-                                 List<ProcessingEntity> rules,
+                                 List<ProcessingRule> rules,
                                  Messager messager) throws GenerationException {
 
         Map<String, Object> root = new HashMap<String, Object>();
@@ -101,9 +102,9 @@ public class DefinitionSetRuleAdapterGenerator {
 
     }
     
-    private List<String> getRuleIds(List<ProcessingEntity> rules) {
+    private List<String> getRuleIds(List<ProcessingRule> rules) {
         List<String> result = new ArrayList<>();
-        for (ProcessingEntity entity : rules ) {
+        for (ProcessingRule entity : rules ) {
             result.add(entity.getId());
         }
         return result;

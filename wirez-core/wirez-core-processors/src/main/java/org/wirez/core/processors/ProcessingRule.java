@@ -14,23 +14,34 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.annotation.rule;
+package org.wirez.core.processors;
 
-import java.lang.annotation.*;
+public class ProcessingRule {
 
-@Inherited
-@Target(ElementType.TYPE) 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Occurrences {
-
-    String id() default "";
+    public enum TYPE {
+        CONTAINMENT, CONNECTION, CARDINALITY;
+    }
     
-    String role() default "";
-    
-    int min() default -1;
+    private final String id;
+    private final TYPE type;
+    private final StringBuffer content;
 
-    int max() default -1;
-    
-    EdgeOccurrences[] value();
+    public ProcessingRule(String id, TYPE type, StringBuffer content) {
+        this.id = id;
+        this.type = type;
+        this.content = content;
+    }
+
+    public StringBuffer getContent() {
+        return content;
+    }
+
+    public TYPE getType() {
+        return type;
+    }
+
+    public String getId() {
+        return id;
+    }
     
 }

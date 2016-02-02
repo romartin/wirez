@@ -44,8 +44,9 @@ import java.util.Set;
         MainProcessor.ANNOTATION_PROPERTY_SET,
         MainProcessor.ANNOTATION_PROPERTY, 
         MainProcessor.ANNOTATION_RULE_CAN_CONTAIN, 
-        MainProcessor.ANNOTATION_RULE_CARDINALITY, 
-        MainProcessor.ANNOTATION_RULE_CONNECTION})
+        MainProcessor.ANNOTATION_RULE_CAN_CONNECT, 
+        MainProcessor.ANNOTATION_RULE_OCCURRENCES,
+        MainProcessor.ANNOTATION_RULE_EDGE_OCCURRENCES})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
@@ -62,6 +63,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     public static final String RULE_CONTAINMENT_SUFFIX_CLASSNAME = "ContainmentRule";
     public static final String RULE_CONNECTION_SUFFIX_CLASSNAME = "ConnectionRule";
+    public static final String RULE_CARDINALITY_SUFFIX_CLASSNAME = "CardinalityRule";
     public static final String PROPERTY_ADAPTER_CLASSNAME = "PropertyAdapter";
     public static final String RULE_ADAPTER_CLASSNAME = "RuleAdapter";
 
@@ -127,15 +129,16 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             processContainmentRules(set, e, roundEnv);
         }
 
-        // https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html
-        // https://blog.idrsolutions.com/2015/03/java-8-repeating-annotation-explained-in-5-minutes/
-        
-        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CARDINALITY) ) ) {
-            processCardinalityRules(set, e, roundEnv);
+        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_OCCURRENCES) ) ) {
+            // processCardinalityRules(set, e, roundEnv);
         }
 
-        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CONNECTION) ) ) {
-            // TODO: processConnectionRules(set, e, roundEnv);
+        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_EDGE_OCCURRENCES) ) ) {
+            // processEdgeCardinalityRules(set, e, roundEnv);
+        }
+
+        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CAN_CONNECT) ) ) {
+            // processConnectionRules(set, e, roundEnv);
         }
         
 
@@ -239,11 +242,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
                         classElement,
                         processingEnv );
 
-                writeCode( packageName,
-                        classNameActivity,
-                        ruleClassCode );
-
-                processingContext.addRule(packageName + "." + classNameActivity, StringUtils.uncapitalize(classNameActivity));
+                processingContext.addRule(toValidId(classNameActivity), ProcessingRule.TYPE.CONTAINMENT, ruleClassCode);
                 
             } catch ( GenerationException ge ) {
                 final String msg = ge.getMessage();
@@ -256,10 +255,45 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         
     }
 
-    protected boolean processCardinalityRules(Set<? extends TypeElement> set, Element element, RoundEnvironment roundEnv) throws Exception {
+    protected boolean processCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
-        return false;
+        final boolean isIface = e.getKind() == ElementKind.INTERFACE;
+        final boolean isClass = e.getKind() == ElementKind.CLASS;
+        /*if (isIface || isClass) {
 
+            TypeElement classElement = (TypeElement) e;
+            PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
+
+            messager.printMessage(Diagnostic.Kind.NOTE, "Discovered cardinality rule for class [" + classElement.getSimpleName() + "]");
+
+            final String packageName = packageElement.getQualifiedName().toString();
+            final String classNameActivity = classElement.getSimpleName() + RULE_CARDINALITY_SUFFIX_CLASSNAME;
+
+            try {
+                //Try generating code for each required class
+                messager.printMessage( Diagnostic.Kind.NOTE, "Generating code for [" + classNameActivity + "]" );
+                final StringBuffer ruleClassCode = cardinalityRuleGenerator.generate( packageName,
+                        packageElement,
+                        classNameActivity,
+                        classElement,
+                        processingEnv );
+
+                processingContext.addRule(toValidId(classNameActivity), ProcessingRule.TYPE.CARDINALITY, ruleClassCode);
+
+            } catch ( GenerationException ge ) {
+                final String msg = ge.getMessage();
+                processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg, classElement );
+            }
+
+        }*/
+
+        return true;
+
+    }
+
+    protected boolean processEdgeCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+        // TODO
+        return false;
     }
 
     protected boolean processConnectionRules(Set<? extends TypeElement> set, Element element, RoundEnvironment roundEnv) throws Exception {
@@ -286,11 +320,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
                         classElement,
                         processingEnv );
 
-                writeCode( packageName,
-                        classNameActivity,
-                        ruleClassCode );
-
-                processingContext.addRule(packageName + "." + classNameActivity, StringUtils.uncapitalize(classNameActivity));
+                processingContext.addRule(toValidId(classNameActivity), ProcessingRule.TYPE.CONNECTION, ruleClassCode);
 
             } catch ( GenerationException ge ) {
                 final String msg = ge.getMessage();
@@ -359,6 +389,10 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         }
         return true;
 
+    }
+    
+    public static String toValidId(String id) {
+        return StringUtils.uncapitalize(id);
     }
 
 }

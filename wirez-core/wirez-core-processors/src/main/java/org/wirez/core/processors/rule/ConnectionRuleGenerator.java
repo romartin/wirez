@@ -47,7 +47,7 @@ public class ConnectionRuleGenerator extends AbstractGenerator  {
         //Extract required information
         final TypeElement classElement = (TypeElement) element;
         final boolean isInterface = classElement.getKind().isInterface();
-        final String annotationName = MainProcessor.ANNOTATION_RULE_CONNECTION;
+        final String annotationName = MainProcessor.ANNOTATION_RULE_CAN_CONNECT;
         final String ruleName = className;
         final String ruleDefinitionId = className.substring(0, ( className.length() - MainProcessor.RULE_CONNECTION_SUFFIX_CLASSNAME.length()) );
         

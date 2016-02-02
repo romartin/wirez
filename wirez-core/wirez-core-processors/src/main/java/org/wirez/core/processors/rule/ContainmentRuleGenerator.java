@@ -48,9 +48,8 @@ public class ContainmentRuleGenerator extends AbstractGenerator  {
 
         //Extract required information
         final TypeElement classElement = (TypeElement) element;
-        final boolean isInterface = classElement.getKind().isInterface();
         final String annotationName = MainProcessor.ANNOTATION_RULE_CAN_CONTAIN;
-        final String ruleName = className;
+        final String ruleId = MainProcessor.toValidId(className);
         final String ruleDefinitionId = className.substring(0, ( className.length() - MainProcessor.RULE_CONTAINMENT_SUFFIX_CLASSNAME.length()) );
         
         List<String> roles = null;
@@ -68,12 +67,8 @@ public class ContainmentRuleGenerator extends AbstractGenerator  {
         }
 
         Map<String, Object> root = new HashMap<String, Object>();
-        root.put( "packageName",
-                packageName );
-        root.put( "className",
-                className );
-        root.put( "ruleName",
-                ruleName );
+        root.put( "ruleId",
+                ruleId );
         root.put( "ruleDefinitionId",
                 ruleDefinitionId );
         root.put( "roles",

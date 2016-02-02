@@ -18,6 +18,7 @@ package ${packageName};
 
 import org.wirez.core.api.adapter.generated.GeneratedDefinitionSetRuleAdapter;
 import org.wirez.core.api.rule.Rule;
+import org.wirez.core.api.rule.impl.DefaultContainmentRule;
 
 import javax.annotation.Generated;
 import javax.annotation.PostConstruct;
@@ -32,8 +33,7 @@ import java.util.Set;
 public class ${className} extends GeneratedDefinitionSetRuleAdapter<${defSetClassName}> {
 
     <#list rules as rule>
-        @Inject
-        ${rule.className} ${rule.id};
+        ${rule.content}
     </#list>
 
     private static final Set<Rule> rules = new HashSet<Rule>(${rulesSize});

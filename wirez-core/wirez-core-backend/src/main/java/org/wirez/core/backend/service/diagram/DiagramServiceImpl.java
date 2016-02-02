@@ -50,10 +50,6 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 import static org.uberfire.java.nio.file.Files.readAllBytes;
 import static org.uberfire.java.nio.file.Files.walkFileTree;
 
-/*
-    See DataSetDefRegistryCDI
- */
-
 @Service
 @ApplicationScoped
 public class DiagramServiceImpl implements DiagramService {

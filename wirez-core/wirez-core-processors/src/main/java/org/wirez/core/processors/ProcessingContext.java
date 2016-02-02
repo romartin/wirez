@@ -8,7 +8,7 @@ public class ProcessingContext {
 
     private static ProcessingContext context;
     private ProcessingEntity definitionSet;
-    private static final List<ProcessingEntity> rules = new ArrayList<>();
+    private static final List<ProcessingRule> rules = new ArrayList<>();
     private static final Map<String, String> propertyValueFieldNames = new HashMap<>();
     private static final Map<String, String> propertyDefaultValueFieldNames = new HashMap<>();
 
@@ -50,11 +50,11 @@ public class ProcessingContext {
         this.definitionSet = new ProcessingEntity(packageName + "." + className, className);
     }
 
-    public void addRule(String className, String id) {
-        rules.add(new ProcessingEntity(className, id));
+    public void addRule(String id, ProcessingRule.TYPE type, StringBuffer content) {
+        rules.add(new ProcessingRule(id, type, content));
     }
     
-    public List<ProcessingEntity> getRules() {
+    public List<ProcessingRule> getRules() {
         return rules;
     }
 }

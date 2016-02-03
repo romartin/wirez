@@ -18,10 +18,12 @@ package ${packageName};
 
 import org.wirez.core.api.adapter.generated.GeneratedDefinitionSetRuleAdapter;
 import org.wirez.core.api.rule.Rule;
+import org.wirez.core.api.rule.CardinalityRule;
 import org.wirez.core.api.rule.ConnectionRule;
 import org.wirez.core.api.rule.impl.DefaultConnectionRule;
 import org.wirez.core.api.rule.impl.DefaultContainmentRule;
 import org.wirez.core.api.rule.impl.DefaultPermittedConnection;
+import org.wirez.core.api.rule.impl.*;
 
 import javax.annotation.Generated;
 import javax.annotation.PostConstruct;

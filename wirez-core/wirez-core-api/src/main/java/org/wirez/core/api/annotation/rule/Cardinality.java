@@ -21,18 +21,8 @@ import java.lang.annotation.*;
 @Inherited
 @Target(ElementType.TYPE) 
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(Cardinality.class)
-public @interface Occurrences {
+public @interface Cardinality {
 
-    String id() default "";
-    
-    // If a role value is given here, it will override any role value for any of the child EdgeOccurrences instances.
-    String role() default "";
-    
-    long min() default 0;
-
-    long max() default -1;
-    
-    EdgeOccurrences[] value();
+    Occurrences[] value();
     
 }

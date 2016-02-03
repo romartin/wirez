@@ -22,6 +22,8 @@ import org.uberfire.relocated.freemarker.template.Template;
 import org.uberfire.relocated.freemarker.template.TemplateException;
 import org.wirez.core.api.annotation.rule.PermittedConnection;
 import org.wirez.core.processors.MainProcessor;
+import org.wirez.core.processors.ProcessingContext;
+import org.wirez.core.processors.ProcessingRule;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -55,8 +57,9 @@ public class ConnectionRuleGenerator extends AbstractGenerator  {
             return to;
         }
     }
-    
-    
+
+    private final ProcessingContext processingContext = ProcessingContext.getInstance();
+
     @Override
     public StringBuffer generate(String packageName, PackageElement packageElement, String className, Element element, ProcessingEnvironment processingEnvironment) throws GenerationException {
 
@@ -87,6 +90,8 @@ public class ConnectionRuleGenerator extends AbstractGenerator  {
                 ruleId );
         root.put( "ruleDefinitionId",
                 ruleDefinitionId );
+        root.put( "connectionsSize",
+                ruleEntries.size() );
         root.put( "connections",
                 ruleEntries );
         
@@ -111,7 +116,8 @@ public class ConnectionRuleGenerator extends AbstractGenerator  {
         }
         messager.printMessage( Diagnostic.Kind.NOTE, "Successfully generated code for [" + className + "]" );
 
-        return sw.getBuffer();
+        processingContext.addRule(ruleId, ProcessingRule.TYPE.CONNECTION, sw.getBuffer());
+        return null;
 
     }
 

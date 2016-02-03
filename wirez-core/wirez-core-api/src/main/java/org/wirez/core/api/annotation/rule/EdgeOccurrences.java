@@ -28,12 +28,14 @@ public @interface EdgeOccurrences {
 
     EdgeType type();
     
-    String role();
+    // If role value is given for the Occurrences parent annotation, the value here is not necessary 
+    // as will be overridden by the parent's one.
+    String role() default "";
 
-    String edgeRole();
+    String edge();
 
-    int min() default -1;
-    
-    int max() default -1;
+    long min() default 0;
+
+    long max() default -1;
     
 }

@@ -20,9 +20,7 @@ import org.uberfire.annotations.processors.AbstractGenerator;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.uberfire.relocated.freemarker.template.Template;
 import org.uberfire.relocated.freemarker.template.TemplateException;
-import org.wirez.core.processors.GeneratorUtils;
-import org.wirez.core.processors.MainProcessor;
-import org.wirez.core.processors.ProcessingElement;
+import org.wirez.core.processors.*;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -37,6 +35,8 @@ import java.io.StringWriter;
 import java.util.*;
 
 public class ContainmentRuleGenerator extends AbstractGenerator  {
+
+    private final ProcessingContext processingContext = ProcessingContext.getInstance();
 
     @Override
     public StringBuffer generate(String packageName, PackageElement packageElement, String className, Element element, ProcessingEnvironment processingEnvironment) throws GenerationException {
@@ -93,9 +93,12 @@ public class ContainmentRuleGenerator extends AbstractGenerator  {
                 throw new GenerationException( ioe );
             }
         }
+        
         messager.printMessage( Diagnostic.Kind.NOTE, "Successfully generated code for [" + className + "]" );
 
-        return sw.getBuffer();
+        processingContext.addRule(ruleId, ProcessingRule.TYPE.CONTAINMENT, sw.getBuffer());
+        
+        return null;
 
     }
 

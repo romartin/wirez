@@ -14,8 +14,20 @@ import javax.inject.Inject;
 @Portable
 @Bindable
 @org.wirez.core.api.annotation.definitionset.DefinitionSet
-// @EdgeOccurrences(type = EdgeType.INCOMING, role = "Startevents_all", edgeRole = "SequenceFlow", max = 0)
-// @EdgeOccurrences(type = EdgeType.OUTGOING, role = "Endevents_all", edgeRole = "SequenceFlow", max = 0)
+@Occurrences(
+        role = "Startevents_all", 
+        min = 0,
+        value = {
+            @EdgeOccurrences(type = EdgeType.INCOMING, edge = "SequenceFlow", max = 0, min = 0)
+        }
+)
+@Occurrences(
+        role = "Endevents_all", 
+        min = 0,
+        value = {
+            @EdgeOccurrences(type = EdgeType.OUTGOING, edge = "SequenceFlow", max = 0, min = 0)
+        }
+)
 public class BPMNDefinitionSet implements DefinitionSet {
 
     public static final String ID = "bpmnDefSet";

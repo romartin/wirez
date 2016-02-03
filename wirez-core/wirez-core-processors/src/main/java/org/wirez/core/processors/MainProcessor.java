@@ -19,8 +19,10 @@ package org.wirez.core.processors;
 import org.apache.commons.lang3.StringUtils;
 import org.uberfire.annotations.processors.AbstractErrorAbsorbingProcessor;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
+import org.wirez.core.api.annotation.rule.Cardinality;
 import org.wirez.core.api.annotation.rule.PermittedConnection;
 import org.wirez.core.processors.property.ErraiBindablePropertyAdapterGenerator;
+import org.wirez.core.processors.rule.CardinalityRuleGenerator;
 import org.wirez.core.processors.rule.ConnectionRuleGenerator;
 import org.wirez.core.processors.rule.ContainmentRuleGenerator;
 import org.wirez.core.processors.rule.DefinitionSetRuleAdapterGenerator;
@@ -60,6 +62,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     public static final String ANNOTATION_RULE_CAN_CONTAIN = "org.wirez.core.api.annotation.rule.CanContain";
     public static final String ANNOTATION_RULE_CAN_CONNECT = "org.wirez.core.api.annotation.rule.CanConnect";
     public static final String ANNOTATION_RULE_PERMITTED_CONNECTION = "org.wirez.core.api.annotation.rule.PermittedConnection";
+    public static final String ANNOTATION_RULE_CARDINALITY = "org.wirez.core.api.annotation.rule.Cardinality";
     public static final String ANNOTATION_RULE_OCCURRENCES = "org.wirez.core.api.annotation.rule.Occurrences";
     public static final String ANNOTATION_RULE_EDGE_OCCURRENCES = "org.wirez.core.api.annotation.rule.EdgeOccurrences";
 
@@ -72,12 +75,14 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     private final ProcessingContext processingContext = ProcessingContext.getInstance();
     private final ContainmentRuleGenerator containmentRuleGenerator;
     private final ConnectionRuleGenerator connectionRuleGenerator;
+    private final CardinalityRuleGenerator cardinalityRuleGenerator; 
     private ErraiBindablePropertyAdapterGenerator propertyAdapterGenerator;
     private DefinitionSetRuleAdapterGenerator ruleAdapterGenerator;
     
     public MainProcessor() {
         ContainmentRuleGenerator ruleGenerator = null;
         ConnectionRuleGenerator connectionRuleGenerator = null;
+        CardinalityRuleGenerator cardinalityRuleGenerator = null;
         ErraiBindablePropertyAdapterGenerator propertyAdapter = null;
         DefinitionSetRuleAdapterGenerator ruleAdapter = null;
         
@@ -86,11 +91,13 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             propertyAdapter = new ErraiBindablePropertyAdapterGenerator();
             ruleAdapter = new DefinitionSetRuleAdapterGenerator();
             connectionRuleGenerator = new ConnectionRuleGenerator();
+            cardinalityRuleGenerator = new CardinalityRuleGenerator();
         } catch (Throwable t) {
             rememberInitializationError(t);
         }
         this.containmentRuleGenerator = ruleGenerator;
         this.connectionRuleGenerator = connectionRuleGenerator;
+        this.cardinalityRuleGenerator = cardinalityRuleGenerator;
         this.propertyAdapterGenerator = propertyAdapter;
         this.ruleAdapterGenerator = ruleAdapter;
     }
@@ -131,12 +138,12 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             processContainmentRules(set, e, roundEnv);
         }
 
-        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_OCCURRENCES) ) ) {
-            // processCardinalityRules(set, e, roundEnv);
+        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CARDINALITY) ) ) {
+            processCardinalityRules(set, e, roundEnv);
         }
 
         for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_EDGE_OCCURRENCES) ) ) {
-            // processEdgeCardinalityRules(set, e, roundEnv);
+            // TODO: processEdgeCardinalityRules(set, e, roundEnv);
         }
 
         for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CAN_CONNECT) ) ) {
@@ -238,14 +245,12 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             try {
                 //Try generating code for each required class
                 messager.printMessage( Diagnostic.Kind.NOTE, "Generating code for [" + classNameActivity + "]" );
-                final StringBuffer ruleClassCode = containmentRuleGenerator.generate( packageName,
+                containmentRuleGenerator.generate( packageName,
                         packageElement,
                         classNameActivity,
                         classElement,
                         processingEnv );
 
-                processingContext.addRule(toValidId(classNameActivity), ProcessingRule.TYPE.CONTAINMENT, ruleClassCode);
-                
             } catch ( GenerationException ge ) {
                 final String msg = ge.getMessage();
                 processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg, classElement );
@@ -261,7 +266,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         final Messager messager = processingEnv.getMessager();
         final boolean isIface = e.getKind() == ElementKind.INTERFACE;
         final boolean isClass = e.getKind() == ElementKind.CLASS;
-        /*if (isIface || isClass) {
+        if (isIface || isClass) {
 
             TypeElement classElement = (TypeElement) e;
             PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
@@ -274,28 +279,21 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             try {
                 //Try generating code for each required class
                 messager.printMessage( Diagnostic.Kind.NOTE, "Generating code for [" + classNameActivity + "]" );
-                final StringBuffer ruleClassCode = cardinalityRuleGenerator.generate( packageName,
+                cardinalityRuleGenerator.generate( packageName,
                         packageElement,
                         classNameActivity,
                         classElement,
                         processingEnv );
-
-                processingContext.addRule(toValidId(classNameActivity), ProcessingRule.TYPE.CARDINALITY, ruleClassCode);
 
             } catch ( GenerationException ge ) {
                 final String msg = ge.getMessage();
                 processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg, classElement );
             }
 
-        }*/
+        }
 
         return true;
 
-    }
-
-    protected boolean processEdgeCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
-        // TODO
-        return false;
     }
 
     protected boolean processConnectionRules(Set<? extends TypeElement> set, Element element, RoundEnvironment roundEnv) throws Exception {
@@ -316,13 +314,11 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
                 //Try generating code for each required class
                 messager.printMessage( Diagnostic.Kind.NOTE, "Generating code for [" + classNameActivity + "]" );
-                final StringBuffer ruleClassCode = connectionRuleGenerator.generate( packageName,
+                connectionRuleGenerator.generate( packageName,
                         packageElement,
                         classNameActivity,
                         classElement,
                         processingEnv );
-
-                processingContext.addRule(toValidId(classNameActivity), ProcessingRule.TYPE.CONNECTION, ruleClassCode);
 
             } catch ( GenerationException ge ) {
                 final String msg = ge.getMessage();

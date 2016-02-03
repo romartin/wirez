@@ -20,6 +20,7 @@ import org.uberfire.annotations.processors.AbstractGenerator;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.uberfire.relocated.freemarker.template.Template;
 import org.uberfire.relocated.freemarker.template.TemplateException;
+import org.wirez.core.api.annotation.rule.PermittedConnection;
 import org.wirez.core.processors.MainProcessor;
 
 import javax.annotation.processing.Messager;
@@ -30,12 +31,32 @@ import javax.tools.Diagnostic;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ConnectionRuleGenerator extends AbstractGenerator  {
 
+    public class ConnectionRuleEntry {
+        private final String from;
+        private final String to;
+
+        public ConnectionRuleEntry(String from, String to) {
+            this.from = from;
+            this.to = to;
+        }
+
+        public String getFrom() {
+            return from;
+        }
+
+        public String getTo() {
+            return to;
+        }
+    }
+    
+    
     @Override
     public StringBuffer generate(String packageName, PackageElement packageElement, String className, Element element, ProcessingEnvironment processingEnvironment) throws GenerationException {
 
@@ -47,43 +68,27 @@ public class ConnectionRuleGenerator extends AbstractGenerator  {
         //Extract required information
         final TypeElement classElement = (TypeElement) element;
         final boolean isInterface = classElement.getKind().isInterface();
-        final String annotationName = MainProcessor.ANNOTATION_RULE_CAN_CONNECT;
-        final String ruleName = className;
+        final String ruleId = MainProcessor.toValidId(className);
         final String ruleDefinitionId = className.substring(0, ( className.length() - MainProcessor.RULE_CONNECTION_SUFFIX_CLASSNAME.length()) );
         
-        List<String> roles = null;
-
-        for ( final AnnotationMirror am : classElement.getAnnotationMirrors() ) {
-            if ( annotationName.equals( am.getAnnotationType().toString() ) ) {
-                for ( Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : am.getElementValues().entrySet() ) {
-                    AnnotationValue aval = entry.getValue();
-                    if ( "permittedConnections".equals( entry.getKey().getSimpleName().toString() ) ) {
-
-                        // TODO
-                        AnnotationValue annotationValue = entry.getValue();
-                        
-                    } 
-                }
-                break;
+        PermittedConnection[] pcs = classElement.getAnnotationsByType(PermittedConnection.class);
+        List<ConnectionRuleEntry> ruleEntries = new ArrayList<>();
+        if ( null != pcs ) {
+            for ( final PermittedConnection pc : pcs ) {
+                String startRole = pc.startRole();
+                String endRole = pc.endRole();
+                ruleEntries.add(new ConnectionRuleEntry(startRole, endRole));
             }
+            
         }
 
-        
-        if ( true ) {
-            return null;
-        }
-        
         Map<String, Object> root = new HashMap<String, Object>();
-        root.put( "packageName",
-                packageName );
-        root.put( "className",
-                className );
-        root.put( "ruleName",
-                ruleName );
+        root.put( "ruleId",
+                ruleId );
         root.put( "ruleDefinitionId",
                 ruleDefinitionId );
-        root.put( "roles",
-                roles );
+        root.put( "connections",
+                ruleEntries );
         
         //Generate code
         final StringWriter sw = new StringWriter();

@@ -19,6 +19,7 @@ package org.wirez.core.processors;
 import org.apache.commons.lang3.StringUtils;
 import org.uberfire.annotations.processors.AbstractErrorAbsorbingProcessor;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
+import org.wirez.core.api.annotation.rule.PermittedConnection;
 import org.wirez.core.processors.property.ErraiBindablePropertyAdapterGenerator;
 import org.wirez.core.processors.rule.ConnectionRuleGenerator;
 import org.wirez.core.processors.rule.ContainmentRuleGenerator;
@@ -57,8 +58,9 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     public static final String ANNOTATION_PROPERTY_DEFAULT_VALUE = "org.wirez.core.api.annotation.property.DefaultValue";
     public static final String ANNOTATION_PROPERTY_VALUE = "org.wirez.core.api.annotation.property.Value";
     public static final String ANNOTATION_RULE_CAN_CONTAIN = "org.wirez.core.api.annotation.rule.CanContain";
-    public static final String ANNOTATION_RULE_OCCURRENCES = "org.wirez.core.api.annotation.rule.Occurrences";
     public static final String ANNOTATION_RULE_CAN_CONNECT = "org.wirez.core.api.annotation.rule.CanConnect";
+    public static final String ANNOTATION_RULE_PERMITTED_CONNECTION = "org.wirez.core.api.annotation.rule.PermittedConnection";
+    public static final String ANNOTATION_RULE_OCCURRENCES = "org.wirez.core.api.annotation.rule.Occurrences";
     public static final String ANNOTATION_RULE_EDGE_OCCURRENCES = "org.wirez.core.api.annotation.rule.EdgeOccurrences";
 
     public static final String RULE_CONTAINMENT_SUFFIX_CLASSNAME = "ContainmentRule";
@@ -138,7 +140,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         }
 
         for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CAN_CONNECT) ) ) {
-            // processConnectionRules(set, e, roundEnv);
+            processConnectionRules(set, e, roundEnv);
         }
         
 

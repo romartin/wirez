@@ -76,7 +76,7 @@ public class Notifications implements IsWidget {
     }
     
     public void add(final Notification notification) {
-        showNotificationErrorPopup(notification);
+        // showNotificationErrorPopup(notification);
         if ( null != notification ) {
             addLogEntry(notification);
             view.redraw();
@@ -85,7 +85,7 @@ public class Notifications implements IsWidget {
     
     private void showNotificationErrorPopup(final Notification notification) {
         if ( null != notification 
-                && org.uberfire.workbench.events.NotificationEvent.NotificationType.ERROR.equals(notification.getType()) ) {
+                && Notification.Type.ERROR.equals(notification.getType()) ) {
             Window.alert("[COMMAND ERROR] - " + getNotificationText(notification));
         }
     }

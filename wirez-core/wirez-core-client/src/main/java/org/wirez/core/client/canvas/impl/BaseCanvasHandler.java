@@ -323,11 +323,10 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                          final CanvasCommand command) {
         command.setCanvas(this);
         boolean isAllowed = commandManager.allow(ruleManager, command);
-        final CanvasCommandAllowedNotification notification = new CanvasCommandAllowedNotification(getSettings().getTitle(), command, isAllowed);
-        notificationEvent.fire(new NotificationEvent(notification));
+        fireCommandAllowedNotification(command, isAllowed);
         return isAllowed;
     }
-
+    
     @Override
     public CommandResults execute(final RuleManager ruleManager,
                                   final CanvasCommand... commands) {
@@ -346,8 +345,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
             // Update canvas state.
             for (final CanvasCommand command : commands) {
                 command.apply();
-                final CanvasCommandExecutionNotification notification = new CanvasCommandExecutionNotification(getSettings().getTitle(), command, results);
-                notificationEvent.fire(new NotificationEvent(notification));
+                fireCommandExecutionNotification(command, results);
             }
         }
 
@@ -359,6 +357,16 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         return commandManager.undo(ruleManager);
     }
 
+    protected void fireCommandAllowedNotification(final CanvasCommand command, final boolean isAllowed) {
+        final CanvasCommandAllowedNotification notification = new CanvasCommandAllowedNotification(getSettings().getTitle(), command, isAllowed);
+        notificationEvent.fire(new NotificationEvent(notification));
+    }
+
+    protected void fireCommandExecutionNotification(final CanvasCommand command, final CommandResults results) {
+        final CanvasCommandExecutionNotification notification = new CanvasCommandExecutionNotification(getSettings().getTitle(), command, results);
+        notificationEvent.fire(new NotificationEvent(notification));
+    }
+    
     protected BaseCanvas getBaseCanvas() {
         return (BaseCanvas) canvas;
     }

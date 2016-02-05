@@ -40,6 +40,7 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasCommand;
+import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.impl.BaseConnector;
@@ -222,12 +223,14 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String message = "Executed SetConnectionSourceNodeCommand [source=" + sourceUUID + ", magnet=" + mIndex +  "]";
             Logger.log(message);
 
-            CommandResults results = execute(
-                    defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                            .add ( defaultCanvasCommands.getCommandFactory().setConnectionSourceNodeCommand( sourceNode, edge ) )
-            );
+            final CompositeElementCanvasCommand canvasCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
+                    .add ( defaultCanvasCommands.getCommandFactory().setConnectionSourceNodeCommand( sourceNode, edge ) );
+            final CommandResults results = execute(canvasCommand);
 
             final boolean isAccept = isAccept(results);
+
+            fireCommandExecutionNotification(canvasCommand, results);
+            
             return isAccept;
         }
 
@@ -246,13 +249,14 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String message = "Executed SetConnectionTargetNodeCommand [target=" + targetUUID + ", magnet=" + mIndex +  "]";
             Logger.log(message);
 
-            CommandResults results = execute(
-                    defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                            .add ( defaultCanvasCommands.getCommandFactory().setConnectionTargetNodeCommand( targetNode, edge ) )
-            );
-            
+            final CompositeElementCanvasCommand canvasCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
+                    .add ( defaultCanvasCommands.getCommandFactory().setConnectionTargetNodeCommand( targetNode, edge ) );
+            final CommandResults results = execute(canvasCommand);
             final boolean isAccept = isAccept(results);
             Logger.log("ConnectionAccepted=" + isAccept);
+            
+            fireCommandExecutionNotification(canvasCommand, results);
+            
             return isAccept;
         }
 
@@ -265,7 +269,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final BaseShape outNode = (BaseShape) shape;
             final BaseShape inNode = tail.getMagnet() != null ? (BaseShape) tail.getMagnet().getMagnets().getWiresShape() : null;
 
-            final boolean isAllowed = allow(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
+            final BaseCanvasCommand canvasCommand = new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
                 protected Command getCommand() {
                     return commandFactory.setConnectionSourceNodeCommand(defaultGraphHandler.getNode(outNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
@@ -282,11 +286,15 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                     return getCommand().toString();
                 }
 
-            });
+            };
+            final boolean isAllowed = allow(canvasCommand);
             final String outUUID = outNode != null ? outNode.getId() : null;
             final String inUUID = inNode != null ? inNode.getId() : null;
             final String message = "HeadConnectionAllowed  [out=" + outUUID + "] [in=" + inUUID + "] [isAllowed=" + isAllowed + "]";
             Logger.log(message);
+            
+            fireCommandAllowedNotification(canvasCommand, isAllowed);
+            
             return isAllowed;
         }
 
@@ -298,7 +306,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final BaseShape inNode = (BaseShape) shape;
             final BaseShape outNode = head.getMagnet() != null ? (BaseShape) head.getMagnet().getMagnets().getWiresShape() : null;
 
-            final boolean isAllowed = allow(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
+            final BaseCanvasCommand canvasCommand = new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
                 protected Command getCommand() {
                     return commandFactory.setConnectionTargetNodeCommand(defaultGraphHandler.getNode(inNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
@@ -315,13 +323,16 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                     return getCommand().toString();
                 }
 
-            });
+            };
+            final boolean isAllowed = allow(canvasCommand);
             final String outUUID = outNode != null ? outNode.getId() : null;
             final String inUUID = inNode != null ? inNode.getId() : null;
             final String message = "TailConnectionAllowed  [out=" + outUUID + "] [in=" + inUUID + "] [isAllowed=" + isAllowed + "]";
             Logger.log(message);
             Logger.log("ConnectionAllowed=" + isAllowed);
 
+            fireCommandAllowedNotification(canvasCommand, isAllowed);
+            
             return isAllowed;
         }
         

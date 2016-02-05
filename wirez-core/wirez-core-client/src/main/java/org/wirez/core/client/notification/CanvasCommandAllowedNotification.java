@@ -45,7 +45,7 @@ public class CanvasCommandAllowedNotification implements Notification<CanvasComm
 
     @Override
     public Type getType() {
-        return isAllowed ? Type.ERROR : Type.INFO;
+        return isAllowed ? Type.INFO : Type.ERROR;
     }
 
     @Override

@@ -41,7 +41,7 @@ public class GraphTests {
         parentNodeProperties.put("name", "Node1");
         parentNodeProperties.put("bgColor", "#00CC00");
         parentNodeProperties.put("fontcolor", "#000000");
-        parentNodeProperties.put("fontSize", (int)8);
+        parentNodeProperties.put("fontSize", 8d);
         Set<String> parentNodeLabels = new HashSet<>();
         final Bounds parentNodeBounds =
                 new DefaultBounds(
@@ -55,8 +55,8 @@ public class GraphTests {
         childNodeProperties2.put("name", "Child Node 2");
         childNodeProperties2.put("bgColor", "#0000CC");
         childNodeProperties2.put("fontcolor", "#000000");
-        childNodeProperties2.put("radius", (int)25);
-        childNodeProperties2.put("fontSize", (int)8);
+        childNodeProperties2.put("radius", 25d);
+        childNodeProperties2.put("fontSize", 8d);
         Set<String> childNodeLabels2 = new HashSet<>();
         final Bounds childNodeBounds2 =
                 new DefaultBounds(
@@ -70,7 +70,7 @@ public class GraphTests {
         viewEdgeProperties.put("name", "View Edge");
         viewEdgeProperties.put("bgColor", "#000000");
         viewEdgeProperties.put("fontcolor", "#000000");
-        viewEdgeProperties.put("fontSize", (int)8);
+        viewEdgeProperties.put("fontSize", 8d);
         Set<String> viewEdgeLabels = new HashSet<>();
         final Bounds viewEdgeBounds =
                 new DefaultBounds(
@@ -115,7 +115,7 @@ public class GraphTests {
         parentNodeProperties.put("name", "Parent Node");
         parentNodeProperties.put("bgColor", "#00CC00");
         parentNodeProperties.put("fontcolor", "#000000");
-        parentNodeProperties.put("fontSize", (int)8);
+        parentNodeProperties.put("fontSize", 8d);
         Set<String> parentNodeLabels = new HashSet<>();
         final Bounds parentNodeBounds =
                 new DefaultBounds(
@@ -129,8 +129,8 @@ public class GraphTests {
         childNodeProperties.put("name", "Child Node");
         childNodeProperties.put("bgColor", "#0000CC");
         childNodeProperties.put("fontcolor", "#000000");
-        childNodeProperties.put("radius", (int)25);
-        childNodeProperties.put("fontSize", (int)8);
+        childNodeProperties.put("radius", 25d);
+        childNodeProperties.put("fontSize", 8d);
         Set<String> childNodeLabels = new HashSet<>();
         final Bounds childNodeBounds =
                 new DefaultBounds(
@@ -170,7 +170,7 @@ public class GraphTests {
         parentNodeProperties.put("name", "Parent Node");
         parentNodeProperties.put("bgColor", "#00CC00");
         parentNodeProperties.put("fontcolor", "#000000");
-        parentNodeProperties.put("fontSize", (int)8);
+        parentNodeProperties.put("fontSize", 8d);
         Set<String> parentNodeLabels = new HashSet<>();
         final Bounds parentNodeBounds =
                 new DefaultBounds(
@@ -191,8 +191,8 @@ public class GraphTests {
         childNodeProperties.put("name", "Child Node");
         childNodeProperties.put("bgColor", "#0000CC");
         childNodeProperties.put("fontcolor", "#000000");
-        childNodeProperties.put("radius", (int)25);
-        childNodeProperties.put("fontSize", (int)8);
+        childNodeProperties.put("radius", 25d);
+        childNodeProperties.put("fontSize", 8d);
         Set<String> childNodeLabels = new HashSet<>();
         final Bounds childNodeBounds =
                 new DefaultBounds(
@@ -236,7 +236,7 @@ public class GraphTests {
         parentNodeProperties.put("name", "Parent Node");
         parentNodeProperties.put("bgColor", "#00CC00");
         parentNodeProperties.put("fontcolor", "#000000");
-        parentNodeProperties.put("fontSize", (int)8);
+        parentNodeProperties.put("fontSize", 8d);
         Set<String> parentNodeLabels = new HashSet<>();
         final Bounds parentNodeBounds =
                 new DefaultBounds(
@@ -257,8 +257,8 @@ public class GraphTests {
         childNodeProperties.put("name", "Child Node");
         childNodeProperties.put("bgColor", "#0000CC");
         childNodeProperties.put("fontcolor", "#000000");
-        childNodeProperties.put("radius", (int)25);
-        childNodeProperties.put("fontSize", (int)8);
+        childNodeProperties.put("radius", 25d);
+        childNodeProperties.put("fontSize", 8d);
         Set<String> childNodeLabels = new HashSet<>();
         final Bounds childNodeBounds =
                 new DefaultBounds(
@@ -280,8 +280,8 @@ public class GraphTests {
         childNodeProperties2.put("name", "Child Node 2");
         childNodeProperties2.put("bgColor", "#0000CC");
         childNodeProperties2.put("fontcolor", "#000000");
-        childNodeProperties2.put("radius", (int)25);
-        childNodeProperties2.put("fontSize", (int)8);
+        childNodeProperties2.put("radius", 25d);
+        childNodeProperties2.put("fontSize", 8d);
         Set<String> childNodeLabels2 = new HashSet<>();
         final Bounds childNodeBounds2 =
                 new DefaultBounds(
@@ -298,7 +298,7 @@ public class GraphTests {
         viewEdgeProperties.put("name", "View Edge");
         viewEdgeProperties.put("bgColor", "#000000");
         viewEdgeProperties.put("fontcolor", "#000000");
-        viewEdgeProperties.put("fontSize", (int)8);
+        viewEdgeProperties.put("fontSize", 8d);
         Set<String> viewEdgeLabels = new HashSet<>();
         final Bounds viewEdgeBounds =
                 new DefaultBounds(

@@ -55,8 +55,8 @@ public abstract class BaseResizeControl<S extends Shape, E extends Element> exte
         
         if (shape instanceof HasSizeMutation) {
             getCommandManager().execute( defaultCanvasCommands.COMPOSITE_COMMAND(element)
-                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "width", (int) width ) )
-                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "height" , (int) height ) )
+                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "width", width ) )
+                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "height" , height ) )
                     .doApplyElementProperties());
             
         } else if (shape instanceof HasRadiusMutation) {
@@ -64,7 +64,7 @@ public abstract class BaseResizeControl<S extends Shape, E extends Element> exte
             final double radius = getRadius(width, height);
             
             getCommandManager().execute( defaultCanvasCommands.COMPOSITE_COMMAND(element)
-                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "radius", (int) radius ) )
+                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "radius", radius ) )
                     .doApplyElementProperties());
             
         }

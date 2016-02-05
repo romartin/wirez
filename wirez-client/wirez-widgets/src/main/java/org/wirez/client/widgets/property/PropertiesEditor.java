@@ -28,6 +28,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
@@ -264,7 +265,7 @@ public class PropertiesEditor implements IsWidget {
             @Override
             public void setCurrentStringValue( final String currentStringValue ) {
                 super.setCurrentStringValue( currentStringValue );
-                Object _v = fromEditorValue(theType, currentStringValue);
+                Object _v = fromEditorValue(property.getType(), theType, currentStringValue);
                 changedHandler.onValueChanged(_v);
             }
         };
@@ -290,13 +291,16 @@ public class PropertiesEditor implements IsWidget {
         return "";
     }
 
-    private Object fromEditorValue(final PropertyEditorType type, final String value) {
+    private Object fromEditorValue(final PropertyType propertyType, final PropertyEditorType type, final String value) {
         if ( null != value ) {
 
             switch (type) {
                 case COLOR:
                     return "#" + value;
                 case NATURAL_NUMBER:
+                    if ( DoubleType.name.equals(propertyType.getName()) ) {
+                        return Double.parseDouble(value);
+                    } 
                     return Integer.parseInt(value);
                 case BOOLEAN:
                     return Boolean.parseBoolean(value);

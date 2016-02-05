@@ -19,6 +19,7 @@ package org.wirez.client.widgets.notification;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasData;
@@ -75,9 +76,17 @@ public class Notifications implements IsWidget {
     }
     
     public void add(final Notification notification) {
+        showNotificationErrorPopup(notification);
         if ( null != notification ) {
             addLogEntry(notification);
             view.redraw();
+        }
+    }
+    
+    private void showNotificationErrorPopup(final Notification notification) {
+        if ( null != notification 
+                && org.uberfire.workbench.events.NotificationEvent.NotificationType.ERROR.equals(notification.getType()) ) {
+            Window.alert("[COMMAND ERROR] - " + getNotificationText(notification));
         }
     }
     
@@ -192,11 +201,15 @@ public class Notifications implements IsWidget {
                 messageCell) {
             @Override
             public String getValue(final Notification object) {
-                return object.getContext() != null ? object.getContext().toString(): "-- No Message --";
+                return getNotificationText(object);
             }
         };
         messageColumn.setSortable(false);
         return messageColumn;
+    }
+    
+    private String getNotificationText(final Notification object) {
+        return object.getContext() != null ? object.getContext().toString(): "-- No Message --";
     }
 
     void onNotification(@Observes final NotificationEvent logEvent) {

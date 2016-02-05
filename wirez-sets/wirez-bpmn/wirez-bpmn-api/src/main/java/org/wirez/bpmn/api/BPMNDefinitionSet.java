@@ -18,14 +18,14 @@ import javax.inject.Inject;
         role = "Startevents_all", 
         min = 0,
         value = {
-            @EdgeOccurrences(type = EdgeType.INCOMING, edge = "SequenceFlow", max = 0, min = 0)
+            @EdgeOccurrences(type = EdgeType.INCOMING, edge = "SequenceFlow", max = 0)
         }
 )
 @Occurrences(
         role = "Endevents_all", 
         min = 0,
         value = {
-            @EdgeOccurrences(type = EdgeType.OUTGOING, edge = "SequenceFlow", max = 0, min = 0)
+            @EdgeOccurrences(type = EdgeType.OUTGOING, edge = "SequenceFlow", max = 0)
         }
 )
 public class BPMNDefinitionSet implements DefinitionSet {

@@ -35,7 +35,7 @@ import java.util.Set;
 @Portable
 @Bindable
 @Definition( type = DefaultGraph.class )
-@CanContain( roles = {"all", "diagram"} )
+@CanContain( roles = { "all" } )
 public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "BPMNDiagram";
@@ -50,8 +50,7 @@ public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
     public BPMNDiagram() {
         super("Diagram", "BPMN Diagram", "BPMN Diagram",
                 new HashSet<String>(){{
-                    add( "all" );
-                    add( "diagram" );
+                    add( "canContainArtifacts" );
                 }});
     }
 

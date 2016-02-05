@@ -58,7 +58,13 @@ public class EndNoneEvent extends BaseDefinition implements BPMNDefinition {
         super("End Events", "End Event", "Untyped end event",
                 new HashSet<String>(){{
                     add( "all" );
-                    add( "diagram" );
+                    add( "sequence_end" );
+                    add( "to_task_event" );
+                    add( "from_task_event" );
+                    add( "fromtoall" );
+                    add( "choreography_sequence_end" );
+                    add( "Endevents_all" );
+                    add( "EndEventsMorph" );
                 }});
     }
 

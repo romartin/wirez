@@ -60,14 +60,20 @@ public class Task extends BaseDefinition implements BPMNDefinition {
 
     @Property
     private Height height;
-
+    
     public Task() {
         super("Activities", "Task", "A task is a unit of work - the job to be performed",
                 new HashSet<String>(){{
                     add( "all" );
                     add( "sequence_start" );
                     add( "sequence_end" );
-                    // TODO
+                    add( "from_task_event" );
+                    add( "to_task_event" );
+                    add( "FromEventbasedGateway" );
+                    add( "messageflow_start" );
+                    add( "messageflow_end" );
+                    add( "fromtoall" );
+                    add( "ActivitiesMorph" );
                 }});
     }
 

@@ -54,12 +54,18 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
     
     @Property
     private Radius radius;
-
+    
     public StartNoneEvent() {
         super("Start Events", "Start Event", "Untyped start event",
                 new HashSet<String>(){{
                     add( "all" );
-                    add( "diagram" );
+                    add( "Startevents_all" );
+                    add( "sequence_start" );
+                    add( "choreography_sequence_start" );
+                    add( "to_task_event" );
+                    add( "from_task_event" );
+                    add( "fromtoall" );
+                    add( "StartEventsMorph" );
                 }});
     }
     

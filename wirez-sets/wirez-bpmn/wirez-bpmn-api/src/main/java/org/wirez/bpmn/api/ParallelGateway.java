@@ -65,7 +65,10 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
                     add( "all" );
                     add( "sequence_start" );
                     add( "sequence_end" );
-                    // TODO
+                    add( "choreography_sequence_start" );
+                    add( "choreography_sequence_end" );
+                    add( "fromtoall" );
+                    add( "GatewaysMorph" );
                 }});
     }
 

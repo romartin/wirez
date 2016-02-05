@@ -17,7 +17,6 @@
 package org.wirez.bpmn.client;
 
 import com.ait.lienzo.client.core.shape.Circle;
-import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
@@ -41,11 +40,11 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
     protected Circle circle;
     protected Circle decorator;
     
-    public EndNoneEventShape(Group group, WiresManager manager) {
+    public EndNoneEventShape(WiresManager manager) {
         super(new MultiPath().rect(0,0, StartNoneEvent.RADIUS * 2, StartNoneEvent.RADIUS * 2)
                 .setFillAlpha(0.001)
                 .setStrokeAlpha(0), 
-                group, manager);
+                manager);
         init();
     }
 
@@ -87,8 +86,6 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
         if (radius > 0) {
             circle.setRadius(radius);
             decorator.setRadius(radius);
-            this.moveChild(circle.getID(), radius, radius);
-            this.moveChild(decorator.getID(), radius, radius);
         }
     }
 

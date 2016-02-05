@@ -149,6 +149,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         if (shape.getId() == null) {
             shape.setId(org.wirez.core.api.util.UUID.uuid());
         }
+        wiresManager.createMagnets(shape);
         wiresManager.registerShape(shape);
         shapes.add(shape);
     }

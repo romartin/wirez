@@ -16,8 +16,6 @@
 
 package org.wirez.bpmn.client.factory;
 
-import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import org.wirez.bpmn.api.ParallelGateway;
 import org.wirez.bpmn.client.ParallelGatewayShape;
 import org.wirez.bpmn.client.glyph.ParallelGatewayGlyph;
@@ -64,15 +62,9 @@ public class ParallelGatewayShapeFactory extends BaseShapeFactory<ParallelGatewa
     @Override
     public ParallelGatewayShape build(final ParallelGateway definition, final CanvasHandler canvasHandler) {
 
-        Group group = new Group();
-
-        group.setDraggable(true);
-
-        group.setEventPropagationMode(EventPropagationMode.FIRST_ANCESTOR);
-
         final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         
-        return new ParallelGatewayShape(group, baseCanvas.getWiresManager());
+        return new ParallelGatewayShape(baseCanvas.getWiresManager());
 
     }
 

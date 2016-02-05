@@ -16,6 +16,8 @@
 
 package org.wirez.core.client;
 
+import com.ait.lienzo.client.core.shape.IContainer;
+import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Node;
 import org.wirez.core.api.definition.Definition;
 
@@ -40,7 +42,7 @@ public interface Shape<W extends Definition> {
 
     /**
      * The shape's container, which must determinate, at least, the absolute position in the canvas.
-     * Usually it should return the wires shape's group, if it is lienzo wires based.
+     * Usually it should return the wires shape's container, if it is lienzo wires based.
      */
     Node getShapeContainer();
 

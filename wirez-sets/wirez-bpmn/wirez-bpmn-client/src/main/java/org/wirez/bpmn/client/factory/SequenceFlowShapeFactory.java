@@ -19,6 +19,7 @@ package org.wirez.bpmn.client.factory;
 import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
 import com.ait.lienzo.client.core.shape.SimpleArrow;
 import com.ait.lienzo.client.core.types.Point2DArray;
+import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.client.SequenceFlowShape;
 import org.wirez.bpmn.client.glyph.SequenceFlowGlyph;
@@ -27,8 +28,8 @@ import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
-import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.BaseShapeFactory;
+import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

@@ -43,15 +43,17 @@ public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
     private Group taskTypeIcon;
     private Rectangle decorator;
     
-    public TaskShape(Group group, WiresManager manager) {
-        super(new MultiPath().rect(0, 0, Task.WIDTH, Task.HEIGHT), group, manager);
+    public TaskShape(WiresManager manager) {
+        super(new MultiPath().rect(0, 0, Task.WIDTH, Task.HEIGHT), manager);
         
         init();
     }
 
     private void init() {
         decorator = new Rectangle(Task.WIDTH, Task.HEIGHT).setX(0).setY(0).setFillAlpha(0).setStrokeAlpha(0);
-        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
+        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER, 
+                getDecoratorCoordinate( Task.WIDTH ), 
+                getDecoratorCoordinate( Task.HEIGHT ) );
         taskTypeIcon = taskTypeUser();
         this.addChild(taskTypeIcon, WiresLayoutContainer.Layout.TOP);
     }
@@ -93,6 +95,7 @@ public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
         getPath().clear().rect(x, y, width, height);
         decorator.setWidth(width);
         decorator.setHeight(height);
+        this.moveChild(decorator, getDecoratorCoordinate(width), getDecoratorCoordinate(height));
     }
 
     private Group taskTypeUser() {
@@ -128,5 +131,9 @@ public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
         return new SVGPath(path)
                 .setStrokeColor(ColorName.BLACK)
                 .setDraggable(false);
+    }
+    
+    private double getDecoratorCoordinate(final double c) {
+        return - ( c / 2 );
     }
 }

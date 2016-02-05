@@ -16,9 +16,9 @@
 
 package org.wirez.bpmn.client;
 
-import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Text;
+import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.client.core.types.LinearGradient;
@@ -38,8 +38,9 @@ public abstract class BPMNBasicShape<W extends Definition>
         extends BaseShape<W>
         implements HasDecorators {
 
-    public BPMNBasicShape(MultiPath path, Group group, WiresManager manager) {
-        super(path, group, manager);
+    public BPMNBasicShape(final MultiPath path, 
+                          final WiresManager manager) {
+        super(path, new WiresLayoutContainer(), manager);
     }
 
     @Override
@@ -108,6 +109,11 @@ public abstract class BPMNBasicShape<W extends Definition>
                 text.setStrokeWidth(borderSize);
             }
 
+            // Center the text on the parent using the bb calculation.
+            final BoundingBox bb = text.getBoundingBox();
+            final double bbw = bb.getWidth();
+            final double bbh = bb.getHeight();
+            this.moveChild(text, - ( bbw / 2 ), - ( bbh / 2 ) );
             text.moveToTop();
         }
 

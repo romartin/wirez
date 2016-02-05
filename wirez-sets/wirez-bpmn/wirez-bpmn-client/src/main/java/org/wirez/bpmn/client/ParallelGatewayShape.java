@@ -19,6 +19,7 @@ package org.wirez.bpmn.client;
 import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.ParallelGateway;
 import org.wirez.bpmn.api.property.Radius;
@@ -39,11 +40,11 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
     protected RegularPolygon decorator;
     protected Group gwTypeIcon;
 
-    public ParallelGatewayShape(Group group, WiresManager manager) {
+    public ParallelGatewayShape(WiresManager manager) {
         super(new MultiPath().rect(0, 0, ParallelGateway.RADIUS * 2, ParallelGateway.RADIUS * 2)
                 .setFillAlpha(0.001)
                 .setStrokeAlpha(0), 
-                group, manager);
+                manager);
         init();
     }
 
@@ -68,8 +69,6 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
         final double radius = ParallelGateway.RADIUS;
         
         polygon = new RegularPolygon(4, radius)
-            .setX(radius)
-            .setY(radius)
             .setStrokeWidth(0)
             .setStrokeAlpha(1)
             .setFillColor(ParallelGateway.COLOR)
@@ -77,22 +76,21 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
             .setStrokeColor(ColorName.BLACK);
         
         decorator = new RegularPolygon(4, radius)
-                .setX(radius)
-                .setY(radius)
                 .setStrokeWidth(0)
                 .setStrokeAlpha(0)
                 .setFillAlpha(0)
                 .setStrokeAlpha(0);
 
         gwTypeIcon = new Group();
-        updateGwTypeIcon(radius);
+        final double[] gwTypeIconSize = updateGwTypeIcon(radius);
         
         this.addChild(polygon, WiresLayoutContainer.Layout.CENTER);
         this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
-        this.addChild(gwTypeIcon, WiresLayoutContainer.Layout.CENTER);
+        this.addChild(gwTypeIcon, WiresLayoutContainer.Layout.CENTER, 
+                - ( gwTypeIconSize[0] / 2 ), - ( gwTypeIconSize[1] / 2 ) );
     }
     
-    private void updateGwTypeIcon(final double radius) {
+    private double[] updateGwTypeIcon(final double radius) {
         gwTypeIcon.removeAll();
 
         final double lineSize = radius / 2;
@@ -105,6 +103,8 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
         vLine.setStrokeAlpha(lineAlpha);
         gwTypeIcon.add(hLine);
         gwTypeIcon.add(vLine);
+        final BoundingBox bb = gwTypeIcon.getBoundingBox();
+        return new double[] {bb.getWidth(), bb.getHeight()};
     }
 
     public void applyElementProperties(Node<ViewContent<ParallelGateway>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
@@ -136,7 +136,6 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
 
     protected ParallelGatewayShape _applyParallelGatewayRadius(final RegularPolygon polygon, final double radius) {
         polygon.setRadius(radius);
-        this.moveChild(polygon.getID(), radius, radius);
         return this;
     }
 

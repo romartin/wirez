@@ -27,7 +27,6 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -35,8 +34,6 @@ import org.wirez.core.client.canvas.impl.BaseCanvas;
 import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.mutation.*;
-
-import java.util.Collection;
 
 public abstract class BaseConnector<W extends Definition> extends WiresConnector implements
         Shape<W>,
@@ -46,7 +43,6 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         HasGraphElementMutation<W, ViewContent<W>, Edge<ViewContent<W>, Node>> {
 
     protected String id;
-    protected Group group;
     protected BaseDragControl<Shape<W>, Edge> dragControl;
     protected BaseToolboxControl<Shape<W>, Edge> toolboxControl;
 
@@ -61,7 +57,6 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     protected void init() {
-        group = new Group();
     }
 
     @Override
@@ -132,7 +127,7 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
 
-        // TODO: Use the given concrete magent indexes.
+        // TODO: Use the given concrete magnet indexes.
         final int sourceMagnet = 0;
         final int targetMagnet = 0;
         

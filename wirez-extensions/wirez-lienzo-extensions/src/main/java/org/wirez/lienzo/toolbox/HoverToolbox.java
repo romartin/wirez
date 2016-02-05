@@ -58,7 +58,7 @@ public class HoverToolbox {
                 HandlerRegistration hr2 = hoverToolboxButton.getShape().addNodeMouseExitHandler(hoverTimer);
                 handlerRegistrationManager.register(hr1);
                 handlerRegistrationManager.register(hr2);
-                this.shape.getGroup().add(hoverToolboxButton.getShape());
+                this.shape.addChild(hoverToolboxButton.getShape());
                 this.shape.getWiresLayer().getLayer().batch();
             }
 

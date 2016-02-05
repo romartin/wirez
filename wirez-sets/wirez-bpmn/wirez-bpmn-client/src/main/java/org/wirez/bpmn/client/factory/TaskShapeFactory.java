@@ -16,8 +16,6 @@
 
 package org.wirez.bpmn.client.factory;
 
-import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.client.TaskShape;
 import org.wirez.bpmn.client.glyph.TaskGlyph;
@@ -68,15 +66,9 @@ public class TaskShapeFactory extends BaseShapeFactory<Task, TaskShape> {
     @Override
     public TaskShape build(final Task definition, final CanvasHandler canvasHandler) {
 
-        Group group = new Group();
-
-        group.setDraggable(true);
-
-        group.setEventPropagationMode(EventPropagationMode.FIRST_ANCESTOR);
-
         final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         
-        return new TaskShape(group, baseCanvas.getWiresManager());
+        return new TaskShape(baseCanvas.getWiresManager());
 
     }
 

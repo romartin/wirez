@@ -20,6 +20,7 @@ import com.ait.lienzo.client.core.event.*;
 import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.shape.Node;
 import com.ait.lienzo.client.core.shape.Shape;
+import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
@@ -55,10 +56,8 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     protected BaseResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> resizeControl;
     protected BaseToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> toolboxControl;
 
-    public BaseShape(final MultiPath path, final Group group, final WiresManager manager) {
-        super(path, group, manager);
-        group.add(path);
-        getPath().setDraggable(false);
+    public BaseShape(final MultiPath path, final LayoutContainer m_layout_container, final WiresManager manager) {
+        super(path, m_layout_container, manager);
         text = buildText("");
         this.addChild(text, getTextPosition());
         text.moveToTop();
@@ -81,8 +80,8 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public Node getShapeContainer() {
-        return getGroup();
+    public com.ait.lienzo.client.core.shape.Node getShapeContainer() {
+        return (Node) getContainer();
     }
 
     /*
@@ -118,7 +117,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
 
     @Override
     public void applyPosition(final double x, final double y, final MutationContext mutationContext) {
-        getGroup().setX(x).setY(y);
+        this.setX(x).setY(y);
     }
 
     @Override

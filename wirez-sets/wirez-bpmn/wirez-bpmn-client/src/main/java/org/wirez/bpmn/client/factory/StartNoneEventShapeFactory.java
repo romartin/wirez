@@ -16,8 +16,6 @@
 
 package org.wirez.bpmn.client.factory;
 
-import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.shared.core.types.EventPropagationMode;
 import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.client.StartNoneEventShape;
 import org.wirez.bpmn.client.glyph.StartNoneEventGlyph;
@@ -64,13 +62,7 @@ public class StartNoneEventShapeFactory extends BaseShapeFactory<StartNoneEvent,
 
         final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
 
-        Group group = new Group();
-
-        group.setDraggable(true);
-
-        group.setEventPropagationMode(EventPropagationMode.FIRST_ANCESTOR);
-
-        StartNoneEventShape circleShape = new StartNoneEventShape(group, baseWirezCanvas.getWiresManager());
+        StartNoneEventShape circleShape = new StartNoneEventShape(baseWirezCanvas.getWiresManager());
 
         return circleShape;
 

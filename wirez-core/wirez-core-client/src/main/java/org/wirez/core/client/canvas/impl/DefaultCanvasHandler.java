@@ -224,7 +224,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             Logger.log(message);
 
             final CompositeElementCanvasCommand canvasCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                    .add ( defaultCanvasCommands.getCommandFactory().setConnectionSourceNodeCommand( sourceNode, edge ) );
+                    .add ( defaultCanvasCommands.getCommandFactory().setConnectionSourceNodeCommand( sourceNode, edge, mIndex ) );
             final CommandResults results = execute(canvasCommand);
 
             final boolean isAccept = isAccept(results);
@@ -250,7 +250,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             Logger.log(message);
 
             final CompositeElementCanvasCommand canvasCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                    .add ( defaultCanvasCommands.getCommandFactory().setConnectionTargetNodeCommand( targetNode, edge ) );
+                    .add ( defaultCanvasCommands.getCommandFactory().setConnectionTargetNodeCommand( targetNode, edge, mIndex ) );
             final CommandResults results = execute(canvasCommand);
             final boolean isAccept = isAccept(results);
             Logger.log("ConnectionAccepted=" + isAccept);
@@ -272,7 +272,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final BaseCanvasCommand canvasCommand = new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
                 protected Command getCommand() {
-                    return commandFactory.setConnectionSourceNodeCommand(defaultGraphHandler.getNode(outNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
+                    return commandFactory.setConnectionSourceNodeCommand(defaultGraphHandler.getNode(outNode.getId()), 
+                            defaultGraphHandler.getEdge(connector.getId()), 0);
                 }
 
                 @Override
@@ -309,7 +310,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final BaseCanvasCommand canvasCommand = new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
                 protected Command getCommand() {
-                    return commandFactory.setConnectionTargetNodeCommand(defaultGraphHandler.getNode(inNode.getId()), defaultGraphHandler.getEdge(connector.getId()));
+                    return commandFactory.setConnectionTargetNodeCommand(defaultGraphHandler.getNode(inNode.getId()), defaultGraphHandler.getEdge(connector.getId()), 0);
                 }
 
                 @Override

@@ -21,6 +21,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
@@ -38,10 +39,12 @@ public class SetConnectionTargetNodeCommand extends AbstractCommand {
     private Node<? extends ViewContent<?>, Edge> lastTargetNode;
     private Node<? extends ViewContent<?>, Edge> sourceNode;
     private Edge<? extends ViewContent<?>, Node> edge;
+    private int magnetIndex;
 
     public SetConnectionTargetNodeCommand(final GraphCommandFactory commandFactory,
                                           final Node<? extends ViewContent<?>, Edge> targetNode,
-                                          final Edge<? extends ViewContent<?>, Node> edge) {
+                                          final Edge<? extends ViewContent<?>, Node> edge,
+                                          final int magnetIndex) {
         super(commandFactory);
         this.edge = PortablePreconditions.checkNotNull( "edge",
                 edge );;
@@ -49,6 +52,7 @@ public class SetConnectionTargetNodeCommand extends AbstractCommand {
                 targetNode);;
         this.lastTargetNode = edge.getTargetNode();
         this.sourceNode = edge.getSourceNode();
+        this.magnetIndex = magnetIndex;
     }
     
     @Override
@@ -66,6 +70,8 @@ public class SetConnectionTargetNodeCommand extends AbstractCommand {
             }
             targetNode.getInEdges().add( edge );
             edge.setTargetNode( targetNode );
+            ConnectionContent connectionContent = (ConnectionContent) edge.getContent();
+            connectionContent.setTargetMagnetIndex(magnetIndex);
         }
         return results;
     }
@@ -89,7 +95,7 @@ public class SetConnectionTargetNodeCommand extends AbstractCommand {
 
     @Override
     public String toString() {
-        return "SetConnectionTargetNodeCommand [edge=" + edge.getUUID() + ", candidate=" + targetNode.getUUID() + "]";
+        return "SetConnectionTargetNodeCommand [edge=" + edge.getUUID() + ", candidate=" + targetNode.getUUID() + ", magnet=" + magnetIndex + "]";
     }
     
 }

@@ -28,10 +28,12 @@ public interface GraphCommandFactory {
                                         Node candidate);
     
     SetConnectionSourceNodeCommand setConnectionSourceNodeCommand(Node<? extends ViewContent<?>, Edge> sourceNode,
-                                                                  Edge<? extends ViewContent<?>, Node> edge);
+                                                                  Edge<? extends ViewContent<?>, Node> edge,
+                                                                  int magnetIndex);
     
     SetConnectionTargetNodeCommand setConnectionTargetNodeCommand(Node<? extends ViewContent<?>, Edge> targetNode,
-                                                                  Edge<? extends ViewContent<?>, Node> edge);
+                                                                  Edge<? extends ViewContent<?>, Node> edge,
+                                                                  int magnetIndex);
     
     UpdateElementPositionCommand updateElementPositionCommand(Element element,
                                                               Double x,

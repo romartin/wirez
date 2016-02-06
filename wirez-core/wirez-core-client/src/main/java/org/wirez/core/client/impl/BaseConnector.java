@@ -26,6 +26,7 @@ import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
@@ -122,14 +123,15 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
 
     }
 
+    // TODO: Move to AddEdge command?
     public Shape<W> applyConnections(final Edge<ViewContent<W>, Node> element, final CanvasHandler canvasHandler) {
         final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
-
-        // TODO: Use the given concrete magnet indexes.
-        final int sourceMagnet = 0;
-        final int targetMagnet = 0;
+        
+        final ConnectionContent connectionContent = (ConnectionContent) element.getContent();
+        final int sourceMagnet = connectionContent.getSourceMagnetIndex();
+        final int targetMagnet = connectionContent.getTargetMagnetIndex();
         
         if (targetNode != null) {
             final BaseShape outNodeShape = (BaseShape) canvas.getShape(targetNode.getUUID());

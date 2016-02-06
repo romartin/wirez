@@ -64,14 +64,16 @@ public class SharedGraphCommandFactory implements GraphCommandFactory {
 
     @Override
     public SetConnectionSourceNodeCommand setConnectionSourceNodeCommand(final Node<? extends ViewContent<?>, Edge> sourceNode,
-                                                                         final Edge<? extends ViewContent<?>, Node> edge) {
-        return new SetConnectionSourceNodeCommand(this, sourceNode, edge);
+                                                                         final Edge<? extends ViewContent<?>, Node> edge,
+                                                                         final int magnetIndex) {
+        return new SetConnectionSourceNodeCommand(this, sourceNode, edge, magnetIndex);
     }
 
     @Override
     public SetConnectionTargetNodeCommand setConnectionTargetNodeCommand(final Node<? extends ViewContent<?>, Edge> targetNode,
-                                                                         final Edge<? extends ViewContent<?>, Node> edge) {
-        return new SetConnectionTargetNodeCommand(this, targetNode, edge);
+                                                                         final Edge<? extends ViewContent<?>, Node> edge,
+                                                                         final int magnetIndex) {
+        return new SetConnectionTargetNodeCommand(this, targetNode, edge, magnetIndex);
     }
 
     @Override

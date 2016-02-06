@@ -20,6 +20,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ConnectionContentImpl;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.content.ViewContentImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
@@ -39,7 +40,7 @@ public class EdgeFactoryImpl<W extends Definition> extends BaseElementFactory<W,
                 new EdgeImpl<ViewContent<W>>( UUID.uuid(),
                         properties,
                         labels,
-                        new ViewContentImpl<>( definition, buildBounds()));
+                        new ConnectionContentImpl<>( definition, buildBounds()));
         
         return edge;
     }

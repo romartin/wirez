@@ -21,7 +21,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 
-public interface EdgeFactory<W extends Definition, C extends ViewContent<W>> 
-        extends ElementFactory<W, C, Edge<C, Node>> {
+public interface ConnectionEdgeFactory<W extends Definition> 
+        extends EdgeFactory<W, ViewContent<W>> {
     
 }

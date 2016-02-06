@@ -18,7 +18,7 @@ import javax.enterprise.context.Dependent;
 import java.util.Set;
 
 @Dependent
-public class DefaultGraphFactoryImpl<W extends Definition> extends BaseElementFactory<W, DefaultGraph<ViewContent<W>, Node, Edge>> 
+public class DefaultGraphFactoryImpl<W extends Definition> extends BaseElementFactory<W, ViewContent<W>, DefaultGraph<ViewContent<W>, Node, Edge>> 
         implements DefaultGraphFactory<W> {
 
     @Override

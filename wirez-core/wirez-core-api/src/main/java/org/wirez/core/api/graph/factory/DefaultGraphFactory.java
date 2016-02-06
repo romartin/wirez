@@ -22,6 +22,6 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 
-public interface DefaultGraphFactory<W extends Definition> extends ElementFactory<W, DefaultGraph<ViewContent<W>, Node, Edge>> {
+public interface DefaultGraphFactory<W extends Definition> extends ElementFactory<W, ViewContent<W>, DefaultGraph<ViewContent<W>, Node, Edge>> {
     
 }

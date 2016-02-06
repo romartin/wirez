@@ -33,9 +33,7 @@ import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactor
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.factory.EdgeFactory;
-import org.wirez.core.api.graph.factory.NodeFactory;
+import org.wirez.core.api.graph.factory.*;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.service.definition.DefinitionServiceResponse;
@@ -57,10 +55,10 @@ public class Bpmn2MarshallerTest {
     DefaultGraphFactory<? extends Definition> graphFactory;
 
     @Mock
-    NodeFactory<? extends Definition> nodeFactory;
+    ViewNodeFactory<? extends Definition> nodeFactory;
 
     @Mock
-    EdgeFactory<? extends Definition> edgeFactory;
+    ConnectionEdgeFactory<? extends Definition> edgeFactory;
 
     @Mock
     DefinitionManager definitionManager;

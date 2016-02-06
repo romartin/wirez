@@ -23,7 +23,7 @@ import org.wirez.core.api.graph.content.ViewContent;
 
 import java.util.Set;
 
-public interface ElementFactory<W extends Definition, T extends Element<ViewContent<W>>> {
+public interface ElementFactory<W extends Definition, C extends ViewContent<W>, T extends Element<C>> {
     
     T build(W definition, Set<Property> properties, Set<String> labels);
     

@@ -13,10 +13,7 @@ import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.factory.EdgeFactory;
-import org.wirez.core.api.graph.factory.ElementFactory;
-import org.wirez.core.api.graph.factory.NodeFactory;
+import org.wirez.core.api.graph.factory.*;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.Rule;
 
@@ -43,10 +40,10 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
     DefaultGraphFactory<? extends Definition> graphFactory;
 
     @Inject
-    NodeFactory<? extends Definition> nodeFactory;
+    ViewNodeFactory<? extends Definition> nodeFactory;
 
     @Inject
-    EdgeFactory<? extends Definition> edgeFactory;
+    ConnectionEdgeFactory<? extends Definition> edgeFactory;
 
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
     protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();

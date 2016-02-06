@@ -24,6 +24,7 @@ import org.wirez.core.api.graph.content.ConnectionContentImpl;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.content.ViewContentImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
+import org.wirez.core.api.graph.factory.ConnectionEdgeFactory;
 import org.wirez.core.api.graph.factory.EdgeFactory;
 import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.util.UUID;
@@ -32,7 +33,8 @@ import javax.enterprise.context.Dependent;
 import java.util.Set;
 
 @Dependent
-public class EdgeFactoryImpl<W extends Definition> extends BaseElementFactory<W, Edge<ViewContent<W>, Node>> implements EdgeFactory<W> {
+public class ConnectionEdgeFactoryImpl<W extends Definition> 
+        extends BaseElementFactory<W, ViewContent<W>, Edge<ViewContent<W>, Node>> implements ConnectionEdgeFactory<W> {
 
     @Override
     public Edge<ViewContent<W>, Node> build(W definition, Set<Property> properties, Set<String> labels) {

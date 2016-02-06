@@ -8,10 +8,7 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.factory.EdgeFactory;
-import org.wirez.core.api.graph.factory.ElementFactory;
-import org.wirez.core.api.graph.factory.NodeFactory;
+import org.wirez.core.api.graph.factory.*;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.Rule;
 
@@ -26,14 +23,16 @@ import java.util.Set;
 public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefinition> {
 
     DefaultGraphFactory<? extends Definition> graphFactory;
-    NodeFactory<? extends Definition> nodeFactory;
-    EdgeFactory<? extends Definition> edgeFactory;
+    ViewNodeFactory<? extends Definition> nodeFactory;
+    ConnectionEdgeFactory<? extends Definition> edgeFactory;
 
     public DefaultDefinitionAdapter() {
     }
 
     @Inject
-    public DefaultDefinitionAdapter(DefaultGraphFactory<? extends Definition> graphFactory, NodeFactory<? extends Definition> nodeFactory, EdgeFactory<? extends Definition> edgeFactory) {
+    public DefaultDefinitionAdapter(DefaultGraphFactory<? extends Definition> graphFactory, 
+                                    ViewNodeFactory<? extends Definition> nodeFactory, 
+                                    ConnectionEdgeFactory<? extends Definition> edgeFactory) {
         this.graphFactory = graphFactory;
         this.nodeFactory = nodeFactory;
         this.edgeFactory = edgeFactory;

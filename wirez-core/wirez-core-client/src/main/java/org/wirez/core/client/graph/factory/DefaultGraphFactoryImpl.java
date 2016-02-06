@@ -18,7 +18,7 @@ import javax.enterprise.context.ApplicationScoped;
 import java.util.Set;
 
 @ApplicationScoped
-public class DefaultGraphFactoryImpl extends BaseElementFactory<DefaultDefinition, DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge>> 
+public class DefaultGraphFactoryImpl extends BaseElementFactory<DefaultDefinition, ViewContent<DefaultDefinition>, DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge>> 
         implements DefaultGraphFactory<DefaultDefinition> {
 
     @Override

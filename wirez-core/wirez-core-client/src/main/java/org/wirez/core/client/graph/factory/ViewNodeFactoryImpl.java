@@ -20,28 +20,33 @@ import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ConnectionContentImpl;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.content.ViewContentImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
-import org.wirez.core.api.graph.factory.EdgeFactory;
-import org.wirez.core.api.graph.impl.EdgeImpl;
+import org.wirez.core.api.graph.factory.NodeFactory;
+import org.wirez.core.api.graph.factory.ViewNodeFactory;
+import org.wirez.core.api.graph.impl.NodeImpl;
 import org.wirez.core.api.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Set;
 
 @ApplicationScoped
-public class EdgeFactoryImpl extends BaseElementFactory<DefaultDefinition, Edge<ViewContent<DefaultDefinition>, Node>> implements EdgeFactory<DefaultDefinition> {
+public class ViewNodeFactoryImpl 
+        extends BaseElementFactory<DefaultDefinition, ViewContent<DefaultDefinition>, Node<ViewContent<DefaultDefinition>, Edge>> 
+        implements ViewNodeFactory<DefaultDefinition> {
 
     @Override
-    public Edge<ViewContent<DefaultDefinition>, Node> build(DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
-        Edge<ViewContent<DefaultDefinition>, Node> edge =
-                new EdgeImpl<ViewContent<DefaultDefinition>>( UUID.uuid(),
+    public Node<ViewContent<DefaultDefinition>, Edge> build(final DefaultDefinition definition, final Set<Property> properties, final Set<String> labels) {
+        Node<ViewContent<DefaultDefinition>, Edge> node =
+                new NodeImpl<ViewContent<DefaultDefinition>>(UUID.uuid(),
                         properties,
                         labels,
-                        new ConnectionContentImpl<>( definition, buildBounds()));
-        
-        return edge;
+                        new ViewContentImpl<>( definition, buildBounds())
+
+                );
+
+        return node;
     }
+    
 }

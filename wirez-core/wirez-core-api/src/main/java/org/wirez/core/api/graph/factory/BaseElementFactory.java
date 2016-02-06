@@ -8,7 +8,7 @@ import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.impl.DefaultBound;
 import org.wirez.core.api.graph.impl.DefaultBounds;
 
-public abstract class BaseElementFactory<W extends Definition, T extends Element<ViewContent<W>>>  implements ElementFactory<W, T> {
+public abstract class BaseElementFactory<W extends Definition, C extends ViewContent<W>, T extends Element<C>>  implements ElementFactory<W, C, T> {
 
     // TODO: ??
     protected Bounds buildBounds() {

@@ -23,38 +23,34 @@ import org.wirez.core.api.graph.Bounds;
 
 @Portable
 public class ConnectionContentImpl<W extends Definition> extends ViewContentImpl<W> implements ConnectionContent<W> {
-    protected W definition;
-    protected Bounds bounds;
-    protected int sourceMagnetIndex;
-    protected int targetMagnetIndex;
+    protected Integer sourceMagnetIndex;
+    protected Integer targetMagnetIndex;
 
     public ConnectionContentImpl(@MapsTo("definition") W definition, 
                                  @MapsTo("bounds") Bounds bounds) {
         super(definition, bounds);
-        this.definition = definition;
-        this.bounds = bounds;
         this.sourceMagnetIndex = 0;
         this.targetMagnetIndex = 0;
     }
 
 
     @Override
-    public int getSourceMagnetIndex() {
+    public Integer getSourceMagnetIndex() {
         return sourceMagnetIndex;
     }
 
     @Override
-    public int getTargetMagnetIndex() {
+    public Integer getTargetMagnetIndex() {
         return targetMagnetIndex;
     }
 
     @Override
-    public void setSourceMagnetIndex(final int index) {
+    public void setSourceMagnetIndex(final Integer index) {
         this.sourceMagnetIndex = index;
     }
 
     @Override
-    public void setTargetMagnetIndex(final int index) {
+    public void setTargetMagnetIndex(final Integer index) {
         this.targetMagnetIndex = index;
     }
 }

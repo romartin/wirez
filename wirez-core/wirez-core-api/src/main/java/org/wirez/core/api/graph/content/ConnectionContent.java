@@ -27,12 +27,12 @@ public interface ConnectionContent<W extends Definition> extends ViewContent<W> 
     
     void setBounds(Bounds bounds);
     
-    int getSourceMagnetIndex();
+    Integer getSourceMagnetIndex();
 
-    int getTargetMagnetIndex();
+    Integer getTargetMagnetIndex();
 
-    void setSourceMagnetIndex(int index);
+    void setSourceMagnetIndex(Integer index);
 
-    void setTargetMagnetIndex(int index);
+    void setTargetMagnetIndex(Integer index);
     
 }

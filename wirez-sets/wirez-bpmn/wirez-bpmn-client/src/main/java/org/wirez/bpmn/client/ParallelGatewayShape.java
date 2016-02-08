@@ -120,6 +120,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
             applyRadius(radius, mutationContext);
+            ElementUtils.updateBounds(radius, element.getContent());
         }
         return this;
     }

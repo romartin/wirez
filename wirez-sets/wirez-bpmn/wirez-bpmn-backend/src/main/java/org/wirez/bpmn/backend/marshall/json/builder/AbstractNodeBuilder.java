@@ -7,6 +7,7 @@ import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultBound;
 import org.wirez.core.api.graph.impl.DefaultBounds;
@@ -64,9 +65,21 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
                 node.getOutEdges().add(edge);
                 edge.setSourceNode(node);
 
+                if ( edge.getContent() instanceof ConnectionContent ) {
+                    setTargetConnectionMagnetIndex(context, node, edge);
+                }
+                
                 // TODO: context.getGraph().addEdge(edge); ?
             }
         }
+    }
+
+    public void setSourceConnectionMagnetIndex(BuilderContext context, T node, Edge<ConnectionContent<W>, Node> edge) {
+
+    }
+
+    public void setTargetConnectionMagnetIndex(BuilderContext context, T node, Edge<ConnectionContent<W>, Node> edge) {
+        
     }
     
 }

@@ -9,6 +9,8 @@ import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.impl.DefaultBound;
+import org.wirez.core.api.graph.impl.DefaultBounds;
 
 import java.util.Set;
 
@@ -88,4 +90,37 @@ public class ElementUtils {
         return new Double[] { w, h };
     }
 
+    public static void updateBounds(final double radius, 
+                                    final ViewContent element) {
+        final Double[] coords = getPosition(element);
+        updateBounds(coords[0], coords[1], radius, element);
+    }
+
+    public static void updateBounds(final double x, 
+                                    final double y,
+                                    final double radius,
+                                    final ViewContent element) {
+        updateBounds(x, y ,radius * 2, radius * 2, element);
+    }
+    
+    public static void updateBounds(final double width, final double height, final ViewContent element) {
+        final Double[] coords = getPosition(element);
+        updateBounds(coords[0], coords[1], width, height, element);
+    }
+
+
+    public static void updateBounds(final double x, 
+                                    final double y, 
+                                    final double width, 
+                                    final double height, 
+                                    final ViewContent element) {
+
+        final Bounds bounds = new DefaultBounds(
+                new DefaultBound(x + width, y + height),
+                new DefaultBound(x, y)
+        );
+        
+        element.setBounds(bounds);
+    }
+    
 }

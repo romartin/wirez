@@ -94,6 +94,7 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
             applyRadius(radius, mutationContext);
+            ElementUtils.updateBounds(radius, element.getContent());
         }
         return this;
     }

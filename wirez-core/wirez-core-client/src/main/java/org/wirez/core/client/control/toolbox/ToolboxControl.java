@@ -29,6 +29,8 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.control.tools.ToolboxConnectionControl;
+import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.util.SVGUtils;
 import org.wirez.lienzo.toolbox.HoverToolbox;
 import org.wirez.lienzo.toolbox.HoverToolboxButton;
@@ -40,14 +42,20 @@ import javax.inject.Inject;
 @Dependent
 public class ToolboxControl extends BaseToolboxControl<Shape, Element> implements IsWidget {
 
-    final Toolbox<Element> toolbox;
+    Toolbox<Element> toolbox;
+    ClientDefinitionServices clientDefinitionServices;
+    ToolboxConnectionControl toolboxConnectionControl;
     HoverToolbox hoverToolbox;
     
     @Inject
-    public ToolboxControl(DefaultCanvasCommands defaultCanvasCommands,
-                          Toolbox<Element> toolbox) {
+    public ToolboxControl(final DefaultCanvasCommands defaultCanvasCommands,
+                          final ToolboxConnectionControl toolboxConnectionControl,
+                          final ClientDefinitionServices clientDefinitionServices,
+                          final Toolbox<Element> toolbox) {
         super(defaultCanvasCommands);
         this.toolbox = toolbox;
+        this.clientDefinitionServices = clientDefinitionServices;
+        this.toolboxConnectionControl = toolboxConnectionControl;
     }
 
     @Override
@@ -61,6 +69,7 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
 
             SVGPath textEditIcon = createSVGIcon(SVGUtils.getTextEdit());
             SVGPath removeIcon = createSVGIcon(SVGUtils.getRemove());
+            SVGPath createConnectionIcon = createSVGIcon(SVGUtils.getCreateConnection());
 
             hoverToolbox = HoverToolbox.toolboxFor(wiresShape).on(Direction.NORTH_EAST)
                     .towards(Direction.SOUTH)
@@ -75,11 +84,23 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
                         @Override
                         public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
                             hoverToolbox.remove();
-                            if ( element instanceof  Node) {
-                                getCommandManager().execute( defaultCanvasCommands.DELETE_NODE((Node) element));
-                            } else if ( element instanceof Edge ) {
-                                getCommandManager().execute( defaultCanvasCommands.DELETE_EDGE((Edge) element));
-                            }
+                            getCommandManager().execute( defaultCanvasCommands.DELETE_NODE((Node) element));
+                        }
+                    }))
+                    .add(new HoverToolboxButton(createConnectionIcon.copy(), new NodeMouseClickHandler() {
+                        @Override
+                        public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
+                            hoverToolbox.remove();
+                            toolboxConnectionControl.show(canvasHandler,
+                                    nodeMouseClickEvent.getX(),
+                                    nodeMouseClickEvent.getY(),
+                                    new ToolboxConnectionControl.Callback() {
+                                        @Override
+                                        public void onNodeClick(Node node) {
+                                            registerConnector((Node) element, node);
+                                        }
+                                    });
+                            
                         }
                     }))
                     .register();
@@ -88,11 +109,20 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
 
         
     }
+    
+    private void registerConnector(final Node source, final Node target) {
+        GWT.log("ToolboxControl - Register connector from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
+        
+        // TODO: clientDefinitionServices.buildGraphElement( SequenceFlow... );
+        
+    }
 
     @Override
     public void disable(final Shape shape) {
 
         toolbox.hide();
+        
+        toolboxConnectionControl.hide();
         
         if ( null != hoverToolbox ) {
             hoverToolbox.remove();

@@ -80,6 +80,7 @@ public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
         final Double width = widthProperty.getValue();
         final Double height = heightProperty.getValue();
         applySize(width, height, mutationContext);
+        ElementUtils.updateBounds(width, height, element.getContent());
         return this;
     }
 

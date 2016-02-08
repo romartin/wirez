@@ -44,6 +44,7 @@ public abstract class AbstractEdgeBuilder<W extends Definition, T extends Edge<V
                 }
 
                 Node node = (Node) outgoingNodeBuilder.build(context);
+                ( (AbstractNodeBuilder) outgoingNodeBuilder).setSourceConnectionMagnetIndex(context, node, edge);
                 edge.setTargetNode(node);
                 node.getInEdges().add(edge);
                 context.getGraph().addNode(node);

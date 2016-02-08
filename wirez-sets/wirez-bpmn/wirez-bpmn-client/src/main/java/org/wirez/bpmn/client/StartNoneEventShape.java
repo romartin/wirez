@@ -80,6 +80,16 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
         _applyRadius(element, mutationContext);
     }
 
+    protected StartNoneEventShape _applyRadius(final Node<ViewContent<StartNoneEvent>, Edge> element, MutationContext mutationContext) {
+        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
+        final Double radius = radiusProperty.getValue();
+        if ( null != radius ) {
+            applyRadius(radius, mutationContext);
+            ElementUtils.updateBounds(radius, element.getContent());
+        }
+        return this;
+    }
+
     @Override
     public void applyRadius(double radius, MutationContext mutationContext) {
         if (radius > 0) {
@@ -87,16 +97,7 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
             decorator.setRadius(radius);
         }
     }
-
-    protected StartNoneEventShape _applyRadius(final Node<ViewContent<StartNoneEvent>, Edge> element, MutationContext mutationContext) {
-        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
-        final Double radius = radiusProperty.getValue();
-        if ( null != radius ) {
-            applyRadius(radius, mutationContext);
-        }
-        return this;
-    }
-
+    
     @Override
     public String toString() {
         return "StartNoneEventShape{}";

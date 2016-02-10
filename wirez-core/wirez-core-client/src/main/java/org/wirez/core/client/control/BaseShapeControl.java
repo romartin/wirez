@@ -21,6 +21,7 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.util.ShapeUtils;
 
 import javax.inject.Inject;
 
@@ -40,8 +41,7 @@ public abstract class BaseShapeControl<S extends Shape, E extends Element> imple
     }
 
     protected double[] getContainerXY(final Shape shape) {
-        return new double[] { shape.getShapeContainer().getAttributes().getX(),
-                shape.getShapeContainer().getAttributes().getY()};
+        return ShapeUtils.getContainerXY(shape);
     }
     
     protected CanvasCommandManager getCommandManager() {

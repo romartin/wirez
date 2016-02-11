@@ -11,16 +11,19 @@ import org.wirez.core.api.graph.commands.SharedGraphCommandFactory;
 import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.command.impl.AddCanvasEdgeCommand;
 import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.control.toolbox.command.AddConnectionCommand;
 import org.wirez.core.client.control.toolbox.command.Context;
 import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.Logger;
+import org.wirez.core.client.util.ShapeUtils;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -82,11 +85,16 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     public void accept(final Context context, final Node target) {
         GWT.log("AddConnectionCommandCallback - Connect from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
 
+        final Canvas canvas = context.getCanvasHandler().getSettings().getCanvas();
+        final BaseShape sourceShape = (BaseShape) canvas.getShape(source.getUUID());
+        final BaseShape targetShape = (BaseShape) canvas.getShape(target.getUUID());
+        final int[] magnetIndexes = ShapeUtils.getDefaultMagnetsIndex(sourceShape, targetShape);
+        
         final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
 
         final CompositeElementCanvasCommand connectionsCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                .add( sharedGraphCommandFactory.setConnectionSourceNodeCommand( (Node<? extends ViewContent<?>, Edge>) source, edge, 0) )
-                .add( sharedGraphCommandFactory.setConnectionTargetNodeCommand((Node<? extends ViewContent<?>, Edge>) target, edge, 0) );
+                .add( sharedGraphCommandFactory.setConnectionSourceNodeCommand( (Node<? extends ViewContent<?>, Edge>) source, edge, magnetIndexes[0] ) )
+                .add( sharedGraphCommandFactory.setConnectionTargetNodeCommand( (Node<? extends ViewContent<?>, Edge>) target, edge, magnetIndexes[1] ) );
 
 
         final AddCanvasEdgeCommand addEdgeCommand = defaultCanvasCommands.ADD_EDGE( edge, factory);

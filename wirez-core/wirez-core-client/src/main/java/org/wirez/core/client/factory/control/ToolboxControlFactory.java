@@ -30,9 +30,9 @@ import javax.inject.Named;
 @Named("defaultToolboxControlFactory")
 public class ToolboxControlFactory implements ShapeControlFactory<Shape, ToolboxControl> {
 
-    protected ToolboxControl toolboxControl;
-    protected NameToolboxCommand nameToolboxCommand;
-    protected RemoveToolboxCommand removeToolboxCommand;
+    ToolboxControl toolboxControl;
+    NameToolboxCommand nameToolboxCommand;
+    RemoveToolboxCommand removeToolboxCommand;
 
     @Inject
     public ToolboxControlFactory(final NameToolboxCommand nameToolboxCommand,

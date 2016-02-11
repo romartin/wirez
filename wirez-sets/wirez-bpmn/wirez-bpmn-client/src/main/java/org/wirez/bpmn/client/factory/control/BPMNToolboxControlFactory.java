@@ -6,42 +6,54 @@ import org.wirez.core.client.control.toolbox.ToolboxControl;
 import org.wirez.core.client.control.toolbox.command.AddConnectionCommand;
 import org.wirez.core.client.control.toolbox.command.NameToolboxCommand;
 import org.wirez.core.client.control.toolbox.command.RemoveToolboxCommand;
+import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.factory.control.ToolboxControlFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 @Dependent
-public class BPMNToolboxControlFactory extends ToolboxControlFactory {
+public class BPMNToolboxControlFactory implements ShapeControlFactory<Shape, ToolboxControl> {
 
+    NameToolboxCommand nameToolboxCommand;
+    RemoveToolboxCommand removeToolboxCommand;
     AddConnectionCommand addConnectionCommand;
     SequenceFlowConnectionCommandCallback sequenceFlowConnectionCommandCallback;
+    Instance<ToolboxControl> toolboxControlInstances;
     
     @Inject
     public BPMNToolboxControlFactory(final SequenceFlowConnectionCommandCallback sequenceFlowConnectionCommandCallback,
                                      final NameToolboxCommand nameToolboxCommand,
                                      final RemoveToolboxCommand removeToolboxCommand,
                                      final AddConnectionCommand addConnectionCommand,
-                                     final ToolboxControl toolboxControl) {
-        super(nameToolboxCommand, removeToolboxCommand, toolboxControl);
+                                     final Instance<ToolboxControl> toolboxControlInstances) {
+        this.nameToolboxCommand = nameToolboxCommand;
+        this.removeToolboxCommand = removeToolboxCommand;
         this.sequenceFlowConnectionCommandCallback = sequenceFlowConnectionCommandCallback;
         this.addConnectionCommand = addConnectionCommand;
+        this.toolboxControlInstances = toolboxControlInstances;
     }
 
     @PostConstruct
     public void init() {
-        super.init();;
         addConnectionCommand.setCallback(sequenceFlowConnectionCommandCallback);
     }
 
     @Override
     public ToolboxControl build(final Shape shape) {
-        defaults();
+        final ToolboxControl toolboxControl = toolboxControlInstances.get();
+        defaults(toolboxControl);
         if ( shape instanceof TaskShape ) {
             toolboxControl.addCommand(addConnectionCommand);
         }
         
         return toolboxControl;
+    }
+
+    protected void defaults(ToolboxControl toolboxControl) {
+        toolboxControl.addCommand(nameToolboxCommand);
+        toolboxControl.addCommand(removeToolboxCommand);
     }
 }

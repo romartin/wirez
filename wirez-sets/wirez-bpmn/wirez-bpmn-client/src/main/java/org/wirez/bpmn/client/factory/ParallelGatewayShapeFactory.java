@@ -18,20 +18,20 @@ package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.ParallelGateway;
 import org.wirez.bpmn.client.ParallelGatewayShape;
+import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.ParallelGatewayGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
-import org.wirez.core.client.factory.BaseShapeFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class ParallelGatewayShapeFactory extends BaseShapeFactory<ParallelGateway, ParallelGatewayShape> {
+public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGateway, ParallelGatewayShape> {
 
     
     public ParallelGatewayShapeFactory() {
@@ -40,8 +40,9 @@ public class ParallelGatewayShapeFactory extends BaseShapeFactory<ParallelGatewa
     
     @Inject
     public ParallelGatewayShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                          final ShapeGlyphDragHandler shapeGlyphDragHandler) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler);
+                            final ShapeGlyphDragHandler shapeGlyphDragHandler,
+                            final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
+        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override

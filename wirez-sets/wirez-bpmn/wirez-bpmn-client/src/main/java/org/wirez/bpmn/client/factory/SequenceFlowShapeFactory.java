@@ -19,31 +19,31 @@ package org.wirez.bpmn.client.factory;
 import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
 import com.ait.lienzo.client.core.shape.SimpleArrow;
 import com.ait.lienzo.client.core.types.Point2DArray;
-import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.client.SequenceFlowShape;
+import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.SequenceFlowGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
-import org.wirez.core.client.factory.BaseShapeFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class SequenceFlowShapeFactory extends BaseShapeFactory<SequenceFlow, SequenceFlowShape> {
+public class SequenceFlowShapeFactory extends BaseBPMNShapeFactory<SequenceFlow, SequenceFlowShape> {
 
     public SequenceFlowShapeFactory() {
     }
-    
+
     @Inject
     public SequenceFlowShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                            final ShapeGlyphDragHandler shapeGlyphDragHandler) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler);
+                            final ShapeGlyphDragHandler shapeGlyphDragHandler,
+                            final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
+        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override

@@ -18,28 +18,29 @@ package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.client.StartNoneEventShape;
+import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.StartNoneEventGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
-import org.wirez.core.client.factory.BaseShapeFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class StartNoneEventShapeFactory extends BaseShapeFactory<StartNoneEvent, StartNoneEventShape> {
+public class StartNoneEventShapeFactory extends BaseBPMNShapeFactory<StartNoneEvent, StartNoneEventShape> {
     
     public StartNoneEventShapeFactory() {
     }
     
     @Inject
     public StartNoneEventShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                         final ShapeGlyphDragHandler shapeGlyphDragHandler) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler);
+                            final ShapeGlyphDragHandler shapeGlyphDragHandler,
+                            final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
+        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override

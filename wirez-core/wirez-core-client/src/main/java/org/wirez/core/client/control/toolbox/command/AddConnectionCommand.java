@@ -7,9 +7,7 @@ import org.wirez.core.api.graph.processing.GraphBoundsIndexer;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.canvas.command.impl.AddCanvasNodeCommand;
 import org.wirez.core.client.mutation.HasCanvasStateMutation;
 import org.wirez.core.client.util.SVGUtils;
 
@@ -24,7 +22,7 @@ public class AddConnectionCommand implements ToolboxCommand {
     
     public interface Callback {
         
-        void onNodeClick(final Node node);
+        void onNodeClick(Context context, Element source, Node target);
         
     }
     
@@ -55,9 +53,10 @@ public class AddConnectionCommand implements ToolboxCommand {
         view.init(this);
     }
 
-    private CanvasHandler canvasHandler;
     private Callback callback;
     private GraphBoundsIndexer boundsIndexer;
+    private Context context;
+    private Element element;
     private Shape shape;
 
 
@@ -73,14 +72,16 @@ public class AddConnectionCommand implements ToolboxCommand {
 
     @Override
     public void execute(final Context context, final Element element) {
-        this.canvasHandler = context.getCanvasHandler();
-        this.boundsIndexer = new GraphBoundsIndexer(canvasHandler.getGraph());
-        view.show(canvasHandler.getSettings().getCanvas(),
+        this.element = element;
+        this.context = context;
+        this.boundsIndexer = new GraphBoundsIndexer(context.getCanvasHandler().getGraph());
+        view.show(context.getCanvasHandler().getSettings().getCanvas(),
                 context.getX(), context.getY());
     }
     
     private void clear() {
-        canvasHandler = null;
+        context = null;
+        element = null;
         shape = null;
         view.clear();
     }
@@ -97,7 +98,7 @@ public class AddConnectionCommand implements ToolboxCommand {
                     final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
                     canvasStateMutation.applyState(ShapeState.HIGHLIGHT);
                 } else if (shape instanceof HasDecorators) {
-                    view.highlight(canvasHandler.getSettings().getCanvas(), shape);
+                    view.highlight(context.getCanvasHandler().getSettings().getCanvas(), shape);
                     
                 }
                 
@@ -112,7 +113,7 @@ public class AddConnectionCommand implements ToolboxCommand {
                 final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
                 canvasStateMutation.applyState(ShapeState.UNHIGHLIGHT);
             } else if (shape instanceof HasDecorators) {
-                view.unhighlight(canvasHandler.getSettings().getCanvas(), shape);
+                view.unhighlight(context.getCanvasHandler().getSettings().getCanvas(), shape);
             }
 
             this.shape = null;
@@ -122,7 +123,7 @@ public class AddConnectionCommand implements ToolboxCommand {
 
    
     private Shape getShape(final String uuid) {
-        return canvasHandler.getSettings().getCanvas().getShape(uuid);
+        return context.getCanvasHandler().getSettings().getCanvas().getShape(uuid);
     }
     
     void onMouseMove(final double x, final double y) {
@@ -138,7 +139,7 @@ public class AddConnectionCommand implements ToolboxCommand {
         if ( null != callback ) {
             final Node node = boundsIndexer.getNodeAt(x, y);
             if ( null != node ) {
-                callback.onNodeClick(node);
+                callback.onNodeClick(context,element, node);
             }
         }
         clear();

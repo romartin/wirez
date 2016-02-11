@@ -18,23 +18,45 @@ package org.wirez.core.client.factory.control;
 
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.control.toolbox.ToolboxControl;
+import org.wirez.core.client.control.toolbox.command.NameToolboxCommand;
+import org.wirez.core.client.control.toolbox.command.RemoveToolboxCommand;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @Dependent
+@Named("defaultToolboxControlFactory")
 public class ToolboxControlFactory implements ShapeControlFactory<Shape, ToolboxControl> {
 
-    ToolboxControl toolboxControl;
+    protected ToolboxControl toolboxControl;
+    protected NameToolboxCommand nameToolboxCommand;
+    protected RemoveToolboxCommand removeToolboxCommand;
 
     @Inject
-    public ToolboxControlFactory(ToolboxControl toolboxControl) {
+    public ToolboxControlFactory(final NameToolboxCommand nameToolboxCommand,
+                                 final RemoveToolboxCommand removeToolboxCommand,
+                                 final ToolboxControl toolboxControl) {
         this.toolboxControl = toolboxControl;
+        this.removeToolboxCommand = removeToolboxCommand;
+        this.nameToolboxCommand = nameToolboxCommand;
+    }
+    
+    @PostConstruct
+    public void init() {
+        defaults();
     }
 
     @Override
-    public ToolboxControl build(Shape shape) {
+    public ToolboxControl build(final Shape shape) {
         return toolboxControl;
+    }
+    
+    protected void defaults() {
+        toolboxControl.clearCommands();
+        toolboxControl.addCommand(nameToolboxCommand);
+        toolboxControl.addCommand(removeToolboxCommand);
     }
     
 }

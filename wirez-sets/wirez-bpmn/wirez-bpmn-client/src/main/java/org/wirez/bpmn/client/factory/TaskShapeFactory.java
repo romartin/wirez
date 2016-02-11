@@ -18,13 +18,13 @@ package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.client.TaskShape;
+import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.TaskGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.impl.BaseCanvas;
-import org.wirez.core.client.factory.BaseShapeFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 
@@ -32,15 +32,16 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class TaskShapeFactory extends BaseShapeFactory<Task, TaskShape> {
+public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
 
     public TaskShapeFactory() {
     }
     
     @Inject
     public TaskShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                            final ShapeGlyphDragHandler shapeGlyphDragHandler) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler);
+                            final ShapeGlyphDragHandler shapeGlyphDragHandler,
+                            final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
+        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override

@@ -87,7 +87,7 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
 
             for (final ToolboxCommand command : commands) {
                 
-                toolboxBuilder.add(new HoverToolboxButton(command.getIcon(), new NodeMouseClickHandler() {
+                toolboxBuilder.add(new HoverToolboxButton(command.getIcon().copy(), new NodeMouseClickHandler() {
                     @Override
                     public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
                         Context context = new ContextImpl(canvasHandler, 

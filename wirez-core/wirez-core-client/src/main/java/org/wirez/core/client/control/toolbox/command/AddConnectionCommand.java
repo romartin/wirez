@@ -85,10 +85,11 @@ public class AddConnectionCommand implements ToolboxCommand {
     }
     
     private void clear() {
+        unhighLightShape();
+        view.clear();
         context = null;
         element = null;
         shape = null;
-        view.clear();
     }
     
     private void highLightShape(final Node node) {
@@ -133,7 +134,9 @@ public class AddConnectionCommand implements ToolboxCommand {
     
     void onMouseMove(final double x, final double y) {
         final Node node = boundsIndexer.getNodeAt(x, y);
-        if ( null != node && callback.isAllowed( context, node ) ) {
+        if ( null != node 
+                && !node.getUUID().equals(element.getUUID())
+                && callback.isAllowed( context, node ) ) {
             highLightShape(node);
         } else {
             unhighLightShape();
@@ -141,9 +144,9 @@ public class AddConnectionCommand implements ToolboxCommand {
     }
 
     void onMouseClick(final double x, final double y) {
-        if ( null != callback ) {
+        if ( null != callback  ) {
             final Node node = boundsIndexer.getNodeAt(x, y);
-            if ( null != node ) {
+            if ( null != node && !node.getUUID().equals(element.getUUID()) ) {
                 callback.accept(context,node);
             }
         }

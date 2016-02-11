@@ -1,4 +1,4 @@
-package org.wirez.core.client.control.tools;
+package org.wirez.core.client.control.toolbox.command;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
@@ -14,16 +14,14 @@ import com.ait.lienzo.shared.core.types.ArrowType;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.core.client.GWT;
-import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.impl.BaseShape;
 
-public class ToolboxConnectionControlView implements ToolboxConnectionControl.View {
+public class AddConnectionCommandView implements AddConnectionCommand.View {
     
-    private ToolboxConnectionControl presenter;
+    private AddConnectionCommand presenter;
 
     private Canvas canvas;
     private IPrimitive<?> connector;
@@ -31,20 +29,20 @@ public class ToolboxConnectionControlView implements ToolboxConnectionControl.Vi
     private final HandlerRegistrationManager h_manager = new HandlerRegistrationManager();
 
     @Override
-    public ToolboxConnectionControl.View init(final ToolboxConnectionControl presenter) {
+    public AddConnectionCommand.View init(final AddConnectionCommand presenter) {
         this.presenter = presenter;
         return this;
     }
 
     @Override
-    public ToolboxConnectionControl.View show(final Canvas canvas, final double x, final double y) {
+    public AddConnectionCommand.View show(final Canvas canvas, final double x, final double y) {
         this.canvas = canvas;
         doShow(x, y);
         return this;
     }
 
     @Override
-    public ToolboxConnectionControl.View highlight(final Canvas canvas, final Shape shape) {
+    public AddConnectionCommand.View highlight(final Canvas canvas, final Shape shape) {
         new ShapeSelectionAnimation(shape)
                 .setCanvas(canvas)
                 .setDuration(200)
@@ -53,7 +51,7 @@ public class ToolboxConnectionControlView implements ToolboxConnectionControl.Vi
     }
 
     @Override
-    public ToolboxConnectionControl.View unhighlight(final Canvas canvas, final Shape shape) {
+    public AddConnectionCommand.View unhighlight(final Canvas canvas, final Shape shape) {
         new ShapeDeSelectionAnimation(shape, 0, 0, ColorName.BLACK)
                 .setCanvas(canvas)
                 .setDuration(200)
@@ -64,7 +62,7 @@ public class ToolboxConnectionControlView implements ToolboxConnectionControl.Vi
 
 
     @Override
-    public ToolboxConnectionControl.View clear() {
+    public AddConnectionCommand.View clear() {
         h_manager.removeHandler();
         if ( null != connector ) {
             connector.removeFromParent();

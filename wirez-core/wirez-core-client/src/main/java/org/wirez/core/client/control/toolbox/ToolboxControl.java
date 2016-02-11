@@ -21,48 +21,58 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.SVGPath;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.Direction;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import org.wirez.core.api.graph.Edge;
+import org.jboss.errai.ioc.client.container.SyncBeanDef;
+import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
-import org.wirez.core.client.control.tools.ToolboxConnectionControl;
+import org.wirez.core.client.control.toolbox.command.Context;
+import org.wirez.core.client.control.toolbox.command.ContextImpl;
+import org.wirez.core.client.control.toolbox.command.ToolboxCommand;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.util.SVGUtils;
+import org.wirez.lienzo.toolbox.ButtonsOrRegister;
 import org.wirez.lienzo.toolbox.HoverToolbox;
 import org.wirez.lienzo.toolbox.HoverToolboxButton;
-import org.wirez.lienzo.toolbox.On;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Dependent
 public class ToolboxControl extends BaseToolboxControl<Shape, Element> implements IsWidget {
 
-    Toolbox<Element> toolbox;
+    public interface View extends IsWidget{
+        
+        View addWidget(IsWidget widget);
+        
+        View clear();
+        
+    }
+    
     ClientDefinitionServices clientDefinitionServices;
-    ToolboxConnectionControl toolboxConnectionControl;
     HoverToolbox hoverToolbox;
+    SyncBeanManager beanManager;
+    View view;
     
     @Inject
     public ToolboxControl(final DefaultCanvasCommands defaultCanvasCommands,
-                          final ToolboxConnectionControl toolboxConnectionControl,
                           final ClientDefinitionServices clientDefinitionServices,
-                          final Toolbox<Element> toolbox) {
+                          final SyncBeanManager beanManager,
+                          final View view) {
         super(defaultCanvasCommands);
-        this.toolbox = toolbox;
+        this.view = view;
         this.clientDefinitionServices = clientDefinitionServices;
-        this.toolboxConnectionControl = toolboxConnectionControl;
+        this.beanManager = beanManager;
     }
 
     @Override
     public void enable(final Shape shape, final Element element) {
 
-        toolbox.initialize(canvasHandler);
-        
         if (shape instanceof WiresShape) {
 
             WiresShape wiresShape = (WiresShape) shape;
@@ -71,7 +81,7 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
             SVGPath removeIcon = createSVGIcon(SVGUtils.getRemove());
             SVGPath createConnectionIcon = createSVGIcon(SVGUtils.getCreateConnection());
 
-            hoverToolbox = HoverToolbox.toolboxFor(wiresShape).on(Direction.NORTH_EAST)
+            /*hoverToolbox = HoverToolbox.toolboxFor(wiresShape).on(Direction.NORTH_EAST)
                     .towards(Direction.SOUTH)
                     .add(new HoverToolboxButton(textEditIcon.copy(), new NodeMouseClickHandler() {
                         @Override
@@ -103,27 +113,46 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
                             
                         }
                     }))
-                    .register();
+                    .register();*/
+
+            
+            ButtonsOrRegister toolboxBuilder = HoverToolbox.toolboxFor(wiresShape).on(Direction.NORTH_EAST)
+                    .towards(Direction.SOUTH);
+
+            final List<ToolboxCommand> commands = getCommands();
+            for (final ToolboxCommand command : commands) {
+                
+                toolboxBuilder.add(new HoverToolboxButton(command.getIcon(), new NodeMouseClickHandler() {
+                    @Override
+                    public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
+                        Context context = new ContextImpl(canvasHandler, 
+                                getCommandManager(), 
+                                nodeMouseClickEvent.getX(), 
+                                nodeMouseClickEvent.getY());
+                        setCommandView(command).execute(context, element);
+                    }
+                }));
+                
+            }
+
+            hoverToolbox = toolboxBuilder.register();
             
         }
 
         
     }
     
-    private void registerConnector(final Node source, final Node target) {
-        GWT.log("ToolboxControl - Register connector from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
-        
-        // TODO: clientDefinitionServices.buildGraphElement( SequenceFlow... );
-        
+    private ToolboxCommand setCommandView(final ToolboxCommand command) {
+        view.clear();
+        if (command instanceof IsWidget) {
+            view.addWidget(((IsWidget) command).asWidget());
+        }
+        return command;
     }
-
+    
     @Override
     public void disable(final Shape shape) {
 
-        toolbox.hide();
-        
-        toolboxConnectionControl.hide();
-        
         if ( null != hoverToolbox ) {
             hoverToolbox.remove();
         }
@@ -132,7 +161,18 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
 
     @Override
     public Widget asWidget() {
-        return toolbox.asWidget();
+        return view.asWidget();
+    }
+    
+    private List<ToolboxCommand> getCommands() {
+        final Collection<SyncBeanDef<ToolboxCommand>> modelBuilderDefs = beanManager.lookupBeans(ToolboxCommand.class);
+        final List<ToolboxCommand> commands = new ArrayList<>(modelBuilderDefs.size());
+        for (SyncBeanDef<ToolboxCommand> modelBuilder : modelBuilderDefs) {
+            ToolboxCommand modelBuilderObject = modelBuilder.getInstance();
+            commands.add(modelBuilderObject);
+        }
+        
+        return commands;
     }
     
     private SVGPath createSVGIcon(final String path) {

@@ -22,7 +22,11 @@ public class AddConnectionCommand implements ToolboxCommand {
     
     public interface Callback {
         
-        void onNodeClick(Context context, Element source, Node target);
+        void init(Element source);
+        
+        boolean isAllowed(Context context, Node target);
+        
+        void accept(Context context, Node target);
         
     }
     
@@ -75,6 +79,7 @@ public class AddConnectionCommand implements ToolboxCommand {
         this.element = element;
         this.context = context;
         this.boundsIndexer = new GraphBoundsIndexer(context.getCanvasHandler().getGraph());
+        callback.init(element);
         view.show(context.getCanvasHandler().getSettings().getCanvas(),
                 context.getX(), context.getY());
     }
@@ -128,7 +133,7 @@ public class AddConnectionCommand implements ToolboxCommand {
     
     void onMouseMove(final double x, final double y) {
         final Node node = boundsIndexer.getNodeAt(x, y);
-        if ( null != node ) {
+        if ( null != node && callback.isAllowed( context, node ) ) {
             highLightShape(node);
         } else {
             unhighLightShape();
@@ -139,7 +144,7 @@ public class AddConnectionCommand implements ToolboxCommand {
         if ( null != callback ) {
             final Node node = boundsIndexer.getNodeAt(x, y);
             if ( null != node ) {
-                callback.onNodeClick(context,element, node);
+                callback.accept(context,node);
             }
         }
         clear();

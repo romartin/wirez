@@ -3,6 +3,7 @@ package org.wirez.bpmn.client.factory.control;
 import com.google.gwt.core.client.GWT;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
@@ -33,6 +34,9 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     ShapeManager shapeManager;
     BPMNDefinitionFactory bpmnDefinitionFactory;
 
+    private Element source;
+    private Edge<ConnectionContent<SequenceFlow>, Node> edge;
+    
     @Inject
     public SequenceFlowConnectionCommandCallback(final DefaultCanvasCommands defaultCanvasCommands,
                                                  final SharedGraphCommandFactory sharedGraphCommandFactory,
@@ -47,25 +51,13 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     }
 
     @Override
-    public void onNodeClick(final Context context, final Element source, final Node target) {
-        GWT.log("AddConnectionCommandCallback - Connect from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
-
+    public void init(final Element element) {
         final SequenceFlow sequenceFlow = bpmnDefinitionFactory.buildSequenceFlow();
         clientDefinitionServices.buildGraphElement(sequenceFlow, new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element item) {
-                final Edge<ConnectionContent<SequenceFlow>, Node> edge = (Edge<ConnectionContent<SequenceFlow>, Node>) item;
-                final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
-
-                final CompositeElementCanvasCommand connectionsCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                        .add( sharedGraphCommandFactory.setConnectionSourceNodeCommand( (Node<? extends ViewContent<?>, Edge>) source, edge, 0) )
-                        .add( sharedGraphCommandFactory.setConnectionTargetNodeCommand((Node<? extends ViewContent<?>, Edge>) target, edge, 0) );
-
-
-                final AddCanvasEdgeCommand addEdgeCommand = defaultCanvasCommands.ADD_EDGE( edge, factory);
-                
-                context.getCommandManager().execute( connectionsCommand, addEdgeCommand );
-                
+                SequenceFlowConnectionCommandCallback.this.source = element;
+                SequenceFlowConnectionCommandCallback.this.edge = (Edge<ConnectionContent<SequenceFlow>, Node>) item;
             }
 
             @Override
@@ -74,6 +66,31 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
             }
         });
         
+    }
+
+    @Override
+    public boolean isAllowed(final Context context, final Node target) {
+
+        final CompositeElementCanvasCommand canvasCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
+                .add ( defaultCanvasCommands.getCommandFactory().setConnectionTargetNodeCommand( (Node<? extends ViewContent<?>, Edge>) target, edge, 0 ) );
+
+        return context.getCommandManager().allow( canvasCommand );
+        
+    }
+
+    @Override
+    public void accept(final Context context, final Node target) {
+        GWT.log("AddConnectionCommandCallback - Connect from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
+
+        final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
+
+        final CompositeElementCanvasCommand connectionsCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
+                .add( sharedGraphCommandFactory.setConnectionSourceNodeCommand( (Node<? extends ViewContent<?>, Edge>) source, edge, 0) )
+                .add( sharedGraphCommandFactory.setConnectionTargetNodeCommand((Node<? extends ViewContent<?>, Edge>) target, edge, 0) );
+
+
+        final AddCanvasEdgeCommand addEdgeCommand = defaultCanvasCommands.ADD_EDGE( edge, factory);
+        context.getCommandManager().execute( connectionsCommand, addEdgeCommand );
         
     }
     

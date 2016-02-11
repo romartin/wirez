@@ -1,5 +1,6 @@
 package org.wirez.bpmn.client.factory.control;
 
+import org.wirez.bpmn.client.BPMNBasicShape;
 import org.wirez.bpmn.client.TaskShape;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.control.toolbox.ToolboxControl;
@@ -45,7 +46,7 @@ public class BPMNToolboxControlFactory implements ShapeControlFactory<Shape, Too
     public ToolboxControl build(final Shape shape) {
         final ToolboxControl toolboxControl = toolboxControlInstances.get();
         defaults(toolboxControl);
-        if ( shape instanceof TaskShape ) {
+        if ( shape instanceof BPMNBasicShape) {
             toolboxControl.addCommand(addConnectionCommand);
         }
         

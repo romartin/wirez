@@ -8,6 +8,6 @@ import java.util.Collection;
 // TODO: Pagination, etc
 public interface DiagramsServiceResponse extends ServiceResponse {
     
-    Collection<Diagram> getDiagrams();
+    Collection<DiagramRepresentation> getDiagramRepresentations();
     
 }

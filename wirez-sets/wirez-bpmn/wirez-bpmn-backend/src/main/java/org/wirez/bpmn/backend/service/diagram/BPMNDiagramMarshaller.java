@@ -14,6 +14,7 @@ import org.jboss.drools.util.DroolsResourceFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
+import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
@@ -83,8 +84,8 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             Collection<DefaultGraph> bpmnGraphs = parser.unmarshall(definitions, null);
             final String uuid = UUID.uuid();
             final Graph graph = bpmnGraphs.iterator().next();
-            final Definition graphDefinition = ( (ViewContent) graph.getContent() ).getDefinition();
-            String title = graphDefinition.getTitle();
+            final BPMNDiagram graphDefinition = (BPMNDiagram) ( (ViewContent) graph.getContent() ).getDefinition();
+            String title = graphDefinition.getGeneral().getName().getValue();
             
             if ( title == null || title.trim().length() == 0 ) {
                 title = "Untitled BPMN diagram";

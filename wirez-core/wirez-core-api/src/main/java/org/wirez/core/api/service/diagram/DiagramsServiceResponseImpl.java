@@ -11,16 +11,16 @@ import java.util.Collection;
 @Portable
 public class DiagramsServiceResponseImpl extends ServiceResponseImpl implements DiagramsServiceResponse {
     
-    private final Collection<Diagram> diagrams;
+    private final Collection<DiagramRepresentation> diagrams;
 
     public DiagramsServiceResponseImpl(@MapsTo("responseStatus") ResponseStatus responseStatus,
-                                       @MapsTo("diagrams") Collection<Diagram> diagrams) {
+                                       @MapsTo("diagrams") Collection<DiagramRepresentation> diagrams) {
         super(responseStatus);
         this.diagrams = diagrams;
     }
 
     @Override
-    public Collection<Diagram> getDiagrams() {
+    public Collection<DiagramRepresentation> getDiagramRepresentations() {
         return diagrams;
     }
 

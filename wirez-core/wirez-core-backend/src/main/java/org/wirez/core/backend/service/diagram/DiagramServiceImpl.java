@@ -104,7 +104,7 @@ public class DiagramServiceImpl implements DiagramService {
         
         if ( isAll ) {
 
-            final Collection<Diagram> result = new ArrayList<Diagram>();
+            final Collection<DiagramRepresentation> result = new ArrayList<DiagramRepresentation>();
 
             if (ioService.exists(root)) {
                 walkFileTree(checkNotNull("root", root),
@@ -117,10 +117,21 @@ public class DiagramServiceImpl implements DiagramService {
                                 String name = file.getFileName().toString();
                                 if ( isAccepted( name ) ) {
                                     
+                                    // TODO: Do not load & process the whole bpmn file. Just the necessary to build the
+                                    // portable diagram representation.
                                     Diagram diagram = doLoad( file );
 
                                     if ( null != diagram ) {
-                                        result.add(diagram);
+
+                                        Settings settings = diagram.getSettings();
+                                        DiagramRepresentation representation =
+                                                new DiagramRepresentationImpl(diagram.getUUID(), 
+                                                        settings.getTitle(),
+                                                        settings.getDefinitionSetId(),
+                                                        settings.getShapeSetId(), 
+                                                        settings.getPath());
+                                        
+                                        result.add(representation);
                                     }
                                     
                                 }
@@ -220,7 +231,11 @@ public class DiagramServiceImpl implements DiagramService {
 
         final String fileName = file.getFileName().toString();
 
-        Diagram diagram = getDiagramInRegistry( fileName );
+        Diagram diagram = null;
+        // TODO: Forget cache while development phase...
+        if ( false) {
+            diagram = getDiagramInRegistry( fileName );
+        }
 
         // If not cached in the registry, load it.
         if ( null == diagram ) {

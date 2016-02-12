@@ -1,6 +1,7 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes;
 
 import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.bpmn.api.property.general.Name;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
@@ -20,7 +21,7 @@ public class BPMNDiagramBuilder extends AbstractObjectBuilder<BPMNDiagram, Defau
     }
 
     @Override
-    public DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge> build(GraphObjectBuilder.BuilderContext context) {
+    protected DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge> doBuild(GraphObjectBuilder.BuilderContext context) {
 
         DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
         DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge> result = 
@@ -40,7 +41,15 @@ public class BPMNDiagramBuilder extends AbstractObjectBuilder<BPMNDiagram, Defau
 
         return result;
     }
-    
+
+    protected String getPropertyIdMapping(final String propId) {
+        if ( "processn".equals(propId) ) {
+            return Name.ID;
+        } else {
+            return super.getPropertyIdMapping(propId);
+        }
+    }
+
     // TODO: Can be multiple
     protected StartNoneEventBuilder getStartProcessNode(BuilderContext context) {
         Collection<GraphObjectBuilder<?, ?>> builders = context.getBuilders();

@@ -22,6 +22,7 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
     protected Double[] boundUL;
     protected Double[] boundLR;
     protected BPMNGraphObjectBuilderFactory bpmnGraphFactory;
+    protected T result;
             
     public AbstractObjectBuilder(BPMNGraphObjectBuilderFactory bpmnGraphFactory) {
         this.bpmnGraphFactory = bpmnGraphFactory;
@@ -39,7 +40,8 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
 
     @Override
     public GraphObjectBuilder<W, T> property(String key, String value) {
-        properties.put(key, value);
+        String mappedKey = getPropertyIdMapping(key);
+        properties.put(mappedKey, value);
         return this;
     }
 
@@ -64,6 +66,16 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
     public GraphObjectBuilder<W, T> boundLR(Double x, Double y) {
         this.boundLR  = new Double[] { x, y };
         return this;
+    }
+    
+    protected abstract T doBuild(BuilderContext context);
+
+    @Override
+    public T build(BuilderContext context) {
+        if ( null == this.result ) {
+            this.result = doBuild(context);
+        }
+        return this.result;
     }
 
     protected GraphObjectBuilder<?, ?> getBuilder(BuilderContext context, String nodeId) {
@@ -100,6 +112,10 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
                 LOG.warn("Property [" + pId + "] not found for definition [" + definition.getId() + "]");
             }
         }
+    }
+    
+    protected String getPropertyIdMapping(final String propId) {
+        return propId;
     }
     
     @Override

@@ -11,6 +11,7 @@ import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.widgets.wizard.CanvasWizardScreen;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.Settings;
+import org.wirez.core.api.service.diagram.DiagramRepresentation;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.service.ClientDiagramServices;
@@ -76,9 +77,9 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
 
         wizard.setNextButtonEnabled(false);
         
-        clientDiagramServices.search("", new ServiceCallback<Collection<Diagram>>() {
+        clientDiagramServices.search("", new ServiceCallback<Collection<DiagramRepresentation>>() {
             @Override
-            public void onSuccess(final Collection<Diagram> items) {
+            public void onSuccess(final Collection<DiagramRepresentation> items) {
                 
                 if ( null == items || items.isEmpty() ) {
                     
@@ -86,7 +87,10 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
                     
                 } else {
                     
-                    for (final Diagram diagram : items) {
+                    for (final DiagramRepresentation diagram : items) {
+                        
+                        
+                        
                         addEntry( diagram );
                     }
                     
@@ -102,12 +106,11 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
         });
     }
     
-    private void addEntry(final Diagram diagram) {
+    private void addEntry(final DiagramRepresentation diagram) {
         assert diagram != null;
-        Settings settings = diagram.getSettings();
         final Collection<ShapeSet> shapeSets = shapeManager.getShapeSets();
-        final SafeUri thumbUri = ShapeUtils.getShapeSet(shapeSets, settings.getShapeSetId()).getThumbnailUri();
-        view.add( settings.getTitle(), settings.getPath(), thumbUri );
+        final SafeUri thumbUri = ShapeUtils.getShapeSet(shapeSets, diagram.getShapeSetId()).getThumbnailUri();
+        view.add( diagram.getName(), diagram.getPath(), thumbUri );
     }
 
     @Override

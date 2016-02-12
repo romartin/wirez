@@ -23,7 +23,7 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
     protected abstract T buildNode(BuilderContext context, DefinitionService definitionService);
     
     @Override
-    public T build(BuilderContext context) {
+    protected T doBuild(BuilderContext context) {
 
         DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
 

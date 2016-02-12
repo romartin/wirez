@@ -34,6 +34,11 @@ public class BootstrapObjectBuilder<W extends Definition, T extends Element<View
     }
 
     @Override
+    protected T doBuild(BuilderContext context) {
+        return null;
+    }
+
+    @Override
     public T build(BuilderContext context) {
         return null;
     }

@@ -25,12 +25,12 @@ public class ClientDiagramServices {
     }
 
     public void search(final String query,
-                       final ServiceCallback<Collection<Diagram>> callback) {
+                       final ServiceCallback<Collection<DiagramRepresentation>> callback) {
 
         diagramService.call(new RemoteCallback<DiagramsServiceResponse>() {
             @Override
             public void callback(final DiagramsServiceResponse response) {
-                callback.onSuccess(response.getDiagrams());
+                callback.onSuccess(response.getDiagramRepresentations());
             }
         }, new ErrorCallback<Message>() {
             @Override

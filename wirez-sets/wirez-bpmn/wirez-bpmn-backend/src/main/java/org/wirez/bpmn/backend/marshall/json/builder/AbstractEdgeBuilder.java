@@ -20,7 +20,7 @@ public abstract class AbstractEdgeBuilder<W extends Definition, T extends Edge<V
     protected abstract T buildEdge(BuilderContext context, DefinitionService definitionService);
 
     @Override
-    public T build(BuilderContext context) {
+    protected T doBuild(BuilderContext context) {
 
         DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
 

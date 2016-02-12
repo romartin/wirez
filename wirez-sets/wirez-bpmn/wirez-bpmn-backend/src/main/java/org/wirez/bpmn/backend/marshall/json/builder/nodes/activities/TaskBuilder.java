@@ -23,14 +23,14 @@ public class TaskBuilder extends AbstractNodeBuilder<Task, Node<ViewContent<Task
     @Override
     public void setSourceConnectionMagnetIndex(BuilderContext context, Node<ViewContent<Task>, Edge> node, Edge<ConnectionContent<Task>, Node> edge) {
         super.setSourceConnectionMagnetIndex(context, node, edge);
-        edge.getContent().setSourceMagnetIndex(5);
+        edge.getContent().setSourceMagnetIndex(3);
 
     }
 
     @Override
     public void setTargetConnectionMagnetIndex(BuilderContext context, Node<ViewContent<Task>, Edge> node, Edge<ConnectionContent<Task>, Node> edge) {
         super.setTargetConnectionMagnetIndex(context, node, edge);
-        edge.getContent().setSourceMagnetIndex(1);
+        edge.getContent().setTargetMagnetIndex(5);
     }
 
     @Override

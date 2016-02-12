@@ -36,15 +36,20 @@ import java.util.Collection;
 
 public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implements HasRadiusMutation {
 
-    protected RegularPolygon polygon;
     protected RegularPolygon decorator;
     protected Group gwTypeIcon;
 
     public ParallelGatewayShape(WiresManager manager) {
-        super(new MultiPath().rect(0, 0, ParallelGateway.RADIUS * 2, ParallelGateway.RADIUS * 2)
-                .setFillAlpha(0.001)
-                .setStrokeAlpha(0), 
+        super(new MultiPath()
+                .M(0 ,ParallelGateway.RADIUS)
+                .L(ParallelGateway.RADIUS, 0)
+                .L(ParallelGateway.RADIUS * 2, ParallelGateway.RADIUS)
+                .L(ParallelGateway.RADIUS, ( ParallelGateway.RADIUS * 2) )
+                .Z()
+                .setStrokeColor(ColorName.BLACK)
+                .setFillColor(ParallelGateway.COLOR),
                 manager);
+        ;
         init();
     }
 
@@ -62,18 +67,11 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
 
     @Override
     public Shape getShape() {
-        return polygon;
+        return getPath();
     }
 
     protected void init() {
         final double radius = ParallelGateway.RADIUS;
-        
-        polygon = new RegularPolygon(4, radius)
-            .setStrokeWidth(0)
-            .setStrokeAlpha(1)
-            .setFillColor(ParallelGateway.COLOR)
-            .setFillAlpha(0.50)
-            .setStrokeColor(ColorName.BLACK);
         
         decorator = new RegularPolygon(4, radius)
                 .setStrokeWidth(0)
@@ -84,7 +82,6 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
         gwTypeIcon = new Group();
         final double[] gwTypeIconSize = updateGwTypeIcon(radius);
         
-        this.addChild(polygon, WiresLayoutContainer.Layout.CENTER);
         this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
         this.addChild(gwTypeIcon, WiresLayoutContainer.Layout.CENTER, 
                 - ( gwTypeIconSize[0] / 2 ), - ( gwTypeIconSize[1] / 2 ) );
@@ -128,7 +125,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
     @Override
     public void applyRadius(final double radius, final MutationContext mutationContext) {
         if (radius > 0) {
-            _applyParallelGatewayRadius(polygon, radius);
+            // _applyParallelGatewayRadius(polygon, radius);
             _applyParallelGatewayRadius(decorator, radius);
             updateGwTypeIcon(radius);
         }

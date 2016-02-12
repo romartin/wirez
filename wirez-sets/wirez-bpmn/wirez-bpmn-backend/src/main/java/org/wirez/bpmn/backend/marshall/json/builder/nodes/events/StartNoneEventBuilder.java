@@ -22,14 +22,14 @@ public class StartNoneEventBuilder extends AbstractNodeBuilder<StartNoneEvent, N
     @Override
     public void setSourceConnectionMagnetIndex(BuilderContext context, Node<ViewContent<StartNoneEvent>, Edge> node, Edge<ConnectionContent<StartNoneEvent>, Node> edge) {
         super.setSourceConnectionMagnetIndex(context, node, edge);
-        edge.getContent().setSourceMagnetIndex(5);
+        edge.getContent().setSourceMagnetIndex(3);
         
     }
 
     @Override
     public void setTargetConnectionMagnetIndex(BuilderContext context, Node<ViewContent<StartNoneEvent>, Edge> node, Edge<ConnectionContent<StartNoneEvent>, Node> edge) {
         super.setTargetConnectionMagnetIndex(context, node, edge);
-        edge.getContent().setSourceMagnetIndex(1);
+        edge.getContent().setTargetMagnetIndex(7);
     }
 
     @Override

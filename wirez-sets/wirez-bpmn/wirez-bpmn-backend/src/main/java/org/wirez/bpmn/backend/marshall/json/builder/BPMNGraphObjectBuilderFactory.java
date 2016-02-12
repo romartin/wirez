@@ -3,8 +3,10 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 import org.wirez.bpmn.api.*;
 import org.wirez.bpmn.backend.marshall.json.builder.edges.SequenceFlowBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.nodes.activities.ParallelGatewayBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.activities.TaskBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.EndNoneEventBuilder;
+import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.EndTerminateEventBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
@@ -38,8 +40,12 @@ public class BPMNGraphObjectBuilderFactory {
             return new StartNoneEventBuilder(this);
         } else if (EndNoneEvent.ID.equals(id)) {
             return new EndNoneEventBuilder(this);
+        } else if (EndTerminateEvent.ID.equals(id)) {
+            return new EndTerminateEventBuilder(this);
         } else if (Task.ID.equals(id)) {
             return new TaskBuilder(this);
+        } else if (ParallelGateway.ID.equals(id)) {
+            return new ParallelGatewayBuilder(this);
         }
 
         /* Edges */

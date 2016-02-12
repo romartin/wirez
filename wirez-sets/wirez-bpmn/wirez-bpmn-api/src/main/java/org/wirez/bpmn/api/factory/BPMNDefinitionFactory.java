@@ -30,6 +30,7 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
         add(Task.ID);
         add(StartNoneEvent.ID);
         add(EndNoneEvent.ID);
+        add(EndTerminateEvent.ID);
         add(SequenceFlow.ID);
         add(ParallelGateway.ID);
     }};
@@ -53,6 +54,9 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
         if (EndNoneEvent.ID.equals(id)) {
             return buildEndNoneEvent();
         }
+        if (EndTerminateEvent.ID.equals(id)) {
+            return buildEndTerminateEvent();
+        }
         if (SequenceFlow.ID.equals(id)) {
             return buildSequenceFlow();
         }
@@ -61,7 +65,7 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
         }
         return null;
     }
-    
+
     public Task buildTask() {
         return new Task(bpmnPropertySetFactory.buildGeneralSet(),
                     bpmnPropertySetFactory.buildBackgroundSet(),
@@ -87,6 +91,15 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
                     bpmnPropertyFactory.buildRadius())
                 .buildDefaults();
     }
+
+    public EndTerminateEvent buildEndTerminateEvent() {
+        return new EndTerminateEvent(bpmnPropertySetFactory.buildGeneralSet(),
+                bpmnPropertySetFactory.buildBackgroundSet(),
+                bpmnPropertySetFactory.buildFontSet(),
+                bpmnPropertyFactory.buildRadius())
+            .buildDefaults();
+    }
+    
     public SequenceFlow buildSequenceFlow() {
         return new SequenceFlow(bpmnPropertySetFactory.buildGeneralSet(),
                     bpmnPropertySetFactory.buildBackgroundSet())

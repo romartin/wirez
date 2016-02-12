@@ -21,7 +21,9 @@ import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import org.wirez.bpmn.api.EndNoneEvent;
+import org.wirez.bpmn.api.EndTerminateEvent;
+import org.wirez.bpmn.api.EndTerminateEvent;
+import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
@@ -34,13 +36,13 @@ import org.wirez.core.client.mutation.MutationContext;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements HasRadiusMutation {
+public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> implements HasRadiusMutation {
 
     protected Circle circle;
     protected Circle decorator;
     
-    public EndNoneEventShape(WiresManager manager) {
-        super(new MultiPath().rect(0,0, EndNoneEvent.RADIUS * 2, EndNoneEvent.RADIUS * 2)
+    public EndTerminateEventShape(WiresManager manager) {
+        super(new MultiPath().rect(0,0, EndTerminateEvent.RADIUS * 2, EndTerminateEvent.RADIUS * 2)
                 .setFillAlpha(0.001)
                 .setStrokeAlpha(0), 
                 manager);
@@ -48,7 +50,7 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
     }
 
     protected void init() {
-        final double radius = EndNoneEvent.RADIUS;
+        final double radius = EndTerminateEvent.RADIUS;
         circle = new Circle(radius).setX(radius).setY(radius);
         this.addChild(circle, WiresLayoutContainer.Layout.CENTER);
         decorator = new Circle(radius).setX(radius).setY(radius).setFillAlpha(0).setStrokeAlpha(0);
@@ -73,7 +75,7 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
     }
 
     @Override
-    public void applyElementProperties(Node<ViewContent<EndNoneEvent>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<ViewContent<EndTerminateEvent>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Radius.
@@ -88,7 +90,7 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
         }
     }
 
-    protected EndNoneEventShape _applyRadius(final Node<ViewContent<EndNoneEvent>, Edge> element, MutationContext mutationContext) {
+    protected EndTerminateEventShape _applyRadius(final Node<ViewContent<EndTerminateEvent>, Edge> element, MutationContext mutationContext) {
         final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
@@ -100,7 +102,7 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
 
     @Override
     public String toString() {
-        return "EndNoneEventShape{}";
+        return "EndTerminateEventShape{}";
     }
 
     

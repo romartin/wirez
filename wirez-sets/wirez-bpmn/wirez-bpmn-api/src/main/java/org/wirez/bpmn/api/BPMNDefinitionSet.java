@@ -50,6 +50,9 @@ public class BPMNDefinitionSet implements DefinitionSet {
     @Definition
     private ParallelGateway parallelGateway;
 
+    @Definition
+    private EndTerminateEvent endTerminateEvent;
+
 
     public BPMNDefinitionSet() {
     }
@@ -59,13 +62,15 @@ public class BPMNDefinitionSet implements DefinitionSet {
                              @MapsTo("endNoneEvent") EndNoneEvent endNoneEvent,
                              @MapsTo("task") Task task,
                              @MapsTo("sequenceFlow") SequenceFlow sequenceFlow,
-                             @MapsTo("parallelGateway") ParallelGateway parallelGateway) {
+                             @MapsTo("parallelGateway") ParallelGateway parallelGateway,
+                             @MapsTo("endTerminateEvent") EndTerminateEvent endTerminateEvent) {
         this.diagram = diagram;
         this.startNoneEvent = startNoneEvent;
         this.endNoneEvent = endNoneEvent;
         this.task = task;
         this.sequenceFlow = sequenceFlow;
         this.parallelGateway = parallelGateway;
+        this.endTerminateEvent = endTerminateEvent;
     }
 
     @Override
@@ -129,5 +134,13 @@ public class BPMNDefinitionSet implements DefinitionSet {
 
     public void setParallelGateway(ParallelGateway parallelGateway) {
         this.parallelGateway = parallelGateway;
+    }
+
+    public EndTerminateEvent getEndTerminateEvent() {
+        return endTerminateEvent;
+    }
+
+    public void setEndTerminateEvent(EndTerminateEvent endTerminateEvent) {
+        this.endTerminateEvent = endTerminateEvent;
     }
 }

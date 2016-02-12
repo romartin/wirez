@@ -70,7 +70,6 @@ public class ShapeUtils {
                 final double tX = targetControl.getX();
                 final double tY = targetControl.getY();
                 final double _d = dist(sX, sY, tX, tY);
-                GWT.log("Dist=" + _d + " / s=" + x + ", t=" + y);
                 if ( _d < dist ) {
                     dist = _d;
                     sMagnet = x;

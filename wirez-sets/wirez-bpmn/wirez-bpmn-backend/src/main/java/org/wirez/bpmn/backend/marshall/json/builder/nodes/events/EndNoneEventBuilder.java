@@ -22,6 +22,13 @@ public class EndNoneEventBuilder extends AbstractNodeBuilder<EndNoneEvent, Node<
     }
 
     @Override
+    protected void setSize(BuilderContext context, Node<ViewContent<EndNoneEvent>, Edge> node, double width, double height) {
+        super.setSize(context, node, width, height);
+        EndNoneEvent def = node.getContent().getDefinition();
+        def.getRadius().setValue(width  / 2);
+    }
+    
+    @Override
     protected void afterNodeBuild(BuilderContext context, Node<ViewContent<EndNoneEvent>, Edge> node) {
         // Do nothing. No outgoing connections expected.
     }

@@ -2,6 +2,7 @@ package org.wirez.bpmn.backend.marshall.json.builder.nodes.activities;
 
 import org.wirez.bpmn.api.ParallelGateway;
 import org.wirez.bpmn.api.ParallelGateway;
+import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.core.api.graph.Edge;
@@ -19,6 +20,13 @@ public class ParallelGatewayBuilder extends AbstractNodeBuilder<ParallelGateway,
     @Override
     protected Node<ViewContent<ParallelGateway>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
         return (Node<ViewContent<ParallelGateway>, Edge>) definitionService.buildGraphElement(ParallelGateway.ID);
+    }
+
+    @Override
+    protected void setSize(BuilderContext context, Node<ViewContent<ParallelGateway>, Edge> node, double width, double height) {
+        super.setSize(context, node, width, height);
+        ParallelGateway def = node.getContent().getDefinition();
+        def.getRadius().setValue(width  / 2);
     }
 
     @Override

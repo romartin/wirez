@@ -3,6 +3,7 @@ package org.wirez.bpmn.backend.marshall.json.builder.nodes.events;
 
 import org.wirez.bpmn.api.EndTerminateEvent;
 import org.wirez.bpmn.api.EndTerminateEvent;
+import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.core.api.graph.Edge;
@@ -22,6 +23,13 @@ public class EndTerminateEventBuilder extends AbstractNodeBuilder<EndTerminateEv
         return (Node<ViewContent<EndTerminateEvent>, Edge>) definitionService.buildGraphElement(EndTerminateEvent.ID);
     }
 
+    @Override
+    protected void setSize(BuilderContext context, Node<ViewContent<EndTerminateEvent>, Edge> node, double width, double height) {
+        super.setSize(context, node, width, height);
+        EndTerminateEvent def = node.getContent().getDefinition();
+        def.getRadius().setValue(width  / 2);
+    }
+    
     @Override
     protected void afterNodeBuild(BuilderContext context, Node<ViewContent<EndTerminateEvent>, Edge> node) {
         // Do nothing. No outgoing connections expected.

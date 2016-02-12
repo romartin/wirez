@@ -12,6 +12,7 @@ import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultBound;
 import org.wirez.core.api.graph.impl.DefaultBounds;
 import org.wirez.core.api.service.definition.DefinitionService;
+import org.wirez.core.api.util.ElementUtils;
 
 public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<ViewContent<W>, Edge>> 
         extends AbstractObjectBuilder<W, T> implements NodeObjectBuilder<W, T> {
@@ -48,7 +49,17 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
                     new DefaultBound( boundLR[0], boundLR[1]),
                     new DefaultBound( boundUL[0], boundUL[1]));
             node.getContent().setBounds(bounds);
+            setSize(context, node);
         }
+    }
+
+    protected void setSize(BuilderContext context, T node) {
+        final Double[] size = ElementUtils.getSize(node.getContent());
+        // TODO: Not working for task - setSize(context, node, size[0], size[1]);
+    }
+
+    protected void setSize(BuilderContext context, T node, double width, double height) {
+        // Do nothing by default.
     }
 
     protected void afterNodeBuild(BuilderContext context, T node) {

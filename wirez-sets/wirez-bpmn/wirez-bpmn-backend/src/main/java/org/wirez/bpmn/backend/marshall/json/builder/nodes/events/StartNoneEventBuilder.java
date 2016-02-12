@@ -2,11 +2,13 @@ package org.wirez.bpmn.backend.marshall.json.builder.nodes.events;
 
 import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.backend.marshall.json.builder.*;
+import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.service.definition.DefinitionService;
+import org.wirez.core.api.util.ElementUtils;
 
 public class StartNoneEventBuilder extends AbstractNodeBuilder<StartNoneEvent, Node<ViewContent<StartNoneEvent>, Edge>> {
     
@@ -17,6 +19,13 @@ public class StartNoneEventBuilder extends AbstractNodeBuilder<StartNoneEvent, N
     @Override
     protected Node<ViewContent<StartNoneEvent>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
         return (Node<ViewContent<StartNoneEvent>, Edge>) definitionService.buildGraphElement(StartNoneEvent.ID);
+    }
+
+    @Override
+    protected void setSize(BuilderContext context, Node<ViewContent<StartNoneEvent>, Edge> node, double width, double height) {
+        super.setSize(context, node, width, height);
+        StartNoneEvent def = node.getContent().getDefinition();
+        def.getRadius().setValue(width  / 2);
     }
 
     @Override

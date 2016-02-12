@@ -1,5 +1,6 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes.activities;
 
+import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.backend.marshall.json.builder.*;
@@ -18,6 +19,14 @@ public class TaskBuilder extends AbstractNodeBuilder<Task, Node<ViewContent<Task
     @Override
     protected Node<ViewContent<Task>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
         return (Node<ViewContent<Task>, Edge>) definitionService.buildGraphElement(Task.ID);
+    }
+
+    @Override
+    protected void setSize(BuilderContext context, Node<ViewContent<Task>, Edge> node, double width, double height) {
+        super.setSize(context, node, width, height);
+        Task def = node.getContent().getDefinition();
+        def.getWidth().setValue(width);
+        def.getHeight().setValue(height);
     }
 
     @Override

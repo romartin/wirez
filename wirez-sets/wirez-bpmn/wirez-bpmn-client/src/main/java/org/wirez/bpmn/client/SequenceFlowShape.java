@@ -20,6 +20,7 @@ import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.DecoratableLine;
 import com.ait.lienzo.client.core.shape.Decorator;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.animation.ShapeSelectionAnimation;
@@ -32,7 +33,7 @@ public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> implemen
 
     DecoratableLine decorator;
 
-    private double strokeWidth;
+    private Double strokeWidth;
     private String color;
     
     public SequenceFlowShape(final AbstractDirectionalMultiPointShape<?> line, 
@@ -60,17 +61,35 @@ public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> implemen
 
     @Override
     public void applyState(final ShapeState shapeState) {
-        if (ShapeState.SELECTED.equals(shapeState)) {
-            this.strokeWidth = getDecoratableLine().getStrokeWidth();
-            this.color = getDecoratableLine().getStrokeColor();
-            new ShapeSelectionAnimation(this)
-                    .setDuration(BaseCanvas.ANIMATION_SELECTION_DURATION)
-                    .run();
-        } else if (ShapeState.DESELECTED.equals(shapeState)) {
-            new ShapeDeSelectionAnimation(this, this.strokeWidth, 1, this.color)
-                    .setDuration(BaseCanvas.ANIMATION_SELECTION_DURATION)
-                    .run();
+        
+        final boolean isSelectedState = ShapeState.SELECTED.equals(shapeState);
+        if ( isSelectedState || ShapeState.HIGHLIGHT.equals(shapeState) ) {
+            
+            if ( null == this.strokeWidth) {
+                this.strokeWidth = getDecoratableLine().getStrokeWidth();
+            }
+
+            if ( null == this.color) {
+                this.color = getDecoratableLine().getStrokeColor();
+            }
+            
+            getDecoratableLine().setStrokeWidth(5);
+            getDecoratableLine().setStrokeColor(isSelectedState ? ColorName.RED : ColorName.BLUE);
+            
+        } else if ( ShapeState.DESELECTED.equals(shapeState) || ShapeState.UNHIGHLIGHT.equals(shapeState) ) {
+            
+            if ( null != this.strokeWidth ) {
+                getDecoratableLine().setStrokeWidth(5);
+                this.strokeWidth = null;
+            }
+
+            if ( null != this.color ) {
+                getDecoratableLine().setStrokeColor(color);
+                this.color = null;
+            }
+            
         }
+        
     }
     
 }

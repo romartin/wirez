@@ -17,6 +17,7 @@
 package org.wirez.core.client.animation;
 
 import com.ait.lienzo.client.core.animation.AnimationProperties;
+import com.google.gwt.core.client.GWT;
 import org.wirez.core.client.Shape;
 
 import java.util.Collection;
@@ -25,7 +26,8 @@ import static com.ait.lienzo.client.core.animation.AnimationProperty.Properties.
 
 public class ShapeHighlightAnimation extends ShapeSelectionAnimation {
 
-    private double[] _strokeWidth;
+    private double[] _width;
+    private double[] _alpha;
     private String[] _color;
     
     public ShapeHighlightAnimation(final Shape shape) {
@@ -36,11 +38,13 @@ public class ShapeHighlightAnimation extends ShapeSelectionAnimation {
     public void run() {
         final Collection<com.ait.lienzo.client.core.shape.Shape> decorators = getDecorators();
         if ( null != decorators && !decorators.isEmpty() ) {
-            _strokeWidth = new double[decorators.size()];
+            _width = new double[decorators.size()];
+            _alpha = new double[decorators.size()];
             _color = new String[decorators.size()];
             int x = 0;
             for( final com.ait.lienzo.client.core.shape.Shape decorator : decorators ) {
-                _strokeWidth[x] = decorator.getStrokeWidth();
+                _width[x] = decorator.getStrokeWidth();
+                _alpha[x] = decorator.getStrokeAlpha();
                 _color[x] = decorator.getStrokeColor();
                 decorator.setStrokeWidth(getStrokeWidth()).setStrokeColor(getColor()).setStrokeAlpha(0);
                 decorator.moveToTop();
@@ -59,7 +63,7 @@ public class ShapeHighlightAnimation extends ShapeSelectionAnimation {
             int x = 0;
             for( final com.ait.lienzo.client.core.shape.Shape decorator : decorators ) {
                 decorator.setStrokeAlpha(1).moveToTop();
-                decorator.animate(getAnimationTweener(), AnimationProperties.toPropertyList(STROKE_WIDTH(_strokeWidth[x]), STROKE_COLOR(_color[x])),
+                decorator.animate(getAnimationTweener(), AnimationProperties.toPropertyList(STROKE_WIDTH(_width[x]), STROKE_COLOR(_color[x]), STROKE_ALPHA(_alpha[x])),
                         getDuration());
                 x++;
             }

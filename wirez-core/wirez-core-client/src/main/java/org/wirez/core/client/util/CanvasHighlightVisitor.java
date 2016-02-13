@@ -18,6 +18,8 @@ package org.wirez.core.client.util;
 
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import org.uberfire.mvp.Command;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.Edge;
@@ -28,10 +30,13 @@ import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.DefaultGraphVisitorImpl;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
 import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeHighlightAnimation;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.ShapeState;
+import org.wirez.core.client.mutation.HasCanvasStateMutation;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,9 +46,7 @@ import java.util.List;
  */
 public class CanvasHighlightVisitor {
 
-    private static final double ALPHA_INIT = 0.1;
-    private static final double ALPHA_END = 1;
-    private static final double DURATION = 1000;
+    private static final long DURATION = 500;
 
 
     private CanvasHandler canvasHandler;
@@ -57,51 +60,60 @@ public class CanvasHighlightVisitor {
         assert canvasHandler != null;
         assert canvasHandler.getGraph() != null;
       
-        prepareSimulation(new Command() {
-            @Override
-            public void execute() {
-                animate(0, new Command() {
-                    @Override
-                    public void execute() {
-                        GWT.log("CanvasHighlightVisitor - FINISHED");
-                        
-                    }
-                });
-            }
-        });
+        prepareSimulation(() -> animate(0, () -> GWT.log("CanvasHighlightVisitor - FINISHED")));
     }
-    
     
     private void animate(final int index, final Command callback) {
         if (index < shapes.size()) {
             final Shape shape = shapes.get(index);
-            new ShapeHighlightAnimation(shape)
-                    .setColor(ColorName.BLUE)
-                    .setCallback(new ShapeAnimation.AnimationCallback() {
-                @Override
-                public void onStart() {
-                    
-                }
 
-                @Override
-                public void onFrame() {
-
-                }
-
-                @Override
-                public void onComplete() {
-                    animate(index + 1, callback);
-                }
+            if (shape instanceof HasCanvasStateMutation) {
                 
-            }).setDuration(500)
-                    .setCanvas(canvasHandler.getCanvas())
-                    .run();
+                final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
+
+                Timer t = new Timer() {
+                    @Override
+                    public void run() {
+                        canvasStateMutation.applyState(ShapeState.UNHIGHLIGHT);
+                        animate(index + 1, callback);
+                    }
+                };
+
+                canvasStateMutation.applyState(ShapeState.HIGHLIGHT);
+                t.schedule( (int) DURATION );
+                
+            } else if (shape instanceof HasDecorators) {
+
+                new ShapeHighlightAnimation(shape)
+                        .setColor(ColorName.BLUE)
+                        .setCallback(new ShapeAnimation.AnimationCallback() {
+                            @Override
+                            public void onStart() {
+
+                            }
+
+                            @Override
+                            public void onFrame() {
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                animate(index + 1, callback);
+                            }
+
+                        }).setDuration(DURATION)
+                        .setCanvas(canvasHandler.getCanvas())
+                        .run();
+                
+            }
             
         } else {
             
             callback.execute();
             
         }
+        
     }
     
     private void prepareSimulation(final Command command) {

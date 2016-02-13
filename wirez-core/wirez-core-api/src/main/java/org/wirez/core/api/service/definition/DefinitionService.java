@@ -10,6 +10,6 @@ public interface DefinitionService {
 
     DefinitionServiceResponse getDefinition(String id);
     
-    Element buildGraphElement(String definitionId);
+    Element buildGraphElement(String uuid, String definitionId);
     
 }

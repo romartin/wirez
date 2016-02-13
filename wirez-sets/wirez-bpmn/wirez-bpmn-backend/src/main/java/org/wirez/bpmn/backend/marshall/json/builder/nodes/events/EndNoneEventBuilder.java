@@ -18,7 +18,7 @@ public class EndNoneEventBuilder extends AbstractNodeBuilder<EndNoneEvent, Node<
 
     @Override
     protected Node<ViewContent<EndNoneEvent>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<ViewContent<EndNoneEvent>, Edge>) definitionService.buildGraphElement(EndNoneEvent.ID);
+        return (Node<ViewContent<EndNoneEvent>, Edge>) definitionService.buildGraphElement(this.nodeId, EndNoneEvent.ID);
     }
 
     @Override

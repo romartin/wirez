@@ -18,7 +18,7 @@ public class StartNoneEventBuilder extends AbstractNodeBuilder<StartNoneEvent, N
 
     @Override
     protected Node<ViewContent<StartNoneEvent>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<ViewContent<StartNoneEvent>, Edge>) definitionService.buildGraphElement(StartNoneEvent.ID);
+        return (Node<ViewContent<StartNoneEvent>, Edge>) definitionService.buildGraphElement(this.nodeId, StartNoneEvent.ID);
     }
 
     @Override

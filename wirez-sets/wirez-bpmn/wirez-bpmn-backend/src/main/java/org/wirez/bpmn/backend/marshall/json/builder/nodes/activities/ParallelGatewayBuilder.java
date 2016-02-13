@@ -19,7 +19,7 @@ public class ParallelGatewayBuilder extends AbstractNodeBuilder<ParallelGateway,
 
     @Override
     protected Node<ViewContent<ParallelGateway>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<ViewContent<ParallelGateway>, Edge>) definitionService.buildGraphElement(ParallelGateway.ID);
+        return (Node<ViewContent<ParallelGateway>, Edge>) definitionService.buildGraphElement(this.nodeId, ParallelGateway.ID);
     }
 
     @Override

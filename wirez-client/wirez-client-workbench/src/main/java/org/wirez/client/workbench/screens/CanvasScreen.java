@@ -39,6 +39,7 @@ import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.service.definition.DefinitionSetServiceResponse;
+import org.wirez.core.api.util.*;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
 import org.wirez.core.client.service.ClientDiagramServices;
@@ -418,7 +419,7 @@ public class CanvasScreen {
                             final double _x, final double _y) {
         
         
-        clientDefinitionServices.buildGraphElement(definition, new ServiceCallback<Element>() {
+        clientDefinitionServices.buildGraphElement(org.wirez.core.api.util.UUID.uuid(), definition, new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element item) {
                 final Element<?> element = (Element<?>) item;

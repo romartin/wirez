@@ -18,7 +18,7 @@ public class TaskBuilder extends AbstractNodeBuilder<Task, Node<ViewContent<Task
 
     @Override
     protected Node<ViewContent<Task>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<ViewContent<Task>, Edge>) definitionService.buildGraphElement(Task.ID);
+        return (Node<ViewContent<Task>, Edge>) definitionService.buildGraphElement(this.nodeId, Task.ID);
     }
 
     @Override

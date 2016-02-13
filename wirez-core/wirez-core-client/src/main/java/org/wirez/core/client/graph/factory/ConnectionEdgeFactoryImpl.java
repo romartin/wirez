@@ -38,9 +38,9 @@ public class ConnectionEdgeFactoryImpl
         implements ConnectionEdgeFactory<DefaultDefinition> {
 
     @Override
-    public Edge<ViewContent<DefaultDefinition>, Node> build(DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
+    public Edge<ViewContent<DefaultDefinition>, Node> build(String uuid, DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
         Edge<ViewContent<DefaultDefinition>, Node> edge =
-                new EdgeImpl<ViewContent<DefaultDefinition>>( UUID.uuid(),
+                new EdgeImpl<ViewContent<DefaultDefinition>>( uuid,
                         properties,
                         labels,
                         new ConnectionContentImpl<>( definition, buildBounds()));

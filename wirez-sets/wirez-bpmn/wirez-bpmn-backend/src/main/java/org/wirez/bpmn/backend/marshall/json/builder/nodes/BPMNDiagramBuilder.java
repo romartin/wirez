@@ -25,7 +25,7 @@ public class BPMNDiagramBuilder extends AbstractObjectBuilder<BPMNDiagram, Defau
 
         DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
         DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge> result = 
-                (DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge>) definitionService.buildGraphElement(BPMNDiagram.ID);
+                (DefaultGraph<ViewContent<BPMNDiagram>, Node, Edge>) definitionService.buildGraphElement(this.nodeId, BPMNDiagram.ID);
 
         setProperties(result.getContent().getDefinition());
 

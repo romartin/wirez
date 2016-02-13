@@ -22,9 +22,9 @@ public class DefaultGraphFactoryImpl extends BaseElementFactory<DefaultDefinitio
         implements DefaultGraphFactory<DefaultDefinition> {
 
     @Override
-    public DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge> build(DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
+    public DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge> build(String uuid, DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
         DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge> graph =
-                new DefaultGraphImpl<ViewContent<DefaultDefinition>>( UUID.uuid(),
+                new DefaultGraphImpl<ViewContent<DefaultDefinition>>( uuid,
                         properties,
                         labels,
                         new ViewContentImpl<DefaultDefinition>( definition, buildBounds()),

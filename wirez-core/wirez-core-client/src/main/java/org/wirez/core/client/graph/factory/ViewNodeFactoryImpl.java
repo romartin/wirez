@@ -37,9 +37,9 @@ public class ViewNodeFactoryImpl
         implements ViewNodeFactory<DefaultDefinition> {
 
     @Override
-    public Node<ViewContent<DefaultDefinition>, Edge> build(final DefaultDefinition definition, final Set<Property> properties, final Set<String> labels) {
+    public Node<ViewContent<DefaultDefinition>, Edge> build(final String uuid, final DefaultDefinition definition, final Set<Property> properties, final Set<String> labels) {
         Node<ViewContent<DefaultDefinition>, Edge> node =
-                new NodeImpl<ViewContent<DefaultDefinition>>(UUID.uuid(),
+                new NodeImpl<ViewContent<DefaultDefinition>>(uuid,
                         properties,
                         labels,
                         new ViewContentImpl<>( definition, buildBounds())

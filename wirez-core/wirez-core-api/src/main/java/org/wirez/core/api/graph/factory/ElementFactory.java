@@ -25,6 +25,6 @@ import java.util.Set;
 
 public interface ElementFactory<W extends Definition, C extends ViewContent<W>, T extends Element<C>> {
     
-    T build(W definition, Set<Property> properties, Set<String> labels);
+    T build(String uuid, W definition, Set<Property> properties, Set<String> labels);
     
 }

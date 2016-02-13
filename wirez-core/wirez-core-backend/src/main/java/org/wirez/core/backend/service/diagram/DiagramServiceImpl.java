@@ -159,10 +159,9 @@ public class DiagramServiceImpl implements DiagramService {
 
         final DefinitionSetServiceResponse definitionSetServiceResponse = definitionService.getDefinitionSet(defSetId);
         final Definition graphDefinition = definitionSetServiceResponse.getGraphElement();
-        final String uuid = UUID.uuid();
-        final Graph graph = (Graph) definitionService.buildGraphElement(graphDefinition.getId());
+        final Graph graph = (Graph) definitionService.buildGraphElement(UUID.uuid(), graphDefinition.getId());
         final Settings diagramSettings = new SettingsImpl(title, defSetId, shapeSetId);
-        final Diagram diagram = new DiagramImpl( uuid, graph, diagramSettings );
+        final Diagram diagram = new DiagramImpl( UUID.uuid(), graph, diagramSettings );
 
         diagramRegistry.add(diagram);
 

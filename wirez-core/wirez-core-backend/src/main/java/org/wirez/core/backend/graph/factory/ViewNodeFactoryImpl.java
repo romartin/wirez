@@ -35,9 +35,9 @@ import java.util.Set;
 public class ViewNodeFactoryImpl<W extends Definition> extends BaseElementFactory<W, ViewContent<W>, Node<ViewContent<W>, Edge>> implements ViewNodeFactory<W> {
 
     @Override
-    public Node<ViewContent<W>, Edge> build(final W definition, final Set<Property> properties, final Set<String> labels) {
+    public Node<ViewContent<W>, Edge> build(final String uuid, final W definition, final Set<Property> properties, final Set<String> labels) {
         Node<ViewContent<W>, Edge> node =
-                new NodeImpl<ViewContent<W>>(UUID.uuid(),
+                new NodeImpl<ViewContent<W>>(uuid,
                         properties,
                         labels,
                         new ViewContentImpl<>( definition, buildBounds())

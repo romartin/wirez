@@ -10,6 +10,7 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.commands.SharedGraphCommandFactory;
 import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.command.impl.AddCanvasEdgeCommand;
@@ -56,7 +57,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     @Override
     public void init(final Element element) {
         final SequenceFlow sequenceFlow = bpmnDefinitionFactory.buildSequenceFlow();
-        clientDefinitionServices.buildGraphElement(sequenceFlow, new ServiceCallback<Element>() {
+        clientDefinitionServices.buildGraphElement(UUID.uuid(), sequenceFlow, new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element item) {
                 SequenceFlowConnectionCommandCallback.this.source = element;

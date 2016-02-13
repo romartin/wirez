@@ -37,9 +37,9 @@ public class ConnectionEdgeFactoryImpl<W extends Definition>
         extends BaseElementFactory<W, ViewContent<W>, Edge<ViewContent<W>, Node>> implements ConnectionEdgeFactory<W> {
 
     @Override
-    public Edge<ViewContent<W>, Node> build(W definition, Set<Property> properties, Set<String> labels) {
+    public Edge<ViewContent<W>, Node> build(String uuid, W definition, Set<Property> properties, Set<String> labels) {
         Edge<ViewContent<W>, Node> edge =
-                new EdgeImpl<ViewContent<W>>( UUID.uuid(),
+                new EdgeImpl<ViewContent<W>>( uuid,
                         properties,
                         labels,
                         new ConnectionContentImpl<>( definition, buildBounds()));

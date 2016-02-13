@@ -20,7 +20,7 @@ public class EndTerminateEventBuilder extends AbstractNodeBuilder<EndTerminateEv
 
     @Override
     protected Node<ViewContent<EndTerminateEvent>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<ViewContent<EndTerminateEvent>, Edge>) definitionService.buildGraphElement(EndTerminateEvent.ID);
+        return (Node<ViewContent<EndTerminateEvent>, Edge>) definitionService.buildGraphElement(this.nodeId, EndTerminateEvent.ID);
     }
 
     @Override

@@ -75,7 +75,7 @@ public class DefinitionServiceImpl implements DefinitionService {
 
     // TODO: Clone definition pojos.
     @Override
-    public Element buildGraphElement(final String definitionId) {
+    public Element buildGraphElement(final String uuid, final String definitionId) {
         
         DefinitionServiceResponse response = getDefinition(definitionId);
         
@@ -100,7 +100,7 @@ public class DefinitionServiceImpl implements DefinitionService {
                 }
             }
             Set<String> labels = definition.getLabels();
-            Element<ViewContent<?>> element = elementFactory.build(definition, properties, labels);;
+            Element<ViewContent<?>> element = elementFactory.build(uuid, definition, properties, labels);;
             return element;
             
         }

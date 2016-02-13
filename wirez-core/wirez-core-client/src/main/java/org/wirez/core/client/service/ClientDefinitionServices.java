@@ -71,7 +71,7 @@ public class ClientDefinitionServices {
         
     }
     
-    public void buildGraphElement(final Definition definition, final ServiceCallback<Element> callback) {
+    public void buildGraphElement(final String uuid, final Definition definition, final ServiceCallback<Element> callback) {
         assert definition != null;
         assert callback != null;
         
@@ -90,7 +90,7 @@ public class ClientDefinitionServices {
                 return false;
             }
             
-        }).buildGraphElement(definition.getId());
+        }).buildGraphElement(uuid, definition.getId());
     }
 
     public void getGraphElement(final DefinitionSet definitionSet, final ServiceCallback<Definition> callback) {

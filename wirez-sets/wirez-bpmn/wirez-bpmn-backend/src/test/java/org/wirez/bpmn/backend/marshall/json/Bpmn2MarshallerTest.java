@@ -139,7 +139,7 @@ public class Bpmn2MarshallerTest {
                 
                 return null;
             }
-        }).when(definitionService).buildGraphElement(anyString());
+        }).when(definitionService).buildGraphElement(anyString(), anyString());
     }
 
     @Test

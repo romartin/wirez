@@ -10,7 +10,6 @@ import org.wirez.core.api.graph.impl.DefaultBounds;
 
 public abstract class BaseElementFactory<W extends Definition, C extends ViewContent<W>, T extends Element<C>>  implements ElementFactory<W, C, T> {
 
-    // TODO: ??
     protected Bounds buildBounds() {
         return new DefaultBounds(new DefaultBound(0d, 0d), new DefaultBound(0d, 0d));
     }

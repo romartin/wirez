@@ -17,7 +17,7 @@ public class SequenceFlowBuilder extends AbstractEdgeBuilder<SequenceFlow, Edge<
 
     @Override
     protected Edge<ViewContent<SequenceFlow>, Node> buildEdge(BuilderContext context, DefinitionService definitionService) {
-        return (Edge<ViewContent<SequenceFlow>, Node>) definitionService.buildGraphElement(SequenceFlow.ID);
+        return (Edge<ViewContent<SequenceFlow>, Node>) definitionService.buildGraphElement(this.nodeId, SequenceFlow.ID);
     }
 
     @Override

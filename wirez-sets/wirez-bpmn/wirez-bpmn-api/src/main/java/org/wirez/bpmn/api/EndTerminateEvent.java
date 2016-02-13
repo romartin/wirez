@@ -39,7 +39,7 @@ public class EndTerminateEvent extends BaseDefinition implements BPMNDefinition 
     public static final String ID = "EndTerminateEvent";
     public static final String COLOR = "#ff6347";
     public static final String BORDER_COLOR = "#000000";
-    public static final Double RADIUS = 25d;
+    public static final Double RADIUS = 14d;
     
     @PropertySet
     private BPMNGeneral general;

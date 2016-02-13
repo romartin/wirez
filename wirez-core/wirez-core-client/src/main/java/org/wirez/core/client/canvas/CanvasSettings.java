@@ -29,8 +29,6 @@ public interface CanvasSettings {
 
     String getTitle();
 
-    Canvas getCanvas();
-    
     Graph<?, ? extends Node> getGraph();
 
     DefinitionSet getDefinitionSet();

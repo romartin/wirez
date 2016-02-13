@@ -125,7 +125,7 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
 
     // TODO: Move to AddEdge command?
     public Shape<W> applyConnections(final Edge<ViewContent<W>, Node> element, final CanvasHandler canvasHandler) {
-        final BaseCanvas canvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
+        final BaseCanvas canvas = (BaseCanvas) canvasHandler.getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
         

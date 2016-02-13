@@ -62,7 +62,7 @@ public class EndTerminateEventShapeFactory extends BaseBPMNShapeFactory<EndTermi
     @Override
     public EndTerminateEventShape build(final EndTerminateEvent definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
+        final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getCanvas();
 
         EndTerminateEventShape circleShape = new EndTerminateEventShape(baseWirezCanvas.getWiresManager());
 

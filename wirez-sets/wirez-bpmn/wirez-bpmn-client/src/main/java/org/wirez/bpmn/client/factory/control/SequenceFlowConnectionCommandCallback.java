@@ -86,7 +86,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     public void accept(final Context context, final Node target) {
         GWT.log("AddConnectionCommandCallback - Connect from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
 
-        final Canvas canvas = context.getCanvasHandler().getSettings().getCanvas();
+        final Canvas canvas = context.getCanvasHandler().getCanvas();
         final BaseShape sourceShape = (BaseShape) canvas.getShape(source.getUUID());
         final BaseShape targetShape = (BaseShape) canvas.getShape(target.getUUID());
         final int[] magnetIndexes = ShapeUtils.getDefaultMagnetsIndex(sourceShape, targetShape);

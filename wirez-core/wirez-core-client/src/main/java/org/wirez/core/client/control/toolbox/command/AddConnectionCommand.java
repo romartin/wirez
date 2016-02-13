@@ -80,7 +80,7 @@ public class AddConnectionCommand implements ToolboxCommand {
         this.context = context;
         this.boundsIndexer = new GraphBoundsIndexer(context.getCanvasHandler().getGraph());
         callback.init(element);
-        view.show(context.getCanvasHandler().getSettings().getCanvas(),
+        view.show(context.getCanvasHandler().getCanvas(),
                 context.getX(), context.getY());
     }
     
@@ -104,7 +104,7 @@ public class AddConnectionCommand implements ToolboxCommand {
                     final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
                     canvasStateMutation.applyState(ShapeState.HIGHLIGHT);
                 } else if (shape instanceof HasDecorators) {
-                    view.highlight(context.getCanvasHandler().getSettings().getCanvas(), shape);
+                    view.highlight(context.getCanvasHandler().getCanvas(), shape);
                     
                 }
                 
@@ -119,7 +119,7 @@ public class AddConnectionCommand implements ToolboxCommand {
                 final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
                 canvasStateMutation.applyState(ShapeState.UNHIGHLIGHT);
             } else if (shape instanceof HasDecorators) {
-                view.unhighlight(context.getCanvasHandler().getSettings().getCanvas(), shape);
+                view.unhighlight(context.getCanvasHandler().getCanvas(), shape);
             }
 
             this.shape = null;
@@ -129,7 +129,7 @@ public class AddConnectionCommand implements ToolboxCommand {
 
    
     private Shape getShape(final String uuid) {
-        return context.getCanvasHandler().getSettings().getCanvas().getShape(uuid);
+        return context.getCanvasHandler().getCanvas().getShape(uuid);
     }
     
     void onMouseMove(final double x, final double y) {

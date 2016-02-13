@@ -77,9 +77,9 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     }
 
     @Override
-    public CanvasHandler initialize(final CanvasSettings settings) {
+    public CanvasHandler initialize(final Canvas canvas, final CanvasSettings settings) {
         this.settings = settings;
-        this.canvas = settings.getCanvas();
+        this.canvas = canvas;
         this.graph = (DefaultGraph<? extends Definition, ? extends Node, ? extends Edge>) settings.getGraph();
         return this;
     }
@@ -92,6 +92,11 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     @Override
     public CanvasSettings getSettings() {
         return settings;
+    }
+
+    @Override
+    public Canvas getCanvas() {
+        return canvas;
     }
 
     /*

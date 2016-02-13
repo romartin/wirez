@@ -63,7 +63,7 @@ public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGa
     @Override
     public ParallelGatewayShape build(final ParallelGateway definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
+        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getCanvas();
         
         return new ParallelGatewayShape(baseCanvas.getWiresManager());
 

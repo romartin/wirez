@@ -17,6 +17,7 @@
 package org.wirez.core.client.canvas.impl;
 
 import com.ait.lienzo.client.core.shape.wires.*;
+import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
@@ -36,6 +37,7 @@ import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.command.BaseCanvasCommand;
@@ -88,8 +90,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
      */
     
     @Override
-    public CanvasHandler initialize(final CanvasSettings settings) {
-        super.initialize(settings);
+    public CanvasHandler initialize(final Canvas canvas, final CanvasSettings settings) {
+        super.initialize(canvas, settings);
 
         // Initialize the graph handler that provides processing and querying operations over the graph.
         defaultGraphHandler.initialize((DefaultGraph) settings.getGraph());

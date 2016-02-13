@@ -67,7 +67,7 @@ public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
     @Override
     public TaskShape build(final Task definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
+        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getCanvas();
         
         return new TaskShape(baseCanvas.getWiresManager());
 

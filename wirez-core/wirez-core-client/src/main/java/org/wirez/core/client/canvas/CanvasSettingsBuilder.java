@@ -34,7 +34,5 @@ public interface CanvasSettingsBuilder<T> {
     
     T graph(Graph<?, ? extends Node> graph);
     
-    T canvas(Canvas canvas);
-    
     CanvasSettings build();
 }

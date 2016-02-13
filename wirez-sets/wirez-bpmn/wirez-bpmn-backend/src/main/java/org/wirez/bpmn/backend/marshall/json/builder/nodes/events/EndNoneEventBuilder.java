@@ -34,20 +34,6 @@ public class EndNoneEventBuilder extends AbstractNodeBuilder<EndNoneEvent, Node<
     }
 
     @Override
-    public void setSourceConnectionMagnetIndex(BuilderContext context, Node<ViewContent<EndNoneEvent>, Edge> node, Edge<ConnectionContent<EndNoneEvent>, Node> edge) {
-        super.setSourceConnectionMagnetIndex(context, node, edge);
-        edge.getContent().setSourceMagnetIndex(3);
-
-    }
-
-    @Override
-    public void setTargetConnectionMagnetIndex(BuilderContext context, Node<ViewContent<EndNoneEvent>, Edge> node, Edge<ConnectionContent<EndNoneEvent>, Node> edge) {
-        super.setTargetConnectionMagnetIndex(context, node, edge);
-        edge.getContent().setTargetMagnetIndex(7);
-    }
-
-
-    @Override
     public String toString() {
         return "[NodeBuilder=EndNoneEventBuilder]" + super.toString();
     }

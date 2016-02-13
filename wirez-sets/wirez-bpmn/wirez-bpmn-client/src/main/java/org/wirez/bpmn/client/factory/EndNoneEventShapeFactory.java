@@ -61,7 +61,7 @@ public class EndNoneEventShapeFactory extends BaseBPMNShapeFactory<EndNoneEvent,
     @Override
     public EndNoneEventShape build(final EndNoneEvent definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
+        final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getCanvas();
 
         EndNoneEventShape circleShape = new EndNoneEventShape(baseWirezCanvas.getWiresManager());
 

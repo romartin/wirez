@@ -86,11 +86,11 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
     }
 
     public void setSourceConnectionMagnetIndex(BuilderContext context, T node, Edge<ConnectionContent<W>, Node> edge) {
-
+        edge.getContent().setSourceMagnetIndex(3);
     }
 
     public void setTargetConnectionMagnetIndex(BuilderContext context, T node, Edge<ConnectionContent<W>, Node> edge) {
-        
+        edge.getContent().setTargetMagnetIndex(7);
     }
     
 }

@@ -43,7 +43,7 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "ParallelGateway";
     public static final String COLOR = "#f0e68c";
-    public static final Double RADIUS = 50d;
+    public static final Double RADIUS = 20d;
     
     @PropertySet
     private BPMNGeneral general;

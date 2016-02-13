@@ -63,7 +63,7 @@ public class SequenceFlowShapeFactory extends BaseBPMNShapeFactory<SequenceFlow,
 
     @Override
     public SequenceFlowShape build(final SequenceFlow definition, final CanvasHandler canvasHandler) {
-        final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getSettings().getCanvas();
+        final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getCanvas();
 
         OrthogonalPolyLine line = createLine(0,0,100,100);
         SequenceFlowShape connector = new SequenceFlowShape(line, null, new SimpleArrow(20, 0.75), baseWirezCanvas.getWiresManager());

@@ -93,10 +93,10 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
         final double lineSize = radius / 2;
         final double lineAlpha = 0.8;
         Line hLine = new Line( 0 , 0, lineSize, 0).setY(lineSize / 2);
-        hLine.setStrokeWidth(5);
+        hLine.setStrokeWidth(2);
         hLine.setStrokeAlpha(lineAlpha);
         Line vLine = new Line(0, 0, 0, lineSize).setX(lineSize / 2);
-        vLine.setStrokeWidth(5);
+        vLine.setStrokeWidth(2);
         vLine.setStrokeAlpha(lineAlpha);
         gwTypeIcon.add(hLine);
         gwTypeIcon.add(vLine);

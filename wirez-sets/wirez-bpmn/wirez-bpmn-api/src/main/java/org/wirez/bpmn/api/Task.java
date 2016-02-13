@@ -42,8 +42,8 @@ public class Task extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "Task";
     public static final String COLOR = "#dfeff8";
-    public static final Double WIDTH = 100d;
-    public static final Double HEIGHT = 100d;
+    public static final Double WIDTH = 136d;
+    public static final Double HEIGHT = 48d;
     public static final Double BORDER_SIZE = 0.5d;
     
     @PropertySet

@@ -94,7 +94,7 @@ public class CanvasHighlightVisitor {
                 }
                 
             }).setDuration(500)
-                    .setCanvas(canvasHandler.getSettings().getCanvas())
+                    .setCanvas(canvasHandler.getCanvas())
                     .run();
             
         } else {
@@ -152,7 +152,7 @@ public class CanvasHighlightVisitor {
             }
 
             private void addShape(String uuid) {
-                final Shape shape = canvasHandler.getSettings().getCanvas().getShape(uuid);
+                final Shape shape = canvasHandler.getCanvas().getShape(uuid);
                 if ( null != shape ) {
                     shapes.add(shape);
                 }

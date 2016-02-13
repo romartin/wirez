@@ -40,6 +40,7 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
     private DefaultGraphVisitorCallback.BoundsVisitorCallback boundsVisitor = null;
     private DefaultGraphVisitorCallback.PropertyVisitorCallback propertyVisitor = null;
     private Set<String> processesEdges;
+    private Set<String> processesNodes;
 
     /*
         ******************************************
@@ -71,6 +72,7 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
         this.visitorCallback = callback;
         this.policy = policy;
         this.processesEdges = new HashSet<String>();
+        this.processesNodes = new HashSet<String>();
         visitGraph();
         visitUnconnectedEdges();
         visitorCallback.endVisit();
@@ -105,28 +107,34 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
 
     private void visitNode(final Node graphNode) {
 
-        final Object contet = graphNode.getContent();
-        
-        if (contet instanceof ViewContent) {
-            visitorCallback.visitNodeWithViewContent(graphNode);
-            visitBounds(graphNode);
-        } else {
-            visitorCallback.visitNode(graphNode);
-        }
-        visitProperties(graphNode);
-        
-        List<Edge> outEdges = graphNode.getOutEdges();
-        if (outEdges != null && !outEdges.isEmpty()) {
-            for (Edge edge : outEdges) {
-                visitEdge(edge);
+        final String uuid = graphNode.getUUID();
+        if ( !this.processesNodes.contains(uuid) ) {
+            this.processesNodes.add(uuid);
+            final Object contet = graphNode.getContent();
+            
+            if (contet instanceof ViewContent) {
+                visitorCallback.visitNodeWithViewContent(graphNode);
+                visitBounds(graphNode);
+            } else {
+                visitorCallback.visitNode(graphNode);
+            }
+            visitProperties(graphNode);
+            
+            List<Edge> outEdges = graphNode.getOutEdges();
+            if (outEdges != null && !outEdges.isEmpty()) {
+                for (Edge edge : outEdges) {
+                    visitEdge(edge);
+                }
             }
         }
         
     }
 
     private void visitEdge(final Edge edge) {
-        if (!this.processesEdges.contains(edge.getUUID())) {
-            processesEdges.add(edge.getUUID());
+
+        final String uuid = edge.getUUID();
+        if (!this.processesEdges.contains(uuid)) {
+            processesEdges.add(uuid);
             if (GraphVisitorPolicy.EDGE_FIRST.equals(policy)) {
                 doVisitEdge(edge);
             }

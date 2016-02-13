@@ -196,10 +196,9 @@ public class CanvasScreen {
                 .shapeSet(shapeSet)
                 .title(title)
                 .graph(graph)
-                .canvas(canvas)
                 .build();
 
-        canvasHandler.initialize(settings);
+        canvasHandler.initialize(canvas, settings);
 
         setStateActive();
 

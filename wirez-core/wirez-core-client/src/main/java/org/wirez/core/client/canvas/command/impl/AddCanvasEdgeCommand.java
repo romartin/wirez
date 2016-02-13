@@ -52,7 +52,7 @@ public class AddCanvasEdgeCommand extends BaseCanvasCommand {
         ( (BaseCanvasHandler) canvasHandler).register(factory, candidate);
         ( (BaseCanvasHandler) canvasHandler).applyElementMutation(candidate);
         final String uuid = candidate.getUUID();
-        BaseConnector connector = (BaseConnector) canvasHandler.getSettings().getCanvas().getShape(uuid);
+        BaseConnector connector = (BaseConnector) canvasHandler.getCanvas().getShape(uuid);
         connector.applyConnections(candidate, canvasHandler);
         return this;
     }

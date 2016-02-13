@@ -27,7 +27,7 @@ public interface CanvasHandler {
     /**
      * Initializes a graphical shape canvas.
      */
-    CanvasHandler initialize(CanvasSettings settings);
+    CanvasHandler initialize(Canvas canvas, CanvasSettings settings);
 
     /**
      * Listens to events from elements in the canvas.
@@ -38,6 +38,11 @@ public interface CanvasHandler {
      * Returns this canvas' settings. 
      */
     CanvasSettings getSettings();
+
+    /**
+     * The managed canvas instance.
+     */
+    Canvas getCanvas();
 
     /**
      * Returns the working copy of the graph. The original graph can be obtained from the canvas settings.

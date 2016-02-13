@@ -36,20 +36,6 @@ public class EndTerminateEventBuilder extends AbstractNodeBuilder<EndTerminateEv
     }
 
     @Override
-    public void setSourceConnectionMagnetIndex(BuilderContext context, Node<ViewContent<EndTerminateEvent>, Edge> node, Edge<ConnectionContent<EndTerminateEvent>, Node> edge) {
-        super.setSourceConnectionMagnetIndex(context, node, edge);
-        edge.getContent().setSourceMagnetIndex(3);
-
-    }
-
-    @Override
-    public void setTargetConnectionMagnetIndex(BuilderContext context, Node<ViewContent<EndTerminateEvent>, Edge> node, Edge<ConnectionContent<EndTerminateEvent>, Node> edge) {
-        super.setTargetConnectionMagnetIndex(context, node, edge);
-        edge.getContent().setTargetMagnetIndex(7);
-    }
-
-
-    @Override
     public String toString() {
         return "[NodeBuilder=EndTerminateEventBuilder]" + super.toString();
     }

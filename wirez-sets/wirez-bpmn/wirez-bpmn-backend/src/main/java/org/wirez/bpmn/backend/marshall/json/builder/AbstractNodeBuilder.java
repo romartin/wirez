@@ -55,7 +55,7 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
 
     protected void setSize(BuilderContext context, T node) {
         final Double[] size = ElementUtils.getSize(node.getContent());
-        // TODO: Not working for task - setSize(context, node, size[0], size[1]);
+        setSize(context, node, size[0], size[1]);
     }
 
     protected void setSize(BuilderContext context, T node, double width, double height) {

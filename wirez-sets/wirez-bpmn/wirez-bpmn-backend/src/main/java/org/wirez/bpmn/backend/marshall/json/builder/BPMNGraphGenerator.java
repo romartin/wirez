@@ -377,8 +377,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
         public void writeEndObject() {
             
             if (end) {
-                nodeBuilders.peek().boundLR(ulX, ulY);
-                nodeBuilders.peek().boundUL(lrX, lrY);
+                nodeBuilders.peek().boundUL(ulX, ulY);
+                nodeBuilders.peek().boundLR(lrX, lrY);
                 parsers.pop();
             }
             
@@ -399,18 +399,18 @@ public class BPMNGraphGenerator extends JsonGenerator {
             Double d = Double.valueOf(value);
 
             if ("x".equals(fieldName)) {
-                if ( isUL ) {
+                if ( isUL && ulX == null ) {
                     ulX = d;
                 }
-                if ( isLR ) {
+                if ( isLR && lrX == null ) {
                     lrX = d;
                 }
             }
             if ("y".equals(fieldName)) {
-                if ( isUL ) {
+                if ( isUL && ulY == null ) {
                     ulY = d;
                 }
-                if ( isLR ) {
+                if ( isLR && lrY == null ) {
                     lrY = d;
                 }
             }

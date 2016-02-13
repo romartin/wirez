@@ -18,8 +18,11 @@ package org.wirez.bpmn.client.glyph;
 
 import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.Group;
+import com.ait.lienzo.client.core.shape.Ring;
+import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.EndNoneEvent;
 import org.wirez.bpmn.api.EndTerminateEvent;
+import org.wirez.bpmn.client.EndTerminateEventShape;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.util.ShapeUtils;
 
@@ -35,7 +38,16 @@ public class EndTerminateEventGlyph implements ShapeGlyph {
                 .setY(RADIUS)
                 .setStrokeWidth(0.5)
                 .setFillGradient(ShapeUtils.getLinearGradient(EndTerminateEvent.COLOR, "#FFFFFF", RADIUS * 2, RADIUS * 2));
+        
+        final Double[] ringRadius = EndTerminateEventShape.getRingRadius(RADIUS);
+        final Ring ring = new Ring(ringRadius[0], ringRadius[1])
+                .setX(RADIUS)
+                .setY(RADIUS)
+                .setStrokeWidth(0)
+                .setFillColor(EndTerminateEvent.RING_COLOR);
+        
         group.add(circle);
+        group.add(ring);
     }
 
     @Override

@@ -18,6 +18,7 @@ package org.wirez.bpmn.client;
 
 import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.MultiPath;
+import com.ait.lienzo.client.core.shape.Ring;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
@@ -39,6 +40,7 @@ import java.util.Collection;
 public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> implements HasRadiusMutation {
 
     protected Circle circle;
+    protected Ring ring;
     protected Circle decorator;
     
     public EndTerminateEventShape(WiresManager manager) {
@@ -53,6 +55,9 @@ public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> im
         final double radius = EndTerminateEvent.RADIUS;
         circle = new Circle(radius).setX(radius).setY(radius);
         this.addChild(circle, WiresLayoutContainer.Layout.CENTER);
+        final Double[] rr = getRingRadius(radius);
+        ring = new Ring(rr[0], rr[1]).setX(radius).setY(radius).setFillColor(EndTerminateEvent.RING_COLOR);
+        this.addChild(ring, WiresLayoutContainer.Layout.CENTER);
         decorator = new Circle(radius).setX(radius).setY(radius).setFillAlpha(0).setStrokeAlpha(0);
         this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
     }
@@ -86,6 +91,9 @@ public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> im
     public void applyRadius(double radius, MutationContext mutationContext) {
         if (radius > 0) {
             circle.setRadius(radius);
+            final Double[] rr = getRingRadius(radius);
+            ring.setInnerRadius(rr[0]);
+            ring.setOuterRadius(rr[1]);
             decorator.setRadius(radius);
         }
     }
@@ -98,6 +106,14 @@ public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> im
             ElementUtils.updateBounds(radius, element.getContent());
         }
         return this;
+    }
+    
+    public static Double[] getRingRadius(final double radius) {
+        final double r = radius / 8;
+        final double inner = r * 6;
+        final double outer = inner + r;
+        
+        return new Double[] { inner, outer};
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultBound;
 import org.wirez.core.api.graph.impl.DefaultBounds;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.ElementUtils;
 
@@ -80,7 +81,10 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
                     setTargetConnectionMagnetIndex(context, node, edge);
                 }
                 
-                // TODO: context.getGraph().addEdge(edge); ?
+                final DefaultGraph<W, Node, Edge> graph = context.getGraph();
+                if ( graph.getEdge(edge.getUUID()) == null ) {
+                    graph.addEdge(edge);
+                }
             }
         }
     }

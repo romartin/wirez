@@ -38,10 +38,7 @@ import org.wirez.core.client.mutation.HasCanvasStateMutation;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
@@ -125,30 +122,37 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
     public BaseCanvas clear() {
 
-        // Clear shapes.
-        for (Shape shape : shapes) {
-            deleteShape(shape);
+        if ( !shapes.isEmpty() ) {
+            final List<Shape> shapesToRemove = new LinkedList<>(shapes);
+            // Clear shapes.
+            for (Shape shape : shapesToRemove) {
+                deleteShape(shape);
+            }
+
+            // Clear state.
+            shapes.clear();
+            
         }
 
-        // Clear state.
-        shapes.clear();
-        selectedShapes.clear();
-
+        if ( !selectedShapes.isEmpty() ) {
+            selectedShapes.clear();
+        }
+        
         return this;
     }
     
     /*
         ******************************************
-        *       Shapes register/deregister
+        *       Shapes register/de-register
         ******************************************
      */
     
     protected void registerShape(final BaseShape shape) {
         assert wiresManager != null;
-        GWT.log("BaseCanvas#registerShape - " + shape.toString());
         if (shape.getId() == null) {
             shape.setId(org.wirez.core.api.util.UUID.uuid());
         }
+        GWT.log("BaseCanvas#registerShape - " + shape.toString() + " [id=" + shape.getId() + "]");
         wiresManager.createMagnets(shape);
         wiresManager.registerShape(shape);
         shapes.add(shape);
@@ -156,24 +160,25 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
     protected void deregisterShape(final BaseShape shape) {
         assert wiresManager != null;
+        GWT.log("BaseCanvas#DE-registerShape - " + shape.toString() + " [id=" + shape.getId() + "]");
         wiresManager.deregisterShape(shape);
         shapes.remove(shape);
     }
 
     protected void registerConnector(final BaseConnector connector) {
         assert wiresManager != null;
-        GWT.log("BaseWirezCanvas#registerConnector - " + connector.toString());
         if (connector.getId() == null) {
             connector.setId(UUID.uuid());
         }
+        GWT.log("BaseCanvas#registerConnector - " + connector.toString() + " [id=" + connector.getId() + "]");
         wiresManager.registerConnector(connector);
         shapes.add(connector);
     }
 
     protected void deregisterConnector(final BaseConnector connector) {
         assert wiresManager != null;
-        final WiresConnector wiresConnector = (WiresConnector) connector;
-        wiresManager.deregisterConnector(wiresConnector);
+        GWT.log("BaseCanvas#DE-registerConnector - " + connector.toString() + " [id=" + connector.getId() + "]");
+        wiresManager.deregisterConnector(connector);
         shapes.remove(connector);
     }
 

@@ -53,6 +53,8 @@ public class BPMNDefinitionSet implements DefinitionSet {
     @Definition
     private EndTerminateEvent endTerminateEvent;
 
+    @Definition
+    private Lane lane;
 
     public BPMNDefinitionSet() {
     }
@@ -63,7 +65,8 @@ public class BPMNDefinitionSet implements DefinitionSet {
                              @MapsTo("task") Task task,
                              @MapsTo("sequenceFlow") SequenceFlow sequenceFlow,
                              @MapsTo("parallelGateway") ParallelGateway parallelGateway,
-                             @MapsTo("endTerminateEvent") EndTerminateEvent endTerminateEvent) {
+                             @MapsTo("endTerminateEvent") EndTerminateEvent endTerminateEvent,
+                             @MapsTo("lane") Lane lane) {
         this.diagram = diagram;
         this.startNoneEvent = startNoneEvent;
         this.endNoneEvent = endNoneEvent;
@@ -71,6 +74,7 @@ public class BPMNDefinitionSet implements DefinitionSet {
         this.sequenceFlow = sequenceFlow;
         this.parallelGateway = parallelGateway;
         this.endTerminateEvent = endTerminateEvent;
+        this.lane = lane;
     }
 
     @Override
@@ -142,5 +146,13 @@ public class BPMNDefinitionSet implements DefinitionSet {
 
     public void setEndTerminateEvent(EndTerminateEvent endTerminateEvent) {
         this.endTerminateEvent = endTerminateEvent;
+    }
+
+    public Lane getLane() {
+        return lane;
+    }
+
+    public void setLane(Lane lane) {
+        this.lane = lane;
     }
 }

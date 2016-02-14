@@ -33,6 +33,7 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
         add(EndTerminateEvent.ID);
         add(SequenceFlow.ID);
         add(ParallelGateway.ID);
+        add(Lane.ID);
     }};
     @Override
     public boolean accepts(final String id) {
@@ -63,7 +64,19 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
         if (ParallelGateway.ID.equals(id)) {
             return buildParallelGateway();
         }
+        if (Lane.ID.equals(id)) {
+            return buildLane();
+        }
         return null;
+    }
+
+    public Lane buildLane() {
+        return new Lane(bpmnPropertySetFactory.buildGeneralSet(),
+                bpmnPropertySetFactory.buildBackgroundSet(),
+                bpmnPropertySetFactory.buildFontSet(),
+                bpmnPropertyFactory.buildWidth(),
+                bpmnPropertyFactory.buildHeight())
+                .buildDefaults();
     }
 
     public Task buildTask() {

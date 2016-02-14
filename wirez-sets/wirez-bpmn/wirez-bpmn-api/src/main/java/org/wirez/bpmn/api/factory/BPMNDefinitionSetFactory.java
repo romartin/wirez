@@ -25,7 +25,8 @@ public class BPMNDefinitionSetFactory implements DefinitionSetFactory<BPMNDefini
                 bpmnDefinitionFactory.buildTask(),
                 bpmnDefinitionFactory.buildSequenceFlow(),
                 bpmnDefinitionFactory.buildParallelGateway(),
-                bpmnDefinitionFactory.buildEndTerminateEvent());
+                bpmnDefinitionFactory.buildEndTerminateEvent(),
+                bpmnDefinitionFactory.buildLane());
     }
     
 }

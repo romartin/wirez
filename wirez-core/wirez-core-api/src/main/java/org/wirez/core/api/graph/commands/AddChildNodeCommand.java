@@ -69,7 +69,7 @@ public class AddChildNodeCommand extends AbstractCommand {
             final Set<String> labels = new HashSet<>(1);
             
             // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
-            final Edge<ParentChildRelationship, Node> child = new EdgeImpl<>(uuid, null, labels, new ParentChildRelationship());
+            final Edge<ParentChildRelationship, Node> child = new EdgeImpl<>(uuid, new HashSet<>(), labels, new ParentChildRelationship());
             child.setSourceNode(parent);
             child.setTargetNode(candidate);
             target.addNode( candidate );

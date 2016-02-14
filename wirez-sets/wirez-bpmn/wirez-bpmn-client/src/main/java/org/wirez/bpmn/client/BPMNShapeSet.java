@@ -43,6 +43,7 @@ public class BPMNShapeSet implements ShapeSet {
     TaskShapeFactory taskShapeFactory;
     SequenceFlowShapeFactory sequenceFlowShapeFactory;
     ParallelGatewayShapeFactory parallelGatewayShapeFactory;
+    LaneShapeFactory laneShapeFactory;
     
     private List<ShapeFactory<? extends Definition, ? extends Shape>> factories;
 
@@ -55,13 +56,15 @@ public class BPMNShapeSet implements ShapeSet {
                          final EndTerminateEventShapeFactory endTerminateEventShapeFactory,
                          final TaskShapeFactory taskShapeFactory,
                          final SequenceFlowShapeFactory sequenceFlowShapeFactory,
-                         final ParallelGatewayShapeFactory parallelGatewayShapeFactory) {
+                         final ParallelGatewayShapeFactory parallelGatewayShapeFactory,
+                         final LaneShapeFactory laneShapeFactory) {
         this.startNoneEventShapeFactory = startNoneEventShapeFactory;
         this.endNoneEventShapeFactory = endNoneEventShapeFactory;
         this.endTerminateEventShapeFactory = endTerminateEventShapeFactory;
         this.taskShapeFactory = taskShapeFactory;
         this.sequenceFlowShapeFactory = sequenceFlowShapeFactory;
         this.parallelGatewayShapeFactory = parallelGatewayShapeFactory;
+        this.laneShapeFactory = laneShapeFactory;
     }
 
     @PostConstruct
@@ -73,6 +76,7 @@ public class BPMNShapeSet implements ShapeSet {
             add( taskShapeFactory );
             add( sequenceFlowShapeFactory );
             add( parallelGatewayShapeFactory );
+            add( laneShapeFactory );
         }};
     }
 

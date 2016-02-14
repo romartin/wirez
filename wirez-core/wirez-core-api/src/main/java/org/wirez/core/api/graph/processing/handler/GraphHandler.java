@@ -63,5 +63,10 @@ public interface GraphHandler<G extends Graph, N extends Node, E extends Edge> {
      * Returns the edges with the given labels.
      */
     Collection<E> findEdges(List<String> labels);
+
+    /**
+     * The managed graph.
+     */
+    G getGraph();
     
 }

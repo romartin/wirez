@@ -180,11 +180,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         if (obj == null) return false;
         if (getId() == null) return false;
 
-        try {
-            BaseShape d = (BaseShape) obj;
-            return getId().equals(d.getId());
-        } catch (ClassCastException e) {
-            return false;
-        }
+        org.wirez.core.client.Shape d = (org.wirez.core.client.Shape) obj;
+        return getId().equals(d.getId());
     }
 }

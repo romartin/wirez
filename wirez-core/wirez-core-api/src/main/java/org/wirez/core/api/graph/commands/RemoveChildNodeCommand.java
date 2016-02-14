@@ -16,9 +16,7 @@
 
 package org.wirez.core.api.graph.commands;
 
-import com.google.gwt.core.client.GWT;
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.graph.Edge;
@@ -34,23 +32,23 @@ import org.wirez.core.api.util.UUID;
 import java.util.*;
 
 /**
- * A Command to set a DefaultNode children of another container node.
+ * A Command to remove the parent of a DefaultNode
  */
-public class AddChildNodeCommand extends AbstractCommand {
+public class RemoveChildNodeCommand extends AbstractCommand {
 
     private DefaultGraph target;
-    private Node parent;
+    private Node oldParent;
     private Node candidate;
 
-    public AddChildNodeCommand(final GraphCommandFactory commandFactory, 
-                               final DefaultGraph target,
-                               final Node parent,
-                               final Node candidate ) {
+    public RemoveChildNodeCommand(final GraphCommandFactory commandFactory,
+                                  final DefaultGraph target,
+                                  final Node oldParent,
+                                  final Node candidate ) {
         super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );
-        this.parent = PortablePreconditions.checkNotNull( "parent",
-                parent );
+        this.oldParent = PortablePreconditions.checkNotNull( "oldParent",
+                oldParent );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
                                                              candidate );
     }
@@ -65,24 +63,32 @@ public class AddChildNodeCommand extends AbstractCommand {
     public CommandResult execute(final RuleManager ruleManager) {
         final CommandResult results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
-            final String uuid = UUID.uuid();
-            final Map<String, Object> properties = new HashMap<>();
-            final Set<String> labels = new HashSet<>(1);
             
-            // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
-            final Edge<ParentChildRelationship, Node> child = new EdgeImpl<>(uuid, new HashSet<>(), labels, new ParentChildRelationship());
-            child.setSourceNode(parent);
-            child.setTargetNode(candidate);
-            target.addNode( candidate );
-            parent.getOutEdges().add( child );
-            candidate.getInEdges().add( child );
+            final List<Edge> oldParentOutEdges = oldParent.getOutEdges();
+            DeleteEdgeCommand deleteEdgeCommand = null;
+            if ( null != oldParentOutEdges && !oldParentOutEdges.isEmpty() ) {
+                for (final Edge oldParentEdge : oldParentOutEdges) {
+                    if ( oldParentEdge.getContent() instanceof ParentChildRelationship ) {
+                        final Node oldParentChild = oldParentEdge.getTargetNode();
+                        if ( null != oldParentChild && oldParentChild.equals(candidate) ) {
+                            deleteEdgeCommand = new DeleteEdgeCommand(commandFactory, target, oldParentEdge);
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            if ( null != deleteEdgeCommand ) {
+                deleteEdgeCommand.execute(ruleManager);
+            }
+            
         }
         return results;
     }
     
     private CommandResult check(final RuleManager ruleManager) {
         final DefaultRuleManager defaultRuleManager = (DefaultRuleManager) ruleManager;
-        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkContainment( parent, candidate).violations();
+        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkContainment( target, candidate).violations();
         final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(containmentRuleViolations);
@@ -99,6 +105,6 @@ public class AddChildNodeCommand extends AbstractCommand {
 
     @Override
     public String toString() {
-        return "AddChildNodeCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
+        return "RemoveChildNodeCommand [graph=" + target.getUUID() + ", candidate=" + candidate.getUUID() + "]";
     }
 }

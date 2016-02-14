@@ -37,7 +37,9 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
+import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
 import org.wirez.core.client.service.ClientDiagramServices;
@@ -189,9 +191,11 @@ public class CanvasScreen {
         final String title = diagram.getSettings().getTitle();
         final Graph graph = diagram.getGraph();
         
-        CanvasScreen.this.title = title;
-        changeTitleNotificationEvent.fire(new ChangeTitleWidgetEvent(placeRequest, this.title));
-
+        final ViewContent viewContent = (ViewContent) graph.getContent();
+        final Double[] graphSize = ElementUtils.getSize(viewContent);
+        
+        
+        // Show the graph a canvas instance.
         CanvasSettings settings = new DefaultCanvasSettingsBuilder()
                 .uuid(uuid)
                 .definitionSet(definitionSet)
@@ -200,8 +204,15 @@ public class CanvasScreen {
                 .graph(graph)
                 .build();
 
+        canvas.show( graphSize[0].intValue() , graphSize[1].intValue() );
+        
         canvasHandler.initialize(canvas, settings);
 
+        // Change screen title.
+        CanvasScreen.this.title = title;
+        changeTitleNotificationEvent.fire(new ChangeTitleWidgetEvent(placeRequest, this.title));
+
+        // Active the screen.
         setStateActive();
 
     }

@@ -35,6 +35,13 @@ public class SharedGraphCommandFactory implements GraphCommandFactory {
     }
 
     @Override
+    public RemoveChildNodeCommand removeChildNodeCommand(final DefaultGraph target, 
+                                                         final Node oldParent, 
+                                                         final Node candidate) {
+        return new RemoveChildNodeCommand(this, target, oldParent, candidate);
+    }
+
+    @Override
     public AddEdgeCommand addEdgeCommand(DefaultGraph target, Edge edge) {
         return new AddEdgeCommand(this, target, edge);
     }

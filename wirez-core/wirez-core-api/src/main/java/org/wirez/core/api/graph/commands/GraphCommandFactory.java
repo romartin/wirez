@@ -12,6 +12,10 @@ public interface GraphCommandFactory {
     AddChildNodeCommand addChildNodeCommand(DefaultGraph target,
                                             Node parent,
                                             Node candidate);
+
+    RemoveChildNodeCommand removeChildNodeCommand(DefaultGraph target,
+                                           Node oldParent,
+                                           Node candidate);
     
     AddEdgeCommand addEdgeCommand(DefaultGraph target, 
                                   Edge edge);

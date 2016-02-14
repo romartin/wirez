@@ -98,6 +98,11 @@ public class DefaultGraphHandler<C, G extends DefaultGraph<C, N, E>, N extends N
         return (Collection<E>) findElements((Iterable<Edge>) graph.edges(), labels);
     }
 
+    @Override
+    public G getGraph() {
+        return graph;
+    }
+
     protected static <T extends Edge> Collection<T> findRelationEdges(final Iterable<T> elements, final String relationName) {
         final Collection<T> result = new LinkedList<>();
         Iterator<T> elementsIt = elements.iterator();

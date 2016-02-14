@@ -30,9 +30,6 @@ import javax.annotation.PostConstruct;
  */
 public class CanvasView extends Composite implements Canvas.View {
 
-    public static final int DEFAULT_SIZE_WIDTH = 1000;
-    public static final int DEFAULT_SIZE_HEIGHT = 1000;
-
     private FlowPanel mainPanel = new FlowPanel();
     private FlowPanel toolsPanel = new FlowPanel();
     private FocusableLienzoPanel panel;
@@ -47,32 +44,37 @@ public class CanvasView extends Composite implements Canvas.View {
     
     @PostConstruct
     public void init() {
-        panel = new FocusableLienzoPanel( DEFAULT_SIZE_WIDTH,
-                                          DEFAULT_SIZE_HEIGHT );
+        initWidget( mainPanel );
+    }
 
+    @Override
+    public Canvas.View show(final int width, final int height, final int padding) {
+
+        panel = new FocusableLienzoPanel( width + padding, height + padding );
         mainPanel.add(toolsPanel);
         mainPanel.add(panel);
-        initWidget( mainPanel );
 
         //Grid...
         Line line1 = new Line( 0,
-                               0,
-                               0,
-                               0 ).setStrokeColor( ColorName.BLUE ).setAlpha( 0.2 ); // primary lines
+                0,
+                0,
+                0 ).setStrokeColor( ColorName.BLUE ).setAlpha( 0.2 ); // primary lines
         Line line2 = new Line( 0,
-                               0,
-                               0,
-                               0 ).setStrokeColor( ColorName.GREEN ).setAlpha( 0.2 ); // secondary dashed-lines
+                0,
+                0,
+                0 ).setStrokeColor( ColorName.GREEN ).setAlpha( 0.2 ); // secondary dashed-lines
         line2.setDashArray( 2,
-                            2 );
-    
+                2 );
+
         GridLayer gridLayer = new GridLayer( 100,
-                                             line1,
-                                             25,
-                                             line2 );
+                line1,
+                25,
+                line2 );
         panel.setBackgroundLayer( gridLayer );
 
         panel.getScene().add( canvasLayer );
+        
+        return this;
     }
 
     @Override

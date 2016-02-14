@@ -18,9 +18,11 @@ package org.wirez.core.client.canvas.impl;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
+import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -96,11 +98,23 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
     @Override
     public Canvas addShape(final Shape shape) {
-        if (shape instanceof BaseShape) {
-            registerShape((BaseShape) shape);
-        } else {
-            registerConnector((BaseConnector) shape);
+
+        if (shape.getId() == null) {
+            shape.setId(org.wirez.core.api.util.UUID.uuid());
         }
+
+        log(Level.FINE, "BaseCanvas#register - " + shape.toString() + " [id=" + shape.getId() + "]");
+
+        if (shape instanceof WiresShape) {
+            registerWiresShape((WiresShape) shape);
+        } else if (shape instanceof WiresConnector) {
+            registerWiresConnector((WiresConnector) shape);
+        } else {
+            registerContainer(shape);
+        }
+
+        shapes.add(shape);
+
         return this;
     }
 
@@ -111,11 +125,19 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
     @Override
     public Canvas deleteShape(final Shape shape) {
-        if (shape instanceof BaseShape) {
-            deregisterShape((BaseShape) shape);
+        
+        log(Level.FINE, "BaseCanvas#deregister - " + shape.toString() + " [id=" + shape.getId() + "]");
+        
+        if (shape instanceof WiresShape) {
+            deregisterWiresShape((WiresShape) shape);
+        } else if (shape instanceof WiresConnector) {
+            deregisterWiresConnector((WiresConnector) shape);
         } else {
-            deregisterConnector((BaseConnector) shape);
+            deregisterContainer(shape);
         }
+
+        shapes.remove(shape);
+        
         return this;
     }
     
@@ -152,41 +174,34 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         ******************************************
      */
     
-    protected void registerShape(final BaseShape shape) {
+    protected void registerWiresShape(final WiresShape shape) {
         assert wiresManager != null;
-        if (shape.getId() == null) {
-            shape.setId(org.wirez.core.api.util.UUID.uuid());
-        }
-        log(Level.FINE, "BaseCanvas#registerShape - " + shape.toString() + " [id=" + shape.getId() + "]");
         wiresManager.createMagnets(shape);
         wiresManager.registerShape(shape);
-        shapes.add(shape);
     }
 
-    protected void deregisterShape(final BaseShape shape) {
+    protected void deregisterWiresShape(final WiresShape shape) {
         assert wiresManager != null;
-        log(Level.FINE, "BaseCanvas#DE-registerShape - " + shape.toString() + " [id=" + shape.getId() + "]");
         wiresManager.deregisterShape(shape);
-        shapes.remove(shape);
     }
 
-    protected void registerConnector(final BaseConnector connector) {
+    protected void registerWiresConnector(final WiresConnector connector) {
         assert wiresManager != null;
-        if (connector.getId() == null) {
-            connector.setId(UUID.uuid());
-        }
-        log(Level.FINE, "BaseCanvas#registerConnector - " + connector.toString() + " [id=" + connector.getId() + "]");
         wiresManager.registerConnector(connector);
-        shapes.add(connector);
     }
 
-    protected void deregisterConnector(final BaseConnector connector) {
+    protected void deregisterWiresConnector(final WiresConnector connector) {
         assert wiresManager != null;
-        log(Level.FINE, "BaseCanvas#DE-registerConnector - " + connector.toString() + " [id=" + connector.getId() + "]");
         wiresManager.deregisterConnector(connector);
-        shapes.remove(connector);
     }
 
+    private void deregisterContainer(final Shape shape) {
+        getLayer().getLayer().remove( (IPrimitive<?>) shape.getShapeContainer() );
+    }
+
+    private void registerContainer(final Shape shape) {
+        getLayer().getLayer().add( (IPrimitive<?>) shape.getShapeContainer() );
+    }
     
     /*
         ******************************************

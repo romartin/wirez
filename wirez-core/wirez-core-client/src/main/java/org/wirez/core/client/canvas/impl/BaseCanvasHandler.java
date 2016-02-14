@@ -18,6 +18,8 @@ package org.wirez.core.client.canvas.impl;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
+import com.ait.lienzo.client.core.shape.wires.WiresContainer;
+import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -44,7 +46,6 @@ import org.wirez.core.client.control.*;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
-import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.*;
 import org.wirez.core.client.notification.CanvasCommandAllowedNotification;
 import org.wirez.core.client.notification.CanvasCommandExecutionNotification;
@@ -69,6 +70,7 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     protected DefaultRuleManager ruleManager;
     protected CanvasSettings settings;
     protected Canvas canvas;
+    protected Shape graphShape;
     protected DefaultGraph<?, ? extends Node, ? extends Edge> graph;
     protected Collection<CanvasListener> listeners = new LinkedList<CanvasListener>();
 
@@ -174,9 +176,19 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
             }
 
         }
-
+        
         // Add the shapes on canvas and fire events.
         canvas.addShape(shape);
+        
+        // Graph shape is considered a wires container, for now.
+        if ( null != this.graphShape && shape instanceof WiresShape ) {
+            ( (WiresContainer) graphShape).add( (WiresShape) shape );
+        }
+
+        if ( null == graphShape && shape.getId().equals(graph.getUUID()) ) {
+            this.graphShape = shape;
+        }
+        
         canvas.draw();
         afterElementAdded(candidate);
     }
@@ -206,10 +218,13 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     public void addChild(final Element parent, final Element child) {
         assert parent != null && child != null;
 
-        final BaseShape parentShape = (BaseShape) canvas.getShape(parent.getUUID());
-        final BaseShape childShape = (BaseShape) canvas.getShape(child.getUUID());
+        final WiresShape parentShape = (WiresShape) canvas.getShape(parent.getUUID());
+        final WiresShape childShape = (WiresShape) canvas.getShape(child.getUUID());
+        addWiresChild(parentShape, childShape);
+    }
+    
+    private void addWiresChild(final WiresShape parentShape, final WiresShape childShape) {
         parentShape.add(childShape);
-        
     }
 
     public void updateElementPosition(final Element element) {

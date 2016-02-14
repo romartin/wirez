@@ -26,8 +26,6 @@ public interface GraphVisitor<G extends Graph, N extends Node, E extends Edge, C
         EDGE_FIRST, EDGE_LAST;
     }
 
-    
-
     void visit(G graph, C callback, GraphVisitorPolicy policy);
     
 }

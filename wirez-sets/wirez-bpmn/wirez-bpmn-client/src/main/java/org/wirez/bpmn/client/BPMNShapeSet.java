@@ -37,6 +37,7 @@ public class BPMNShapeSet implements ShapeSet {
 
     public static final String ID = "BPMNShapeSet";
 
+    BPMNDiagramShapeFactory bpmnDiagramShapeFactory;
     StartNoneEventShapeFactory startNoneEventShapeFactory;
     EndNoneEventShapeFactory endNoneEventShapeFactory;
     EndTerminateEventShapeFactory endTerminateEventShapeFactory;
@@ -51,13 +52,15 @@ public class BPMNShapeSet implements ShapeSet {
     }
 
     @Inject
-    public BPMNShapeSet( final StartNoneEventShapeFactory startNoneEventShapeFactory,
+    public BPMNShapeSet( final BPMNDiagramShapeFactory bpmnDiagramShapeFactory,
+                         final StartNoneEventShapeFactory startNoneEventShapeFactory,
                          final EndNoneEventShapeFactory endNoneEventShapeFactory,
                          final EndTerminateEventShapeFactory endTerminateEventShapeFactory,
                          final TaskShapeFactory taskShapeFactory,
                          final SequenceFlowShapeFactory sequenceFlowShapeFactory,
                          final ParallelGatewayShapeFactory parallelGatewayShapeFactory,
                          final LaneShapeFactory laneShapeFactory) {
+        this.bpmnDiagramShapeFactory = bpmnDiagramShapeFactory;
         this.startNoneEventShapeFactory = startNoneEventShapeFactory;
         this.endNoneEventShapeFactory = endNoneEventShapeFactory;
         this.endTerminateEventShapeFactory = endTerminateEventShapeFactory;
@@ -70,6 +73,7 @@ public class BPMNShapeSet implements ShapeSet {
     @PostConstruct
     public void init() {
         factories = new LinkedList<ShapeFactory<? extends Definition, ? extends Shape>>() {{
+            add( bpmnDiagramShapeFactory );
             add( startNoneEventShapeFactory );
             add( endNoneEventShapeFactory );
             add( endTerminateEventShapeFactory );

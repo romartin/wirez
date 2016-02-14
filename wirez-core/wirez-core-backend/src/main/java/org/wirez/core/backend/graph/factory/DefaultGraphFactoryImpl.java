@@ -2,12 +2,15 @@ package org.wirez.core.backend.graph.factory;
 
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.content.ViewContentImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
+import org.wirez.core.api.graph.impl.DefaultBound;
+import org.wirez.core.api.graph.impl.DefaultBounds;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.DefaultGraphImpl;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
@@ -34,4 +37,9 @@ public class DefaultGraphFactoryImpl<W extends Definition> extends BaseElementFa
         
         return graph;
     }
+
+    protected Bounds buildBounds() {
+        return new DefaultBounds(new DefaultBound(1000d, 1000d), new DefaultBound(0d, 0d));
+    }
+
 }

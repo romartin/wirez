@@ -31,9 +31,16 @@ import javax.inject.Inject;
 @Dependent
 public class Canvas extends BaseCanvas implements IsWidget {
 
+    private static final int PADDING = 15;
+    
     public interface View extends UberView<Canvas> {
+        
+        View show(int width, int height, int padding);
+        
         View add(IsWidget widget);
+        
         View clear();
+        
     }
 
     View view;
@@ -55,6 +62,11 @@ public class Canvas extends BaseCanvas implements IsWidget {
         return view.asWidget();
     }
 
+    public Canvas show(final int width, final int height) {
+        view.show(width, height, PADDING);
+        return this;
+    }
+    
     @Override
     public Canvas addControl(final IsWidget control) {
         view.add(control);

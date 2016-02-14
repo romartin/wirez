@@ -163,6 +163,11 @@ public class Palette implements IsWidget {
                 final String category = definition.getCategory();
                 final String description = factory.getDescription();
                 final ShapeGlyph glyph = factory.getGlyph();
+                
+                // Shapes not considered to be on the palette.
+                if ( null == glyph ) {
+                    continue;
+                }
 
                 List<PaletteGroupItem> items = paletteGroupItems.get(category);
                 if ( null == items ) {
@@ -170,8 +175,6 @@ public class Palette implements IsWidget {
                     paletteGroupItems.put(category, items);
                 }
                 
-                
-
                 PaletteGroupItem paletteGroupItem = PaletteGroup.buildItem(glyph, description,
                         new PaletteGroupItem.Handler() {
 

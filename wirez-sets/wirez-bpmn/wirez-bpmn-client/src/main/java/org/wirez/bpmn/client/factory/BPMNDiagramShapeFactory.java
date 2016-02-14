@@ -1,0 +1,69 @@
+/*
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.wirez.bpmn.client.factory;
+
+import com.ait.lienzo.client.core.shape.MultiPath;
+import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.bpmn.api.Task;
+import org.wirez.bpmn.client.BPMNDiagramShape;
+import org.wirez.bpmn.client.TaskShape;
+import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
+import org.wirez.bpmn.client.glyph.TaskGlyph;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
+import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
+import org.wirez.core.client.factory.control.ShapeControlFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+@ApplicationScoped
+public class BPMNDiagramShapeFactory implements ShapeFactory<BPMNDiagram, BPMNDiagramShape> {
+
+    @Inject
+    public BPMNDiagramShapeFactory() {
+    }
+    
+    @Override
+    public boolean accepts(final Definition definition) {
+        return definition instanceof BPMNDiagram;
+    }
+
+    @Override
+    public ShapeGlyph getGlyph() {
+        return null;
+    }
+
+    @Override
+    public String getDescription() {
+        return "A task";
+    }
+
+    @Override
+    public BPMNDiagramShape build(final BPMNDiagram definition, final CanvasHandler canvasHandler) {
+
+        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getCanvas();
+        
+        return new BPMNDiagramShape(new MultiPath(), baseCanvas.getWiresManager());
+
+    }
+
+}

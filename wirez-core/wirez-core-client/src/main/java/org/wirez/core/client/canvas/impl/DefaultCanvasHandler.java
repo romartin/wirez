@@ -36,6 +36,7 @@ import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -46,7 +47,6 @@ import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.impl.BaseConnector;
-import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.WirezLogger;
@@ -158,6 +158,19 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
     private final AbstractGraphVisitorCallback DRAW_VISITOR_CALLBACK = new AbstractGraphVisitorCallback() {
 
         @Override
+        public void visitGraphWithViewContent(DefaultGraph<? extends ViewContent, ? extends Node, ? extends Edge> graph) {
+            super.visitGraphWithViewContent(graph);
+
+            final ShapeFactory factory = shapeManager.getFactory(graph.getContent().getDefinition());
+
+            // Add the node shape into the canvas.
+            defaultCanvasCommands.ADD_GRAPH(graph, factory)
+                    .setCanvas(DefaultCanvasHandler.this)
+                    .apply();
+                            
+        }
+
+        @Override
         public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
             final ShapeFactory factory = shapeManager.getFactory(node.getContent().getDefinition());
 
@@ -219,7 +232,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         @Override
         public boolean acceptHead(WiresConnection head, WiresMagnet magnet) {
             final BaseConnector connector = (BaseConnector) head.getConnector();
-            final BaseShape sourceShape = (BaseShape) magnet.getMagnets().getWiresShape();
+            final Shape sourceShape = (Shape) magnet.getMagnets().getWiresShape();
             final Node sourceNode = (Node) defaultGraphHandler.getNode(sourceShape.getId());
             final Edge edge = (Edge) defaultGraphHandler.getEdge(connector.getId());
             final String sourceUUID = sourceNode != null ? sourceNode.getUUID() : null;
@@ -245,7 +258,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         public boolean acceptTail(WiresConnection tail, WiresMagnet magnet) {
             WiresConnection head = tail.getConnector().getHeadConnection();
             final BaseConnector connector = (BaseConnector) head.getConnector();
-            final BaseShape targetShape = (BaseShape) magnet.getMagnets().getWiresShape();
+            final Shape targetShape = (Shape) magnet.getMagnets().getWiresShape();
             final Node targetNode = (Node) defaultGraphHandler.getNode(targetShape.getId());
             final Edge edge = (Edge) defaultGraphHandler.getEdge(connector.getId());
             final String targetUUID = targetNode != null ? targetNode.getUUID() : null;
@@ -272,8 +285,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             WiresMagnet m = tail.getMagnet();
 
             final BaseConnector connector = (BaseConnector) tail.getConnector();
-            final BaseShape outNode = (BaseShape) shape;
-            final BaseShape inNode = tail.getMagnet() != null ? (BaseShape) tail.getMagnet().getMagnets().getWiresShape() : null;
+            final Shape outNode = (Shape) shape;
+            final Shape inNode = tail.getMagnet() != null ? (Shape) tail.getMagnet().getMagnets().getWiresShape() : null;
 
             final BaseCanvasCommand canvasCommand = new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
@@ -284,7 +297,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
                 @Override
                 public CanvasCommand apply() {
-                    // Do nothing, lienzo wires do it for us.
+                    // Do nothing, lienzo wires does it for us.
                     return this;
                 }
 
@@ -310,8 +323,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             WiresConnection head = tail.getConnector().getHeadConnection();
 
             final BaseConnector connector = (BaseConnector) tail.getConnector();
-            final BaseShape inNode = (BaseShape) shape;
-            final BaseShape outNode = head.getMagnet() != null ? (BaseShape) head.getMagnet().getMagnets().getWiresShape() : null;
+            final Shape inNode = (Shape) shape;
+            final Shape outNode = head.getMagnet() != null ? (Shape) head.getMagnet().getMagnets().getWiresShape() : null;
 
             final BaseCanvasCommand canvasCommand = new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                 @Override
@@ -321,7 +334,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
                 @Override
                 public CanvasCommand apply() {
-                    // Do nothing, lienzo wires do it for us.
+                    // Do nothing, lienzo wires does it for us.
                     return this;
                 }
 
@@ -361,23 +374,32 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         @Override
         public boolean containmentAllowed(final WiresContainer wiresContainer, final WiresShape wiresShape) {
 
-            final BaseShape parent = (BaseShape) wiresContainer;
-            final BaseShape child = (BaseShape) wiresShape;
-            final Node parentNode = defaultGraphHandler.getNode(parent.getId());
+            final Shape parent = (Shape) wiresContainer;
+            final Shape child = (Shape) wiresShape;
+            final boolean isGraph = isGraph(parent);
+            
             final Node childNode = defaultGraphHandler.getNode(child.getId());
             final Node currentParentNode = defaultGraphHandler.getParent(child.getId());
+
+            if ( isGraph && currentParentNode == null) {
+                return true;
+            }
+
+            final Node parentNode = defaultGraphHandler.getNode(parent.getId());
 
             if ( null == currentParentNode || !currentParentNode.getUUID().equals(parent.getId()) ) {
 
                 final boolean isAllowed = allow(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                     @Override
                     protected Command getCommand() {
-                        return commandFactory.addChildNodeCommand(graph, parentNode, childNode);
+                        return isGraph ? 
+                                commandFactory.removeChildNodeCommand(graph, parentNode, childNode) : 
+                                commandFactory.addChildNodeCommand(graph, parentNode, childNode);
                     }
 
                     @Override
                     public CanvasCommand apply() {
-                        // Do nothing, lienzo wires do it for us.
+                        // Do nothing, lienzo wires does it for us.
                         return this;
                     }
 
@@ -393,6 +415,10 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                 
                 return isAllowed;
                 
+            } else {
+
+                log(Level.FINE, "No containment allowed - Parent is same as previous one.");
+
             }
             
             return false;
@@ -401,14 +427,19 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         @Override
         public boolean acceptContainment(final WiresContainer wiresContainer, final WiresShape wiresShape) {
 
-            final BaseShape parent = (BaseShape) wiresContainer;
-            final BaseShape child = (BaseShape) wiresShape;
-
+            final Shape parent = (Shape) wiresContainer;
+            final Shape child = (Shape) wiresShape;
+            final boolean isGraph = isGraph(parent);
+            
             final String parentUUID = parent != null ? parent.getId() : null;
             final String childUUID = child != null ? child.getId() : null;
 
             final Node currentParentNode = defaultGraphHandler.getParent(childUUID);
 
+            if ( isGraph && currentParentNode == null) {
+                return true;
+            }
+            
             if ( null == currentParentNode || !currentParentNode.getUUID().equals(parentUUID) ) {
 
                 final String message = "Executed AddChildNodeCommand [parent=" + parentUUID + ", child=" + childUUID + "]";
@@ -420,12 +451,14 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                 CommandResults results = execute(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
                     @Override
                     protected Command getCommand() {
-                        return commandFactory.addChildNodeCommand(graph, parentNode, childNode);
+                        return isGraph ?
+                                commandFactory.removeChildNodeCommand(graph, parentNode, childNode) :
+                                commandFactory.addChildNodeCommand(graph, parentNode, childNode);
                     }
 
                     @Override
                     public CanvasCommand apply() {
-                        // Do nothing, lienzo wires do it for us.
+                        // Do nothing, lienzo wires does it for us.
                         return this;
                     }
 
@@ -441,12 +474,21 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
                 return isAccept;
                 
+            }else {
+
+                log(Level.FINE, "No containment allowed - Parent is same as previous one.");
+
             }
             
             return false;
         }
         
     };
+    
+    private boolean isGraph(final Shape container) {
+        final String id = container.getId();
+        return id.equals(defaultGraphHandler.getGraph().getUUID());
+    }
     
     private boolean isAccept(final CommandResults results) {
         WirezLogger.logCommandResults(results.results());

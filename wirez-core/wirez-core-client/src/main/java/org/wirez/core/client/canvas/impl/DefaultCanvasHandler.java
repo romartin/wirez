@@ -362,31 +362,37 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final BaseShape child = (BaseShape) wiresShape;
             final Node parentNode = defaultGraphHandler.getNode(parent.getId());
             final Node childNode = defaultGraphHandler.getNode(child.getId());
+            final Node currentParentNode = defaultGraphHandler.getParent(child.getId());
 
-            final boolean isAllowed = allow(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
-                @Override
-                protected Command getCommand() {
-                    return commandFactory.addChildNodeCommand(graph, parentNode, childNode);
-                }
+            if ( null == currentParentNode || !currentParentNode.getUUID().equals(parent.getId()) ) {
 
-                @Override
-                public CanvasCommand apply() {
-                    // Do nothing, lienzo wires do it for us.
-                    return this;
-                }
+                final boolean isAllowed = allow(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
+                    @Override
+                    protected Command getCommand() {
+                        return commandFactory.addChildNodeCommand(graph, parentNode, childNode);
+                    }
 
-                @Override
-                public String toString() {
-                    return getCommand().toString();
-                }
+                    @Override
+                    public CanvasCommand apply() {
+                        // Do nothing, lienzo wires do it for us.
+                        return this;
+                    }
 
-            });
-            final String parentUUID = parent != null ? parent.getId() : null;
-            final String childUUID = child != null ? child.getId() : null;
-            Logger.log("containmentAllowed  [parent=" + parentUUID + "] [child=" + childUUID + "] [isAllowed=" + isAllowed + "]");
-            Logger.log("containmentAllowed#Result=" + isAllowed);
-            return isAllowed;
+                    @Override
+                    public String toString() {
+                        return getCommand().toString();
+                    }
+
+                });
+                final String parentUUID = parent != null ? parent.getId() : null;
+                final String childUUID = child != null ? child.getId() : null;
+                Logger.log("containmentAllowed  [parent=" + parentUUID + "] [child=" + childUUID + "] [isAllowed=" + isAllowed + "]");
+                Logger.log("containmentAllowed#Result=" + isAllowed);
+                return isAllowed;
+                
+            }
             
+            return false;
         }
 
         @Override
@@ -398,36 +404,44 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String parentUUID = parent != null ? parent.getId() : null;
             final String childUUID = child != null ? child.getId() : null;
 
-            final String message = "Executed AddChildNodeCommand [parent=" + parentUUID + ", child=" + childUUID + "]";
-            Logger.log(message);
+            final Node currentParentNode = defaultGraphHandler.getParent(childUUID);
+
+            if ( null == currentParentNode || !currentParentNode.getUUID().equals(parentUUID) ) {
+
+                final String message = "Executed AddChildNodeCommand [parent=" + parentUUID + ", child=" + childUUID + "]";
+                Logger.log(message);
+
+                final Node parentNode = defaultGraphHandler.getNode(parentUUID);
+                final Node childNode = defaultGraphHandler.getNode(childUUID);
+
+                CommandResults results = execute(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
+                    @Override
+                    protected Command getCommand() {
+                        return commandFactory.addChildNodeCommand(graph, parentNode, childNode);
+                    }
+
+                    @Override
+                    public CanvasCommand apply() {
+                        // Do nothing, lienzo wires do it for us.
+                        return this;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return getCommand().toString();
+                    }
+
+                });
+
+                final boolean isAccept = isAccept(results);
+                Logger.log("acceptContainment#Result=" + isAccept);
+                return isAccept;
+                
+            }
             
-            final Node parentNode = defaultGraphHandler.getNode(parentUUID);
-            final Node childNode = defaultGraphHandler.getNode(childUUID);
-
-            CommandResults results = execute(new BaseCanvasCommand(DefaultCanvasHandler.this.defaultCanvasCommands.getCommandFactory()) {
-                @Override
-                protected Command getCommand() {
-                    return commandFactory.addChildNodeCommand(graph, parentNode, childNode);
-                }
-
-                @Override
-                public CanvasCommand apply() {
-                    // Do nothing, lienzo wires do it for us.
-                    return this;
-                }
-
-                @Override
-                public String toString() {
-                    return getCommand().toString();
-                }
-
-            });
-
-            final boolean isAccept = isAccept(results);
-            Logger.log("acceptContainment#Result=" + isAccept);
-            return isAccept;
-
+            return false;
         }
+        
     };
     
     private boolean isAccept(final CommandResults results) {

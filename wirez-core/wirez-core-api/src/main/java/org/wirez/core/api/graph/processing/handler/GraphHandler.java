@@ -50,6 +50,11 @@ public interface GraphHandler<G extends Graph, N extends Node, E extends Edge> {
     E getEdge(String uuid);
 
     /**
+     * Returns the parent node for the child with the given uuid.
+     */
+    N getParent(String uuid);
+
+    /**
      * Returns the nodes with the given labels.
      */
     Collection<N> findNodes(List<String> labels);

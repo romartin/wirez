@@ -16,6 +16,7 @@
 
 package org.wirez.core.api.graph.commands;
 
+import com.google.gwt.core.client.GWT;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
@@ -75,6 +76,7 @@ public class AddChildNodeCommand extends AbstractCommand {
             target.addNode( candidate );
             parent.getOutEdges().add( child );
             candidate.getInEdges().add( child );
+            GWT.log("AddChildNodeCommand - Added [" + candidate.getUUID() + "] into [" + parent.getUUID() + "]");
         }
         return results;
     }

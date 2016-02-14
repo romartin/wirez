@@ -20,6 +20,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.impl.*;
 
 import javax.enterprise.context.Dependent;
@@ -59,6 +60,32 @@ public class DefaultGraphHandler<C, G extends DefaultGraph<C, N, E>, N extends N
     public E getEdge(final String uuid) {
         assert graph != null && uuid != null;
         return graph.getEdge(uuid);
+    }
+
+    @Override
+    public N getParent(final String uuid) {
+        assert graph != null && uuid != null;
+        
+        final Iterable<N> nodesIter = graph.nodes();
+        final Iterator<N> nodesIt = nodesIter.iterator();
+        while ( nodesIt.hasNext() ) {
+            final N node = nodesIt.next();
+            final List<Edge> edges = node.getOutEdges();
+            if ( null != edges && !edges.isEmpty() ) {
+                for (final Edge edge : edges) {
+                    final Object content = edge.getContent();
+                    if ( content instanceof ParentChildRelationship ) {
+                        final Node child = edge.getTargetNode();
+                        if ( null != child && child.getUUID().equals(uuid) ) {
+                            return node;
+                        }
+                        
+                    }
+                }
+            }
+        }
+        
+        return null;
     }
 
     @Override

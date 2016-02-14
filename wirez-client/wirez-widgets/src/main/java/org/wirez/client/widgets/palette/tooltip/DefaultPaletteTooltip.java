@@ -56,7 +56,6 @@ public class DefaultPaletteTooltip implements PaletteTooltip {
 
     @Override
     public void show(final ShapeGlyph glyph, final String text, final double x, final double y) {
-        GWT.log("DefaultPaletteTooltip#show [x=" + x + ", y=" + y + "]");
         view.show(glyph.getGroup(), text, glyph.getWidth(), glyph.getHeight(), x, y);
     }
 

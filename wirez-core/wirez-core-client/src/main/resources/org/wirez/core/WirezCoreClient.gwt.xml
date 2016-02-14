@@ -20,11 +20,12 @@
 <module>
 
 	<inherits name='com.google.gwt.user.User' />
+	<inherits name="com.google.gwt.logging.Logging"/>
 	<inherits name="org.uberfire.commons.UberfireCommons"/>
 	<inherits name="com.ait.lienzo.Lienzo"/>
 	<inherits name="org.wirez.core.WirezCoreApi"/>
 	<inherits name="org.wirez.WirezLienzoExtensions"/>
-
+	
 	<source path="client"/>
 
 </module>

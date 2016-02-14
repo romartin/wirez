@@ -30,12 +30,16 @@ import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.ElementUtils;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A Command to update an element's bounds.
  */
 public class UpdateElementPositionCommand extends AbstractCommand {
 
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.api.graph.commands.UpdateElementPositionCommand");
+    
     private Element element;
     private Double x;
     private Double y;
@@ -71,7 +75,7 @@ public class UpdateElementPositionCommand extends AbstractCommand {
         final double w = oldSize[0];
         final double h = oldSize[1];
 
-        GWT.log("Moving element bounds to [" + x + "," + y + "] [" + ( x + w ) + "," + ( y + h ) + "]");
+        LOGGER.log(Level.FINE, "Moving element bounds to [" + x + "," + y + "] [" + ( x + w ) + "," + ( y + h ) + "]");
         final DefaultBounds newBounds = new DefaultBounds(
                 new DefaultBound(x + w, y + h),
                 new DefaultBound(x, y)

@@ -1,9 +1,8 @@
 package org.wirez.bpmn.client.factory.control;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
-import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
@@ -23,15 +22,19 @@ import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.Logger;
+import org.wirez.core.client.util.WirezLogger;
 import org.wirez.core.client.util.ShapeUtils;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Dependent
 public class SequenceFlowConnectionCommandCallback implements AddConnectionCommand.Callback {
-    
+
+    private static Logger LOGGER = Logger.getLogger("org.wirez.bpmn.client.factory.control.SequenceFlowConnectionCommandCallback");
+
     DefaultCanvasCommands defaultCanvasCommands;
     SharedGraphCommandFactory sharedGraphCommandFactory;
     ClientDefinitionServices clientDefinitionServices;
@@ -66,7 +69,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
 
             @Override
             public void onError(final ClientRuntimeError error) {
-                Logger.logError(error);
+                log(Level.SEVERE, WirezLogger.getErrorMessage(error));
             }
         });
         
@@ -84,7 +87,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
 
     @Override
     public void accept(final Context context, final Node target) {
-        GWT.log("AddConnectionCommandCallback - Connect from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
+        log(Level.FINE, "AddConnectionCommandCallback - Connect from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
 
         final Canvas canvas = context.getCanvasHandler().getCanvas();
         final BaseShape sourceShape = (BaseShape) canvas.getShape(source.getUUID());
@@ -101,6 +104,12 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
         final AddCanvasEdgeCommand addEdgeCommand = defaultCanvasCommands.ADD_EDGE( edge, factory);
         context.getCommandManager().execute( connectionsCommand, addEdgeCommand );
         
+    }
+
+    private void log(final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
     }
     
 }

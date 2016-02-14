@@ -17,6 +17,7 @@
 package org.wirez.client.widgets.property;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
@@ -49,18 +50,23 @@ import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
+import org.wirez.core.client.util.WirezLogger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @Dependent
 public class PropertiesEditor implements IsWidget {
-
+    
+    private static Logger LOGGER = Logger.getLogger("org.wirez.client.widgets.property.PropertiesEditor");
+    
     public interface View extends UberView<PropertiesEditor> {
         
         void handle(PropertyEditorEvent propertyEditorEvent);
@@ -160,7 +166,6 @@ public class PropertiesEditor implements IsWidget {
                             final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                                 @Override
                                 public void onValueChanged(final Object value) {
-                                    GWT.log("PropertiesEditor  - Setting value [" + value.toString() + "] for property [" + propertyId + "] in element with id [" + elementId + "].");
                                     executeUpdateProperty(element, property, value);
                                 }
                             });
@@ -201,7 +206,7 @@ public class PropertiesEditor implements IsWidget {
     }
 
     private void showError(ClientRuntimeError error) {
-        GWT.log("ERROR - " + error.getMessage() );
+        log(Level.SEVERE, WirezLogger.getErrorMessage(error));
     }
 
     private PropertyEditorCategory buildPropertiesCategory(final Element<? extends ViewContent<?>> element,
@@ -220,7 +225,6 @@ public class PropertiesEditor implements IsWidget {
                     final PropertyEditorFieldInfo fieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                         @Override
                         public void onValueChanged(final Object value) {
-                            GWT.log("PropertiesEditor  - Setting value [" + value.toString() + "] for property [" + property.getId() + "] in element with id [" + element.getUUID() + "].");
                             executeUpdateProperty(element, property, value);
                         }
                     });
@@ -344,7 +348,6 @@ public class PropertiesEditor implements IsWidget {
                 super.setCurrentStringValue( currentStringValue );
                 final Double x = Double.parseDouble(currentStringValue);
                 final Double y = element.getContent().getBounds().getUpperLeft().getY();
-                GWT.log("PropertiesEditor  tiesEditor - Setting value [" + x + "] for property [X] in element with id [" + id + "].");
                 executeMove(element, x, y);
             }
         };
@@ -359,7 +362,6 @@ public class PropertiesEditor implements IsWidget {
                 super.setCurrentStringValue( currentStringValue );
                 final Double y = Double.parseDouble(currentStringValue);
                 final Double x = element.getContent().getBounds().getUpperLeft().getX();
-                GWT.log("PropertiesEditor  - Setting value [" + y + "] for property [Y] in element with id [" + id + "].");
                 executeMove(element, x, y);
             }
         };
@@ -422,7 +424,6 @@ public class PropertiesEditor implements IsWidget {
             final String shapeUUID = shape.getId();
             final Element<? extends ViewContent<?>> element = defaultGraphHandler.initialize(defaultGraph).get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
-                GWT.log("PropertiesEditor  - Showing properties for node [" + element.getUUID() + "]");
                 show(element);
             } else if (ShapeState.DESELECTED.equals(state)) {
                 view.clear();
@@ -473,6 +474,12 @@ public class PropertiesEditor implements IsWidget {
     private void removeCanvasListener() {
         if (canvasListener != null) {
             canvasListener.removeListener();
+        }
+    }
+
+    private void log(final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
         }
     }
     

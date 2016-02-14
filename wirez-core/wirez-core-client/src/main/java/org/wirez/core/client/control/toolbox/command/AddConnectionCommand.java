@@ -97,7 +97,6 @@ public class AddConnectionCommand implements ToolboxCommand {
             final String uuid = node.getUUID();
             final Shape shape = getShape(uuid);
             if ( null != shape ) {
-                GWT.log("Highlight shape for " + uuid);
                 this.shape = shape;
 
                 if (shape instanceof HasCanvasStateMutation) {

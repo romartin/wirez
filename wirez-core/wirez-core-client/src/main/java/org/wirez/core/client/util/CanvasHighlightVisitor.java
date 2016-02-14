@@ -18,6 +18,7 @@ package org.wirez.core.client.util;
 
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import org.uberfire.mvp.Command;
@@ -40,14 +41,16 @@ import org.wirez.core.client.mutation.HasCanvasStateMutation;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Visits the graph and highlights elements while visiting. Just for development use.
  */
 public class CanvasHighlightVisitor {
 
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.util.CanvasHighlightVisitor");
     private static final long DURATION = 500;
-
 
     private CanvasHandler canvasHandler;
     private final List<Shape> shapes = new LinkedList<Shape>();
@@ -60,7 +63,7 @@ public class CanvasHighlightVisitor {
         assert canvasHandler != null;
         assert canvasHandler.getGraph() != null;
       
-        prepareSimulation(() -> animate(0, () -> GWT.log("CanvasHighlightVisitor - FINISHED")));
+        prepareSimulation(() -> animate(0, () -> log(Level.FINE, "CanvasHighlightVisitor - FINISHED")));
     }
     
     private void animate(final int index, final Command callback) {
@@ -172,6 +175,12 @@ public class CanvasHighlightVisitor {
 
         }, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
         
+    }
+
+    private void log(final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
     }
     
 }

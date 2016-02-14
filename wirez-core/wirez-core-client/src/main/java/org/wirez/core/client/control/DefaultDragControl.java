@@ -55,8 +55,6 @@ public class DefaultDragControl extends BaseDragControl<Shape, Element>  {
                 @Override
                 public void onDragEnd(DragEvent dragEvent) {
                     final double[] xy = getContainerXY(shape);
-                    GWT.log("DragControl#onDragEnd [node=" + element.getUUID() + "]  [x=" + dragEvent.getX() + "] [y=" + dragEvent.getY() + "]");
-                    GWT.log("DragControl#onDragEnd [shape=" + shape.getId() + "]  [x=" + xy[0]  + "] [y=" + xy[1] + "]");
                     getCommandManager().execute( defaultCanvasCommands.MOVE(element, xy[0], xy[1]) );
                 }
             });

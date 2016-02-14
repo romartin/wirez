@@ -17,6 +17,7 @@
 package org.wirez.client.workbench.screens;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -32,19 +33,16 @@ import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.canvas.Canvas;
 import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
-import org.wirez.client.workbench.util.GraphTests;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.impl.*;
-import org.wirez.core.api.service.definition.DefinitionSetServiceResponse;
-import org.wirez.core.api.util.*;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.Logger;
+import org.wirez.core.client.util.WirezLogger;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.ShapeManager;
@@ -66,6 +64,8 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
@@ -73,6 +73,8 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 @WorkbenchScreen(identifier = CanvasScreen.SCREEN_ID )
 public class CanvasScreen {
 
+    private static Logger LOGGER = Logger.getLogger("org.wirez.client.workbench.screens.CanvasScreen");
+    
     public static final String SCREEN_ID = "CanvasScreen";
 
     public enum CanvasScreenState {
@@ -239,6 +241,9 @@ public class CanvasScreen {
 
     private Menus makeMenuBar() {
         return MenuFactory
+                .newTopLevelMenu("Switch log level")
+                .respondsWith(getSwitchLogLevelCommand())
+                .endMenu()
                 .newTopLevelMenu("Clear grid")
                 .respondsWith(getClearGridCommand())
                 .endMenu()
@@ -261,6 +266,17 @@ public class CanvasScreen {
                 .respondsWith(getVisitGraphCommand())
                 .endMenu()
                 .build();
+    }
+
+    private Command getSwitchLogLevelCommand() {
+        return new Command() {
+            public void execute() {
+                final Level level = Logger.getLogger("").getLevel();
+                final Level newLevel = Level.SEVERE.equals(level) ? Level.FINE : Level.SEVERE;
+                LOGGER.log(Level.SEVERE, "Switching to log level [" + newLevel.getName() + "]");
+                Logger.getLogger("").setLevel(newLevel);
+            }
+        };
     }
 
     private Command getClearGridCommand() {
@@ -289,17 +305,17 @@ public class CanvasScreen {
                         if (element == null) {
                             element = ( (DefaultGraph) canvasHandler.getGraph()).getEdge(shape.getId());
                             if (element != null) {
-                                GWT.log("Deleting edge with id " + element.getUUID());
+                                log(Level.FINE, "Deleting edge with id " + element.getUUID());
                                 canvasHandler.execute(defaultCanvasCommands.DELETE_EDGE((Edge) element));
                             }
                         } else {
-                            GWT.log("Deleting node with id " + element.getUUID());
+                            log(Level.FINE, "Deleting node with id " + element.getUUID());
                             canvasHandler.execute(defaultCanvasCommands.DELETE_NODE((Node) element));
 
                         }
                     }
                 } else {
-                    GWT.log("Cannot delete element, no element selected on canvas.");
+                    log(Level.FINE, "Cannot delete element, no element selected on canvas.");
                 }
             }
         };
@@ -362,11 +378,11 @@ public class CanvasScreen {
     }
 
     private void resumeGraph() {
-        Logger.resume((DefaultGraph) canvasHandler.getGraph());
+        WirezLogger.resume((DefaultGraph) canvasHandler.getGraph());
     }
 
     private void logGraph() {
-        Logger.log((DefaultGraph) canvasHandler.getGraph());
+        WirezLogger.log((DefaultGraph) canvasHandler.getGraph());
     }
 
     private void visitGraph() {
@@ -449,4 +465,10 @@ public class CanvasScreen {
 
     }
 
+    private void log(final Level level, final String message) {
+        if (LogConfiguration.loggingIsEnabled()) {
+            LOGGER.log(level, message);
+        }
+    }
+    
 }

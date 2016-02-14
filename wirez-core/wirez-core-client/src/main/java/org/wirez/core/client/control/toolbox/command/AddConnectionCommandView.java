@@ -73,8 +73,6 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
     }
 
     private void doShow(double x, double y) {
-        GWT.log("Creating toolbox connection control...");
-
         final Layer layer = canvas.getLayer();
         
         lineStart = new Point2D(x, y);

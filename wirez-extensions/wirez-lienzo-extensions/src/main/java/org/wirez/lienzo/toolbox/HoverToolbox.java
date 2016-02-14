@@ -50,7 +50,6 @@ public class HoverToolbox {
             for (int i = 0; i < buttons.size(); i++) {
                 HoverToolboxButton hoverToolboxButton = buttons.get(i);
                 Point2D position = findPosition(i);
-                // GWT.log(position.toJSONString());
                 hoverToolboxButton.getShape().setX(position.getX());
                 hoverToolboxButton.getShape().setY(position.getY());
                 hoverToolboxButton.getShape().animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 500, new AnimationCallback());

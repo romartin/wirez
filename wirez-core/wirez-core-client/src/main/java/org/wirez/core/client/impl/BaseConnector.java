@@ -23,6 +23,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.Point2DArray;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
@@ -36,6 +37,9 @@ import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.mutation.*;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public abstract class BaseConnector<W extends Definition> extends WiresConnector implements
         Shape<W>,
         HasPositionMutation,
@@ -43,6 +47,8 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         HasPropertyMutation,
         HasGraphElementMutation<W, ViewContent<W>, Edge<ViewContent<W>, Node>> {
 
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.impl.BaseConnector");
+    
     protected String id;
     protected BaseDragControl<Shape<W>, Edge> dragControl;
     protected BaseToolboxControl<Shape<W>, Edge> toolboxControl;
@@ -147,12 +153,12 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
                            final boolean tailArrow, final boolean headArrow)
     {
         if (headMagnetsIndex < 0) {
-            GWT.log("WARN - HeadMagnet index invalid!");
+            log(Level.SEVERE, "WARN - HeadMagnet index invalid!");
             headMagnetsIndex = 0;
         }
 
         if (tailMagnetsIndex < 0) {
-            GWT.log("WARN - TailMagnet index invalid!");
+            log(Level.SEVERE, "WARN - TailMagnet index invalid!");
             tailMagnetsIndex = 0;
         }
         
@@ -184,4 +190,10 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
     }
 
+    private void log(final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
+    }
+    
 }

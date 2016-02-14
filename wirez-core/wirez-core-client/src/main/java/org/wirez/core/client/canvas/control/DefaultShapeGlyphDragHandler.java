@@ -96,7 +96,6 @@ public class DefaultShapeGlyphDragHandler implements ShapeGlyphDragHandler {
                 final double x = mouseMoveEvent.getX();
                 final double y = mouseMoveEvent.getY();
                 callback.onMove(floatingPanel, x, y);
-                // GWT.log("Drag Proxy Mouse Move Event [x=" + x + ", y=" + y + "]");
             }
         }, MouseMoveEvent.getType() );
 
@@ -111,7 +110,6 @@ public class DefaultShapeGlyphDragHandler implements ShapeGlyphDragHandler {
                 final double x = mouseUpEvent.getX();
                 final double y = mouseUpEvent.getY();
                 callback.onComplete(floatingPanel, x, y);
-                GWT.log("Drag Proxy Mouse Up Event [x=" + x + ", y=" + y + "]");
             }
         }, MouseUpEvent.getType() );
     }

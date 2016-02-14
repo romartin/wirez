@@ -19,7 +19,7 @@ public class HoverToolboxButton {
         this(shape, new NodeMouseClickHandler() {
             @Override
             public void onNodeMouseClick(NodeMouseClickEvent nodeMouseClickEvent) {
-                GWT.log("HoverToolboxButton - Default Click Handler");
+                
             }
         });
     }

@@ -23,6 +23,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
@@ -39,9 +40,13 @@ import org.wirez.core.client.mutation.HasCanvasStateMutation;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.BaseCanvas");
+    
     public static final long ANIMATION_SELECTION_DURATION = 250;
     
     Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent;
@@ -152,7 +157,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         if (shape.getId() == null) {
             shape.setId(org.wirez.core.api.util.UUID.uuid());
         }
-        GWT.log("BaseCanvas#registerShape - " + shape.toString() + " [id=" + shape.getId() + "]");
+        log(Level.FINE, "BaseCanvas#registerShape - " + shape.toString() + " [id=" + shape.getId() + "]");
         wiresManager.createMagnets(shape);
         wiresManager.registerShape(shape);
         shapes.add(shape);
@@ -160,7 +165,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
 
     protected void deregisterShape(final BaseShape shape) {
         assert wiresManager != null;
-        GWT.log("BaseCanvas#DE-registerShape - " + shape.toString() + " [id=" + shape.getId() + "]");
+        log(Level.FINE, "BaseCanvas#DE-registerShape - " + shape.toString() + " [id=" + shape.getId() + "]");
         wiresManager.deregisterShape(shape);
         shapes.remove(shape);
     }
@@ -170,14 +175,14 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         if (connector.getId() == null) {
             connector.setId(UUID.uuid());
         }
-        GWT.log("BaseCanvas#registerConnector - " + connector.toString() + " [id=" + connector.getId() + "]");
+        log(Level.FINE, "BaseCanvas#registerConnector - " + connector.toString() + " [id=" + connector.getId() + "]");
         wiresManager.registerConnector(connector);
         shapes.add(connector);
     }
 
     protected void deregisterConnector(final BaseConnector connector) {
         assert wiresManager != null;
-        GWT.log("BaseCanvas#DE-registerConnector - " + connector.toString() + " [id=" + connector.getId() + "]");
+        log(Level.FINE, "BaseCanvas#DE-registerConnector - " + connector.toString() + " [id=" + connector.getId() + "]");
         wiresManager.deregisterConnector(connector);
         shapes.remove(connector);
     }
@@ -279,4 +284,10 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
         return wiresManager;
     }
 
+    private void log(final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
+    }
+    
 }

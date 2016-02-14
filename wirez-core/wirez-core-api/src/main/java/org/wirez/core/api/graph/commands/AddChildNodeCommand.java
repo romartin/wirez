@@ -76,7 +76,6 @@ public class AddChildNodeCommand extends AbstractCommand {
             target.addNode( candidate );
             parent.getOutEdges().add( child );
             candidate.getInEdges().add( child );
-            GWT.log("AddChildNodeCommand - Added [" + candidate.getUUID() + "] into [" + parent.getUUID() + "]");
         }
         return results;
     }

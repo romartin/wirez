@@ -181,7 +181,6 @@ public class PaletteGroup implements IsWidget {
                 final double[] positions = layoutBuilder.add(item.getGlyph().getWidth(), item.getGlyph().getHeight());
                 itemImpl.x = positions[0];
                 itemImpl.y = positions[1];
-                GWT.log("PaletteGroup#buildItemPositions [desc=" + item.getDescription() + ", x=" + itemImpl.x + ", y=" + itemImpl.y + "]");
             }
         }
         

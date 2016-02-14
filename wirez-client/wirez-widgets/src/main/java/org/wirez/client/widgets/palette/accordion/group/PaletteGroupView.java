@@ -115,8 +115,6 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
                                       final PaletteGroup.GlyphViewCallback callback) {
         assert lienzoPanel != null;
 
-        GWT.log("PaletteGroupView#addGlyph");
-        
         final PaletteItemDecorator decorator = new DefaultPaletteItemDecorator(new PaletteItemDecorator.Callback() {
             @Override
             public void onShow(double absX, double absY) {

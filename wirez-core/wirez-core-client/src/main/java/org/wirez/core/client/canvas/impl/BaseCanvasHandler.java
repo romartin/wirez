@@ -19,6 +19,7 @@ package org.wirez.core.client.canvas.impl;
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
@@ -53,12 +54,16 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 // TODO: Implement SelectionManager<Element>
 public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandManager {
 
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.BaseCanvasHandler");
+    
     protected Event<NotificationEvent> notificationEvent;
     protected DefaultCommandManager commandManager;
     protected DefaultRuleManager ruleManager;
@@ -131,10 +136,10 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
                     }
 
                     if (isSelected) {
-                        GWT.log("Deselect [shape=" + shape.getId() + "]");
+                        log(Level.FINE, "Deselect [shape=" + shape.getId() + "]");
                         selectionManager.deselect(shape);
                     } else {
-                        GWT.log("Select [shape=" + shape.getId() + "]");
+                        log(Level.FINE, "Select [shape=" + shape.getId() + "]");
                         selectionManager.select(shape);
                     }
 
@@ -376,4 +381,10 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         return (BaseCanvas) canvas;
     }
 
+    private void log(final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
+    }
+    
 }

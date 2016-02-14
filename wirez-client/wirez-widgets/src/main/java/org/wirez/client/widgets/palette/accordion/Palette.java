@@ -18,6 +18,7 @@ package org.wirez.client.widgets.palette.accordion;
 
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
@@ -46,10 +47,14 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Dependent
 public class Palette implements IsWidget {
 
+    private static Logger LOGGER = Logger.getLogger("org.wirez.client.widgets.palette.accordion.Palette");
+    
     public interface View extends UberView<Palette> {
         
         View setNoCanvasViewVisible(boolean isVisible);
@@ -185,7 +190,7 @@ public class Palette implements IsWidget {
                              */
                             @Override
                             public void onClick() {
-                                GWT.log("Palette: Adding " + description);
+                                log(Level.FINE, "Palette: Adding " + description);
                                 addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory));
                             }
 
@@ -208,7 +213,7 @@ public class Palette implements IsWidget {
 
                                         @Override
                                         public void onComplete(final LienzoPanel floatingPanel, final double x, final double y) {
-                                            GWT.log("Palette: Adding " + description + " at " + x + "," + y);
+                                            log(Level.FINE, "Palette: Adding " + description + " at " + x + "," + y);
                                             addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory, x - width, y));
                                         }
                                     });
@@ -259,6 +264,12 @@ public class Palette implements IsWidget {
 
     void showError(final String message) {
         errorPopupPresenter.showMessage(message);
+    }
+
+    private void log(final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
     }
     
 }

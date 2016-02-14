@@ -1,23 +1,19 @@
 package org.wirez.client.widgets.wizard.screen.load;
 
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.wirez.client.widgets.event.LoadDiagramEvent;
 import org.wirez.client.widgets.wizard.BaseWizardScreen;
-import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.widgets.wizard.CanvasWizardScreen;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.service.diagram.DiagramRepresentation;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.Logger;
+import org.wirez.core.client.util.WirezLogger;
 import org.wirez.core.client.util.ShapeUtils;
 
 import javax.annotation.PostConstruct;
@@ -25,11 +21,13 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Dependent
 public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasWizardScreen {
+
+    private static Logger LOGGER = Logger.getLogger("org.wirez.client.widgets.wizard.screen.load.LoadDiagramWizardScreen");
 
     public interface View extends UberView<LoadDiagramWizardScreen> {
         
@@ -101,7 +99,7 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
 
             @Override
             public void onError(final ClientRuntimeError error) {
-                Logger.logError( error );
+                log( Level.SEVERE, WirezLogger.getErrorMessage(error) );
             }
         });
     }
@@ -158,6 +156,12 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
     @Override
     public Widget asWidget() {
         return view.asWidget();
+    }
+
+    private void log(final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
     }
     
 }

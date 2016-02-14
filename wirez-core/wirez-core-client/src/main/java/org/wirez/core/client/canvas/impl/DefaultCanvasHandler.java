@@ -17,7 +17,7 @@
 package org.wirez.core.client.canvas.impl;
 
 import com.ait.lienzo.client.core.shape.wires.*;
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
@@ -49,16 +49,20 @@ import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.Logger;
+import org.wirez.core.client.util.WirezLogger;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // TODO: Implement SelectionManager<Element> ?
 @Dependent
 public class DefaultCanvasHandler extends BaseCanvasHandler {
+
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.DefaultCanvasHandler");
 
     ShapeManager shapeManager;
     ClientDefinitionManager clientDefinitionManager;
@@ -138,7 +142,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
 
             @Override
             public void onError(final ClientRuntimeError error) {
-                Logger.logError( error );
+                log(Level.SEVERE, WirezLogger.getErrorMessage(error));
                 errorCallback.execute();
             }
         });
@@ -223,7 +227,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final int mIndex = getMagnetIndex(magnet);
 
             final String message = "Executed SetConnectionSourceNodeCommand [source=" + sourceUUID + ", magnet=" + mIndex +  "]";
-            Logger.log(message);
+            log(Level.FINE, message);
 
             final CompositeElementCanvasCommand canvasCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
                     .add ( defaultCanvasCommands.getCommandFactory().setConnectionSourceNodeCommand( sourceNode, edge, mIndex ) );
@@ -249,13 +253,13 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final int mIndex = getMagnetIndex(magnet);
             
             final String message = "Executed SetConnectionTargetNodeCommand [target=" + targetUUID + ", magnet=" + mIndex +  "]";
-            Logger.log(message);
+            log(Level.FINE, message);
 
             final CompositeElementCanvasCommand canvasCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
                     .add ( defaultCanvasCommands.getCommandFactory().setConnectionTargetNodeCommand( targetNode, edge, mIndex ) );
             final CommandResults results = execute(canvasCommand);
             final boolean isAccept = isAccept(results);
-            Logger.log("ConnectionAccepted=" + isAccept);
+            log(Level.FINE, "ConnectionAccepted=" + isAccept);
             
             fireCommandExecutionNotification(canvasCommand, results);
             
@@ -294,7 +298,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String outUUID = outNode != null ? outNode.getId() : null;
             final String inUUID = inNode != null ? inNode.getId() : null;
             final String message = "HeadConnectionAllowed  [out=" + outUUID + "] [in=" + inUUID + "] [isAllowed=" + isAllowed + "]";
-            Logger.log(message);
+            log(Level.FINE, message);
             
             fireCommandAllowedNotification(canvasCommand, isAllowed);
             
@@ -331,8 +335,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             final String outUUID = outNode != null ? outNode.getId() : null;
             final String inUUID = inNode != null ? inNode.getId() : null;
             final String message = "TailConnectionAllowed  [out=" + outUUID + "] [in=" + inUUID + "] [isAllowed=" + isAllowed + "]";
-            Logger.log(message);
-            Logger.log("ConnectionAllowed=" + isAllowed);
+            log(Level.FINE, message);
 
             fireCommandAllowedNotification(canvasCommand, isAllowed);
             
@@ -386,8 +389,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                 });
                 final String parentUUID = parent != null ? parent.getId() : null;
                 final String childUUID = child != null ? child.getId() : null;
-                Logger.log("containmentAllowed  [parent=" + parentUUID + "] [child=" + childUUID + "] [isAllowed=" + isAllowed + "]");
-                Logger.log("containmentAllowed#Result=" + isAllowed);
+                log(Level.FINE, "containmentAllowed  [parent=" + parentUUID + "] [child=" + childUUID + "] [isAllowed=" + isAllowed + "]");
+                
                 return isAllowed;
                 
             }
@@ -409,7 +412,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
             if ( null == currentParentNode || !currentParentNode.getUUID().equals(parentUUID) ) {
 
                 final String message = "Executed AddChildNodeCommand [parent=" + parentUUID + ", child=" + childUUID + "]";
-                Logger.log(message);
+                log(Level.FINE, message);
 
                 final Node parentNode = defaultGraphHandler.getNode(parentUUID);
                 final Node childNode = defaultGraphHandler.getNode(childUUID);
@@ -434,7 +437,8 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                 });
 
                 final boolean isAccept = isAccept(results);
-                Logger.log("acceptContainment#Result=" + isAccept);
+                log(Level.FINE, "acceptContainment#Result=" + isAccept);
+
                 return isAccept;
                 
             }
@@ -445,10 +449,17 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
     };
     
     private boolean isAccept(final CommandResults results) {
-        Logger.logCommandResults(results.results());
+        WirezLogger.logCommandResults(results.results());
         final boolean hasCommandErrors = results.results(CommandResult.Type.ERROR) != null
                 && results.results(CommandResult.Type.ERROR).iterator().hasNext();
         return !hasCommandErrors;
     }
+    
+    private void log(final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
+    }
+    
 }
 

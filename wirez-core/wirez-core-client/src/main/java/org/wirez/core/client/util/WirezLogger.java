@@ -17,6 +17,7 @@
 package org.wirez.core.client.util;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.command.CommandResult;
@@ -30,35 +31,30 @@ import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.service.ClientRuntimeError;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Just for development use.
  */
-public class Logger {
-    
-    public static void logError(final ClientRuntimeError error) {
+public class WirezLogger {
+
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.util.WirezLogger");
+
+    public static String getErrorMessage(final ClientRuntimeError error) {
         final String message = error.getMessage();
         final Throwable t1 = error.getThrowable();
         final Throwable t2 = t1 != null ? t1.getCause() : null;
-        
-        if ( null != t2 ) {
-            logError( t2 );
-        } else if ( null != t1 ) {
-            logError( t1 );
-        } else {
-            logError( message );
-        }
-    }
 
-    public static void logError(final Throwable throwable) {
-        logError( throwable.getMessage() );
+        if ( null != t2 ) {
+            return t2.getMessage();
+        } else if ( null != t1 ) {
+            return t1.getMessage();
+        } 
+        
+        return message;
     }
     
-    public static void logError(final String message) {
-        GWT.log("[ERROR] " + message);
-        Window.alert("[ERROR] " + message);
-    }
-
     public static void logCommandResults(final Iterable<CommandResult> results) {
         if (results == null) {
             log("Results is null");
@@ -214,12 +210,17 @@ public class Logger {
                 .setDefinitionManager(definitionManager)
                 .visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
     }
-    
-    public static void log(final String message) {
-        GWT.log(message);
+
+    private static void log(final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(Level.INFO, message);
+        }
     }
 
-    public static void error(final String message) {
-        GWT.log("[ERROR] " + message);
+    private static void error(final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(Level.SEVERE, message);
+        }
     }
+
 }

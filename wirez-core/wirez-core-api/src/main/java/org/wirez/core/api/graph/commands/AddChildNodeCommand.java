@@ -81,9 +81,8 @@ public class AddChildNodeCommand extends AbstractCommand {
     }
     
     private CommandResult check(final RuleManager ruleManager) {
-        final DefaultRuleManager defaultRuleManager = (DefaultRuleManager) ruleManager;
-        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkContainment( parent, candidate).violations();
-        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
+        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) ruleManager.checkContainment( parent, candidate).violations();
+        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(containmentRuleViolations);
         violations.addAll(cardinalityRuleViolations);

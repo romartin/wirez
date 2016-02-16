@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
@@ -81,17 +82,15 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             Definitions definitions = parseDefinitions(inputStream);
             Bpmn2UnMarshaller parser = new Bpmn2UnMarshaller(bpmnGraphBuilderFactory);
             parser.setProfile(new DefaultProfileImpl());
-            Collection<DefaultGraph> bpmnGraphs = parser.unmarshall(definitions, null);
-            final String uuid = UUID.uuid();
-            final Graph graph = bpmnGraphs.iterator().next();
-            final BPMNDiagram graphDefinition = (BPMNDiagram) ( (ViewContent) graph.getContent() ).getDefinition();
+            final Graph graph = parser.unmarshall(definitions, null);
+            final BPMNGraph graphDefinition = (BPMNGraph) ( (ViewContent) graph.getContent() ).getDefinition();
             String title = graphDefinition.getGeneral().getName().getValue();
             
             if ( title == null || title.trim().length() == 0 ) {
                 title = "Untitled BPMN diagram";
             }
             
-            final Diagram<Settings> diagram = new DiagramImpl( uuid, graph, 
+            final Diagram<Settings> diagram = new DiagramImpl( UUID.uuid(), graph, 
                     new SettingsImpl(title, BPMNDefinitionSet.ID, "BPMNShapeSet"));
 
             LOG.info("BPMN process loading finished successfully.");

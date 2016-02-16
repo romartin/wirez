@@ -8,20 +8,36 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ConnectionContent;
+import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultBound;
 import org.wirez.core.api.graph.impl.DefaultBounds;
 import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.util.UUID;
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<ViewContent<W>, Edge>> 
         extends AbstractObjectBuilder<W, T> implements NodeObjectBuilder<W, T> {
+
+    protected Set<String> childNodeIds;
     
     public AbstractNodeBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
         super(wiresFactory);
+        this.childNodeIds = new LinkedHashSet<String>();
     }
 
+    @Override
+    public AbstractNodeBuilder<W, T> child(String nodeId) {
+        childNodeIds.add(nodeId);
+        return this;
+    }
+    
     protected abstract T buildNode(BuilderContext context, DefinitionService definitionService);
     
     @Override
@@ -70,7 +86,7 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
             for (String outgoingNodeId : outgoingNodeIds) {
                 GraphObjectBuilder<?, ?> outgoingNodeBuilder = getBuilder(context, outgoingNodeId);
                 if (outgoingNodeBuilder == null) {
-                    throw new RuntimeException("No edge for " + outgoingNodeId);
+                    throw new RuntimeException("No outgoing edge builder for " + outgoingNodeId);
                 }
 
                 Edge edge = (Edge) outgoingNodeBuilder.build(context);
@@ -87,6 +103,27 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
                 }
             }
         }
+
+        // Children connections.
+        if (childNodeIds != null && !childNodeIds.isEmpty()) {
+            for (String childNodeId : childNodeIds) {
+                GraphObjectBuilder<?, ?> childNodeBuilder = getBuilder(context, childNodeId);
+                if (childNodeBuilder == null) {
+                    throw new RuntimeException("No child builder for " + childNodeId);
+                }
+
+                if ( childNodeBuilder instanceof NodeObjectBuilder ) {
+                    Node childNode = (Node) childNodeBuilder.build(context);
+                    final Edge<ParentChildRelationship, Node> childEdge = new EdgeImpl<>(UUID.uuid(), new HashSet<>(), new HashSet<>(), new ParentChildRelationship());
+                    childEdge.setSourceNode(node);
+                    childEdge.setTargetNode(childNode);
+                    context.getGraph().addNode(childNode);
+                    node.getOutEdges().add(childEdge);
+                    childNode.getInEdges().add(childEdge);
+                }
+                
+            }
+        }
     }
 
     public void setSourceConnectionMagnetIndex(BuilderContext context, T node, Edge<ConnectionContent<W>, Node> edge) {
@@ -95,6 +132,11 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
 
     public void setTargetConnectionMagnetIndex(BuilderContext context, T node, Edge<ConnectionContent<W>, Node> edge) {
         edge.getContent().setTargetMagnetIndex(7);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder(super.toString()).append(" [childrenIds=").append(childNodeIds).append("] ").toString();
     }
     
 }

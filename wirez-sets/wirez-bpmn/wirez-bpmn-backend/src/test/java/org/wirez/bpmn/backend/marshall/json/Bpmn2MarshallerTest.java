@@ -147,8 +147,8 @@ public class Bpmn2MarshallerTest {
         Definitions definitions = parseDefinitions();
         Bpmn2UnMarshaller parser = new Bpmn2UnMarshaller(bpmnWiresFactory);
         parser.setProfile(new DefaultProfileImpl());
-        Collection<DefaultGraph> bpmnGraphs = parser.unmarshall(definitions, null);
-        log(bpmnGraphs);
+        DefaultGraph bpmnGraph = parser.unmarshall(definitions, null);
+        // log(bpmnGraphs);
         log("BPMN2 load test finished!");
     }
 

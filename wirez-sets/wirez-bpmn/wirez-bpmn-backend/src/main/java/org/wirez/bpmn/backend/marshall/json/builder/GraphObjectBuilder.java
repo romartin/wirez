@@ -30,9 +30,9 @@ public interface GraphObjectBuilder<W extends Definition, T extends Element<View
     
     interface BuilderContext<W extends Definition> {
 
-        void init(DefaultGraph<W, Node, Edge> graph);
+        void init(DefaultGraph<ViewContent<W>, Node, Edge> graph);
 
-        DefaultGraph<W, Node, Edge> getGraph();
+        DefaultGraph<ViewContent<W>, Node, Edge> getGraph();
         
         Collection<GraphObjectBuilder<?, ?>> getBuilders();
         

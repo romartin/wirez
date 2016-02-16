@@ -121,9 +121,9 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("[NodeId=").append(nodeId).append("]");
-        builder.append("[properties=").append(properties).append("]");
-        builder.append("[outgoingNodeIds=").append(outgoingNodeIds).append("]");
+        builder.append(" [NodeId=").append(nodeId).append("] ");
+        builder.append(" [properties=").append(properties).append("] ");
+        builder.append(" [outgoingNodeIds=").append(outgoingNodeIds).append("] ");
         return builder.toString();
     }
 }

@@ -87,13 +87,10 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
                     
                     for (final DiagramRepresentation diagram : items) {
                         
-                        
-                        
                         addEntry( diagram );
                     }
                     
                 }
-                
                 
             }
 

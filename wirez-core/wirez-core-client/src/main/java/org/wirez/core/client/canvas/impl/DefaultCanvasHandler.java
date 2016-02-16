@@ -54,6 +54,7 @@ import org.wirez.core.client.util.WirezLogger;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,7 +76,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                                 final ClientDefinitionManager clientDefinitionManager,
                                 final Event<NotificationEvent> notificationEvent, 
                                 final DefaultCommandManager commandManager, 
-                                final DefaultRuleManager ruleManager,
+                                final @Named( "default" ) DefaultRuleManager ruleManager,
                                 final DefaultCanvasCommands defaultCanvasCommands,
                                 final DefaultGraphHandler defaultGraphHandler,
                                 final DefaultGraphVisitor defaultGraphVisitor) {
@@ -156,19 +157,6 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
      */
 
     private final AbstractGraphVisitorCallback DRAW_VISITOR_CALLBACK = new AbstractGraphVisitorCallback() {
-
-        @Override
-        public void visitGraphWithViewContent(DefaultGraph<? extends ViewContent, ? extends Node, ? extends Edge> graph) {
-            super.visitGraphWithViewContent(graph);
-
-            final ShapeFactory factory = shapeManager.getFactory(graph.getContent().getDefinition());
-
-            // Add the node shape into the canvas.
-            defaultCanvasCommands.ADD_GRAPH(graph, factory)
-                    .setCanvas(DefaultCanvasHandler.this)
-                    .apply();
-                            
-        }
 
         @Override
         public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {

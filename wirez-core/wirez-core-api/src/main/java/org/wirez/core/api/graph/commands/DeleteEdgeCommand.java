@@ -76,7 +76,6 @@ public class DeleteEdgeCommand extends AbstractCommand {
     }
     
     private CommandResult check(final RuleManager ruleManager) {
-        final DefaultRuleManager defaultRuleManager = (DefaultRuleManager) ruleManager;
         boolean isEdgeInGraph = false;
         for ( Edge edge : graph.edges() ) {
             if ( edge.equals( this.edge ) ) {
@@ -87,7 +86,7 @@ public class DeleteEdgeCommand extends AbstractCommand {
 
         DefaultCommandResult results;
         if ( isEdgeInGraph ) {
-            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), (Edge<? extends ViewContent<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
+            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), (Edge<? extends ViewContent<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
             results = new DefaultCommandResult(cardinalityRuleViolations);
         } else {
             results = new DefaultCommandResult();

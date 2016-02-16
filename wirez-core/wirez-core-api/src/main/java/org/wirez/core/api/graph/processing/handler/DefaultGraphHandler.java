@@ -24,10 +24,7 @@ import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.impl.*;
 
 import javax.enterprise.context.Dependent;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Dependent
 public class DefaultGraphHandler<C, G extends DefaultGraph<C, N, E>, N extends Node, E extends Edge> implements GraphHandler<G, N ,E> {
@@ -86,6 +83,28 @@ public class DefaultGraphHandler<C, G extends DefaultGraph<C, N, E>, N extends N
         }
         
         return null;
+    }
+
+    @Override
+    public Collection<N> getChildren(final String uuid) {
+        assert graph != null && uuid != null;
+        
+        final List<N> result = new ArrayList<>();
+        
+        final N node = getNode(uuid);
+        final List<Edge> edges = node.getOutEdges();
+        if ( null != edges && !edges.isEmpty() ) {
+            for (final Edge edge : edges) {
+                final Object content = edge.getContent();
+                if ( content instanceof ParentChildRelationship ) {
+                    final N child = (N) edge.getTargetNode();
+                    result.add(child);
+
+                }
+            }
+        }
+        
+        return result;
     }
 
     @Override

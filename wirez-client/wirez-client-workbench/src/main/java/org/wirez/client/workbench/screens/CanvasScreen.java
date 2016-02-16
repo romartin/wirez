@@ -19,6 +19,7 @@ package org.wirez.client.workbench.screens;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.inject.name.Named;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.uberfire.client.annotations.*;
@@ -39,6 +40,8 @@ import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
+import org.wirez.core.api.rule.EmptyRuleManager;
+import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.command.impl.MoveCanvasElementCommand;
@@ -109,6 +112,9 @@ public class CanvasScreen {
 
     @Inject
     PlaceManager placeManager;
+    
+    @Inject
+    EmptyRuleManager emptyRuleManager;
 
     @Inject
     Event<ChangeTitleWidgetEvent> changeTitleNotificationEvent;
@@ -464,7 +470,7 @@ public class CanvasScreen {
 
                 // Execute both add element and move commands in batch, so undo will be done in batch as well.
                 MoveCanvasElementCommand moveCanvasElementCommand = defaultCanvasCommands.MOVE(element, x ,y);
-                canvasHandler.execute(command, moveCanvasElementCommand);
+                canvasHandler.execute(emptyRuleManager, command, moveCanvasElementCommand);
             }
 
             @Override

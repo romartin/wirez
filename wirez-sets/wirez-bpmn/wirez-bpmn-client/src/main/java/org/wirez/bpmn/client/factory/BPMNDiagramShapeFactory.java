@@ -22,6 +22,7 @@ import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.client.BPMNDiagramShape;
 import org.wirez.bpmn.client.TaskShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
+import org.wirez.bpmn.client.glyph.BPMNDiagramGlyph;
 import org.wirez.bpmn.client.glyph.TaskGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
@@ -36,10 +37,16 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class BPMNDiagramShapeFactory implements ShapeFactory<BPMNDiagram, BPMNDiagramShape> {
+public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, BPMNDiagramShape> {
+
+    public BPMNDiagramShapeFactory() {
+    }
 
     @Inject
-    public BPMNDiagramShapeFactory() {
+    public BPMNDiagramShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
+                            final ShapeGlyphDragHandler shapeGlyphDragHandler,
+                            final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
+        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
     
     @Override
@@ -49,20 +56,25 @@ public class BPMNDiagramShapeFactory implements ShapeFactory<BPMNDiagram, BPMNDi
 
     @Override
     public ShapeGlyph getGlyph() {
-        return null;
+        return BPMNDiagramGlyph.INSTANCE;
     }
 
     @Override
     public String getDescription() {
-        return "A task";
+        return "A BPMN Diagram";
     }
 
+    @Override
+    protected ShapeControlFactory<?, ?> getResizeControlFactory() {
+        return defaultShapeControlFactories.lienzoResizeControlFactory();
+    }
+    
     @Override
     public BPMNDiagramShape build(final BPMNDiagram definition, final CanvasHandler canvasHandler) {
 
         final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getCanvas();
         
-        return new BPMNDiagramShape(new MultiPath(), baseCanvas.getWiresManager());
+        return new BPMNDiagramShape(baseCanvas.getWiresManager());
 
     }
 

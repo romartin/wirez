@@ -19,12 +19,18 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.api.property.Height;
+import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.diagram.DiagramSet;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
+import org.wirez.bpmn.api.property.general.BackgroundSet;
+import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.core.api.annotation.definition.Definition;
+import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.definition.PropertySet;
 import org.wirez.core.api.annotation.rule.CanContain;
 import org.wirez.core.api.definition.BaseDefinition;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import javax.annotation.PostConstruct;
@@ -34,11 +40,16 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = DefaultGraph.class )
+@Definition( type = Node.class )
 @CanContain( roles = { "all" } )
 public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "BPMNDiagram";
+    public static final String COLOR = "#FFFFFF";
+    public static final String BORDER_COLOR = "#000000";
+    public static final Double BORDER_SIZE = 1d;
+    public static final Double WIDTH = 500d;
+    public static final Double HEIGHT = 500d;
 
     @PropertySet
     private BPMNGeneral general;
@@ -46,23 +57,48 @@ public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
     @PropertySet
     private DiagramSet diagramSet;
 
+    @PropertySet
+    private BackgroundSet backgroundSet;
 
+    @PropertySet
+    private FontSet fontSet;
+    
+    @Property
+    private Width width;
+
+    @Property
+    private Height height;
+    
     public BPMNDiagram() {
         super("Diagram", "BPMN Diagram", "BPMN Diagram",
                 new HashSet<String>(){{
                     add( "canContainArtifacts" );
+                    add( "diagram" );
                 }});
     }
 
     public BPMNDiagram(@MapsTo("general") BPMNGeneral general,
-                       @MapsTo("diagramSet") DiagramSet diagramSet) {
+                       @MapsTo("diagramSet") DiagramSet diagramSet,
+                       @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                       @MapsTo("fontSet") FontSet fontSet,
+                       @MapsTo("width") Width width,
+                       @MapsTo("height") Height height) {
         this();
         this.general = general;
         this.diagramSet = diagramSet;
+        this.backgroundSet = backgroundSet;
+        this.fontSet = fontSet;
+        this.width = width;
+        this.height = height;
     }
 
     public BPMNDiagram buildDefaults() {
-        getGeneral().getName().setValue("My diagram");
+        getGeneral().getName().setValue("My BPMN diagram");
+        getBackgroundSet().getBgColor().setValue(COLOR);
+        getBackgroundSet().getBorderSize().setValue(BORDER_SIZE);
+        getBackgroundSet().getBorderColor().setValue(BORDER_COLOR);
+        getWidth().setValue(WIDTH);
+        getHeight().setValue(HEIGHT);
         return this;
     }
 
@@ -85,5 +121,37 @@ public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
 
     public void setDiagramSet(final DiagramSet diagramSet) {
         this.diagramSet = diagramSet;
+    }
+
+    public Height getHeight() {
+        return height;
+    }
+
+    public void setHeight(Height height) {
+        this.height = height;
+    }
+
+    public Width getWidth() {
+        return width;
+    }
+
+    public void setWidth(Width width) {
+        this.width = width;
+    }
+
+    public BackgroundSet getBackgroundSet() {
+        return backgroundSet;
+    }
+
+    public void setBackgroundSet(BackgroundSet backgroundSet) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public FontSet getFontSet() {
+        return fontSet;
+    }
+
+    public void setFontSet(FontSet fontSet) {
+        this.fontSet = fontSet;
     }
 }

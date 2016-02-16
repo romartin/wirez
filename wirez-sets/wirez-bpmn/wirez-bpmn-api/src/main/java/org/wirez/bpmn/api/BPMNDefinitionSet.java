@@ -33,6 +33,9 @@ public class BPMNDefinitionSet implements DefinitionSet {
     public static final String ID = "bpmnDefSet";
 
     @Definition
+    private BPMNGraph graph;
+    
+    @Definition
     private BPMNDiagram diagram;
 
     @Definition
@@ -59,7 +62,8 @@ public class BPMNDefinitionSet implements DefinitionSet {
     public BPMNDefinitionSet() {
     }
 
-    public BPMNDefinitionSet(@MapsTo("diagram") BPMNDiagram diagram,
+    public BPMNDefinitionSet(@MapsTo("graph") BPMNGraph graph,
+                             @MapsTo("diagram") BPMNDiagram diagram,
                              @MapsTo("startNoneEvent") StartNoneEvent startNoneEvent,
                              @MapsTo("endNoneEvent") EndNoneEvent endNoneEvent,
                              @MapsTo("task") Task task,
@@ -67,6 +71,7 @@ public class BPMNDefinitionSet implements DefinitionSet {
                              @MapsTo("parallelGateway") ParallelGateway parallelGateway,
                              @MapsTo("endTerminateEvent") EndTerminateEvent endTerminateEvent,
                              @MapsTo("lane") Lane lane) {
+        this.graph = graph;
         this.diagram = diagram;
         this.startNoneEvent = startNoneEvent;
         this.endNoneEvent = endNoneEvent;
@@ -90,6 +95,14 @@ public class BPMNDefinitionSet implements DefinitionSet {
     @Override
     public String getDescription() {
         return "THe BPMN definition set";
+    }
+
+    public BPMNGraph getGraph() {
+        return graph;
+    }
+
+    public void setGraph(BPMNGraph graph) {
+        this.graph = graph;
     }
 
     public BPMNDiagram getDiagram() {

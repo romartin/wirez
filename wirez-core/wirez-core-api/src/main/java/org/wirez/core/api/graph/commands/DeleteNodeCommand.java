@@ -79,7 +79,6 @@ public class DeleteNodeCommand extends AbstractCommand {
     
     private CommandResult check(final RuleManager ruleManager) {
 
-        final DefaultRuleManager defaultRuleManager = (DefaultRuleManager) ruleManager;
         boolean isNodeInGraph = false;
         for ( Object node : target.nodes() ) {
             if ( node.equals( candidate ) ) {
@@ -90,7 +89,7 @@ public class DeleteNodeCommand extends AbstractCommand {
 
         DefaultCommandResult results;
         if ( isNodeInGraph ) {
-            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality( target, candidate, RuleManager.Operation.DELETE).violations();
+            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality( target, candidate, RuleManager.Operation.DELETE).violations();
             results = new DefaultCommandResult(cardinalityRuleViolations);
         } else {
             results = new DefaultCommandResult();

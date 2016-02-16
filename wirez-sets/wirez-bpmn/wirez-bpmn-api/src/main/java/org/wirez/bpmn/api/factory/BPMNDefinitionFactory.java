@@ -26,6 +26,7 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
     BPMNPropertySetFactory bpmnPropertySetFactory;
     
     private static final Set<String>  SUPPORTED_DEF_IDS = new LinkedHashSet<String>() {{
+        add(BPMNGraph.ID);
         add(BPMNDiagram.ID);
         add(Task.ID);
         add(StartNoneEvent.ID);
@@ -42,7 +43,10 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
 
     @Override
     public BPMNDefinition build(final String id) {
-        
+
+        if (BPMNGraph.ID.equals(id)) {
+            return buildBPMNGraph();
+        }
         if (BPMNDiagram.ID.equals(id)) {
             return buildBPMNDiagram();
         }
@@ -68,6 +72,11 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
             return buildLane();
         }
         return null;
+    }
+
+    public BPMNGraph buildBPMNGraph() {
+        return new BPMNGraph(bpmnPropertySetFactory.buildGeneralSet())
+                .buildDefaults();
     }
 
     public Lane buildLane() {
@@ -129,7 +138,11 @@ public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> 
 
     public BPMNDiagram buildBPMNDiagram() {
         return new BPMNDiagram(bpmnPropertySetFactory.buildGeneralSet(),
-                    bpmnPropertySetFactory.buildDiagramSet())
+                    bpmnPropertySetFactory.buildDiagramSet(),
+                bpmnPropertySetFactory.buildBackgroundSet(),
+                bpmnPropertySetFactory.buildFontSet(),
+                bpmnPropertyFactory.buildWidth(),
+                bpmnPropertyFactory.buildHeight())
                 .buildDefaults();
     }
 }

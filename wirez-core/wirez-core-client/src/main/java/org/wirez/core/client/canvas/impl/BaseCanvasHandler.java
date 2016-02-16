@@ -53,6 +53,7 @@ import org.wirez.core.client.notification.CanvasCommandExecutionNotification;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -70,14 +71,13 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     protected DefaultRuleManager ruleManager;
     protected CanvasSettings settings;
     protected Canvas canvas;
-    protected Shape graphShape;
     protected DefaultGraph<?, ? extends Node, ? extends Edge> graph;
     protected Collection<CanvasListener> listeners = new LinkedList<CanvasListener>();
 
     @Inject
     public BaseCanvasHandler(final Event<NotificationEvent> notificationEvent,
                              final DefaultCommandManager commandManager,
-                             final DefaultRuleManager ruleManager) {
+                             final @Named( "default" ) DefaultRuleManager ruleManager) {
         this.notificationEvent = notificationEvent;
         this.commandManager = commandManager;
         this.ruleManager = ruleManager;
@@ -179,16 +179,6 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         
         // Add the shapes on canvas and fire events.
         canvas.addShape(shape);
-        
-        // Graph shape is considered a wires container, for now.
-        if ( null != this.graphShape && shape instanceof WiresShape ) {
-            ( (WiresContainer) graphShape).add( (WiresShape) shape );
-        }
-
-        if ( null == graphShape && shape.getId().equals(graph.getUUID()) ) {
-            this.graphShape = shape;
-        }
-        
         canvas.draw();
         afterElementAdded(candidate);
     }
@@ -220,12 +210,9 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
 
         final WiresShape parentShape = (WiresShape) canvas.getShape(parent.getUUID());
         final WiresShape childShape = (WiresShape) canvas.getShape(child.getUUID());
-        addWiresChild(parentShape, childShape);
-    }
-    
-    private void addWiresChild(final WiresShape parentShape, final WiresShape childShape) {
         parentShape.add(childShape);
     }
+    
 
     public void updateElementPosition(final Element element) {
         final Shape shape = canvas.getShape(element.getUUID());

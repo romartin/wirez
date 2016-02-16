@@ -190,6 +190,7 @@ public class Palette implements IsWidget {
 
                             /**
                              * Add the shape into the canvas diagram when mouse click at a fixed position.
+                             * Disabled for now.
                              */
                             @Override
                             public void onClick() {
@@ -204,7 +205,8 @@ public class Palette implements IsWidget {
                             @Override
                             public void onDragStart(final LienzoPanel parentPanel, final double x, final double y) {
 
-                                if (factory instanceof HasShapeGlyphDragHandler) {
+                                // TODO
+                                /*if (factory instanceof HasShapeGlyphDragHandler) {
                                     final HasShapeGlyphDragHandler hasShapeGlyphDragHandler = (HasShapeGlyphDragHandler) factory;
                                     final ShapeGlyphDragHandler shapeGlyphDragHandler = hasShapeGlyphDragHandler.getShapeGlyphDragHandler();
 
@@ -221,7 +223,7 @@ public class Palette implements IsWidget {
                                         }
                                     });
                                     
-                                }
+                                }*/
 
                             }
                         });

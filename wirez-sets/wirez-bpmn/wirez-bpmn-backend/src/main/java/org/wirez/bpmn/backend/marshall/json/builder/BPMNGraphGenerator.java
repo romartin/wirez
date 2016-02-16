@@ -2,10 +2,14 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.codehaus.jackson.*;
 import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.service.definition.DefinitionService;
+import org.wirez.core.api.util.UUID;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -24,7 +28,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
     Stack<GraphObjectBuilder> nodeBuilders = new LoggableStack<GraphObjectBuilder>("nodeBuilders");
     Stack<GraphObjectParser> parsers = new LoggableStack<GraphObjectParser>("parsers");
     Collection<GraphObjectBuilder<?, ?>> builders = new LinkedList<GraphObjectBuilder<?, ?>>();
-    Collection<DefaultGraph> graphs;
+    DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> graph;
     boolean isClosed;
     
     // Just for development & testing
@@ -57,7 +61,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
     
     public BPMNGraphGenerator(BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
-        this.parsers.push(new RootObjectParser());
+        this.parsers.push(new RootObjectParser(null));
         this.isClosed = false;
     }
 
@@ -100,21 +104,39 @@ public class BPMNGraphGenerator extends JsonGenerator {
     public void close() throws IOException {
         logBuilders();
 
-        BPMNDiagramBuilder processNodeBuilder = getRootBuilder();
-        if (processNodeBuilder == null) {
-            throw new RuntimeException("No process node found!");
+        DefinitionService definitionService = bpmnGraphBuilderFactory.getDefinitionService();
+        this.graph = (DefaultGraph<ViewContent<BPMNGraph>, Node, Edge>) definitionService.buildGraphElement(UUID.uuid(), BPMNGraph.ID);
+        builderContext.init(graph);
+        
+        BPMNDiagramBuilder diagramBuilder = getDiagramBuilder(builderContext);
+        if (diagramBuilder == null) {
+            throw new RuntimeException("No diagrams found!");
         }
 
-        this.graphs = new ArrayList<DefaultGraph>(1);
-        DefaultGraph processNode = processNodeBuilder.build(builderContext);
-        this.graphs.add(processNode);
+        Node<ViewContent<BPMNDiagram>, Edge> diagramNode = diagramBuilder.build(builderContext);
+        graph.addNode(diagramNode);
         
         this.isClosed = true;
     }
 
-    public Collection<DefaultGraph> getGraphs() {
+    // TODO: Can be multiple
+    protected BPMNDiagramBuilder getDiagramBuilder(GraphObjectBuilder.BuilderContext context) {
+        Collection<GraphObjectBuilder<?, ?>> builders = context.getBuilders();
+        if (builders != null && !builders.isEmpty()) {
+            for (GraphObjectBuilder<?, ?> builder : builders) {
+                try {
+                    return (BPMNDiagramBuilder) builder;
+                } catch (ClassCastException e) {
+                    // Not a start event. Continue with the search...
+                }
+            }
+        }
+        return null;
+    }
+
+    public DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> getGraph() {
         assert isClosed();
-        return this.graphs;
+        return this.graph;
     }
     
     private BPMNDiagramBuilder getRootBuilder() {
@@ -129,17 +151,17 @@ public class BPMNGraphGenerator extends JsonGenerator {
         return null;
     }
     
-    final GraphObjectBuilder.BuilderContext<BPMNDiagram> builderContext = new GraphObjectBuilder.BuilderContext<BPMNDiagram>() {
+    final GraphObjectBuilder.BuilderContext<BPMNGraph> builderContext = new GraphObjectBuilder.BuilderContext<BPMNGraph>() {
 
-        DefaultGraph<BPMNDiagram, Node, Edge> graph;
+        DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> graph;
 
         @Override
-        public void init(final DefaultGraph<BPMNDiagram, Node, Edge> graph) {
+        public void init(final DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> graph) {
             this.graph = graph;
         }
 
         @Override
-        public DefaultGraph<BPMNDiagram, Node, Edge> getGraph() {
+        public DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> getGraph() {
             return graph;
         }
 
@@ -147,9 +169,6 @@ public class BPMNGraphGenerator extends JsonGenerator {
         public Collection<GraphObjectBuilder<?, ?>> getBuilders() {
             return builders;
         }
-
-        
-        
 
     };
     
@@ -189,7 +208,12 @@ public class BPMNGraphGenerator extends JsonGenerator {
     final class RootObjectParser implements GraphObjectParser {
         
         String fieldName;
-        
+        NodeObjectBuilder parentNodeBuilder;
+
+        public RootObjectParser(NodeObjectBuilder parentNodeBuilder) {
+            this.parentNodeBuilder = parentNodeBuilder;
+        }
+
         @Override
         public void writeStartObject() {
             if (fieldName == null) {
@@ -199,7 +223,9 @@ public class BPMNGraphGenerator extends JsonGenerator {
             } else if ("stencil".equals(fieldName)) {
                 parsers.push(new StencilObjectParser());
             } else if ("childShapes".equals(fieldName)) {
-                parsers.push(new RootObjectParser());
+                RootObjectParser rootObjectParser = nodeBuilders.empty() ? null : 
+                        new RootObjectParser((NodeObjectBuilder) nodeBuilders.peek()); 
+                parsers.push(rootObjectParser);
                 nodeBuilders.push(bpmnGraphBuilderFactory.bootstrapBuilder());
             } else if ("outgoing".equals(fieldName)) {
                 parsers.push(new OutgoingObjectParser());
@@ -227,6 +253,9 @@ public class BPMNGraphGenerator extends JsonGenerator {
             String value = o.toString();
             if ("resourceId".equals(fieldName)) {
                 nodeBuilders.peek().nodeId(value);
+                if ( null != parentNodeBuilder ) {
+                    parentNodeBuilder.child(value);
+                }
             }
         }
 

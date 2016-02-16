@@ -40,15 +40,15 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
         resourceSet.getPackageRegistry().put( "http://www.omg.org/spec/BPMN/20100524/MODEL", Bpmn2Package.eINSTANCE );
     }
     
-    BPMNGraphObjectBuilderFactory wiresFactory;
+    BPMNGraphObjectBuilderFactory elementBuilderFactory;
     BPMNGraphGenerator bpmnGraphGenerator;
 
-    public Bpmn2UnMarshaller(BPMNGraphObjectBuilderFactory wiresFactory) {
-        this.wiresFactory = wiresFactory;
-        this.bpmnGraphGenerator = new BPMNGraphGenerator(wiresFactory);
+    public Bpmn2UnMarshaller(BPMNGraphObjectBuilderFactory elementBuilderFactory) {
+        this.elementBuilderFactory = elementBuilderFactory;
+        this.bpmnGraphGenerator = new BPMNGraphGenerator(elementBuilderFactory);
     }
 
-    public Collection<DefaultGraph> unmarshall(String content) throws IOException {
+    public DefaultGraph unmarshall(String content) throws IOException {
         XMLResource outResource = (XMLResource) resourceSet.createResource( URI.createURI( "inputStream://dummyUriWithValidSuffix.xml" ) );
         outResource.getDefaultLoadOptions().put( XMLResource.OPTION_ENCODING, "UTF-8" );
         outResource.setEncoding( "UTF-8" );
@@ -60,11 +60,11 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
         return unmarshall(definitions, null);
     }
 
-    public Collection<DefaultGraph> unmarshall(Definitions def, String preProcessingData) throws IOException {
+    public DefaultGraph unmarshall(Definitions def, String preProcessingData) throws IOException {
         DroolsPackageImpl.init();
         BpsimPackageImpl.init();
         super.marshall(bpmnGraphGenerator, def, preProcessingData);
-        return bpmnGraphGenerator.getGraphs();
+        return bpmnGraphGenerator.getGraph();
     }
     
 }

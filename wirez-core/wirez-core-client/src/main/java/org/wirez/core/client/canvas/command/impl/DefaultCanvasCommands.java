@@ -43,12 +43,12 @@ public class DefaultCanvasCommands {
         return new ClearCanvasCommand( commandFactory );
     }
 
-    public AddCanvasGraphCommand ADD_GRAPH(final Graph graph, final ShapeFactory factory ) {
-        return new AddCanvasGraphCommand( commandFactory, graph, factory );
-    }
-    
     public AddCanvasNodeCommand ADD_NODE(final Node node, final ShapeFactory factory ) {
         return new AddCanvasNodeCommand( commandFactory, node, factory );
+    }
+
+    public AddCanvasNodeAtCommand ADD_NODE_AT(final Node node, final double x, final double y, final ShapeFactory factory ) {
+        return new AddCanvasNodeAtCommand( commandFactory, node, x, y, factory );
     }
 
     public DeleteCanvasNodeCommand DELETE_NODE(final Node node) {

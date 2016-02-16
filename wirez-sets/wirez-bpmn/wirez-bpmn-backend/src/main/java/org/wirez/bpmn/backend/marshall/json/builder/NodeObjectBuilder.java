@@ -7,5 +7,7 @@ import org.wirez.core.api.graph.content.ViewContent;
 
 public interface NodeObjectBuilder<W extends Definition, T extends Node<ViewContent<W>, Edge>> 
         extends GraphObjectBuilder<W, T> {
-    
+
+    NodeObjectBuilder<W, T> child(String nodeId);
+
 }

@@ -77,9 +77,8 @@ public class SetConnectionSourceNodeCommand extends AbstractCommand {
     }
     
     private CommandResult check(final RuleManager ruleManager) {
-        final DefaultRuleManager defaultRuleManager = (DefaultRuleManager) ruleManager;
-        final Collection<RuleViolation> connectionRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkConnectionRules(sourceNode, targetNode, edge).violations();
-        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) defaultRuleManager.checkCardinality(sourceNode, targetNode, edge, RuleManager.Operation.ADD).violations();
+        final Collection<RuleViolation> connectionRuleViolations = (Collection<RuleViolation>) ruleManager.checkConnectionRules(sourceNode, targetNode, edge).violations();
+        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(sourceNode, targetNode, edge, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(connectionRuleViolations);
         violations.addAll(cardinalityRuleViolations);

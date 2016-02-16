@@ -48,8 +48,8 @@ public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
     public static final String COLOR = "#FFFFFF";
     public static final String BORDER_COLOR = "#000000";
     public static final Double BORDER_SIZE = 1d;
-    public static final Double WIDTH = 500d;
-    public static final Double HEIGHT = 500d;
+    public static final Double WIDTH = 950d;
+    public static final Double HEIGHT = 950d;
 
     @PropertySet
     private BPMNGeneral general;

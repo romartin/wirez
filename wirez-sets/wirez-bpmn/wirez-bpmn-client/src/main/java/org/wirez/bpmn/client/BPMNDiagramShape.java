@@ -17,46 +17,42 @@
 package org.wirez.bpmn.client;
 
 import com.ait.lienzo.client.core.shape.MultiPath;
+import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Shape;
-import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.client.core.shape.wires.WiresShape;
-import com.ait.lienzo.client.core.types.BoundingBox;
-import com.ait.lienzo.client.core.types.LinearGradient;
-import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
-import org.wirez.bpmn.api.property.general.*;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.util.ElementUtils;
-import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.impl.BaseShape;
-import org.wirez.core.client.mutation.HasGraphElementMutation;
 import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.MutationContext;
-import org.wirez.core.client.mutation.MutationType;
-import org.wirez.core.client.util.ShapeUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class BPMNDiagramShape extends BPMNBasicShape<BPMNDiagram> implements HasSizeMutation {
 
-
+    private Rectangle decorator;
+    
     public BPMNDiagramShape(final WiresManager manager) {
         super(new MultiPath().rect(0, 0, BPMNDiagram.WIDTH, BPMNDiagram.HEIGHT), manager);
         getPath().setFillAlpha(0.1);
+        init();
     }
 
+    private void init() {
+        decorator = new Rectangle(BPMNDiagram.WIDTH, BPMNDiagram.HEIGHT).setX(0).setY(0).setFillAlpha(0).setStrokeAlpha(0);
+        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER,
+                getDecoratorCoordinate( BPMNDiagram.WIDTH ),
+                getDecoratorCoordinate( BPMNDiagram.HEIGHT ) );
+    }
+    
     @Override
     protected WiresLayoutContainer.Layout getTextPosition() {
         return WiresLayoutContainer.Layout.TOP;
@@ -65,7 +61,7 @@ public class BPMNDiagramShape extends BPMNBasicShape<BPMNDiagram> implements Has
     @Override
     public Collection<Shape> getDecorators() {
         return new ArrayList<Shape>(1) {{
-            add( getPath() );
+            add( decorator );
         }};
     }
 
@@ -99,6 +95,9 @@ public class BPMNDiagramShape extends BPMNBasicShape<BPMNDiagram> implements Has
         final double x = getPath().getX();
         final double y = getPath().getY();
         getPath().clear().rect(x, y, width, height);
+        decorator.setWidth(width);
+        decorator.setHeight(height);
+        this.moveChild(decorator, getDecoratorCoordinate(width), getDecoratorCoordinate(height));
     }
 
     @Override
@@ -106,5 +105,8 @@ public class BPMNDiagramShape extends BPMNBasicShape<BPMNDiagram> implements Has
         return "BPMNDiagramShape{}";
     }
 
+    private double getDecoratorCoordinate(final double c) {
+        return - ( c / 2 );
+    }
     
 }

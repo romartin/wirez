@@ -9,6 +9,7 @@ import org.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
+import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
@@ -16,7 +17,9 @@ import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.service.definition.DefinitionService;
 
 import java.util.Collection;
+import java.util.Set;
 
+// TODO: Bounds.
 public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<ViewContent<BPMNDiagram>, Edge>> {
 
     public BPMNDiagramBuilder(BPMNGraphObjectBuilderFactory graphObjectBuilderFactory) {
@@ -50,12 +53,14 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
         def.getHeight().setValue(height);
     }
 
-    protected String getPropertyIdMapping(final String propId) {
-        if ( "processn".equals(propId) ) {
-            return Name.ID;
-        } else {
-            return super.getPropertyIdMapping(propId);
+    @Override
+    protected Property getProperty(Set<Property> defProperties, String id) {
+        if ( "processn".equals(id) ) {
+            return super.getProperty(defProperties, Name.ID);
+        } else if ( Name.ID.equals(id)) {
+            return null;
         }
+        return super.getProperty(defProperties, id);
     }
 
     // TODO: Support for multiple start nodes.
@@ -72,7 +77,7 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
     
     @Override
     public String toString() {
-        return "[NodeBuilder=BPMNDiagramBuilder]" + super.toString();
+        return "[NodeBuilder=BPMNDiagramBuilder] " + super.toString();
     }
 
 }

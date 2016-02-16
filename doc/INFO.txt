@@ -49,9 +49,12 @@
         import org.livespark.formmodeler.model.annotation.FieldDef;
 
 - Joe
-    - http://huxhzq.axshare.com/#p=process
-         if you click the [+] box. it will then draw a line that is a continuation in the direction of the last input line - to get the line direction, and will mirror the length of that line. then it will use a dummy SVG for at the end. Which is the grphical collection of composed possible shapes. That hte user will select.
-        if they click the [+] and drag, it'll drop the dummy SVG where ever the mouse finishes.
+    - Toolbox connectors
+        - http://huxhzq.axshare.com/#p=process
+            - if you click the [+] box. it will then draw a line that is a continuation in the direction of the last input line - to get the line direction, and will mirror the length of that line. then it will use a dummy SVG for at the end. Which is the grphical collection of composed possible shapes. That hte user will select.
+            - if they click the [+] and drag, it'll drop the dummy SVG where ever the mouse finishes.
+    - User task type properties
+        - http://huxhzq.axshare.com/#p=user_task_detail_panels&c=1
         
 - SVG
     - Examples -> http://svgicons.sparkk.fr/

@@ -114,6 +114,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
         }
 
         Node<ViewContent<BPMNDiagram>, Edge> diagramNode = diagramBuilder.build(builderContext);
+        String diagramName = diagramNode.getContent().getDefinition().getGeneral().getName().getValue();
+        graph.getContent().getDefinition().getGeneral().getName().setValue( diagramName );
         graph.addNode(diagramNode);
         
         this.isClosed = true;
@@ -137,18 +139,6 @@ public class BPMNGraphGenerator extends JsonGenerator {
     public DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> getGraph() {
         assert isClosed();
         return this.graph;
-    }
-    
-    private BPMNDiagramBuilder getRootBuilder() {
-        for (GraphObjectBuilder builder : builders) {
-            try {
-                return  (BPMNDiagramBuilder) builder;
-            } catch (ClassCastException e) {
-                // Continue searching the root process builder.
-            }
-        }
-        
-        return null;
     }
     
     final GraphObjectBuilder.BuilderContext<BPMNGraph> builderContext = new GraphObjectBuilder.BuilderContext<BPMNGraph>() {

@@ -53,7 +53,7 @@ public class BPMNGraph extends BaseDefinition implements BPMNDefinition {
     }
 
     public BPMNGraph buildDefaults() {
-        getGeneral().getName().setValue("My diagram");
+        getGeneral().getName().setValue("My BPMN graph");
         return this;
     }
 

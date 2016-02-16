@@ -30,6 +30,15 @@ public class BootstrapObjectBuilder<W extends Definition, T extends Element<View
                 builder.out(outRefId);
             }
         }
+
+        if ( null != boundLR ) {
+            builder.boundLR( boundLR[0], boundLR[1]);
+        }
+
+        if ( null != boundUL ) {
+            builder.boundUL( boundUL[0], boundUL[1]);
+        }
+        
         return builder;
     }
 

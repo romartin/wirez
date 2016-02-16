@@ -40,8 +40,7 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
 
     @Override
     public GraphObjectBuilder<W, T> property(String key, String value) {
-        String mappedKey = getPropertyIdMapping(key);
-        properties.put(mappedKey, value);
+        properties.put(key, value);
         return this;
     }
 
@@ -99,7 +98,7 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             final String pId = entry.getKey();
             final String pValue = entry.getValue();
-            final Property property = ElementUtils.getPropertyIgnoreCase(defProperties, pId);
+            final Property property = getProperty(defProperties, pId);
             if ( null != property ) {
                 final Object value;
                 try {
@@ -114,8 +113,8 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
         }
     }
     
-    protected String getPropertyIdMapping(final String propId) {
-        return propId;
+    protected Property getProperty(final Set<Property> defProperties, final String id) {
+        return ElementUtils.getPropertyIgnoreCase(defProperties, id);
     }
     
     @Override
@@ -124,6 +123,8 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
         builder.append(" [NodeId=").append(nodeId).append("] ");
         builder.append(" [properties=").append(properties).append("] ");
         builder.append(" [outgoingNodeIds=").append(outgoingNodeIds).append("] ");
+        builder.append(" [boundUL=").append(boundUL).append("] ");
+        builder.append(" [boundLR=").append(boundLR).append("] ");
         return builder.toString();
     }
 }

@@ -44,7 +44,7 @@ public class AddCanvasEdgeCommand extends BaseCanvasCommand {
 
     @Override
     public Command getCommand() {
-        return commandFactory.addEdgeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
+        return commandFactory.addEdgeCommand((DefaultGraph) canvasHandler.getGraphHandler().getGraph(), candidate);
     }
 
     @Override

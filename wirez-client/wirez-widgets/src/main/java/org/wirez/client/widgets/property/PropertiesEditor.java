@@ -405,7 +405,7 @@ public class PropertiesEditor implements IsWidget {
     }
     
     private void showDefault() {
-        final DefaultGraph defaultGraph = (DefaultGraph) PropertiesEditor.this.canvasHandler.getGraph();
+        final DefaultGraph defaultGraph = (DefaultGraph) PropertiesEditor.this.canvasHandler.getGraphHandler().getGraph();
         if ( null != defaultGraph) {
             this.elementUUID = defaultGraph.getUUID();
             show(defaultGraph);
@@ -417,7 +417,7 @@ public class PropertiesEditor implements IsWidget {
     void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
         checkNotNull("event", event);
         final ShapeState state = event.getState();
-        final DefaultGraph defaultGraph = (DefaultGraph) this.canvasHandler.getGraph();
+        final DefaultGraph defaultGraph = (DefaultGraph) this.canvasHandler.getGraphHandler().getGraph();
         final Shape shape = event.getShape();
         if ( shape != null ) {
             // If shape exist, show the properties for the underlying model element.

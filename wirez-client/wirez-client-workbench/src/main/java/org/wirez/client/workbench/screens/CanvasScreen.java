@@ -318,9 +318,9 @@ public class CanvasScreen {
                 final Collection<Shape> selectedItems = ((SelectionManager)canvas).getSelectedItems();
                 if (selectedItems != null && !selectedItems.isEmpty()) {
                     for (Shape shape : selectedItems) {
-                        Element element = ( (DefaultGraph) canvasHandler.getGraph()).getNode(shape.getId());
+                        Element element = ( (DefaultGraph) canvasHandler.getGraphHandler().getGraph()).getNode(shape.getId());
                         if (element == null) {
-                            element = ( (DefaultGraph) canvasHandler.getGraph()).getEdge(shape.getId());
+                            element = ( (DefaultGraph) canvasHandler.getGraphHandler().getGraph()).getEdge(shape.getId());
                             if (element != null) {
                                 log(Level.FINE, "Deleting edge with id " + element.getUUID());
                                 canvasHandler.execute(defaultCanvasCommands.DELETE_EDGE((Edge) element));
@@ -395,11 +395,11 @@ public class CanvasScreen {
     }
 
     private void resumeGraph() {
-        WirezLogger.resume((DefaultGraph) canvasHandler.getGraph());
+        WirezLogger.resume((DefaultGraph) canvasHandler.getGraphHandler().getGraph());
     }
 
     private void logGraph() {
-        WirezLogger.log((DefaultGraph) canvasHandler.getGraph());
+        WirezLogger.log((DefaultGraph) canvasHandler.getGraphHandler().getGraph());
     }
 
     private void visitGraph() {

@@ -92,11 +92,6 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     }
 
     @Override
-    public DefaultGraph<?, ? extends Node, ? extends Edge> getGraph() {
-        return graph;
-    }
-
-    @Override
     public CanvasSettings getSettings() {
         return settings;
     }

@@ -61,7 +61,8 @@ public class CanvasHighlightVisitor {
 
     public void run() {
         assert canvasHandler != null;
-        assert canvasHandler.getGraph() != null;
+        assert canvasHandler.getGraphHandler() != null;
+        assert canvasHandler.getGraphHandler().getGraph() != null;
       
         prepareSimulation(() -> animate(0, () -> log(Level.FINE, "CanvasHighlightVisitor - FINISHED")));
     }
@@ -121,7 +122,7 @@ public class CanvasHighlightVisitor {
     
     private void prepareSimulation(final Command command) {
 
-        final DefaultGraph graph = canvasHandler.getGraph();
+        final DefaultGraph graph = (DefaultGraph) canvasHandler.getGraphHandler().getGraph();
 
         shapes.clear();
 

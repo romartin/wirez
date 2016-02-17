@@ -38,7 +38,7 @@ public class ClearCanvasCommand extends BaseCanvasCommand {
 
     @Override
     protected Command getCommand() {
-        return commandFactory.clearGraphCommand( (DefaultGraph) canvasHandler.getGraph() );
+        return commandFactory.clearGraphCommand( (DefaultGraph) canvasHandler.getGraphHandler().getGraph() );
     }
 
     @Override

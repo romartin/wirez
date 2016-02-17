@@ -30,6 +30,7 @@ import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.handler.DefaultGraphHandler;
+import org.wirez.core.api.graph.processing.handler.GraphHandler;
 import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.DefaultGraphVisitor;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
@@ -120,6 +121,11 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
         });
         
         return this;
+    }
+
+    @Override
+    public GraphHandler<?, ? extends Node, ? extends Edge> getGraphHandler() {
+        return defaultGraphHandler;
     }
 
     private void loadRules(final DefinitionSet definitionSet, final org.uberfire.mvp.Command sucessCallback, final org.uberfire.mvp.Command errorCallback) {

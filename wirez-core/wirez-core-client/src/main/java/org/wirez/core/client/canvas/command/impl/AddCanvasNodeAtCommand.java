@@ -54,12 +54,12 @@ public class AddCanvasNodeAtCommand extends BaseCanvasCommand {
     @Override
     public Command getCommand() {
 
-        final GraphBoundsIndexer boundsIndexer = new GraphBoundsIndexer( canvasHandler.getGraph() );
+        final GraphBoundsIndexer boundsIndexer = new GraphBoundsIndexer((DefaultGraph) canvasHandler.getGraphHandler().getGraph());
         this.parent = boundsIndexer.getNodeAt(x , y);
         if ( null == this.parent ) {
-            return commandFactory.addNodeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
+            return commandFactory.addNodeCommand((DefaultGraph) canvasHandler.getGraphHandler().getGraph(), candidate);
         } else {
-            return commandFactory.addChildNodeCommand((DefaultGraph) canvasHandler.getGraph(), this.parent, candidate);
+            return commandFactory.addChildNodeCommand((DefaultGraph) canvasHandler.getGraphHandler().getGraph(), this.parent, candidate);
         }
         
     }

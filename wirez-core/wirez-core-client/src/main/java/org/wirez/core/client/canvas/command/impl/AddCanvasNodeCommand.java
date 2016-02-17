@@ -42,7 +42,7 @@ public class AddCanvasNodeCommand extends BaseCanvasCommand {
 
     @Override
     public Command getCommand() {
-        return commandFactory.addNodeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
+        return commandFactory.addNodeCommand((DefaultGraph) canvasHandler.getGraphHandler().getGraph(), candidate);
     }
 
     @Override

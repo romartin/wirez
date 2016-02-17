@@ -46,7 +46,7 @@ public class AddCanvasChildNodeCommand extends BaseCanvasCommand {
 
     @Override
     public Command getCommand() {
-        return commandFactory.addChildNodeCommand((DefaultGraph) canvasHandler.getGraph(), parent, candidate);
+        return commandFactory.addChildNodeCommand((DefaultGraph) canvasHandler.getGraphHandler().getGraph(), parent, candidate);
     }
 
     @Override

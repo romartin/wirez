@@ -43,7 +43,7 @@ public class DeleteCanvasEdgeCommand extends BaseCanvasCommand {
 
     @Override
     protected Command getCommand() {
-        return commandFactory.deleteEdgeCommand((DefaultGraph) canvasHandler.getGraph(), candidate);
+        return commandFactory.deleteEdgeCommand((DefaultGraph) canvasHandler.getGraphHandler().getGraph(), candidate);
     }
 
     @Override

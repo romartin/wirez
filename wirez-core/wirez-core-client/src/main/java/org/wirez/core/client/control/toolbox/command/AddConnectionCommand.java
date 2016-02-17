@@ -3,6 +3,7 @@ package org.wirez.core.client.control.toolbox.command;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.GraphBoundsIndexer;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
@@ -78,7 +79,7 @@ public class AddConnectionCommand implements ToolboxCommand {
     public void execute(final Context context, final Element element) {
         this.element = element;
         this.context = context;
-        this.boundsIndexer = new GraphBoundsIndexer(context.getCanvasHandler().getGraph());
+        this.boundsIndexer = new GraphBoundsIndexer((DefaultGraph) context.getCanvasHandler().getGraphHandler().getGraph());
         callback.init(element);
         view.show(context.getCanvasHandler().getCanvas(),
                 context.getX(), context.getY());

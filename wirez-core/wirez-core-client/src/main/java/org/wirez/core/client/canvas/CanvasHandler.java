@@ -21,6 +21,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.graph.processing.handler.GraphHandler;
 
 public interface CanvasHandler {
 
@@ -45,10 +46,9 @@ public interface CanvasHandler {
     Canvas getCanvas();
 
     /**
-     * Returns the working copy of the graph. The original graph can be obtained from the canvas settings.
+     * Returns the current canvas graph handler. 
+     * It contains the working copy of the graph. The original graph can be obtained from the canvas settings.
      */
-    DefaultGraph<?, ? extends Node, ? extends Edge> getGraph();
-    
-    
+    GraphHandler<?, ? extends Node, ? extends Edge> getGraphHandler();
     
 }

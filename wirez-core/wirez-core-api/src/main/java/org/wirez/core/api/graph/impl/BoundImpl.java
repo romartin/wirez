@@ -21,32 +21,32 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.graph.Bounds;
 
 @Portable
-public class DefaultBounds implements Bounds {
-    
-    private DefaultBound lr;
-    private DefaultBound ul;
+public class BoundImpl implements Bounds.Bound {
 
-    public DefaultBounds(@MapsTo("lr") DefaultBound lr,
-                         @MapsTo("ul") DefaultBound ul) {
-        this.lr = lr;
-        this.ul = ul;
+    private Double x;
+    private Double y;
+
+    public BoundImpl(@MapsTo("x") Double x,
+                     @MapsTo("y") Double y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
-    public DefaultBound getLowerRight() {
-        return lr;
+    public Double getX() {
+        return x;
     }
 
     @Override
-    public DefaultBound getUpperLeft() {
-        return ul;
+    public Double getY() {
+        return y;
     }
 
-    public void setLowerRight(DefaultBound lr) {
-        this.lr = lr;
+    public void setX(Double x) {
+        this.x = x;
     }
 
-    public void setUpperLeft(DefaultBound ul) {
-        this.ul = ul;
+    public void setY(Double y) {
+        this.y = y;
     }
 }

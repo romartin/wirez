@@ -22,8 +22,8 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultBound;
-import org.wirez.core.api.graph.impl.DefaultBounds;
+import org.wirez.core.api.graph.impl.BoundImpl;
+import org.wirez.core.api.graph.impl.BoundsImpl;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.ElementUtils;
@@ -75,9 +75,9 @@ public class UpdateElementPositionCommand extends AbstractCommand {
         final double h = oldSize[1];
 
         LOGGER.log(Level.FINE, "Moving element bounds to [" + x + "," + y + "] [" + ( x + w ) + "," + ( y + h ) + "]");
-        final DefaultBounds newBounds = new DefaultBounds(
-                new DefaultBound(x + w, y + h),
-                new DefaultBound(x, y)
+        final BoundsImpl newBounds = new BoundsImpl(
+                new BoundImpl(x + w, y + h),
+                new BoundImpl(x, y)
         );
         ((ViewContent) element.getContent()).setBounds(newBounds);
         return new GraphCommandResult(new ArrayList<RuleViolation>());

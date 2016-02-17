@@ -9,13 +9,12 @@ import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.content.ViewContentImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.impl.DefaultBound;
-import org.wirez.core.api.graph.impl.DefaultBounds;
+import org.wirez.core.api.graph.impl.BoundImpl;
+import org.wirez.core.api.graph.impl.BoundsImpl;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.DefaultGraphImpl;
+import org.wirez.core.api.graph.impl.GraphImpl;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
-import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
-import org.wirez.core.api.util.UUID;
+import org.wirez.core.api.graph.store.GraphNodeStoreImpl;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Set;
@@ -27,11 +26,11 @@ public class DefaultGraphFactoryImpl extends BaseElementFactory<DefaultDefinitio
     @Override
     public DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge> build(String uuid, DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
         DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge> graph =
-                new DefaultGraphImpl<ViewContent<DefaultDefinition>>( uuid,
+                new GraphImpl<ViewContent<DefaultDefinition>>( uuid,
                         properties,
                         labels,
                         new ViewContentImpl<DefaultDefinition>( definition, buildBounds()),
-                        new DefaultGraphNodeStore(),
+                        new GraphNodeStoreImpl(),
                         new DefaultGraphEdgeStore());
 
         return graph;
@@ -39,7 +38,7 @@ public class DefaultGraphFactoryImpl extends BaseElementFactory<DefaultDefinitio
     }
 
     protected Bounds buildBounds() {
-        return new DefaultBounds(new DefaultBound(1000d, 1000d), new DefaultBound(0d, 0d));
+        return new BoundsImpl(new BoundImpl(1000d, 1000d), new BoundImpl(0d, 0d));
     }
 
 }

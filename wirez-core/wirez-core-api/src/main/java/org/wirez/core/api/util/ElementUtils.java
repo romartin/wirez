@@ -1,16 +1,13 @@
 package org.wirez.core.api.util;
 
-import org.jboss.errai.databinding.client.HasProperties;
-import org.jboss.errai.databinding.client.api.DataBinder;
-import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultBound;
-import org.wirez.core.api.graph.impl.DefaultBounds;
+import org.wirez.core.api.graph.impl.BoundImpl;
+import org.wirez.core.api.graph.impl.BoundsImpl;
 
 import java.util.Set;
 
@@ -115,9 +112,9 @@ public class ElementUtils {
                                     final double height, 
                                     final ViewContent element) {
 
-        final Bounds bounds = new DefaultBounds(
-                new DefaultBound(x + width, y + height),
-                new DefaultBound(x, y)
+        final Bounds bounds = new BoundsImpl(
+                new BoundImpl(x + width, y + height),
+                new BoundImpl(x, y)
         );
         
         element.setBounds(bounds);

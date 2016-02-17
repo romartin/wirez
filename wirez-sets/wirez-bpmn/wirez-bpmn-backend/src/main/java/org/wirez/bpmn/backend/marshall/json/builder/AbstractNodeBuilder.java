@@ -1,17 +1,15 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultBound;
-import org.wirez.core.api.graph.impl.DefaultBounds;
+import org.wirez.core.api.graph.impl.BoundImpl;
+import org.wirez.core.api.graph.impl.BoundsImpl;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.service.definition.DefinitionService;
@@ -62,9 +60,9 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
     
     protected void setBounds(BuilderContext context, T node) {
         if ( null != boundUL && null != boundLR ) {
-            Bounds bounds = new DefaultBounds(
-                    new DefaultBound( boundLR[0], boundLR[1]),
-                    new DefaultBound( boundUL[0], boundUL[1]));
+            Bounds bounds = new BoundsImpl(
+                    new BoundImpl( boundLR[0], boundLR[1]),
+                    new BoundImpl( boundUL[0], boundUL[1]));
             node.getContent().setBounds(bounds);
             setSize(context, node);
         }

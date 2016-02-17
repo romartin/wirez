@@ -33,4 +33,6 @@ public interface Graph<C, N extends Node> extends Element<C> {
 
     Iterable<N> nodes();
     
+    void clear();
+    
 }

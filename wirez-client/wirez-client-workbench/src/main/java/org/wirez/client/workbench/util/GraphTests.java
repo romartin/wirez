@@ -16,19 +16,7 @@
 
 package org.wirez.client.workbench.util;
 
-import org.wirez.core.api.graph.Bounds;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContentImpl;
-import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
-import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 public class GraphTests {
 

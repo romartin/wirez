@@ -17,44 +17,44 @@
 package org.wirez.core.api.graph.store;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 @Portable
-public class DefaultGraphEdgeStore implements GraphEdgeStore<Edge> {
+public class GraphNodeStoreImpl implements GraphNodeStore<Node> {
 
-    protected Map<String, Edge> edges = new HashMap<String, Edge>();
+    protected Map<String, Node> nodes = new HashMap<String, Node>();
     
     @Override
-    public Edge add(final Edge edge) {
-        return edges.put(edge.getUUID(), edge);
+    public Node add(final Node node) {
+        return nodes.put(node.getUUID(), node);
     }
 
     @Override
-    public Edge remove(final String uuid) {
-        return edges.remove(uuid);
+    public Node remove(final String uuid) {
+        return nodes.remove(uuid);
     }
 
     @Override
-    public Edge get(final String uuid) {
-        return edges.get(uuid);
+    public Node get(final String uuid) {
+        return nodes.get(uuid);
     }
 
     @Override
     public int size() {
-        return edges.size();
+        return nodes.size();
     }
 
     @Override
     public void clear() {
-        edges.clear();
+        nodes.clear();
     }
 
     @Override
-    public Iterator<Edge> iterator() {
-        return edges.values().iterator();
+    public Iterator<Node> iterator() {
+        return nodes.values().iterator();
     }
 }

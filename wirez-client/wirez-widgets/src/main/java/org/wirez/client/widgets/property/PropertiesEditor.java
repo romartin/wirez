@@ -16,7 +16,6 @@
 
 package org.wirez.client.widgets.property;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,12 +34,11 @@ import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.processing.handler.DefaultGraphHandler;
+import org.wirez.core.api.graph.processing.handler.GraphHandlerImpl;
 import org.wirez.core.api.service.definition.DefinitionServiceResponse;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.DefaultCanvasListener;
 import org.wirez.core.client.canvas.ShapeState;
@@ -83,7 +81,7 @@ public class PropertiesEditor implements IsWidget {
     DefinitionManager definitionManager;
     ShapeManager wirezClientManager;
     DefaultCanvasCommands defaultCommands;
-    DefaultGraphHandler defaultGraphHandler;
+    GraphHandlerImpl defaultGraphHandler;
     View view;
     private CanvasHandler canvasHandler;
     private DefaultCanvasListener canvasListener;
@@ -96,7 +94,7 @@ public class PropertiesEditor implements IsWidget {
                             final View view,
                             final ShapeManager wirezClientManager,
                             final DefaultCanvasCommands defaultCommands,
-                            final DefaultGraphHandler defaultGraphHandler) {
+                            final GraphHandlerImpl defaultGraphHandler) {
         this.clientDefinitionServices = clientDefinitionServices;
         this.definitionManager = definitionManager;
         this.view = view;

@@ -9,13 +9,12 @@ import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.content.ViewContentImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
 import org.wirez.core.api.graph.factory.DefaultGraphFactory;
-import org.wirez.core.api.graph.impl.DefaultBound;
-import org.wirez.core.api.graph.impl.DefaultBounds;
+import org.wirez.core.api.graph.impl.BoundImpl;
+import org.wirez.core.api.graph.impl.BoundsImpl;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.impl.DefaultGraphImpl;
+import org.wirez.core.api.graph.impl.GraphImpl;
 import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
-import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
-import org.wirez.core.api.util.UUID;
+import org.wirez.core.api.graph.store.GraphNodeStoreImpl;
 
 import javax.enterprise.context.Dependent;
 import java.util.Set;
@@ -28,18 +27,18 @@ public class DefaultGraphFactoryImpl<W extends Definition> extends BaseElementFa
     public DefaultGraph<ViewContent<W>, Node, Edge> build(String uuid, W definition, Set<Property> properties, Set<String> labels) {
 
         DefaultGraph<ViewContent<W>, Node, Edge> graph =
-                new DefaultGraphImpl<ViewContent<W>>( uuid,
+                new GraphImpl<ViewContent<W>>( uuid,
                         properties,
                         labels,
                         new ViewContentImpl<>( definition, buildBounds()),
-                        new DefaultGraphNodeStore(),
+                        new GraphNodeStoreImpl(),
                         new DefaultGraphEdgeStore());
         
         return graph;
     }
 
     protected Bounds buildBounds() {
-        return new DefaultBounds(new DefaultBound(1000d, 1000d), new DefaultBound(0d, 0d));
+        return new BoundsImpl(new BoundImpl(1000d, 1000d), new BoundImpl(0d, 0d));
     }
 
 }

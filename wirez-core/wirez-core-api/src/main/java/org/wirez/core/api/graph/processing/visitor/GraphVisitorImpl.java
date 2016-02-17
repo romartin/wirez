@@ -22,23 +22,22 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.*;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.util.*;
 
 @Dependent
-public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
+public class GraphVisitorImpl implements GraphVisitor<Graph, Node, Edge> {
 
     @Inject
     DefinitionManager definitionManager;
     
-    private DefaultGraph graph;
-    private DefaultGraphVisitorCallback visitorCallback;
+    private Graph graph;
+    private GraphVisitorCallback visitorCallback;
     private GraphVisitorPolicy policy;
-    private DefaultGraphVisitorCallback.BoundsVisitorCallback boundsVisitor = null;
-    private DefaultGraphVisitorCallback.PropertyVisitorCallback propertyVisitor = null;
+    private BoundsVisitorCallback boundsVisitor = null;
+    private PropertyVisitorCallback propertyVisitor = null;
     private Set<String> processesEdges;
     private Set<String> processesNodes;
 
@@ -49,25 +48,23 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
      */
     
     @Override
-    public DefaultGraphVisitorImpl setBoundsVisitorCallback(DefaultGraphVisitorCallback.BoundsVisitorCallback callback) {
+    public void setBoundsVisitorCallback(final BoundsVisitorCallback callback) {
         this.boundsVisitor = callback;
-        return this;
     }
 
     @Override
-    public DefaultGraphVisitorImpl setPropertiesVisitorCallback(DefaultGraphVisitorCallback.PropertyVisitorCallback callback) {
+    public void setPropertiesVisitorCallback(final PropertyVisitorCallback callback) {
         this.propertyVisitor = callback;
-        return this;
     }
 
     // For quick development and testing... remove later
-    public DefaultGraphVisitorImpl setDefinitionManager(DefinitionManager definitionManager) {
+    public GraphVisitorImpl setDefinitionManager(final DefinitionManager definitionManager) {
         this.definitionManager = definitionManager;
         return this;
     }
 
     @Override
-    public void visit(DefaultGraph graph, DefaultGraphVisitorCallback callback, GraphVisitorPolicy policy) {
+    public void visit(Graph graph, GraphVisitorCallback callback, GraphVisitorPolicy policy) {
         this.graph = graph;
         this.visitorCallback = callback;
         this.policy = policy;
@@ -165,17 +162,18 @@ public class DefaultGraphVisitorImpl implements DefaultGraphVisitor {
     }
     
     private void visitUnconnectedEdges() {
-        Iterable<Edge> edges = graph.edges();
+        // TODO
+        /*Iterable<Edge> edges = graph.edges();
         Iterator<Edge> edgesIt = edges.iterator();
         while (edgesIt.hasNext()) {
             Edge edge = edgesIt.next();
             if (!this.processesEdges.contains(edge.getUUID())) {
                 doVisitEdge(edge);
             }
-        }
+        }*/
     }
 
-    private Collection<Node> getStartingNodes(final DefaultGraph graph) {
+    private Collection<Node> getStartingNodes(final Graph graph) {
         final Collection<Node> result = new LinkedList<Node>();
 
         final Iterator<Node> nodesIt = graph.nodes().iterator();

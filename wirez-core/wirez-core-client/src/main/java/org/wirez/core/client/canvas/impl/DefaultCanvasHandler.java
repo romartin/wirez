@@ -29,7 +29,7 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.graph.processing.handler.DefaultGraphHandler;
+import org.wirez.core.api.graph.processing.handler.GraphHandlerImpl;
 import org.wirez.core.api.graph.processing.handler.GraphHandler;
 import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.DefaultGraphVisitor;
@@ -69,7 +69,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
     ShapeManager shapeManager;
     ClientDefinitionManager clientDefinitionManager;
     DefaultCanvasCommands defaultCanvasCommands;
-    DefaultGraphHandler defaultGraphHandler;
+    GraphHandlerImpl defaultGraphHandler;
     DefaultGraphVisitor defaultGraphVisitor;
     
     @Inject
@@ -79,7 +79,7 @@ public class DefaultCanvasHandler extends BaseCanvasHandler {
                                 final DefaultCommandManager commandManager, 
                                 final @Named( "default" ) DefaultRuleManager ruleManager,
                                 final DefaultCanvasCommands defaultCanvasCommands,
-                                final DefaultGraphHandler defaultGraphHandler,
+                                final GraphHandlerImpl defaultGraphHandler,
                                 final DefaultGraphVisitor defaultGraphVisitor) {
         super(notificationEvent, commandManager, ruleManager);
         this.shapeManager = shapeManager;

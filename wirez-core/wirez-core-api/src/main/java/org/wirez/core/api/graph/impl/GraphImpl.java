@@ -20,32 +20,24 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
-import org.wirez.core.api.graph.store.DefaultGraphNodeStore;
-import org.wirez.core.api.graph.store.GraphEdgeStore;
 import org.wirez.core.api.graph.store.GraphNodeStore;
 
-import java.util.Map;
 import java.util.Set;
 
 @Portable
-public class DefaultGraphImpl<C> extends ElementImpl<C> implements DefaultGraph<C, Node, Edge> {
+public class GraphImpl<C> extends ElementImpl<C> implements Graph<C, Node> {
     private final GraphNodeStore<Node> nodeStore;
-    private final GraphEdgeStore<Edge> edgeStore;
 
-    public DefaultGraphImpl(@MapsTo("uuid") String uuid,
-                            @MapsTo("properties") Set<Property> properties,
-                            @MapsTo("labels") Set<String> labels,
-                            @MapsTo("content") C content,
-                            @MapsTo("nodeStore") GraphNodeStore<Node> nodeStore,
-                            @MapsTo("edgeStore") GraphEdgeStore<Edge> edgeStore) {
+    public GraphImpl(@MapsTo("uuid") String uuid,
+                     @MapsTo("properties") Set<Property> properties,
+                     @MapsTo("labels") Set<String> labels,
+                     @MapsTo("content") C content,
+                     @MapsTo("nodeStore") GraphNodeStore<Node> nodeStore) {
         super(uuid, properties, labels, content);
         this.nodeStore = PortablePreconditions.checkNotNull( "nodeStore",
                 nodeStore );
-        this.edgeStore = PortablePreconditions.checkNotNull( "edgeStore",
-                edgeStore );
     }
 
     @Override
@@ -68,25 +60,9 @@ public class DefaultGraphImpl<C> extends ElementImpl<C> implements DefaultGraph<
         return nodeStore;
     }
 
-    public Edge addEdge(final Edge edge) {
-        return edgeStore.add(edge);
-    }
-
-    public Edge removeEdge(final String uuid) {
-        return edgeStore.remove(uuid);
-    }
-
-    public Edge getEdge(final String uuid) {
-        return edgeStore.get(uuid);
-    }
-
-    public Iterable<Edge> edges() {
-        return edgeStore;
-    }
-
     @Override
     public void clear() {
         nodeStore.clear();
-        edgeStore.clear();
     }
+    
 }

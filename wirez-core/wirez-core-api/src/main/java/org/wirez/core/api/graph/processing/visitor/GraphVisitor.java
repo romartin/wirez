@@ -20,12 +20,16 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 
-public interface GraphVisitor<G extends Graph, N extends Node, E extends Edge, C extends GraphVisitorCallback<G, N, E>> {
+public interface GraphVisitor<G extends Graph, N extends Node, E extends Edge> {
 
     public enum GraphVisitorPolicy {
         EDGE_FIRST, EDGE_LAST;
     }
 
-    void visit(G graph, C callback, GraphVisitorPolicy policy);
+    void visit(G graph, GraphVisitorCallback<G, N, E> callback, GraphVisitorPolicy policy);
+
+    void setBoundsVisitorCallback(BoundsVisitorCallback callback);
+
+    void setPropertiesVisitorCallback(PropertyVisitorCallback callback);
     
 }

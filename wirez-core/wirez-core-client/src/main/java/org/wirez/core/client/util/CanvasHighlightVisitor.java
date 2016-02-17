@@ -17,10 +17,8 @@
 package org.wirez.core.client.util;
 
 import com.ait.lienzo.shared.core.types.ColorName;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import org.uberfire.mvp.Command;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.Edge;
@@ -28,7 +26,7 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.DefaultGraphVisitorImpl;
+import org.wirez.core.api.graph.processing.visitor.GraphVisitorImpl;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.HasDecorators;
@@ -127,7 +125,7 @@ public class CanvasHighlightVisitor {
         shapes.clear();
 
         final DefinitionManager definitionManager = ClientDefinitionManager.get();
-        new DefaultGraphVisitorImpl()
+        new GraphVisitorImpl()
                 .setDefinitionManager(definitionManager)
                 .visit(graph, new AbstractGraphVisitorCallback() {
 

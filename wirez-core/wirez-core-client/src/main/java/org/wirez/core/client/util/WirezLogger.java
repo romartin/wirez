@@ -16,15 +16,12 @@
 
 package org.wirez.core.client.util;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.Window;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.*;
 import org.wirez.core.api.graph.processing.visitor.*;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.ClientDefinitionManager;
@@ -184,7 +181,7 @@ public class WirezLogger {
 
     public static void log(final DefaultGraph graph) {
         final DefinitionManager definitionManager = ClientDefinitionManager.get();
-        new DefaultGraphVisitorImpl()
+        new GraphVisitorImpl()
                 .setDefinitionManager(definitionManager)
                 .setBoundsVisitorCallback(new DefaultGraphVisitorCallback.BoundsVisitorCallback() {
                     @Override
@@ -206,7 +203,7 @@ public class WirezLogger {
 
     public static void resume(final DefaultGraph graph) {
         final DefinitionManager definitionManager = ClientDefinitionManager.get();
-        new DefaultGraphVisitorImpl()
+        new GraphVisitorImpl()
                 .setDefinitionManager(definitionManager)
                 .visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
     }

@@ -27,7 +27,7 @@ import javax.enterprise.context.Dependent;
 import java.util.*;
 
 @Dependent
-public class DefaultGraphHandler<C, G extends DefaultGraph<C, N, E>, N extends Node, E extends Edge> implements GraphHandler<G, N ,E> {
+public class GraphHandlerImpl<C, G extends Graph<C, N>, N extends Node, E extends Edge> implements GraphHandler<G, N ,E> {
 
     G graph;
 
@@ -42,7 +42,7 @@ public class DefaultGraphHandler<C, G extends DefaultGraph<C, N, E>, N extends N
         assert graph != null && uuid != null;
         Element element = graph.getNode(uuid);
         if (element == null) {
-            element = graph.getEdge(uuid);
+            element = _getEdge(uuid);
         }
         return element;
     }
@@ -56,7 +56,7 @@ public class DefaultGraphHandler<C, G extends DefaultGraph<C, N, E>, N extends N
     @Override
     public E getEdge(final String uuid) {
         assert graph != null && uuid != null;
-        return graph.getEdge(uuid);
+        return _getEdge(uuid);
     }
 
     @Override
@@ -82,6 +82,23 @@ public class DefaultGraphHandler<C, G extends DefaultGraph<C, N, E>, N extends N
             }
         }
         
+        return null;
+    }
+    
+    private E _getEdge(final String uuid) {
+        final Iterable<N> nodesIterable = graph.nodes();
+        final Iterator<N> nodesIterator = nodesIterable.iterator();
+        while (nodesIterator.hasNext()) {
+            final N node = nodesIterator.next();
+            List<E> outEdges = node.getOutEdges();
+            if ( null != outEdges && !outEdges.isEmpty() ) {
+                for ( final E outEdge : outEdges ) {
+                    if ( outEdge.getUUID().equals(uuid) ) {
+                        return outEdge;
+                    }
+                }
+            }
+        }
         return null;
     }
 
@@ -114,7 +131,8 @@ public class DefaultGraphHandler<C, G extends DefaultGraph<C, N, E>, N extends N
 
     @Override
     public Collection<E> findEdges(final List<String> labels) {
-        return (Collection<E>) findElements((Iterable<Edge>) graph.edges(), labels);
+        // TODO
+        return null;
     }
 
     @Override

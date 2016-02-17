@@ -17,15 +17,16 @@
 package org.wirez.core.api.graph.processing.visitor;
 
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.*;
 
-public abstract class AbstractGraphVisitorCallback implements DefaultGraphVisitorCallback {
+public abstract class AbstractGraphVisitorCallback implements GraphVisitorCallback<Graph, Node, Edge> {
 
     @Override
-    public void visitGraphWithViewContent(DefaultGraph<? extends ViewContent, ? extends Node, ? extends Edge> graph) {
+    public void visitGraphWithViewContent(Graph<? extends ViewContent, ? extends Node> graph) {
         
     }
 
@@ -45,7 +46,7 @@ public abstract class AbstractGraphVisitorCallback implements DefaultGraphVisito
     }
 
     @Override
-    public void visitGraph(DefaultGraph graph) {
+    public void visitGraph(Graph graph) {
 
     }
 

@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.graph.commands;
+package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -49,14 +49,13 @@ public class DeleteEdgeCommand extends AbstractCommand {
     }
     
     @Override
-    public CommandResult allow(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
-        return results;
+    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
+        return check(ruleManager);
     }
 
     @Override
-    public CommandResult execute(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
+    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
+        final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
             
             final Node outNode = edge.getTargetNode();
@@ -75,7 +74,7 @@ public class DeleteEdgeCommand extends AbstractCommand {
         return results;
     }
     
-    private CommandResult check(final RuleManager ruleManager) {
+    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
         boolean isEdgeInGraph = false;
         for ( Edge edge : graph.edges() ) {
             if ( edge.equals( this.edge ) ) {
@@ -84,12 +83,12 @@ public class DeleteEdgeCommand extends AbstractCommand {
             }
         }
 
-        DefaultCommandResult results;
+        GraphCommandResult results;
         if ( isEdgeInGraph ) {
             final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), (Edge<? extends ViewContent<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
-            results = new DefaultCommandResult(cardinalityRuleViolations);
+            results = new GraphCommandResult(cardinalityRuleViolations);
         } else {
-            results = new DefaultCommandResult();
+            results = new GraphCommandResult();
             results.setType(CommandResult.Type.ERROR);
             results.setMessage("Edge was not present in Graph and hence was not deleted");
         }
@@ -99,8 +98,8 @@ public class DeleteEdgeCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = commandFactory.addEdgeCommand( graph, edge );
+    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
+        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.addEdgeCommand( graph, edge );
         return undoCommand.execute( ruleManager );
     }
 

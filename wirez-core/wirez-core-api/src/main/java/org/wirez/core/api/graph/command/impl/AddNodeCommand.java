@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.graph.commands;
+package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -47,33 +47,31 @@ public class AddNodeCommand extends AbstractCommand {
     }
     
     @Override
-    public CommandResult allow(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
-        return results;
+    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
+        return check(ruleManager);
     }
 
     @Override
-    public CommandResult execute(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
+    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
+        final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
             target.addNode( candidate );
         }
         return results;
     }
     
-    private CommandResult check(final RuleManager ruleManager) {
+    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
         final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) ruleManager.checkContainment( target, candidate).violations();
         final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(containmentRuleViolations);
         violations.addAll(cardinalityRuleViolations);
-        final CommandResult results = new DefaultCommandResult(violations);
-        return results;
+        return new GraphCommandResult(violations);
     }
 
     @Override
-    public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = commandFactory.deleteNodeCommand( target, candidate );
+    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
+        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.deleteNodeCommand( target, candidate );
         return undoCommand.execute( ruleManager );
     }
 

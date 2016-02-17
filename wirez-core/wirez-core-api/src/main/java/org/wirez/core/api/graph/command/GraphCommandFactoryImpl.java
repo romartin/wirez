@@ -1,4 +1,4 @@
-package org.wirez.core.api.graph.commands;
+package org.wirez.core.api.graph.command;
 
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.adapter.PropertyAdapter;
@@ -7,6 +7,7 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.impl.*;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.util.ElementUtils;
@@ -15,15 +16,15 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class SharedGraphCommandFactory implements GraphCommandFactory {
+public class GraphCommandFactoryImpl implements GraphCommandFactory {
 
     DefinitionManager definitionManager;
 
-    public SharedGraphCommandFactory() {
+    public GraphCommandFactoryImpl() {
     }
 
     @Inject
-    public SharedGraphCommandFactory(DefinitionManager definitionManager) {
+    public GraphCommandFactoryImpl(DefinitionManager definitionManager) {
         this.definitionManager = definitionManager;
     }
 
@@ -35,8 +36,8 @@ public class SharedGraphCommandFactory implements GraphCommandFactory {
     }
 
     @Override
-    public RemoveChildNodeCommand removeChildNodeCommand(final DefaultGraph target, 
-                                                         final Node oldParent, 
+    public RemoveChildNodeCommand removeChildNodeCommand(final DefaultGraph target,
+                                                         final Node oldParent,
                                                          final Node candidate) {
         return new RemoveChildNodeCommand(this, target, oldParent, candidate);
     }

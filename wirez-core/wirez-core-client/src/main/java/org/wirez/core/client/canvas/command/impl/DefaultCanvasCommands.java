@@ -17,12 +17,10 @@
 package org.wirez.core.client.canvas.command.impl;
 
 
-import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.commands.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.factory.ShapeFactory;

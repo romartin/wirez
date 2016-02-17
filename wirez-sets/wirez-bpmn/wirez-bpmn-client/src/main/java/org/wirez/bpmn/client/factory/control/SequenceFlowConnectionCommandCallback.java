@@ -6,7 +6,7 @@ import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.commands.SharedGraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandFactoryImpl;
 import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.UUID;
@@ -36,7 +36,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     private static Logger LOGGER = Logger.getLogger("org.wirez.bpmn.client.factory.control.SequenceFlowConnectionCommandCallback");
 
     DefaultCanvasCommands defaultCanvasCommands;
-    SharedGraphCommandFactory sharedGraphCommandFactory;
+    GraphCommandFactoryImpl graphCommandFactoryImpl;
     ClientDefinitionServices clientDefinitionServices;
     ShapeManager shapeManager;
     BPMNDefinitionFactory bpmnDefinitionFactory;
@@ -46,12 +46,12 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     
     @Inject
     public SequenceFlowConnectionCommandCallback(final DefaultCanvasCommands defaultCanvasCommands,
-                                                 final SharedGraphCommandFactory sharedGraphCommandFactory,
+                                                 final GraphCommandFactoryImpl graphCommandFactoryImpl,
                                                  final ClientDefinitionServices clientDefinitionServices,
                                                  final ShapeManager shapeManager,
                                                  final BPMNDefinitionFactory bpmnDefinitionFactory) {
         this.defaultCanvasCommands = defaultCanvasCommands;
-        this.sharedGraphCommandFactory = sharedGraphCommandFactory;
+        this.graphCommandFactoryImpl = graphCommandFactoryImpl;
         this.clientDefinitionServices = clientDefinitionServices;
         this.shapeManager = shapeManager;
         this.bpmnDefinitionFactory = bpmnDefinitionFactory;
@@ -97,8 +97,8 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
         final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
 
         final CompositeElementCanvasCommand connectionsCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                .add( sharedGraphCommandFactory.setConnectionSourceNodeCommand( (Node<? extends ViewContent<?>, Edge>) source, edge, magnetIndexes[0] ) )
-                .add( sharedGraphCommandFactory.setConnectionTargetNodeCommand( (Node<? extends ViewContent<?>, Edge>) target, edge, magnetIndexes[1] ) );
+                .add( graphCommandFactoryImpl.setConnectionSourceNodeCommand( (Node<? extends ViewContent<?>, Edge>) source, edge, magnetIndexes[0] ) )
+                .add( graphCommandFactoryImpl.setConnectionTargetNodeCommand( (Node<? extends ViewContent<?>, Edge>) target, edge, magnetIndexes[1] ) );
 
 
         final AddCanvasEdgeCommand addEdgeCommand = defaultCanvasCommands.ADD_EDGE( edge, factory);

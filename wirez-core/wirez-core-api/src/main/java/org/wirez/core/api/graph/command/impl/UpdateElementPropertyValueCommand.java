@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.graph.commands;
+package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.adapter.PropertyAdapter;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.ElementUtils;
@@ -57,22 +58,22 @@ public class UpdateElementPropertyValueCommand extends AbstractCommand {
     }
     
     @Override
-    public CommandResult allow(final RuleManager ruleManager) {
+    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
         // TODO: Check value.
-        return new DefaultCommandResult(new ArrayList<RuleViolation>());
+        return new GraphCommandResult();
     }
 
     @Override
-    public CommandResult execute(final RuleManager ruleManager) {
+    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
         final Property p = ElementUtils.getProperty(element, propertyId);
         oldValue = adapter.getValue(p);
         adapter.setValue(p, value);
-        return new DefaultCommandResult(new ArrayList<RuleViolation>());
+        return new GraphCommandResult(new ArrayList<RuleViolation>());
     }
     
     @Override
-    public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = commandFactory.updateElementPropertyValueCommand( element, propertyId, oldValue );
+    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
+        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.updateElementPropertyValueCommand( element, propertyId, oldValue );
         return undoCommand.execute( ruleManager );
     }
 

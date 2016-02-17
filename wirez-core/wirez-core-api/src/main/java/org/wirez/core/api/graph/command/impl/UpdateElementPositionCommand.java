@@ -13,15 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.graph.commands;
+package org.wirez.core.api.graph.command.impl;
 
-import com.google.gwt.core.client.GWT;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.DefaultCommandResult;
-import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultBound;
 import org.wirez.core.api.graph.impl.DefaultBounds;
@@ -61,13 +60,13 @@ public class UpdateElementPositionCommand extends AbstractCommand {
     }
     
     @Override
-    public CommandResult allow(final RuleManager ruleManager) {
+    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
         // TODO: Check bounds values.
-        return new DefaultCommandResult(new ArrayList<RuleViolation>());
+        return new GraphCommandResult();
     }
 
     @Override
-    public CommandResult execute(final RuleManager ruleManager) {
+    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
         final Double[] oldPosition = ElementUtils.getPosition((ViewContent) element.getContent());
         final Double[] oldSize = ElementUtils.getSize((ViewContent) element.getContent());
         this.oldX = oldPosition[0];
@@ -81,12 +80,12 @@ public class UpdateElementPositionCommand extends AbstractCommand {
                 new DefaultBound(x, y)
         );
         ((ViewContent) element.getContent()).setBounds(newBounds);
-        return new DefaultCommandResult(new ArrayList<RuleViolation>());
+        return new GraphCommandResult(new ArrayList<RuleViolation>());
     }
     
     @Override
-    public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = commandFactory.updateElementPositionCommand( element, oldX, oldY);
+    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
+        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.updateElementPositionCommand( element, oldX, oldY);
         return undoCommand.execute( ruleManager );
     }
 

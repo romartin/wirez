@@ -13,60 +13,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.graph.commands;
+package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.DefaultCommandResult;
-import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RuleViolation;
 
 /**
- * A Command to add a DefaultEdge to a Graph
+ * A Command to clear all elements in a graph
  */
-public class AddEdgeCommand extends AbstractCommand {
+public class ClearGraphCommand extends AbstractCommand {
 
     private DefaultGraph target;
-    private Edge edge;
 
-    public AddEdgeCommand(final GraphCommandFactory commandFactory,
-                          DefaultGraph target, Edge edge) {
+    public ClearGraphCommand(final GraphCommandFactory commandFactory,
+                             DefaultGraph target) {
         super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );;
-        this.edge = PortablePreconditions.checkNotNull( "edge",
-                edge );;
     }
     
     @Override
-    public CommandResult allow(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
-        return results;
+    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
+        return check(ruleManager);
     }
 
     @Override
-    public CommandResult execute(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
+    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
+        final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
-            target.addEdge( edge );
+            target.clear();
         }
         return results;
     }
     
-    private CommandResult check(final RuleManager ruleManager) {
-        return new DefaultCommandResult();        
+    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
+        return new GraphCommandResult();        
     }
 
     @Override
-    public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = commandFactory.deleteEdgeCommand( target, edge );
-        return undoCommand.execute( ruleManager );
+    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
+        // TODO
+        return null;
     }
 
     @Override
     public String toString() {
-        return "AddEdgeCommand [target=" + target.getUUID() + ", edge=" + edge.getUUID() + "]";
+        return "ClearGraphCommand [target=" + target.getUUID() + "]";
     }
 }

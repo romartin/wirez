@@ -20,15 +20,9 @@ import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresEvent;
 import com.ait.lienzo.client.core.shape.wires.event.ResizeEvent;
 import com.ait.lienzo.client.core.shape.wires.event.ResizeHandler;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.commands.UpdateElementPropertyValueCommand;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.canvas.command.impl.CompositeElementCanvasCommand;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
-import org.wirez.core.client.control.BaseShapeControl;
 import org.wirez.core.client.impl.BaseShape;
-import org.wirez.core.client.mutation.HasRadiusMutation;
-import org.wirez.core.client.mutation.HasSizeMutation;
-import org.wirez.core.client.mutation.StaticMutationContext;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;

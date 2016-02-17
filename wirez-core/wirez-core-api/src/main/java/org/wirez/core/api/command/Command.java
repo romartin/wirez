@@ -15,32 +15,23 @@
  */
 package org.wirez.core.api.command;
 
-import org.wirez.core.api.rule.RuleManager;
-
-/**
- * Command to mutate Elements in a Graph.
- */
-public interface Command {
+public interface Command<T, V> {
 
     /**
-     * Check whether the command operation is allowed. It does not mutate the graph.
-     * @param ruleManager
-     * @return
+     * Check whether the command operation is allowed.
+     * Does not perform any update or mutation.
      */
-    CommandResult allow(final RuleManager ruleManager);
+    CommandResult<V> allow(T context);
 
     /**
-     * Executes the command operation. Graph can be mutated.
-     * @param ruleManager
-     * @return
+     * Executes the command operation.
+     * Does perform some update or mutation.
      */
-    CommandResult execute(final RuleManager ruleManager);
+    CommandResult<V> execute(T context);
 
     /**
-     * Undo the changes the command execution made to the model
-     * @param ruleManager
-     * @return
+     * Undo the changes done by this command execution.
      */
-    CommandResult undo(final RuleManager ruleManager);
+    CommandResult<V> undo(T context);
 
 }

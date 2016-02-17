@@ -20,7 +20,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.commands.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.handler.GraphHandler;
 import org.wirez.core.api.rule.RuleManager;

@@ -14,27 +14,28 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.command;
+package org.wirez.core.api.graph.command;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Portable
-public class DefaultCommandResult implements CommandResult {
+public class GraphCommandResult implements CommandResult<RuleViolation> {
     
-    private CommandResult.Type type;
+    private Type type;
     private String message;
     private Collection<RuleViolation> violations;
 
-    public DefaultCommandResult() {
+    public GraphCommandResult() {
         this.violations = new ArrayList<RuleViolation>();
         init(violations);
     }
     
-    public DefaultCommandResult(final Collection<RuleViolation> violations) {
+    public GraphCommandResult(final Collection<RuleViolation> violations) {
         this.violations = violations;
         init(violations);
     }
@@ -69,6 +70,15 @@ public class DefaultCommandResult implements CommandResult {
     public String getMessage() {
         return message;
     }
+
+    @Override
+    public Iterable<RuleViolation> getViolations() {
+        return violations;
+    }
+
+    public Collection<RuleViolation> getViolationsCollection() {
+        return violations;
+    }
     
     public void setType(Type type) {
         this.type = type;
@@ -78,8 +88,5 @@ public class DefaultCommandResult implements CommandResult {
         this.message = message;
     }
     
-    @Override
-    public Iterable<RuleViolation> getRuleViolations() {
-        return violations;
-    }
+    
 }

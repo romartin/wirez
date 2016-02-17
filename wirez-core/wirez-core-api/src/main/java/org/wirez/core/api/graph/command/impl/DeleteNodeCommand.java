@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.graph.commands;
+package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -48,36 +48,38 @@ public class DeleteNodeCommand extends AbstractCommand {
     }
     
     @Override
-    public CommandResult allow(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
-        return results;
+    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
+        return check(ruleManager);
     }
 
     @Override
-    public CommandResult execute(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
+    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
+        final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
-            
-            final List<Edge> inEdges = candidate.getInEdges();
-            if ( null != inEdges ) {
-                for (final Edge inEdge : inEdges) {
-                    inEdge.setTargetNode(null);
-                }
-            }
-
-            final List<Edge> outEdges = candidate.getOutEdges();
-            if ( null != outEdges ) {
-                for (final Edge outEdge : outEdges) {
-                    outEdge.setSourceNode(null);
-                }
-            }
-            
-            target.removeNode( candidate.getUUID() );
+            removeNode(candidate);
         }
         return results;
     }
     
-    private CommandResult check(final RuleManager ruleManager) {
+    private void removeNode(final Node node) {
+        final List<Edge> inEdges = node.getInEdges();
+        if ( null != inEdges ) {
+            for (final Edge inEdge : inEdges) {
+                inEdge.setTargetNode(null);
+            }
+        }
+
+        final List<Edge> outEdges = node.getOutEdges();
+        if ( null != outEdges ) {
+            for (final Edge outEdge : outEdges) {
+                outEdge.setSourceNode(null);
+            }
+        }
+
+        target.removeNode( candidate.getUUID() );
+    }
+    
+    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
 
         boolean isNodeInGraph = false;
         for ( Object node : target.nodes() ) {
@@ -87,12 +89,12 @@ public class DeleteNodeCommand extends AbstractCommand {
             }
         }
 
-        DefaultCommandResult results;
+        GraphCommandResult results;
         if ( isNodeInGraph ) {
             final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality( target, candidate, RuleManager.Operation.DELETE).violations();
-            results = new DefaultCommandResult(cardinalityRuleViolations);
+            results = new GraphCommandResult(cardinalityRuleViolations);
         } else {
-            results = new DefaultCommandResult();
+            results = new GraphCommandResult();
             results.setType(CommandResult.Type.ERROR);
             results.setMessage("GraphNode was not present in Graph and hence was not deleted");
         }
@@ -101,8 +103,8 @@ public class DeleteNodeCommand extends AbstractCommand {
     }
 
     @Override
-    public CommandResult undo(RuleManager ruleManager) {
-        final Command undoCommand = commandFactory.addNodeCommand( target, candidate );
+    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
+        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.addNodeCommand( target, candidate );
         return undoCommand.execute( ruleManager );
     }
 

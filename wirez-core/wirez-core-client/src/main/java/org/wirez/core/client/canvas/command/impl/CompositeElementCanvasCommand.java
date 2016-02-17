@@ -20,7 +20,7 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.commands.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.CanvasHandler;

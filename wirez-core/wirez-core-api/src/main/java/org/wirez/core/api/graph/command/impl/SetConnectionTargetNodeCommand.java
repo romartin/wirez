@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.core.api.graph.commands;
+package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.DefaultCommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -31,71 +30,68 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * A Command to set the outgoing connection for a DefaultEdge in a Graph.
+ * A Command to set the incoming connection for a DefaultEdge in a Graph.
  */
-public class SetConnectionSourceNodeCommand extends AbstractCommand {
+public class SetConnectionTargetNodeCommand extends AbstractCommand {
 
     private Node<? extends ViewContent<?>, Edge> targetNode;
-    private Node<? extends ViewContent<?>, Edge> lastSourceNode;
+    private Node<? extends ViewContent<?>, Edge> lastTargetNode;
     private Node<? extends ViewContent<?>, Edge> sourceNode;
     private Edge<? extends ViewContent<?>, Node> edge;
     private int magnetIndex;
 
-    public SetConnectionSourceNodeCommand(final GraphCommandFactory commandFactory,
-                                          final Node<? extends ViewContent<?>, Edge> sourceNode,
-                                          final Edge<? extends ViewContent<?>, Node> edge, 
+    public SetConnectionTargetNodeCommand(final GraphCommandFactory commandFactory,
+                                          final Node<? extends ViewContent<?>, Edge> targetNode,
+                                          final Edge<? extends ViewContent<?>, Node> edge,
                                           final int magnetIndex) {
         super(commandFactory);
         this.edge = PortablePreconditions.checkNotNull( "edge",
                 edge );;
-        this.sourceNode = PortablePreconditions.checkNotNull( "sourceNode",
-                sourceNode);;
-        this.lastSourceNode = edge.getSourceNode();
-        this.targetNode = edge.getTargetNode();
+        this.targetNode = PortablePreconditions.checkNotNull( "targetNode",
+                targetNode);;
+        this.lastTargetNode = edge.getTargetNode();
+        this.sourceNode = edge.getSourceNode();
         this.magnetIndex = magnetIndex;
     }
     
     @Override
-    public CommandResult allow(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
-        return results;
+    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
+        return check(ruleManager);
     }
 
     @Override
-    public CommandResult execute(final RuleManager ruleManager) {
-        final CommandResult results = check(ruleManager);
+    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
+        final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
-            if (lastSourceNode != null) {
-                lastSourceNode.getOutEdges().remove( edge );
+            if (lastTargetNode != null) {
+                lastTargetNode.getInEdges().remove( edge );
             }
-            sourceNode.getOutEdges().add( edge );
-            edge.setSourceNode( sourceNode );
+            targetNode.getInEdges().add( edge );
+            edge.setTargetNode( targetNode );
             ConnectionContent connectionContent = (ConnectionContent) edge.getContent();
-            connectionContent.setSourceMagnetIndex(magnetIndex);
+            connectionContent.setTargetMagnetIndex(magnetIndex);
         }
         return results;
     }
     
-    private CommandResult check(final RuleManager ruleManager) {
+    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
         final Collection<RuleViolation> connectionRuleViolations = (Collection<RuleViolation>) ruleManager.checkConnectionRules(sourceNode, targetNode, edge).violations();
         final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(sourceNode, targetNode, edge, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(connectionRuleViolations);
         violations.addAll(cardinalityRuleViolations);
 
-        final CommandResult results = new DefaultCommandResult(violations);
-        return results;        
+        return new GraphCommandResult(violations);        
     }
 
     @Override
-    public CommandResult undo(RuleManager ruleManager) {
+    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
         throw new UnsupportedOperationException("Undo for this command not supported yet.");
     }
 
     @Override
     public String toString() {
-        return "SetConnectionSourceNodeCommand [edge=" + edge.getUUID() + ", candidate=" + sourceNode.getUUID() 
-                + ", magnet=" + magnetIndex + "]";
+        return "SetConnectionTargetNodeCommand [edge=" + edge.getUUID() + ", candidate=" + targetNode.getUUID() + ", magnet=" + magnetIndex + "]";
     }
     
 }

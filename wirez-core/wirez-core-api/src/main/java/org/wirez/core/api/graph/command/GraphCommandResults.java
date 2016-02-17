@@ -14,32 +14,35 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.command;
+package org.wirez.core.api.graph.command;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.Collection;
 import java.util.LinkedList;
 
 @Portable
-public class DefaultCommandResults implements CommandResults {
+public class GraphCommandResults implements CommandResults<RuleViolation> {
     
-    Collection<CommandResult> results = new LinkedList<CommandResult>();
+    Collection<CommandResult<RuleViolation>> results = new LinkedList<CommandResult<RuleViolation>>();
 
-    public Collection<CommandResult> getItems() {
+    public Collection<CommandResult<RuleViolation>> getItems() {
         return results;
     }
 
     @Override
-    public Iterable<CommandResult> results() {
+    public Iterable<CommandResult<RuleViolation>> results() {
         return results;
     }
 
     @Override
-    public Iterable<CommandResult> results(final CommandResult.Type resultType) {
-        final Collection<CommandResult> resultsByType = new LinkedList<>();
+    public Iterable<CommandResult<RuleViolation>> results(final CommandResult.Type resultType) {
+        final Collection<CommandResult<RuleViolation>> resultsByType = new LinkedList<>();
         if ( results != null ) {
-            for (final CommandResult _result : results) {
+            for (final CommandResult<RuleViolation> _result : results) {
                 if (_result.getType().equals(resultType)) {
                     resultsByType.add(_result);
                 }

@@ -17,36 +17,26 @@
 package org.wirez.core.api.command;
 
 
-import org.wirez.core.api.rule.RuleManager;
-
 /**
  * Manager to handle execution of commands.
  */
-public interface CommandManager<C extends Command> {
+public interface CommandManager<T, V> {
 
     /**
-     * Check whether command can be executed and return results. Graph elements are not mutated.
-     * @param ruleManager
-     * @param command
-     * @return
+     * Check whether the given commands can be executed.
      */
-    boolean allow(final RuleManager ruleManager,
-                  final C command);
+    boolean allow(final T context,
+                  final Command<T, V>... command);
     
     /**
-     * Execute a command and return the results. Graph elements can be mutated.
-     * @param ruleManager
-     * @param command
-     * @return
+     * Execute the given commands.
      */
-    CommandResults execute(final RuleManager ruleManager,
-                           final C... command);
+    CommandResults<V> execute(final T context,
+              final Command<T, V>... command);
 
     /**
-     * Undo the most recent command.
-     * @param ruleManager
-     * @return
+     * Undo the most recent command execution.
      */
-    CommandResults undo(final RuleManager ruleManager);
+    CommandResults<V> undo(final T context);
 
 }

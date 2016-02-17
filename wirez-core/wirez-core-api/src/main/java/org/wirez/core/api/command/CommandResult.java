@@ -16,13 +16,15 @@
 
 package org.wirez.core.api.command;
 
-import org.wirez.core.api.rule.RuleViolation;
-
 /**
  * Result from the execution of a command
  */
-public interface CommandResult {
+public interface CommandResult<T> {
 
+    enum Type {
+        ERROR, WARNING, INFO
+    }
+    
     /**
      * Type of Result
      * @return
@@ -35,9 +37,6 @@ public interface CommandResult {
      */
     String getMessage();
 
-    Iterable<RuleViolation> getRuleViolations();
+    Iterable<T> getViolations();
 
-    enum Type {
-        ERROR, WARNING, INFO
-    }
 }

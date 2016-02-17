@@ -16,10 +16,10 @@
 
 package org.wirez.core.api.command;
 
-public interface CommandResults {
+public interface CommandResults<T> {
 
-    Iterable<CommandResult> results();
+    Iterable<CommandResult<T>> results();
 
-    Iterable<CommandResult> results(CommandResult.Type resultType);
+    Iterable<CommandResult<T>> results(CommandResult.Type resultType);
     
 }

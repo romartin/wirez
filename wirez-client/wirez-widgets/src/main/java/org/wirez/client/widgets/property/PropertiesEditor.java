@@ -40,10 +40,10 @@ import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.DefaultCanvasListener;
+import org.wirez.core.client.canvas.CanvasListenerImpl;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
-import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
+import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -84,7 +84,7 @@ public class PropertiesEditor implements IsWidget {
     GraphHandlerImpl defaultGraphHandler;
     View view;
     private CanvasHandler canvasHandler;
-    private DefaultCanvasListener canvasListener;
+    private CanvasListenerImpl canvasListener;
     private EditorCallback editorCallback;
     private String elementUUID;
 
@@ -370,13 +370,13 @@ public class PropertiesEditor implements IsWidget {
     private void executeUpdateProperty(final Element<? extends ViewContent<?>> element, 
                                        final Property property,
                                        final Object value) {
-        ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.UPDATE_PROPERTY(element, property.getId(), value));
+        ((WiresCanvasHandler) canvasHandler).execute(defaultCommands.UPDATE_PROPERTY(element, property.getId(), value));
     }
 
     private void executeMove(final Element<? extends ViewContent<?>> element,
                                        final double x,
                                        final double y) {
-        ((BaseCanvasHandler) canvasHandler).execute(defaultCommands.MOVE(element, x, y));
+        ((WiresCanvasHandler) canvasHandler).execute(defaultCommands.MOVE(element, x, y));
     }
 
     private double getWidth(final Element<? extends ViewContent<?>> element) {
@@ -436,7 +436,7 @@ public class PropertiesEditor implements IsWidget {
     private void addCanvasListener() {
         removeCanvasListener();
 
-        canvasListener = new DefaultCanvasListener(canvasHandler) {
+        canvasListener = new CanvasListenerImpl(canvasHandler) {
             @Override
             public void onElementAdded(final Element element) {
 

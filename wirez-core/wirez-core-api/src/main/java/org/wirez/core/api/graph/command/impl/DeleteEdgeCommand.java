@@ -18,13 +18,11 @@ package org.wirez.core.api.graph.command.impl;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -33,17 +31,14 @@ import java.util.Collection;
 /**
  * A Command to delete a DefaultEdge from a Graph
  */
-public class DeleteEdgeCommand extends AbstractCommand {
+public class DeleteEdgeCommand extends AbstractGraphCommand {
 
-    private DefaultGraph<?, Node, Edge> graph;
     private Edge<? extends ViewContent, Node> edge;
+    private Node parent;
 
     public DeleteEdgeCommand(final GraphCommandFactory commandFactory,
-                             final DefaultGraph<? extends Definition, Node, Edge> graph,
                              final Edge<? extends ViewContent, Node> edge) {
         super(commandFactory);
-        this.graph = PortablePreconditions.checkNotNull( "graph",
-                graph );;
         this.edge = PortablePreconditions.checkNotNull( "edge",
                 edge );;
     }
@@ -61,6 +56,8 @@ public class DeleteEdgeCommand extends AbstractCommand {
             final Node outNode = edge.getTargetNode();
             final Node inNode = edge.getSourceNode();
 
+            this.parent = inNode;
+            
             if ( null != outNode ) {
                 outNode.getInEdges().remove( edge );
             }
@@ -68,20 +65,12 @@ public class DeleteEdgeCommand extends AbstractCommand {
                 inNode.getOutEdges().remove( edge );
             }
 
-            graph.removeEdge( edge.getUUID() );
-            
         }
         return results;
     }
     
     private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
         boolean isEdgeInGraph = false;
-        for ( Edge edge : graph.edges() ) {
-            if ( edge.equals( this.edge ) ) {
-                isEdgeInGraph = true;
-                break;
-            }
-        }
 
         GraphCommandResult results;
         if ( isEdgeInGraph ) {
@@ -99,12 +88,12 @@ public class DeleteEdgeCommand extends AbstractCommand {
 
     @Override
     public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.addEdgeCommand( graph, edge );
+        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.addEdgeCommand( parent, edge );
         return undoCommand.execute( ruleManager );
     }
 
     @Override
     public String toString() {
-        return "DeleteEdgeCommand [graph=" + graph.getUUID() + ", edge=" + edge.getUUID() + "]";
+        return "DeleteEdgeCommand [edge=" + edge.getUUID() + "]";
     }
 }

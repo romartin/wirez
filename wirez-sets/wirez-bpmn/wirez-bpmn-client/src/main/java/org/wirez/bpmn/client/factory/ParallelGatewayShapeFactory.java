@@ -24,7 +24,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.canvas.impl.WiresCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -63,7 +63,7 @@ public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGa
     @Override
     public ParallelGatewayShape build(final ParallelGateway definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getCanvas();
+        final WiresCanvas baseCanvas = (WiresCanvas) canvasHandler.getCanvas();
         
         return new ParallelGatewayShape(baseCanvas.getWiresManager());
 

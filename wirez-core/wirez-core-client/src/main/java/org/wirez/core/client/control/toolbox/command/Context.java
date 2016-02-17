@@ -1,13 +1,13 @@
 package org.wirez.core.client.control.toolbox.command;
 
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
+import org.wirez.core.client.canvas.command.WiresCanvasCommandManager;
 
 public interface Context {
 
     CanvasHandler getCanvasHandler();
 
-    CanvasCommandManager getCommandManager();
+    WiresCanvasCommandManager getCommandManager();
     
     double getX();
 

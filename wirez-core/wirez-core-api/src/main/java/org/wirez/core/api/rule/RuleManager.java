@@ -19,9 +19,9 @@ package org.wirez.core.api.rule;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 
 /**
  * Rule Manager to report validation issues when attempting to mutate Elements
@@ -60,7 +60,7 @@ public interface RuleManager {
      * @param operation Is the candidate Node being added or removed
      * @return
      */
-    RuleViolations checkCardinality(final DefaultGraph<? extends Definition, ? extends Node, ? extends Edge> target,
+    RuleViolations checkCardinality(final Graph<? extends Definition, ? extends Node> target,
                                     final Node<? extends ViewContent, ? extends Edge> candidate,
                                     final Operation operation);
 

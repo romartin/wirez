@@ -19,7 +19,7 @@ package org.wirez.core.client.control;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
+import org.wirez.core.client.canvas.command.WiresCanvasCommandManager;
 import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
 import org.wirez.core.client.util.ShapeUtils;
 
@@ -44,8 +44,8 @@ public abstract class BaseShapeControl<S extends Shape, E extends Element> imple
         return ShapeUtils.getContainerXY(shape);
     }
     
-    protected CanvasCommandManager getCommandManager() {
-        return (CanvasCommandManager) canvasHandler;
+    protected WiresCanvasCommandManager getCommandManager() {
+        return (WiresCanvasCommandManager) canvasHandler;
     }
     
 }

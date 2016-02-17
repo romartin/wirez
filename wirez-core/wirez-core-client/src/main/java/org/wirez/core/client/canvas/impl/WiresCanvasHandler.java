@@ -18,9 +18,7 @@ package org.wirez.core.client.canvas.impl;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
-import com.ait.lienzo.client.core.shape.wires.WiresContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.api.command.CommandResults;
@@ -40,7 +38,7 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasListener;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.command.CanvasCommand;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
+import org.wirez.core.client.canvas.command.WiresCanvasCommandManager;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.control.*;
 import org.wirez.core.client.factory.ShapeFactory;
@@ -51,7 +49,6 @@ import org.wirez.core.client.notification.CanvasCommandAllowedNotification;
 import org.wirez.core.client.notification.CanvasCommandExecutionNotification;
 
 import javax.enterprise.event.Event;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Collection;
@@ -59,10 +56,8 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
-
 // TODO: Implement SelectionManager<Element>
-public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandManager {
+public abstract class WiresCanvasHandler implements CanvasHandler, WiresCanvasCommandManager {
 
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.BaseCanvasHandler");
     
@@ -75,9 +70,9 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
     protected Collection<CanvasListener> listeners = new LinkedList<CanvasListener>();
 
     @Inject
-    public BaseCanvasHandler(final Event<NotificationEvent> notificationEvent,
-                             final DefaultCommandManager commandManager,
-                             final @Named( "default" ) DefaultRuleManager ruleManager) {
+    public WiresCanvasHandler(final Event<NotificationEvent> notificationEvent,
+                              final DefaultCommandManager commandManager,
+                              final @Named( "default" ) DefaultRuleManager ruleManager) {
         this.notificationEvent = notificationEvent;
         this.commandManager = commandManager;
         this.ruleManager = ruleManager;
@@ -374,8 +369,8 @@ public abstract class BaseCanvasHandler implements CanvasHandler, CanvasCommandM
         notificationEvent.fire(new NotificationEvent(notification));
     }
     
-    protected BaseCanvas getBaseCanvas() {
-        return (BaseCanvas) canvas;
+    protected WiresCanvas getBaseCanvas() {
+        return (WiresCanvas) canvas;
     }
 
     private void log(final Level level, final String message) {

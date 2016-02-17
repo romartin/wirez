@@ -18,13 +18,13 @@ package org.wirez.core.client.canvas;
 
 
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
+import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
-public class DefaultCanvasListener implements CanvasListener {
+public class CanvasListenerImpl implements CanvasListener {
     
     CanvasHandler canvasHandler;
 
-    public DefaultCanvasListener(final CanvasHandler canvasHandler) {
+    public CanvasListenerImpl(final CanvasHandler canvasHandler) {
         this.canvasHandler = canvasHandler;
     }
 
@@ -50,6 +50,6 @@ public class DefaultCanvasListener implements CanvasListener {
 
     public void removeListener() {
         assert canvasHandler != null;
-        ((BaseCanvasHandler)canvasHandler).removeListener(this);
+        ((WiresCanvasHandler)canvasHandler).removeListener(this);
     }
 }

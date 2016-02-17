@@ -24,7 +24,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.canvas.impl.WiresCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 
@@ -67,7 +67,7 @@ public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
     @Override
     public TaskShape build(final Task definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getCanvas();
+        final WiresCanvas baseCanvas = (WiresCanvas) canvasHandler.getCanvas();
         
         return new TaskShape(baseCanvas.getWiresManager());
 

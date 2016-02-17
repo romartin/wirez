@@ -2,22 +2,22 @@ package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import java.util.List;
 import java.util.Stack;
 
-public class RemoveChildNodesCommand extends AbstractCompositeCommand {
+public class RemoveChildNodesCommand extends AbstractGraphCompositeCommand {
 
-    private DefaultGraph target;
+    private Graph target;
     private Node parent;
     private final Stack<Node> nodesToRemove = new Stack<>();
     
     public RemoveChildNodesCommand(final GraphCommandFactory commandFactory,
-                                   final DefaultGraph target,
+                                   final Graph target,
                                    final Node parent) {
         super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",

@@ -6,10 +6,11 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.*;
+import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.util.ElementUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -24,48 +25,62 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Inject
-    public GraphCommandFactoryImpl(DefinitionManager definitionManager) {
+    public GraphCommandFactoryImpl(final DefinitionManager definitionManager) {
         this.definitionManager = definitionManager;
     }
 
     @Override
-    public AddChildNodeCommand addChildNodeCommand(final DefaultGraph target,
+    public AddChildNodeCommand addChildNodeCommand(final Graph target,
                                                    final Node parent,
                                                    final Node candidate) {
         return new AddChildNodeCommand(this, target, parent, candidate);
     }
 
     @Override
-    public RemoveChildNodeCommand removeChildNodeCommand(final DefaultGraph target,
+    public RemoveChildNodeCommand removeChildNodeCommand(final Graph target,
                                                          final Node oldParent,
                                                          final Node candidate) {
         return new RemoveChildNodeCommand(this, target, oldParent, candidate);
     }
 
     @Override
-    public AddEdgeCommand addEdgeCommand(DefaultGraph target, Edge edge) {
+    public RemoveChildNodesCommand removeChildNodesCommand(final Graph target, final Node parent) {
+        return new RemoveChildNodesCommand(this, target, parent);
+    }
+
+    @Override
+    public AddEdgeCommand addEdgeCommand(final Node target, final Edge edge) {
         return new AddEdgeCommand(this, target, edge);
     }
 
     @Override
-    public AddNodeCommand addNodeCommand(final DefaultGraph target,
+    public AddNodeCommand addNodeCommand(final Graph target,
                                          final Node candidate) {
         return new AddNodeCommand(this, target, candidate);
     }
 
     @Override
-    public ClearGraphCommand clearGraphCommand(DefaultGraph target) {
+    public ClearGraphCommand clearGraphCommand(final Graph target) {
         return new ClearGraphCommand(this, target);
     }
 
     @Override
-    public DeleteEdgeCommand deleteEdgeCommand(final DefaultGraph<? extends Definition, Node, Edge> graph,
-                                               final Edge<? extends ViewContent, Node> edge) {
-        return new DeleteEdgeCommand(this, graph, edge);
+    public SetParentCommand setParentCommand(final Node parent, final Node candidate, final Edge<ParentChildRelationship, Node> edge) {
+        return new SetParentCommand(this, parent, candidate, edge);
     }
 
     @Override
-    public DeleteNodeCommand deleteNodeCommand(final DefaultGraph target,
+    public RemoveParentCommand removeParentCommand(final Node parent, final Node candidate) {
+        return new RemoveParentCommand(this, parent, candidate);
+    }
+
+    @Override
+    public DeleteEdgeCommand deleteEdgeCommand(final Edge<? extends ViewContent, Node> edge) {
+        return new DeleteEdgeCommand(this, edge);
+    }
+
+    @Override
+    public DeleteNodeCommand deleteNodeCommand(final Graph target,
                                                final Node candidate) {
         return new DeleteNodeCommand(this, target, candidate);
     }

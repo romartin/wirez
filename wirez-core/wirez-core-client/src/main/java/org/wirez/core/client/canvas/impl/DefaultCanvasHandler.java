@@ -62,7 +62,7 @@ import java.util.logging.Logger;
 
 // TODO: Implement SelectionManager<Element> ?
 @Dependent
-public class DefaultCanvasHandler extends BaseCanvasHandler {
+public class DefaultCanvasHandler extends WiresCanvasHandler {
 
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.DefaultCanvasHandler");
 

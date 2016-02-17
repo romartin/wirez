@@ -18,6 +18,8 @@ package org.wirez.core.api.command;
 
 public interface CommandResults<T> {
 
+    void add(CommandResult<T> result);
+    
     Iterable<CommandResult<T>> results();
 
     Iterable<CommandResult<T>> results(CommandResult.Type resultType);

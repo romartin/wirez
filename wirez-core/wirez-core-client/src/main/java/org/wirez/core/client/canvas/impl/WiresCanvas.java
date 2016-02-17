@@ -24,9 +24,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.ColorName;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
@@ -36,7 +34,6 @@ import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.impl.BaseConnector;
-import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.HasCanvasStateMutation;
 
 import javax.enterprise.event.Event;
@@ -45,9 +42,12 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
+/**
+ * Canvas impl based on Lienzo Wires.
+ */
+public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.BaseCanvas");
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.WiresCanvas");
     
     public static final long ANIMATION_SELECTION_DURATION = 250;
     
@@ -58,7 +58,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     protected Layer layer;
 
     @Inject
-    public BaseCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent) {
+    public WiresCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent) {
         this.canvasShapeStateModifiedEvent = canvasShapeStateModifiedEvent;
     }
 
@@ -69,7 +69,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
      */
     
     @Override
-    public BaseCanvas initialize(final Layer lienzoLayer) {
+    public WiresCanvas initialize(final Layer lienzoLayer) {
         this.layer = lienzoLayer;
         wiresManager = WiresManager.get(lienzoLayer);
         lienzoLayer.addNodeMouseClickHandler(new NodeMouseClickHandler() {
@@ -142,12 +142,12 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
     }
     
     @Override
-    public BaseCanvas draw() {
+    public WiresCanvas draw() {
         wiresManager.getLayer().getLayer().batch();
         return this;
     }
 
-    public BaseCanvas clear() {
+    public WiresCanvas clear() {
 
         if ( !shapes.isEmpty() ) {
             final List<Shape> shapesToRemove = new LinkedList<>(shapes);
@@ -252,7 +252,7 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
             canvasStateMutation.applyState(ShapeState.SELECTED);
         } else if (shape instanceof HasDecorators) {
             new ShapeSelectionAnimation(shape)
-                    .setCanvas(BaseCanvas.this)
+                    .setCanvas(WiresCanvas.this)
                     .setDuration(ANIMATION_SELECTION_DURATION)
                     .run();
         }
@@ -266,13 +266,13 @@ public abstract class BaseCanvas implements Canvas, SelectionManager<Shape> {
             canvasStateMutation.applyState(ShapeState.DESELECTED);
         } else if (shape instanceof HasDecorators) {
             new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK)
-                    .setCanvas(BaseCanvas.this)
+                    .setCanvas(WiresCanvas.this)
                     .setDuration(ANIMATION_SELECTION_DURATION)
                     .run();
         }
     }
 
-    protected BaseCanvas updateViewShapesState() {
+    protected WiresCanvas updateViewShapesState() {
         final List<Shape> shapes = getShapes();
         for (final Shape shape : shapes) {
             final boolean isSelected = !selectedShapes.isEmpty() && selectedShapes.contains(shape);

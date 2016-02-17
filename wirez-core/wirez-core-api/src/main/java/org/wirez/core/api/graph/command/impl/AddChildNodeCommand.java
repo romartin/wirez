@@ -2,10 +2,10 @@ package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.util.UUID;
 
@@ -14,14 +14,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class AddChildNodeCommand extends AbstractCompositeCommand {
+public class AddChildNodeCommand extends AbstractGraphCompositeCommand {
 
-    private DefaultGraph target;
+    private Graph target;
     private Node parent;
     private Node candidate;
     
     public AddChildNodeCommand(final GraphCommandFactory commandFactory,
-                               final DefaultGraph target,
+                               final Graph target,
                                final Node parent,
                                final Node candidate) {
         super(commandFactory);

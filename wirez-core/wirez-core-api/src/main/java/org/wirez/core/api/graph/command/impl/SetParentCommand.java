@@ -32,7 +32,7 @@ import java.util.LinkedList;
 /**
  * A Command to set a DefaultNode children of another container node.
  */
-public class SetParentCommand extends AbstractCommand {
+public class SetParentCommand extends AbstractGraphCommand {
 
     private Node parent;
     private Node candidate;
@@ -60,10 +60,22 @@ public class SetParentCommand extends AbstractCommand {
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
         final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
+            
+            final Node oldParent = edge.getSourceNode();
+            if ( null != oldParent ) {
+                oldParent.getOutEdges().remove( edge );
+            }
+
+            final Node oldChild = edge.getTargetNode();
+            if ( null != oldChild ) {
+                oldChild.getInEdges().remove( edge );
+            }
+            
             edge.setSourceNode(parent);
             edge.setTargetNode(candidate);
             parent.getOutEdges().add( edge );
             candidate.getInEdges().add( edge );
+            
         }
         return results;
     }

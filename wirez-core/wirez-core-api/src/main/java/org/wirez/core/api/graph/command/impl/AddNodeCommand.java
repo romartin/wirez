@@ -18,10 +18,10 @@ package org.wirez.core.api.graph.command.impl;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -31,13 +31,13 @@ import java.util.LinkedList;
 /**
  * A Command to add a DefaultNode to a DefaultGraph
  */
-public class AddNodeCommand extends AbstractCommand {
+public class AddNodeCommand extends AbstractGraphCommand {
 
-    private DefaultGraph target;
+    private Graph target;
     private Node candidate;
 
     public AddNodeCommand(final GraphCommandFactory commandFactory,
-                          final DefaultGraph target,
+                          final Graph target,
                           final Node candidate ) {
         super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",

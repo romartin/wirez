@@ -5,11 +5,11 @@ import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
-public abstract class AbstractCommand implements Command<RuleManager, RuleViolation> {
+public abstract class AbstractGraphCommand implements Command<RuleManager, RuleViolation> {
     
     protected GraphCommandFactory commandFactory;
 
-    public AbstractCommand(GraphCommandFactory commandFactory) {
+    public AbstractGraphCommand(GraphCommandFactory commandFactory) {
         this.commandFactory = commandFactory;
     }
     

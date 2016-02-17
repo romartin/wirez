@@ -19,8 +19,7 @@ package org.wirez.client.widgets.canvas;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
-import org.wirez.core.client.control.toolbox.Toolbox;
+import org.wirez.core.client.canvas.impl.WiresCanvas;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 
 import javax.annotation.PostConstruct;
@@ -29,7 +28,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 @Dependent
-public class Canvas extends BaseCanvas implements IsWidget {
+public class Canvas extends WiresCanvas implements IsWidget {
 
     private static final int PADDING = 15;
     

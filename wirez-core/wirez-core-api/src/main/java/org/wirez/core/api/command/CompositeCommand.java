@@ -13,22 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wirez.core.api.command;
 
-package org.wirez.core.client.canvas.command;
-
-import org.wirez.core.api.command.Command;
-import org.wirez.core.client.canvas.CanvasHandler;
-
-public interface CanvasCommand extends Command {
-
-    /**
-     * Set the target canvas.
-     */
-    CanvasCommand setCanvas(CanvasHandler canvasHandler);
-
-    /**
-     * Apply command results on canvas.
-     */
-    CanvasCommand apply();
+public interface CompositeCommand<T, V> extends Command<T, V> {
     
+    CompositeCommand<T, V> addCommand( Command<T, V> command );
+
 }

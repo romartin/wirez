@@ -24,7 +24,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.canvas.impl.WiresCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -61,7 +61,7 @@ public class EndNoneEventShapeFactory extends BaseBPMNShapeFactory<EndNoneEvent,
     @Override
     public EndNoneEventShape build(final EndNoneEvent definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getCanvas();
+        final WiresCanvas baseWirezCanvas = (WiresCanvas) canvasHandler.getCanvas();
 
         EndNoneEventShape circleShape = new EndNoneEventShape(baseWirezCanvas.getWiresManager());
 

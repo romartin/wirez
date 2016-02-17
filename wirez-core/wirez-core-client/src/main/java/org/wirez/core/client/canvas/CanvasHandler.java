@@ -20,10 +20,9 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.handler.GraphHandler;
 
-public interface CanvasHandler {
+public interface CanvasHandler<C extends Canvas> {
 
     /**
      * Initializes a graphical shape canvas.

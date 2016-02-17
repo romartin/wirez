@@ -16,48 +16,47 @@
 
 package org.wirez.core.client.canvas;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.ShapeSet;
 
-public class DefaultCanvasSettingsBuilder implements CanvasSettingsBuilder<DefaultCanvasSettingsBuilder> {
+public class CanvasSettingsBuilderImpl implements CanvasSettingsBuilder<CanvasSettingsBuilderImpl> {
 
 
-    private DefaultCanvasSettings settings;
+    private CanvasSettingsImpl settings;
     
-    public DefaultCanvasSettingsBuilder() {
-        settings = new DefaultCanvasSettings();
+    public CanvasSettingsBuilderImpl() {
+        settings = new CanvasSettingsImpl();
     }
 
     @Override
-    public DefaultCanvasSettingsBuilder uuid(final String uuid) {
+    public CanvasSettingsBuilderImpl uuid(final String uuid) {
         settings.setUUUID(uuid);
         return this;
     }
 
     @Override
-    public DefaultCanvasSettingsBuilder definitionSet(final DefinitionSet definitionSet) {
+    public CanvasSettingsBuilderImpl definitionSet(final DefinitionSet definitionSet) {
         settings.setDefinitionSet(definitionSet);
         return this;
     }
 
     @Override
-    public DefaultCanvasSettingsBuilder shapeSet(final ShapeSet shapeSet) {
+    public CanvasSettingsBuilderImpl shapeSet(final ShapeSet shapeSet) {
         settings.setShapeSet(shapeSet);
         return this;
     }
 
 
     @Override
-    public DefaultCanvasSettingsBuilder title(final String title) {
+    public CanvasSettingsBuilderImpl title(final String title) {
         settings.setTitle(title);
         return this;
     }
 
     @Override
-    public DefaultCanvasSettingsBuilder graph(final Graph<?, ? extends Node> graph) {
+    public CanvasSettingsBuilderImpl graph(final Graph<?, ? extends Node> graph) {
         settings.setGraph(graph);
         return this;
     }

@@ -17,17 +17,14 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.Lane;
-import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.client.LaneShape;
-import org.wirez.bpmn.client.TaskShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.LaneGlyph;
-import org.wirez.bpmn.client.glyph.TaskGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.canvas.impl.WiresCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 
@@ -70,7 +67,7 @@ public class LaneShapeFactory extends BaseBPMNShapeFactory<Lane, LaneShape> {
     @Override
     public LaneShape build(final Lane definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getCanvas();
+        final WiresCanvas baseCanvas = (WiresCanvas) canvasHandler.getCanvas();
         
         return new LaneShape(baseCanvas.getWiresManager());
 

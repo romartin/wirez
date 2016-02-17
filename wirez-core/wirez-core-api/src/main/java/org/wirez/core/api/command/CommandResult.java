@@ -37,6 +37,8 @@ public interface CommandResult<T> {
      */
     String getMessage();
 
+    void addViolation( T violation );
+    
     Iterable<T> getViolations();
 
 }

@@ -32,7 +32,7 @@ import java.util.LinkedList;
 /**
  * A Command to set the incoming connection for a DefaultEdge in a Graph.
  */
-public class SetConnectionTargetNodeCommand extends AbstractCommand {
+public class SetConnectionTargetNodeCommand extends AbstractGraphCommand {
 
     private Node<? extends ViewContent<?>, Edge> targetNode;
     private Node<? extends ViewContent<?>, Edge> lastTargetNode;

@@ -27,7 +27,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.canvas.impl.WiresCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -63,7 +63,7 @@ public class SequenceFlowShapeFactory extends BaseBPMNShapeFactory<SequenceFlow,
 
     @Override
     public SequenceFlowShape build(final SequenceFlow definition, final CanvasHandler canvasHandler) {
-        final BaseCanvas baseWirezCanvas = (BaseCanvas) canvasHandler.getCanvas();
+        final WiresCanvas baseWirezCanvas = (WiresCanvas) canvasHandler.getCanvas();
 
         OrthogonalPolyLine line = createLine(0,0,100,100);
         SequenceFlowShape connector = new SequenceFlowShape(line, null, new SimpleArrow(20, 0.75), baseWirezCanvas.getWiresManager());

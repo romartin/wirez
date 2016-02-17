@@ -17,76 +17,19 @@
 package org.wirez.core.api.graph.command;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.AbstractCommandResult;
 import org.wirez.core.api.rule.RuleViolation;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 @Portable
-public class GraphCommandResult implements CommandResult<RuleViolation> {
-    
-    private Type type;
-    private String message;
-    private Collection<RuleViolation> violations;
+public class GraphCommandResult extends AbstractCommandResult<RuleViolation> {
 
     public GraphCommandResult() {
-        this.violations = new ArrayList<RuleViolation>();
-        init(violations);
-    }
-    
-    public GraphCommandResult(final Collection<RuleViolation> violations) {
-        this.violations = violations;
-        init(violations);
-    }
-    
-    private void init(final Collection<RuleViolation> violations) {
-        boolean hasError = false;
-        boolean hasWarn= false;
-        String message = null;
-        if (violations != null) {
-            for (final RuleViolation violation : violations) {
-                if (RuleViolation.Type.ERROR.equals(violation.getViolationType())) {
-                    hasError = true;
-                    message = violation.getMessage();
-                } else if (RuleViolation.Type.WARNING.equals(violation.getViolationType())) {
-                    hasWarn= true;
-                    if (message == null) {
-                        message = violation.getMessage();
-                    }
-                }
-            }
-            this.type = hasError ? Type.ERROR : ( hasWarn ? Type.WARNING : Type.INFO );
-            this.message = message != null ? message : "";
-        }
     }
 
-    @Override
-    public Type getType() {
-        return type;
+    public GraphCommandResult(Collection<RuleViolation> violations) {
+        super(violations);
     }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public Iterable<RuleViolation> getViolations() {
-        return violations;
-    }
-
-    public Collection<RuleViolation> getViolationsCollection() {
-        return violations;
-    }
-    
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-    
     
 }

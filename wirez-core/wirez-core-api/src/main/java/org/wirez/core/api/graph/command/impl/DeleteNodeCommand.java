@@ -19,10 +19,10 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -32,13 +32,13 @@ import java.util.List;
 /**
  * A Command to delete a DefaultNode from a DefaultGraph
  */
-public class DeleteNodeCommand extends AbstractCommand {
+public class DeleteNodeCommand extends AbstractGraphCommand {
 
-    private DefaultGraph target;
+    private Graph target;
     private Node candidate;
 
     public DeleteNodeCommand(final GraphCommandFactory commandFactory,
-                             final DefaultGraph target,
+                             final Graph target,
                              final Node candidate ) {
         super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",

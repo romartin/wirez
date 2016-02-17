@@ -32,7 +32,7 @@ import java.util.ArrayList;
 /**
  * A Command to update an element's property.
  */
-public class UpdateElementPropertyValueCommand extends AbstractCommand {
+public class UpdateElementPropertyValueCommand extends AbstractGraphCommand {
 
     private PropertyAdapter adapter;
     private Element element;

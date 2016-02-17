@@ -22,7 +22,7 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.ShapeSet;
 
-public class DefaultCanvasSettings implements CanvasSettings {
+public class CanvasSettingsImpl implements CanvasSettings {
     
     private String uuid;
     private DefinitionSet definitionSet;
@@ -30,7 +30,7 @@ public class DefaultCanvasSettings implements CanvasSettings {
     private String title;
     private Graph<?, ? extends Node> graph;
 
-    public DefaultCanvasSettings() {
+    public CanvasSettingsImpl() {
     }
 
     @Override

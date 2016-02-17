@@ -1,69 +1,34 @@
-/*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
- *  
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *  
- *    http://www.apache.org/licenses/LICENSE-2.0
- *  
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.GraphCommandFactory;
-import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.graph.command.GraphCommandFactoryImpl;
+import org.wirez.core.api.graph.command.impl.AddChildNodeCommand;
 import org.wirez.core.api.rule.RuleManager;
-import org.wirez.core.client.canvas.command.BaseCanvasCommand;
-import org.wirez.core.client.canvas.command.CanvasCommand;
-import org.wirez.core.client.canvas.impl.BaseCanvasHandler;
+import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.client.canvas.command.CanvasCommandFactory;
+import org.wirez.core.client.canvas.command.HasGraphCommand;
 import org.wirez.core.client.factory.ShapeFactory;
 
-/**
- * A Command to add a DefaultNode to a Graph and add the corresponding canvas shapes.
- */
-public class AddCanvasChildNodeCommand extends BaseCanvasCommand {
+public class AddCanvasChildNodeCommand extends AbstractCanvasCompositeCommand {
 
-    Node parent;
-    Node candidate;
-    ShapeFactory factory;
+    protected Node parent;
+    protected Node candidate;
+    protected ShapeFactory factory;
 
-    public AddCanvasChildNodeCommand(final GraphCommandFactory commandFactory, final Node parent, final Node candidate, final ShapeFactory factory ) {
-        super(commandFactory);
+    public AddCanvasChildNodeCommand(final CanvasCommandFactory canvasCommandFactory, final Node parent, final Node candidate, final ShapeFactory factory) {
+        super(canvasCommandFactory);
         this.parent = parent;
         this.candidate = candidate;
         this.factory = factory;
+        
+        initCommands();
     }
-
-    @Override
-    public Command getCommand() {
-        return commandFactory.addChildNodeCommand((DefaultGraph) canvasHandler.getGraphHandler().getGraph(), parent, candidate);
+    
+    private void initCommands() {
+        this.addCommand( canvasCommandFactory.addCanvasNodeCommand( candidate, factory ) )
+                .addCommand( canvasCommandFactory.setCanvasElementParentCommand( parent, candidate ) );
     }
-
-    @Override
-    public CanvasCommand apply() {
-        ( (BaseCanvasHandler) canvasHandler).addChild(parent, candidate);
-        ( (BaseCanvasHandler) canvasHandler).applyElementMutation(candidate);
-        return this;
-    }
-
-    @Override
-    public CommandResult execute(final RuleManager ruleManager) {
-        return super.execute(ruleManager);
-    }
-
-    @Override
-    public String toString() {
-        return "AddCanvasChildNodeCommand [parent=" + parent + ", candidate=" + candidate.getUUID() + ", factory=" + factory + "]";
-    }
-
 
 }

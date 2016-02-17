@@ -15,23 +15,15 @@
  */
 package org.wirez.core.api.rule;
 
-import org.uberfire.commons.data.Pair;
-import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.rule.violations.CardinalityMaxRuleViolation;
-import org.wirez.core.api.rule.violations.CardinalityMinRuleViolation;
-import org.wirez.core.api.rule.violations.ConnectionRuleViolation;
-import org.wirez.core.api.rule.violations.ContainmentRuleViolation;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Named;
-import java.util.HashSet;
-import java.util.Set;
 
 @Dependent
 @Named( "empty" )
@@ -50,7 +42,7 @@ public class EmptyRuleManager implements RuleManager {
     }
 
     @Override
-    public RuleViolations checkCardinality(final DefaultGraph<? extends Definition, ? extends Node, ? extends Edge> target,
+    public RuleViolations checkCardinality(final Graph<? extends Definition, ? extends Node> target,
                                            final Node<? extends ViewContent, ? extends Edge> candidate,
                                            final Operation operation ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();

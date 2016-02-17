@@ -20,7 +20,6 @@ import org.uberfire.workbench.events.UberFireEvent;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
 
 /**
  * CDI event when the shape's state for an element in the graph has been modified. 

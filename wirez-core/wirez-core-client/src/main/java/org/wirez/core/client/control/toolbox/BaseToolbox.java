@@ -19,7 +19,7 @@ package org.wirez.core.client.control.toolbox;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasListener;
-import org.wirez.core.client.canvas.DefaultCanvasListener;
+import org.wirez.core.client.canvas.CanvasListenerImpl;
 
 public abstract class BaseToolbox<E extends Element> implements Toolbox<E> {
 
@@ -32,7 +32,7 @@ public abstract class BaseToolbox<E extends Element> implements Toolbox<E> {
         
     }
 
-    protected final CanvasListener canvasListener = new DefaultCanvasListener(canvasHandler) {
+    protected final CanvasListener canvasListener = new CanvasListenerImpl(canvasHandler) {
 
         @Override
         public void onElementAdded(final Element element) {

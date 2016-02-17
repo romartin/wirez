@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 /**
  * A Command to update an element's bounds.
  */
-public class UpdateElementPositionCommand extends AbstractCommand {
+public class UpdateElementPositionCommand extends AbstractGraphCommand {
 
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.api.graph.commands.UpdateElementPositionCommand");
     

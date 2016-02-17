@@ -17,21 +17,21 @@ package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.command.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
 /**
  * A Command to clear all elements in a graph
  */
-public class ClearGraphCommand extends AbstractCommand {
+public class ClearGraphCommand extends AbstractGraphCommand {
 
-    private DefaultGraph target;
+    private Graph target;
 
     public ClearGraphCommand(final GraphCommandFactory commandFactory,
-                             DefaultGraph target) {
+                             Graph target) {
         super(commandFactory);
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );;

@@ -22,7 +22,6 @@ import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.Point2DArray;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
@@ -32,7 +31,7 @@ import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
+import org.wirez.core.client.canvas.impl.WiresCanvas;
 import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.mutation.*;
@@ -131,7 +130,7 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
 
     // TODO: Move to AddEdge command?
     public Shape<W> applyConnections(final Edge<ViewContent<W>, Node> element, final CanvasHandler canvasHandler) {
-        final BaseCanvas canvas = (BaseCanvas) canvasHandler.getCanvas();
+        final WiresCanvas canvas = (WiresCanvas) canvasHandler.getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
         

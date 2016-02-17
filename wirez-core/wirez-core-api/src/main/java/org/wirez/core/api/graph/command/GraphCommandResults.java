@@ -17,38 +17,10 @@
 package org.wirez.core.api.graph.command;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.command.AbstractCommandResults;
 import org.wirez.core.api.rule.RuleViolation;
 
-import java.util.Collection;
-import java.util.LinkedList;
-
 @Portable
-public class GraphCommandResults implements CommandResults<RuleViolation> {
+public class GraphCommandResults extends AbstractCommandResults<RuleViolation> {
     
-    Collection<CommandResult<RuleViolation>> results = new LinkedList<CommandResult<RuleViolation>>();
-
-    public Collection<CommandResult<RuleViolation>> getItems() {
-        return results;
-    }
-
-    @Override
-    public Iterable<CommandResult<RuleViolation>> results() {
-        return results;
-    }
-
-    @Override
-    public Iterable<CommandResult<RuleViolation>> results(final CommandResult.Type resultType) {
-        final Collection<CommandResult<RuleViolation>> resultsByType = new LinkedList<>();
-        if ( results != null ) {
-            for (final CommandResult<RuleViolation> _result : results) {
-                if (_result.getType().equals(resultType)) {
-                    resultsByType.add(_result);
-                }
-            }
-        }
-        return resultsByType;
-    }
-
 }

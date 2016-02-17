@@ -16,20 +16,15 @@
 
 package org.wirez.bpmn.client.factory;
 
-import com.ait.lienzo.client.core.shape.MultiPath;
 import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.client.BPMNDiagramShape;
-import org.wirez.bpmn.client.TaskShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.BPMNDiagramGlyph;
-import org.wirez.bpmn.client.glyph.TaskGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
-import org.wirez.core.client.canvas.impl.BaseCanvas;
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.canvas.impl.WiresCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 
@@ -72,7 +67,7 @@ public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, B
     @Override
     public BPMNDiagramShape build(final BPMNDiagram definition, final CanvasHandler canvasHandler) {
 
-        final BaseCanvas baseCanvas = (BaseCanvas) canvasHandler.getCanvas();
+        final WiresCanvas baseCanvas = (WiresCanvas) canvasHandler.getCanvas();
         
         return new BPMNDiagramShape(baseCanvas.getWiresManager());
 

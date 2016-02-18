@@ -16,18 +16,11 @@
 
 package org.wirez.core.client.canvas.settings;
 
-import org.wirez.core.api.command.CommandManager;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.processing.handler.GraphHandler;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
-import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
-import org.wirez.core.client.canvas.impl2.WiresCanvasViewHandler;
 
 public interface CanvasSettings<G extends Graph, N extends Node, E extends Edge> {
     

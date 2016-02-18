@@ -18,8 +18,12 @@ package org.wirez.core.client.canvas.command;
 
 import org.wirez.core.api.command.*;
 import org.wirez.core.api.event.NotificationEvent;
+import org.wirez.core.api.graph.command.GraphCommandManager;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
-import org.wirez.core.client.canvas.impl2.WiresCanvasViewHandler;
+import org.wirez.core.client.canvas.impl.WiresCanvasViewHandler;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -32,25 +36,45 @@ import javax.inject.Named;
  */
 @Dependent
 @Named("wiresCanvasCommandManager")
-public class WiresCanvasCommandManager extends AbstractCommandManager<WiresCanvasViewHandler, CanvasCommandViolation> {
+public class WiresCanvasCommandManager extends AbstractCommandManager<WiresCanvasHandler, CanvasCommandViolation> {
 
+    CommandManager<RuleManager, RuleViolation> graphCommandManager;
+    GraphCommandFactory graphCommandFactory;
+    
     @Inject
-    public WiresCanvasCommandManager(final Event<NotificationEvent> notificationEvent) {
+    public WiresCanvasCommandManager(final Event<NotificationEvent> notificationEvent,
+                                     final CommandManager<RuleManager, RuleViolation> graphCommandManager,
+                                     final GraphCommandFactory graphCommandFactory) {
         super(notificationEvent);
+        this.graphCommandManager = graphCommandManager;
+        this.graphCommandFactory = graphCommandFactory;
     }
 
     @Override
-    protected CommandResult<CanvasCommandViolation> doAllow(WiresCanvasHandler context, Command<WiresCanvasHandler, CanvasCommandViolation> command) {
-        // TODO: execute the graph command on a graph command manager.
+    protected CommandResult<CanvasCommandViolation> doAllow(final WiresCanvasHandler context, 
+                                                            final Command<WiresCanvasHandler, CanvasCommandViolation> command) {
+    
+        if ( command instanceof HasGraphCommand ) {
+            final Command<RuleManager, RuleViolation> graphCommand = ((HasGraphCommand) command).getGraphCommand(context, graphCommandFactory);
+            final CommandResult<RuleViolation> result = graphCommand.allow( context.getRuleManager() );
+            // TODO: Check result.
+        }
+        
         return super.doAllow(context, command);
     }
 
     @Override
     protected CommandResult<CanvasCommandViolation> doExecute(WiresCanvasHandler context, Command<WiresCanvasHandler, CanvasCommandViolation> command) {
-        // TODO: execute the graph command on a graph command manager.
+
+        if ( command instanceof HasGraphCommand ) {
+            final Command<RuleManager, RuleViolation> graphCommand = ((HasGraphCommand) command).getGraphCommand(context, graphCommandFactory);
+            final CommandResult<RuleViolation> result = graphCommand.execute( context.getRuleManager() );
+            // TODO: Check result.
+        }
+        
         return super.doExecute(context, command);
     }
-    
+
     @Override
     protected CommandResults<CanvasCommandViolation> buildResults() {
         return new CanvasCommandResults();

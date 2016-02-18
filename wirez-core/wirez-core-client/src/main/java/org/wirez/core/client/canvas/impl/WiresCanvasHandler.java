@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas.impl2;
+package org.wirez.core.client.canvas.impl;
 
 import com.ait.lienzo.client.core.shape.wires.*;
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResults;
+import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.rule.Rule;
@@ -32,11 +32,13 @@ import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.control.ConnectionAcceptor;
 import org.wirez.core.client.canvas.control.ContainmentAcceptor;
-import org.wirez.core.client.canvas.listener.CanvasListener;
 import org.wirez.core.client.canvas.listener.CanvasModelListener;
-import org.wirez.core.client.canvas.settings.CanvasViewSettings;
 import org.wirez.core.client.canvas.settings.WiresCanvasSettings;
-import org.wirez.core.client.canvas.settings.WiresCanvasSettingsBuilder;
+import org.wirez.core.client.control.HasCanvasHandler;
+import org.wirez.core.client.control.ShapeControl;
+import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.factory.control.HasShapeControlFactories;
+import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
@@ -111,16 +113,54 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         });
 
     }
+
+    @Override
+    protected void doRegister(Shape shape, Element element, ShapeFactory factory) {
+        super.doRegister(shape, element, factory);
+        doAddShapeControls(shape, element, factory);
+    }
+
+    protected void doAddShapeControls(final Shape shape,
+                                      final Element element,
+                                      final ShapeFactory factory) {
+        
+        // Shape controls.
+        if (factory instanceof HasShapeControlFactories) {
+
+            final Collection<ShapeControlFactory<?, ?>> factories = ((HasShapeControlFactories) factory).getFactories();
+            for (ShapeControlFactory controlFactory : factories) {
+                ShapeControl control = controlFactory.build(shape);
+
+                // Some controls needs to add elements on the DOM.
+                if (control instanceof IsWidget) {
+                    final IsWidget controlWidget = (IsWidget) control;
+                    canvas.addControl(controlWidget);
+                }
+
+                // Controls that execute commands on the canvas require the canvas handler instance.
+                if (control instanceof HasCanvasHandler) {
+                    final HasCanvasHandler hasCanvasHandler = (HasCanvasHandler) control;
+                    hasCanvasHandler.setCanvasHandler(this);
+
+                }
+
+                // Enable the stateful control.
+                control.enable(shape, element);
+
+            }
+        }
+        
+    }
     
-    protected RuleManager getRuleManager() {
+    public RuleManager getRuleManager() {
         return settings.getRuleManager();
     }
-    
-    protected ConnectionAcceptor getConnectionAcceptor() {
+
+    public ConnectionAcceptor getConnectionAcceptor() {
         return settings.getConnectionAcceptor();
     }
-    
-    protected ContainmentAcceptor getContainmentAcceptor() {
+
+    public ContainmentAcceptor getContainmentAcceptor() {
         return settings.getContainmentAcceptor();
     }
 

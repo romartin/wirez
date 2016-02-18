@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas.impl2;
+package org.wirez.core.client.canvas.impl;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
@@ -35,10 +35,8 @@ import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.control.SelectionManager;
-import org.wirez.core.client.canvas.impl.WiresCanvas;
 import org.wirez.core.client.canvas.listener.CanvasListener;
 import org.wirez.core.client.canvas.settings.CanvasSettings;
-import org.wirez.core.client.canvas.settings.CanvasViewSettings;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.mutation.*;
@@ -228,12 +226,16 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
 
         }
 
-        // TODO: Register shape controls.
+        doRegister(shape, candidate, factory);
 
         // Add the shapes on canvas and fire events.
         canvas.addShape(shape);
         canvas.draw();
         afterElementAdded(candidate);
+    }
+    
+    protected void doRegister(final Shape shape, final Element element, final ShapeFactory factory) {
+        
     }
 
     public void applyElementMutation(final Element candidate) {

@@ -29,6 +29,7 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Collection;
 
 /**
  * Default implementation of a CommandManager for a wires canvas. 
@@ -57,10 +58,13 @@ public class WiresCanvasCommandManager extends AbstractCommandManager<WiresCanva
         if ( command instanceof HasGraphCommand ) {
             final Command<RuleManager, RuleViolation> graphCommand = ((HasGraphCommand) command).getGraphCommand(context, graphCommandFactory);
             final CommandResult<RuleViolation> result = graphCommand.allow( context.getRuleManager() );
-            // TODO: Check result.
+            if ( CommandResult.Type.ERROR.equals(result.getType()) ) {
+                return buildResult(result);
+            }
         }
-        
+
         return super.doAllow(context, command);
+
     }
 
     @Override
@@ -69,7 +73,9 @@ public class WiresCanvasCommandManager extends AbstractCommandManager<WiresCanva
         if ( command instanceof HasGraphCommand ) {
             final Command<RuleManager, RuleViolation> graphCommand = ((HasGraphCommand) command).getGraphCommand(context, graphCommandFactory);
             final CommandResult<RuleViolation> result = graphCommand.execute( context.getRuleManager() );
-            // TODO: Check result.
+            if ( CommandResult.Type.ERROR.equals(result.getType()) ) {
+                return buildResult(result);
+            }
         }
         
         return super.doExecute(context, command);
@@ -80,4 +86,11 @@ public class WiresCanvasCommandManager extends AbstractCommandManager<WiresCanva
         return new CanvasCommandResults();
     }
 
+    protected CommandResult<CanvasCommandViolation> buildResult(final CommandResult<RuleViolation> ruleViolation) {
+        final CanvasCommandViolation violation = new CanvasCommandViolationImpl((Collection<RuleViolation>) ruleViolation.getViolations());
+        CommandResult<CanvasCommandViolation> result = new CanvasCommandResult();
+        result.addViolation(violation);
+        return result;
+    }
+    
 }

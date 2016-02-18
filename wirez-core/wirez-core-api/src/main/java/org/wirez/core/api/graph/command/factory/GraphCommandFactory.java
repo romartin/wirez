@@ -37,13 +37,13 @@ public interface GraphCommandFactory {
     RemoveParentCommand REMOVE_PARENT(Node parent,
                                       Node candidate);
 
-    SetConnectionSourceNodeCommand SET_TARGET_CONNECTION(Node<? extends ViewContent<?>, Edge> sourceNode,
-                                                         Edge<? extends ViewContent<?>, Node> edge,
-                                                         int magnetIndex);
+    SetConnectionSourceNodeCommand SET_TARGET_NODE(Node<? extends ViewContent<?>, Edge> sourceNode,
+                                                   Edge<? extends ViewContent<?>, Node> edge,
+                                                   int magnetIndex);
 
-    SetConnectionTargetNodeCommand SET_SORUCE_CONNECTION(Node<? extends ViewContent<?>, Edge> targetNode,
-                                                         Edge<? extends ViewContent<?>, Node> edge,
-                                                         int magnetIndex);
+    SetConnectionTargetNodeCommand SET_SOURCE_NODE(Node<? extends ViewContent<?>, Edge> targetNode,
+                                                   Edge<? extends ViewContent<?>, Node> edge,
+                                                   int magnetIndex);
 
     UpdateElementPositionCommand UPDATE_POSITION(Element element,
                                                  Double x,

@@ -77,17 +77,11 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         final ModelFactory modelFactory = clientDefinitionManager.getModelFactory(defSetId);
         final DefinitionSet definitionSet = (DefinitionSet) modelFactory.build(defSetId); 
         
-        loadRules(definitionSet, new org.uberfire.mvp.Command() {
-            @Override
-            public void execute() {
-                // Initialization complete.
-                doAfterInitialize();
-            }
-        }, new org.uberfire.mvp.Command() {
-            @Override
-            public void execute() {
-                // Do nothing
-            }
+        loadRules(definitionSet, () -> {
+            // Initialization complete.
+            doAfterInitialize();
+        }, () -> {
+            // Do nothing
         });
         
         
@@ -160,11 +154,11 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         return settings.getCommandManager();
     }
 
-    public ConnectionAcceptor getConnectionAcceptor() {
+    public ConnectionAcceptor<WiresCanvasHandler> getConnectionAcceptor() {
         return settings.getConnectionAcceptor();
     }
 
-    public ContainmentAcceptor getContainmentAcceptor() {
+    public ContainmentAcceptor<WiresCanvasHandler> getContainmentAcceptor() {
         return settings.getContainmentAcceptor();
     }
 
@@ -184,7 +178,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final String message = "Executed SetConnectionSourceNodeCommand [source=" + sourceUUID + ", magnet=" + mIndex +  "]";
             log(Level.FINE, message);
 
-            return getConnectionAcceptor().acceptSource(sourceNode, edge, mIndex);
+            return getConnectionAcceptor().acceptSource(WiresCanvasHandler.this, sourceNode, edge, mIndex);
         }
 
         // Set the target Node for the connector.
@@ -202,7 +196,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final String message = "Executed SetConnectionTargetNodeCommand [target=" + targetUUID + ", magnet=" + mIndex +  "]";
             log(Level.FINE, message);
 
-            return getConnectionAcceptor().acceptTarget(targetNode, edge, mIndex);
+            return getConnectionAcceptor().acceptTarget(WiresCanvasHandler.this, targetNode, edge, mIndex);
         }
 
         @Override
@@ -215,7 +209,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final Node sourceNode = getGraphHandler().getNode(outNode.getId());
             final Edge<ViewContent<?>, Node> edge = getGraphHandler().getEdge(connector.getId()); 
             
-            return getConnectionAcceptor().allowSource(sourceNode, edge, 0);
+            return getConnectionAcceptor().allowSource(WiresCanvasHandler.this, sourceNode, edge, 0);
         }
 
         @Override
@@ -226,7 +220,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final Node targetNode = getGraphHandler().getNode(inNode.getId());
             final Edge<ViewContent<?>, Node> edge = getGraphHandler().getEdge(connector.getId());
             
-            return getConnectionAcceptor().allowTarget(targetNode, edge, 0);
+            return getConnectionAcceptor().allowTarget(WiresCanvasHandler.this, targetNode, edge, 0);
         }
 
         private int getMagnetIndex(final WiresMagnet magnet) {
@@ -254,7 +248,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final Node childNode = getGraphHandler().getNode(child.getId());
             final Node parentNode = getGraphHandler().getNode(parent.getId());
 
-            return getContainmentAcceptor().allow(parentNode, childNode);
+            return getContainmentAcceptor().allow(WiresCanvasHandler.this, parentNode, childNode);
         }
 
         @Override
@@ -266,7 +260,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final Node childNode = getGraphHandler().getNode(child.getId());
             final Node parentNode = getGraphHandler().getNode(parent.getId());
             
-           return getContainmentAcceptor().accept(parentNode, childNode);
+           return getContainmentAcceptor().accept(WiresCanvasHandler.this, parentNode, childNode);
         }
 
     };

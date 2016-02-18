@@ -88,7 +88,8 @@ public class WiresCanvasCommandManager extends AbstractCommandManager<WiresCanva
 
     protected CommandResult<CanvasCommandViolation> buildResult(final CommandResult<RuleViolation> ruleViolation) {
         final CanvasCommandViolation violation = new CanvasCommandViolationImpl((Collection<RuleViolation>) ruleViolation.getViolations());
-        CommandResult<CanvasCommandViolation> result = new CanvasCommandResult();
+        CanvasCommandResult result = new CanvasCommandResult();
+        result.setType(ruleViolation.getType());
         result.addViolation(violation);
         return result;
     }

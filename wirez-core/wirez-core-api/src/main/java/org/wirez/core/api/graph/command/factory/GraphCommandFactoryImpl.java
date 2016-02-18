@@ -85,16 +85,16 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public SetConnectionSourceNodeCommand SET_TARGET_CONNECTION(final Node<? extends ViewContent<?>, Edge> sourceNode,
-                                                                final Edge<? extends ViewContent<?>, Node> edge,
-                                                                final int magnetIndex) {
+    public SetConnectionSourceNodeCommand SET_TARGET_NODE(final Node<? extends ViewContent<?>, Edge> sourceNode,
+                                                          final Edge<? extends ViewContent<?>, Node> edge,
+                                                          final int magnetIndex) {
         return new SetConnectionSourceNodeCommand(this, sourceNode, edge, magnetIndex);
     }
 
     @Override
-    public SetConnectionTargetNodeCommand SET_SORUCE_CONNECTION(final Node<? extends ViewContent<?>, Edge> targetNode,
-                                                                final Edge<? extends ViewContent<?>, Node> edge,
-                                                                final int magnetIndex) {
+    public SetConnectionTargetNodeCommand SET_SOURCE_NODE(final Node<? extends ViewContent<?>, Edge> targetNode,
+                                                          final Edge<? extends ViewContent<?>, Node> edge,
+                                                          final int magnetIndex) {
         return new SetConnectionTargetNodeCommand(this, targetNode, edge, magnetIndex);
     }
 

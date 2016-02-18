@@ -33,8 +33,8 @@ public interface WiresCanvasSettings extends CanvasViewSettings {
     
     RuleManager getRuleManager();
     
-    ConnectionAcceptor getConnectionAcceptor();
+    ConnectionAcceptor<WiresCanvasHandler> getConnectionAcceptor();
     
-    ContainmentAcceptor getContainmentAcceptor();
+    ContainmentAcceptor<WiresCanvasHandler> getContainmentAcceptor();
     
 }

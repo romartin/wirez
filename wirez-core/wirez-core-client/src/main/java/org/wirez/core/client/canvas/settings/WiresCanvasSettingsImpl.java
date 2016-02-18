@@ -12,8 +12,8 @@ public class WiresCanvasSettingsImpl extends CanvasViewSettingsImpl implements W
 
     private CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager;
     private RuleManager ruleManager;
-    private ConnectionAcceptor connectionAcceptor;
-    private ContainmentAcceptor containmentAcceptor;
+    private ConnectionAcceptor<WiresCanvasHandler> connectionAcceptor;
+    private ContainmentAcceptor<WiresCanvasHandler> containmentAcceptor;
     
     public WiresCanvasSettingsImpl() {
     }
@@ -29,12 +29,12 @@ public class WiresCanvasSettingsImpl extends CanvasViewSettingsImpl implements W
     }
 
     @Override
-    public ConnectionAcceptor getConnectionAcceptor() {
+    public ConnectionAcceptor<WiresCanvasHandler> getConnectionAcceptor() {
         return connectionAcceptor;
     }
 
     @Override
-    public ContainmentAcceptor getContainmentAcceptor() {
+    public ContainmentAcceptor<WiresCanvasHandler> getContainmentAcceptor() {
         return containmentAcceptor;
     }
 
@@ -46,11 +46,11 @@ public class WiresCanvasSettingsImpl extends CanvasViewSettingsImpl implements W
         this.ruleManager = ruleManager;
     }
 
-    public void setConnectionAcceptor(ConnectionAcceptor connectionAcceptor) {
+    public void setConnectionAcceptor(ConnectionAcceptor<WiresCanvasHandler> connectionAcceptor) {
         this.connectionAcceptor = connectionAcceptor;
     }
 
-    public void setContainmentAcceptor(ContainmentAcceptor containmentAcceptor) {
+    public void setContainmentAcceptor(ContainmentAcceptor<WiresCanvasHandler> containmentAcceptor) {
         this.containmentAcceptor = containmentAcceptor;
     }
 }

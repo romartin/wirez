@@ -11,6 +11,7 @@ import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @ApplicationScoped
 public class CanvasSettingsFactory {
@@ -19,15 +20,16 @@ public class CanvasSettingsFactory {
     GraphVisitor graphVisitor;
     CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager;
     RuleManager ruleManager;
-    ConnectionAcceptor connectionAcceptor;
-    ContainmentAcceptor containmentAcceptor;
+    ConnectionAcceptor<WiresCanvasHandler> connectionAcceptor;
+    ContainmentAcceptor<WiresCanvasHandler> containmentAcceptor;
 
     @Inject
     public CanvasSettingsFactory(final GraphHandler graphHandler,
                                  final GraphVisitor graphVisitor,
-                                 final CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager, 
-                                 final RuleManager ruleManager, ConnectionAcceptor connectionAcceptor, 
-                                 final ContainmentAcceptor containmentAcceptor) {
+                                 final CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager,
+                                 final @Named( "default" ) RuleManager ruleManager, 
+                                 final ConnectionAcceptor<WiresCanvasHandler> connectionAcceptor,
+                                 final ContainmentAcceptor<WiresCanvasHandler> containmentAcceptor) {
         this.graphHandler = graphHandler;
         this.graphVisitor = graphVisitor;
         this.commandManager = commandManager;

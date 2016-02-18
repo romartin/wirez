@@ -6,7 +6,7 @@ import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.GraphCommandFactoryImpl;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactoryImpl;
 import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.UUID;

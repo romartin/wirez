@@ -18,7 +18,7 @@ package org.wirez.core.api.graph.command.impl;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;

@@ -1,8 +1,7 @@
-package org.wirez.core.api.graph.command;
+package org.wirez.core.api.graph.command.factory;
 
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.adapter.PropertyAdapter;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;

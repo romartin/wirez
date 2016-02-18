@@ -21,23 +21,28 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.wirez.core.api.command.Command;
+import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.command.DefaultCommandManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.DefaultRuleManager;
 import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.CanvasListener;
 import org.wirez.core.client.canvas.CanvasSettings;
 import org.wirez.core.client.canvas.command.CanvasCommand;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.WiresCanvasCommandManager;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.control.*;
@@ -57,33 +62,39 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 // TODO: Implement SelectionManager<Element>
-public abstract class WiresCanvasHandler implements CanvasHandler, WiresCanvasCommandManager {
+public abstract class WiresCanvasHandler 
+        implements CanvasHandler<WiresCanvas>, 
+                    CommandManager<WiresCanvasHandler, CanvasCommandViolation> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.BaseCanvasHandler");
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.WiresCanvasHandler");
     
     protected Event<NotificationEvent> notificationEvent;
-    protected DefaultCommandManager commandManager;
+    protected CommandManager<RuleManager, RuleViolation> graphCommandManager;
     protected DefaultRuleManager ruleManager;
     protected CanvasSettings settings;
-    protected Canvas canvas;
-    protected DefaultGraph<?, ? extends Node, ? extends Edge> graph;
+    protected WiresCanvas canvas;
+    protected Graph<?, ? extends Node> graph;
     protected Collection<CanvasListener> listeners = new LinkedList<CanvasListener>();
 
     @Inject
     public WiresCanvasHandler(final Event<NotificationEvent> notificationEvent,
-                              final DefaultCommandManager commandManager,
+                              final CommandManager<RuleManager, RuleViolation> graphCommandManager,
                               final @Named( "default" ) DefaultRuleManager ruleManager) {
         this.notificationEvent = notificationEvent;
-        this.commandManager = commandManager;
+        this.graphCommandManager = graphCommandManager;
         this.ruleManager = ruleManager;
     }
 
     @Override
-    public CanvasHandler initialize(final Canvas canvas, final CanvasSettings settings) {
+    public CanvasHandler initialize(final WiresCanvas canvas, final CanvasSettings settings) {
         this.settings = settings;
         this.canvas = canvas;
-        this.graph = (DefaultGraph<? extends Definition, ? extends Node, ? extends Edge>) settings.getGraph();
+        this.graph = settings.getGraph();
         return this;
+    }
+
+    public CommandManager<RuleManager, RuleViolation> getGraphCommandManager() {
+        return graphCommandManager;
     }
 
     @Override
@@ -92,7 +103,7 @@ public abstract class WiresCanvasHandler implements CanvasHandler, WiresCanvasCo
     }
 
     @Override
-    public Canvas getCanvas() {
+    public WiresCanvas getCanvas() {
         return canvas;
     }
 
@@ -304,6 +315,38 @@ public abstract class WiresCanvasHandler implements CanvasHandler, WiresCanvasCo
         * Command handling
         ***************************************************************************************
      */
+
+    @Override
+    public boolean allow(WiresCanvasHandler context, Command<WiresCanvasHandler, CanvasCommandViolation>... command) {
+        return false;
+    }
+
+    @Override
+    public CommandResults<CanvasCommandViolation> execute(WiresCanvasHandler context, Command<WiresCanvasHandler, CanvasCommandViolation>... command) {
+        return null;
+    }
+
+    @Override
+    public CommandResults<CanvasCommandViolation> undo(WiresCanvasHandler context) {
+        return null;
+    }
+
+    public boolean allow(WiresCanvasHandler context, Command<WiresCanvasHandler, CanvasCommandViolation>... command) {
+        return false;
+    }
+
+    public CommandResults<CanvasCommandViolation> execute(WiresCanvasHandler context, Command<WiresCanvasHandler, CanvasCommandViolation>... command) {
+        return null;
+    }
+
+    public CommandResults<CanvasCommandViolation> undo(WiresCanvasHandler context) {
+        return null;
+    }
+    
+    
+    
+    
+    
 
     @Override
     public boolean allow(final CanvasCommand command) {

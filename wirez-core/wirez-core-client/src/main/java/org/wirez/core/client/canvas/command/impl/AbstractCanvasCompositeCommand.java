@@ -2,7 +2,7 @@ package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.AbstractCompositeCommand;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.client.canvas.command.CanvasCommandFactory;
+import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.command.CanvasCommandResult;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;

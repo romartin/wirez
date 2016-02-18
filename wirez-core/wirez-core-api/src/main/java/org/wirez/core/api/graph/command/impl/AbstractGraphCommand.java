@@ -1,7 +1,7 @@
 package org.wirez.core.api.graph.command.impl;
 
 import org.wirez.core.api.command.Command;
-import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 

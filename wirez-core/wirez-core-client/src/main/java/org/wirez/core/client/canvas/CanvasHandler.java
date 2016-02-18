@@ -25,9 +25,9 @@ import org.wirez.core.api.graph.processing.handler.GraphHandler;
 public interface CanvasHandler<C extends Canvas> {
 
     /**
-     * Initializes a graphical shape canvas.
+     * Load a given graph and displays it into the canvas..
      */
-    CanvasHandler initialize(Canvas canvas, CanvasSettings settings);
+    CanvasHandler initialize(C canvas, CanvasSettings settings);
 
     /**
      * Listens to events from elements in the canvas.
@@ -42,7 +42,7 @@ public interface CanvasHandler<C extends Canvas> {
     /**
      * The managed canvas instance.
      */
-    Canvas getCanvas();
+    C getCanvas();
 
     /**
      * Returns the current canvas graph handler. 

@@ -21,7 +21,7 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;

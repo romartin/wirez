@@ -4,7 +4,7 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.GraphCommandFactory;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 
 import java.util.List;

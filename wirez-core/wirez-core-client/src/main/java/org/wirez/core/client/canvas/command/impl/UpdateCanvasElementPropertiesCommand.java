@@ -1,18 +1,30 @@
 package org.wirez.core.client.canvas.command.impl;
 
+import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.client.canvas.command.CanvasCommandFactory;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.client.canvas.command.HasGraphCommand;
+import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
-public class UpdateCanvasElementPropertiesCommand extends AbstractCanvasCommand {
+public class UpdateCanvasElementPropertiesCommand extends AbstractCanvasCommand implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
 
     protected Element element;
-
-    public UpdateCanvasElementPropertiesCommand(final CanvasCommandFactory canvasCommandFactory, final Element element) {
+    protected String propertyId;
+    protected Object value;
+    
+    public UpdateCanvasElementPropertiesCommand(final CanvasCommandFactory canvasCommandFactory, 
+                                                final Element element,
+                                                final String propertyId,
+                                                final Object value) {
         super(canvasCommandFactory);
         this.element = element;
+        this.propertyId = propertyId;
+        this.value = value;
     }
 
     @Override
@@ -25,5 +37,10 @@ public class UpdateCanvasElementPropertiesCommand extends AbstractCanvasCommand 
     public CommandResult<CanvasCommandViolation> undo(final WiresCanvasHandler context) {
         // TODO
         return null;
+    }
+
+    @Override
+    public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
+        return factory.updateElementPropertyValueCommand(element, propertyId, value);
     }
 }

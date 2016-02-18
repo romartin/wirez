@@ -97,8 +97,8 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
         final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
 
         final CompositeElementCanvasCommand connectionsCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                .add( graphCommandFactoryImpl.setConnectionSourceNodeCommand( (Node<? extends ViewContent<?>, Edge>) source, edge, magnetIndexes[0] ) )
-                .add( graphCommandFactoryImpl.setConnectionTargetNodeCommand( (Node<? extends ViewContent<?>, Edge>) target, edge, magnetIndexes[1] ) );
+                .add( graphCommandFactoryImpl.SET_TARGET_CONNECTION( (Node<? extends ViewContent<?>, Edge>) source, edge, magnetIndexes[0] ) )
+                .add( graphCommandFactoryImpl.SET_SORUCE_CONNECTION( (Node<? extends ViewContent<?>, Edge>) target, edge, magnetIndexes[1] ) );
 
 
         final AddCanvasEdgeCommand addEdgeCommand = defaultCanvasCommands.ADD_EDGE( edge, factory);

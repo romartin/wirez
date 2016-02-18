@@ -36,7 +36,7 @@ public class AddCanvasEdgeCommand extends AddCanvasElementCommand<Edge> implemen
 
     @Override
     public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
-        return factory.addEdgeCommand(parent, candidate);
+        return factory.ADD_EDGE(parent, candidate);
     }
     
 }

@@ -13,53 +13,53 @@ import javax.enterprise.context.ApplicationScoped;
 public class CanvasCommandFactoryImpl implements CanvasCommandFactory {
     
     @Override
-    public AddCanvasNodeCommand addCanvasNodeCommand(Node candidate, ShapeFactory factory) {
+    public AddCanvasNodeCommand ADD_NODE(Node candidate, ShapeFactory factory) {
         return new AddCanvasNodeCommand(this, candidate, factory);
     }
 
     @Override
-    public AddCanvasEdgeCommand addCanvasEdgeCommand(Node parent, Edge candidate, ShapeFactory factory) {
+    public AddCanvasEdgeCommand ADD_EDGE(Node parent, Edge candidate, ShapeFactory factory) {
         return new AddCanvasEdgeCommand(this, parent, candidate, factory);
     }
 
     @Override
-    public DeleteCanvasNodeCommand deleteCanvasNodeCommand(Node candidate, ShapeFactory factory) {
+    public DeleteCanvasNodeCommand DELETE_NODE(Node candidate, ShapeFactory factory) {
         return new DeleteCanvasNodeCommand(this, candidate, factory);
     }
 
     @Override
-    public DeleteCanvasEdgeCommand deleteCanvasEdgeCommand(Edge candidate, ShapeFactory factory) {
+    public DeleteCanvasEdgeCommand DELETE_EDGE(Edge candidate, ShapeFactory factory) {
         return new DeleteCanvasEdgeCommand(this, candidate, factory);
     }
 
     @Override
-    public ClearCanvasCommand clearCanvasCommand() {
+    public ClearCanvasCommand CLEAR_CANVAS() {
         return new ClearCanvasCommand(this);
     }
 
     @Override
-    public SetCanvasElementParentCommand setCanvasElementParentCommand(Node parent, 
-                                                                       Node candidate,
-                                                                       Edge<ParentChildRelationship, Node> edge) {
+    public SetCanvasElementParentCommand SET_PARENT(Node parent,
+                                                    Node candidate,
+                                                    Edge<ParentChildRelationship, Node> edge) {
         return new SetCanvasElementParentCommand(this, parent, candidate, edge);
     }
 
     @Override
-    public UpdateCanvasElementPositionCommand updateCanvasElementPositionCommand(Element element,
-                                                                                 Double x,
-                                                                                 Double y) {
+    public UpdateCanvasElementPositionCommand UPDATE_POSITION(Element element,
+                                                              Double x,
+                                                              Double y) {
         return new UpdateCanvasElementPositionCommand(this, element, x, y);
     }
 
     @Override
-    public UpdateCanvasElementPropertiesCommand updateCanvasElementPropertiesCommand(Element element,
-                                                                                     String propertyId,
-                                                                                     Object value) {
-        return new UpdateCanvasElementPropertiesCommand(this, element, propertyId, value);
+    public UpdateCanvasElementPropertyCommand UPDATE_PROPERTY(Element element,
+                                                              String propertyId,
+                                                              Object value) {
+        return new UpdateCanvasElementPropertyCommand(this, element, propertyId, value);
     }
 
     @Override
-    public AddCanvasChildNodeCommand addCanvasChildNodeCommand(Node parent, Node candidate, ShapeFactory factory) {
+    public AddCanvasChildNodeCommand ADD_CHILD_NODE(Node parent, Node candidate, ShapeFactory factory) {
         return new AddCanvasChildNodeCommand(this, parent, candidate, factory);
     }
 

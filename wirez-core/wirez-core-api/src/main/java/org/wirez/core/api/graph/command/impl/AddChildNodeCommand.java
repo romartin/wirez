@@ -43,8 +43,8 @@ public class AddChildNodeCommand extends AbstractGraphCompositeCommand {
         // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
         final Edge<ParentChildRelationship, Node> edge = new EdgeImpl<>(uuid, new HashSet<>(), labels, new ParentChildRelationship());
         
-        this.addCommand( commandFactory.addNodeCommand(target, candidate) )
-            .addCommand( commandFactory.setParentCommand(parent, candidate, edge) );
+        this.addCommand( commandFactory.ADD_NOE(target, candidate) )
+            .addCommand( commandFactory.SET_PARENT(parent, candidate, edge) );
     }
 
     @Override

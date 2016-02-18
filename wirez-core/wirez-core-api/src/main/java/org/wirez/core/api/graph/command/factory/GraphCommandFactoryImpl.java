@@ -29,86 +29,86 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public AddChildNodeCommand addChildNodeCommand(final Graph target,
-                                                   final Node parent,
-                                                   final Node candidate) {
+    public AddChildNodeCommand ADD_CHILD_NODE(final Graph target,
+                                              final Node parent,
+                                              final Node candidate) {
         return new AddChildNodeCommand(this, target, parent, candidate);
     }
 
     @Override
-    public RemoveChildNodeCommand removeChildNodeCommand(final Graph target,
-                                                         final Node oldParent,
-                                                         final Node candidate) {
+    public RemoveChildNodeCommand REMOVE_CHILD_NODE(final Graph target,
+                                                    final Node oldParent,
+                                                    final Node candidate) {
         return new RemoveChildNodeCommand(this, target, oldParent, candidate);
     }
 
     @Override
-    public RemoveChildNodesCommand removeChildNodesCommand(final Graph target, final Node parent) {
+    public RemoveChildNodesCommand REMOVE_CHILD_NODES(final Graph target, final Node parent) {
         return new RemoveChildNodesCommand(this, target, parent);
     }
 
     @Override
-    public AddEdgeCommand addEdgeCommand(final Node target, final Edge edge) {
+    public AddEdgeCommand ADD_EDGE(final Node target, final Edge edge) {
         return new AddEdgeCommand(this, target, edge);
     }
 
     @Override
-    public AddNodeCommand addNodeCommand(final Graph target,
-                                         final Node candidate) {
+    public AddNodeCommand ADD_NOE(final Graph target,
+                                  final Node candidate) {
         return new AddNodeCommand(this, target, candidate);
     }
 
     @Override
-    public ClearGraphCommand clearGraphCommand(final Graph target) {
+    public ClearGraphCommand CLEAR_GRAPH(final Graph target) {
         return new ClearGraphCommand(this, target);
     }
 
     @Override
-    public SetParentCommand setParentCommand(final Node parent, final Node candidate, final Edge<ParentChildRelationship, Node> edge) {
+    public SetParentCommand SET_PARENT(final Node parent, final Node candidate, final Edge<ParentChildRelationship, Node> edge) {
         return new SetParentCommand(this, parent, candidate, edge);
     }
 
     @Override
-    public RemoveParentCommand removeParentCommand(final Node parent, final Node candidate) {
+    public RemoveParentCommand REMOVE_PARENT(final Node parent, final Node candidate) {
         return new RemoveParentCommand(this, parent, candidate);
     }
 
     @Override
-    public DeleteEdgeCommand deleteEdgeCommand(final Edge<? extends ViewContent, Node> edge) {
+    public DeleteEdgeCommand DELETE_EDGE(final Edge<? extends ViewContent, Node> edge) {
         return new DeleteEdgeCommand(this, edge);
     }
 
     @Override
-    public DeleteNodeCommand deleteNodeCommand(final Graph target,
-                                               final Node candidate) {
+    public DeleteNodeCommand DELETE_NODE(final Graph target,
+                                         final Node candidate) {
         return new DeleteNodeCommand(this, target, candidate);
     }
 
     @Override
-    public SetConnectionSourceNodeCommand setConnectionSourceNodeCommand(final Node<? extends ViewContent<?>, Edge> sourceNode,
-                                                                         final Edge<? extends ViewContent<?>, Node> edge,
-                                                                         final int magnetIndex) {
+    public SetConnectionSourceNodeCommand SET_TARGET_CONNECTION(final Node<? extends ViewContent<?>, Edge> sourceNode,
+                                                                final Edge<? extends ViewContent<?>, Node> edge,
+                                                                final int magnetIndex) {
         return new SetConnectionSourceNodeCommand(this, sourceNode, edge, magnetIndex);
     }
 
     @Override
-    public SetConnectionTargetNodeCommand setConnectionTargetNodeCommand(final Node<? extends ViewContent<?>, Edge> targetNode,
-                                                                         final Edge<? extends ViewContent<?>, Node> edge,
-                                                                         final int magnetIndex) {
+    public SetConnectionTargetNodeCommand SET_SORUCE_CONNECTION(final Node<? extends ViewContent<?>, Edge> targetNode,
+                                                                final Edge<? extends ViewContent<?>, Node> edge,
+                                                                final int magnetIndex) {
         return new SetConnectionTargetNodeCommand(this, targetNode, edge, magnetIndex);
     }
 
     @Override
-    public UpdateElementPositionCommand updateElementPositionCommand(final Element element,
-                                                                     final Double x,
-                                                                     final Double y) {
+    public UpdateElementPositionCommand UPDATE_POSITION(final Element element,
+                                                        final Double x,
+                                                        final Double y) {
         return new UpdateElementPositionCommand(this, element, x ,y);
     }
 
     @Override
-    public UpdateElementPropertyValueCommand updateElementPropertyValueCommand(final Element element,
-                                                                               final String propertyId,
-                                                                               final Object value) {
+    public UpdateElementPropertyValueCommand UPDATE_PROPERTY_VALUE(final Element element,
+                                                                   final String propertyId,
+                                                                   final Object value) {
         final Property p = ElementUtils.getProperty(element, propertyId);
         PropertyAdapter adapter = getPropertyAdapter(p);
         return adapter != null ? new UpdateElementPropertyValueCommand(this, adapter, element, propertyId, value) : null;

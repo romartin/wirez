@@ -14,35 +14,25 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas;
+package org.wirez.core.client.canvas.settings;
 
-import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.command.CommandManager;
+import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.processing.handler.GraphHandler;
-import org.wirez.core.client.canvas.listener.CanvasListener;
-import org.wirez.core.client.canvas.settings.CanvasSettings;
+import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.client.ShapeSet;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.impl2.WiresCanvasViewHandler;
 
-public interface CanvasHandler<C extends Canvas, S extends CanvasSettings, L extends CanvasListener> {
-
-    /**
-     * Load a given graph and displays it into the canvas..
-     */
-    CanvasHandler<C, S, L> initialize(C canvas, Diagram<?> diagram, S settings);
-
-    /**
-     * Listens to events from elements in the canvas.
-     */
-    CanvasHandler<C, S, L> addListener(L listener);
-
-    /**
-     * The managed canvas instance.
-     */
-    C getCanvas();
-
-    /**
-     * The managed diagram instance.
-     */
-    Diagram<?> getDiagram();
+public interface CanvasSettings<G extends Graph, N extends Node, E extends Edge> {
+    
+    GraphHandler<G, N, E> getGraphHandler();
+    
+    GraphVisitor<G, N, E> getGraphVisitor();
     
 }

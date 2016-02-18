@@ -30,6 +30,6 @@ public class ClearCanvasCommand extends AbstractCanvasCommand implements HasGrap
 
     @Override
     public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
-        return factory.clearGraphCommand(canvasHandler.getGraphHandler().getGraph());
+        return factory.CLEAR_GRAPH(canvasHandler.getDiagram().getGraph());
     }
 }

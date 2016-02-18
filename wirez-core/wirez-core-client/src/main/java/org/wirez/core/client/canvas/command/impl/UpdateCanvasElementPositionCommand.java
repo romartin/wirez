@@ -42,6 +42,6 @@ public class UpdateCanvasElementPositionCommand extends AbstractCanvasCommand im
 
     @Override
     public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
-        return factory.updateElementPositionCommand( element, x, y );
+        return factory.UPDATE_POSITION( element, x, y );
     }
 }

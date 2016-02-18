@@ -47,8 +47,8 @@ import org.wirez.core.client.util.WirezLogger;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.canvas.CanvasSettings;
-import org.wirez.core.client.canvas.CanvasSettingsBuilderImpl;
+import org.wirez.core.client.canvas.settings.CanvasSettings;
+import org.wirez.core.client.canvas.settings.CanvasViewSettingsBuilderImpl;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.WiresCanvasCommandManager;
@@ -198,7 +198,7 @@ public class CanvasScreen {
         
         
         // Show the graph a canvas instance.
-        CanvasSettings settings = new CanvasSettingsBuilderImpl()
+        CanvasSettings settings = new CanvasViewSettingsBuilderImpl()
                 .uuid(uuid)
                 .definitionSet(definitionSet)
                 .shapeSet(shapeSet)

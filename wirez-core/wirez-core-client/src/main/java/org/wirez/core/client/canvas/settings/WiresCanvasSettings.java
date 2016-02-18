@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas;
+package org.wirez.core.client.canvas.settings;
 
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.command.CommandManager;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.client.ShapeSet;
+import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.control.ConnectionAcceptor;
+import org.wirez.core.client.canvas.control.ContainmentAcceptor;
 
-public interface CanvasSettingsBuilder<T> {
+public interface WiresCanvasSettings extends CanvasViewSettings {
     
-    T uuid(String uuid);
+    CommandManager<? extends CanvasHandler, CanvasCommandViolation> getCommandManager();
     
-    T definitionSet(DefinitionSet definitionSet);
+    RuleManager getRuleManager();
     
-    T shapeSet(ShapeSet shapeSet);
+    ConnectionAcceptor getConnectionAcceptor();
     
-    T title(String title);
+    ContainmentAcceptor getContainmentAcceptor();
     
-    T graph(Graph<?, ? extends Node> graph);
-    
-    CanvasSettings build();
 }

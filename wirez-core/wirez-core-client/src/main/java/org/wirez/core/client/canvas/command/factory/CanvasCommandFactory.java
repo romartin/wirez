@@ -2,7 +2,6 @@ package org.wirez.core.client.canvas.command.factory;
 
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.client.canvas.command.impl.*;
@@ -14,33 +13,34 @@ public interface CanvasCommandFactory {
                                     Atomic commands.
        ****************************************************************************************** */
     
-    AddCanvasNodeCommand addCanvasNodeCommand(Node candidate, ShapeFactory factory);
+    AddCanvasNodeCommand ADD_NODE(Node candidate, ShapeFactory factory);
     
-    AddCanvasEdgeCommand addCanvasEdgeCommand(Node parent, Edge candidate, ShapeFactory factory);
+    AddCanvasEdgeCommand ADD_EDGE(Node parent, Edge candidate, ShapeFactory factory);
     
-    DeleteCanvasNodeCommand deleteCanvasNodeCommand(Node candidate, ShapeFactory factory);
+    DeleteCanvasNodeCommand DELETE_NODE(Node candidate, ShapeFactory factory);
     
-    DeleteCanvasEdgeCommand deleteCanvasEdgeCommand(Edge candidate, ShapeFactory factory);
+    DeleteCanvasEdgeCommand DELETE_EDGE(Edge candidate, ShapeFactory factory);
     
-    ClearCanvasCommand clearCanvasCommand();
+    ClearCanvasCommand CLEAR_CANVAS();
     
-    SetCanvasElementParentCommand setCanvasElementParentCommand(Node parent, 
-                                                                Node candidate,
-                                                                Edge<ParentChildRelationship, Node> edge);
+    SetCanvasElementParentCommand SET_PARENT(Node parent,
+                                             Node candidate,
+                                             Edge<ParentChildRelationship, Node> edge);
     
-    UpdateCanvasElementPositionCommand updateCanvasElementPositionCommand(Element element,
-                                                                          Double x,
-                                                                          Double y);
+    UpdateCanvasElementPositionCommand UPDATE_POSITION(Element element,
+                                                       Double x,
+                                                       Double y);
     
-    UpdateCanvasElementPropertiesCommand updateCanvasElementPropertiesCommand(Element element,
-                                                                              String propertyId,
-                                                                              Object value);
-    
+    UpdateCanvasElementPropertyCommand UPDATE_PROPERTY(Element element,
+                                                       String propertyId,
+                                                       Object value);
+
+    UpdateCanvasElementPropertiesCommand UPDATE_PROPERTIES(Element element);
     
     /* ******************************************************************************************
                                     Composite commands.
        ****************************************************************************************** */
     
-    AddCanvasChildNodeCommand addCanvasChildNodeCommand(Node parent, Node candidate, ShapeFactory factory);
+    AddCanvasChildNodeCommand ADD_CHILD_NODE(Node parent, Node candidate, ShapeFactory factory);
     
 }

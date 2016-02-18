@@ -6,19 +6,25 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.HasGraphCommand;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
-public class UpdateCanvasElementPropertiesCommand extends AbstractCanvasCommand {
+public class UpdateCanvasElementPropertyCommand extends AbstractCanvasCommand implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
 
     protected Element element;
+    protected String propertyId;
+    protected Object value;
     
-    public UpdateCanvasElementPropertiesCommand(final CanvasCommandFactory canvasCommandFactory,
-                                                final Element element) {
+    public UpdateCanvasElementPropertyCommand(final CanvasCommandFactory canvasCommandFactory,
+                                              final Element element,
+                                              final String propertyId,
+                                              final Object value) {
         super(canvasCommandFactory);
         this.element = element;
+        this.propertyId = propertyId;
+        this.value = value;
     }
 
     @Override
@@ -33,4 +39,8 @@ public class UpdateCanvasElementPropertiesCommand extends AbstractCanvasCommand 
         return null;
     }
 
+    @Override
+    public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
+        return factory.UPDATE_PROPERTY_VALUE(element, propertyId, value);
+    }
 }

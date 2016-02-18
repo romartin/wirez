@@ -73,7 +73,7 @@ public class UpdateElementPropertyValueCommand extends AbstractGraphCommand {
     
     @Override
     public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.updateElementPropertyValueCommand( element, propertyId, oldValue );
+        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.UPDATE_PROPERTY_VALUE( element, propertyId, oldValue );
         return undoCommand.execute( ruleManager );
     }
 

@@ -18,7 +18,7 @@ public class DeleteCanvasEdgeCommand extends DeleteCanvasElementCommand<Edge> im
 
     @Override
     public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
-        return factory.deleteEdgeCommand(candidate);
+        return factory.DELETE_EDGE(candidate);
     }
     
 }

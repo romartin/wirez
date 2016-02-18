@@ -38,7 +38,7 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
         PortablePreconditions.checkNotNull( "commands", commands );
 
         for (final Command<C, V> command : commands) {
-            final CommandResult<V> result = command.allow( context );
+            final CommandResult<V> result = doAllow( context, command );
             final CommandResults<V> results = buildResults();
             results.add(result);
             if ( !CommandResult.Type.ERROR.equals(result.getType()) ) {
@@ -47,6 +47,10 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
         }
         
         return  true;
+    }
+
+    protected CommandResult<V> doAllow(final C context, final Command<C, V> command) {
+        return command.allow( context );
     }
 
     @Override
@@ -58,12 +62,16 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
         final CommandResults<V> results = buildResults();
         final Stack<Command<C, V>> commandStack = new Stack<>();
         for (final Command<C, V> command : commands) {
-            final CommandResult<V> result = command.execute( context );
-                commandStack.push(command);
+            final CommandResult<V> result = doExecute( context, command );
+            commandStack.push(command);
             results.add(result);
         }
         commandHistory.push(commandStack);
         return results;
+    }
+    
+    protected CommandResult<V> doExecute(final C context, final Command<C, V> command) {
+        return command.execute( context );
     }
 
     @Override

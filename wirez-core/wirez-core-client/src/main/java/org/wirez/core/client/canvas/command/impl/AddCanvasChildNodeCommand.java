@@ -27,7 +27,7 @@ public class AddCanvasChildNodeCommand extends AddCanvasElementCommand<Node> imp
 
     @Override
     public Command<RuleManager, RuleViolation> getGraphCommand(final WiresCanvasHandler handler, final GraphCommandFactory factory) {
-        return factory.addChildNodeCommand(handler.getGraphHandler().getGraph(), parent, candidate);
+        return factory.ADD_CHILD_NODE(handler.getDiagram().getGraph(), parent, candidate);
     }
     
 }

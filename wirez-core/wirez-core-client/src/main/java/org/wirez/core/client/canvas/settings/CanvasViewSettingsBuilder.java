@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas;
+package org.wirez.core.client.canvas.settings;
 
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.processing.handler.GraphHandler;
+import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.client.ShapeSet;
+import org.wirez.core.client.canvas.settings.CanvasSettings;
 
-/**
- * Listen to events from elements in the canvas.
- */
-public interface CanvasListener {
-    
-    void onElementAdded(Element element);
+public interface CanvasViewSettingsBuilder extends CanvasSettingsBuilder<CanvasViewSettingsBuilder, CanvasViewSettings> {
 
-    void onElementModified(Element element);
-
-    void onElementDeleted(Element element);
-
-    void onClear();
-    
+   
 }

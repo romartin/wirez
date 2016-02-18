@@ -36,8 +36,8 @@ public class RemoveChildNodesCommand extends AbstractGraphCompositeCommand {
     }
     
     private void addDeleteCommands(final Node node) {
-        this.addCommand( commandFactory.removeParentCommand( parent, node) )
-            .addCommand( commandFactory.deleteNodeCommand( target, node ) );
+        this.addCommand( commandFactory.REMOVE_PARENT( parent, node) )
+            .addCommand( commandFactory.DELETE_NODE( target, node ) );
     }
 
     @Override

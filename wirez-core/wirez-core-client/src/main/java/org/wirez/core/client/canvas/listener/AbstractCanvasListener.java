@@ -14,33 +14,21 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas;
+package org.wirez.core.client.canvas.listener;
 
+import org.wirez.core.client.canvas.CanvasHandler;
 
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
-
-public class CanvasListenerImpl implements CanvasListener {
+public abstract class AbstractCanvasListener implements CanvasListener {
     
     CanvasHandler canvasHandler;
 
-    public CanvasListenerImpl(final CanvasHandler canvasHandler) {
+    public AbstractCanvasListener(final CanvasHandler canvasHandler) {
         this.canvasHandler = canvasHandler;
     }
 
     @Override
-    public void onElementAdded(final Element element) {
-        assert canvasHandler != null;
-    }
-
-    @Override
-    public void onElementModified(final Element element) {
-        assert canvasHandler != null;
-    }
-
-    @Override
-    public void onElementDeleted(final Element element) {
-        assert canvasHandler != null;
+    public void onInitializationComplete() {
+        
     }
 
     @Override
@@ -50,6 +38,6 @@ public class CanvasListenerImpl implements CanvasListener {
 
     public void removeListener() {
         assert canvasHandler != null;
-        ((WiresCanvasHandler)canvasHandler).removeListener(this);
+        // TODO
     }
 }

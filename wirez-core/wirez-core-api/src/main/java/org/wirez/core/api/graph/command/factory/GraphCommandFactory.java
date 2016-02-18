@@ -15,58 +15,58 @@ public interface GraphCommandFactory {
                                     Atomic commands.
        ****************************************************************************************** */
 
-    AddNodeCommand addNodeCommand(Graph target,
+    AddNodeCommand ADD_NOE(Graph target,
+                           Node candidate);
+
+    AddEdgeCommand ADD_EDGE(Node target,
+                            Edge edge);
+
+
+    DeleteNodeCommand DELETE_NODE(Graph target,
                                   Node candidate);
 
-    AddEdgeCommand addEdgeCommand(Node target,
-                                  Edge edge);
-
-
-    DeleteNodeCommand deleteNodeCommand(Graph target,
-                                        Node candidate);
-
-    DeleteEdgeCommand deleteEdgeCommand(Edge<? extends ViewContent, 
+    DeleteEdgeCommand DELETE_EDGE(Edge<? extends ViewContent, 
             Node> edge);
 
-    ClearGraphCommand clearGraphCommand(Graph target);
+    ClearGraphCommand CLEAR_GRAPH(Graph target);
 
-    SetParentCommand setParentCommand(Node parent, 
-                                      Node candidate, 
-                                      Edge<ParentChildRelationship, Node> edge);
+    SetParentCommand SET_PARENT(Node parent,
+                                Node candidate,
+                                Edge<ParentChildRelationship, Node> edge);
 
-    RemoveParentCommand removeParentCommand(Node parent, 
-                                            Node candidate);
+    RemoveParentCommand REMOVE_PARENT(Node parent,
+                                      Node candidate);
 
-    SetConnectionSourceNodeCommand setConnectionSourceNodeCommand(Node<? extends ViewContent<?>, Edge> sourceNode,
-                                                                  Edge<? extends ViewContent<?>, Node> edge,
-                                                                  int magnetIndex);
+    SetConnectionSourceNodeCommand SET_TARGET_CONNECTION(Node<? extends ViewContent<?>, Edge> sourceNode,
+                                                         Edge<? extends ViewContent<?>, Node> edge,
+                                                         int magnetIndex);
 
-    SetConnectionTargetNodeCommand setConnectionTargetNodeCommand(Node<? extends ViewContent<?>, Edge> targetNode,
-                                                                  Edge<? extends ViewContent<?>, Node> edge,
-                                                                  int magnetIndex);
+    SetConnectionTargetNodeCommand SET_SORUCE_CONNECTION(Node<? extends ViewContent<?>, Edge> targetNode,
+                                                         Edge<? extends ViewContent<?>, Node> edge,
+                                                         int magnetIndex);
 
-    UpdateElementPositionCommand updateElementPositionCommand(Element element,
-                                                              Double x,
-                                                              Double y);
+    UpdateElementPositionCommand UPDATE_POSITION(Element element,
+                                                 Double x,
+                                                 Double y);
 
-    UpdateElementPropertyValueCommand updateElementPropertyValueCommand(Element element,
-                                                                        String propertyId,
-                                                                        Object value);
+    UpdateElementPropertyValueCommand UPDATE_PROPERTY_VALUE(Element element,
+                                                            String propertyId,
+                                                            Object value);
     
 
     /* ******************************************************************************************
                                     Composite commands.
        ****************************************************************************************** */
     
-    AddChildNodeCommand addChildNodeCommand(Graph target,
-                                            Node parent,
-                                            Node candidate);
+    AddChildNodeCommand ADD_CHILD_NODE(Graph target,
+                                       Node parent,
+                                       Node candidate);
 
-    RemoveChildNodeCommand removeChildNodeCommand(Graph target,
-                                                  Node oldParent,
-                                                  Node candidate);
+    RemoveChildNodeCommand REMOVE_CHILD_NODE(Graph target,
+                                             Node oldParent,
+                                             Node candidate);
     
-    RemoveChildNodesCommand removeChildNodesCommand(Graph target,
-                                                    Node parent);
+    RemoveChildNodesCommand REMOVE_CHILD_NODES(Graph target,
+                                               Node parent);
     
 }

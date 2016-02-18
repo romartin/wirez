@@ -10,7 +10,6 @@ import org.wirez.core.client.canvas.CanvasHandler;
 
 public interface HasGraphCommand<H extends CanvasHandler, F> {
     
-    
     Command<RuleManager, RuleViolation> getGraphCommand(H canvasHandler, F factory);
     
 }

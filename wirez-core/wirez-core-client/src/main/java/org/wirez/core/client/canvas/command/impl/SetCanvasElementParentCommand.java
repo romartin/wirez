@@ -53,7 +53,7 @@ public class SetCanvasElementParentCommand extends AbstractCanvasCommand impleme
     @Override
     public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
         assert edge != null;
-        return factory.setParentCommand(parent, candidate, edge);
+        return factory.SET_PARENT(parent, candidate, edge);
     }
     
 }

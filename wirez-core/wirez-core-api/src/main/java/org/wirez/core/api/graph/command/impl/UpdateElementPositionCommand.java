@@ -85,7 +85,7 @@ public class UpdateElementPositionCommand extends AbstractGraphCommand {
     
     @Override
     public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.updateElementPositionCommand( element, oldX, oldY);
+        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.UPDATE_POSITION( element, oldX, oldY);
         return undoCommand.execute( ruleManager );
     }
 

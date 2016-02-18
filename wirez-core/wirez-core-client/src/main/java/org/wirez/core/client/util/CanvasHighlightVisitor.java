@@ -22,9 +22,9 @@ import com.google.gwt.user.client.Timer;
 import org.uberfire.mvp.Command;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitorImpl;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
@@ -59,8 +59,6 @@ public class CanvasHighlightVisitor {
 
     public void run() {
         assert canvasHandler != null;
-        assert canvasHandler.getGraphHandler() != null;
-        assert canvasHandler.getGraphHandler().getGraph() != null;
       
         prepareSimulation(() -> animate(0, () -> log(Level.FINE, "CanvasHighlightVisitor - FINISHED")));
     }
@@ -120,7 +118,7 @@ public class CanvasHighlightVisitor {
     
     private void prepareSimulation(final Command command) {
 
-        final DefaultGraph graph = (DefaultGraph) canvasHandler.getGraphHandler().getGraph();
+        final Graph graph = canvasHandler.getDiagram().getGraph();
 
         shapes.clear();
 
@@ -155,7 +153,7 @@ public class CanvasHighlightVisitor {
             }
 
             @Override
-            public void visitGraph(DefaultGraph graph) {
+            public void visitGraph(Graph graph) {
                 super.visitGraph(graph);
             }
 

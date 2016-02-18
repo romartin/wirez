@@ -16,36 +16,59 @@
 
 package org.wirez.core.client.control;
 
+import org.wirez.core.api.command.Command;
+import org.wirez.core.api.command.CommandManager;
+import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.command.WiresCanvasCommandManager;
-import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 import org.wirez.core.client.util.ShapeUtils;
 
 import javax.inject.Inject;
 
-public abstract class BaseShapeControl<S extends Shape, E extends Element> implements ShapeControl<S, E>, HasCanvasHandler {
+public abstract class BaseShapeControl<S extends Shape, E extends Element> implements ShapeControl<WiresCanvasHandler, S, E> {
     
-    protected CanvasHandler canvasHandler;
-    protected DefaultCanvasCommands defaultCanvasCommands;
+    protected WiresCanvasHandler canvasHandler;
+    protected CanvasCommandFactory commandFactory;
 
     @Inject
-    public BaseShapeControl(DefaultCanvasCommands defaultCanvasCommands) {
-        this.defaultCanvasCommands = defaultCanvasCommands;
+    public BaseShapeControl(CanvasCommandFactory commandFactory) {
+        this.commandFactory = commandFactory;
     }
 
     @Override
-    public void setCanvasHandler(final CanvasHandler canvasHandler) {
+    public void enable(final WiresCanvasHandler canvasHandler, 
+                       final S shape, final E element) {
         this.canvasHandler = canvasHandler;
+        doEnable(shape, element);
+    }
+
+    @Override
+    public void disable(final WiresCanvasHandler canvasHandler, 
+                        final S shape) {
+        doDisable(shape);
+    }
+
+    protected void doEnable(final S shape, final E element) {
+    }
+
+    protected void doDisable(final S shape) {
     }
 
     protected double[] getContainerXY(final Shape shape) {
         return ShapeUtils.getContainerXY(shape);
     }
     
-    protected WiresCanvasCommandManager getCommandManager() {
-        return (WiresCanvasCommandManager) canvasHandler;
+    protected CommandManager<WiresCanvasHandler, CanvasCommandViolation> getCommandManager() {
+        return canvasHandler.getCommandManager();
+    }
+    
+    protected CommandResults<CanvasCommandViolation> execute (final Command<WiresCanvasHandler, CanvasCommandViolation> command) {
+        return getCommandManager().execute( canvasHandler, command );
     }
     
 }

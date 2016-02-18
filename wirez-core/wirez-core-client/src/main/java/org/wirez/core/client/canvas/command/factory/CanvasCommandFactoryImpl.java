@@ -59,6 +59,11 @@ public class CanvasCommandFactoryImpl implements CanvasCommandFactory {
     }
 
     @Override
+    public UpdateCanvasElementPropertiesCommand UPDATE_PROPERTIES(final Element element) {
+        return new UpdateCanvasElementPropertiesCommand(this, element);
+    }
+
+    @Override
     public AddCanvasChildNodeCommand ADD_CHILD_NODE(Node parent, Node candidate, ShapeFactory factory) {
         return new AddCanvasChildNodeCommand(this, parent, candidate, factory);
     }

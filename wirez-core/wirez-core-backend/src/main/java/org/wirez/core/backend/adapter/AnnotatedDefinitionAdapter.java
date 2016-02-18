@@ -12,17 +12,15 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.factory.*;
-import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.rule.Rule;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 
 @ApplicationScoped
@@ -37,7 +35,7 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
     Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances;
 
     @Inject
-    DefaultGraphFactory<? extends Definition> graphFactory;
+    GraphFactory<? extends Definition> graphFactory;
 
     @Inject
     ViewNodeFactory<? extends Definition> nodeFactory;
@@ -182,7 +180,7 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
             Class<? extends Element> item = getGraphElementType(definition);
 
-            if (item.equals(DefaultGraph.class)) {
+            if (item.equals(Graph.class)) {
                 return graphFactory;
             } else if (item.equals(Node.class)) {
                 return nodeFactory;

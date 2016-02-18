@@ -7,14 +7,12 @@ import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.factory.*;
-import org.wirez.core.api.graph.impl.DefaultGraph;
-import org.wirez.core.api.rule.Rule;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +20,7 @@ import java.util.Set;
 @ApplicationScoped
 public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefinition> {
 
-    DefaultGraphFactory<? extends Definition> graphFactory;
+    GraphFactory<? extends Definition> graphFactory;
     ViewNodeFactory<? extends Definition> nodeFactory;
     ConnectionEdgeFactory<? extends Definition> edgeFactory;
 
@@ -30,7 +28,7 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefini
     }
 
     @Inject
-    public DefaultDefinitionAdapter(DefaultGraphFactory<? extends Definition> graphFactory, 
+    public DefaultDefinitionAdapter(GraphFactory<? extends Definition> graphFactory, 
                                     ViewNodeFactory<? extends Definition> nodeFactory, 
                                     ConnectionEdgeFactory<? extends Definition> edgeFactory) {
         this.graphFactory = graphFactory;
@@ -87,7 +85,7 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefini
 
             Class<? extends Element> item = getGraphElementType(definition);
 
-            if (item.equals(DefaultGraph.class)) {
+            if (item.equals(Graph.class)) {
                 return graphFactory;
             } else if (item.equals(Node.class)) {
                 return nodeFactory;

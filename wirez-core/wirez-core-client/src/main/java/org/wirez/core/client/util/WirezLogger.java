@@ -66,7 +66,7 @@ public class WirezLogger {
         String message = result.getMessage();
         CommandResult.Type type = result.getType();
         log("Command Result [message=" + message + "] [type" + type.name());
-        Iterable<RuleViolation> violations = result.getRuleViolations();
+        Iterable<RuleViolation> violations = result.getViolations();
         logRuleViolations(violations);
     }
 
@@ -89,7 +89,7 @@ public class WirezLogger {
     private static final AbstractGraphVisitorCallback VISITOR_CALLBACK = new AbstractGraphVisitorCallback() {
 
         @Override
-        public void visitGraphWithViewContent(DefaultGraph<? extends ViewContent, ? extends Node, ? extends Edge> graph) {
+        public void visitGraphWithViewContent(Graph<? extends ViewContent, ? extends Node> graph) {
             if (graph == null) {
                 error("Graph is null!");
             } else {
@@ -101,7 +101,7 @@ public class WirezLogger {
         }
 
         @Override
-        public void visitGraph(DefaultGraph graph) {
+        public void visitGraph(Graph graph) {
             if (graph == null) {
                 error("Graph is null!");
             } else {
@@ -179,29 +179,27 @@ public class WirezLogger {
 
     };
 
-    public static void log(final DefaultGraph graph) {
+    public static void log(final Graph graph) {
         final DefinitionManager definitionManager = ClientDefinitionManager.get();
-        new GraphVisitorImpl()
-                .setDefinitionManager(definitionManager)
-                .setBoundsVisitorCallback(new DefaultGraphVisitorCallback.BoundsVisitorCallback() {
-                    @Override
-                    public void visitBounds(Element<? extends ViewContent> element, Bounds.Bound ul, Bounds.Bound lr) {
-                        log(" Bound UL [x=" + ul.getX() + ", y=" + ul.getY() + "]");
-                        log(" Bound LR [x=" + lr.getX() + ", y=" + lr.getY() + "]");
-                    }
-                })
-                .setPropertiesVisitorCallback(new DefaultGraphVisitorCallback.PropertyVisitorCallback() {
-                    @Override
-                    public void visitProperty(Element element, String key, Object value) {
-                        log(" Property [key=" + key + ", value=" + value + "]");
-                    }
-                })
-                .visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
-
-
+        final GraphVisitor visitor = new GraphVisitorImpl()
+                .setDefinitionManager(definitionManager);
+        visitor.setBoundsVisitorCallback(new BoundsVisitorCallback() {
+            @Override
+            public void visitBounds(Element<? extends ViewContent> element, Bounds.Bound ul, Bounds.Bound lr) {
+                log(" Bound UL [x=" + ul.getX() + ", y=" + ul.getY() + "]");
+                log(" Bound LR [x=" + lr.getX() + ", y=" + lr.getY() + "]");
+            }
+        });
+        visitor.setPropertiesVisitorCallback(new PropertyVisitorCallback() {
+            @Override
+            public void visitProperty(Element element, String key, Object value) {
+                log(" Property [key=" + key + ", value=" + value + "]");
+            }
+        });
+        visitor.visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
     }
 
-    public static void resume(final DefaultGraph graph) {
+    public static void resume(final Graph graph) {
         final DefinitionManager definitionManager = ClientDefinitionManager.get();
         new GraphVisitorImpl()
                 .setDefinitionManager(definitionManager)

@@ -4,34 +4,32 @@ import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.content.ViewContentImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
-import org.wirez.core.api.graph.factory.DefaultGraphFactory;
+import org.wirez.core.api.graph.factory.GraphFactory;
 import org.wirez.core.api.graph.impl.BoundImpl;
 import org.wirez.core.api.graph.impl.BoundsImpl;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.GraphImpl;
-import org.wirez.core.api.graph.store.DefaultGraphEdgeStore;
 import org.wirez.core.api.graph.store.GraphNodeStoreImpl;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Set;
 
 @ApplicationScoped
-public class DefaultGraphFactoryImpl extends BaseElementFactory<DefaultDefinition, ViewContent<DefaultDefinition>, DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge>> 
-        implements DefaultGraphFactory<DefaultDefinition> {
+public class DefaultGraphFactoryImpl extends BaseElementFactory<DefaultDefinition, ViewContent<DefaultDefinition>, Graph<ViewContent<DefaultDefinition>, Node>> 
+        implements GraphFactory<DefaultDefinition> {
 
     @Override
-    public DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge> build(String uuid, DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
-        DefaultGraph<ViewContent<DefaultDefinition>, Node, Edge> graph =
+    public Graph<ViewContent<DefaultDefinition>, Node> build(String uuid, DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
+        Graph<ViewContent<DefaultDefinition>, Node> graph =
                 new GraphImpl<ViewContent<DefaultDefinition>>( uuid,
                         properties,
                         labels,
                         new ViewContentImpl<DefaultDefinition>( definition, buildBounds()),
-                        new GraphNodeStoreImpl(),
-                        new DefaultGraphEdgeStore());
+                        new GraphNodeStoreImpl());
 
         return graph;
         

@@ -19,7 +19,9 @@ package org.wirez.core.client.canvas.impl;
 import com.ait.lienzo.client.core.shape.wires.*;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
@@ -29,12 +31,13 @@ import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.control.ConnectionAcceptor;
 import org.wirez.core.client.canvas.control.ContainmentAcceptor;
 import org.wirez.core.client.canvas.listener.CanvasModelListener;
 import org.wirez.core.client.canvas.settings.WiresCanvasSettings;
-import org.wirez.core.client.control.HasCanvasHandler;
 import org.wirez.core.client.control.ShapeControl;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
@@ -70,7 +73,11 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
     protected void doInitialize() {
 
         // Load the rules that apply for the diagram.
-        loadRules(settings.getDefinitionSet(), new org.uberfire.mvp.Command() {
+        final String defSetId = getDiagram().getSettings().getDefinitionSetId();
+        final ModelFactory modelFactory = clientDefinitionManager.getModelFactory(defSetId);
+        final DefinitionSet definitionSet = (DefinitionSet) modelFactory.build(defSetId); 
+        
+        loadRules(definitionSet, new org.uberfire.mvp.Command() {
             @Override
             public void execute() {
                 // Initialization complete.
@@ -137,15 +144,8 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
                     canvas.addControl(controlWidget);
                 }
 
-                // Controls that execute commands on the canvas require the canvas handler instance.
-                if (control instanceof HasCanvasHandler) {
-                    final HasCanvasHandler hasCanvasHandler = (HasCanvasHandler) control;
-                    hasCanvasHandler.setCanvasHandler(this);
-
-                }
-
                 // Enable the stateful control.
-                control.enable(shape, element);
+                control.enable(this, shape, element);
 
             }
         }
@@ -154,6 +154,10 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
     
     public RuleManager getRuleManager() {
         return settings.getRuleManager();
+    }
+
+    public CommandManager<WiresCanvasHandler, CanvasCommandViolation> getCommandManager() {
+        return settings.getCommandManager();
     }
 
     public ConnectionAcceptor getConnectionAcceptor() {

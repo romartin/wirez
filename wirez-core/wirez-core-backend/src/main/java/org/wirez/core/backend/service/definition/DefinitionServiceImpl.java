@@ -11,9 +11,9 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.factory.ElementFactory;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.service.ResponseStatus;
 import org.wirez.core.api.service.definition.*;
@@ -42,7 +42,7 @@ public class DefinitionServiceImpl implements DefinitionService {
         Definition graphDefinition = null;
         for (Definition definition : definitions) {
             Class<? extends Element> elementClass = definitionManager.getDefinitionAdapter(definition).getGraphElementType(definition);
-            Class<? extends Element> graphClass = DefaultGraph.class;
+            Class<? extends Element> graphClass = Graph.class;
             if ( elementClass.equals( graphClass ) ) {
                 graphDefinition = definition;
             }

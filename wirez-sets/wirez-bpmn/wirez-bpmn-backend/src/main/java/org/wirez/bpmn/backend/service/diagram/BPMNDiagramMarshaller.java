@@ -14,28 +14,23 @@ import org.jboss.drools.util.DroolsResourceFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
-import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.diagram.SettingsImpl;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.service.diagram.DiagramMarshaller;
 import org.wirez.core.api.util.UUID;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

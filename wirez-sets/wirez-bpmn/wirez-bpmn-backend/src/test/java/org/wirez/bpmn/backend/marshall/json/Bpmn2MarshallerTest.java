@@ -21,24 +21,15 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import org.wirez.bpmn.api.*;
-import org.wirez.bpmn.api.property.Height;
-import org.wirez.bpmn.api.property.Radius;
-import org.wirez.bpmn.api.property.Width;
-import org.wirez.bpmn.api.property.diagram.DiagramSet;
-import org.wirez.bpmn.api.property.diagram.Executable;
-import org.wirez.bpmn.api.property.diagram.Package;
-import org.wirez.bpmn.api.property.general.*;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.factory.*;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.service.definition.DefinitionService;
-import org.wirez.core.api.service.definition.DefinitionServiceResponse;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -52,7 +43,7 @@ import static org.mockito.Mockito.*;
 public class Bpmn2MarshallerTest {
 
     @Mock
-    DefaultGraphFactory<? extends Definition> graphFactory;
+    GraphFactory<? extends Definition> graphFactory;
 
     @Mock
     ViewNodeFactory<? extends Definition> nodeFactory;
@@ -147,7 +138,7 @@ public class Bpmn2MarshallerTest {
         Definitions definitions = parseDefinitions();
         Bpmn2UnMarshaller parser = new Bpmn2UnMarshaller(bpmnWiresFactory);
         parser.setProfile(new DefaultProfileImpl());
-        DefaultGraph bpmnGraph = parser.unmarshall(definitions, null);
+        Graph bpmnGraph = parser.unmarshall(definitions, null);
         // log(bpmnGraphs);
         log("BPMN2 load test finished!");
     }
@@ -191,7 +182,7 @@ public class Bpmn2MarshallerTest {
         System.out.println(message);
     }
 
-    private void log(Collection<DefaultGraph> graphs) {
+    private void log(Collection<Graph> graphs) {
         // TODO
     }
 }

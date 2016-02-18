@@ -25,6 +25,7 @@ import org.uberfire.ext.properties.editor.model.PropertyEditorEvent;
 import org.uberfire.ext.properties.editor.model.PropertyEditorFieldInfo;
 import org.uberfire.ext.properties.editor.model.PropertyEditorType;
 import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.command.Command;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
@@ -32,18 +33,20 @@ import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.processing.handler.GraphHandlerImpl;
 import org.wirez.core.api.service.definition.DefinitionServiceResponse;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.CanvasListenerImpl;
 import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
+import org.wirez.core.client.canvas.listener.AbstractCanvasModelListener;
+import org.wirez.core.client.canvas.listener.CanvasModelListener;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -80,11 +83,11 @@ public class PropertiesEditor implements IsWidget {
     ClientDefinitionServices clientDefinitionServices;
     DefinitionManager definitionManager;
     ShapeManager wirezClientManager;
-    DefaultCanvasCommands defaultCommands;
+    CanvasCommandFactory canvasCommandFactory;
     GraphHandlerImpl defaultGraphHandler;
     View view;
-    private CanvasHandler canvasHandler;
-    private CanvasListenerImpl canvasListener;
+    private WiresCanvasHandler canvasHandler;
+    private CanvasModelListener canvasListener;
     private EditorCallback editorCallback;
     private String elementUUID;
 
@@ -93,13 +96,13 @@ public class PropertiesEditor implements IsWidget {
                             final DefinitionManager definitionManager,
                             final View view,
                             final ShapeManager wirezClientManager,
-                            final DefaultCanvasCommands defaultCommands,
+                            final CanvasCommandFactory canvasCommandFactory,
                             final GraphHandlerImpl defaultGraphHandler) {
         this.clientDefinitionServices = clientDefinitionServices;
         this.definitionManager = definitionManager;
         this.view = view;
         this.wirezClientManager = wirezClientManager;
-        this.defaultCommands = defaultCommands;
+        this.canvasCommandFactory = canvasCommandFactory;
         this.defaultGraphHandler = defaultGraphHandler;
     }
 
@@ -113,7 +116,7 @@ public class PropertiesEditor implements IsWidget {
         return view.asWidget();
     }
 
-    public void show(final CanvasHandler canvasHandler) {
+    public void show(final WiresCanvasHandler canvasHandler) {
         if ( this.canvasHandler != null ) {
             removeCanvasListener();
         }
@@ -370,13 +373,17 @@ public class PropertiesEditor implements IsWidget {
     private void executeUpdateProperty(final Element<? extends ViewContent<?>> element, 
                                        final Property property,
                                        final Object value) {
-        ((WiresCanvasHandler) canvasHandler).execute(defaultCommands.UPDATE_PROPERTY(element, property.getId(), value));
+        execute( canvasCommandFactory.UPDATE_PROPERTY(element, property.getId(), value) );
     }
 
     private void executeMove(final Element<? extends ViewContent<?>> element,
                                        final double x,
                                        final double y) {
-        ((WiresCanvasHandler) canvasHandler).execute(defaultCommands.MOVE(element, x, y));
+        execute( canvasCommandFactory.UPDATE_POSITION(element, x, y) );
+    }
+    
+    private void execute(final Command<WiresCanvasHandler, CanvasCommandViolation> command) {
+        canvasHandler.getCommandManager().execute( canvasHandler, command );   
     }
 
     private double getWidth(final Element<? extends ViewContent<?>> element) {
@@ -403,7 +410,7 @@ public class PropertiesEditor implements IsWidget {
     }
     
     private void showDefault() {
-        final DefaultGraph defaultGraph = (DefaultGraph) PropertiesEditor.this.canvasHandler.getGraphHandler().getGraph();
+        final Graph defaultGraph = PropertiesEditor.this.canvasHandler.getDiagram().getGraph();
         if ( null != defaultGraph) {
             this.elementUUID = defaultGraph.getUUID();
             show(defaultGraph);
@@ -415,7 +422,7 @@ public class PropertiesEditor implements IsWidget {
     void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
         checkNotNull("event", event);
         final ShapeState state = event.getState();
-        final DefaultGraph defaultGraph = (DefaultGraph) this.canvasHandler.getGraphHandler().getGraph();
+        final Graph defaultGraph = this.canvasHandler.getDiagram().getGraph();
         final Shape shape = event.getShape();
         if ( shape != null ) {
             // If shape exist, show the properties for the underlying model element.
@@ -436,7 +443,7 @@ public class PropertiesEditor implements IsWidget {
     private void addCanvasListener() {
         removeCanvasListener();
 
-        canvasListener = new CanvasListenerImpl(canvasHandler) {
+        canvasListener = new AbstractCanvasModelListener(canvasHandler) {
             @Override
             public void onElementAdded(final Element element) {
 
@@ -471,7 +478,7 @@ public class PropertiesEditor implements IsWidget {
 
     private void removeCanvasListener() {
         if (canvasListener != null) {
-            canvasListener.removeListener();
+            canvasListener.detach();
         }
     }
 

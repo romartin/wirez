@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.toolbox.command.Context;
 import org.wirez.core.client.control.toolbox.command.ContextImpl;
 import org.wirez.core.client.control.toolbox.command.ToolboxCommand;
@@ -57,10 +57,10 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
     private final List<ToolboxCommand> commands = new ArrayList<>();
     
     @Inject
-    public ToolboxControl(final DefaultCanvasCommands defaultCanvasCommands,
+    public ToolboxControl(final CanvasCommandFactory commandFactory,
                           final ClientDefinitionServices clientDefinitionServices,
                           final View view) {
-        super(defaultCanvasCommands);
+        super(commandFactory);
         this.view = view;
         this.clientDefinitionServices = clientDefinitionServices;
     }
@@ -76,7 +76,7 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
     }
 
     @Override
-    public void enable(final Shape shape, final Element element) {
+    public void doEnable(final Shape shape, final Element element) {
 
         if (shape instanceof WiresShape) {
 
@@ -116,7 +116,7 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
     }
     
     @Override
-    public void disable(final Shape shape) {
+    public void doDisable(final Shape shape) {
 
         if ( null != hoverToolbox ) {
             hoverToolbox.remove();

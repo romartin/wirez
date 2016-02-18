@@ -5,9 +5,9 @@ import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.UUID;
 
@@ -28,7 +28,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
     Stack<GraphObjectBuilder> nodeBuilders = new LoggableStack<GraphObjectBuilder>("nodeBuilders");
     Stack<GraphObjectParser> parsers = new LoggableStack<GraphObjectParser>("parsers");
     Collection<GraphObjectBuilder<?, ?>> builders = new LinkedList<GraphObjectBuilder<?, ?>>();
-    DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> graph;
+    Graph<ViewContent<BPMNGraph>, Node> graph;
     boolean isClosed;
     
     // Just for development & testing
@@ -105,7 +105,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
         logBuilders();
 
         DefinitionService definitionService = bpmnGraphBuilderFactory.getDefinitionService();
-        this.graph = (DefaultGraph<ViewContent<BPMNGraph>, Node, Edge>) definitionService.buildGraphElement(UUID.uuid(), BPMNGraph.ID);
+        this.graph = (Graph<ViewContent<BPMNGraph>, Node>) definitionService.buildGraphElement(UUID.uuid(), BPMNGraph.ID);
         builderContext.init(graph);
         
         BPMNDiagramBuilder diagramBuilder = getDiagramBuilder(builderContext);
@@ -136,22 +136,22 @@ public class BPMNGraphGenerator extends JsonGenerator {
         return null;
     }
 
-    public DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> getGraph() {
+    public Graph<ViewContent<BPMNGraph>, Node> getGraph() {
         assert isClosed();
         return this.graph;
     }
     
     final GraphObjectBuilder.BuilderContext<BPMNGraph> builderContext = new GraphObjectBuilder.BuilderContext<BPMNGraph>() {
 
-        DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> graph;
+        Graph<ViewContent<BPMNGraph>, Node> graph;
 
         @Override
-        public void init(final DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> graph) {
+        public void init(final Graph<ViewContent<BPMNGraph>, Node> graph) {
             this.graph = graph;
         }
 
         @Override
-        public DefaultGraph<ViewContent<BPMNGraph>, Node, Edge> getGraph() {
+        public Graph<ViewContent<BPMNGraph>, Node> getGraph() {
             return graph;
         }
 

@@ -31,7 +31,6 @@ import org.wirez.core.api.annotation.definition.PropertySet;
 import org.wirez.core.api.annotation.rule.CanContain;
 import org.wirez.core.api.definition.BaseDefinition;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;

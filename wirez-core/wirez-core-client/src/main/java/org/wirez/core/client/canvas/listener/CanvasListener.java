@@ -28,4 +28,6 @@ public interface CanvasListener {
 
     void onClear();
     
+    void detach();
+    
 }

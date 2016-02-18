@@ -25,10 +25,11 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.control.ConnectionAcceptor;
 import org.wirez.core.client.canvas.control.ContainmentAcceptor;
+import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
 public interface WiresCanvasSettings extends CanvasViewSettings {
     
-    CommandManager<? extends CanvasHandler, CanvasCommandViolation> getCommandManager();
+    CommandManager<WiresCanvasHandler, CanvasCommandViolation> getCommandManager();
     
     RuleManager getRuleManager();
     

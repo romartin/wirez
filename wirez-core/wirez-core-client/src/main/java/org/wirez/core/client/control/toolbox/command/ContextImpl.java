@@ -1,17 +1,20 @@
 package org.wirez.core.client.control.toolbox.command;
 
+import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.WiresCanvasCommandManager;
+import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
 public class ContextImpl implements Context {
     
-    private final CanvasHandler canvasHandler;
-    private final WiresCanvasCommandManager commandManager;
+    private final WiresCanvasHandler canvasHandler;
+    private final CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager;
     private final double x;
     private final double y;
 
-    public ContextImpl(final CanvasHandler canvasHandler, 
-                       final WiresCanvasCommandManager commandManager,
+    public ContextImpl(final WiresCanvasHandler canvasHandler, 
+                       final CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager,
                        final double x, 
                        final double y) {
         this.canvasHandler = canvasHandler;
@@ -21,12 +24,12 @@ public class ContextImpl implements Context {
     }
 
     @Override
-    public CanvasHandler getCanvasHandler() {
+    public WiresCanvasHandler getCanvasHandler() {
         return canvasHandler;
     }
 
     @Override
-    public WiresCanvasCommandManager getCommandManager() {
+    public CommandManager<WiresCanvasHandler, CanvasCommandViolation> getCommandManager() {
         return commandManager;
     }
 

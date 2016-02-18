@@ -28,8 +28,8 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.palette.accordion.Palette;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
-import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.ShapeSet;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -56,7 +56,7 @@ public class PaletteScreen {
     PlaceManager placeManager;
     
     @Inject
-    ShapeManager wirezClientManager;
+    ShapeManager shapeManager;
 
     @Inject
     Event<ChangeTitleWidgetEvent> changeTitleNotification;
@@ -120,8 +120,9 @@ public class PaletteScreen {
     void onCanvasScreenStateChanged(@Observes CanvasScreenStateChangedEvent canvasScreenStateChangedEvent) {
         checkNotNull("canvasScreenStateChangedEvent", canvasScreenStateChangedEvent);
         final CanvasScreen.CanvasScreenState state = canvasScreenStateChangedEvent.getState();
-        final ShapeSet shapeSet = canvasScreenStateChangedEvent.getCanvasHandler().getSettings().getShapeSet();
-        
+        final String _shapeSetId = canvasScreenStateChangedEvent.getCanvasHandler().getDiagram().getSettings().getShapeSetId();
+        final ShapeSet shapeSet = getShapeSet(_shapeSetId);
+                
         if (CanvasScreen.CanvasScreenState.ACTIVE.equals(state)) {
             
             // Open the palette with the given shape set.
@@ -137,5 +138,14 @@ public class PaletteScreen {
             open();
         }
         
+    }
+
+    private ShapeSet getShapeSet(final String id) {
+        for (final ShapeSet set : shapeManager.getShapeSets()) {
+            if (set.getId().equals(id)) {
+                return set;
+            }
+        }
+        return null;
     }
 }

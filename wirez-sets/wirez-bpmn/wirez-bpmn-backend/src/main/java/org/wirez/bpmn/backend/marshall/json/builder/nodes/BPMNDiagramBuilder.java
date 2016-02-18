@@ -2,7 +2,6 @@ package org.wirez.bpmn.backend.marshall.json.builder.nodes;
 
 import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.api.BPMNGraph;
-import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.api.property.general.Name;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
@@ -11,9 +10,9 @@ import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.service.definition.DefinitionService;
 
 import java.util.Collection;
@@ -41,7 +40,7 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
         }
 
         Node startProcessNode = startProcessNodeBuilder.build(context);
-        final DefaultGraph<BPMNGraph, Node, Edge> graph = context.getGraph();
+        final Graph<BPMNGraph, Node> graph = context.getGraph();
         graph.addNode(startProcessNode);
     }
 

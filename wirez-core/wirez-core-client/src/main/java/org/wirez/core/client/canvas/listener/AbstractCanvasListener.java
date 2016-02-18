@@ -36,7 +36,7 @@ public abstract class AbstractCanvasListener implements CanvasListener {
         assert canvasHandler != null;
     }
 
-    public void removeListener() {
+    public void detach() {
         assert canvasHandler != null;
         // TODO
     }

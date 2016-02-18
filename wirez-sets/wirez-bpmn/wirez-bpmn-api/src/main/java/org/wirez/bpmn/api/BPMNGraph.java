@@ -25,13 +25,13 @@ import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.PropertySet;
 import org.wirez.core.api.annotation.rule.CanContain;
 import org.wirez.core.api.definition.BaseDefinition;
-import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.graph.Graph;
 
 import java.util.HashSet;
 
 @Portable
 @Bindable
-@Definition( type = DefaultGraph.class )
+@Definition( type = Graph.class )
 @CanContain( roles = { "diagram" } )
 public class BPMNGraph extends BaseDefinition implements BPMNDefinition {
 

@@ -19,11 +19,22 @@ package org.wirez.core.client.canvas.settings;
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.graph.processing.handler.GraphHandler;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.control.ConnectionAcceptor;
+import org.wirez.core.client.canvas.control.ContainmentAcceptor;
+import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
 public interface WiresCanvasSettingsBuilder extends CanvasSettingsBuilder<WiresCanvasSettingsBuilder, WiresCanvasSettings> {
 
-    WiresCanvasSettingsBuilder commandManager(CommandManager<? extends CanvasHandler, CanvasCommandViolation> commandManager);
-    
+    WiresCanvasSettingsBuilder commandManager(CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager);
+
+    WiresCanvasSettingsBuilder ruleManager(RuleManager ruleManager);
+
+    WiresCanvasSettingsBuilder connectionAcceptor(ConnectionAcceptor connectionAcceptor);
+
+    WiresCanvasSettingsBuilder containmentAcceptor(ContainmentAcceptor  connectionAcceptor);
+
+
 }

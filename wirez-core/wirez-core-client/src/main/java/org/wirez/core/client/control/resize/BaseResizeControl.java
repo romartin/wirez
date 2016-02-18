@@ -18,7 +18,7 @@ package org.wirez.core.client.control.resize;
 
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.BaseShapeControl;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.HasRadiusMutation;
@@ -27,8 +27,8 @@ import org.wirez.core.client.mutation.StaticMutationContext;
 
 public abstract class BaseResizeControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E> {
 
-    public BaseResizeControl(DefaultCanvasCommands defaultCanvasCommands) {
-        super(defaultCanvasCommands);
+    public BaseResizeControl(CanvasCommandFactory commandFactory) {
+        super(commandFactory);
     }
 
     protected void doResizeStart(final S shape, final E element, final double width, final double height) {
@@ -47,25 +47,21 @@ public abstract class BaseResizeControl<S extends Shape, E extends Element> exte
     protected void doResizeEnd(final S shape, final E element, final double width, final double height) {
         
         if (shape instanceof HasSizeMutation) {
-            getCommandManager().execute( defaultCanvasCommands.COMPOSITE_COMMAND(element)
-                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "width", width ) )
-                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "height" , height ) )
-                    .doApplyElementProperties());
+
+            execute( commandFactory.UPDATE_PROPERTY(element, "width", width));
+            execute( commandFactory.UPDATE_PROPERTY(element, "height", height));
             
         } else if (shape instanceof HasRadiusMutation) {
 
             final double radius = getRadius(width, height);
-            
-            getCommandManager().execute( defaultCanvasCommands.COMPOSITE_COMMAND(element)
-                    .add(defaultCanvasCommands.getCommandFactory().updateElementPropertyValueCommand(element, "radius", radius ) )
-                    .doApplyElementProperties());
+            execute( commandFactory.UPDATE_PROPERTY(element, "radius", radius));
             
         }
         
     }
 
     @Override
-    public void disable(final S shape) {
+    public void doDisable(final S shape) {
 
         if (shape instanceof BaseShape) {
             ((BaseShape) shape).setResizable(false);

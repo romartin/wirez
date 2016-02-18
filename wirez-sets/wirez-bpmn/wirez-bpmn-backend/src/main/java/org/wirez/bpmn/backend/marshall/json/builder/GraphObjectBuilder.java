@@ -2,11 +2,10 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 
 import java.util.Collection;
 
@@ -30,9 +29,9 @@ public interface GraphObjectBuilder<W extends Definition, T extends Element<View
     
     interface BuilderContext<W extends Definition> {
 
-        void init(DefaultGraph<ViewContent<W>, Node, Edge> graph);
+        void init(Graph<ViewContent<W>, Node> graph);
 
-        DefaultGraph<ViewContent<W>, Node, Edge> getGraph();
+        Graph<ViewContent<W>, Node> getGraph();
         
         Collection<GraphObjectBuilder<?, ?>> getBuilders();
         

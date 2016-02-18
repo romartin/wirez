@@ -319,7 +319,7 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
         fireCanvasClear();
     }
     
-    protected GraphHandler getGraphHandler() {
+    public GraphHandler getGraphHandler() {
         return settings.getGraphHandler();
     }
     

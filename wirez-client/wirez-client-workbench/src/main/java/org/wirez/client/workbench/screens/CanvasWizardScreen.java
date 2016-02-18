@@ -16,7 +16,6 @@
 
 package org.wirez.client.workbench.screens;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.uberfire.client.annotations.*;
 import org.uberfire.client.mvp.PlaceManager;
@@ -24,18 +23,15 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
-import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.event.CreateEmptyDiagramEvent;
 import org.wirez.client.widgets.event.LoadDiagramEvent;
 import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.workbench.perspectives.WirezPerspective;
-import org.wirez.core.api.util.UUID;
-import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.ShapeSet;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;

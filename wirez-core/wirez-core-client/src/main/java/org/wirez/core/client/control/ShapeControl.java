@@ -18,16 +18,17 @@ package org.wirez.core.client.control;
 
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.CanvasHandler;
 
 /**
  * A shape control. It can implement <code>IsWidet</code> if the control have to include views outside the canvas.
  * @param <S> The shape targeted for the control 
  * @param <E> The view element that the control handles.
  */
-public interface ShapeControl<S extends Shape, E extends Element> {
+public interface ShapeControl<C extends CanvasHandler, S extends Shape, E extends Element> {
     
-    void enable(S shape, E element);
+    void enable(C canvasHandler, S shape, E element);
 
-    void disable(S shape);
+    void disable(C canvasHandler, S shape);
     
 }

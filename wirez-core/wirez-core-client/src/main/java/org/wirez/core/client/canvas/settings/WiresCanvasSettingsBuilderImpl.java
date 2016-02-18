@@ -22,8 +22,12 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.processing.handler.GraphHandler;
 import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.control.ConnectionAcceptor;
+import org.wirez.core.client.canvas.control.ContainmentAcceptor;
+import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
 public class WiresCanvasSettingsBuilderImpl implements WiresCanvasSettingsBuilder {
 
@@ -47,8 +51,26 @@ public class WiresCanvasSettingsBuilderImpl implements WiresCanvasSettingsBuilde
     }
 
     @Override
-    public WiresCanvasSettingsBuilder commandManager(final CommandManager<? extends CanvasHandler, CanvasCommandViolation> commandManager) {
+    public WiresCanvasSettingsBuilder commandManager(final CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager) {
         settings.setCommandManager(commandManager);
+        return this;
+    }
+
+    @Override
+    public WiresCanvasSettingsBuilder ruleManager(final RuleManager ruleManager) {
+        settings.setRuleManager(ruleManager);
+        return this;
+    }
+
+    @Override
+    public WiresCanvasSettingsBuilder connectionAcceptor(final ConnectionAcceptor connectionAcceptor) {
+        settings.setConnectionAcceptor(connectionAcceptor);
+        return this;
+    }
+
+    @Override
+    public WiresCanvasSettingsBuilder containmentAcceptor(final ContainmentAcceptor connectionAcceptor) {
+        settings.setContainmentAcceptor(connectionAcceptor);
         return this;
     }
 

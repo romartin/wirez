@@ -32,6 +32,7 @@ import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -122,7 +123,7 @@ public class PropertiesScreen {
         checkNotNull("stateChangedEvent", stateChangedEvent);
         
         if (CanvasScreen.CanvasScreenState.ACTIVE.equals(stateChangedEvent.getState())) {
-            propertiesEditor.show(stateChangedEvent.getCanvasHandler());
+            propertiesEditor.show((WiresCanvasHandler) stateChangedEvent.getCanvasHandler());
         } else {
             propertiesEditor.clear();
             changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));

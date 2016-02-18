@@ -16,22 +16,20 @@
 
 package org.wirez.core.client.notification;
 
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.command.Command;
 import org.wirez.core.api.notification.Notification;
 import org.wirez.core.api.util.UUID;
-import org.wirez.core.client.canvas.command.CanvasCommand;
 
 import java.util.Iterator;
 
-public class CanvasCommandAllowedNotification implements Notification<CanvasCommand> {
+public class CanvasCommandAllowedNotification implements Notification<Command> {
 
     final String notificationUUID;
     final String canvasUUID;
-    final CanvasCommand command;
+    final Command command;
     final boolean isAllowed;
 
-    public CanvasCommandAllowedNotification(String canvasUUID, CanvasCommand command, boolean isAllowed) {
+    public CanvasCommandAllowedNotification(String canvasUUID, Command command, boolean isAllowed) {
         this.notificationUUID = UUID.uuid();
         this.canvasUUID = canvasUUID;
         this.command = command;
@@ -54,7 +52,7 @@ public class CanvasCommandAllowedNotification implements Notification<CanvasComm
     }
 
     @Override
-    public CanvasCommand getContext() {
+    public Command getContext() {
         return command;
     }
 

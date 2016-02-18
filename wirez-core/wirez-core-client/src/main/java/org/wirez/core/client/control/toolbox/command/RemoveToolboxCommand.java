@@ -3,7 +3,7 @@ package org.wirez.core.client.control.toolbox.command;
 import com.ait.lienzo.client.core.shape.Shape;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.util.SVGUtils;
 
 import javax.enterprise.context.Dependent;
@@ -12,12 +12,12 @@ import javax.inject.Inject;
 @Dependent
 public class RemoveToolboxCommand implements ToolboxCommand {
 
-    DefaultCanvasCommands defaultCanvasCommands;
+    CanvasCommandFactory commandFactory;
     private final Shape<?> icon;
 
     @Inject
-    public RemoveToolboxCommand(DefaultCanvasCommands defaultCanvasCommands) {
-        this.defaultCanvasCommands = defaultCanvasCommands;
+    public RemoveToolboxCommand(CanvasCommandFactory commandFactory) {
+        this.commandFactory = commandFactory;
         this.icon = (Shape<?>) SVGUtils.createSVGIcon(SVGUtils.getRemove());;
     }
 
@@ -29,6 +29,6 @@ public class RemoveToolboxCommand implements ToolboxCommand {
     @Override
     public void execute(final Context context, 
                         final Element element) {
-        context.getCommandManager().execute( defaultCanvasCommands.DELETE_NODE((Node) element));
+        context.getCommandManager().execute( context.getCanvasHandler(), commandFactory.DELETE_NODE((Node) element, null));
     }
 }

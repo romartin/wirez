@@ -4,13 +4,13 @@ import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ConnectionContent;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.impl.BoundImpl;
 import org.wirez.core.api.graph.impl.BoundsImpl;
-import org.wirez.core.api.graph.impl.DefaultGraph;
 import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.ElementUtils;
@@ -18,6 +18,7 @@ import org.wirez.core.api.util.UUID;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<ViewContent<W>, Edge>> 
@@ -94,11 +95,6 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
                 if ( edge.getContent() instanceof ConnectionContent ) {
                     setTargetConnectionMagnetIndex(context, node, edge);
                 }
-                
-                final DefaultGraph<W, Node, Edge> graph = context.getGraph();
-                if ( graph.getEdge(edge.getUUID()) == null ) {
-                    graph.addEdge(edge);
-                }
             }
         }
 
@@ -123,7 +119,7 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
             }
         }
     }
-
+   
     public void setSourceConnectionMagnetIndex(BuilderContext context, T node, Edge<ConnectionContent<W>, Node> edge) {
         edge.getContent().setSourceMagnetIndex(3);
     }

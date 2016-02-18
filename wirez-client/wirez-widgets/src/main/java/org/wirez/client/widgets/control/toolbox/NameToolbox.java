@@ -22,7 +22,7 @@ import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.command.WiresCanvasCommandManager;
-import org.wirez.core.client.canvas.command.impl.DefaultCanvasCommands;
+import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.toolbox.BaseToolbox;
 
 import javax.annotation.PostConstruct;
@@ -41,12 +41,12 @@ public class NameToolbox extends BaseToolbox {
     }
 
     View view;
-    DefaultCanvasCommands defaultCanvasCommands;
+    CanvasCommandFactory canvasCommandFactory;
     private Element element;
 
     @Inject
-    public NameToolbox(final DefaultCanvasCommands defaultCanvasCommands, final View view) {
-        this.defaultCanvasCommands = defaultCanvasCommands;
+    public NameToolbox(final CanvasCommandFactory canvasCommandFactory, final View view) {
+        this.canvasCommandFactory = canvasCommandFactory;
         this.view = view;
     }
 
@@ -74,8 +74,7 @@ public class NameToolbox extends BaseToolbox {
     }
     
     void onChangeName(final String name) {
-        final WiresCanvasCommandManager commandManager = (WiresCanvasCommandManager) canvasHandler;
-        commandManager.execute(defaultCanvasCommands.UPDATE_PROPERTY(element, "name", name));
+        canvasHandler.getCommandManager().execute( canvasHandler, canvasCommandFactory.UPDATE_PROPERTY(element, "name", name) );
         view.hide();
     }
     

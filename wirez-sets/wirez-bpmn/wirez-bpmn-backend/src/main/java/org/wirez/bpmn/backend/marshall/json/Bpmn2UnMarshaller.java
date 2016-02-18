@@ -16,7 +16,7 @@ import org.jboss.drools.util.DroolsResourceFactoryImpl;
 import org.wirez.bpmn.backend.legacy.Bpmn2JsonMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphGenerator;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.wirez.core.api.graph.impl.DefaultGraph;
+import org.wirez.core.api.graph.Graph;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -48,7 +48,7 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
         this.bpmnGraphGenerator = new BPMNGraphGenerator(elementBuilderFactory);
     }
 
-    public DefaultGraph unmarshall(String content) throws IOException {
+    public Graph unmarshall(String content) throws IOException {
         XMLResource outResource = (XMLResource) resourceSet.createResource( URI.createURI( "inputStream://dummyUriWithValidSuffix.xml" ) );
         outResource.getDefaultLoadOptions().put( XMLResource.OPTION_ENCODING, "UTF-8" );
         outResource.setEncoding( "UTF-8" );
@@ -60,7 +60,7 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
         return unmarshall(definitions, null);
     }
 
-    public DefaultGraph unmarshall(Definitions def, String preProcessingData) throws IOException {
+    public Graph unmarshall(Definitions def, String preProcessingData) throws IOException {
         DroolsPackageImpl.init();
         BpsimPackageImpl.init();
         super.marshall(bpmnGraphGenerator, def, preProcessingData);

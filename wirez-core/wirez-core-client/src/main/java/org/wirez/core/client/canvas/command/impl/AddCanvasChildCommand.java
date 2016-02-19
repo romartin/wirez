@@ -13,6 +13,9 @@ import org.wirez.core.client.canvas.command.HasGraphCommand;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
+/**
+ * TODO: Register the new edge into the canvas hander's index for the graph. 
+ */
 public class AddCanvasChildCommand extends AbstractCanvasCommand implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
 
     protected Node parent;

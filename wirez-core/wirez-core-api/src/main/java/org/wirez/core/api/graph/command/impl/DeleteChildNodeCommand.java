@@ -5,13 +5,13 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 
-public class RemoveChildNodeCommand extends AbstractGraphCompositeCommand {
+public class DeleteChildNodeCommand extends AbstractGraphCompositeCommand {
 
     private Graph target;
     private Node parent;
     private Node candidate;
     
-    public RemoveChildNodeCommand(final GraphCommandFactory commandFactory,
+    public DeleteChildNodeCommand(final GraphCommandFactory commandFactory,
                                   final Graph target,
                                   final Node parent,
                                   final Node candidate) {
@@ -26,12 +26,12 @@ public class RemoveChildNodeCommand extends AbstractGraphCompositeCommand {
     }
     
     private void initCommands() {
-        this.addCommand( commandFactory.REMOVE_PARENT( parent, candidate) )
+        this.addCommand( commandFactory.DELETE_PARENT( parent, candidate) )
             .addCommand( commandFactory.DELETE_NODE( target, candidate ) );
     }
 
     @Override
     public String toString() {
-        return "RemoveChildNodeCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
+        return "DeleteChildNodeCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
     }
 }

@@ -16,42 +16,40 @@
 
 package org.wirez.core.client.canvas.settings;
 
-import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.processing.index.GraphIndexBuilder;
+import org.wirez.core.api.graph.processing.index.Index;
+import org.wirez.core.api.graph.processing.index.IndexBuilder;
 import org.wirez.core.api.graph.processing.visitor.ContentVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.Visitor;
 import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
-import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.canvas.settings.CanvasSettings;
 
 public abstract class CanvasSettingsImpl<G extends Graph<?, N>, N extends Node, E extends Edge> implements CanvasSettings<G, N, E> {
 
-    private GraphIndexBuilder<G, N, E> indexBuilder;
+    private IndexBuilder<G, N, E, ? extends Index<N, E>> indexBuilder;
     private Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> visitor;
 
     public CanvasSettingsImpl() {
     }
 
-    public CanvasSettingsImpl(final GraphIndexBuilder<G, N, E> indexBuilder,
+    public CanvasSettingsImpl(final IndexBuilder<G, N, E, ? extends Index<N, E>> indexBuilder,
                             final Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> visitor) {
         this.indexBuilder = indexBuilder;
         this.visitor = visitor;
     }
 
     @Override
-    public GraphIndexBuilder<G, N, E> getGraphIndexBuilder() {
+    public IndexBuilder<G, N, E, ? extends Index<N, E>> getIndexBuilder() {
         return indexBuilder;
     }
 
     @Override
-    public Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> getGraphVisitor() {
+    public Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> getVisitor() {
         return visitor;
     }
 
-    public void setIndexBuilder(final GraphIndexBuilder<G, N, E> indexBuilder) {
+    public void setIndexBuilder(final IndexBuilder<G, N, E, ? extends Index<N, E>> indexBuilder) {
         this.indexBuilder = indexBuilder;
     }
 

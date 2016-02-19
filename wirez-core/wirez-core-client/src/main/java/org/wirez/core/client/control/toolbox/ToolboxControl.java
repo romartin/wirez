@@ -91,7 +91,6 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
                     @Override
                     public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
                         Context context = new ContextImpl(canvasHandler, 
-                                getCommandManager(), 
                                 nodeMouseClickEvent.getX(), 
                                 nodeMouseClickEvent.getY());
                         setCommandView(command).execute(context, element);

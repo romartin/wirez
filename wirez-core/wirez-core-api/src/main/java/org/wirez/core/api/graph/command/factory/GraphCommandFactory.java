@@ -37,7 +37,7 @@ public interface GraphCommandFactory {
                                 Node candidate,
                                 Edge<ParentChildRelationship, Node> edge);
 
-    RemoveParentCommand REMOVE_PARENT(Node parent,
+    DeleteParentCommand DELETE_PARENT(Node parent,
                                       Node candidate);
 
     SetConnectionSourceNodeCommand SET_TARGET_NODE(Node<? extends ViewContent<?>, Edge> sourceNode,
@@ -65,11 +65,11 @@ public interface GraphCommandFactory {
                                        Node parent,
                                        Node candidate);
 
-    RemoveChildNodeCommand REMOVE_CHILD_NODE(Graph target,
+    DeleteChildNodeCommand DELETE_CHILD_NODE(Graph target,
                                              Node oldParent,
                                              Node candidate);
     
-    RemoveChildNodesCommand REMOVE_CHILD_NODES(Graph target,
+    DeleteChildNodesCommand DELETE_CHILD_NODES(Graph target,
                                                Node parent);
     
 }

@@ -10,13 +10,13 @@ import org.wirez.core.api.graph.content.ParentChildRelationship;
 import java.util.List;
 import java.util.Stack;
 
-public class RemoveChildNodesCommand extends AbstractGraphCompositeCommand {
+public class DeleteChildNodesCommand extends AbstractGraphCompositeCommand {
 
     private Graph target;
     private Node parent;
     private final Stack<Node> nodesToRemove = new Stack<>();
     
-    public RemoveChildNodesCommand(final GraphCommandFactory commandFactory,
+    public DeleteChildNodesCommand(final GraphCommandFactory commandFactory,
                                    final Graph target,
                                    final Node parent) {
         super(commandFactory);
@@ -36,7 +36,7 @@ public class RemoveChildNodesCommand extends AbstractGraphCompositeCommand {
     }
     
     private void addDeleteCommands(final Node node) {
-        this.addCommand( commandFactory.REMOVE_PARENT( parent, node) )
+        this.addCommand( commandFactory.DELETE_PARENT( parent, node) )
             .addCommand( commandFactory.DELETE_NODE( target, node ) );
     }
 

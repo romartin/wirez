@@ -3,6 +3,7 @@ package org.wirez.bpmn.client.factory.control;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
@@ -12,6 +13,7 @@ import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.toolbox.command.AddConnectionCommand;
 import org.wirez.core.client.control.toolbox.command.Context;
@@ -76,13 +78,10 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     @Override
     public boolean isAllowed(final Context context, final Node target) {
 
-        // TODO
-        /*final CompositeElementCanvasCommand canvasCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                .add ( defaultCanvasCommands.getCommandFactory().setConnectionTargetNodeCommand( (Node<? extends ViewContent<?>, Edge>) target, edge, 0 ) );
-
-        return context.getCommandManager().allow( canvasCommand );*/
-        
-        return true;
+        final boolean allowsSourceConn = context.getCanvasHandler().allow( commandFactory.SET_SOURCE_NODE( (Node) source, edge, 0) );
+        final boolean allowsTargetConn = context.getCanvasHandler().allow( commandFactory.SET_SOURCE_NODE( target, edge, 0) );
+                
+        return allowsSourceConn & allowsTargetConn;
         
     }
 
@@ -97,15 +96,12 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
         
         final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
 
-        // TODO
-        /*final CompositeElementCanvasCommand connectionsCommand = defaultCanvasCommands.COMPOSITE_COMMAND(edge)
-                .add( graphCommandFactoryImpl.SET_TARGET_CONNECTION( (Node<? extends ViewContent<?>, Edge>) source, edge, magnetIndexes[0] ) )
-                .add( graphCommandFactoryImpl.SET_SORUCE_CONNECTION( (Node<? extends ViewContent<?>, Edge>) target, edge, magnetIndexes[1] ) );
+        final CommandResults<CanvasCommandViolation> results =
+                context.getCanvasHandler().execute( commandFactory.ADD_EDGE( (Node) source, edge, factory),
+                                            commandFactory.SET_SOURCE_NODE( (Node) source, edge, magnetIndexes[1]),
+                                            commandFactory.SET_TARGET_NODE( (Node) source, edge, magnetIndexes[0]));
 
-
-        final AddCanvasEdgeCommand addEdgeCommand = defaultCanvasCommands.ADD_EDGE( edge, factory);
-        context.getCommandManager().execute( connectionsCommand, addEdgeCommand );*/
-        
+        // TODO: Check results.
     }
 
     private void log(final Level level, final String message) {

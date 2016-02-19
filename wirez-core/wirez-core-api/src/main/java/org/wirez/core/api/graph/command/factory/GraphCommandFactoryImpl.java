@@ -36,15 +36,15 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public RemoveChildNodeCommand REMOVE_CHILD_NODE(final Graph target,
+    public DeleteChildNodeCommand DELETE_CHILD_NODE(final Graph target,
                                                     final Node oldParent,
                                                     final Node candidate) {
-        return new RemoveChildNodeCommand(this, target, oldParent, candidate);
+        return new DeleteChildNodeCommand(this, target, oldParent, candidate);
     }
 
     @Override
-    public RemoveChildNodesCommand REMOVE_CHILD_NODES(final Graph target, final Node parent) {
-        return new RemoveChildNodesCommand(this, target, parent);
+    public DeleteChildNodesCommand DELETE_CHILD_NODES(final Graph target, final Node parent) {
+        return new DeleteChildNodesCommand(this, target, parent);
     }
 
     @Override
@@ -74,8 +74,8 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public RemoveParentCommand REMOVE_PARENT(final Node parent, final Node candidate) {
-        return new RemoveParentCommand(this, parent, candidate);
+    public DeleteParentCommand DELETE_PARENT(final Node parent, final Node candidate) {
+        return new DeleteParentCommand(this, parent, candidate);
     }
 
     @Override

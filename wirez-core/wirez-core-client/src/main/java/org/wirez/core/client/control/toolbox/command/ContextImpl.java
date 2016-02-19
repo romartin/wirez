@@ -9,16 +9,13 @@ import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 public class ContextImpl implements Context {
     
     private final WiresCanvasHandler canvasHandler;
-    private final CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager;
     private final double x;
     private final double y;
 
     public ContextImpl(final WiresCanvasHandler canvasHandler, 
-                       final CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager,
                        final double x, 
                        final double y) {
         this.canvasHandler = canvasHandler;
-        this.commandManager = commandManager;
         this.x = x;
         this.y = y;
     }
@@ -26,11 +23,6 @@ public class ContextImpl implements Context {
     @Override
     public WiresCanvasHandler getCanvasHandler() {
         return canvasHandler;
-    }
-
-    @Override
-    public CommandManager<WiresCanvasHandler, CanvasCommandViolation> getCommandManager() {
-        return commandManager;
     }
 
     @Override

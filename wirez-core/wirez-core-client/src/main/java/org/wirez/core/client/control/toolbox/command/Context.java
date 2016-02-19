@@ -10,8 +10,6 @@ public interface Context {
 
     WiresCanvasHandler getCanvasHandler();
 
-    CommandManager<WiresCanvasHandler, CanvasCommandViolation> getCommandManager();
-    
     double getX();
 
     double getY();

@@ -16,15 +16,14 @@
 
 package org.wirez.core.client.canvas.settings;
 
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.processing.index.GraphIndex;
+import org.wirez.core.api.graph.processing.index.IndexBuilder;
 import org.wirez.core.api.graph.processing.visitor.Visitor;
 
 public interface CanvasSettingsBuilder<T, S extends CanvasSettings> {
     
     T visitor(Visitor<?, ?, ?> visitor);
     
-    T indexBuilder(GraphIndex<?, ?> indexBuilder);
+    T indexBuilder(IndexBuilder<?, ?, ?, ?> indexBuilder);
     
     S build();
 }

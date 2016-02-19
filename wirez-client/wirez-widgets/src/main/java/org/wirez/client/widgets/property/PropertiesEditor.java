@@ -35,13 +35,11 @@ import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.processing.index.GraphIndexBuilder;
-import org.wirez.core.api.graph.processing.index.map.MapGraphIndexBuilder;
+import org.wirez.core.api.graph.processing.index.map.MapIndexBuilder;
 import org.wirez.core.api.service.definition.DefinitionServiceResponse;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
@@ -85,7 +83,6 @@ public class PropertiesEditor implements IsWidget {
     DefinitionManager definitionManager;
     ShapeManager wirezClientManager;
     CanvasCommandFactory canvasCommandFactory;
-    MapGraphIndexBuilder indexBuilder;
     View view;
     private WiresCanvasHandler canvasHandler;
     private CanvasModelListener canvasListener;
@@ -97,14 +94,12 @@ public class PropertiesEditor implements IsWidget {
                             final DefinitionManager definitionManager,
                             final View view,
                             final ShapeManager wirezClientManager,
-                            final CanvasCommandFactory canvasCommandFactory,
-                            final MapGraphIndexBuilder indexBuilder) {
+                            final CanvasCommandFactory canvasCommandFactory) {
         this.clientDefinitionServices = clientDefinitionServices;
         this.definitionManager = definitionManager;
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.canvasCommandFactory = canvasCommandFactory;
-        this.indexBuilder = indexBuilder;
     }
 
     @PostConstruct
@@ -423,12 +418,11 @@ public class PropertiesEditor implements IsWidget {
     void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
         checkNotNull("event", event);
         final ShapeState state = event.getState();
-        final Graph defaultGraph = this.canvasHandler.getDiagram().getGraph();
         final Shape shape = event.getShape();
         if ( shape != null ) {
             // If shape exist, show the properties for the underlying model element.
             final String shapeUUID = shape.getId();
-            final Element<? extends ViewContent<?>> element = indexBuilder.build(defaultGraph).get(shapeUUID);
+            final Element<? extends ViewContent<?>> element = this.canvasHandler.getGraphIndex().get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
                 show(element);
             } else if (ShapeState.DESELECTED.equals(state)) {

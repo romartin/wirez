@@ -31,12 +31,12 @@ import java.util.List;
 /**
  * A Command to set a DefaultNode children of another container node.
  */
-public class RemoveParentCommand extends AbstractGraphCommand {
+public class DeleteParentCommand extends AbstractGraphCommand {
 
     private Node parent;
     private Node candidate;
 
-    public RemoveParentCommand(final GraphCommandFactory commandFactory,
+    public DeleteParentCommand(final GraphCommandFactory commandFactory,
                                final Node parent,
                                final Node candidate) {
         super(commandFactory);

@@ -20,13 +20,12 @@ import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.processing.index.GraphIndex;
-import org.wirez.core.api.graph.processing.index.GraphIndexBuilder;
+import org.wirez.core.api.graph.processing.index.Index;
+import org.wirez.core.api.graph.processing.index.IndexBuilder;
 import org.wirez.core.api.graph.processing.visitor.ContentVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.Visitor;
 import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 import org.wirez.core.api.rule.RuleManager;
-import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.control.ConnectionAcceptor;
 import org.wirez.core.client.canvas.control.ContainmentAcceptor;
@@ -71,8 +70,8 @@ public class WiresCanvasSettingsBuilderImpl implements WiresCanvasSettingsBuilde
     }
 
     @Override
-    public WiresCanvasSettingsBuilder indexBuilder(final GraphIndex<?, ?> indexBuilder) {
-        settings.setIndexBuilder((GraphIndexBuilder<Graph<?, Node>, Node, Edge>) indexBuilder);
+    public WiresCanvasSettingsBuilder indexBuilder(final IndexBuilder<?, ?, ? ,?> indexBuilder) {
+        settings.setIndexBuilder((IndexBuilder<Graph<?, Node>, Node, Edge, ? extends Index<Node, Edge>>) indexBuilder);
         return this;
     }
 

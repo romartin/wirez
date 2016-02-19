@@ -25,8 +25,12 @@ public abstract class DeleteCanvasElementCommand<E extends Element> extends Abst
     @Override
     public CommandResult<CanvasCommandViolation> execute(final WiresCanvasHandler context) {
         this.factory = getShapeFactory(context);
-        context.deregister(candidate);
+        doDeregister(context);
         return buildResult();
+    }
+    
+    protected void doDeregister(final WiresCanvasHandler context) {
+        context.deregister(candidate);
     }
     
     protected abstract Node getParent();

@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * A generic graph index interface for performing fast look-ups over the graph elements.
  */
-public interface GraphIndex<N extends Node, E extends Edge> {
+public interface Index<N extends Node, E extends Edge> {
 
     /**
      * Returns the element (node or edge) with the given uuid.

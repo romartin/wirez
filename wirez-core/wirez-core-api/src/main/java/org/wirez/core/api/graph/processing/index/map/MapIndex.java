@@ -4,17 +4,17 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.processing.index.GraphIndex;
+import org.wirez.core.api.graph.processing.index.Index;
 
 import java.util.*;
 
-public class MapGraphIndex implements GraphIndex<Node, Edge> {
+public class MapIndex implements Index<Node, Edge> {
     
-    private final Map<String, Node> nodes;
-    private final Map<String, Edge> edges;
+    final Map<String, Node> nodes;
+    final Map<String, Edge> edges;
 
-    public MapGraphIndex(final Map<String, Node> nodes, 
-                         final Map<String, Edge> edges) {
+    public MapIndex(final Map<String, Node> nodes,
+                    final Map<String, Edge> edges) {
         this.nodes = nodes;
         this.edges = edges;
     }

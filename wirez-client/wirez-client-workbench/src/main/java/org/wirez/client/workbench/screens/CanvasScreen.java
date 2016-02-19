@@ -40,6 +40,7 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.processing.GraphBoundsIndexer;
 import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.ClientDefinitionManager;
@@ -101,7 +102,7 @@ public class CanvasScreen {
     ClientDiagramServices clientDiagramServices;
     
     @Inject
-    ShapeManager wirezClientManager;
+    ShapeManager shapeManager;
 
     @Inject
     CanvasCommandFactory canvasCommandFactory;
@@ -312,11 +313,11 @@ public class CanvasScreen {
                             element = canvasHandler.getGraphHandler().getEdge(shape.getId());
                             if (element != null) {
                                 log(Level.FINE, "Deleting edge with id " + element.getUUID());
-                                CanvasScreen.this.execute( canvasCommandFactory.DELETE_EDGE( (Edge) element, null ));
+                                CanvasScreen.this.execute( canvasCommandFactory.DELETE_EDGE( (Edge) element ));
                             }
                         } else {
                             log(Level.FINE, "Deleting node with id " + element.getUUID());
-                            CanvasScreen.this.execute( canvasCommandFactory.DELETE_NODE( (Node) element, null ));
+                            CanvasScreen.this.execute( canvasCommandFactory.DELETE_NODE( (Node) element ));
 
                         }
                     }
@@ -326,7 +327,7 @@ public class CanvasScreen {
             }
         };
     }
-
+    
     private Command getUndoCommand() {
         return new Command() {
             public void execute() {
@@ -374,11 +375,11 @@ public class CanvasScreen {
     };
     
     private void execute(final org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> command) {
-        canvasHandler.getCommandManager().execute( canvasHandler, command);
+        canvasHandler.execute( command );
     }
     
     private void undo() {
-        canvasHandler.getCommandManager().undo(canvasHandler);
+        canvasHandler.undo();
     }
 
     private void resumeGraph() {
@@ -443,15 +444,29 @@ public class CanvasScreen {
             public void onSuccess(final Element item) {
                 final Element<?> element = (Element<?>) item;
 
-                final double x = _x > -1 ? _x : 100d;
-                final double y = _y > -1 ? _y : 100d;
+                double x = _x > -1 ? _x : 100d;
+                double y = _y > -1 ? _y : 100d;
 
+                Node<ViewContent<?>, Edge> parent = null;
+                if ( _x > -1 && _y > -1) {
+                    final GraphBoundsIndexer boundsIndexer = new GraphBoundsIndexer(canvasHandler.getDiagram().getGraph());
+                    parent = boundsIndexer.getNodeAt(_x, _y);
+                    final Double[] parentCoords = ElementUtils.getPosition(parent.getContent());
+                    x = _x - parentCoords[0];
+                    y = _y - parentCoords[1];
+                }
+                
                 org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> command = null;
                 if ( element instanceof Node) {
-                    command = canvasCommandFactory.ADD_NODE((Node) element, factory);
-                } else if ( element instanceof Edge) {
-                    // TODO
-                    // command = canvasCommandFactory.ADD_EDGE((Edge) element, factory);
+                    
+                    if ( null != parent ) {
+                        command = canvasCommandFactory.ADD_CHILD_NODE( parent, (Node) element, factory );
+                    } else {
+                        command = canvasCommandFactory.ADD_NODE((Node) element, factory);
+                    }
+
+                } else if ( element instanceof Edge && null != parent ) {
+                    command = canvasCommandFactory.ADD_EDGE( parent, (Edge) element, factory );
                 } else {
                     throw new RuntimeException("Unrecognized element type for " + element);
                 }
@@ -459,9 +474,10 @@ public class CanvasScreen {
                 // Execute both add element and move commands in batch, so undo will be done in batch as well.
                 org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> moveCanvasElementCommand = 
                         canvasCommandFactory.UPDATE_POSITION(element, x ,y);
+                
                 // TODO: Use no rules.
                 // canvasHandler.getCommandManager().execute( emptyRuleManager, command, moveCanvasElementCommand);
-                canvasHandler.getCommandManager().execute( canvasHandler, command, moveCanvasElementCommand);
+                canvasHandler.execute( command, moveCanvasElementCommand);
             }
 
             @Override

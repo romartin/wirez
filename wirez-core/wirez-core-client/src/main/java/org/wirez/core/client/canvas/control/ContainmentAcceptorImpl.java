@@ -37,7 +37,7 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
         final Edge current = isSameParent(parent, child);
         final Command<WiresCanvasHandler, CanvasCommandViolation> command = current != null ?
                 commandFactory.SET_PARENT(parent, child, current) : commandFactory.ADD_CHILD(parent,child);
-        final boolean isAllow = canvasHandler.getCommandManager().allow( canvasHandler, command );
+        final boolean isAllow = canvasHandler.allow( command );
         log(Level.FINE, "isAllow=" + isAllow);
         return isAllow;
     }
@@ -51,7 +51,7 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
         final Command<WiresCanvasHandler, CanvasCommandViolation> command = current != null ? 
                 commandFactory.SET_PARENT(parent, child, current) : commandFactory.ADD_CHILD(parent,child);
         final CommandResults<CanvasCommandViolation> violations = 
-                canvasHandler.getCommandManager().execute( canvasHandler, command );;
+                canvasHandler.execute( command );;
         final boolean isAccept = isAccept(violations);
         log(Level.FINE, "isAccept=" + isAccept);
         return isAccept;

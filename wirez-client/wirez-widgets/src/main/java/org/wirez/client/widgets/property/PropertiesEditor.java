@@ -383,7 +383,7 @@ public class PropertiesEditor implements IsWidget {
     }
     
     private void execute(final Command<WiresCanvasHandler, CanvasCommandViolation> command) {
-        canvasHandler.getCommandManager().execute( canvasHandler, command );   
+        canvasHandler.execute( command );   
     }
 
     private double getWidth(final Element<? extends ViewContent<?>> element) {

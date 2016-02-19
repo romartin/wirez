@@ -74,7 +74,7 @@ public class NameToolbox extends BaseToolbox {
     }
     
     void onChangeName(final String name) {
-        canvasHandler.getCommandManager().execute( canvasHandler, canvasCommandFactory.UPDATE_PROPERTY(element, "name", name) );
+        canvasHandler.execute( canvasCommandFactory.UPDATE_PROPERTY(element, "name", name) );
         view.hide();
     }
     

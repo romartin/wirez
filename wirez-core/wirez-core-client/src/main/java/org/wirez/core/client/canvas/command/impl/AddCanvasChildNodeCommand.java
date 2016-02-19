@@ -1,10 +1,12 @@
 package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
+import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.HasGraphCommand;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
@@ -29,5 +31,9 @@ public class AddCanvasChildNodeCommand extends AddCanvasElementCommand<Node> imp
     public Command<RuleManager, RuleViolation> getGraphCommand(final WiresCanvasHandler handler, final GraphCommandFactory factory) {
         return factory.ADD_CHILD_NODE(handler.getDiagram().getGraph(), parent, candidate);
     }
-    
+
+    @Override
+    public CommandResult<CanvasCommandViolation> undo(WiresCanvasHandler context) {
+        return null;
+    }
 }

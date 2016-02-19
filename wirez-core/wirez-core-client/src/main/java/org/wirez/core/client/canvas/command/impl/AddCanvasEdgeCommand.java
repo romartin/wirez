@@ -33,6 +33,11 @@ public class AddCanvasEdgeCommand extends AddCanvasElementCommand<Edge> implemen
         return result;
     }
 
+    @Override
+    public CommandResult<CanvasCommandViolation> undo(WiresCanvasHandler context) {
+        return canvasCommandFactory.DELETE_EDGE( candidate ).execute( context );
+    }
+
 
     @Override
     public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {

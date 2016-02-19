@@ -18,9 +18,9 @@ public interface CanvasCommandFactory {
     
     AddCanvasEdgeCommand ADD_EDGE(Node parent, Edge candidate, ShapeFactory factory);
     
-    DeleteCanvasNodeCommand DELETE_NODE(Node candidate, ShapeFactory factory);
+    DeleteCanvasNodeCommand DELETE_NODE(Node candidate);
     
-    DeleteCanvasEdgeCommand DELETE_EDGE(Edge candidate, ShapeFactory factory);
+    DeleteCanvasEdgeCommand DELETE_EDGE(Edge candidate);
     
     ClearCanvasCommand CLEAR_CANVAS();
     

@@ -27,7 +27,7 @@ public class ConnectionAcceptorImpl implements ConnectionAcceptor<WiresCanvasHan
                                final Node source, 
                                final Edge<ViewContent<?>, Node> connector, 
                                final int magnet) {
-        return canvasHandler.getCommandManager().allow( canvasHandler, commandFactory.SET_SOURCE_NODE(source, connector, magnet) );
+        return canvasHandler.allow( commandFactory.SET_SOURCE_NODE(source, connector, magnet) );
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ConnectionAcceptorImpl implements ConnectionAcceptor<WiresCanvasHan
                                final Node target,
                                final Edge<ViewContent<?>, Node> connector,
                                final int magnet) {
-        return canvasHandler.getCommandManager().allow( canvasHandler, commandFactory.SET_TARGET_NODE(target, connector, magnet) );
+        return canvasHandler.allow( commandFactory.SET_TARGET_NODE(target, connector, magnet) );
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ConnectionAcceptorImpl implements ConnectionAcceptor<WiresCanvasHan
                                 final Node source,
                                 final Edge<ViewContent<?>, Node> connector,
                                 final int magnet) {
-        CommandResults<CanvasCommandViolation> violations = canvasHandler.getCommandManager().execute( canvasHandler, commandFactory.SET_SOURCE_NODE(source, connector, magnet) );
+        CommandResults<CanvasCommandViolation> violations = canvasHandler.execute( commandFactory.SET_SOURCE_NODE(source, connector, magnet) );
         return isAccept(violations);
     }
 
@@ -52,7 +52,7 @@ public class ConnectionAcceptorImpl implements ConnectionAcceptor<WiresCanvasHan
                                 final Node target,
                                 final Edge<ViewContent<?>, Node> connector,
                                 final int magnet) {
-        CommandResults<CanvasCommandViolation> violations = canvasHandler.getCommandManager().execute( canvasHandler, commandFactory.SET_TARGET_NODE(target, connector, magnet) );
+        CommandResults<CanvasCommandViolation> violations = canvasHandler.execute( commandFactory.SET_TARGET_NODE(target, connector, magnet) );
         return isAccept(violations);
     }
 

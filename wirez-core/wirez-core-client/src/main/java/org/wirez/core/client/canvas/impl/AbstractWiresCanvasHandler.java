@@ -321,7 +321,11 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     public GraphHandler getGraphHandler() {
         return settings.getGraphHandler();
     }
-    
+
+    public ShapeManager getShapeManager() {
+        return shapeManager;
+    }
+
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

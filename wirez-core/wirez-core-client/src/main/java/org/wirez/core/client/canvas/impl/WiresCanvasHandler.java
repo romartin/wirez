@@ -19,7 +19,10 @@ package org.wirez.core.client.canvas.impl;
 import com.ait.lienzo.client.core.shape.wires.*;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandManager;
+import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.graph.Edge;
@@ -152,6 +155,18 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
 
     public CommandManager<WiresCanvasHandler, CanvasCommandViolation> getCommandManager() {
         return settings.getCommandManager();
+    }
+    
+    public boolean allow(final Command<WiresCanvasHandler, CanvasCommandViolation>... commands) {
+        return getCommandManager().allow( this, commands );
+    }
+
+    public CommandResults<CanvasCommandViolation> execute(final Command<WiresCanvasHandler, CanvasCommandViolation>... commands) {
+        return getCommandManager().execute( this, commands );
+    }
+
+    public CommandResults<CanvasCommandViolation> undo() {
+        return getCommandManager().undo( this );
     }
 
     public ConnectionAcceptor<WiresCanvasHandler> getConnectionAcceptor() {

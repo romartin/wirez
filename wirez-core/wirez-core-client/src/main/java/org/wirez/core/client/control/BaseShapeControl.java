@@ -68,7 +68,7 @@ public abstract class BaseShapeControl<S extends Shape, E extends Element> imple
     }
     
     protected CommandResults<CanvasCommandViolation> execute (final Command<WiresCanvasHandler, CanvasCommandViolation> command) {
-        return getCommandManager().execute( canvasHandler, command );
+        return canvasHandler.execute( command );
     }
     
 }

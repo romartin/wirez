@@ -32,10 +32,5 @@ public abstract class AddCanvasElementCommand<E extends Element> extends Abstrac
     protected void doMutate(final WiresCanvasHandler context) {
         context.applyElementMutation(candidate);
     }
-
-    @Override
-    public CommandResult<CanvasCommandViolation> undo(final WiresCanvasHandler context) {
-        // TODO
-        return null;
-    }
+    
 }

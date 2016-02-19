@@ -24,13 +24,13 @@ public class CanvasCommandFactoryImpl implements CanvasCommandFactory {
     }
 
     @Override
-    public DeleteCanvasNodeCommand DELETE_NODE(Node candidate, ShapeFactory factory) {
-        return new DeleteCanvasNodeCommand(this, candidate, factory);
+    public DeleteCanvasNodeCommand DELETE_NODE(Node candidate) {
+        return new DeleteCanvasNodeCommand(this, candidate);
     }
 
     @Override
-    public DeleteCanvasEdgeCommand DELETE_EDGE(Edge candidate, ShapeFactory factory) {
-        return new DeleteCanvasEdgeCommand(this, candidate, factory);
+    public DeleteCanvasEdgeCommand DELETE_EDGE(Edge candidate) {
+        return new DeleteCanvasEdgeCommand(this, candidate);
     }
 
     @Override

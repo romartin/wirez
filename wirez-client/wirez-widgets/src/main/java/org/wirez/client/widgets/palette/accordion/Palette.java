@@ -205,8 +205,7 @@ public class Palette implements IsWidget {
                             @Override
                             public void onDragStart(final LienzoPanel parentPanel, final double x, final double y) {
 
-                                // TODO
-                                /*if (factory instanceof HasShapeGlyphDragHandler) {
+                                if (factory instanceof HasShapeGlyphDragHandler) {
                                     final HasShapeGlyphDragHandler hasShapeGlyphDragHandler = (HasShapeGlyphDragHandler) factory;
                                     final ShapeGlyphDragHandler shapeGlyphDragHandler = hasShapeGlyphDragHandler.getShapeGlyphDragHandler();
 
@@ -223,7 +222,7 @@ public class Palette implements IsWidget {
                                         }
                                     });
                                     
-                                }*/
+                                }
 
                             }
                         });

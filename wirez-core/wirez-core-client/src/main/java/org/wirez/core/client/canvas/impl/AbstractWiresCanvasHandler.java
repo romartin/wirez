@@ -136,7 +136,6 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
             if (content instanceof ViewContent) {
                 final ViewContent viewContent = (ViewContent) content;
                 final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
-                register(factory, child);
                 addChild(parent, child);
                 applyElementMutation(child);
             }

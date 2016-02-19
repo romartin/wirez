@@ -24,6 +24,9 @@ public interface CanvasCommandFactory {
     
     ClearCanvasCommand CLEAR_CANVAS();
     
+    AddCanvasChildCommand ADD_CHILD(Node parent,
+                                    Node candidate);
+    
     SetCanvasElementParentCommand SET_PARENT(Node parent,
                                              Node candidate,
                                              Edge<ParentChildRelationship, Node> edge);

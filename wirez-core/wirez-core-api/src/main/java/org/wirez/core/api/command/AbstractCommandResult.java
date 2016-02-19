@@ -26,11 +26,13 @@ public abstract class AbstractCommandResult<V> implements CommandResult<V> {
     private Collection<V> violations;
 
     public AbstractCommandResult() {
-        this.violations = new ArrayList<V>();
+        this(new ArrayList<V>());
     }
     
     public AbstractCommandResult(final Collection<V> violations) {
         this.violations = violations;
+        this.type = Type.INFO;
+        this.message = "";
     }
     
     @Override

@@ -24,7 +24,7 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
     public boolean allow(final WiresCanvasHandler canvasHandler, 
                          final Node parent, 
                          final Node child) {
-        return canvasHandler.getCommandManager().allow( canvasHandler, commandFactory.ADD_CHILD_NODE(parent,child, null) );
+        return canvasHandler.getCommandManager().allow( canvasHandler, commandFactory.ADD_CHILD(parent,child) );
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
                           final Node parent, 
                           final Node child) {
         final CommandResults<CanvasCommandViolation> violations = 
-                canvasHandler.getCommandManager().execute( canvasHandler, commandFactory.ADD_CHILD_NODE(parent,child, null) );;
+                canvasHandler.getCommandManager().execute( canvasHandler, commandFactory.ADD_CHILD(parent,child) );;
         return isAccept(violations);
     }
 

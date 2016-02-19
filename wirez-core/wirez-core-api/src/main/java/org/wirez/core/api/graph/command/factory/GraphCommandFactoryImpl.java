@@ -64,6 +64,11 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
+    public AddChildCommand ADD_CHILD(final Node parent, final Node candidate) {
+        return new AddChildCommand(this, parent, candidate);
+    }
+
+    @Override
     public SetParentCommand SET_PARENT(final Node parent, final Node candidate, final Edge<ParentChildRelationship, Node> edge) {
         return new SetParentCommand(this, parent, candidate, edge);
     }

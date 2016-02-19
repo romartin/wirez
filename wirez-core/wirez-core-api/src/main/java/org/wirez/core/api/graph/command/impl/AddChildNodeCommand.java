@@ -14,6 +14,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Creates a new node on the target graph and creates/defines a new parent-child connection so new node will be added as a child of 
+ * given parent.
+ */
 public class AddChildNodeCommand extends AbstractGraphCompositeCommand {
 
     private Graph target;
@@ -35,12 +39,11 @@ public class AddChildNodeCommand extends AbstractGraphCompositeCommand {
     }
     
     private void initCommands() {
-        
+
+        // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
         final String uuid = UUID.uuid();
         final Map<String, Object> properties = new HashMap<>();
         final Set<String> labels = new HashSet<>(1);
-
-        // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
         final Edge<ParentChildRelationship, Node> edge = new EdgeImpl<>(uuid, new HashSet<>(), labels, new ParentChildRelationship());
         
         this.addCommand( commandFactory.ADD_NOE(target, candidate) )

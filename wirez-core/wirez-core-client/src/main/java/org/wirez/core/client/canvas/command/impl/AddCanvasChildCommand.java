@@ -8,25 +8,22 @@ import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.HasGraphCommand;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
-public class SetCanvasElementParentCommand extends AbstractCanvasCommand implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
+public class AddCanvasChildCommand extends AbstractCanvasCommand implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
 
     protected Node parent;
     protected Node candidate;
-    protected Edge<ParentChildRelationship, Node> edge;
 
-    public SetCanvasElementParentCommand(final CanvasCommandFactory canvasCommandFactory, 
-                                         final Node parent, 
-                                         final Node candidate,
-                                         final Edge<ParentChildRelationship, Node> edge) {
+    public AddCanvasChildCommand(final CanvasCommandFactory canvasCommandFactory,
+                                 final Node parent,
+                                 final Node candidate) {
         super(canvasCommandFactory);
         this.parent = parent;
         this.candidate = candidate;
-        this.edge = edge;
     }
 
     @Override
@@ -44,8 +41,7 @@ public class SetCanvasElementParentCommand extends AbstractCanvasCommand impleme
 
     @Override
     public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
-        assert edge != null;
-        return factory.SET_PARENT(parent, candidate, edge);
+        return factory.ADD_CHILD(parent, candidate);
     }
     
 }

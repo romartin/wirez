@@ -20,35 +20,33 @@ import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.util.UUID;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
- * Updates the parent and child nodes for a parent-child connection.
+ * Creates/defines a new parent-child connection from the given nodes.
+ * Both nodes must already be crated and present on the graph storage.
  */
-public class SetParentCommand extends AbstractGraphCommand {
+public class AddChildCommand extends AbstractGraphCommand {
 
     private Node parent;
     private Node candidate;
-    private Edge<ParentChildRelationship, Node> edge;
 
-    public SetParentCommand(final GraphCommandFactory commandFactory,
-                            final Node parent,
-                            final Node candidate,
-                            final Edge<ParentChildRelationship, Node> edge) {
+    public AddChildCommand(final GraphCommandFactory commandFactory,
+                           final Node parent,
+                           final Node candidate) {
         super(commandFactory);
         this.parent = PortablePreconditions.checkNotNull( "parent",
                 parent );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
                                                              candidate );
-        this.edge = PortablePreconditions.checkNotNull( "edge",
-                edge );
     }
     
     @Override
@@ -60,17 +58,13 @@ public class SetParentCommand extends AbstractGraphCommand {
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
         final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
-            
-            final Node oldParent = edge.getSourceNode();
-            if ( null != oldParent ) {
-                oldParent.getOutEdges().remove( edge );
-            }
 
-            final Node oldChild = edge.getTargetNode();
-            if ( null != oldChild ) {
-                oldChild.getInEdges().remove( edge );
-            }
-            
+            // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
+            final String uuid = UUID.uuid();
+            final Map<String, Object> properties = new HashMap<>();
+            final Set<String> labels = new HashSet<>(1);
+            final Edge<ParentChildRelationship, Node> edge = new EdgeImpl<>(uuid, new HashSet<>(), labels, new ParentChildRelationship());
+
             edge.setSourceNode(parent);
             edge.setTargetNode(candidate);
             parent.getOutEdges().add( edge );
@@ -95,6 +89,6 @@ public class SetParentCommand extends AbstractGraphCommand {
 
     @Override
     public String toString() {
-        return "SetParentCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
+        return "AddChildCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
     }
 }

@@ -39,6 +39,11 @@ public class CanvasCommandFactoryImpl implements CanvasCommandFactory {
     }
 
     @Override
+    public AddCanvasChildCommand ADD_CHILD(final Node parent, final Node candidate) {
+        return new AddCanvasChildCommand(this, parent, candidate);
+    }
+
+    @Override
     public SetCanvasElementParentCommand SET_PARENT(Node parent,
                                                     Node candidate,
                                                     Edge<ParentChildRelationship, Node> edge) {

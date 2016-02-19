@@ -30,6 +30,9 @@ public interface GraphCommandFactory {
 
     ClearGraphCommand CLEAR_GRAPH(Graph target);
 
+    AddChildCommand ADD_CHILD(Node parent,
+                              Node candidate);
+    
     SetParentCommand SET_PARENT(Node parent,
                                 Node candidate,
                                 Edge<ParentChildRelationship, Node> edge);

@@ -20,8 +20,11 @@ import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.processing.handler.GraphHandler;
-import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.api.graph.processing.index.GraphIndex;
+import org.wirez.core.api.graph.processing.index.GraphIndexBuilder;
+import org.wirez.core.api.graph.processing.visitor.ContentVisitorCallback;
+import org.wirez.core.api.graph.processing.visitor.Visitor;
+import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
@@ -35,19 +38,6 @@ public class WiresCanvasSettingsBuilderImpl implements WiresCanvasSettingsBuilde
     
     public WiresCanvasSettingsBuilderImpl() {
         settings = new WiresCanvasSettingsImpl();
-    }
-
-
-    @Override
-    public WiresCanvasSettingsBuilder graphHandler(final GraphHandler<?, ?, ?> handler) {
-        settings.setHandler((GraphHandler<Graph, Node, Edge>) handler);
-        return this;
-    }
-
-    @Override
-    public WiresCanvasSettingsBuilder graphVisitor(final GraphVisitor<?, ?, ?> visitor) {
-        settings.setVisitor((GraphVisitor<Graph, Node, Edge>) visitor);
-        return this;
     }
 
     @Override
@@ -71,6 +61,18 @@ public class WiresCanvasSettingsBuilderImpl implements WiresCanvasSettingsBuilde
     @Override
     public WiresCanvasSettingsBuilder containmentAcceptor(final ContainmentAcceptor connectionAcceptor) {
         settings.setContainmentAcceptor(connectionAcceptor);
+        return this;
+    }
+
+    @Override
+    public WiresCanvasSettingsBuilder visitor(final Visitor<?, ?, ?> visitor) {
+        settings.setVisitor((Visitor<Graph<?, Node>, ? extends ContentVisitorCallback<Node, Edge, Graph<?, Node>>, ? extends VisitorPolicy>) visitor);
+        return this;
+    }
+
+    @Override
+    public WiresCanvasSettingsBuilder indexBuilder(final GraphIndex<?, ?> indexBuilder) {
+        settings.setIndexBuilder((GraphIndexBuilder<Graph<?, Node>, Node, Edge>) indexBuilder);
         return this;
     }
 

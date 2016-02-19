@@ -29,6 +29,6 @@ public class RemoveToolboxCommand implements ToolboxCommand {
     @Override
     public void execute(final Context context, 
                         final Element element) {
-        context.getCommandManager().execute( context.getCanvasHandler(), commandFactory.DELETE_NODE((Node) element, null));
+        context.getCommandManager().execute( context.getCanvasHandler(), commandFactory.DELETE_NODE((Node) element));
     }
 }

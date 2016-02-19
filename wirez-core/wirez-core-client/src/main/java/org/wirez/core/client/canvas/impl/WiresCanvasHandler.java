@@ -184,8 +184,8 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         public boolean acceptHead(WiresConnection head, WiresMagnet magnet) {
             final BaseConnector connector = (BaseConnector) head.getConnector();
             final Shape sourceShape = (Shape) magnet.getMagnets().getWiresShape();
-            final Node sourceNode = getGraphHandler().getNode(sourceShape.getId());
-            final Edge edge = getGraphHandler().getEdge(connector.getId());
+            final Node sourceNode = getGraphIndex().getNode(sourceShape.getId());
+            final Edge edge = getGraphIndex().getEdge(connector.getId());
             final String sourceUUID = sourceNode != null ? sourceNode.getUUID() : null;
 
             final int mIndex = getMagnetIndex(magnet);
@@ -202,8 +202,8 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             WiresConnection head = tail.getConnector().getHeadConnection();
             final BaseConnector connector = (BaseConnector) head.getConnector();
             final Shape targetShape = (Shape) magnet.getMagnets().getWiresShape();
-            final Node targetNode = getGraphHandler().getNode(targetShape.getId());
-            final Edge edge = getGraphHandler().getEdge(connector.getId());
+            final Node targetNode = getGraphIndex().getNode(targetShape.getId());
+            final Edge edge = getGraphIndex().getEdge(connector.getId());
             final String targetUUID = targetNode != null ? targetNode.getUUID() : null;
 
             final int mIndex = getMagnetIndex(magnet);
@@ -221,8 +221,8 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final BaseConnector connector = (BaseConnector) tail.getConnector();
             final Shape outNode = (Shape) shape;
 
-            final Node sourceNode = getGraphHandler().getNode(outNode.getId());
-            final Edge<ViewContent<?>, Node> edge = getGraphHandler().getEdge(connector.getId()); 
+            final Node sourceNode = getGraphIndex().getNode(outNode.getId());
+            final Edge<ViewContent<?>, Node> edge = getGraphIndex().getEdge(connector.getId()); 
             
             return getConnectionAcceptor().allowSource(WiresCanvasHandler.this, sourceNode, edge, 0);
         }
@@ -232,8 +232,8 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final BaseConnector connector = (BaseConnector) tail.getConnector();
             final Shape inNode = (Shape) shape;
 
-            final Node targetNode = getGraphHandler().getNode(inNode.getId());
-            final Edge<ViewContent<?>, Node> edge = getGraphHandler().getEdge(connector.getId());
+            final Node targetNode = getGraphIndex().getNode(inNode.getId());
+            final Edge<ViewContent<?>, Node> edge = getGraphIndex().getEdge(connector.getId());
             
             return getConnectionAcceptor().allowTarget(WiresCanvasHandler.this, targetNode, edge, 0);
         }
@@ -260,8 +260,8 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final Shape parent = (Shape) wiresContainer;
             final Shape child = (Shape) wiresShape;
 
-            final Node childNode = getGraphHandler().getNode(child.getId());
-            final Node parentNode = getGraphHandler().getNode(parent.getId());
+            final Node childNode = getGraphIndex().getNode(child.getId());
+            final Node parentNode = getGraphIndex().getNode(parent.getId());
 
             return getContainmentAcceptor().allow(WiresCanvasHandler.this, parentNode, childNode);
         }
@@ -272,8 +272,8 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final Shape parent = (Shape) wiresContainer;
             final Shape child = (Shape) wiresShape;
 
-            final Node childNode = getGraphHandler().getNode(child.getId());
-            final Node parentNode = getGraphHandler().getNode(parent.getId());
+            final Node childNode = getGraphIndex().getNode(child.getId());
+            final Node parentNode = getGraphIndex().getNode(parent.getId());
             
            return getContainmentAcceptor().accept(WiresCanvasHandler.this, parentNode, childNode);
         }

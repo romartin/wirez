@@ -1,8 +1,9 @@
 package org.wirez.core.client.canvas.settings;
 
 import org.wirez.core.api.command.CommandManager;
-import org.wirez.core.api.graph.processing.handler.GraphHandler;
-import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.api.graph.processing.index.GraphIndex;
+import org.wirez.core.api.graph.processing.index.map.MapGraphIndexBuilder;
+import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkContentVisitor;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.control.ConnectionAcceptor;
@@ -16,22 +17,22 @@ import javax.inject.Named;
 @ApplicationScoped
 public class CanvasSettingsFactory {
     
-    GraphHandler graphHandler;
-    GraphVisitor graphVisitor;
+    TreeWalkContentVisitor visitor;
+    MapGraphIndexBuilder indexBuilder;
     CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager;
     RuleManager ruleManager;
     ConnectionAcceptor<WiresCanvasHandler> connectionAcceptor;
     ContainmentAcceptor<WiresCanvasHandler> containmentAcceptor;
 
     @Inject
-    public CanvasSettingsFactory(final GraphHandler graphHandler,
-                                 final GraphVisitor graphVisitor,
+    public CanvasSettingsFactory(final TreeWalkContentVisitor visitor,
+                                 final MapGraphIndexBuilder indexBuilder,
                                  final CommandManager<WiresCanvasHandler, CanvasCommandViolation> commandManager,
                                  final @Named( "default" ) RuleManager ruleManager, 
                                  final ConnectionAcceptor<WiresCanvasHandler> connectionAcceptor,
                                  final ContainmentAcceptor<WiresCanvasHandler> containmentAcceptor) {
-        this.graphHandler = graphHandler;
-        this.graphVisitor = graphVisitor;
+        this.visitor = visitor;
+        this.indexBuilder = indexBuilder;
         this.commandManager = commandManager;
         this.ruleManager = ruleManager;
         this.connectionAcceptor = connectionAcceptor;
@@ -40,15 +41,15 @@ public class CanvasSettingsFactory {
     
     public CanvasViewSettings getViewSettings() {
         return new CanvasViewSettingsBuilderImpl()
-                .graphHandler(graphHandler)
-                .graphVisitor(graphVisitor)
+                .indexBuilder( (GraphIndex<?, ?>) indexBuilder)
+                .visitor(visitor)
                 .build();
     }
 
     public WiresCanvasSettings getDefaultSettings() {
         return new WiresCanvasSettingsBuilderImpl()
-                .graphHandler(graphHandler)
-                .graphVisitor(graphVisitor)
+                .indexBuilder( (GraphIndex<?, ?>) indexBuilder)
+                .visitor(visitor)
                 .commandManager(commandManager)
                 .ruleManager(ruleManager)
                 .connectionAcceptor(connectionAcceptor)

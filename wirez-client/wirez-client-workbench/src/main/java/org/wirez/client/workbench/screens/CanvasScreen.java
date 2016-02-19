@@ -40,7 +40,7 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.processing.GraphBoundsIndexer;
+import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
 import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.ClientDefinitionManager;
@@ -308,9 +308,9 @@ public class CanvasScreen {
                 final Collection<Shape> selectedItems = ((SelectionManager)canvas).getSelectedItems();
                 if (selectedItems != null && !selectedItems.isEmpty()) {
                     for (Shape shape : selectedItems) {
-                        Element element = canvasHandler.getGraphHandler().getNode(shape.getId());
+                        Element element = canvasHandler.getGraphIndex().getNode(shape.getId());
                         if (element == null) {
-                            element = canvasHandler.getGraphHandler().getEdge(shape.getId());
+                            element = canvasHandler.getGraphIndex().getEdge(shape.getId());
                             if (element != null) {
                                 log(Level.FINE, "Deleting edge with id " + element.getUUID());
                                 CanvasScreen.this.execute( canvasCommandFactory.DELETE_EDGE( (Edge) element ));

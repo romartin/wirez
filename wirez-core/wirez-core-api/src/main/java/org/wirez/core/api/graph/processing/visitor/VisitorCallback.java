@@ -16,18 +16,15 @@
 
 package org.wirez.core.api.graph.processing.visitor;
 
-import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 
 /**
  * A generic graph visitor callback interface.
  */
-public interface GraphVisitorCallback<G extends Graph, N extends Node, E extends Edge> {
+public interface VisitorCallback<N extends Node, E extends Edge, G extends Graph<?, N>> {
 
-    /*
-        Generic visit.
-     */
     void visitGraph(G graph);
 
     void visitNode(N node);
@@ -35,17 +32,5 @@ public interface GraphVisitorCallback<G extends Graph, N extends Node, E extends
     void visitEdge(E edge);
 
     void endVisit();
-
-    /*
-        Content based visit.
-     */
-
-    void visitGraphWithViewContent(Graph<? extends ViewContent, ? extends Node> graph);
-
-    void visitNodeWithViewContent(Node<? extends ViewContent, ?> node);
-
-    void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge);
-
-    void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge);
 
 }

@@ -25,9 +25,9 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.GraphVisitorImpl;
-import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.api.graph.processing.visitor.AbstractContentVisitorCallback;
+import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
+import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkContentVisitor;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
@@ -123,9 +123,7 @@ public class CanvasHighlightVisitor {
         shapes.clear();
 
         final DefinitionManager definitionManager = ClientDefinitionManager.get();
-        new GraphVisitorImpl()
-                .setDefinitionManager(definitionManager)
-                .visit(graph, new AbstractGraphVisitorCallback() {
+        new TreeWalkContentVisitor().visit(graph, new AbstractContentVisitorCallback() {
 
             @Override
             public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
@@ -170,7 +168,7 @@ public class CanvasHighlightVisitor {
                 }
             }
 
-        }, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
+        }, VisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE);
         
     }
 

@@ -21,47 +21,19 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.*;
 
-public abstract class AbstractGraphVisitorCallback implements GraphVisitorCallback<Graph, Node, Edge> {
+/**
+ * A generic graph visitor callback interface based on the element's content.
+ */
+public interface ContentVisitorCallback<N extends Node, E extends Edge, G extends Graph<?, N>>
+        extends VisitorCallback<N, E, G> {
 
-    @Override
-    public void visitGraphWithViewContent(Graph<? extends ViewContent, ? extends Node> graph) {
-        
-    }
+    void visitGraphWithViewContent(Graph<? extends ViewContent, ? extends Node> graph);
 
-    @Override
-    public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
-        
-    }
+    void visitNodeWithViewContent(Node<? extends ViewContent, ?> node);
 
-    @Override
-    public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
+    void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge);
 
-    }
+    void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge);
 
-    @Override
-    public void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge) {
-
-    }
-
-    @Override
-    public void visitGraph(Graph graph) {
-
-    }
-
-    @Override
-    public void visitNode(Node node) {
-
-    }
-
-    @Override
-    public void visitEdge(Edge edge) {
-
-    }
-
-    @Override
-    public void endVisit() {
-
-    }
 }

@@ -20,40 +20,42 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.processing.handler.GraphHandler;
-import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.api.graph.processing.index.GraphIndexBuilder;
+import org.wirez.core.api.graph.processing.visitor.ContentVisitorCallback;
+import org.wirez.core.api.graph.processing.visitor.Visitor;
+import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.canvas.settings.CanvasSettings;
 
-public abstract class CanvasSettingsImpl<G extends Graph, N extends Node, E extends Edge> implements CanvasSettings<G, N, E> {
+public abstract class CanvasSettingsImpl<G extends Graph<?, N>, N extends Node, E extends Edge> implements CanvasSettings<G, N, E> {
 
-    private GraphHandler<G, N, E> handler;
-    private GraphVisitor<G, N, E> visitor;
+    private GraphIndexBuilder<G, N, E> indexBuilder;
+    private Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> visitor;
 
     public CanvasSettingsImpl() {
     }
 
-    public CanvasSettingsImpl(final GraphHandler<G, N, E> handler,
-                              final GraphVisitor<G, N, E> visitor) {
-        this.handler = handler;
+    public CanvasSettingsImpl(final GraphIndexBuilder<G, N, E> indexBuilder,
+                            final Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> visitor) {
+        this.indexBuilder = indexBuilder;
         this.visitor = visitor;
     }
 
     @Override
-    public GraphHandler<G, N, E> getGraphHandler() {
-        return handler;
+    public GraphIndexBuilder<G, N, E> getGraphIndexBuilder() {
+        return indexBuilder;
     }
 
     @Override
-    public GraphVisitor<G, N, E> getGraphVisitor() {
+    public Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> getGraphVisitor() {
         return visitor;
     }
 
-    public void setHandler(GraphHandler<G, N, E> handler) {
-        this.handler = handler;
+    public void setIndexBuilder(final GraphIndexBuilder<G, N, E> indexBuilder) {
+        this.indexBuilder = indexBuilder;
     }
 
-    public void setVisitor(GraphVisitor<G, N, E> visitor) {
+    public void setVisitor(final Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> visitor) {
         this.visitor = visitor;
     }
 }

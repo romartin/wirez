@@ -2,7 +2,7 @@ package org.wirez.core.client.control.toolbox.command;
 
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.processing.GraphBoundsIndexer;
+import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;

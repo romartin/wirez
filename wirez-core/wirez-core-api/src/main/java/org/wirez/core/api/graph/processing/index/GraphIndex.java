@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.processing.handler;
+package org.wirez.core.api.graph.processing.index;
 
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
@@ -25,15 +25,10 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * A generic graph handler interface for processing and querying operations over a graph.
+ * A generic graph index interface for performing fast look-ups over the graph elements.
  */
-public interface GraphHandler<G extends Graph, N extends Node, E extends Edge> {
+public interface GraphIndex<N extends Node, E extends Edge> {
 
-    /**
-     * Initialize the handler with the graph.
-     */
-    GraphHandler<G, N, E> initialize(G graph);
-    
     /**
      * Returns the element (node or edge) with the given uuid.
      */
@@ -69,9 +64,4 @@ public interface GraphHandler<G extends Graph, N extends Node, E extends Edge> {
      */
     Collection<E> findEdges(List<String> labels);
 
-    /**
-     * The managed graph.
-     */
-    G getGraph();
-    
 }

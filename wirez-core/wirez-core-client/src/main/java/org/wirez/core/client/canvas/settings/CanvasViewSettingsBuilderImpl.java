@@ -19,8 +19,11 @@ package org.wirez.core.client.canvas.settings;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.processing.handler.GraphHandler;
-import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.api.graph.processing.index.GraphIndex;
+import org.wirez.core.api.graph.processing.index.GraphIndexBuilder;
+import org.wirez.core.api.graph.processing.visitor.ContentVisitorCallback;
+import org.wirez.core.api.graph.processing.visitor.Visitor;
+import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 
 public class CanvasViewSettingsBuilderImpl implements CanvasViewSettingsBuilder {
 
@@ -30,16 +33,15 @@ public class CanvasViewSettingsBuilderImpl implements CanvasViewSettingsBuilder 
         settings = new CanvasViewSettingsImpl();
     }
 
-
     @Override
-    public CanvasViewSettingsBuilder graphHandler(final GraphHandler<?, ?, ?> handler) {
-        settings.setHandler((GraphHandler<Graph, Node, Edge>) handler);
+    public CanvasViewSettingsBuilder visitor(final Visitor<?, ?, ?> visitor) {
+        settings.setVisitor((Visitor<Graph<?, Node>, ? extends ContentVisitorCallback<Node, Edge, Graph<?, Node>>, ? extends VisitorPolicy>) visitor);
         return this;
     }
 
     @Override
-    public CanvasViewSettingsBuilder graphVisitor(final GraphVisitor<?, ?, ?> visitor) {
-        settings.setVisitor((GraphVisitor<Graph, Node, Edge>) visitor);
+    public CanvasViewSettingsBuilder indexBuilder(final GraphIndex<?, ?> indexBuilder) {
+        settings.setIndexBuilder((GraphIndexBuilder<Graph<?, Node>, Node, Edge>) indexBuilder);
         return this;
     }
 

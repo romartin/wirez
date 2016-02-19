@@ -27,9 +27,9 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.processing.handler.GraphHandler;
-import org.wirez.core.api.graph.processing.visitor.AbstractGraphVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
+import org.wirez.core.api.graph.processing.index.GraphIndex;
+import org.wirez.core.api.graph.processing.visitor.AbstractContentVisitorCallback;
+import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -56,6 +56,7 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     protected WiresCanvas canvas;
     protected Diagram<?> diagram;
     protected S settings;
+    protected GraphIndex<?, ?> graphIndex;
     protected Collection<L> listeners = new LinkedList<L>();
 
     @Inject
@@ -72,7 +73,8 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
         this.diagram = diagram;
 
         // Initialize the graph handler that provides processing and querying operations over the graph.
-        settings.getGraphHandler().initialize(diagram.getGraph());
+        
+        this.graphIndex = settings.getGraphIndexBuilder().build(diagram.getGraph());
         
         doInitialize();
 
@@ -101,10 +103,10 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     }
 
     protected void draw() {
-        settings.getGraphVisitor().visit(diagram.getGraph(), DRAW_VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_LAST);
+        settings.getGraphVisitor().visit(diagram.getGraph(), DRAW_VISITOR_CALLBACK, VisitorPolicy.VISIT_EDGE_AFTER_TARGET_NODE);
     }
 
-    private final AbstractGraphVisitorCallback DRAW_VISITOR_CALLBACK = new AbstractGraphVisitorCallback() {
+    private final AbstractContentVisitorCallback DRAW_VISITOR_CALLBACK = new AbstractContentVisitorCallback() {
 
         @Override
         public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
@@ -317,9 +319,9 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     protected void afterClear() {
         fireCanvasClear();
     }
-    
-    public GraphHandler getGraphHandler() {
-        return settings.getGraphHandler();
+
+    public GraphIndex<?, ?> getGraphIndex() {
+        return graphIndex;
     }
 
     public ShapeManager getShapeManager() {

@@ -35,7 +35,8 @@ import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.processing.handler.GraphHandlerImpl;
+import org.wirez.core.api.graph.processing.index.GraphIndexBuilder;
+import org.wirez.core.api.graph.processing.index.map.MapGraphIndexBuilder;
 import org.wirez.core.api.service.definition.DefinitionServiceResponse;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
@@ -84,7 +85,7 @@ public class PropertiesEditor implements IsWidget {
     DefinitionManager definitionManager;
     ShapeManager wirezClientManager;
     CanvasCommandFactory canvasCommandFactory;
-    GraphHandlerImpl defaultGraphHandler;
+    MapGraphIndexBuilder indexBuilder;
     View view;
     private WiresCanvasHandler canvasHandler;
     private CanvasModelListener canvasListener;
@@ -97,13 +98,13 @@ public class PropertiesEditor implements IsWidget {
                             final View view,
                             final ShapeManager wirezClientManager,
                             final CanvasCommandFactory canvasCommandFactory,
-                            final GraphHandlerImpl defaultGraphHandler) {
+                            final MapGraphIndexBuilder indexBuilder) {
         this.clientDefinitionServices = clientDefinitionServices;
         this.definitionManager = definitionManager;
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.canvasCommandFactory = canvasCommandFactory;
-        this.defaultGraphHandler = defaultGraphHandler;
+        this.indexBuilder = indexBuilder;
     }
 
     @PostConstruct
@@ -427,7 +428,7 @@ public class PropertiesEditor implements IsWidget {
         if ( shape != null ) {
             // If shape exist, show the properties for the underlying model element.
             final String shapeUUID = shape.getId();
-            final Element<? extends ViewContent<?>> element = defaultGraphHandler.initialize(defaultGraph).get(shapeUUID);
+            final Element<? extends ViewContent<?>> element = indexBuilder.build(defaultGraph).get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
                 show(element);
             } else if (ShapeState.DESELECTED.equals(state)) {

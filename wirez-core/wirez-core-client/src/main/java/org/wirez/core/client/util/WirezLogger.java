@@ -23,6 +23,7 @@ import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.processing.visitor.*;
+import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkContentVisitor;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -86,7 +87,7 @@ public class WirezLogger {
         log("Rule Violation [message=" + message + "] [type" + type.name());
     }
     
-    private static final AbstractGraphVisitorCallback VISITOR_CALLBACK = new AbstractGraphVisitorCallback() {
+    private static final AbstractContentVisitorCallback VISITOR_CALLBACK = new AbstractContentVisitorCallback() {
 
         @Override
         public void visitGraphWithViewContent(Graph<? extends ViewContent, ? extends Node> graph) {
@@ -180,30 +181,11 @@ public class WirezLogger {
     };
 
     public static void log(final Graph graph) {
-        final DefinitionManager definitionManager = ClientDefinitionManager.get();
-        final GraphVisitor visitor = new GraphVisitorImpl()
-                .setDefinitionManager(definitionManager);
-        visitor.setBoundsVisitorCallback(new BoundsVisitorCallback() {
-            @Override
-            public void visitBounds(Element<? extends ViewContent> element, Bounds.Bound ul, Bounds.Bound lr) {
-                log(" Bound UL [x=" + ul.getX() + ", y=" + ul.getY() + "]");
-                log(" Bound LR [x=" + lr.getX() + ", y=" + lr.getY() + "]");
-            }
-        });
-        visitor.setPropertiesVisitorCallback(new PropertyVisitorCallback() {
-            @Override
-            public void visitProperty(Element element, String key, Object value) {
-                log(" Property [key=" + key + ", value=" + value + "]");
-            }
-        });
-        visitor.visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
+        new TreeWalkContentVisitor().visit(graph, VISITOR_CALLBACK, VisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE);
     }
 
     public static void resume(final Graph graph) {
-        final DefinitionManager definitionManager = ClientDefinitionManager.get();
-        new GraphVisitorImpl()
-                .setDefinitionManager(definitionManager)
-                .visit(graph, VISITOR_CALLBACK, GraphVisitor.GraphVisitorPolicy.EDGE_FIRST);
+        new TreeWalkContentVisitor().visit(graph, VISITOR_CALLBACK, VisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE);
     }
 
     private static void log(final String message) {

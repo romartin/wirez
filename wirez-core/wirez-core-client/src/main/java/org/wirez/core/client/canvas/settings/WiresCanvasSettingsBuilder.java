@@ -17,8 +17,6 @@
 package org.wirez.core.client.canvas.settings;
 
 import org.wirez.core.api.command.CommandManager;
-import org.wirez.core.api.graph.processing.handler.GraphHandler;
-import org.wirez.core.api.graph.processing.visitor.GraphVisitor;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;

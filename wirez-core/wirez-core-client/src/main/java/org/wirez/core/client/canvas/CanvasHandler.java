@@ -17,9 +17,6 @@
 package org.wirez.core.client.canvas;
 
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.processing.handler.GraphHandler;
 import org.wirez.core.client.canvas.listener.CanvasListener;
 import org.wirez.core.client.canvas.settings.CanvasSettings;
 

@@ -49,7 +49,7 @@ import java.util.logging.Logger;
 
 public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L extends CanvasListener> implements CanvasHandler<WiresCanvas, S, L> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.WiresCanvasHandler");
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.AbstractWiresCanvasHandler");
 
     protected ShapeManager shapeManager;
     protected CanvasCommandFactory commandFactory;

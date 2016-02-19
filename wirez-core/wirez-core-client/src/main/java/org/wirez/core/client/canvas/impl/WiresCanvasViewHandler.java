@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 @Dependent
 public class WiresCanvasViewHandler extends AbstractWiresCanvasHandler<CanvasViewSettings, CanvasListener> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.WiresCanvasHandler");
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.WiresCanvasViewHandler");
 
     @Inject
     public WiresCanvasViewHandler(final ShapeManager shapeManager,

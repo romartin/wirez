@@ -41,7 +41,7 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
             final CommandResult<V> result = doAllow( context, command );
             final CommandResults<V> results = buildResults();
             results.add(result);
-            if ( !CommandResult.Type.ERROR.equals(result.getType()) ) {
+            if ( CommandResult.Type.ERROR.equals(result.getType()) ) {
                 return false;
             }
         }

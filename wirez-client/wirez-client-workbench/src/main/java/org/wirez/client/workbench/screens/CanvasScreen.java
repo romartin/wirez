@@ -16,6 +16,12 @@
 
 package org.wirez.client.workbench.screens;
 
+import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
+import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
+import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
+import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.bus.client.api.messaging.Message;
@@ -126,6 +132,8 @@ public class CanvasScreen {
     private PlaceRequest placeRequest;
     private String title = "Canvas Screen";
 
+    private HandlerRegistration mousePointerCoordsHandlerReg;
+    
     @PostConstruct
     public void init() {
 
@@ -251,6 +259,9 @@ public class CanvasScreen {
                 .newTopLevelMenu("Switch log level")
                 .respondsWith(getSwitchLogLevelCommand())
                 .endMenu()
+                .newTopLevelMenu("Mouse pointer coords")
+                .respondsWith(getMousePointerCoordsCommand())
+                .endMenu()
                 .newTopLevelMenu("Clear grid")
                 .respondsWith(getClearGridCommand())
                 .endMenu()
@@ -275,89 +286,87 @@ public class CanvasScreen {
                 .build();
     }
 
-    private Command getSwitchLogLevelCommand() {
+    private Command getMousePointerCoordsCommand() {
         return new Command() {
             public void execute() {
-                final Level level = Logger.getLogger("").getLevel();
-                final Level newLevel = Level.SEVERE.equals(level) ? Level.FINE : Level.SEVERE;
-                LOGGER.log(Level.SEVERE, "Switching to log level [" + newLevel.getName() + "]");
-                Logger.getLogger("").setLevel(newLevel);
+
+                if ( null == mousePointerCoordsHandlerReg ) {
+                    mousePointerCoordsHandlerReg = canvasHandler.getCanvas().getLayer().addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
+                        @Override
+                        public void onNodeMouseMove(NodeMouseMoveEvent nodeMouseMoveEvent) {
+                            LOGGER.log(Level.INFO, "Mouse at [" + nodeMouseMoveEvent.getX() + ", " + nodeMouseMoveEvent.getY() + "]");
+                            /*final GraphBoundsIndexer indexer = new GraphBoundsIndexer(canvasHandler.getDiagram().getGraph());
+                            final Node node = indexer.getNodeAt(nodeMouseMoveEvent.getX(), nodeMouseMoveEvent.getY());
+                            LOGGER.log(Level.INFO, "Node [" + ( node != null ? node.getUUID() : null ) +
+                                    "at [" + nodeMouseMoveEvent.getX() + ", " + nodeMouseMoveEvent.getY() + "]");*/
+                        }
+                    });
+                    
+                } else {
+                    mousePointerCoordsHandlerReg.removeHandler();
+                    mousePointerCoordsHandlerReg = null;
+                    
+                }
+
             }
+        };
+    }
+
+    private Command getSwitchLogLevelCommand() {
+        return () -> {
+            final Level level = Logger.getLogger("").getLevel();
+            final Level newLevel = Level.SEVERE.equals(level) ? Level.FINE : Level.SEVERE;
+            LOGGER.log(Level.SEVERE, "Switching to log level [" + newLevel.getName() + "]");
+            Logger.getLogger("").setLevel(newLevel);
         };
     }
 
     private Command getClearGridCommand() {
-        return new Command() {
-            public void execute() {
-                CanvasScreen.this.execute( canvasCommandFactory.CLEAR_CANVAS() );
-            }
-        };
+        return () -> CanvasScreen.this.execute( canvasCommandFactory.CLEAR_CANVAS() );
     }
 
     private Command getClearSelectionCommand() {
-        return new Command() {
-            public void execute() {
-                ((SelectionManager)canvas).clearSelection();
-            }
-        };
+        return () -> ((SelectionManager)canvas).clearSelection();
     }
 
     private Command getDeleteSelectionCommand() {
-        return new Command() {
-            public void execute() {
-                final Collection<Shape> selectedItems = ((SelectionManager)canvas).getSelectedItems();
-                if (selectedItems != null && !selectedItems.isEmpty()) {
-                    for (Shape shape : selectedItems) {
-                        Element element = canvasHandler.getGraphIndex().getNode(shape.getId());
-                        if (element == null) {
-                            element = canvasHandler.getGraphIndex().getEdge(shape.getId());
-                            if (element != null) {
-                                log(Level.FINE, "Deleting edge with id " + element.getUUID());
-                                CanvasScreen.this.execute( canvasCommandFactory.DELETE_EDGE( (Edge) element ));
-                            }
-                        } else {
-                            log(Level.FINE, "Deleting node with id " + element.getUUID());
-                            CanvasScreen.this.execute( canvasCommandFactory.DELETE_NODE( (Node) element ));
-
+        return () -> {
+            final Collection<Shape> selectedItems = ((SelectionManager)canvas).getSelectedItems();
+            if (selectedItems != null && !selectedItems.isEmpty()) {
+                for (Shape shape : selectedItems) {
+                    Element element = canvasHandler.getGraphIndex().getNode(shape.getId());
+                    if (element == null) {
+                        element = canvasHandler.getGraphIndex().getEdge(shape.getId());
+                        if (element != null) {
+                            log(Level.FINE, "Deleting edge with id " + element.getUUID());
+                            CanvasScreen.this.execute( canvasCommandFactory.DELETE_EDGE( (Edge) element ));
                         }
+                    } else {
+                        log(Level.FINE, "Deleting node with id " + element.getUUID());
+                        CanvasScreen.this.execute( canvasCommandFactory.DELETE_NODE( (Node) element ));
+
                     }
-                } else {
-                    log(Level.FINE, "Cannot delete element, no element selected on canvas.");
                 }
+            } else {
+                log(Level.FINE, "Cannot delete element, no element selected on canvas.");
             }
         };
     }
     
     private Command getUndoCommand() {
-        return new Command() {
-            public void execute() {
-                undo();
-            }
-        };
+        return () -> undo();
     }
 
     private Command getLogGraphCommand() {
-        return new Command() {
-            public void execute() {
-                logGraph();
-            }
-        };
+        return () -> logGraph();
     }
 
     private Command getResumeGraphCommand() {
-        return new Command() {
-            public void execute() {
-                resumeGraph();
-            }
-        };
+        return () -> resumeGraph();
     }
     
     private Command getVisitGraphCommand() {
-        return new Command() {
-            public void execute() {
-                visitGraph();
-            }
-        };
+        return () -> visitGraph();
     }
 
     private interface DefinitionSetRequestCallback {

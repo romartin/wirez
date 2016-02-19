@@ -81,13 +81,15 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
         final boolean allowsSourceConn = context.getCanvasHandler().allow( commandFactory.SET_SOURCE_NODE( (Node) source, edge, 0) );
         final boolean allowsTargetConn = context.getCanvasHandler().allow( commandFactory.SET_SOURCE_NODE( target, edge, 0) );
                 
-        return allowsSourceConn & allowsTargetConn;
+        final boolean isAllowed = allowsSourceConn & allowsTargetConn;
+        log(Level.FINE, "Connection allowed from [" + source.getUUID() + "] to [" + target.getUUID() + "] = [" 
+                + ( isAllowed ? "true" : "false" ) + "]");
+        return isAllowed;
         
     }
 
     @Override
     public void accept(final Context context, final Node target) {
-        log(Level.FINE, "AddConnectionCommandCallback - Connect from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
 
         final Canvas canvas = context.getCanvasHandler().getCanvas();
         final BaseShape sourceShape = (BaseShape) canvas.getShape(source.getUUID());
@@ -99,9 +101,11 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
         final CommandResults<CanvasCommandViolation> results =
                 context.getCanvasHandler().execute( commandFactory.ADD_EDGE( (Node) source, edge, factory),
                                             commandFactory.SET_SOURCE_NODE( (Node) source, edge, magnetIndexes[1]),
-                                            commandFactory.SET_TARGET_NODE( (Node) source, edge, magnetIndexes[0]));
+                                            commandFactory.SET_TARGET_NODE( target, edge, magnetIndexes[0]));
 
         // TODO: Check results.
+
+        log(Level.FINE, "Connection performed from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
     }
 
     private void log(final Level level, final String message) {

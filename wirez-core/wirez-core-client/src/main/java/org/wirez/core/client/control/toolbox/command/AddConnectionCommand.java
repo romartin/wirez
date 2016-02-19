@@ -92,6 +92,9 @@ public class AddConnectionCommand implements ToolboxCommand {
     }
     
     private void highLightShape(final Node node) {
+        if ( null != this.shape && !node.getUUID().equals(shape.getId()) ) {
+            unhighLightShape();
+        }
         if ( null == this.shape ) {
             final String uuid = node.getUUID();
             final Shape shape = getShape(uuid);

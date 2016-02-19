@@ -40,11 +40,11 @@ public interface GraphCommandFactory {
     DeleteParentCommand DELETE_PARENT(Node parent,
                                       Node candidate);
 
-    SetConnectionSourceNodeCommand SET_TARGET_NODE(Node<? extends ViewContent<?>, Edge> sourceNode,
+    SetConnectionSourceNodeCommand SET_SOURCE_NODE(Node<? extends ViewContent<?>, Edge> sourceNode,
                                                    Edge<? extends ViewContent<?>, Node> edge,
                                                    int magnetIndex);
 
-    SetConnectionTargetNodeCommand SET_SOURCE_NODE(Node<? extends ViewContent<?>, Edge> targetNode,
+    SetConnectionTargetNodeCommand SET_TARGET_NODE(Node<? extends ViewContent<?>, Edge> targetNode,
                                                    Edge<? extends ViewContent<?>, Node> edge,
                                                    int magnetIndex);
 

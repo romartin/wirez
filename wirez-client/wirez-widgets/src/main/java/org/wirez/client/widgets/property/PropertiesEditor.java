@@ -318,10 +318,7 @@ public class PropertiesEditor implements IsWidget {
 
         final String id = element.getUUID();
         final double x = element.getContent().getBounds().getUpperLeft().getX();
-        final double y = element.getContent().getBounds().getLowerRight().getY();
-
-        final double w = getWidth(element);
-        final double h = getHeight(element);
+        final double y = element.getContent().getBounds().getUpperLeft().getY();
 
         // Element ID
         final PropertyEditorFieldInfo idField = new PropertyEditorFieldInfo( "Id",

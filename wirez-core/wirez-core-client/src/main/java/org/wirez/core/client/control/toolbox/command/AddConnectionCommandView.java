@@ -19,8 +19,12 @@ import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.Canvas;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class AddConnectionCommandView implements AddConnectionCommand.View {
-    
+
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.control.toolbox.command.AddConnectionCommandView");
     private AddConnectionCommand presenter;
 
     private Canvas canvas;
@@ -88,7 +92,9 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
                 // updateLineTo((OrthogonalPolyLine) connector, x, y);
                 updateArrowTo((Arrow) connector, x, y);
                 connector.moveToTop();
+                
                 presenter.onMouseMove(x, y);
+                LOGGER.log(Level.INFO, "Mouse at [" + x + ", " + y+ "]");
                 layer.batch();
             }
         }));

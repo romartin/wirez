@@ -90,7 +90,7 @@ public class TreeExplorerScreen {
 
     @WorkbenchPartTitle
     public String getTitle() {
-        return "Tree Explorer";
+        return "Explorer";
     }
 
     @WorkbenchPartView

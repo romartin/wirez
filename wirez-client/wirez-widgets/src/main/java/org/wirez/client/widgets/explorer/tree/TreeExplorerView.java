@@ -1,6 +1,7 @@
 package org.wirez.client.widgets.explorer.tree;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -25,27 +26,34 @@ public class TreeExplorerView extends Composite implements TreeExplorer.View {
     public void init(final TreeExplorer presenter) {
         this.presenter = presenter;
         initWidget( uiBinder.createAndBindUi( this ) );
+        tree.addSelectionHandler(selectionEvent -> { 
+            final TreeItem item = selectionEvent.getSelectedItem();
+            final String uuid = (String) item.getUserObject();
+            presenter.onSelect(uuid);
+        });
+
     }
 
-    public TreeExplorer.View addItem(final String itemText) {
-    
-        final TreeItem item = new TreeItem();
-        item.setText(itemText);
-        
+    public TreeExplorer.View addItem(final String uuid, final String itemText) {
+        final TreeItem item = buildItem(uuid, itemText);
         tree.addItem(item);
-
         return this;
     }
 
-    public TreeExplorer.View addItem(final String itemText, final int... parentsIds) {
-
-        final TreeItem item = new TreeItem();
-        item.setText(itemText);
-
+    public TreeExplorer.View addItem(final String uuid, final String itemText, final int... parentsIds) {
+        final TreeItem item = buildItem(uuid, itemText);
         final TreeItem parent = getParent(parentsIds);
         parent.addItem(item);
 
         return this;
+    }
+    
+    private TreeItem buildItem(final String uuid, final String itemText) {
+        final TreeItem item = new TreeItem();
+        item.setText(itemText);
+        item.setUserObject(uuid);
+        item.getElement().getStyle().setCursor(Style.Cursor.POINTER);
+        return item;
     }
 
     public TreeExplorer.View removeItem(final int index) {

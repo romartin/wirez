@@ -230,11 +230,15 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
 
         }
 
-        doRegister(shape, candidate, factory);
-
+        
         // Add the shapes on canvas and fire events.
         canvas.addShape(shape);
         canvas.draw();
+
+        // Parents can register controls etc here.
+        doRegister(shape, candidate, factory);
+        
+        // Fire updates.
         afterElementAdded(candidate);
     }
     

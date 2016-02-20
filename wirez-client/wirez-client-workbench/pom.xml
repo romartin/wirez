@@ -143,6 +143,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Just here while coding... -->
+    <dependency>
+      <groupId>com.ahome-it</groupId>
+      <artifactId>lienzo-core</artifactId>
+    </dependency>
+    
     <!-- Test scope. -->
 
     <!-- Test scope. -->

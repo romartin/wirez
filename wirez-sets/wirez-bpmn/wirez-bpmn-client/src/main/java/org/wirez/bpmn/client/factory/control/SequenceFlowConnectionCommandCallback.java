@@ -100,8 +100,8 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
 
         final CommandResults<CanvasCommandViolation> results =
                 context.getCanvasHandler().execute( commandFactory.ADD_EDGE( (Node) source, edge, factory),
-                                            commandFactory.SET_SOURCE_NODE( (Node) source, edge, magnetIndexes[1]),
-                                            commandFactory.SET_TARGET_NODE( target, edge, magnetIndexes[0]));
+                                            commandFactory.SET_SOURCE_NODE( (Node) source, edge, magnetIndexes[0]),
+                                            commandFactory.SET_TARGET_NODE( target, edge, magnetIndexes[1]));
 
         // TODO: Check results.
 

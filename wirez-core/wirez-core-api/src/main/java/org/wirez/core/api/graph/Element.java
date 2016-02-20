@@ -23,8 +23,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An element of a graph. All graph elements (nodes, edges, etc) must have a unique identifier, a collection of properties, a set of labels (roles) and a generic content. 
- * The content gives the semantics and views, if any, for the element.
+ * <p>This interface provides the basic contract for any element of a graph (node/edge).</p>
+ * 
+ * <p>The graph implementation is based on the <b>Labeled Property Graph Model</b>, so all graph elements 
+ * must have a unique identifier, a collection of properties, a set of labels and a generic content.
+ * The content gives the graph the different processing semantics, or some view representation for the element on the canvas,</p>
+ * 
  */
 public interface Element<C> {
     

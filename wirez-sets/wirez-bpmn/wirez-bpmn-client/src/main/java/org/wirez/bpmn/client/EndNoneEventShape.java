@@ -25,7 +25,7 @@ import org.wirez.bpmn.api.EndNoneEvent;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasRadiusMutation;
@@ -73,7 +73,7 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
     }
 
     @Override
-    public void applyElementProperties(Node<ViewContent<EndNoneEvent>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<View<EndNoneEvent>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Radius.
@@ -88,7 +88,7 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> implements H
         }
     }
 
-    protected EndNoneEventShape _applyRadius(final Node<ViewContent<EndNoneEvent>, Edge> element, MutationContext mutationContext) {
+    protected EndNoneEventShape _applyRadius(final Node<View<EndNoneEvent>, Edge> element, MutationContext mutationContext) {
         final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {

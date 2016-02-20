@@ -4,7 +4,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.canvas.command.impl.*;
 import org.wirez.core.client.factory.ShapeFactory;
 
@@ -75,12 +75,12 @@ public class CanvasCommandFactoryImpl implements CanvasCommandFactory {
     }
 
     @Override
-    public SetCanvasConnectionSourceNodeCommand SET_SOURCE_NODE(Node<? extends ViewContent<?>, Edge> node, Edge<? extends ViewContent<?>, Node> edge, int magnetIndex) {
+    public SetCanvasConnectionSourceNodeCommand SET_SOURCE_NODE(Node<? extends View<?>, Edge> node, Edge<? extends View<?>, Node> edge, int magnetIndex) {
         return new SetCanvasConnectionSourceNodeCommand(this, node, edge, magnetIndex);
     }
 
     @Override
-    public SetCanvasConnectionTargetNodeCommand SET_TARGET_NODE(Node<? extends ViewContent<?>, Edge> node, Edge<? extends ViewContent<?>, Node> edge, int magnetIndex) {
+    public SetCanvasConnectionTargetNodeCommand SET_TARGET_NODE(Node<? extends View<?>, Edge> node, Edge<? extends View<?>, Node> edge, int magnetIndex) {
         return new SetCanvasConnectionTargetNodeCommand(this, node, edge, magnetIndex);
     }
 

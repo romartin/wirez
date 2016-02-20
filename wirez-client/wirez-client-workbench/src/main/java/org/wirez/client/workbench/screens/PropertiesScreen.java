@@ -30,7 +30,7 @@ import org.wirez.client.widgets.property.PropertiesEditor;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
@@ -66,7 +66,7 @@ public class PropertiesScreen {
     public void init() {
         propertiesEditor.setEditorCallback(new PropertiesEditor.EditorCallback() {
             @Override
-            public void onShowElement(Element<? extends ViewContent<?>> element) {
+            public void onShowElement(Element<? extends View<?>> element) {
                 if ( null != element ) {
                     final Name nameProperty = (Name) ElementUtils.getProperty(element, Name.ID);
                     String name = nameProperty.getValue();

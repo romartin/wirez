@@ -17,15 +17,13 @@
 package org.wirez.core.client.util;
 
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.visitor.*;
 import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkContentVisitor;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.service.ClientRuntimeError;
 
 import java.util.List;
@@ -90,7 +88,7 @@ public class WirezLogger {
     private static final AbstractContentVisitorCallback VISITOR_CALLBACK = new AbstractContentVisitorCallback() {
 
         @Override
-        public void visitGraphWithViewContent(Graph<? extends ViewContent, ? extends Node> graph) {
+        public void visitGraphWithViewContent(Graph<? extends View, ? extends Node> graph) {
             if (graph == null) {
                 error("Graph is null!");
             } else {
@@ -126,7 +124,7 @@ public class WirezLogger {
 
 
         @Override
-        public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
+        public void visitNodeWithViewContent(Node<? extends View, ?> node) {
             log("(View) UUID: " + node.getUUID());
             log("(View) Node Id: " + node.getContent().getDefinition().getId());
             List<Edge> outEdges = (List<Edge>) node.getOutEdges();
@@ -139,7 +137,7 @@ public class WirezLogger {
         }
 
         @Override
-        public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
+        public void visitEdgeWithViewContent(Edge<? extends View, ?> edge) {
             log("(View) Edge UUI: " + edge.getUUID());
             log("(View) Edge Id: " + edge.getContent().getDefinition().getId());
 

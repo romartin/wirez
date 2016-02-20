@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,36 +14,38 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.content;
+package org.wirez.core.api.graph.content.view;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
 
 @Portable
-public class ViewContentImpl<W extends Definition> implements ViewContent<W> {
-    protected W definition;
-    protected Bounds bounds;
-
-    public ViewContentImpl(@MapsTo("definition") W definition, @MapsTo("bounds") Bounds bounds) {
-        this.definition = definition;
-        this.bounds = bounds;
-    }
+public final class BoundsImpl implements Bounds {
     
-    @Override
-    public W getDefinition() {
-        return definition;
+    private BoundImpl lr;
+    private BoundImpl ul;
+
+    public BoundsImpl(@MapsTo("lr") BoundImpl lr,
+                      @MapsTo("ul") BoundImpl ul) {
+        this.lr = lr;
+        this.ul = ul;
     }
 
     @Override
-    public Bounds getBounds() {
-        return bounds;
+    public BoundImpl getLowerRight() {
+        return lr;
     }
 
     @Override
-    public void setBounds(final Bounds bounds) {
-        this.bounds = bounds;
+    public BoundImpl getUpperLeft() {
+        return ul;
     }
 
+    public void setLowerRight(BoundImpl lr) {
+        this.lr = lr;
+    }
+
+    public void setUpperLeft(BoundImpl ul) {
+        this.ul = ul;
+    }
 }

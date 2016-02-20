@@ -16,7 +16,11 @@
 
 package org.wirez.core.api.graph.content;
 
-public interface Relationship extends Content {
+/**
+ * Indicates any kind of an edge/relationship that has no view representation on the canvas 
+ * but provides graph processing semantics ( such as when performing traverse / transform ).
+ */
+public interface Relationship {
     
     String getName();
     

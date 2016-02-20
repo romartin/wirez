@@ -14,18 +14,35 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.content;
+package org.wirez.core.api.graph.content.view;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.definition.Definition;
 
 @Portable
-public class ParentChildRelationship implements Relationship {
-    
-    public static final String PARENT_CHILD_NAME = "p-c";
-    
-    @Override
-    public String getName() {
-        return PARENT_CHILD_NAME;
+public final class ViewImpl<W extends Definition> implements View<W> {
+    protected W definition;
+    protected Bounds bounds;
+
+    public ViewImpl(@MapsTo("definition") W definition, @MapsTo("bounds") Bounds bounds) {
+        this.definition = definition;
+        this.bounds = bounds;
     }
     
+    @Override
+    public W getDefinition() {
+        return definition;
+    }
+
+    @Override
+    public Bounds getBounds() {
+        return bounds;
+    }
+
+    @Override
+    public void setBounds(final Bounds bounds) {
+        this.bounds = bounds;
+    }
+
 }

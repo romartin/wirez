@@ -20,29 +20,27 @@ import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.content.ViewContentImpl;
+import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.view.ViewImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
-import org.wirez.core.api.graph.factory.NodeFactory;
 import org.wirez.core.api.graph.factory.ViewNodeFactory;
 import org.wirez.core.api.graph.impl.NodeImpl;
-import org.wirez.core.api.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Set;
 
 @ApplicationScoped
 public class ViewNodeFactoryImpl 
-        extends BaseElementFactory<DefaultDefinition, ViewContent<DefaultDefinition>, Node<ViewContent<DefaultDefinition>, Edge>> 
+        extends BaseElementFactory<DefaultDefinition, View<DefaultDefinition>, Node<View<DefaultDefinition>, Edge>> 
         implements ViewNodeFactory<DefaultDefinition> {
 
     @Override
-    public Node<ViewContent<DefaultDefinition>, Edge> build(final String uuid, final DefaultDefinition definition, final Set<Property> properties, final Set<String> labels) {
-        Node<ViewContent<DefaultDefinition>, Edge> node =
-                new NodeImpl<ViewContent<DefaultDefinition>>(uuid,
+    public Node<View<DefaultDefinition>, Edge> build(final String uuid, final DefaultDefinition definition, final Set<Property> properties, final Set<String> labels) {
+        Node<View<DefaultDefinition>, Edge> node =
+                new NodeImpl<View<DefaultDefinition>>(uuid,
                         properties,
                         labels,
-                        new ViewContentImpl<>( definition, buildBounds())
+                        new ViewImpl<>( definition, buildBounds())
 
                 );
 

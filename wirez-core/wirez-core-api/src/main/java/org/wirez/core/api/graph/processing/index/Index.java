@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * A generic graph index interface for performing fast look-ups over the graph elements.
+ * <p>A generic graph index based on element's identifiers. Allows performing fast look-ups over the graph elements.</p>
  */
 public interface Index<N extends Node, E extends Edge> {
 
@@ -44,24 +44,6 @@ public interface Index<N extends Node, E extends Edge> {
      */
     E getEdge(String uuid);
 
-    /**
-     * Returns the parent node for the child with the given uuid.
-     */
-    N getParent(String uuid);
-
-    /**
-     * Return the child nodes, if any.
-     */
-    Collection<N> getChildren(String uuid);
-
-    /**
-     * Returns the nodes with the given labels.
-     */
-    Collection<N> findNodes(List<String> labels);
-
-    /**
-     * Returns the edges with the given labels.
-     */
-    Collection<E> findEdges(List<String> labels);
+    
 
 }

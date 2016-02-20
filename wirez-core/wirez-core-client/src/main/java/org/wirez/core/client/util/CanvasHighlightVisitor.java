@@ -24,7 +24,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.visitor.AbstractContentVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkContentVisitor;
@@ -126,14 +126,14 @@ public class CanvasHighlightVisitor {
         new TreeWalkContentVisitor().visit(graph, new AbstractContentVisitorCallback() {
 
             @Override
-            public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
+            public void visitNodeWithViewContent(Node<? extends View, ?> node) {
                 super.visitNodeWithViewContent(node);
                 addShape(node.getUUID());
                 
             }
 
             @Override
-            public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
+            public void visitEdgeWithViewContent(Edge<? extends View, ?> edge) {
                 super.visitEdgeWithViewContent(edge);
                 addShape(edge.getUUID());
             }

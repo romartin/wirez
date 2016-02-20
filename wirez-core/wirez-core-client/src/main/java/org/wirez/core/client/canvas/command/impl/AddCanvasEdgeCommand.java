@@ -6,7 +6,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
@@ -42,7 +42,7 @@ public class AddCanvasEdgeCommand extends AddCanvasElementCommand<Edge> implemen
         CommandResult<CanvasCommandViolation> result = super.execute(context);
         final String uuid = candidate.getUUID();
         BaseConnector connector = (BaseConnector) context.getCanvas().getShape(uuid);
-        connector.applyConnections((Edge<ViewContent, Node>) candidate, context);
+        connector.applyConnections((Edge<View, Node>) candidate, context);
         return result;
     }
 

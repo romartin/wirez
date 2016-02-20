@@ -5,7 +5,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
@@ -16,13 +16,13 @@ import org.wirez.core.client.impl.BaseConnector;
 
 public class SetCanvasConnectionTargetNodeCommand extends AbstractCanvasCommand implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
 
-    Node<? extends ViewContent<?>, Edge> node;
-    Edge<? extends ViewContent<?>, Node> edge;
+    Node<? extends View<?>, Edge> node;
+    Edge<? extends View<?>, Node> edge;
     int magnetIndex;
             
     public SetCanvasConnectionTargetNodeCommand(final CanvasCommandFactory canvasCommandFactory,
-                                                final Node<? extends ViewContent<?>, Edge> node,
-                                                final Edge<? extends ViewContent<?>, Node> edge,
+                                                final Node<? extends View<?>, Edge> node,
+                                                final Edge<? extends View<?>, Node> edge,
                                                 final int magnetIndex) {
         super(canvasCommandFactory);
         this.node = node;

@@ -19,14 +19,13 @@ package org.wirez.bpmn.client;
 import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.Decorator;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.property.general.BgColor;
 import org.wirez.bpmn.api.property.general.BorderColor;
 import org.wirez.bpmn.api.property.general.BorderSize;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseConnector;
@@ -44,7 +43,7 @@ public abstract class BPMNBasicConnector<W extends Definition>
     }
 
     @Override
-    public void applyElementProperties(Edge<ViewContent<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementProperties(Edge<View<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         super.applyElementProperties(element, canvasHandler, mutationContext);
 
         // Fill color.
@@ -55,7 +54,7 @@ public abstract class BPMNBasicConnector<W extends Definition>
 
     }
 
-    protected BPMNBasicConnector<W> _applyFillColor(Edge<ViewContent<W>, Node> element) {
+    protected BPMNBasicConnector<W> _applyFillColor(Edge<View<W>, Node> element) {
         final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.ID);
         final String color = bgColor.getValue();
         if (color != null && color.trim().length() > 0) {
@@ -64,7 +63,7 @@ public abstract class BPMNBasicConnector<W extends Definition>
         return this;
     }
 
-    protected BPMNBasicConnector<W> _applyBorders(Edge<ViewContent<W>, Node> element) {
+    protected BPMNBasicConnector<W> _applyBorders(Edge<View<W>, Node> element) {
         final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.ID);
         final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.ID);
         final String color = borderColor.getValue();

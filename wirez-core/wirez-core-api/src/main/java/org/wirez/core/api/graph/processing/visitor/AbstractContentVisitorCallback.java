@@ -4,7 +4,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 
 public abstract class AbstractContentVisitorCallback 
         extends AbstractVisitorCallback 
@@ -12,17 +12,17 @@ public abstract class AbstractContentVisitorCallback
 
 
     @Override
-    public void visitGraphWithViewContent(Graph<? extends ViewContent, ? extends Node> graph) {
+    public void visitGraphWithViewContent(Graph<? extends View, ? extends Node> graph) {
         
     }
 
     @Override
-    public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
+    public void visitNodeWithViewContent(Node<? extends View, ?> node) {
 
     }
 
     @Override
-    public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
+    public void visitEdgeWithViewContent(Edge<? extends View, ?> edge) {
 
     }
 

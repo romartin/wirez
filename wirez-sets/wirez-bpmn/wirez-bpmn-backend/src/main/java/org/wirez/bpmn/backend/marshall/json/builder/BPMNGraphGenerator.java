@@ -7,14 +7,13 @@ import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.UUID;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -28,7 +27,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
     Stack<GraphObjectBuilder> nodeBuilders = new LoggableStack<GraphObjectBuilder>("nodeBuilders");
     Stack<GraphObjectParser> parsers = new LoggableStack<GraphObjectParser>("parsers");
     Collection<GraphObjectBuilder<?, ?>> builders = new LinkedList<GraphObjectBuilder<?, ?>>();
-    Graph<ViewContent<BPMNGraph>, Node> graph;
+    Graph<View<BPMNGraph>, Node> graph;
     boolean isClosed;
     
     // Just for development & testing
@@ -105,7 +104,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
         logBuilders();
 
         DefinitionService definitionService = bpmnGraphBuilderFactory.getDefinitionService();
-        this.graph = (Graph<ViewContent<BPMNGraph>, Node>) definitionService.buildGraphElement(UUID.uuid(), BPMNGraph.ID);
+        this.graph = (Graph<View<BPMNGraph>, Node>) definitionService.buildGraphElement(UUID.uuid(), BPMNGraph.ID);
         builderContext.init(graph);
         
         BPMNDiagramBuilder diagramBuilder = getDiagramBuilder(builderContext);
@@ -113,7 +112,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
             throw new RuntimeException("No diagrams found!");
         }
 
-        Node<ViewContent<BPMNDiagram>, Edge> diagramNode = diagramBuilder.build(builderContext);
+        Node<View<BPMNDiagram>, Edge> diagramNode = diagramBuilder.build(builderContext);
         String diagramName = diagramNode.getContent().getDefinition().getGeneral().getName().getValue();
         graph.getContent().getDefinition().getGeneral().getName().setValue( diagramName );
         graph.addNode(diagramNode);
@@ -136,22 +135,22 @@ public class BPMNGraphGenerator extends JsonGenerator {
         return null;
     }
 
-    public Graph<ViewContent<BPMNGraph>, Node> getGraph() {
+    public Graph<View<BPMNGraph>, Node> getGraph() {
         assert isClosed();
         return this.graph;
     }
     
     final GraphObjectBuilder.BuilderContext<BPMNGraph> builderContext = new GraphObjectBuilder.BuilderContext<BPMNGraph>() {
 
-        Graph<ViewContent<BPMNGraph>, Node> graph;
+        Graph<View<BPMNGraph>, Node> graph;
 
         @Override
-        public void init(final Graph<ViewContent<BPMNGraph>, Node> graph) {
+        public void init(final Graph<View<BPMNGraph>, Node> graph) {
             this.graph = graph;
         }
 
         @Override
-        public Graph<ViewContent<BPMNGraph>, Node> getGraph() {
+        public Graph<View<BPMNGraph>, Node> getGraph() {
             return graph;
         }
 

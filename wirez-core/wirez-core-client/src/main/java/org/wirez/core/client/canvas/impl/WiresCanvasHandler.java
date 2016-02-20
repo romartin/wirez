@@ -21,20 +21,18 @@ import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandManager;
-import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.control.ConnectionAcceptor;
@@ -223,7 +221,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final Shape outNode = (Shape) shape;
 
             final Node sourceNode = getGraphIndex().getNode(outNode.getId());
-            final Edge<ViewContent<?>, Node> edge = getGraphIndex().getEdge(connector.getId()); 
+            final Edge<View<?>, Node> edge = getGraphIndex().getEdge(connector.getId()); 
             
             return getConnectionAcceptor().allowSource(WiresCanvasHandler.this, sourceNode, edge, 0);
         }
@@ -234,7 +232,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final Shape inNode = (Shape) shape;
 
             final Node targetNode = getGraphIndex().getNode(inNode.getId());
-            final Edge<ViewContent<?>, Node> edge = getGraphIndex().getEdge(connector.getId());
+            final Edge<View<?>, Node> edge = getGraphIndex().getEdge(connector.getId());
             
             return getConnectionAcceptor().allowTarget(WiresCanvasHandler.this, targetNode, edge, 0);
         }

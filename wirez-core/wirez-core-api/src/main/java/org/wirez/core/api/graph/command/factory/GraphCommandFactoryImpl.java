@@ -9,7 +9,7 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.*;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -79,7 +79,7 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public DeleteEdgeCommand DELETE_EDGE(final Edge<? extends ViewContent, Node> edge) {
+    public DeleteEdgeCommand DELETE_EDGE(final Edge<? extends View, Node> edge) {
         return new DeleteEdgeCommand(this, edge);
     }
 
@@ -90,15 +90,15 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public SetConnectionSourceNodeCommand SET_SOURCE_NODE(final Node<? extends ViewContent<?>, Edge> sourceNode,
-                                                          final Edge<? extends ViewContent<?>, Node> edge,
+    public SetConnectionSourceNodeCommand SET_SOURCE_NODE(final Node<? extends View<?>, Edge> sourceNode,
+                                                          final Edge<? extends View<?>, Node> edge,
                                                           final int magnetIndex) {
         return new SetConnectionSourceNodeCommand(this, sourceNode, edge, magnetIndex);
     }
 
     @Override
-    public SetConnectionTargetNodeCommand SET_TARGET_NODE(final Node<? extends ViewContent<?>, Edge> targetNode,
-                                                          final Edge<? extends ViewContent<?>, Node> edge,
+    public SetConnectionTargetNodeCommand SET_TARGET_NODE(final Node<? extends View<?>, Edge> targetNode,
+                                                          final Edge<? extends View<?>, Node> edge,
                                                           final int magnetIndex) {
         return new SetConnectionTargetNodeCommand(this, targetNode, edge, magnetIndex);
     }

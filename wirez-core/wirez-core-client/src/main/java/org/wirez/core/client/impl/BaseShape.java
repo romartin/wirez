@@ -16,7 +16,6 @@
 
 package org.wirez.core.client.impl;
 
-import com.ait.lienzo.client.core.event.*;
 import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.shape.Node;
 import com.ait.lienzo.client.core.shape.Shape;
@@ -25,21 +24,17 @@ import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.ColorName;
-import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
-import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.*;
 import org.wirez.core.client.control.resize.BaseResizeControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.mutation.*;
-
-import java.util.Collection;
 
 /**
  * A default Lienzo Wires based shape.
@@ -48,7 +43,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         org.wirez.core.client.Shape<W>,
         HasPositionMutation,
         HasPropertyMutation,
-        HasGraphElementMutation<W, ViewContent<W>, org.wirez.core.api.graph.Node<ViewContent<W>, Edge>> {
+        HasGraphElementMutation<W, View<W>, org.wirez.core.api.graph.Node<View<W>, Edge>> {
 
     protected String id;
     protected Text text;
@@ -96,7 +91,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void applyElementPosition(final org.wirez.core.api.graph.Node<ViewContent<W>, Edge> element,
+    public void applyElementPosition(final org.wirez.core.api.graph.Node<View<W>, Edge> element,
                                      final CanvasHandler wirezCanvas,
                                      final MutationContext mutationContext) {
         final Double[] position = ElementUtils.getPosition(element.getContent());
@@ -106,7 +101,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public void applyElementProperties(final org.wirez.core.api.graph.Node<ViewContent<W>, Edge> element,
+    public void applyElementProperties(final org.wirez.core.api.graph.Node<View<W>, Edge> element,
                                        final CanvasHandler wirezCanvas,
                                        final MutationContext mutationContext) {
         
@@ -163,7 +158,7 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
         return text;
     }
 
-    protected void _applyElementName(final org.wirez.core.api.graph.Node<ViewContent<W>, Edge> element,
+    protected void _applyElementName(final org.wirez.core.api.graph.Node<View<W>, Edge> element,
                                      final MutationContext mutationContext) {
         final Name nameProperty = (Name) ElementUtils.getProperty(element, Name.ID);
         String name = nameProperty.getValue();

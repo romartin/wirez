@@ -15,33 +15,12 @@
  */
 package org.wirez.client.screens;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import org.jboss.errai.ui.shared.api.annotations.DataField;
-import org.jboss.errai.ui.shared.api.annotations.EventHandler;
-import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.uberfire.client.annotations.*;
-import org.uberfire.mvp.Command;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.bpmn.api.Task;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.rule.Rule;
-import org.wirez.core.api.util.ElementUtils;
-import org.wirez.core.client.ClientDefinitionManager;
-import org.wirez.core.client.service.ClientDefinitionServices;
-import org.wirez.core.client.service.ClientRuntimeError;
-import org.wirez.core.client.service.ServiceCallback;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import java.util.Collection;
 
 @Dependent
 @WorkbenchScreen(identifier="HomeScreen")

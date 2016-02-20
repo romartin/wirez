@@ -19,8 +19,8 @@ package org.wirez.core.api.graph;
 import org.wirez.core.api.definition.Definition;
 
 /**
- * A generic edge of a graph. An edge represents a relationship between two nodes and has a given direction.
- * @param <N> The type of nodes.
+ * <p>A graph edge/relationship. It provides directed relationships between two nodes in order to provider
+ * multi-directional graphs.</p>
  */
 public interface Edge<C, N extends Node> extends Element<C> {
 

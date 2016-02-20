@@ -22,7 +22,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -33,11 +33,11 @@ import java.util.Collection;
  */
 public class DeleteEdgeCommand extends AbstractGraphCommand {
 
-    private Edge<? extends ViewContent, Node> edge;
+    private Edge<? extends View, Node> edge;
     private Node parent;
 
     public DeleteEdgeCommand(final GraphCommandFactory commandFactory,
-                             final Edge<? extends ViewContent, Node> edge) {
+                             final Edge<? extends View, Node> edge) {
         super(commandFactory);
         this.edge = PortablePreconditions.checkNotNull( "edge",
                 edge );;
@@ -74,7 +74,7 @@ public class DeleteEdgeCommand extends AbstractGraphCommand {
 
         GraphCommandResult results;
         if ( isEdgeInGraph ) {
-            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), (Edge<? extends ViewContent<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
+            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), (Edge<? extends View<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
             results = new GraphCommandResult(cardinalityRuleViolations);
         } else {
             results = new GraphCommandResult();

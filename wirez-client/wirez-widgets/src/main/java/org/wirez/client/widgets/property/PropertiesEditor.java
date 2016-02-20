@@ -31,11 +31,9 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.*;
-import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.processing.index.map.MapIndexBuilder;
 import org.wirez.core.api.service.definition.DefinitionServiceResponse;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
@@ -76,7 +74,7 @@ public class PropertiesEditor implements IsWidget {
     }
     
     public interface EditorCallback {
-        void onShowElement(Element<? extends ViewContent<?>> element);
+        void onShowElement(Element<? extends org.wirez.core.api.graph.content.view.View<?>> element);
     }
 
     ClientDefinitionServices clientDefinitionServices;
@@ -130,7 +128,7 @@ public class PropertiesEditor implements IsWidget {
     }
     
     @SuppressWarnings("unchecked")
-    protected void show(final Element<? extends ViewContent<?>> element) {
+    protected void show(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element) {
         assert element != null;
         
         this.elementUUID = element.getUUID();
@@ -206,7 +204,7 @@ public class PropertiesEditor implements IsWidget {
         log(Level.SEVERE, WirezLogger.getErrorMessage(error));
     }
 
-    private PropertyEditorCategory buildPropertiesCategory(final Element<? extends ViewContent<?>> element,
+    private PropertyEditorCategory buildPropertiesCategory(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element,
                                                            final Set<String> processedPropertyIds,
                                                            final Map<Property, Object> propertySet) {
         final Definition definition = element.getContent().getDefinition();
@@ -237,7 +235,7 @@ public class PropertiesEditor implements IsWidget {
         
     }
     
-    private PropertyEditorFieldInfo buildGenericFieldInfo(final Element<? extends ViewContent<?>> element,
+    private PropertyEditorFieldInfo buildGenericFieldInfo(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element,
                                                           final Property property,
                                                           final Object value,
                                                           final PropertyValueChangedHandler changedHandler) {
@@ -313,7 +311,7 @@ public class PropertiesEditor implements IsWidget {
         return value;
     }
     
-    private PropertyEditorCategory buildElementCategory(final Element<? extends ViewContent<?>> element) {
+    private PropertyEditorCategory buildElementCategory(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element) {
         final PropertyEditorCategory result = new PropertyEditorCategory("Element", 0);
 
         final String id = element.getUUID();
@@ -363,13 +361,13 @@ public class PropertiesEditor implements IsWidget {
         return result.withField(idField).withField(xField).withField(yField);
     }
     
-    private void executeUpdateProperty(final Element<? extends ViewContent<?>> element, 
+    private void executeUpdateProperty(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element, 
                                        final Property property,
                                        final Object value) {
         execute( canvasCommandFactory.UPDATE_PROPERTY(element, property.getId(), value) );
     }
 
-    private void executeMove(final Element<? extends ViewContent<?>> element,
+    private void executeMove(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element,
                                        final double x,
                                        final double y) {
         execute( canvasCommandFactory.UPDATE_POSITION(element, x, y) );
@@ -379,13 +377,13 @@ public class PropertiesEditor implements IsWidget {
         canvasHandler.execute( command );   
     }
 
-    private double getWidth(final Element<? extends ViewContent<?>> element) {
+    private double getWidth(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element) {
         final Bounds.Bound ul = element.getContent().getBounds().getUpperLeft();
         final Bounds.Bound lr = element.getContent().getBounds().getLowerRight();
         return lr.getX() - ul.getX();
     }
 
-    private double getHeight(final Element<? extends ViewContent<?>> element) {
+    private double getHeight(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element) {
         final Bounds.Bound ul = element.getContent().getBounds().getUpperLeft();
         final Bounds.Bound lr = element.getContent().getBounds().getLowerRight();
         return lr.getY() - ul.getY();
@@ -419,7 +417,7 @@ public class PropertiesEditor implements IsWidget {
         if ( shape != null ) {
             // If shape exist, show the properties for the underlying model element.
             final String shapeUUID = shape.getId();
-            final Element<? extends ViewContent<?>> element = this.canvasHandler.getGraphIndex().get(shapeUUID);
+            final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element = this.canvasHandler.getGraphIndex().get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
                 show(element);
             } else if (ShapeState.DESELECTED.equals(state)) {

@@ -2,15 +2,13 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 
 import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 
-public abstract class AbstractEdgeBuilder<W extends Definition, T extends Edge<ViewContent<W>, Node>> 
+public abstract class AbstractEdgeBuilder<W extends Definition, T extends Edge<View<W>, Node>> 
         extends AbstractObjectBuilder<W, T> implements EdgeObjectBuilder<W, T> {
 
     public AbstractEdgeBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {

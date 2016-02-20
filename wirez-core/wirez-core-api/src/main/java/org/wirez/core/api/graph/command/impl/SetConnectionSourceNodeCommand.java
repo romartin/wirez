@@ -21,8 +21,8 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.content.ConnectionContent;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.ViewConnector;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -34,15 +34,15 @@ import java.util.LinkedList;
  */
 public class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
 
-    private Node<? extends ViewContent<?>, Edge> targetNode;
-    private Node<? extends ViewContent<?>, Edge> lastSourceNode;
-    private Node<? extends ViewContent<?>, Edge> sourceNode;
-    private Edge<? extends ViewContent<?>, Node> edge;
+    private Node<? extends View<?>, Edge> targetNode;
+    private Node<? extends View<?>, Edge> lastSourceNode;
+    private Node<? extends View<?>, Edge> sourceNode;
+    private Edge<? extends View<?>, Node> edge;
     private int magnetIndex;
 
     public SetConnectionSourceNodeCommand(final GraphCommandFactory commandFactory,
-                                          final Node<? extends ViewContent<?>, Edge> sourceNode,
-                                          final Edge<? extends ViewContent<?>, Node> edge, 
+                                          final Node<? extends View<?>, Edge> sourceNode,
+                                          final Edge<? extends View<?>, Node> edge, 
                                           final int magnetIndex) {
         super(commandFactory);
         this.edge = PortablePreconditions.checkNotNull( "edge",
@@ -69,7 +69,7 @@ public class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
             }
             sourceNode.getOutEdges().add( edge );
             edge.setSourceNode( sourceNode );
-            ConnectionContent connectionContent = (ConnectionContent) edge.getContent();
+            ViewConnector connectionContent = (ViewConnector) edge.getContent();
             connectionContent.setSourceMagnetIndex(magnetIndex);
         }
         return results;

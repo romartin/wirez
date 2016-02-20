@@ -22,7 +22,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.violations.CardinalityMaxRuleViolation;
 import org.wirez.core.api.rule.violations.CardinalityMinRuleViolation;
 import org.wirez.core.api.rule.violations.ConnectionRuleViolation;
@@ -62,8 +62,8 @@ public class DefaultRuleManager implements RuleManager {
     }
     
     @Override
-    public RuleViolations checkContainment(final Element<? extends ViewContent<?>> target,
-                                           final Element<? extends ViewContent<?>> candidate ) {
+    public RuleViolations checkContainment(final Element<? extends View<?>> target,
+                                           final Element<? extends View<?>> candidate ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         if ( containmentRules.isEmpty() ) {
             return results;
@@ -85,7 +85,7 @@ public class DefaultRuleManager implements RuleManager {
 
     @Override
     public RuleViolations checkCardinality(final Graph<? extends Definition, ? extends Node> target,
-                                           final Node<? extends ViewContent, ? extends Edge> candidate,
+                                           final Node<? extends View, ? extends Edge> candidate,
                                            final DefaultRuleManager.Operation operation ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         if ( cardinalityRules.isEmpty() ) {
@@ -97,7 +97,7 @@ public class DefaultRuleManager implements RuleManager {
                 final long minOccurrences = rule.getMinOccurrences();
                 final long maxOccurrences = rule.getMaxOccurrences();
                 long count = ( operation == Operation.ADD ? 1 : -1 );
-                for ( Node<? extends ViewContent, ? extends Edge> node : target.nodes() ) {
+                for ( Node<? extends View, ? extends Edge> node : target.nodes() ) {
                     if (node.getContent().getDefinition().getId().equals( candidate.getContent().getDefinition().getId() ))  {
                         count++;
                     }
@@ -113,9 +113,9 @@ public class DefaultRuleManager implements RuleManager {
     }
 
     @Override
-    public RuleViolations checkConnectionRules( final Node<? extends ViewContent<?>, ? extends Edge> outgoingNode,
-                                                final Node<? extends ViewContent<?>, ? extends Edge> incomingNode,
-                                                final Edge<? extends ViewContent<?>, ? extends Node> edge ) {
+    public RuleViolations checkConnectionRules( final Node<? extends View<?>, ? extends Edge> outgoingNode,
+                                                final Node<? extends View<?>, ? extends Edge> incomingNode,
+                                                final Edge<? extends View<?>, ? extends Node> edge ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         if ( connectionRules.isEmpty() || incomingNode == null || outgoingNode == null ) {
             return results;
@@ -141,9 +141,9 @@ public class DefaultRuleManager implements RuleManager {
     }
 
     @Override
-    public RuleViolations checkCardinality( final Node<? extends ViewContent<?>, ? extends Edge> outgoingNode,
-                                            final Node<? extends ViewContent<?>, ? extends Edge> incomingNode,
-                                            final Edge<? extends ViewContent<?>, ? extends Node> edge,
+    public RuleViolations checkCardinality( final Node<? extends View<?>, ? extends Edge> outgoingNode,
+                                            final Node<? extends View<?>, ? extends Edge> incomingNode,
+                                            final Edge<? extends View<?>, ? extends Node> edge,
                                             final Operation operation ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         if ( cardinalityRules.isEmpty() ) {
@@ -198,7 +198,7 @@ public class DefaultRuleManager implements RuleManager {
         return results;
     }
     
-    private boolean checkLabels(Edge<? extends ViewContent, ? extends Node> e1, Edge<? extends ViewContent, ? extends Node> e2) {
+    private boolean checkLabels(Edge<? extends View, ? extends Node> e1, Edge<? extends View, ? extends Node> e2) {
         final Set<String> e1Strings = e1.getLabels();
         final Set<String> e2Strings = e2.getLabels();
         for (final String role : e1Strings) {

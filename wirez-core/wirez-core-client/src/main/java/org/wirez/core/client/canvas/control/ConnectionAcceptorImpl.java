@@ -4,7 +4,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
@@ -25,7 +25,7 @@ public class ConnectionAcceptorImpl implements ConnectionAcceptor<WiresCanvasHan
     @Override
     public boolean allowSource(final WiresCanvasHandler canvasHandler,
                                final Node source, 
-                               final Edge<ViewContent<?>, Node> connector, 
+                               final Edge<View<?>, Node> connector, 
                                final int magnet) {
         return canvasHandler.allow( commandFactory.SET_SOURCE_NODE(source, connector, magnet) );
     }
@@ -33,7 +33,7 @@ public class ConnectionAcceptorImpl implements ConnectionAcceptor<WiresCanvasHan
     @Override
     public boolean allowTarget(final WiresCanvasHandler canvasHandler,
                                final Node target,
-                               final Edge<ViewContent<?>, Node> connector,
+                               final Edge<View<?>, Node> connector,
                                final int magnet) {
         return canvasHandler.allow( commandFactory.SET_TARGET_NODE(target, connector, magnet) );
     }
@@ -41,7 +41,7 @@ public class ConnectionAcceptorImpl implements ConnectionAcceptor<WiresCanvasHan
     @Override
     public boolean acceptSource(final WiresCanvasHandler canvasHandler,
                                 final Node source,
-                                final Edge<ViewContent<?>, Node> connector,
+                                final Edge<View<?>, Node> connector,
                                 final int magnet) {
         CommandResults<CanvasCommandViolation> violations = canvasHandler.execute( commandFactory.SET_SOURCE_NODE(source, connector, magnet) );
         return isAccept(violations);
@@ -50,7 +50,7 @@ public class ConnectionAcceptorImpl implements ConnectionAcceptor<WiresCanvasHan
     @Override
     public boolean acceptTarget(final WiresCanvasHandler canvasHandler,
                                 final Node target,
-                                final Edge<ViewContent<?>, Node> connector,
+                                final Edge<View<?>, Node> connector,
                                 final int magnet) {
         CommandResults<CanvasCommandViolation> violations = canvasHandler.execute( commandFactory.SET_TARGET_NODE(target, connector, magnet) );
         return isAccept(violations);

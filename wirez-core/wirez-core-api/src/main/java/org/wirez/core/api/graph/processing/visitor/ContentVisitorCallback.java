@@ -20,7 +20,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 
 /**
  * A generic graph visitor callback interface based on the element's content.
@@ -28,11 +28,11 @@ import org.wirez.core.api.graph.content.ViewContent;
 public interface ContentVisitorCallback<N extends Node, E extends Edge, G extends Graph<?, N>>
         extends VisitorCallback<N, E, G> {
 
-    void visitGraphWithViewContent(Graph<? extends ViewContent, ? extends Node> graph);
+    void visitGraphWithViewContent(Graph<? extends View, ? extends Node> graph);
 
-    void visitNodeWithViewContent(Node<? extends ViewContent, ?> node);
+    void visitNodeWithViewContent(Node<? extends View, ?> node);
 
-    void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge);
+    void visitEdgeWithViewContent(Edge<? extends View, ?> edge);
 
     void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge);
 

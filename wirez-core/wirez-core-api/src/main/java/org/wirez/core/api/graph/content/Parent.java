@@ -16,23 +16,20 @@
 
 package org.wirez.core.api.graph.content;
 
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
+import org.jboss.errai.common.client.api.annotations.Portable;
 
-public interface ConnectionContent<W extends Definition> extends ViewContent<W> {
-
-    W getDefinition();
-
-    Bounds getBounds();
+/**
+ * Indicates that the target node is the parent of the source node.
+ * This content has no view representation on the canvas.
+ */
+@Portable
+public final class Parent implements Relationship {
     
-    void setBounds(Bounds bounds);
+    private static final transient String RELATIONSHIP = "parent";
     
-    Integer getSourceMagnetIndex();
-
-    Integer getTargetMagnetIndex();
-
-    void setSourceMagnetIndex(Integer index);
-
-    void setTargetMagnetIndex(Integer index);
+    @Override
+    public String getName() {
+        return RELATIONSHIP;
+    }
     
 }

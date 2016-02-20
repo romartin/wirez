@@ -2,15 +2,14 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ConnectionContent;
+import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.BoundImpl;
-import org.wirez.core.api.graph.impl.BoundsImpl;
+import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.view.BoundImpl;
+import org.wirez.core.api.graph.content.view.BoundsImpl;
 import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.ElementUtils;
@@ -18,10 +17,9 @@ import org.wirez.core.api.util.UUID;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<ViewContent<W>, Edge>> 
+public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<View<W>, Edge>> 
         extends AbstractObjectBuilder<W, T> implements NodeObjectBuilder<W, T> {
 
     protected Set<String> childNodeIds;
@@ -92,7 +90,7 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
                 node.getOutEdges().add(edge);
                 edge.setSourceNode(node);
 
-                if ( edge.getContent() instanceof ConnectionContent ) {
+                if ( edge.getContent() instanceof ViewConnector) {
                     setTargetConnectionMagnetIndex(context, node, edge);
                 }
             }
@@ -120,11 +118,11 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
         }
     }
    
-    public void setSourceConnectionMagnetIndex(BuilderContext context, T node, Edge<ConnectionContent<W>, Node> edge) {
+    public void setSourceConnectionMagnetIndex(BuilderContext context, T node, Edge<ViewConnector<W>, Node> edge) {
         edge.getContent().setSourceMagnetIndex(3);
     }
 
-    public void setTargetConnectionMagnetIndex(BuilderContext context, T node, Edge<ConnectionContent<W>, Node> edge) {
+    public void setTargetConnectionMagnetIndex(BuilderContext context, T node, Edge<ViewConnector<W>, Node> edge) {
         edge.getContent().setTargetMagnetIndex(7);
     }
 

@@ -21,7 +21,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 
 /**
  * Rule Manager to report validation issues when attempting to mutate Elements
@@ -50,8 +50,8 @@ public interface RuleManager {
      * @param candidate Candidate node
      * @return
      */
-    RuleViolations checkContainment(final Element<? extends ViewContent<?>> target,
-                                    final Element<? extends ViewContent<?>> candidate);
+    RuleViolations checkContainment(final Element<? extends View<?>> target,
+                                    final Element<? extends View<?>> candidate);
     
     /**
      * Check whether adding the proposed Node to the target Process breaks any cardinality Rules
@@ -61,7 +61,7 @@ public interface RuleManager {
      * @return
      */
     RuleViolations checkCardinality(final Graph<? extends Definition, ? extends Node> target,
-                                    final Node<? extends ViewContent, ? extends Edge> candidate,
+                                    final Node<? extends View, ? extends Edge> candidate,
                                     final Operation operation);
 
     /**
@@ -71,9 +71,9 @@ public interface RuleManager {
      * @param edge Candidate edge
      * @return Is the Edge being added or removed
      */
-    RuleViolations checkConnectionRules(final Node<? extends ViewContent<?>, ? extends Edge> outgoingNode,
-                                        final Node<? extends ViewContent<?>, ? extends Edge> incomingNode,
-                                        final Edge<? extends ViewContent<?>, ? extends Node> edge);
+    RuleViolations checkConnectionRules(final Node<? extends View<?>, ? extends Edge> outgoingNode,
+                                        final Node<? extends View<?>, ? extends Edge> incomingNode,
+                                        final Edge<? extends View<?>, ? extends Node> edge);
 
     /**
      * Check whether adding the proposed Edge to the target Process breaks any cardinality Rules
@@ -83,9 +83,9 @@ public interface RuleManager {
      * @param operation
      * @return Is the Edge being added or removed
      */
-    RuleViolations checkCardinality(final Node<? extends ViewContent<?>, ? extends Edge> outgoingNode,
-                                    final Node<? extends ViewContent<?>, ? extends Edge> incomingNode,
-                                    final Edge<? extends ViewContent<?>, ? extends Node> edge,
+    RuleViolations checkCardinality(final Node<? extends View<?>, ? extends Edge> outgoingNode,
+                                    final Node<? extends View<?>, ? extends Edge> incomingNode,
+                                    final Edge<? extends View<?>, ? extends Node> edge,
                                     final Operation operation);
     
     /**

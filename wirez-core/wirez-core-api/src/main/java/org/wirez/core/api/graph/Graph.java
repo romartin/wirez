@@ -19,9 +19,44 @@ package org.wirez.core.api.graph;
 import org.wirez.core.api.definition.Definition;
 
 /**
- * This interface is the main entry point for a graph representation.
+ * <p>The graph implementation is based on the <b>Labeled Property Graph Model</b>:</p>
  * 
- * @param <N> Type of nodes that it contains.
+ * <ul>
+ *     <li>
+ *         <p>Is made up of nodes, relationships (edges), properties and labels</p>
+ *     </li>
+ *     <li>
+ *         <p>Nodes contain properties. Think of nodes as documents that store properties in the form of arbitrary key-value pairs</p>
+ *     </li>
+ *     <li>
+ *         <p>Nodes can be tagged with one or more labels. Labels group nodes together, and indicate the roles they play within the data set</p>
+ *     </li>
+ *     <li>
+ *         <p>Relationships/edges connect nodes and structure the graph. A relationship always has a direction, a single name, 
+ *         and a start node and an end node—there are no dangling relationships. 
+ *         Together, a relationship’s direction and name add semantic clarity to the structuring of nodes</p>
+ *     </li>
+ *     <li>
+ *         <p>
+ *             Like nodes, relationships/edges can also have properties. 
+ *             The ability to add properties to relationships is particularly useful for providing additional metadata for graph algorithms, 
+ *             adding additional semantics to relationships (including quality and weight), and for constraining queries at runtime, if needed
+ *         </p>
+ *     </li>
+ *     <li>
+ *         <p>
+ *             You can create domain specific diagrams by providing rule constraints in the Definition Set
+ *         </p>
+ *     </li>
+ * </ul>
+ *
+ * <p>
+ *     <i>NOTE about E-R diagrams</i>: E-R diagrams are intrinsically supported as they're graphs as well, 
+ *     but keep in mind that E-R diagrams allow only single, undirected, named relationships between entities, 
+ *     and sometimes these diagrams are not enough to model rich and complex real scenarios where relationships 
+ *     are several and semantically diverse
+ * </p>
+ *
  */
 public interface Graph<C, N extends Node> extends Element<C> {
 

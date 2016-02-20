@@ -6,7 +6,7 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.*;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 
 public interface GraphCommandFactory {
 
@@ -25,7 +25,7 @@ public interface GraphCommandFactory {
     DeleteNodeCommand DELETE_NODE(Graph target,
                                   Node candidate);
 
-    DeleteEdgeCommand DELETE_EDGE(Edge<? extends ViewContent, 
+    DeleteEdgeCommand DELETE_EDGE(Edge<? extends View, 
             Node> edge);
 
     ClearGraphCommand CLEAR_GRAPH(Graph target);
@@ -40,12 +40,12 @@ public interface GraphCommandFactory {
     DeleteParentCommand DELETE_PARENT(Node parent,
                                       Node candidate);
 
-    SetConnectionSourceNodeCommand SET_SOURCE_NODE(Node<? extends ViewContent<?>, Edge> sourceNode,
-                                                   Edge<? extends ViewContent<?>, Node> edge,
+    SetConnectionSourceNodeCommand SET_SOURCE_NODE(Node<? extends View<?>, Edge> sourceNode,
+                                                   Edge<? extends View<?>, Node> edge,
                                                    int magnetIndex);
 
-    SetConnectionTargetNodeCommand SET_TARGET_NODE(Node<? extends ViewContent<?>, Edge> targetNode,
-                                                   Edge<? extends ViewContent<?>, Node> edge,
+    SetConnectionTargetNodeCommand SET_TARGET_NODE(Node<? extends View<?>, Edge> targetNode,
+                                                   Edge<? extends View<?>, Node> edge,
                                                    int magnetIndex);
 
     UpdateElementPositionCommand UPDATE_POSITION(Element element,

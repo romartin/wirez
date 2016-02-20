@@ -21,8 +21,7 @@ import org.wirez.core.api.definition.Definition;
 import java.util.List;
 
 /**
- * A generic node of a graph. A node can contain incoming and/or outgoing edges.
- * @param <E> The edge type.
+ * <p>A graph node/vertex. A node can have incoming and/or outgoing edges.</p>
  */
 public interface Node<C, E extends Edge> extends Element<C> {
     

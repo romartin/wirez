@@ -27,8 +27,7 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
 import org.wirez.core.api.graph.processing.visitor.AbstractContentVisitorCallback;
@@ -114,7 +113,7 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     private final AbstractContentVisitorCallback DRAW_VISITOR_CALLBACK = new AbstractContentVisitorCallback() {
 
         @Override
-        public void visitNodeWithViewContent(Node<? extends ViewContent, ?> node) {
+        public void visitNodeWithViewContent(Node<? extends View, ?> node) {
             final ShapeFactory factory = shapeManager.getFactory(node.getContent().getDefinition());
 
             // Add the node shape into the canvas.
@@ -124,7 +123,7 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
         }
 
         @Override
-        public void visitEdgeWithViewContent(Edge<? extends ViewContent, ?> edge) {
+        public void visitEdgeWithViewContent(Edge<? extends View, ?> edge) {
             final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
 
             // Add the edge shape into the canvas.
@@ -140,8 +139,8 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
             final Node child = edge.getTargetNode();
             final Node parent = edge.getSourceNode();
             final Object content = child.getContent();
-            if (content instanceof ViewContent) {
-                final ViewContent viewContent = (ViewContent) content;
+            if (content instanceof View) {
+                final View viewContent = (View) content;
                 final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
                 addChild(parent, child);
                 applyElementMutation(child);
@@ -199,9 +198,9 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
         assert factory != null && candidate != null;
         
         final Object content = candidate.getContent();
-        assert content instanceof ViewContent;
+        assert content instanceof View;
         
-        final Definition wirez = ( (ViewContent) candidate.getContent()).getDefinition();
+        final Definition wirez = ( (View) candidate.getContent()).getDefinition();
         final Shape shape = factory.build(wirez, this);
 
         // Set the same identifier as the graph element's one.

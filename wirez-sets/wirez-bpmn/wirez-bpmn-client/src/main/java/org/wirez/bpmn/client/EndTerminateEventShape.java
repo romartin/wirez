@@ -23,12 +23,10 @@ import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.bpmn.api.EndTerminateEvent;
-import org.wirez.bpmn.api.EndTerminateEvent;
-import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasRadiusMutation;
@@ -80,7 +78,7 @@ public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> im
     }
 
     @Override
-    public void applyElementProperties(Node<ViewContent<EndTerminateEvent>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<View<EndTerminateEvent>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Radius.
@@ -98,7 +96,7 @@ public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> im
         }
     }
 
-    protected EndTerminateEventShape _applyRadius(final Node<ViewContent<EndTerminateEvent>, Edge> element, MutationContext mutationContext) {
+    protected EndTerminateEventShape _applyRadius(final Node<View<EndTerminateEvent>, Edge> element, MutationContext mutationContext) {
         final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {

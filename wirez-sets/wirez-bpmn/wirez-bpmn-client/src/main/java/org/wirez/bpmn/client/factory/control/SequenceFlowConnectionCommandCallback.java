@@ -8,8 +8,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactoryImpl;
-import org.wirez.core.api.graph.content.ConnectionContent;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.Canvas;
@@ -42,7 +41,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     BPMNDefinitionFactory bpmnDefinitionFactory;
 
     private Element source;
-    private Edge<ConnectionContent<SequenceFlow>, Node> edge;
+    private Edge<ViewConnector<SequenceFlow>, Node> edge;
     
     @Inject
     public SequenceFlowConnectionCommandCallback(final CanvasCommandFactory commandFactory,
@@ -64,7 +63,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
             @Override
             public void onSuccess(final Element item) {
                 SequenceFlowConnectionCommandCallback.this.source = element;
-                SequenceFlowConnectionCommandCallback.this.edge = (Edge<ConnectionContent<SequenceFlow>, Node>) item;
+                SequenceFlowConnectionCommandCallback.this.edge = (Edge<ViewConnector<SequenceFlow>, Node>) item;
             }
 
             @Override

@@ -26,7 +26,7 @@ import org.wirez.bpmn.api.property.general.*;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -44,7 +44,7 @@ public abstract class BPMNBasicShape<W extends Definition>
     }
 
     @Override
-    public void applyElementProperties(Node<ViewContent<W>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<View<W>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Fill color.
@@ -58,7 +58,7 @@ public abstract class BPMNBasicShape<W extends Definition>
         
     }
 
-    protected BPMNBasicShape<W> _applyFillColor(Node<ViewContent<W>, Edge> element) {
+    protected BPMNBasicShape<W> _applyFillColor(Node<View<W>, Edge> element) {
         final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.ID);
         final String color = bgColor.getValue();
         if (color != null && color.trim().length() > 0) {
@@ -71,7 +71,7 @@ public abstract class BPMNBasicShape<W extends Definition>
         return this;
     }
 
-    protected BPMNBasicShape<W> _applyBorders(Node<ViewContent<W>, Edge> element) {
+    protected BPMNBasicShape<W> _applyBorders(Node<View<W>, Edge> element) {
         final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.ID);
         final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.ID);
         final String color = borderColor.getValue();
@@ -85,7 +85,7 @@ public abstract class BPMNBasicShape<W extends Definition>
         return this;
     }
 
-    protected BPMNBasicShape<W> _applyFont(Node<ViewContent<W>, Edge> element) {
+    protected BPMNBasicShape<W> _applyFont(Node<View<W>, Edge> element) {
         final Text text = super.getText();
         if ( null != text ) {
             final FontFamily fontFamily = (FontFamily) ElementUtils.getProperty(element, FontFamily.ID);

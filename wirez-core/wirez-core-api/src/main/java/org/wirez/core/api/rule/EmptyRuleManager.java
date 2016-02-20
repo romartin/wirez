@@ -20,7 +20,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Named;
@@ -35,32 +35,32 @@ public class EmptyRuleManager implements RuleManager {
     }
     
     @Override
-    public RuleViolations checkContainment(final Element<? extends ViewContent<?>> target,
-                                           final Element<? extends ViewContent<?>> candidate ) {
+    public RuleViolations checkContainment(final Element<? extends View<?>> target,
+                                           final Element<? extends View<?>> candidate ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         return results;
     }
 
     @Override
     public RuleViolations checkCardinality(final Graph<? extends Definition, ? extends Node> target,
-                                           final Node<? extends ViewContent, ? extends Edge> candidate,
+                                           final Node<? extends View, ? extends Edge> candidate,
                                            final Operation operation ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         return results;
     }
 
     @Override
-    public RuleViolations checkConnectionRules( final Node<? extends ViewContent<?>, ? extends Edge> outgoingNode,
-                                                final Node<? extends ViewContent<?>, ? extends Edge> incomingNode,
-                                                final Edge<? extends ViewContent<?>, ? extends Node> edge ) {
+    public RuleViolations checkConnectionRules( final Node<? extends View<?>, ? extends Edge> outgoingNode,
+                                                final Node<? extends View<?>, ? extends Edge> incomingNode,
+                                                final Edge<? extends View<?>, ? extends Node> edge ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         return results;
     }
 
     @Override
-    public RuleViolations checkCardinality( final Node<? extends ViewContent<?>, ? extends Edge> outgoingNode,
-                                            final Node<? extends ViewContent<?>, ? extends Edge> incomingNode,
-                                            final Edge<? extends ViewContent<?>, ? extends Node> edge,
+    public RuleViolations checkCardinality( final Node<? extends View<?>, ? extends Edge> outgoingNode,
+                                            final Node<? extends View<?>, ? extends Edge> incomingNode,
+                                            final Edge<? extends View<?>, ? extends Node> edge,
                                             final Operation operation ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         return results;

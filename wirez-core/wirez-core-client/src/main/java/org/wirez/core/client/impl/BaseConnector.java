@@ -26,8 +26,8 @@ import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ConnectionContent;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.ViewConnector;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -44,7 +44,7 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         HasPositionMutation,
         HasSizeMutation,
         HasPropertyMutation,
-        HasGraphElementMutation<W, ViewContent<W>, Edge<ViewContent<W>, Node>> {
+        HasGraphElementMutation<W, View<W>, Edge<View<W>, Node>> {
 
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.impl.BaseConnector");
     
@@ -92,12 +92,12 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public void applyElementPosition(Edge<ViewContent<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementPosition(Edge<View<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         // TODO
     }
 
     @Override
-    public void applyElementProperties(Edge<ViewContent<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementProperties(Edge<View<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         
         // TODO
 
@@ -129,12 +129,12 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     // TODO: Move to AddEdge command?
-    public Shape<W> applyConnections(final Edge<ViewContent<W>, Node> element, final CanvasHandler canvasHandler) {
+    public Shape<W> applyConnections(final Edge<View<W>, Node> element, final CanvasHandler canvasHandler) {
         final WiresCanvas canvas = (WiresCanvas) canvasHandler.getCanvas();
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
         
-        final ConnectionContent connectionContent = (ConnectionContent) element.getContent();
+        final ViewConnector connectionContent = (ViewConnector) element.getContent();
         final int sourceMagnet = connectionContent.getSourceMagnetIndex();
         final int targetMagnet = connectionContent.getTargetMagnetIndex();
         

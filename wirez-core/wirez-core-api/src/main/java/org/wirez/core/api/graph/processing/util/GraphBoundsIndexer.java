@@ -1,7 +1,8 @@
 package org.wirez.core.api.graph.processing.util;
 
 import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.Bounds;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.visitor.AbstractChildrenVisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkChildrenVisitor;
@@ -26,7 +27,7 @@ public class GraphBoundsIndexer {
             @Override
             public void visitNode(final Node node) {
                 super.visitNode(node);
-                if (node.getContent() instanceof ViewContent && isNodeAt(node, 0, 0, x, y)) {
+                if (node.getContent() instanceof View && isNodeAt(node, 0, 0, x, y)) {
                     result[0] = node;
                 }
             }
@@ -37,8 +38,8 @@ public class GraphBoundsIndexer {
                 
                 final Object content = parent.getContent();
                 
-                if ( content instanceof ViewContent ) {
-                    final ViewContent viewContent = (ViewContent) content;
+                if ( content instanceof View) {
+                    final View viewContent = (View) content;
                     final Double[] parentCoords = ElementUtils.getPosition(viewContent);
                     if (isNodeAt(child, parentCoords[0], parentCoords[1], x, y)) {
                         result[0] = child;
@@ -60,7 +61,7 @@ public class GraphBoundsIndexer {
                              final double mouseY) {
         
         final Object c = node.getContent();
-        final Bounds bounds = ( (ViewContent) node.getContent()).getBounds();
+        final Bounds bounds = ( (View) node.getContent()).getBounds();
         final Bounds.Bound ulBound = bounds.getUpperLeft();
         final Bounds.Bound lrBound = bounds.getLowerRight();
         final double ulX = ulBound.getX() + parentX;

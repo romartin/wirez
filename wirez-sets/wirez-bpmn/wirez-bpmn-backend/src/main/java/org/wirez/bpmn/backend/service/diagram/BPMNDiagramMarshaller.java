@@ -23,7 +23,7 @@ import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.diagram.SettingsImpl;
 import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.diagram.DiagramMarshaller;
 import org.wirez.core.api.util.UUID;
 
@@ -78,7 +78,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             Bpmn2UnMarshaller parser = new Bpmn2UnMarshaller(bpmnGraphBuilderFactory);
             parser.setProfile(new DefaultProfileImpl());
             final Graph graph = parser.unmarshall(definitions, null);
-            final BPMNGraph graphDefinition = (BPMNGraph) ( (ViewContent) graph.getContent() ).getDefinition();
+            final BPMNGraph graphDefinition = (BPMNGraph) ( (View) graph.getContent() ).getDefinition();
             String title = graphDefinition.getGeneral().getName().getValue();
             
             if ( title == null || title.trim().length() == 0 ) {

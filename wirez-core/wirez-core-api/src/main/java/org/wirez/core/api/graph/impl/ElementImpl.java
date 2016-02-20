@@ -19,12 +19,9 @@ package org.wirez.core.api.graph.impl;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.graph.Bounds;
 import org.wirez.core.api.graph.Element;
 
-import java.util.Map;
 import java.util.Set;
 
 @Portable

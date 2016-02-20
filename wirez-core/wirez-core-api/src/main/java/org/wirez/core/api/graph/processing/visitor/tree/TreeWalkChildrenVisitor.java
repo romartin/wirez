@@ -4,14 +4,11 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
 import org.wirez.core.api.graph.processing.visitor.ChildrenVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.VisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 
 import javax.enterprise.context.Dependent;
 import java.util.List;
-import java.util.Stack;
 
 /**
  * Visits the graph by walking on the different tree nodes and their children in a recursive way.

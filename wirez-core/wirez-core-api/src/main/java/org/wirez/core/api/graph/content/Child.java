@@ -16,15 +16,20 @@
 
 package org.wirez.core.api.graph.content;
 
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
+import org.jboss.errai.common.client.api.annotations.Portable;
 
-public interface ViewContent<W extends Definition> extends Content {
-
-    W getDefinition();
-
-    Bounds getBounds();
+/**
+ * Indicates that the target node is a child of the source node.
+ * This content has no view representation on the canvas.
+ */
+@Portable
+public final class Child implements Relationship {
     
-    void setBounds(Bounds bounds);
+    private static final transient String RELATIONSHIP = "child";
+    
+    @Override
+    public String getName() {
+        return RELATIONSHIP;
+    }
     
 }

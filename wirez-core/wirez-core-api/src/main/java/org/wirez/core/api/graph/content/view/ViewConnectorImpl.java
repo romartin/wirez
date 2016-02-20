@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.content;
+package org.wirez.core.api.graph.content.view;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.Bounds;
 
 @Portable
-public class ConnectionContentImpl<W extends Definition> extends ViewContentImpl<W> implements ConnectionContent<W> {
+public final class ViewConnectorImpl<W extends Definition> extends ViewImpl<W> implements ViewConnector<W> {
     protected Integer sourceMagnetIndex;
     protected Integer targetMagnetIndex;
 
-    public ConnectionContentImpl(@MapsTo("definition") W definition, 
-                                 @MapsTo("bounds") Bounds bounds) {
+    public ViewConnectorImpl(@MapsTo("definition") W definition,
+                             @MapsTo("bounds") Bounds bounds) {
         super(definition, bounds);
         this.sourceMagnetIndex = 0;
         this.targetMagnetIndex = 0;

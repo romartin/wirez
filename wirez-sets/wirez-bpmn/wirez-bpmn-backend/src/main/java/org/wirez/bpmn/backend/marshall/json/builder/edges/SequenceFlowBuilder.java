@@ -5,19 +5,18 @@ import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.backend.marshall.json.builder.*;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ConnectionContent;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 
-public class SequenceFlowBuilder extends AbstractEdgeBuilder<SequenceFlow, Edge<ViewContent<SequenceFlow>, Node>> {
+public class SequenceFlowBuilder extends AbstractEdgeBuilder<SequenceFlow, Edge<View<SequenceFlow>, Node>> {
 
     public SequenceFlowBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
         super(wiresFactory);
     }
 
     @Override
-    protected Edge<ViewContent<SequenceFlow>, Node> buildEdge(BuilderContext context, DefinitionService definitionService) {
-        return (Edge<ViewContent<SequenceFlow>, Node>) definitionService.buildGraphElement(this.nodeId, SequenceFlow.ID);
+    protected Edge<View<SequenceFlow>, Node> buildEdge(BuilderContext context, DefinitionService definitionService) {
+        return (Edge<View<SequenceFlow>, Node>) definitionService.buildGraphElement(this.nodeId, SequenceFlow.ID);
     }
 
     @Override

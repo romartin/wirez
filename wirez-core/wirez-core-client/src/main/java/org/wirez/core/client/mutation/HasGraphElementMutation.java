@@ -18,10 +18,10 @@ package org.wirez.core.client.mutation;
 
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.canvas.CanvasHandler;
 
-public interface HasGraphElementMutation<W extends Definition, C extends ViewContent<W>, E extends Element<C>> extends HasMutation {
+public interface HasGraphElementMutation<W extends Definition, C extends View<W>, E extends Element<C>> extends HasMutation {
     
     void applyElementPosition(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
 

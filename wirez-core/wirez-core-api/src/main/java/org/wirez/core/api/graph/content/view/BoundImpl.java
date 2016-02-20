@@ -14,39 +14,39 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.impl;
+package org.wirez.core.api.graph.content.view;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.content.view.Bounds;
 
 @Portable
-public class BoundsImpl implements Bounds {
-    
-    private BoundImpl lr;
-    private BoundImpl ul;
+public final class BoundImpl implements Bounds.Bound {
 
-    public BoundsImpl(@MapsTo("lr") BoundImpl lr,
-                      @MapsTo("ul") BoundImpl ul) {
-        this.lr = lr;
-        this.ul = ul;
+    private Double x;
+    private Double y;
+
+    public BoundImpl(@MapsTo("x") Double x,
+                     @MapsTo("y") Double y) {
+        this.x = x;
+        this.y = y;
     }
 
     @Override
-    public BoundImpl getLowerRight() {
-        return lr;
+    public Double getX() {
+        return x;
     }
 
     @Override
-    public BoundImpl getUpperLeft() {
-        return ul;
+    public Double getY() {
+        return y;
     }
 
-    public void setLowerRight(BoundImpl lr) {
-        this.lr = lr;
+    public void setX(Double x) {
+        this.x = x;
     }
 
-    public void setUpperLeft(BoundImpl ul) {
-        this.ul = ul;
+    public void setY(Double y) {
+        this.y = y;
     }
 }

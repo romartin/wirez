@@ -18,8 +18,6 @@ package org.wirez.client.workbench.screens;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.uberfire.client.annotations.*;
-import org.uberfire.client.mvp.PlaceManager;
-import org.uberfire.client.workbench.events.ChangeTitleWidgetEvent;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnOpen;
@@ -27,18 +25,10 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.explorer.tree.TreeExplorer;
-import org.wirez.client.widgets.property.PropertiesEditor;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
-import org.wirez.core.api.definition.property.defaults.Name;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.util.ElementUtils;
-import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 

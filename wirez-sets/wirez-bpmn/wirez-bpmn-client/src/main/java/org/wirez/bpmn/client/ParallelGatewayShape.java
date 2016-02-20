@@ -25,7 +25,7 @@ import org.wirez.bpmn.api.ParallelGateway;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasRadiusMutation;
@@ -104,7 +104,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
         return new double[] {bb.getWidth(), bb.getHeight()};
     }
 
-    public void applyElementProperties(Node<ViewContent<ParallelGateway>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<View<ParallelGateway>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Radius.
@@ -112,7 +112,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
         
     }
 
-    protected ParallelGatewayShape _applyRadius(final Node<ViewContent<ParallelGateway>, Edge> element, final MutationContext mutationContext) {
+    protected ParallelGatewayShape _applyRadius(final Node<View<ParallelGateway>, Edge> element, final MutationContext mutationContext) {
         final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {

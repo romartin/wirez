@@ -21,9 +21,9 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.BoundImpl;
-import org.wirez.core.api.graph.impl.BoundsImpl;
+import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.view.BoundImpl;
+import org.wirez.core.api.graph.content.view.BoundsImpl;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.ElementUtils;
@@ -67,8 +67,8 @@ public class UpdateElementPositionCommand extends AbstractGraphCommand {
 
     @Override
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final Double[] oldPosition = ElementUtils.getPosition((ViewContent) element.getContent());
-        final Double[] oldSize = ElementUtils.getSize((ViewContent) element.getContent());
+        final Double[] oldPosition = ElementUtils.getPosition((View) element.getContent());
+        final Double[] oldSize = ElementUtils.getSize((View) element.getContent());
         this.oldX = oldPosition[0];
         this.oldY = oldPosition[1];
         final double w = oldSize[0];
@@ -79,7 +79,7 @@ public class UpdateElementPositionCommand extends AbstractGraphCommand {
                 new BoundImpl(x + w, y + h),
                 new BoundImpl(x, y)
         );
-        ((ViewContent) element.getContent()).setBounds(newBounds);
+        ((View) element.getContent()).setBounds(newBounds);
         return new GraphCommandResult(new ArrayList<RuleViolation>());
     }
     

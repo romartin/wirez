@@ -16,11 +16,8 @@
 
 package org.wirez.client.workbench.screens;
 
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -45,7 +42,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
 import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.util.ElementUtils;
@@ -201,7 +198,7 @@ public class CanvasScreen {
         final String title = diagram.getSettings().getTitle();
         final Graph graph = diagram.getGraph();
         
-        final ViewContent viewContent = (ViewContent) graph.getContent();
+        final View viewContent = (View) graph.getContent();
         final Double[] graphSize = ElementUtils.getSize(viewContent);
         
         
@@ -456,7 +453,7 @@ public class CanvasScreen {
                 double x = _x > -1 ? _x : 100d;
                 double y = _y > -1 ? _y : 100d;
 
-                Node<ViewContent<?>, Edge> parent = null;
+                Node<View<?>, Edge> parent = null;
                 if ( _x > -1 && _y > -1) {
                     final GraphBoundsIndexer boundsIndexer = new GraphBoundsIndexer(canvasHandler.getDiagram().getGraph());
                     parent = boundsIndexer.getNodeAt(_x, _y);

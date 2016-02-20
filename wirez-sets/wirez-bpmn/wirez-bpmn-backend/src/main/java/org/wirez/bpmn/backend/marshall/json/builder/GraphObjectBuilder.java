@@ -5,11 +5,11 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 
 import java.util.Collection;
 
-public interface GraphObjectBuilder<W extends Definition, T extends Element<ViewContent<W>>> {
+public interface GraphObjectBuilder<W extends Definition, T extends Element<View<W>>> {
     
     GraphObjectBuilder<W, T> nodeId(String nodeId);
 
@@ -29,9 +29,9 @@ public interface GraphObjectBuilder<W extends Definition, T extends Element<View
     
     interface BuilderContext<W extends Definition> {
 
-        void init(Graph<ViewContent<W>, Node> graph);
+        void init(Graph<View<W>, Node> graph);
 
-        Graph<ViewContent<W>, Node> getGraph();
+        Graph<View<W>, Node> getGraph();
         
         Collection<GraphObjectBuilder<?, ?>> getBuilders();
         

@@ -12,7 +12,7 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.service.ResponseStatus;
@@ -100,7 +100,7 @@ public class DefinitionServiceImpl implements DefinitionService {
                 }
             }
             Set<String> labels = definition.getLabels();
-            Element<ViewContent<?>> element = elementFactory.build(uuid, definition, properties, labels);;
+            Element<View<?>> element = elementFactory.build(uuid, definition, properties, labels);;
             return element;
             
         }

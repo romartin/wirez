@@ -20,30 +20,27 @@ import org.wirez.core.api.definition.DefaultDefinition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ConnectionContentImpl;
-import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.content.ViewContentImpl;
+import org.wirez.core.api.graph.content.view.ViewConnectorImpl;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
 import org.wirez.core.api.graph.factory.ConnectionEdgeFactory;
-import org.wirez.core.api.graph.factory.EdgeFactory;
 import org.wirez.core.api.graph.impl.EdgeImpl;
-import org.wirez.core.api.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Set;
 
 @ApplicationScoped
 public class ConnectionEdgeFactoryImpl 
-        extends BaseElementFactory<DefaultDefinition, ViewContent<DefaultDefinition>, Edge<ViewContent<DefaultDefinition>, Node>> 
+        extends BaseElementFactory<DefaultDefinition, View<DefaultDefinition>, Edge<View<DefaultDefinition>, Node>> 
         implements ConnectionEdgeFactory<DefaultDefinition> {
 
     @Override
-    public Edge<ViewContent<DefaultDefinition>, Node> build(String uuid, DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
-        Edge<ViewContent<DefaultDefinition>, Node> edge =
-                new EdgeImpl<ViewContent<DefaultDefinition>>( uuid,
+    public Edge<View<DefaultDefinition>, Node> build(String uuid, DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
+        Edge<View<DefaultDefinition>, Node> edge =
+                new EdgeImpl<View<DefaultDefinition>>( uuid,
                         properties,
                         labels,
-                        new ConnectionContentImpl<>( definition, buildBounds()));
+                        new ViewConnectorImpl<>( definition, buildBounds()));
         
         return edge;
     }

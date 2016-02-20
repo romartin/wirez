@@ -19,8 +19,8 @@ package org.wirez.core.api.graph.factory;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 
-public interface GraphFactory<W extends Definition> extends ElementFactory<W, ViewContent<W>, Graph<ViewContent<W>, Node>> {
+public interface GraphFactory<W extends Definition> extends ElementFactory<W, View<W>, Graph<View<W>, Node>> {
     
 }

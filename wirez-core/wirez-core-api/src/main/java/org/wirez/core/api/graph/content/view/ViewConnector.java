@@ -14,7 +14,22 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.content;
+package org.wirez.core.api.graph.content.view;
 
-public interface Content {
+import org.wirez.core.api.definition.Definition;
+
+/**
+ * Indicates that the view for the node/edge represents a physical connector that will the drawn in the canvas.
+ * @param <W> The Definition of the connector's graphical view representation.
+ */
+public interface ViewConnector<W extends Definition> extends View<W> {
+
+    Integer getSourceMagnetIndex();
+
+    Integer getTargetMagnetIndex();
+
+    void setSourceMagnetIndex(Integer index);
+
+    void setTargetMagnetIndex(Integer index);
+    
 }

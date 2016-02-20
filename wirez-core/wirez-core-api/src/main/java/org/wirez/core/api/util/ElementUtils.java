@@ -3,11 +3,11 @@ package org.wirez.core.api.util;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.*;
-import org.wirez.core.api.graph.Bounds;
+import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.ViewContent;
-import org.wirez.core.api.graph.impl.BoundImpl;
-import org.wirez.core.api.graph.impl.BoundsImpl;
+import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.view.BoundImpl;
+import org.wirez.core.api.graph.content.view.BoundsImpl;
 
 import java.util.Set;
 
@@ -72,14 +72,14 @@ public class ElementUtils {
         return null;
     }
 
-    public static Double[] getPosition(final ViewContent element) {
+    public static Double[] getPosition(final View element) {
         final Bounds.Bound ul = element.getBounds().getUpperLeft();
         final double x = ul.getX();
         final double y = ul.getY();
         return new Double[] { x, y };
     }
 
-    public static Double[] getSize(final ViewContent element) {
+    public static Double[] getSize(final View element) {
         final Bounds.Bound ul = element.getBounds().getUpperLeft();
         final Bounds.Bound lr = element.getBounds().getLowerRight();
         final double w = lr.getX() - ul.getX();
@@ -88,7 +88,7 @@ public class ElementUtils {
     }
 
     public static void updateBounds(final double radius, 
-                                    final ViewContent element) {
+                                    final View element) {
         final Double[] coords = getPosition(element);
         updateBounds(coords[0], coords[1], radius, element);
     }
@@ -96,11 +96,11 @@ public class ElementUtils {
     public static void updateBounds(final double x, 
                                     final double y,
                                     final double radius,
-                                    final ViewContent element) {
+                                    final View element) {
         updateBounds(x, y ,radius * 2, radius * 2, element);
     }
     
-    public static void updateBounds(final double width, final double height, final ViewContent element) {
+    public static void updateBounds(final double width, final double height, final View element) {
         final Double[] coords = getPosition(element);
         updateBounds(coords[0], coords[1], width, height, element);
     }
@@ -110,7 +110,7 @@ public class ElementUtils {
                                     final double y, 
                                     final double width, 
                                     final double height, 
-                                    final ViewContent element) {
+                                    final View element) {
 
         final Bounds bounds = new BoundsImpl(
                 new BoundImpl(x + width, y + height),

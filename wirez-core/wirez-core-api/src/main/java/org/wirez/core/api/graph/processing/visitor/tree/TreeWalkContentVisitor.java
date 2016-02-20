@@ -1,11 +1,10 @@
 package org.wirez.core.api.graph.processing.visitor.tree;
 
-import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.ParentChildRelationship;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.visitor.ContentVisitorCallback;
 
 import javax.enterprise.context.Dependent;
@@ -26,7 +25,7 @@ public class TreeWalkContentVisitor extends AbstractTreeWalkVisitor<ContentVisit
     protected void doVisitGraph() {
         
         final Object content = graph.getContent();
-        if (content instanceof ViewContent) {
+        if (content instanceof View) {
             callback.visitGraphWithViewContent(graph);
         } else {
             super.doVisitGraph();
@@ -39,7 +38,7 @@ public class TreeWalkContentVisitor extends AbstractTreeWalkVisitor<ContentVisit
         
         final Object contet = node.getContent();
 
-        if (contet instanceof ViewContent) {
+        if (contet instanceof View) {
             callback.visitNodeWithViewContent(node);
         } else {
             super.doVisitNode(node);
@@ -51,7 +50,7 @@ public class TreeWalkContentVisitor extends AbstractTreeWalkVisitor<ContentVisit
     protected void doVisitEdge(Edge edge) {
         
         final Object content = edge.getContent();
-        if (content instanceof ViewContent) {
+        if (content instanceof View) {
             callback.visitEdgeWithViewContent(edge);
         } else if (content instanceof ParentChildRelationship) {
             callback.visitEdgeWithParentChildRelationContent(edge);

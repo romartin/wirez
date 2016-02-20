@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph;
+package org.wirez.core.api.graph.content.view;
+
+import org.wirez.core.api.definition.Definition;
 
 /**
- * The element bounds for a graphical model.
+ * Indicates that the content of a node/edge is given by a Definition of the graphical representation.
+ * The nodes/edges with View content are represented in the canvas with shapes.
+ * @param <W> The definition of the view graphical representation for a node/edge.
  */
-public interface Bounds {
+public interface View<W extends Definition> {
+
+    W getDefinition();
+
+    Bounds getBounds();
     
-    Bound getLowerRight();
-    
-    Bound getUpperLeft();
-    
-    /**
-     * A bound definition.
-     */
-    interface Bound {
-        Double getX();
-        Double getY();
-    }
+    void setBounds(Bounds bounds);
     
 }

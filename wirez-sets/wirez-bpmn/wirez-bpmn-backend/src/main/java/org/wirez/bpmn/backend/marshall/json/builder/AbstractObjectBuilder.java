@@ -7,12 +7,12 @@ import org.wirez.core.api.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 
 import java.util.*;
 
-public abstract class AbstractObjectBuilder<W extends Definition, T extends Element<ViewContent<W>>> implements GraphObjectBuilder<W, T> {
+public abstract class AbstractObjectBuilder<W extends Definition, T extends Element<View<W>>> implements GraphObjectBuilder<W, T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractObjectBuilder.class);
 

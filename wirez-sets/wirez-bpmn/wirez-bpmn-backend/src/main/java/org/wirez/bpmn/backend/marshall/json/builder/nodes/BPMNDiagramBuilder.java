@@ -4,7 +4,6 @@ import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.api.property.general.Name;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
-import org.wirez.bpmn.backend.marshall.json.builder.AbstractObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
@@ -12,26 +11,25 @@ import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ViewContent;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 
-import java.util.Collection;
 import java.util.Set;
 
 // TODO: Bounds.
-public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<ViewContent<BPMNDiagram>, Edge>> {
+public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<View<BPMNDiagram>, Edge>> {
 
     public BPMNDiagramBuilder(BPMNGraphObjectBuilderFactory graphObjectBuilderFactory) {
         super(graphObjectBuilderFactory);
     }
 
     @Override
-    protected Node<ViewContent<BPMNDiagram>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<ViewContent<BPMNDiagram>, Edge>) definitionService.buildGraphElement(this.nodeId, BPMNDiagram.ID);
+    protected Node<View<BPMNDiagram>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
+        return (Node<View<BPMNDiagram>, Edge>) definitionService.buildGraphElement(this.nodeId, BPMNDiagram.ID);
     }
 
     @Override
-    protected void afterNodeBuild(BuilderContext context, Node<ViewContent<BPMNDiagram>, Edge> node) {
+    protected void afterNodeBuild(BuilderContext context, Node<View<BPMNDiagram>, Edge> node) {
         super.afterNodeBuild(context, node);
 
         StartNoneEventBuilder startProcessNodeBuilder = getStartProcessNode(context);
@@ -45,7 +43,7 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
     }
 
     @Override
-    protected void setSize(BuilderContext context, Node<ViewContent<BPMNDiagram>, Edge> node, double width, double height) {
+    protected void setSize(BuilderContext context, Node<View<BPMNDiagram>, Edge> node, double width, double height) {
         super.setSize(context, node, width, height);
         BPMNDiagram def = node.getContent().getDefinition();
         def.getWidth().setValue(width);

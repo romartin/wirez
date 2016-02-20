@@ -10,6 +10,7 @@ import org.wirez.core.api.graph.processing.visitor.VisitorCallback;
 import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 
 import javax.enterprise.context.Dependent;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -20,9 +21,6 @@ import java.util.Stack;
 @Dependent
 public class TreeWalkChildrenVisitor extends AbstractTreeWalkVisitor<ChildrenVisitorCallback<Node, Edge, Graph<?, Node>>> {
 
-
-    private final Stack<Node> parents = new Stack<>();
-
     @Override
     public void visit(Graph<?, Node> graph, ChildrenVisitorCallback<Node, Edge, Graph<?, Node>> callback, VisitorPolicy policy) {
         assert VisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE.equals(policy);
@@ -30,36 +28,27 @@ public class TreeWalkChildrenVisitor extends AbstractTreeWalkVisitor<ChildrenVis
     }
 
     @Override
-    protected void startVisit() {
-        
-        super.startVisit();
-        parents.clear();
-    }
-
-    @Override
     protected void doVisitNode(final Node graphNode) {
-        final Node parent = parents.empty() ? null : parents.pop();
+
+        boolean found = false;
+        List<Edge> inEdges = graphNode.getInEdges();
+        if ( null != inEdges && !inEdges.isEmpty() ) {
+            for (final Edge edge : inEdges) {
+                if (edge.getContent() instanceof ParentChildRelationship) {
+                    final Node parent = edge.getSourceNode();
+                    if ( null != parent ) {
+                        callback.visitChildNode(parent, graphNode);
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        }
         
-        if ( null != parent ) {
-            callback.visitChildNode(parent, graphNode);
-        } else {
+        if ( !found ) {
             super.doVisitNode(graphNode);
         }
         
     }
 
-    @Override
-    protected void doVisitEdge(final Edge edge) {
-        final Object content = edge.getContent();
-        if (content instanceof ParentChildRelationship) {
-            final Node parent = edge.getSourceNode();
-            if (null != parent) {
-                parents.push(parent);
-            }
-        }
-
-        super.doVisitEdge(edge);
-
-    }
-    
 }

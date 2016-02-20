@@ -25,10 +25,7 @@ import org.uberfire.workbench.model.PerspectiveDefinition;
 import org.uberfire.workbench.model.impl.PanelDefinitionImpl;
 import org.uberfire.workbench.model.impl.PartDefinitionImpl;
 import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
-import org.wirez.client.workbench.screens.CanvasWizardScreen;
-import org.wirez.client.workbench.screens.NotificationsScreen;
-import org.wirez.client.workbench.screens.PaletteScreen;
-import org.wirez.client.workbench.screens.PropertiesScreen;
+import org.wirez.client.workbench.screens.*;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -38,7 +35,7 @@ public class WirezPerspective {
 
     PanelDefinition palettePanel;
     PanelDefinition notificationsPanel;
-    PanelDefinition propertiesPanel;
+    PanelDefinition eastPanel;
     
     @Perspective
     public PerspectiveDefinition buildPerspective() {
@@ -54,10 +51,11 @@ public class WirezPerspective {
         palettePanel.setWidth( 400 );
         palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( PaletteScreen.SCREEN_ID ) ) );
 
-        propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
-        propertiesPanel.setMinWidth( PaletteScreen.WIDTH );
-        propertiesPanel.setWidth( PaletteScreen.WIDTH );
-        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
+        eastPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
+        eastPanel.setMinWidth( PaletteScreen.WIDTH );
+        eastPanel.setWidth( PaletteScreen.WIDTH );
+        eastPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
+        eastPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(TreeExplorerScreen.SCREEN_ID ) ) );
        
         notificationsPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         notificationsPanel.setMinWidth( 400 );
@@ -70,7 +68,7 @@ public class WirezPerspective {
                 palettePanel );
 
         perspective.getRoot().insertChild( CompassPosition.EAST,
-                propertiesPanel );
+                eastPanel );
 
         perspective.getRoot().insertChild( CompassPosition.SOUTH,
                 notificationsPanel );
@@ -78,15 +76,4 @@ public class WirezPerspective {
         return perspective;
     }
 
-    public PanelDefinition getPalettePanel() {
-        return palettePanel;
-    }
-
-    public PanelDefinition getNotificationsPanel() {
-        return notificationsPanel;
-    }
-
-    public PanelDefinition getPropertiesPanel() {
-        return propertiesPanel;
-    }
 }

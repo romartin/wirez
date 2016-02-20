@@ -83,7 +83,7 @@ public class TreeExplorer implements IsWidget {
             public void visitNode(final Node node) {
                 super.visitNode(node);
                 parents.put(node.getUUID(), 0);
-                indexes.get(0).add(node.getUUID());
+                // indexes.get(0).add(node.getUUID());
                 view.addItem(node.getUUID());
             }
 
@@ -92,7 +92,7 @@ public class TreeExplorer implements IsWidget {
                 super.visitChildNode(parent, child);
                 final int parentIdx = parents.get(parent.getUUID());
                 parents.put( child.getUUID(), parentIdx + 1 );
-                indexes.get(parentIdx).add(child.getUUID());
+                // indexes.get(parentIdx).add(child.getUUID());
                 view.addItem(child.getUUID(), parentIdx);
             }
 

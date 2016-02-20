@@ -93,6 +93,8 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
         draw();
         // Draw it.
         canvas.draw();
+        // Fire initialization completed event.
+        fireCanvasInitialized();
     }
 
     @Override

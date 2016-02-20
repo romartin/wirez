@@ -46,6 +46,7 @@ import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.impl.BaseConnector;
+import org.wirez.core.client.mutation.HasGraphElementMutation;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.WirezLogger;
@@ -279,6 +280,43 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         }
 
     };
+
+    @Override
+    protected void afterElementAdded(final Element element) {
+        super.afterElementAdded(element);
+        fireElementAdded(element);
+    }
+
+    @Override
+    protected void afterElementDeleted(final Element element) {
+        super.afterElementDeleted(element);
+        fireElementDeleted(element);
+    }
+
+    @Override
+    protected void afterElementUpdated(final Element element, 
+                                       final HasGraphElementMutation elementMutation) {
+        super.afterElementUpdated(element, elementMutation);
+        fireElementUpdated(element);
+    }
+
+    protected void fireElementAdded(final Element element) {
+        for (final CanvasModelListener listener : listeners) {
+            listener.onElementAdded(element);
+        }
+    }
+
+    protected void fireElementDeleted(final Element element) {
+        for (final CanvasModelListener listener : listeners) {
+            listener.onElementDeleted(element);
+        }
+    }
+
+    protected void fireElementUpdated(final Element element) {
+        for (final CanvasModelListener listener : listeners) {
+            listener.onElementModified(element);
+        }
+    }
 
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {

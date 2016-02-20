@@ -35,7 +35,8 @@ public class WirezPerspective {
 
     PanelDefinition palettePanel;
     PanelDefinition notificationsPanel;
-    PanelDefinition eastPanel;
+    PanelDefinition propertiesPanel;
+    PanelDefinition treeExplorerPanel;
     
     @Perspective
     public PerspectiveDefinition buildPerspective() {
@@ -51,12 +52,19 @@ public class WirezPerspective {
         palettePanel.setWidth( 400 );
         palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( PaletteScreen.SCREEN_ID ) ) );
 
-        eastPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
-        eastPanel.setMinWidth( PaletteScreen.WIDTH );
-        eastPanel.setWidth( PaletteScreen.WIDTH );
-        eastPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
-        eastPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(TreeExplorerScreen.SCREEN_ID ) ) );
+        propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
+        propertiesPanel.setMinWidth( PaletteScreen.WIDTH );
+        propertiesPanel.setWidth( PaletteScreen.WIDTH );
+        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
+
+        treeExplorerPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
+        treeExplorerPanel.setMinWidth( PaletteScreen.WIDTH );
+        treeExplorerPanel.setWidth( PaletteScreen.WIDTH );
+        treeExplorerPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(TreeExplorerScreen.SCREEN_ID ) ) );
        
+        propertiesPanel.appendChild(CompassPosition.SOUTH,
+                        treeExplorerPanel);
+        
         notificationsPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         notificationsPanel.setMinWidth( 400 );
         notificationsPanel.setWidth( 400 );
@@ -68,7 +76,7 @@ public class WirezPerspective {
                 palettePanel );
 
         perspective.getRoot().insertChild( CompassPosition.EAST,
-                eastPanel );
+                propertiesPanel );
 
         perspective.getRoot().insertChild( CompassPosition.SOUTH,
                 notificationsPanel );

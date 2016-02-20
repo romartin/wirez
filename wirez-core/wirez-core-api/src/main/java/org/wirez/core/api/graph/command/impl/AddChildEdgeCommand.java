@@ -22,7 +22,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
@@ -34,14 +34,14 @@ import java.util.*;
  * Creates/defines a new parent-child connection from the given nodes.
  * Both nodes must already be crated and present on the graph storage.
  */
-public class AddChildCommand extends AbstractGraphCommand {
+public class AddChildEdgeCommand extends AbstractGraphCommand {
 
     private Node parent;
     private Node candidate;
 
-    public AddChildCommand(final GraphCommandFactory commandFactory,
-                           final Node parent,
-                           final Node candidate) {
+    public AddChildEdgeCommand(final GraphCommandFactory commandFactory,
+                               final Node parent,
+                               final Node candidate) {
         super(commandFactory);
         this.parent = PortablePreconditions.checkNotNull( "parent",
                 parent );
@@ -63,7 +63,7 @@ public class AddChildCommand extends AbstractGraphCommand {
             final String uuid = UUID.uuid();
             final Map<String, Object> properties = new HashMap<>();
             final Set<String> labels = new HashSet<>(1);
-            final Edge<ParentChildRelationship, Node> edge = new EdgeImpl<>(uuid, new HashSet<>(), labels, new ParentChildRelationship());
+            final Edge<Child, Node> edge = new EdgeImpl<>(uuid, new HashSet<>(), labels, new Child());
 
             edge.setSourceNode(parent);
             edge.setTargetNode(candidate);

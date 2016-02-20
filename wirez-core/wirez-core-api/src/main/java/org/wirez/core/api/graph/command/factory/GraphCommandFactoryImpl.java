@@ -8,7 +8,6 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.*;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 
@@ -53,8 +52,8 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public AddNodeCommand ADD_NOE(final Graph target,
-                                  final Node candidate) {
+    public AddNodeCommand ADD_NODE(final Graph target,
+                                   final Node candidate) {
         return new AddNodeCommand(this, target, candidate);
     }
 
@@ -64,18 +63,18 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public AddChildCommand ADD_CHILD(final Node parent, final Node candidate) {
-        return new AddChildCommand(this, parent, candidate);
+    public AddChildEdgeCommand ADD_CHILD_EDGE(final Node parent, final Node candidate) {
+        return new AddChildEdgeCommand(this, parent, candidate);
     }
 
     @Override
-    public SetParentCommand SET_PARENT(final Node parent, final Node candidate, final Edge<ParentChildRelationship, Node> edge) {
-        return new SetParentCommand(this, parent, candidate, edge);
+    public AddParentEdgeCommand ADD_PARENT_EDGE(final Node parent, final Node candidate) {
+        return new AddParentEdgeCommand(this, parent, candidate);
     }
 
     @Override
-    public DeleteParentCommand DELETE_PARENT(final Node parent, final Node candidate) {
-        return new DeleteParentCommand(this, parent, candidate);
+    public DeleteParentEdgeCommand DELETE_PARENT_EDGE(final Node parent, final Node candidate) {
+        return new DeleteParentEdgeCommand(this, parent, candidate);
     }
 
     @Override

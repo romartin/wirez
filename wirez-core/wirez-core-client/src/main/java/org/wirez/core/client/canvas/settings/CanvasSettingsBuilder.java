@@ -17,11 +17,8 @@
 package org.wirez.core.client.canvas.settings;
 
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
-import org.wirez.core.api.graph.processing.visitor.Visitor;
 
 public interface CanvasSettingsBuilder<T, S extends CanvasSettings> {
-    
-    T visitor(Visitor<?, ?, ?> visitor);
     
     T indexBuilder(IndexBuilder<?, ?, ?, ?> indexBuilder);
     

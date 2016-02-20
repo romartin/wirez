@@ -21,17 +21,32 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.definition.Definition;
 
 @Portable
-public final class ViewConnectorImpl<W extends Definition> extends ViewImpl<W> implements ViewConnector<W> {
+public final class ViewConnectorImpl<W extends Definition> implements ViewConnector<W> {
+    protected W definition;
+    protected Bounds bounds;
     protected Integer sourceMagnetIndex;
     protected Integer targetMagnetIndex;
 
     public ViewConnectorImpl(@MapsTo("definition") W definition,
                              @MapsTo("bounds") Bounds bounds) {
-        super(definition, bounds);
         this.sourceMagnetIndex = 0;
         this.targetMagnetIndex = 0;
     }
 
+    @Override
+    public W getDefinition() {
+        return definition;
+    }
+
+    @Override
+    public Bounds getBounds() {
+        return bounds;
+    }
+
+    @Override
+    public void setBounds(final Bounds bounds) {
+        this.bounds = bounds;
+    }
 
     @Override
     public Integer getSourceMagnetIndex() {

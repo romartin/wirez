@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 @Dependent
 public final class ChildrenTraverseProcessorImpl extends AbstractContentTraverseProcessor<Child, Node<View, Edge>, Edge<Child, Node>>
-        implements ChildTraverseProcessor {
+        implements ChildrenTraverseProcessor {
 
     @Inject
     public ChildrenTraverseProcessorImpl(final TreeWalkTraverseProcessor treeWalkTraverseProcessor) {

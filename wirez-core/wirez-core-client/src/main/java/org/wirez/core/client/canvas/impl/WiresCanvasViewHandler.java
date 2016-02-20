@@ -17,6 +17,7 @@
 package org.wirez.core.client.canvas.impl;
 
 import com.google.gwt.logging.client.LogConfiguration;
+import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.listener.CanvasListener;
@@ -33,9 +34,10 @@ public class WiresCanvasViewHandler extends AbstractWiresCanvasHandler<CanvasVie
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.WiresCanvasViewHandler");
 
     @Inject
-    public WiresCanvasViewHandler(final ShapeManager shapeManager,
+    public WiresCanvasViewHandler(final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
+                                  final ShapeManager shapeManager,
                                   final CanvasCommandFactory commandFactory) {
-        super(shapeManager, commandFactory);
+        super(treeWalkTraverseProcessor, shapeManager, commandFactory);
     }
 
     private void log(final Level level, final String message) {

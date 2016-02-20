@@ -22,7 +22,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.Parent;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -31,14 +31,14 @@ import java.util.List;
 /**
  * A Command to set a DefaultNode children of another container node.
  */
-public class DeleteParentCommand extends AbstractGraphCommand {
+public class DeleteParentEdgeCommand extends AbstractGraphCommand {
 
     private Node parent;
     private Node candidate;
 
-    public DeleteParentCommand(final GraphCommandFactory commandFactory,
-                               final Node parent,
-                               final Node candidate) {
+    public DeleteParentEdgeCommand(final GraphCommandFactory commandFactory,
+                                   final Node parent,
+                                   final Node candidate) {
         super(commandFactory);
         this.parent = PortablePreconditions.checkNotNull( "parent",
                 parent );
@@ -55,7 +55,7 @@ public class DeleteParentCommand extends AbstractGraphCommand {
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
         final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
-            final Edge<ParentChildRelationship, Node>  edge = getEdgeForTarget();
+            final Edge<Parent, Node>  edge = getEdgeForTarget();
             if ( null != edge ) {
                 edge.setSourceNode(null);
                 edge.setTargetNode(null);
@@ -66,14 +66,14 @@ public class DeleteParentCommand extends AbstractGraphCommand {
         return results;
     }
     
-    private Edge<ParentChildRelationship, Node> getEdgeForTarget() {
+    private Edge<Parent, Node> getEdgeForTarget() {
         final List<Edge<?, Node>> outEdges = parent.getOutEdges();
         if ( null != outEdges && !outEdges.isEmpty() ) {
             for ( Edge<?, Node> outEdge : outEdges ) {
-                if ( outEdge.getContent() instanceof ParentChildRelationship ) {
+                if ( outEdge.getContent() instanceof Parent ) {
                     final Node target = outEdge.getTargetNode();
                     if ( null != target && target.equals( candidate )) {
-                        return (Edge<ParentChildRelationship, Node>) outEdge;
+                        return (Edge<Parent, Node>) outEdge;
                     }
                 }
             }

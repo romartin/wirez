@@ -28,6 +28,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.ClientDefinitionManager;
@@ -63,10 +64,11 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
     ClientDefinitionManager clientDefinitionManager;
     
     @Inject
-    public WiresCanvasHandler(final ShapeManager shapeManager,
+    public WiresCanvasHandler(final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
+                              final ShapeManager shapeManager,
                               final CanvasCommandFactory commandFactory,
                               final ClientDefinitionManager clientDefinitionManager) {
-        super(shapeManager, commandFactory);
+        super(treeWalkTraverseProcessor, shapeManager, commandFactory);
         this.clientDefinitionManager = clientDefinitionManager;
     }
 

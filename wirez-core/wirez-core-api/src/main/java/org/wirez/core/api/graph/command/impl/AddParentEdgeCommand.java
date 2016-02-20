@@ -22,33 +22,30 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.Parent;
+import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.util.UUID;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
- * Updates the parent and child nodes for a parent-child connection.
+ * Creates a parent connection to the target node from the child node.
  */
-public class SetParentCommand extends AbstractGraphCommand {
+public class AddParentEdgeCommand extends AbstractGraphCommand {
 
     private Node parent;
     private Node candidate;
-    private Edge<ParentChildRelationship, Node> edge;
 
-    public SetParentCommand(final GraphCommandFactory commandFactory,
-                            final Node parent,
-                            final Node candidate,
-                            final Edge<ParentChildRelationship, Node> edge) {
+    public AddParentEdgeCommand(final GraphCommandFactory commandFactory,
+                                final Node parent,
+                                final Node candidate) {
         super(commandFactory);
         this.parent = PortablePreconditions.checkNotNull( "parent",
                 parent );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
                                                              candidate );
-        this.edge = PortablePreconditions.checkNotNull( "edge",
-                edge );
     }
     
     @Override
@@ -60,16 +57,12 @@ public class SetParentCommand extends AbstractGraphCommand {
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
         final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
-            
-            final Node oldParent = edge.getSourceNode();
-            if ( null != oldParent ) {
-                oldParent.getOutEdges().remove( edge );
-            }
 
-            final Node oldChild = edge.getTargetNode();
-            if ( null != oldChild ) {
-                oldChild.getInEdges().remove( edge );
-            }
+            // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
+            final String uuid = UUID.uuid();
+            final Map<String, Object> properties = new HashMap<>();
+            final Set<String> labels = new HashSet<>(1);
+            final Edge<Parent, Node> edge = new EdgeImpl<>(uuid, new HashSet<>(), labels, new Parent());
             
             edge.setSourceNode(parent);
             edge.setTargetNode(candidate);

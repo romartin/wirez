@@ -2,11 +2,11 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.ViewConnector;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.content.view.BoundImpl;
 import org.wirez.core.api.graph.content.view.BoundsImpl;
@@ -106,7 +106,7 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
 
                 if ( childNodeBuilder instanceof NodeObjectBuilder ) {
                     Node childNode = (Node) childNodeBuilder.build(context);
-                    final Edge<ParentChildRelationship, Node> childEdge = new EdgeImpl<>(UUID.uuid(), new HashSet<>(), new HashSet<>(), new ParentChildRelationship());
+                    final Edge<Child, Node> childEdge = new EdgeImpl<>(UUID.uuid(), new HashSet<>(), new HashSet<>(), new Child());
                     childEdge.setSourceNode(node);
                     childEdge.setTargetNode(childNode);
                     context.getGraph().addNode(childNode);

@@ -3,7 +3,6 @@ package org.wirez.core.client.canvas.command.factory;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.canvas.command.impl.*;
 import org.wirez.core.client.factory.ShapeFactory;
@@ -24,12 +23,11 @@ public interface CanvasCommandFactory {
     
     ClearCanvasCommand CLEAR_CANVAS();
     
-    AddCanvasChildCommand ADD_CHILD(Node parent,
-                                    Node candidate);
+    AddCanvasChildEdgeCommand ADD_CHILD_EDGE(Node parent,
+                                             Node candidate);
     
-    SetCanvasElementParentCommand SET_PARENT(Node parent,
-                                             Node candidate,
-                                             Edge<ParentChildRelationship, Node> edge);
+    AddCanvasParentEdgeCommand ADD_PARENT_EDGE(Node parent,
+                                               Node candidate);
     
     UpdateCanvasElementPositionCommand UPDATE_POSITION(Element element,
                                                        Double x,

@@ -3,27 +3,30 @@ package org.wirez.core.api.graph.processing.traverse.content;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.Parent;
+import org.wirez.core.api.graph.content.Relationship;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.processing.traverse.TraverseProcessor;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, Edge>, E extends Edge<C, Node>>
-        implements ContentTraverseProcessor<C, N, E, ContentTraverseCallback<C, N, E>> {
+@Dependent
+public final class AllEdgesTraverseProcessorImpl implements AllEdgesTraverseProcessor {
 
     TreeWalkTraverseProcessor treeWalkTraverseProcessor;
 
     @Inject
-    public AbstractContentTraverseProcessor(final TreeWalkTraverseProcessor treeWalkTraverseProcessor) {
+    public AllEdgesTraverseProcessorImpl(final TreeWalkTraverseProcessor treeWalkTraverseProcessor) {
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
     }
-
-    protected abstract boolean doTraverse(final Edge edge);
-
+    
     @Override
-    public void traverse(final Graph<View, N> graph,
-                         final ContentTraverseCallback<C, N, E> callback) {
+    public void traverse(final Graph<View, Node<View, Edge>> graph, 
+                         final AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>> callback) {
 
         treeWalkTraverseProcessor
                 .usePolicy(TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_BEFORE_TARGET_NODE)
@@ -32,14 +35,14 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
                     @Override
                     public void traverseGraph(final Graph graph) {
                         if (graph.getContent() instanceof View) {
-                            callback.traverseView(graph);
+                            callback.traverseView( graph );
                         }
                     }
 
                     @Override
                     public boolean traverseNode(final Node node) {
                         if (node.getContent() instanceof View) {
-                            callback.traverseView((N) node);
+                            callback.traverseView( node );
                             return true;
                         }
                         return false;
@@ -47,11 +50,16 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
 
                     @Override
                     public boolean traverseEdge(final Edge edge) {
-                        if (doTraverse(edge)) {
-                            callback.traverse((E) edge);
-                            return true;
+                        if ( edge.getContent() instanceof View ) {
+                            callback.traverseViewEdge( edge );
+                        } else if ( edge.getContent() instanceof Child ) {
+                            callback.traverseChildEdge( edge );
+                        } else if ( edge.getContent() instanceof Parent ) {
+                            callback.traverseParentEdge( edge );
+                        } else {
+                            callback.traverse( edge );
                         }
-                        return false;
+                        return true;
                     }
 
                     @Override
@@ -59,7 +67,6 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
                         callback.traverseCompleted();
                     }
                 });
-
+        
     }
-
 }

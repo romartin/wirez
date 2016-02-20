@@ -3,53 +3,82 @@ package org.wirez.core.api.graph.processing.util;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.visitor.AbstractChildrenVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
-import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkChildrenVisitor;
+import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseCallback;
+import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseProcessor;
+import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseProcessorImpl;
+import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 import org.wirez.core.api.util.ElementUtils;
 
 public class GraphBoundsIndexer {
 
-    private final Graph<?, Node> graph;
-    private final TreeWalkChildrenVisitor visitor;
+    private final Graph<View, Node<View, Edge>> graph;
+    private final AllEdgesTraverseProcessor visitor;
 
-    public GraphBoundsIndexer(final Graph<?, Node> graph) {
+    public GraphBoundsIndexer(final Graph<View, Node<View, Edge>> graph) {
         this.graph = graph;
-        this.visitor = new TreeWalkChildrenVisitor();
+        this.visitor = new AllEdgesTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl());
     }
 
     public Node getNodeAt(final double x, final double y) {
 
         final Node[] result = new Node[1];
 
-        visitor.visit(graph, new AbstractChildrenVisitorCallback() {
-
-            @Override
-            public void visitNode(final Node node) {
-                super.visitNode(node);
-                if (node.getContent() instanceof View && isNodeAt(node, 0, 0, x, y)) {
-                    result[0] = node;
-                }
-            }
-
-            @Override
-            public void visitChildNode(final Node parent, final Node child) {
-                super.visitChildNode(parent, child);
-                
-                final Object content = parent.getContent();
-                
-                if ( content instanceof View) {
-                    final View viewContent = (View) content;
-                    final Double[] parentCoords = ElementUtils.getPosition(viewContent);
-                    if (isNodeAt(child, parentCoords[0], parentCoords[1], x, y)) {
-                        result[0] = child;
-                    }
-                }
-                
-            }
-
-        }, VisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE);
+        visitor.traverse(graph, new AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
             
+                    double parentX = 0;
+                    double parentY = 0;
+            
+                    @Override
+                    public void traverseViewEdge(final Edge<Object, Node> edge) {
+                        
+                    }
+
+                    @Override
+                    public void traverseChildEdge(final Edge<Object, Node> edge) {
+
+                        final Node parent = edge.getSourceNode();
+                        final Object content = parent.getContent();
+
+                        if (content instanceof View) {
+                            final View viewContent = (View) content;
+                            final Double[] parentCoords = ElementUtils.getPosition(viewContent);
+                            this.parentX = parentCoords[0];
+                            this.parentY = parentCoords[1];
+                        }
+                        
+                    }
+
+                    @Override
+                    public void traverseParentEdge(final Edge<Object, Node> edge) {
+
+                    }
+
+                    @Override
+                    public void traverse(final Edge<Object, Node> edge) {
+
+                    }
+
+                    @Override
+                    public void traverseView(final Graph<View, Node<View, Edge>> graph) {
+
+                    }
+
+                    @Override
+                    public void traverseView(final Node<View, Edge> node) {
+                        if (isNodeAt(node, parentX, parentY, x, y)) {
+                            result[0] = node;
+                        }
+                        this.parentX = 0;
+                        this.parentY = 0;
+                    }
+
+                    @Override
+                    public void traverseCompleted() {
+
+                    }
+            
+                });
+               
         return result[0];
         
     }

@@ -5,7 +5,6 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.*;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.view.View;
 
 public interface GraphCommandFactory {
@@ -15,8 +14,8 @@ public interface GraphCommandFactory {
                                     Atomic commands.
        ****************************************************************************************** */
 
-    AddNodeCommand ADD_NOE(Graph target,
-                           Node candidate);
+    AddNodeCommand ADD_NODE(Graph target,
+                            Node candidate);
 
     AddEdgeCommand ADD_EDGE(Node target,
                             Edge edge);
@@ -30,15 +29,14 @@ public interface GraphCommandFactory {
 
     ClearGraphCommand CLEAR_GRAPH(Graph target);
 
-    AddChildCommand ADD_CHILD(Node parent,
-                              Node candidate);
+    AddChildEdgeCommand ADD_CHILD_EDGE(Node parent,
+                                       Node candidate);
     
-    SetParentCommand SET_PARENT(Node parent,
-                                Node candidate,
-                                Edge<ParentChildRelationship, Node> edge);
+    AddParentEdgeCommand ADD_PARENT_EDGE(Node parent,
+                                    Node candidate);
 
-    DeleteParentCommand DELETE_PARENT(Node parent,
-                                      Node candidate);
+    DeleteParentEdgeCommand DELETE_PARENT_EDGE(Node parent,
+                                               Node candidate);
 
     SetConnectionSourceNodeCommand SET_SOURCE_NODE(Node<? extends View<?>, Edge> sourceNode,
                                                    Edge<? extends View<?>, Node> edge,

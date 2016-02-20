@@ -21,22 +21,16 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
-import org.wirez.core.api.graph.processing.visitor.ContentVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.Visitor;
-import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 
 public abstract class CanvasSettingsImpl<G extends Graph<?, N>, N extends Node, E extends Edge> implements CanvasSettings<G, N, E> {
 
     private IndexBuilder<G, N, E, ? extends Index<N, E>> indexBuilder;
-    private Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> visitor;
 
     public CanvasSettingsImpl() {
     }
 
-    public CanvasSettingsImpl(final IndexBuilder<G, N, E, ? extends Index<N, E>> indexBuilder,
-                            final Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> visitor) {
+    public CanvasSettingsImpl(final IndexBuilder<G, N, E, ? extends Index<N, E>> indexBuilder) {
         this.indexBuilder = indexBuilder;
-        this.visitor = visitor;
     }
 
     @Override
@@ -44,16 +38,8 @@ public abstract class CanvasSettingsImpl<G extends Graph<?, N>, N extends Node, 
         return indexBuilder;
     }
 
-    @Override
-    public Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> getVisitor() {
-        return visitor;
-    }
-
     public void setIndexBuilder(final IndexBuilder<G, N, E, ? extends Index<N, E>> indexBuilder) {
         this.indexBuilder = indexBuilder;
     }
 
-    public void setVisitor(final Visitor<G, ? extends ContentVisitorCallback<N, E, G>, ? extends VisitorPolicy> visitor) {
-        this.visitor = visitor;
-    }
 }

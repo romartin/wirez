@@ -6,7 +6,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
@@ -35,8 +35,7 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
                          final Node child) {
 
         final Edge current = isSameParent(parent, child);
-        final Command<WiresCanvasHandler, CanvasCommandViolation> command = current != null ?
-                commandFactory.SET_PARENT(parent, child, current) : commandFactory.ADD_CHILD(parent,child);
+        final Command<WiresCanvasHandler, CanvasCommandViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
         final boolean isAllow = canvasHandler.allow( command );
         log(Level.FINE, "isAllow=" + isAllow);
         return isAllow;
@@ -48,8 +47,7 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
                           final Node child) {
 
         final Edge current = isSameParent(parent, child);
-        final Command<WiresCanvasHandler, CanvasCommandViolation> command = current != null ? 
-                commandFactory.SET_PARENT(parent, child, current) : commandFactory.ADD_CHILD(parent,child);
+        final Command<WiresCanvasHandler, CanvasCommandViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
         final CommandResults<CanvasCommandViolation> violations = 
                 canvasHandler.execute( command );;
         final boolean isAccept = isAccept(violations);
@@ -58,16 +56,16 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
         
     }
     
-    private Edge<ParentChildRelationship, Node> isSameParent(final Node parent,
-                                 final Node child) {
+    private Edge<Child, Node> isSameParent(final Node parent,
+                                           final Node child) {
         if ( null != parent && child != null) {
             final List<Edge> outEdges = parent.getOutEdges();
             if ( null != outEdges && !outEdges.isEmpty() ) {
                 for ( final Edge edge : outEdges ) {
-                    if ( edge.getContent() instanceof ParentChildRelationship ) {
+                    if ( edge.getContent() instanceof Child ) {
                         final Node target = edge.getTargetNode();
                         if ( target != null && target.getUUID().equals(child.getUUID())) {
-                            return (Edge<ParentChildRelationship, Node>) edge;
+                            return (Edge<Child, Node>) edge;
                         }
                     }
                 }

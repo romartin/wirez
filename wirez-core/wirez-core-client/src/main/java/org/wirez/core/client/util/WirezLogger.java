@@ -19,10 +19,10 @@ package org.wirez.core.client.util;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.visitor.*;
-import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkContentVisitor;
+import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseCallback;
+import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseProcessorImpl;
+import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.service.ClientRuntimeError;
 
@@ -85,105 +85,92 @@ public class WirezLogger {
         log("Rule Violation [message=" + message + "] [type" + type.name());
     }
     
-    private static final AbstractContentVisitorCallback VISITOR_CALLBACK = new AbstractContentVisitorCallback() {
+    private static final AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>> TREE_TRAVERSE_CALLBACK = 
+            new AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
+                @Override
+                public void traverseViewEdge(final Edge<Object, Node> edge) {
+                    log("(View) Edge UUI: " + edge.getUUID());
+                    final View viewContent = (View) edge.getContent();
+                    log("(View) Edge Id: " + viewContent.getDefinition().getId());
 
-        @Override
-        public void visitGraphWithViewContent(Graph<? extends View, ? extends Node> graph) {
-            if (graph == null) {
-                error("Graph is null!");
-            } else {
-                log("Graph UUID: " + graph.getUUID());
-                log("Graph Id: " + graph.getContent().getDefinition().getId());
-                log("  Graph Starting nodes");
-                log("  ====================");
-            }
-        }
+                    final Node outNode = (Node) edge.getTargetNode();
+                    if (outNode == null) {
+                        log("  No outgoing node found");
+                    } else {
+                        log("  Outgoing Node");
+                        log("  ==============");
+                    }
+                }
 
-        @Override
-        public void visitGraph(Graph graph) {
-            if (graph == null) {
-                error("Graph is null!");
-            } else {
-                log("Graph UUID: " + graph.getUUID());
-                log("  Graph Starting nodes");
-                log("  ====================");
-            }
-        }
+                @Override
+                public void traverseChildEdge(final Edge<Object, Node> edge) {
+                    log("(Child= Edge UUI: " + edge.getUUID());
 
-        @Override
-        public void visitNode(Node node) {
-            log("Node UUID: " + node.getUUID());
-            List<Edge> outEdges = (List<Edge>) node.getOutEdges();
-            if (outEdges == null || outEdges.isEmpty()) {
-                log("  No outgoing edges found");
-            } else {
-                log("  Outgoing edges");
-                log("  ==============");
-            }
-        }
+                    final Node outNode = edge.getTargetNode();
+                    if (outNode == null) {
+                        log("  No outgoing node found");
+                    } else {
+                        log("  Outgoing Node");
+                        log("  ==============");
+                    }
+                }
 
+                @Override
+                public void traverseParentEdge(final Edge<Object, Node> edge) {
 
-        @Override
-        public void visitNodeWithViewContent(Node<? extends View, ?> node) {
-            log("(View) UUID: " + node.getUUID());
-            log("(View) Node Id: " + node.getContent().getDefinition().getId());
-            List<Edge> outEdges = (List<Edge>) node.getOutEdges();
-            if (outEdges == null || outEdges.isEmpty()) {
-                log("  No outgoing edges found");
-            } else {
-                log("  Outgoing edges");
-                log("  ==============");
-            }
-        }
+                }
 
-        @Override
-        public void visitEdgeWithViewContent(Edge<? extends View, ?> edge) {
-            log("(View) Edge UUI: " + edge.getUUID());
-            log("(View) Edge Id: " + edge.getContent().getDefinition().getId());
+                @Override
+                public void traverse(final Edge<Object, Node> edge) {
+                    log("Edge UUI: " + edge.getUUID());
 
-            final Node outNode = (Node) edge.getTargetNode();
-            if (outNode == null) {
-                log("  No outgoing node found");
-            } else {
-                log("  Outgoing Node");
-                log("  ==============");
-            }
-        }
+                    final Node outNode = (Node) edge.getTargetNode();
+                    if (outNode == null) {
+                        log("  No outgoing node found");
+                    } else {
+                        log("  Outgoing Node");
+                        log("  ==============");
+                    }
+                }
 
-        @Override
-        public void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge) {
-            log("(Parent-Child= Edge UUI: " + edge.getUUID());
+                @Override
+                public void traverseView(final Graph<View, Node<View, Edge>> graph) {
+                    if (graph == null) {
+                        error("Graph is null!");
+                    } else {
+                        log("Graph UUID: " + graph.getUUID());
+                        log("  Graph Starting nodes");
+                        log("  ====================");
+                    }
+                }
 
-            final Node outNode = (Node) edge.getTargetNode();
-            if (outNode == null) {
-                log("  No outgoing node found");
-            } else {
-                log("  Outgoing Node");
-                log("  ==============");
-            }
-        }
+                @Override
+                public void traverseView(final Node<View, Edge> node) {
+                    log("(View) UUID: " + node.getUUID());
+                    log("(View) Node Id: " + node.getContent().getDefinition().getId());
+                    List<Edge> outEdges = (List<Edge>) node.getOutEdges();
+                    if (outEdges == null || outEdges.isEmpty()) {
+                        log("  No outgoing edges found");
+                    } else {
+                        log("  Outgoing edges");
+                        log("  ==============");
+                    }
+                }
 
-        @Override
-        public void visitEdge(Edge edge) {
-            log("Edge UUI: " + edge.getUUID());
+                @Override
+                public void traverseCompleted() {
 
-            final Node outNode = (Node) edge.getTargetNode();
-            if (outNode == null) {
-                log("  No outgoing node found");
-            } else {
-                log("  Outgoing Node");
-                log("  ==============");
-            }
-        }
-
-    };
-
+                }
+            };
+    
     public static void log(final Graph graph) {
-        new TreeWalkContentVisitor().visit(graph, VISITOR_CALLBACK, VisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE);
+        new AllEdgesTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
+                .traverse(graph, TREE_TRAVERSE_CALLBACK);
     }
 
     public static void resume(final Graph graph) {
-        new TreeWalkContentVisitor().visit(graph, VISITOR_CALLBACK, VisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE);
+        new AllEdgesTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
+                .traverse(graph, TREE_TRAVERSE_CALLBACK);
     }
 
     private static void log(final String message) {

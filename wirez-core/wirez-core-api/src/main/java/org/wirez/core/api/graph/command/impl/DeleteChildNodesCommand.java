@@ -5,7 +5,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.Child;
 
 import java.util.List;
 import java.util.Stack;
@@ -36,7 +36,7 @@ public class DeleteChildNodesCommand extends AbstractGraphCompositeCommand {
     }
     
     private void addDeleteCommands(final Node node) {
-        this.addCommand( commandFactory.DELETE_PARENT( parent, node) )
+        this.addCommand( commandFactory.DELETE_PARENT_EDGE( parent, node) )
             .addCommand( commandFactory.DELETE_NODE( target, node ) );
     }
 
@@ -49,7 +49,7 @@ public class DeleteChildNodesCommand extends AbstractGraphCompositeCommand {
         final List<Edge<?, Node>> outEdges = node.getOutEdges();
         if ( null != outEdges && !outEdges.isEmpty() ) {
             for ( Edge<?, Node> outEdge : outEdges ) {
-                if ( outEdge.getContent() instanceof ParentChildRelationship ) {
+                if ( outEdge.getContent() instanceof Child) {
                     final Node target = outEdge.getTargetNode();
                     loadChildrenNodes( target );
                     nodesToRemove.add( target );

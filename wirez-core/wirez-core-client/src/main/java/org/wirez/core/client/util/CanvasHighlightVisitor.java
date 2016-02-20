@@ -25,9 +25,9 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.visitor.AbstractContentVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
-import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkContentVisitor;
+import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseCallback;
+import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseProcessorImpl;
+import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
@@ -123,41 +123,41 @@ public class CanvasHighlightVisitor {
         shapes.clear();
 
         final DefinitionManager definitionManager = ClientDefinitionManager.get();
-        new TreeWalkContentVisitor().visit(graph, new AbstractContentVisitorCallback() {
-
+        
+        
+        new AllEdgesTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
             @Override
-            public void visitNodeWithViewContent(Node<? extends View, ?> node) {
-                super.visitNodeWithViewContent(node);
-                addShape(node.getUUID());
-                
-            }
-
-            @Override
-            public void visitEdgeWithViewContent(Edge<? extends View, ?> edge) {
-                super.visitEdgeWithViewContent(edge);
+            public void traverseViewEdge(final Edge<Object, Node> edge) {
                 addShape(edge.getUUID());
             }
 
             @Override
-            public void visitNode(Node node) {
-                super.visitNode(node);
+            public void traverseChildEdge(final Edge<Object, Node> edge) {
+
+            }
+
+            @Override
+            public void traverseParentEdge(final Edge<Object, Node> edge) {
+
+            }
+
+            @Override
+            public void traverse(final Edge<Object, Node> edge) {
+
+            }
+
+            @Override
+            public void traverseView(final Graph<View, Node<View, Edge>> graph) {
+
+            }
+
+            @Override
+            public void traverseView(final Node<View, Edge> node) {
                 addShape(node.getUUID());
             }
 
             @Override
-            public void visitEdge(Edge edge) {
-                super.visitEdge(edge);
-                addShape(edge.getUUID());
-            }
-
-            @Override
-            public void visitGraph(Graph graph) {
-                super.visitGraph(graph);
-            }
-
-            @Override
-            public void endVisit() {
-                super.endVisit();
+            public void traverseCompleted() {
                 command.execute();
             }
 
@@ -167,8 +167,8 @@ public class CanvasHighlightVisitor {
                     shapes.add(shape);
                 }
             }
-
-        }, VisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE);
+            
+        });
         
     }
 

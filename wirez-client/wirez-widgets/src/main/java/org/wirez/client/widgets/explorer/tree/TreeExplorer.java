@@ -6,12 +6,14 @@ import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.defaults.Name;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.processing.visitor.AbstractChildrenVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
-import org.wirez.core.api.graph.processing.visitor.tree.TreeWalkChildrenVisitor;
+import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessor;
+import org.wirez.core.api.graph.processing.traverse.content.ContentTraverseCallback;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
@@ -51,7 +53,7 @@ public class TreeExplorer implements IsWidget {
     
     ClientDefinitionServices clientDefinitionServices;
     DefinitionManager definitionManager;
-    TreeWalkChildrenVisitor visitor;
+    ChildrenTraverseProcessor childrenTraverseProcessor;
     View view;
 
     private CanvasHandler canvasHandler;
@@ -60,11 +62,11 @@ public class TreeExplorer implements IsWidget {
     @Inject
     public TreeExplorer(final ClientDefinitionServices clientDefinitionServices,
                         final DefinitionManager definitionManager,
-                        final TreeWalkChildrenVisitor visitor, 
+                        final ChildrenTraverseProcessor childrenTraverseProcessor, 
                         final View view) {
         this.definitionManager = definitionManager;
         this.clientDefinitionServices = clientDefinitionServices;
-        this.visitor = visitor;
+        this.childrenTraverseProcessor = childrenTraverseProcessor;
         this.view = view;
     }
 
@@ -80,41 +82,24 @@ public class TreeExplorer implements IsWidget {
         doShow(canvasHandler.getDiagram().getGraph());
     }
 
-    private void doShow(final Graph<?, Node> graph) {
+    private void doShow(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
         assert graph != null;
 
         clear();
 
         final Canvas canvas = canvasHandler.getCanvas();
-        
-        visitor.visit(graph, new AbstractChildrenVisitorCallback() {
+
+        childrenTraverseProcessor.traverse(graph, new ContentTraverseCallback<Child, Node<org.wirez.core.api.graph.content.view.View, Edge>, Edge<Child, Node>>() {
 
             final Map<String, Integer> parents = new LinkedHashMap<String, Integer>();
             final Map<Integer, List<String>> indexes = new LinkedHashMap<Integer, List<String>>();
-
+            boolean isChild = false;
+            
             @Override
-            public void visitGraph(Graph<?, Node> graph) {
-                super.visitGraph(graph);
-            }
+            public void traverse(final Edge<Child, Node> edge) {
 
-            @Override
-            public void visitNode(final Node node) {
-                super.visitNode(node);
-                parents.put(node.getUUID(), 0);
-                
-                List<String> parentIdxList = indexes.get(0);
-                if ( null == parentIdxList ) {
-                    parentIdxList = new ArrayList<String>();
-                    indexes.put(0, parentIdxList);
-                }
-                parentIdxList.add(node.getUUID());
-                view.addItem(node.getUUID(), getItemText(node));
-            }
-
-            @Override
-            public void visitChildNode(final Node parent, Node child) {
-                super.visitChildNode(parent, child);
-                
+                final Node parent = edge.getSourceNode();
+                final Node child = edge.getTargetNode();
                 String parentUUID = parent.getUUID();
                 int parentIdx = parents.get(parentUUID);
                 parents.put( child.getUUID(), parentIdx + 1 );
@@ -124,14 +109,47 @@ public class TreeExplorer implements IsWidget {
                     parentIdxList = new ArrayList<String>();
                     indexes.put(parentIdx, parentIdxList);
                 }
-                
+
                 parentIdxList.add(child.getUUID());
-                
+
                 // TODO: Calculate parents recursively.
                 view.addItem(child.getUUID(), getItemText(child), parentIdx);
+                
+                this.isChild = true;
             }
 
-        }, VisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE);
+            @Override
+            public void traverseView(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
+
+            }
+
+            @Override
+            public void traverseView(final Node<org.wirez.core.api.graph.content.view.View, Edge> node) {
+                
+                if ( !isChild ) {
+                    
+                    parents.put(node.getUUID(), 0);
+
+                    List<String> parentIdxList = indexes.get(0);
+                    if ( null == parentIdxList ) {
+                        parentIdxList = new ArrayList<String>();
+                        indexes.put(0, parentIdxList);
+                    }
+                    parentIdxList.add(node.getUUID());
+                    view.addItem(node.getUUID(), getItemText(node));
+                    
+                } else {
+                    isChild = false;
+                }
+                
+            }
+
+            @Override
+            public void traverseCompleted() {
+
+            }
+        });
+        
     }
     
     public void clear() {

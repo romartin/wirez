@@ -22,9 +22,6 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
-import org.wirez.core.api.graph.processing.visitor.ContentVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.Visitor;
-import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.control.ConnectionAcceptor;
@@ -60,12 +57,6 @@ public class WiresCanvasSettingsBuilderImpl implements WiresCanvasSettingsBuilde
     @Override
     public WiresCanvasSettingsBuilder containmentAcceptor(final ContainmentAcceptor connectionAcceptor) {
         settings.setContainmentAcceptor(connectionAcceptor);
-        return this;
-    }
-
-    @Override
-    public WiresCanvasSettingsBuilder visitor(final Visitor<?, ?, ?> visitor) {
-        settings.setVisitor((Visitor<Graph<?, Node>, ? extends ContentVisitorCallback<Node, Edge, Graph<?, Node>>, ? extends VisitorPolicy>) visitor);
         return this;
     }
 

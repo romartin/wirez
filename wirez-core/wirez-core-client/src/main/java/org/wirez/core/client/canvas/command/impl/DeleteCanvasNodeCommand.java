@@ -6,7 +6,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
@@ -40,7 +40,7 @@ public class DeleteCanvasNodeCommand extends DeleteCanvasElementCommand<Node> im
         List<Edge> inEdges = candidate.getInEdges();
         if ( null != inEdges && !inEdges.isEmpty() ) {
             for ( final Edge edge : inEdges ) {
-                if ( edge.getContent() instanceof ParentChildRelationship) {
+                if ( edge.getContent() instanceof Child) {
                     return edge.getSourceNode();
                 }
             }

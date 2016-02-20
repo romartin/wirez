@@ -26,12 +26,12 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.ParentChildRelationship;
+import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
-import org.wirez.core.api.graph.processing.visitor.AbstractContentVisitorCallback;
-import org.wirez.core.api.graph.processing.visitor.VisitorPolicy;
+import org.wirez.core.api.graph.processing.traverse.tree.TreeTraverseCallback;
+import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -55,6 +55,7 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
 
     protected ShapeManager shapeManager;
     protected CanvasCommandFactory commandFactory;
+    protected TreeWalkTraverseProcessor treeWalkTraverseProcessor;
     protected WiresCanvas canvas;
     protected Diagram<?> diagram;
     protected S settings;
@@ -62,8 +63,10 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     protected Collection<L> listeners = new LinkedList<L>();
 
     @Inject
-    public AbstractWiresCanvasHandler(final ShapeManager shapeManager,
+    public AbstractWiresCanvasHandler(final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
+                                      final ShapeManager shapeManager,
                                       final CanvasCommandFactory commandFactory) {
+        this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
         this.shapeManager = shapeManager;
         this.commandFactory = commandFactory;
     }
@@ -107,58 +110,77 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     }
 
     protected void draw() {
-        settings.getVisitor().visit(diagram.getGraph(), DRAW_VISITOR_CALLBACK, VisitorPolicy.VISIT_EDGE_AFTER_TARGET_NODE);
+
+        treeWalkTraverseProcessor
+                .usePolicy(TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_AFTER_TARGET_NODE)
+                .traverse(diagram.getGraph(), new TreeTraverseCallback<Graph, Node, Edge>() {
+            @Override
+            public void traverseGraph(final Graph graph) {
+                
+            }
+
+            @Override
+            public boolean traverseNode(final Node node) {
+                
+                if ( node.getContent() instanceof View ) {
+                    final View viewContent = (View) node.getContent();
+                    final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
+
+                    // Add the node shape into the canvas.
+                    register(factory, node);
+                    applyElementMutation(node);
+                    
+                    return true;
+                }
+                
+                return false;
+            }
+
+            @Override
+            public boolean traverseEdge(final Edge edge) {
+                
+                final Object content = edge.getContent();
+
+                if ( content instanceof View ) {
+
+                    final View viewContent = (View) edge.getContent();
+                    final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
+
+                    // Add the edge shape into the canvas.
+                    register(factory, edge);
+                    applyElementMutation(edge);
+                    final String uuid = edge.getUUID();
+                    BaseConnector connector = (BaseConnector) getCanvas().getShape(uuid);
+                    connector.applyConnections(edge, AbstractWiresCanvasHandler.this);
+                    
+                    return true;
+
+                } else if ( content instanceof Child ) {
+
+                    final Node child = edge.getTargetNode();
+                    final Node parent = edge.getSourceNode();
+
+                    final Object childContent = child.getContent();
+                    if (childContent instanceof View) {
+                        addChild(parent, child);
+                        applyElementMutation(child);
+                    }
+                    
+                    return true;
+                } 
+
+                return false;
+                
+            }
+
+            @Override
+            public void traverseCompleted() {
+
+            }
+        });
+        
     }
 
-    private final AbstractContentVisitorCallback DRAW_VISITOR_CALLBACK = new AbstractContentVisitorCallback() {
-
-        @Override
-        public void visitNodeWithViewContent(Node<? extends View, ?> node) {
-            final ShapeFactory factory = shapeManager.getFactory(node.getContent().getDefinition());
-
-            // Add the node shape into the canvas.
-            register(factory, node);
-            applyElementMutation(node);
-           
-        }
-
-        @Override
-        public void visitEdgeWithViewContent(Edge<? extends View, ?> edge) {
-            final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
-
-            // Add the edge shape into the canvas.
-            register(factory, edge);
-            applyElementMutation(edge);
-            final String uuid = edge.getUUID();
-            BaseConnector connector = (BaseConnector) getCanvas().getShape(uuid);
-            connector.applyConnections(edge, AbstractWiresCanvasHandler.this);
-        }
-
-        @Override
-        public void visitEdgeWithParentChildRelationContent(Edge<ParentChildRelationship, ?> edge) {
-            final Node child = edge.getTargetNode();
-            final Node parent = edge.getSourceNode();
-            final Object content = child.getContent();
-            if (content instanceof View) {
-                final View viewContent = (View) content;
-                final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
-                addChild(parent, child);
-                applyElementMutation(child);
-            }
-        }
-
-        @Override
-        public void visitNode(final Node node) {
-
-        }
-
-        @Override
-        public void visitEdge(final Edge edge) {
-
-        }
-
-    };
-    
      /*
         ***************************************************************************************
         * Listeners handling

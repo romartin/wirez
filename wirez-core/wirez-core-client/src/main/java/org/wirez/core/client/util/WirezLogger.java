@@ -89,7 +89,7 @@ public class WirezLogger {
             new AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
                 @Override
                 public void traverseViewEdge(final Edge<Object, Node> edge) {
-                    log("(View) Edge UUI: " + edge.getUUID());
+                    log("(View) Edge UUID: " + edge.getUUID());
                     final View viewContent = (View) edge.getContent();
                     log("(View) Edge Id: " + viewContent.getDefinition().getId());
 
@@ -104,7 +104,7 @@ public class WirezLogger {
 
                 @Override
                 public void traverseChildEdge(final Edge<Object, Node> edge) {
-                    log("(Child= Edge UUI: " + edge.getUUID());
+                    log("(Child= Edge UUID: " + edge.getUUID());
 
                     final Node outNode = edge.getTargetNode();
                     if (outNode == null) {
@@ -122,7 +122,7 @@ public class WirezLogger {
 
                 @Override
                 public void traverse(final Edge<Object, Node> edge) {
-                    log("Edge UUI: " + edge.getUUID());
+                    log("Edge UUID: " + edge.getUUID());
 
                     final Node outNode = (Node) edge.getTargetNode();
                     if (outNode == null) {
@@ -146,7 +146,7 @@ public class WirezLogger {
 
                 @Override
                 public void traverseView(final Node<View, Edge> node) {
-                    log("(View) UUID: " + node.getUUID());
+                    log("(View) Node UUID: " + node.getUUID());
                     log("(View) Node Id: " + node.getContent().getDefinition().getId());
                     List<Edge> outEdges = (List<Edge>) node.getOutEdges();
                     if (outEdges == null || outEdges.isEmpty()) {

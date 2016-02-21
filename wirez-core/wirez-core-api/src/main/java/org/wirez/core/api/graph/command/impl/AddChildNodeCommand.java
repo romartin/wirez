@@ -40,7 +40,7 @@ public class AddChildNodeCommand extends AbstractGraphCompositeCommand {
     private void initCommands() {
 
         this.addCommand( commandFactory.ADD_NODE(target, candidate) )
-            .addCommand( commandFactory.ADD_PARENT_EDGE(parent, candidate) );
+            .addCommand( commandFactory.ADD_CHILD_EDGE(parent, candidate) );
     }
 
     @Override

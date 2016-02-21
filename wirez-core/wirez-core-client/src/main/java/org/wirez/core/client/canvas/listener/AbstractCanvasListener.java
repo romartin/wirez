@@ -17,6 +17,7 @@
 package org.wirez.core.client.canvas.listener;
 
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.impl.AbstractWiresCanvasHandler;
 
 public abstract class AbstractCanvasListener implements CanvasListener {
     
@@ -38,6 +39,6 @@ public abstract class AbstractCanvasListener implements CanvasListener {
 
     public void detach() {
         assert canvasHandler != null;
-        // TODO
+        ( (AbstractWiresCanvasHandler) canvasHandler).removeListener(this);
     }
 }

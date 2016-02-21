@@ -21,12 +21,14 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
 
     protected abstract boolean doTraverse(final Edge edge);
 
+    protected abstract TreeWalkTraverseProcessor.TraversePolicy getPolicy();
+    
     @Override
     public void traverse(final Graph<View, N> graph,
                          final ContentTraverseCallback<C, N, E> callback) {
 
         treeWalkTraverseProcessor
-                .usePolicy(TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_BEFORE_TARGET_NODE)
+                .usePolicy(getPolicy())
                 .traverse(graph, new TreeTraverseCallback<Graph, Node, Edge>() {
 
                     @Override

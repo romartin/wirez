@@ -19,6 +19,11 @@ public final class ParentTraverseProcessorImpl extends AbstractContentTraversePr
     }
 
     @Override
+    protected TreeWalkTraverseProcessor.TraversePolicy getPolicy() {
+        return TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_BEFORE_TARGET_NODE;
+    }
+
+    @Override
     protected boolean doTraverse(final Edge edge) {
         return edge.getContent() instanceof Parent;
     }

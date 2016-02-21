@@ -32,7 +32,10 @@ public final class TreeWalkTraverseProcessorImpl implements TreeWalkTraverseProc
                          final TreeTraverseCallback<Graph, Node, Edge> callback) {
         this.graph = graph;
         this.callback = callback;
-
+        
+        processesNodes.clear();
+        processesEdges.clear();
+        
         startTraverse();
     }
 

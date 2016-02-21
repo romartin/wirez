@@ -28,10 +28,7 @@ import org.wirez.core.client.service.ClientDefinitionServices;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,6 +54,7 @@ public class TreeExplorer implements IsWidget {
     ClientDefinitionServices clientDefinitionServices;
     DefinitionManager definitionManager;
     AllEdgesTraverseProcessor allEdgesTraverseProcessor;
+    ChildrenTraverseProcessor childrenTraverseProcessor;
     View view;
 
     private CanvasHandler canvasHandler;
@@ -66,10 +64,12 @@ public class TreeExplorer implements IsWidget {
     public TreeExplorer(final ClientDefinitionServices clientDefinitionServices,
                         final DefinitionManager definitionManager,
                         final AllEdgesTraverseProcessor allEdgesTraverseProcessor, 
+                        final ChildrenTraverseProcessor childrenTraverseProcessor,
                         final View view) {
         this.definitionManager = definitionManager;
         this.clientDefinitionServices = clientDefinitionServices;
         this.allEdgesTraverseProcessor = allEdgesTraverseProcessor;
+        this.childrenTraverseProcessor = childrenTraverseProcessor;
         this.view = view;
     }
 
@@ -86,6 +86,95 @@ public class TreeExplorer implements IsWidget {
     }
 
     private void doShow(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
+        traverseChildrenEdges(graph);
+    }
+
+    private void traverseChildrenEdges(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
+        assert graph != null;
+
+        clear();
+
+        childrenTraverseProcessor.traverse(graph, new ContentTraverseCallback<Child, Node<org.wirez.core.api.graph.content.view.View, Edge>, Edge<Child, Node>>() {
+
+            final Stack<Integer> idxStack = new Stack<Integer>();
+            Node parent = null;
+            
+            @Override
+            public void traverse(final Edge<Child, Node> edge) {
+                final Node newParent = edge.getSourceNode();
+                assert newParent != null;
+                
+                if ( null == parent || ( !parent.equals(newParent) ) ) {
+                    idxStack.push(-1);
+                } 
+                
+                this.parent = edge.getSourceNode();
+            }
+
+            @Override
+            public void traverseView(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
+                idxStack.clear();
+                idxStack.push(-1);
+            }
+
+            @Override
+            public void traverseView(final Node<org.wirez.core.api.graph.content.view.View, Edge> node) {
+                LOGGER.log(Level.INFO, " Start of Traverse View Node " + node.getUUID());
+
+                inc(idxStack);
+                
+                if ( null == parent ) {
+
+                    LOGGER.log(Level.INFO, " Traverse for View Node " + node.getUUID() + " with no parent");
+
+                    view.addItem(node.getUUID(), getItemText(node));
+
+
+                } else {
+                    
+                    final String parentUUID = parent.getUUID();
+
+                    LOGGER.log(Level.INFO, " Traverse for View Node " + node.getUUID() + " with parent " + parentUUID);
+
+                    view.addItem(node.getUUID(), getItemText(node), getParentsIds(idxStack));
+
+                }
+
+                LOGGER.log(Level.INFO, " End of Traverse View Node " + node.getUUID());
+            }
+
+            @Override
+            public void traverseCompleted() {
+
+            }
+        });
+
+    }
+    
+    private void inc(final Stack<Integer> stack) {
+        final Integer currentIdx = stack.pop();
+        stack.push(currentIdx + 1);
+    }
+    
+    private int[] getParentsIds(final Stack<Integer> stack) {
+        final int parentsLength = stack.size();
+        List<Integer> result = new LinkedList<>();
+        for ( int x = 0; x < parentsLength; x++) {
+            result.add( stack.get(x) );
+        }
+        
+        if ( !result.isEmpty() ) {
+            final int[] resultArray = new int[result.size()];
+            for (int x = 0; x < result.size(); x++) {
+                resultArray[x] = result.get(x);
+            }
+            return resultArray;
+        }
+        
+        return new int[] { };
+    }
+    
+    private void traverseAllEdges(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
         assert graph != null;
 
         clear();
@@ -95,10 +184,10 @@ public class TreeExplorer implements IsWidget {
             final Map<String, Integer> parents = new LinkedHashMap<String, Integer>();
             final Map<Integer, List<String>> indexes = new LinkedHashMap<Integer, List<String>>();
             Node parent = null;
-            
+
             @Override
             public void traverseViewEdge(final Edge<Object, Node> edge) {
-                
+
             }
 
             @Override
@@ -138,7 +227,7 @@ public class TreeExplorer implements IsWidget {
                         indexes.put(0, parentIdxList);
                     }
                     parentIdxList.add(node.getUUID());
-                    
+
                     view.addItem(node.getUUID(), getItemText(node));
 
                 } else {
@@ -172,7 +261,6 @@ public class TreeExplorer implements IsWidget {
 
             }
         });
-        
     }
     
     public void clear() {
@@ -202,6 +290,7 @@ public class TreeExplorer implements IsWidget {
         }
     }
 
+    // TODO: Fix - Several calls here for a single command...
     private void addCanvasListener(final CanvasHandler canvasHandler) {
         removeCanvasListener();
 

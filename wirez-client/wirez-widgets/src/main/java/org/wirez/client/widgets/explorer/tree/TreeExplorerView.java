@@ -85,16 +85,18 @@ public class TreeExplorerView extends Composite implements TreeExplorer.View {
 
     private  TreeItem getParent(final int... parentsIds) {
         TreeItem parent = null;
-        for ( int parentIdx : parentsIds ) {
+        
+        for ( int x = 0; x <  ( parentsIds.length - 1) ; x++) {
+            final int parentIdx = parentsIds[x];
             
             if ( null == parent ) {
                 parent = tree.getItem(parentIdx);
             } else {
-                parent = parent.getChild(parentIdx);    
+                parent = parent.getChild(parentIdx);
             }
-            
         }
         
         return parent;
     }
+    
 }

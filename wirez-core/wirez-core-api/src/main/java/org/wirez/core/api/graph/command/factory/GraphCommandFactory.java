@@ -35,6 +35,9 @@ public interface GraphCommandFactory {
     AddParentEdgeCommand ADD_PARENT_EDGE(Node parent,
                                     Node candidate);
 
+    DeleteChildEdgeCommand DELETE_CHILD_EDGE(Node parent,
+                                             Node candidate);
+    
     DeleteParentEdgeCommand DELETE_PARENT_EDGE(Node parent,
                                                Node candidate);
 

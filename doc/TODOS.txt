@@ -1,0 +1,70 @@
+- Immediately
+*************
+    - Tree explorer - add treeitems on all sublevels
+    - Commands - undo
+    - custom graph factory for bpmn -> create a diagram by default
+    - Delete from canvas - ( all children... )
+        - Confirm delete alert
+    - lanes support
+
+      
+- Next
+*******
+
+    - Save services & BPMN marshalling
+    - improve server-client tx errai marshalling for definitions, graphs, diagrams
+
+
+- Lienzo
+********
+
+    - Fix wires issues
+        - WiresLayoutContainer - set positions when resizing
+        - WiresManager - addToIndex not working for unconnected connectors
+        - WiresShapeDragHandler -> fixes on highlight / unhighlight
+        - Examples
+            - Resize -> http://screencast.com/t/TjRkYpMvt
+            - Align -> http://screencast.com/t/62lCjZGYDq7i
+            
+    - Wires refactors
+        - Exctract logics for conttainment & connection ( hightlight parents, show magnets, etc) from drag event handlers
+        
+    - Others
+        - Text orientation
+
+- Dynamic forms
+***************
+
+    - Issues with property change event handlers
+    - Create a doc with requirements ( field types, etc )
+ 
+- Widgets
+*********
+
+    - Raw view of the graph
+      - Draw all kind of content for nodes/edges as
+        - node /vertex - circle
+        - edge / relation - line
+      - use a Canvas impl not using wires - LienzoCanvas
+      - add info popup on over a vertex/edge
+      - show as a pop on canvas screen
+      
+      
+- House keeping & others
+************************
+
+    - BPMN marshalling / unmarshalling
+        - Remove code from "legacy" package and use the jbpm-designer-backend artifact as a required dependency.
+            - Exclude drools datamodeller transitive artifact -> It produces an errai compilation error
+            - Try to exclude as much as possible the transitive dependencies
+            - Currently some CDI issues appears when adding it...
+     - Connections
+        - Do not call head/tailConnectionAccepted until drag eng!
+    - Generics cleaning
+    - UX
+        - Loading popups
+        - Initially only show wizard screen - when creating/loading a diagram, show all other screens ( palette, props, etc )
+    - Model
+        - compile time generation adapters for Def, DefSet, PropSet
+        - use of graph factories in client side 
+        - Clone definitions and properties when creating graph elements -> errai low level serialization?- Cloning models

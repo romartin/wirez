@@ -47,7 +47,6 @@ public class ShapeHighlightAnimation extends ShapeSelectionAnimation {
                 _alpha[x] = decorator.getStrokeAlpha();
                 _color[x] = decorator.getStrokeColor();
                 decorator.setStrokeWidth(getStrokeWidth()).setStrokeColor(getColor()).setStrokeAlpha(0);
-                decorator.moveToTop();
                 decorator.animate(getAnimationTweener(), AnimationProperties.toPropertyList(STROKE_ALPHA(1)), 
                         getDuration(), animationCallback);
                 x++;
@@ -62,7 +61,7 @@ public class ShapeHighlightAnimation extends ShapeSelectionAnimation {
         if ( null != decorators && !decorators.isEmpty() ) {
             int x = 0;
             for( final com.ait.lienzo.client.core.shape.Shape decorator : decorators ) {
-                decorator.setStrokeAlpha(1).moveToTop();
+                decorator.setStrokeAlpha(1);
                 decorator.animate(getAnimationTweener(), AnimationProperties.toPropertyList(STROKE_WIDTH(_width[x]), STROKE_COLOR(_color[x]), STROKE_ALPHA(_alpha[x])),
                         getDuration());
                 x++;

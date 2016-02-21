@@ -43,7 +43,10 @@ public class TreeExplorerView extends Composite implements TreeExplorer.View {
     public TreeExplorer.View addItem(final String uuid, final String itemText, final int... parentsIds) {
         final TreeItem item = buildItem(uuid, itemText);
         final TreeItem parent = getParent(parentsIds);
-        parent.addItem(item);
+        // TODO: Remove this NPE check and fix it.
+        if ( null != parent ) {
+            parent.addItem(item);
+        }
 
         return this;
     }

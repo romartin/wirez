@@ -29,7 +29,7 @@ import org.wirez.core.api.rule.RuleViolation;
 import java.util.List;
 
 /**
- * A Command to set a DefaultNode children of another container node.
+ * Deletes a parent edge ( from the child to the parent node ).
  */
 public class DeleteParentEdgeCommand extends AbstractGraphCommand {
 
@@ -59,20 +59,20 @@ public class DeleteParentEdgeCommand extends AbstractGraphCommand {
             if ( null != edge ) {
                 edge.setSourceNode(null);
                 edge.setTargetNode(null);
-                parent.getOutEdges().remove( edge );
-                candidate.getInEdges().remove( edge );
+                parent.getInEdges().remove( edge );
+                candidate.getOutEdges().remove( edge );
             }
         }
         return results;
     }
     
     private Edge<Parent, Node> getEdgeForTarget() {
-        final List<Edge<?, Node>> outEdges = parent.getOutEdges();
+        final List<Edge<?, Node>> outEdges = parent.getInEdges();
         if ( null != outEdges && !outEdges.isEmpty() ) {
             for ( Edge<?, Node> outEdge : outEdges ) {
                 if ( outEdge.getContent() instanceof Parent ) {
-                    final Node target = outEdge.getTargetNode();
-                    if ( null != target && target.equals( candidate )) {
+                    final Node source = outEdge.getSourceNode();
+                    if ( null != source && source.equals( candidate )) {
                         return (Edge<Parent, Node>) outEdge;
                     }
                 }
@@ -94,6 +94,6 @@ public class DeleteParentEdgeCommand extends AbstractGraphCommand {
 
     @Override
     public String toString() {
-        return "RemoveParentCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
+        return "DeleteParentEdgeCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
     }
 }

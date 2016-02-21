@@ -88,6 +88,6 @@ public class AddParentEdgeCommand extends AbstractGraphCommand {
 
     @Override
     public String toString() {
-        return "SetParentCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
+        return "AddParentEdgeCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
     }
 }

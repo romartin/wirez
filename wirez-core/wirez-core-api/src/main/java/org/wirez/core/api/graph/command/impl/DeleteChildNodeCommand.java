@@ -26,7 +26,7 @@ public class DeleteChildNodeCommand extends AbstractGraphCompositeCommand {
     }
     
     private void initCommands() {
-        this.addCommand( commandFactory.DELETE_PARENT_EDGE( parent, candidate) )
+        this.addCommand( commandFactory.DELETE_CHILD_EDGE( parent, candidate) )
             .addCommand( commandFactory.DELETE_NODE( target, candidate ) );
     }
 

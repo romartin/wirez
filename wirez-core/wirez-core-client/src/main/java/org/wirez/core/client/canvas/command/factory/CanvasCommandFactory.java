@@ -26,9 +26,15 @@ public interface CanvasCommandFactory {
     AddCanvasChildEdgeCommand ADD_CHILD_EDGE(Node parent,
                                              Node candidate);
     
+    DeleteCanvasChildEdgeCommand DELETE_CHILD_EDGE(Node parent,
+                                                   Node candidate);
+    
     AddCanvasParentEdgeCommand ADD_PARENT_EDGE(Node parent,
                                                Node candidate);
     
+    DeleteCanvasParentEdgeCommand DELETE_PARENT_EDGE(Node parent,
+                                                    Node candidate);
+
     UpdateCanvasElementPositionCommand UPDATE_POSITION(Element element,
                                                        Double x,
                                                        Double y);

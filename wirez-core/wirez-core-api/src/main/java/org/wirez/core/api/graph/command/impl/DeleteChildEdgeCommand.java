@@ -22,26 +22,25 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.command.impl.AbstractGraphCommand;
 import org.wirez.core.api.graph.content.Child;
-import org.wirez.core.api.graph.impl.EdgeImpl;
+import org.wirez.core.api.graph.content.Parent;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.UUID;
 
-import java.util.*;
+import java.util.List;
 
 /**
- * Creates/defines a new parent-child connection from the given nodes.
- * Both nodes must already be crated and present on the graph storage.
+ * Deletes a child edge ( from the parent to the child node ).
  */
-public class AddChildEdgeCommand extends AbstractGraphCommand {
+public class DeleteChildEdgeCommand extends AbstractGraphCommand {
 
     private Node parent;
     private Node candidate;
 
-    public AddChildEdgeCommand(final GraphCommandFactory commandFactory,
-                               final Node parent,
-                               final Node candidate) {
+    public DeleteChildEdgeCommand(final GraphCommandFactory commandFactory,
+                                  final Node parent,
+                                  final Node candidate) {
         super(commandFactory);
         this.parent = PortablePreconditions.checkNotNull( "parent",
                 parent );
@@ -58,27 +57,35 @@ public class AddChildEdgeCommand extends AbstractGraphCommand {
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
         final CommandResult<RuleViolation> results = check(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
-
-            // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
-            final String uuid = UUID.uuid();
-            final Map<String, Object> properties = new HashMap<>();
-            final Set<String> labels = new HashSet<>(1);
-            final Edge<Child, Node> edge = new EdgeImpl<>(uuid, new HashSet<>(), labels, new Child());
-
-            edge.setSourceNode(parent);
-            edge.setTargetNode(candidate);
-            parent.getOutEdges().add( edge );
-            candidate.getInEdges().add( edge );
-            
+            final Edge<Parent, Node>  edge = getEdgeForTarget();
+            if ( null != edge ) {
+                edge.setSourceNode(null);
+                edge.setTargetNode(null);
+                parent.getOutEdges().remove( edge );
+                candidate.getInEdges().remove( edge );
+            }
         }
         return results;
     }
     
+    private Edge<Parent, Node> getEdgeForTarget() {
+        final List<Edge<?, Node>> outEdges = parent.getOutEdges();
+        if ( null != outEdges && !outEdges.isEmpty() ) {
+            for ( Edge<?, Node> outEdge : outEdges ) {
+                if ( outEdge.getContent() instanceof Child) {
+                    final Node targetNode = outEdge.getTargetNode();
+                    if ( null != targetNode && targetNode.equals( candidate )) {
+                        return (Edge<Parent, Node>) outEdge;
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
+
     private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
-        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) ruleManager.checkContainment( parent, candidate).violations();
-        final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
-        violations.addAll(containmentRuleViolations);
-        return new GraphCommandResult(violations);
+        return new GraphCommandResult();
     }
 
     @Override
@@ -89,6 +96,6 @@ public class AddChildEdgeCommand extends AbstractGraphCommand {
 
     @Override
     public String toString() {
-        return "AddChildEdgeCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
+        return "DeleteChildEdgeCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
     }
 }

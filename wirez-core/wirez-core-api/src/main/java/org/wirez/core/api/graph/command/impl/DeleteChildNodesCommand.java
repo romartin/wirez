@@ -36,13 +36,8 @@ public class DeleteChildNodesCommand extends AbstractGraphCompositeCommand {
     }
     
     private void addDeleteCommands(final Node node) {
-        this.addCommand( commandFactory.DELETE_PARENT_EDGE( parent, node) )
+        this.addCommand( commandFactory.DELETE_CHILD_EDGE( parent, node) )
             .addCommand( commandFactory.DELETE_NODE( target, node ) );
-    }
-
-    @Override
-    public String toString() {
-        return "RemoveChildNodesCommand [parent=" + parent.getUUID() + "]";
     }
 
     private void loadChildrenNodes(final Node node) {
@@ -57,5 +52,10 @@ public class DeleteChildNodesCommand extends AbstractGraphCompositeCommand {
             }
         }
     }
-    
+
+    @Override
+    public String toString() {
+        return "DeleteChildNodesCommand [parent=" + parent.getUUID() + "]";
+    }
+
 }

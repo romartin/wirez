@@ -43,9 +43,19 @@ public class CanvasCommandFactoryImpl implements CanvasCommandFactory {
     }
 
     @Override
+    public DeleteCanvasChildEdgeCommand DELETE_CHILD_EDGE(final Node parent, final Node candidate) {
+        return new DeleteCanvasChildEdgeCommand(this, parent, candidate);
+    }
+
+    @Override
     public AddCanvasParentEdgeCommand ADD_PARENT_EDGE(Node parent,
                                                       Node candidate) {
         return new AddCanvasParentEdgeCommand(this, parent, candidate);
+    }
+
+    @Override
+    public DeleteCanvasParentEdgeCommand DELETE_PARENT_EDGE(final Node parent, final Node candidate) {
+        return new DeleteCanvasParentEdgeCommand(this, parent, candidate);
     }
 
     @Override

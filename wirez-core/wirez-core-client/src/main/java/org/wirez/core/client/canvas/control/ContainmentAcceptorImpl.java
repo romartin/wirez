@@ -34,9 +34,16 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
                          final Node parent, 
                          final Node child) {
 
-        final Edge current = isSameParent(parent, child);
-        final Command<WiresCanvasHandler, CanvasCommandViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
-        final boolean isAllow = canvasHandler.allow( command );
+        boolean isAllow = false;
+        final Edge childEdge = getChildEdge(child);
+        final boolean isSameParent = isSameParent(parent, childEdge);
+        if ( isSameParent ) {
+            isAllow = true;
+        } else {
+            final Command<WiresCanvasHandler, CanvasCommandViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
+            isAllow = canvasHandler.allow( command );
+        }
+        
         log(Level.FINE, "isAllow=" + isAllow);
         return isAllow;
     }
@@ -46,27 +53,50 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
                           final Node parent, 
                           final Node child) {
 
-        final Edge current = isSameParent(parent, child);
-        final Command<WiresCanvasHandler, CanvasCommandViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
-        final CommandResults<CanvasCommandViolation> violations = 
-                canvasHandler.execute( command );;
-        final boolean isAccept = isAccept(violations);
+        final Edge childEdge = getChildEdge(child);
+        final boolean isSameParent = isSameParent(parent, childEdge);
+        
+        boolean isAccept = true;
+        if ( !isSameParent ) {
+
+            // Remove current child relationship.
+            if ( null != childEdge ) {
+                // TODO: Check command results?
+                canvasHandler.execute( commandFactory.DELETE_CHILD_EDGE( childEdge.getSourceNode() , child ) );
+            }
+
+            // Add a new child relationship.
+            final Command<WiresCanvasHandler, CanvasCommandViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
+            final CommandResults<CanvasCommandViolation> violations = canvasHandler.execute( command );
+            isAccept = isAccept(violations);
+            
+        }
+        
         log(Level.FINE, "isAccept=" + isAccept);
         return isAccept;
         
     }
-    
-    private Edge<Child, Node> isSameParent(final Node parent,
-                                           final Node child) {
-        if ( null != parent && child != null) {
-            final List<Edge> outEdges = parent.getOutEdges();
+
+    private boolean isSameParent(final Node parent,
+                                   final Edge<Child, Node> edge) {
+
+        if ( null != edge ) {
+            final Node sourceNode = edge.getSourceNode();
+            if ( sourceNode != null && sourceNode.getUUID().equals(parent.getUUID())) {
+                return true;
+            }
+        }
+        
+        return parent == null;
+    }
+
+    private Edge<Child, Node> getChildEdge(final Node child) {
+        if ( child != null) {
+            final List<Edge> outEdges = child.getInEdges();
             if ( null != outEdges && !outEdges.isEmpty() ) {
                 for ( final Edge edge : outEdges ) {
                     if ( edge.getContent() instanceof Child ) {
-                        final Node target = edge.getTargetNode();
-                        if ( target != null && target.getUUID().equals(child.getUUID())) {
-                            return (Edge<Child, Node>) edge;
-                        }
+                        return edge;
                     }
                 }
             }

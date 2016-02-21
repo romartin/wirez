@@ -73,6 +73,11 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
+    public DeleteChildEdgeCommand DELETE_CHILD_EDGE(final Node parent, final Node candidate) {
+        return new DeleteChildEdgeCommand(this, parent, candidate);
+    }
+
+    @Override
     public DeleteParentEdgeCommand DELETE_PARENT_EDGE(final Node parent, final Node candidate) {
         return new DeleteParentEdgeCommand(this, parent, candidate);
     }

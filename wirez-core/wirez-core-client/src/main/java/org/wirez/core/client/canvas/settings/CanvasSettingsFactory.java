@@ -7,7 +7,7 @@ import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.control.ConnectionAcceptor;
 import org.wirez.core.client.canvas.control.ContainmentAcceptor;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

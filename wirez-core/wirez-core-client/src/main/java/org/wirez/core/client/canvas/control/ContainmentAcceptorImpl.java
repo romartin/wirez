@@ -9,7 +9,7 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;

@@ -39,14 +39,14 @@ public class WiresRectangleView extends AbstractWiresShapeView<WiresRectangleVie
 
     @Override
     public boolean supports(final ViewEventType type) {
-        return ViewEventType.CLICK.equals( type );
+        return ViewEventType.MOUSE_CLICK.equals( type );
     }
 
     @Override
     protected HandlerRegistration doAddHandler(final ViewEventType type, 
                                                final ViewHandler<ViewEvent> eventHandler) {
         
-        if ( ViewEventType.CLICK.equals(type) ) {
+        if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
             return registerClickHandler(getPath(), eventHandler);
         }
 

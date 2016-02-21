@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas.impl;
+package org.wirez.core.client.canvas.wires;
 
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 @Dependent
 public class WiresCanvasViewHandler extends AbstractWiresCanvasHandler<CanvasViewSettings, CanvasListener> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.WiresCanvasViewHandler");
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.wires.WiresCanvasViewHandler");
 
     @Inject
     public WiresCanvasViewHandler(final TreeWalkTraverseProcessor treeWalkTraverseProcessor,

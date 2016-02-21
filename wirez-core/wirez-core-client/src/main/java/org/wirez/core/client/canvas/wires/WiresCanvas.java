@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas.impl;
+package org.wirez.core.client.canvas.wires;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
@@ -47,7 +47,7 @@ import java.util.logging.Logger;
  */
 public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.WiresCanvas");
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.wires.WiresCanvas");
     
     public static final long ANIMATION_SELECTION_DURATION = 250;
     

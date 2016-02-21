@@ -17,7 +17,7 @@
 package org.wirez.core.client.control.toolbox;
 
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.canvas.listener.AbstractCanvasModelListener;
 import org.wirez.core.client.canvas.listener.CanvasModelListener;
 

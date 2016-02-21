@@ -32,7 +32,7 @@ import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;

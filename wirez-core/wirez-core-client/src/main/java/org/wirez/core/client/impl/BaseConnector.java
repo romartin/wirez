@@ -31,7 +31,7 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.impl.WiresCanvas;
+import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.mutation.*;

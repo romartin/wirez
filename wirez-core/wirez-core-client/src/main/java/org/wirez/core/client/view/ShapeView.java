@@ -2,6 +2,8 @@ package org.wirez.core.client.view;
 
 public interface ShapeView<T> {
 
+    T setTitle(String title);
+    
     double getShapeX();
 
     double getShapeY();

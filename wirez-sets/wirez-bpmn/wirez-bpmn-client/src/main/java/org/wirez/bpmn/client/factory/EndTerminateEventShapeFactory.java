@@ -24,7 +24,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
-import org.wirez.core.client.canvas.impl.WiresCanvas;
+import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 
 import javax.enterprise.context.ApplicationScoped;

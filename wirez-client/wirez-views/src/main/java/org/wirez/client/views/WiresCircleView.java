@@ -2,13 +2,11 @@ package org.wirez.client.views;
 
 import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.MultiPath;
-import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.core.client.view.HasRadius;
-import org.wirez.core.client.view.HasSize;
 import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
 import org.wirez.core.client.view.event.ViewHandler;
@@ -42,14 +40,14 @@ public class WiresCircleView extends AbstractWiresShapeView<WiresCircleView>
     }
     @Override
     public boolean supports(final ViewEventType type) {
-        return ViewEventType.CLICK.equals( type );
+        return ViewEventType.MOUSE_CLICK.equals( type );
     }
 
     @Override
     protected HandlerRegistration doAddHandler(final ViewEventType type, 
                                                final ViewHandler<ViewEvent> eventHandler) {
         
-        if ( ViewEventType.CLICK.equals(type) ) {
+        if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
             return registerClickHandler(getPath(), eventHandler);
         }
 

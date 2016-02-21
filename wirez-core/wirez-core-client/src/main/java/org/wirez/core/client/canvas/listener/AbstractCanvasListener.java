@@ -17,7 +17,7 @@
 package org.wirez.core.client.canvas.listener;
 
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.impl.AbstractWiresCanvasHandler;
+import org.wirez.core.client.canvas.wires.AbstractWiresCanvasHandler;
 
 public abstract class AbstractCanvasListener implements CanvasListener {
     

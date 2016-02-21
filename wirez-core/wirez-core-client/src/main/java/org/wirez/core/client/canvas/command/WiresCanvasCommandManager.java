@@ -18,12 +18,10 @@ package org.wirez.core.client.canvas.command;
 
 import org.wirez.core.api.command.*;
 import org.wirez.core.api.event.NotificationEvent;
-import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
-import org.wirez.core.client.canvas.impl.WiresCanvasViewHandler;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;

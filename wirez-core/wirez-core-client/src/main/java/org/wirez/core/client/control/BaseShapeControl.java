@@ -18,14 +18,12 @@ package org.wirez.core.client.control;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandManager;
-import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.util.ShapeUtils;
 
 import javax.inject.Inject;

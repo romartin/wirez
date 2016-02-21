@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.canvas.impl;
+package org.wirez.core.client.canvas.wires;
 
 import com.ait.lienzo.client.core.shape.wires.*;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -59,7 +59,7 @@ import java.util.logging.Logger;
 @Dependent
 public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSettings, CanvasModelListener> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.impl.WiresCanvasHandler");
+    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.wires.WiresCanvasHandler");
 
     ClientDefinitionManager clientDefinitionManager;
     

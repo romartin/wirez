@@ -9,7 +9,7 @@ import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.HasGraphCommand;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 
 /**
  * TODO: Register the new edge into the canvas handler's index for the graph. 

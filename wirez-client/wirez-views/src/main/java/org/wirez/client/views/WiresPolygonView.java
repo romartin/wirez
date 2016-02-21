@@ -1,6 +1,8 @@
 package org.wirez.client.views;
 
-import com.ait.lienzo.client.core.shape.*;
+import com.ait.lienzo.client.core.shape.MultiPath;
+import com.ait.lienzo.client.core.shape.RegularPolygon;
+import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
@@ -46,14 +48,14 @@ public class WiresPolygonView extends AbstractWiresShapeView<WiresPolygonView>
     }
     @Override
     public boolean supports(final ViewEventType type) {
-        return ViewEventType.CLICK.equals( type );
+        return ViewEventType.MOUSE_CLICK.equals( type );
     }
 
     @Override
     protected HandlerRegistration doAddHandler(final ViewEventType type, 
                                                final ViewHandler<ViewEvent> eventHandler) {
         
-        if ( ViewEventType.CLICK.equals(type) ) {
+        if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
             return registerClickHandler(getPath(), eventHandler);
         }
 

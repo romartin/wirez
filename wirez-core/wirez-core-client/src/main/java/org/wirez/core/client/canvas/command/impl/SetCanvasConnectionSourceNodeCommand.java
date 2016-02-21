@@ -11,7 +11,7 @@ import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.HasGraphCommand;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.impl.BaseConnector;
 
 public class SetCanvasConnectionSourceNodeCommand extends AbstractCanvasCommand implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {

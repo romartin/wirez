@@ -52,7 +52,7 @@ import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.control.SelectionManager;
-import org.wirez.core.client.canvas.impl.WiresCanvasHandler;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.canvas.settings.CanvasSettingsFactory;
 import org.wirez.core.client.canvas.settings.WiresCanvasSettings;
 import org.wirez.core.client.factory.ShapeFactory;

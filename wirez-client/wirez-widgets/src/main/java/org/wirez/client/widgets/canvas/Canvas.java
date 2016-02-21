@@ -19,7 +19,7 @@ package org.wirez.client.widgets.canvas;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.wirez.core.client.canvas.impl.WiresCanvas;
+import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 
 import javax.annotation.PostConstruct;

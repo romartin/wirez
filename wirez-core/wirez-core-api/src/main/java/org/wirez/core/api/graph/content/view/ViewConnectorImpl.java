@@ -29,6 +29,8 @@ public final class ViewConnectorImpl<W extends Definition> implements ViewConnec
 
     public ViewConnectorImpl(@MapsTo("definition") W definition,
                              @MapsTo("bounds") Bounds bounds) {
+        this.definition = definition;
+        this.bounds = bounds;
         this.sourceMagnetIndex = 0;
         this.targetMagnetIndex = 0;
     }

@@ -53,7 +53,6 @@ public class TreeExplorer implements IsWidget {
     
     ClientDefinitionServices clientDefinitionServices;
     DefinitionManager definitionManager;
-    AllEdgesTraverseProcessor allEdgesTraverseProcessor;
     ChildrenTraverseProcessor childrenTraverseProcessor;
     View view;
 
@@ -63,12 +62,10 @@ public class TreeExplorer implements IsWidget {
     @Inject
     public TreeExplorer(final ClientDefinitionServices clientDefinitionServices,
                         final DefinitionManager definitionManager,
-                        final AllEdgesTraverseProcessor allEdgesTraverseProcessor, 
                         final ChildrenTraverseProcessor childrenTraverseProcessor,
                         final View view) {
         this.definitionManager = definitionManager;
         this.clientDefinitionServices = clientDefinitionServices;
-        this.allEdgesTraverseProcessor = allEdgesTraverseProcessor;
         this.childrenTraverseProcessor = childrenTraverseProcessor;
         this.view = view;
     }
@@ -174,95 +171,6 @@ public class TreeExplorer implements IsWidget {
         return new int[] { };
     }
     
-    private void traverseAllEdges(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
-        assert graph != null;
-
-        clear();
-
-        allEdgesTraverseProcessor.traverse(graph, new AllEdgesTraverseCallback<Node<org.wirez.core.api.graph.content.view.View, Edge>, Edge<Object, Node>>() {
-
-            final Map<String, Integer> parents = new LinkedHashMap<String, Integer>();
-            final Map<Integer, List<String>> indexes = new LinkedHashMap<Integer, List<String>>();
-            Node parent = null;
-
-            @Override
-            public void traverseViewEdge(final Edge<Object, Node> edge) {
-
-            }
-
-            @Override
-            public void traverseChildEdge(final Edge<Object, Node> edge) {
-                LOGGER.log(Level.INFO, "Traverse Child edge " + edge.getUUID());
-                this.parent = edge.getSourceNode();
-            }
-
-            @Override
-            public void traverseParentEdge(final Edge<Object, Node> edge) {
-
-            }
-
-            @Override
-            public void traverse(final Edge<Object, Node> edge) {
-
-            }
-
-            @Override
-            public void traverseView(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
-                LOGGER.log(Level.INFO, "Traverse graph " + graph.getUUID());
-            }
-
-            @Override
-            public void traverseView(final Node<org.wirez.core.api.graph.content.view.View, Edge> node) {
-                LOGGER.log(Level.INFO, " Start of Traverse View Node " + node.getUUID());
-
-                if ( null == parent ) {
-
-                    LOGGER.log(Level.INFO, " Traverse for View Node " + node.getUUID() + " with no parent");
-
-                    parents.put(node.getUUID(), 0);
-
-                    List<String> parentIdxList = indexes.get(0);
-                    if ( null == parentIdxList ) {
-                        parentIdxList = new ArrayList<String>();
-                        indexes.put(0, parentIdxList);
-                    }
-                    parentIdxList.add(node.getUUID());
-
-                    view.addItem(node.getUUID(), getItemText(node));
-
-                } else {
-
-                    final String parentUUID = parent.getUUID();
-
-                    LOGGER.log(Level.INFO, " Traverse for View Node " + node.getUUID() + " with parent " + parentUUID);
-
-                    int parentIdx = parents.get(parentUUID);
-                    parents.put( node.getUUID(), parentIdx + 1 );
-
-                    List<String> parentIdxList = indexes.get(parentIdx);
-                    if ( null == parentIdxList ) {
-                        parentIdxList = new ArrayList<String>();
-                        indexes.put(parentIdx, parentIdxList);
-                    }
-
-                    parentIdxList.add(node.getUUID());
-
-                    // TODO: Calculate parents recursively.
-                    view.addItem(node.getUUID(), getItemText(node), parentIdx);
-
-                    this.parent = null;
-                }
-
-                LOGGER.log(Level.INFO, " End of Traverse View Node " + node.getUUID());
-            }
-
-            @Override
-            public void traverseCompleted() {
-
-            }
-        });
-    }
-    
     public void clear() {
         view.clear();
     }
@@ -304,7 +212,7 @@ public class TreeExplorer implements IsWidget {
             @Override
             public void onElementModified(final Element _element) {
                 super.onElementModified(_element);
-                doShow(getGraph());
+                // doShow(getGraph());
             }
 
             @Override

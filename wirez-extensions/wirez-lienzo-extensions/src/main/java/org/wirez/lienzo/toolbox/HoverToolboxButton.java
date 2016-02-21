@@ -45,7 +45,7 @@ public class HoverToolboxButton {
                 .setStrokeWidth(0)
                 .setCornerRadius(10);
         decorator.addNodeMouseClickHandler(clickHandler);
-        group.add( decorator.moveToTop() );
+        group.add( decorator );
         
         return group;
     }

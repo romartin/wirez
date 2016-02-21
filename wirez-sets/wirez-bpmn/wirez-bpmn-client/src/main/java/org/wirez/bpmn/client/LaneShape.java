@@ -18,6 +18,7 @@ package org.wirez.bpmn.client;
 
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Shape;
+import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.bpmn.api.Lane;
 import org.wirez.bpmn.api.property.Height;
@@ -44,6 +45,11 @@ public class LaneShape extends BPMNBasicShape<Lane> implements HasSizeMutation {
         return new ArrayList<Shape>() {{
             add( getPath() );
         }};
+    }
+
+    @Override
+    protected WiresLayoutContainer.Layout getTextPosition() {
+        return WiresLayoutContainer.Layout.TOP;
     }
 
     @Override

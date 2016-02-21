@@ -6,7 +6,7 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.Relationship;
 import org.wirez.core.api.graph.content.view.View;
 
-public interface AllEdgesTraverseCallback<N extends Node<View, Edge>, E extends Edge<Object, Node>> 
+public interface FullContentTraverseCallback<N extends Node<View, Edge>, E extends Edge<Object, Node>> 
     extends ContentTraverseCallback<Object, N, E> {
 
     void traverseViewEdge(E edge);

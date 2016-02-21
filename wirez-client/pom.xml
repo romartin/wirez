@@ -17,6 +17,7 @@
   <modules>
     <module>wirez-widgets</module>
     <module>wirez-client-workbench</module>
+    <module>wirez-views</module>
   </modules>
 
 

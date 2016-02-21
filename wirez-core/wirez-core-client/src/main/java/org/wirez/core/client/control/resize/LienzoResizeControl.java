@@ -38,7 +38,8 @@ public class LienzoResizeControl extends BaseResizeControl<Shape, Element> {
     @Override
     public void doEnable(final Shape shape, final Element element) {
         
-        if (shape instanceof BaseShape) {
+        // TODO
+        /*if (shape instanceof BaseShape) {
             ( (BaseShape) shape).setResizable(shape.getShape(), true).addWiresHandler(AbstractWiresEvent.RESIZE, new ResizeHandler() {
                 @Override
                 public void onResizeStart(ResizeEvent resizeEvent) {
@@ -55,7 +56,7 @@ public class LienzoResizeControl extends BaseResizeControl<Shape, Element> {
                     doResizeEnd(shape, element, resizeEvent.getWidth(), resizeEvent.getHeight());
                 }
             });
-        }
+        }*/
         
     }
     

@@ -11,11 +11,11 @@ import org.wirez.core.api.util.ElementUtils;
 public class GraphBoundsIndexer {
 
     private final Graph<View, Node<View, Edge>> graph;
-    private final AllEdgesTraverseProcessor visitor;
+    private final FullContentTraverseProcessor visitor;
 
     public GraphBoundsIndexer(final Graph<View, Node<View, Edge>> graph) {
         this.graph = graph;
-        this.visitor = new AllEdgesTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl());
+        this.visitor = new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl());
     }
 
     public Node getNodeAt(final double x, final double y) {
@@ -77,7 +77,7 @@ public class GraphBoundsIndexer {
     public Node traverseAll(final double x, final double y) {
         final Node[] result = new Node[1];
         
-        visitor.traverse(graph, new AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
+        visitor.traverse(graph, new FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
 
             double parentX = 0;
             double parentY = 0;

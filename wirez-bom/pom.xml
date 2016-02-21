@@ -81,6 +81,20 @@
       </dependency>
 
       <!-- Wirez Client-->
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-views</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-views</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
       <dependency>
         <groupId>org.wirez</groupId>
         <artifactId>wirez-widgets</artifactId>

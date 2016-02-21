@@ -76,13 +76,22 @@
     <dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-core-client</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.wirez</groupId>
+      <artifactId>wirez-views</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.wirez</groupId>
       <artifactId>wirez-widgets</artifactId>
+      <scope>provided</scope>
     </dependency>
 
+    <!-- Just while developing... -->
     <dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-bpmn-api</artifactId>

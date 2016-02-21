@@ -20,8 +20,8 @@ import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseCallback;
-import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseProcessorImpl;
+import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseCallback;
+import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -85,8 +85,8 @@ public class WirezLogger {
         log("Rule Violation [message=" + message + "] [type" + type.name());
     }
     
-    private static final AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>> TREE_TRAVERSE_CALLBACK = 
-            new AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
+    private static final FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>> TREE_TRAVERSE_CALLBACK = 
+            new FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
                 @Override
                 public void traverseViewEdge(final Edge<Object, Node> edge) {
                     log("(View) Edge UUID: " + edge.getUUID());
@@ -164,12 +164,12 @@ public class WirezLogger {
             };
     
     public static void log(final Graph graph) {
-        new AllEdgesTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
+        new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
                 .traverse(graph, TREE_TRAVERSE_CALLBACK);
     }
 
     public static void resume(final Graph graph) {
-        new AllEdgesTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
+        new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
                 .traverse(graph, TREE_TRAVERSE_CALLBACK);
     }
 

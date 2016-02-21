@@ -25,8 +25,8 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseCallback;
-import org.wirez.core.api.graph.processing.traverse.content.AllEdgesTraverseProcessorImpl;
+import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseCallback;
+import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.HasDecorators;
@@ -125,7 +125,7 @@ public class CanvasHighlightVisitor {
         final DefinitionManager definitionManager = ClientDefinitionManager.get();
         
         
-        new AllEdgesTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AllEdgesTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
+        new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
             @Override
             public void traverseViewEdge(final Edge<Object, Node> edge) {
                 addShape(edge.getUUID());

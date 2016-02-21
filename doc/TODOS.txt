@@ -1,20 +1,21 @@
 - Immediately
 *************
-    - Tree explorer - add treeitems on all sublevels
-    - Commands - undo
+    - Explorer
+        - explorer tree items - improve
+        - get glyph for a given size
     - custom graph factory for bpmn -> create a diagram by default
     - Delete from canvas - ( all children... )
         - Confirm delete alert
     - lanes support
-
+    - notifications not shown
       
 - Next
 *******
 
     - Save services & BPMN marshalling
+    - use commands to build the graph on marshallers/un
     - improve server-client tx errai marshalling for definitions, graphs, diagrams
-
-
+    
 - Lienzo
 ********
 
@@ -37,13 +38,30 @@
 
     - Issues with property change event handlers
     - Create a doc with requirements ( field types, etc )
- 
+    - custom property types
+    - composite props - depenens on the other properties' values
+    
 - Client
 *********
 
+    - client views
+        - views
+          - for shapes
+         - lienzo primitives
+         - canvas
+         - shape controls
     - Review logic/view separation
-    
+        - use a producer for the different traverse, index, managers etc?
+        - ModelFactory has producer methods, so the model can be injected ( if no producer, use the modelfactory iface methods )
+        - DefManager.getDefSet - call producer method to obtain a singleton instance
+        - use producers for commands, so beans can be injected
+        - producers for views, so in ShapeFactory or in a Shape you can do: ViewFactory.rectangle.setWProp(..).setBgProp(..)...build() - so default shape impls can manage the views
+
     - Widgets
+        - Notifications
+            - notificate command errors with alerts
+            - custom level for "loading..." popups
+            
         - Raw view of the graph
           - Draw all kind of content for nodes/edges as
             - node /vertex - circle
@@ -55,14 +73,28 @@
 - API
 *****
 
+    - Factory/CDI producers
+    
+
     - Commands
+         CommManager
+            - executions async - use callbacks as expensive ops can be executed on backend
+            -  basic impl
+            -  stacked (history)
+            - stacked + batch
+              - for canvas handler internal executions on batch ( startBatch, execute xN, endBatch)
+              - on each batch you can spcify block screen ( modal loading ) or not
+              - canvas listeners fired once per element
         - Undos
         - Restore the graph to a previous state
    - Model
           - compile time generation adapters for Def, DefSet, PropSet
           - use of graph factories in client side 
           - Clone definitions and properties when creating graph elements -> errai low level serialization?- Cloning models
-          
+Backend
+*******
+    - create snapshot copies of d diagram
+
           
 - House keeping & others
 ************************

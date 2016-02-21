@@ -45,6 +45,11 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
+      <artifactId>wirez-views</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
       <artifactId>wirez-bpmn-api</artifactId>
     </dependency>
 

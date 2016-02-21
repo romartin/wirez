@@ -9,8 +9,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>wirez-widgets</artifactId>
-  <name>Wirez - Client Widgets</name>
+  <artifactId>wirez-views</artifactId>
+  <name>Wirez - Views</name>
   <packaging>jar</packaging>
 
   <dependencies>
@@ -20,7 +20,7 @@
       <artifactId>javax.inject</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- GWT and GWT Extensions -->
 
     <dependency>
@@ -34,7 +34,7 @@
       <artifactId>gwt-user</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- Uberfire & Errai. -->
 
     <dependency>
@@ -46,7 +46,7 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-api</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-all</artifactId>
@@ -67,25 +67,16 @@
       <artifactId>uberfire-workbench-client</artifactId>
     </dependency>
 
+    <!-- Lienzo. -->
+    
     <dependency>
       <groupId>com.ahome-it</groupId>
       <artifactId>lienzo-core</artifactId>
     </dependency>
 
-    <!-- Property Editor - Uberfire Extensions -->
     <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-widgets-properties-editor-client</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-widgets-properties-editor-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-widgets-properties-editor-backend</artifactId>
+      <groupId>com.ahome-it</groupId>
+      <artifactId>ahome-tooling-nativetools</artifactId>
     </dependency>
 
     <!-- Wirez. -->
@@ -98,11 +89,6 @@
     <dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-core-client</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-views</artifactId>
     </dependency>
 
   </dependencies>

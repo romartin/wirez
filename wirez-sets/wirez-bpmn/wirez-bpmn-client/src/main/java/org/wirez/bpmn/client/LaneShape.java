@@ -27,11 +27,13 @@ import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.view.HasTitle;
 
 public class LaneShape extends BPMNBasicShape<Lane> implements HasSizeMutation {
 
     public LaneShape(final WiresRectangleView view) {
         super(view);
+        getView().setPosition(HasTitle.Position.TOP);
     }
 
     protected WiresRectangleView getView() {

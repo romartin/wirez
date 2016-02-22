@@ -78,9 +78,9 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
     @Override
     public void doEnable(final Shape shape, final Element element) {
 
-        if (shape instanceof WiresShape) {
+        if (shape.getShapeView() instanceof WiresShape) {
 
-            WiresShape wiresShape = (WiresShape) shape;
+            WiresShape wiresShape = (WiresShape) shape.getShapeView();
             
             ButtonsOrRegister toolboxBuilder = HoverToolbox.toolboxFor(wiresShape).on(Direction.NORTH_EAST)
                     .towards(Direction.SOUTH);

@@ -6,6 +6,7 @@ import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Node;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.Text;
+import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
@@ -45,14 +46,16 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
     protected Collection<Shape> decorators = null;
     protected Text text;
+    protected WiresLayoutContainer.Layout textPosition;
     protected String uuid;
     
     public AbstractWiresShapeView(final MultiPath path, 
                                   final WiresManager manager) {
         super(path, new WiresLayoutContainer(), manager);
+        this.textPosition = WiresLayoutContainer.Layout.CENTER;
         
     }
-
+    
     protected abstract HandlerRegistration doAddHandler(final ViewEventType type,
                                                         final ViewHandler<? extends ViewEvent> eventHandler);
 
@@ -91,11 +94,27 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
         }
 
         if ( null != title ) {
-            text = buildText("");
+            text = buildText(title);
             this.addChild(text, getTextPosition());
             text.moveToTop();
         }
         
+        return (T) this;
+    }
+
+    @Override
+    public T setPosition(final Position position) {
+        if ( Position.BOTTOM.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.BOTTOM;
+        } else if ( Position.TOP.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.TOP;
+        } else if ( Position.LEFT.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.LEFT;
+        } else if ( Position.RIGHT.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.RIGHT;
+        } else if ( Position.CENTER.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.CENTER;
+        }
         return (T) this;
     }
 
@@ -147,8 +166,8 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
         return text.moveToTop();
     }
     
-    protected WiresLayoutContainer.Layout getTextPosition() {
-        return WiresLayoutContainer.Layout.CENTER;
+    private WiresLayoutContainer.Layout getTextPosition() {
+        return textPosition;
     }
     
     protected HandlerRegistration registerClickHandler(final Node node,

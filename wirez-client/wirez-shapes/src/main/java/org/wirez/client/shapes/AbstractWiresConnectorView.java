@@ -30,16 +30,19 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
     protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
     protected Text text;
+    protected WiresLayoutContainer.Layout textPosition;
     protected String uuid;
     private Double strokeWidth;
     private String color;
 
     public AbstractWiresConnectorView(AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
         super(line, head, tail, manager);
+        this.textPosition = WiresLayoutContainer.Layout.CENTER;
     }
 
     public AbstractWiresConnectorView(WiresMagnet headMagnet, WiresMagnet tailMagnet, AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
         super(headMagnet, tailMagnet, line, head, tail, manager);
+        this.textPosition = WiresLayoutContainer.Layout.CENTER;
     }
 
     protected abstract HandlerRegistration doAddHandler(final ViewEventType type,
@@ -196,6 +199,22 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
             // TODO
         }
 
+        return (T) this;
+    }
+
+    @Override
+    public T setPosition(final Position position) {
+        if ( Position.BOTTOM.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.BOTTOM;
+        } else if ( Position.TOP.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.TOP;
+        } else if ( Position.LEFT.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.LEFT;
+        } else if ( Position.RIGHT.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.RIGHT;
+        } else if ( Position.CENTER.equals(position) ) {
+            this.textPosition = LayoutContainer.Layout.CENTER;
+        }
         return (T) this;
     }
 

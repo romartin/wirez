@@ -41,11 +41,6 @@ public class WiresCircleView extends AbstractWiresShapeView<WiresCircleView>
     }
 
     @Override
-    protected WiresLayoutContainer.Layout getTextPosition() {
-        return WiresLayoutContainer.Layout.BOTTOM;
-    }
-
-    @Override
     protected Shape getDecorator() {
         return decorator;
     }
@@ -59,7 +54,7 @@ public class WiresCircleView extends AbstractWiresShapeView<WiresCircleView>
                                                final ViewHandler<? extends ViewEvent> eventHandler) {
         
         if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
-            return registerClickHandler(getPath(), (ViewHandler<ViewEvent>) eventHandler);
+            return registerClickHandler(circle, (ViewHandler<ViewEvent>) eventHandler);
         }
 
         if ( ViewEventType.DRAG.equals(type) ) {

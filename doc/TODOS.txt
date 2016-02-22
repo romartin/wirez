@@ -45,11 +45,9 @@
 *********
 
     - client views
-        - views
-          - for shapes
-         - lienzo primitives
-         - canvas
-         - shape controls
+        - add children into shape views
+        - text un-positioned after updating from toolbox
+        
     - Review logic/view separation
         - use a producer for the different traverse, index, managers etc?
         - ModelFactory has producer methods, so the model can be injected ( if no producer, use the modelfactory iface methods )

@@ -28,11 +28,13 @@ import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.view.HasTitle;
 
 public class BPMNDiagramShape extends BPMNBasicShape<BPMNDiagram> implements HasSizeMutation {
 
     public BPMNDiagramShape(final WiresRectangleView view) {
         super(view);
+        getView().setPosition(HasTitle.Position.TOP);
     }
 
     protected WiresRectangleView getView() {

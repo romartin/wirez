@@ -26,11 +26,13 @@ import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.view.HasTitle;
 
 public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> implements HasRadiusMutation {
 
     public EndTerminateEventShape(final WiresCircleView view) {
         super(view);
+        getView().setPosition(HasTitle.Position.BOTTOM);
     }
 
     protected WiresCircleView getView() {

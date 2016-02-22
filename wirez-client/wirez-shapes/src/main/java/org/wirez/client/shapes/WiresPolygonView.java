@@ -44,11 +44,6 @@ public class WiresPolygonView extends AbstractWiresShapeView<WiresPolygonView>
     }
 
     @Override
-    protected WiresLayoutContainer.Layout getTextPosition() {
-        return WiresLayoutContainer.Layout.BOTTOM;
-    }
-    
-    @Override
     protected Shape getDecorator() {
         return decorator;
     }

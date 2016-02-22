@@ -2,7 +2,13 @@ package org.wirez.core.client.view;
 
 public interface HasTitle<T> {
 
+    enum Position {
+        CENTER, LEFT, RIGHT, TOP, BOTTOM;
+    }
+    
     T setTitle(String title);
+    
+    T setPosition(Position position);
 
     T setTitleStrokeColor(String color);
 

@@ -120,10 +120,10 @@ public abstract class BaseShape<W extends Definition> implements
             final String name = (String) value;
             if ( name != null ) {
                 hasTitle.setTitle(name);
+                hasTitle.refreshTitle();
             } else {
                 hasTitle.setTitle(null);
             }
-            hasTitle.moveTitleToTop();
         }
         
     }

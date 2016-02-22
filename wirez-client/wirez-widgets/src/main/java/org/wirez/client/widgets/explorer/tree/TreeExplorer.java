@@ -37,13 +37,13 @@ public class TreeExplorer implements IsWidget {
 
     public interface View extends UberView<TreeExplorer> {
 
-        View addItem(final String uuid, final String itemText);
+        View addItem(String uuid, boolean state, String itemText);
 
-        View addItem(final String uuid, final String itemText, int... parentIdx);
+        View addItem(String uuid, boolean state, String itemText, int... parentIdx);
 
-        View removeItem(final int index);
+        View removeItem(int index);
 
-        View removeItem(final int index, int... parentIdx);
+        View removeItem(int index, int... parentIdx);
         
         View clear();
     }
@@ -80,10 +80,11 @@ public class TreeExplorer implements IsWidget {
     }
 
     private void doShow(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
-        traverseChildrenEdges(graph);
+        traverseChildrenEdges(graph, true);
     }
 
-    private void traverseChildrenEdges(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
+    private void traverseChildrenEdges(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph,
+                                       final boolean expand) {
         assert graph != null;
 
         clear();
@@ -138,7 +139,7 @@ public class TreeExplorer implements IsWidget {
 
                     LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with no parent");
 
-                    view.addItem(node.getUUID(), getItemText(node));
+                    view.addItem(node.getUUID(), expand, getItemText(node));
 
 
                 } else {
@@ -149,7 +150,7 @@ public class TreeExplorer implements IsWidget {
                     LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with parent " + parentUUID 
                             + " and parentsIdx=" + parentsIdx + " / level=" + level);
 
-                    view.addItem(node.getUUID(), getItemText(node), parentsIdx);
+                    view.addItem(node.getUUID(), expand, getItemText(node), parentsIdx);
                     
                 }
 

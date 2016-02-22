@@ -34,24 +34,29 @@ public class TreeExplorerView extends Composite implements TreeExplorer.View {
 
     }
 
-    public TreeExplorer.View addItem(final String uuid, final String itemText) {
+    public TreeExplorer.View addItem(final String uuid, 
+                                     final boolean state,
+                                     final String itemText) {
         final TreeItem item = buildItem(uuid, itemText);
         tree.addItem(item);
+        item.setState(state);
         return this;
     }
 
-    public TreeExplorer.View addItem(final String uuid, final String itemText, final int... parentsIds) {
+    public TreeExplorer.View addItem(final String uuid,
+                                     final boolean state,
+                                     final String itemText, 
+                                     final int... parentsIds) {
         final TreeItem item = buildItem(uuid, itemText);
         final TreeItem parent = getParent(parentsIds);
-        // TODO: Remove this NPE check and fix it.
-        if ( null != parent ) {
-            parent.addItem(item);
-        }
-
+        parent.addItem(item);
+        parent.setState(state);
+        item.setState(state);
         return this;
     }
     
-    private TreeItem buildItem(final String uuid, final String itemText) {
+    private TreeItem buildItem(final String uuid,
+                               final String itemText) {
         final TreeItem item = new TreeItem();
         item.setText(itemText);
         item.setUserObject(uuid);

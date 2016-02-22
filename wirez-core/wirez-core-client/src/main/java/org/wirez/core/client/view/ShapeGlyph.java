@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.wirez.core.client.view;
 
-package org.wirez.core.client.mutation;
+import com.ait.lienzo.client.core.shape.Group;
 
 /**
- * A shape that its size depends on the radius property present in the Definition.
+ * A Shape Glyph.
  */
-public interface HasRadiusMutation extends HasMutation {
-    
-    void applyRadius(double radius, MutationContext mutationContext);
-    
+public interface ShapeGlyph {
+
+    /**
+     * Get the glyph's Group
+     * @return
+     */
+    Group getGroup();
+
+    /**
+     * Get the glyph's width
+     * @return
+     */
+    double getWidth();
+
+    /**
+     * Get the glyph's height
+     * @return
+     */
+    double getHeight();
+
 }

@@ -9,7 +9,7 @@ import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
 import org.wirez.core.client.view.event.ViewHandler;
 
-public class WiresConnectorView extends AbstractWiresConnectorView<WiresConnectorView> {
+public class WiresConnectorView<T extends WiresConnectorView> extends AbstractWiresConnectorView<T> {
 
     
     public WiresConnectorView(final WiresManager manager, 

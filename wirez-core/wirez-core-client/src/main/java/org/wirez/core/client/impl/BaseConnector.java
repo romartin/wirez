@@ -20,15 +20,18 @@ import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
-import org.wirez.core.client.mutation.*;
+import org.wirez.core.client.mutation.HasGraphElementMutation;
+import org.wirez.core.client.mutation.HasPropertyMutation;
+import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.mutation.MutationType;
 import org.wirez.core.client.view.IsConnector;
 import org.wirez.core.client.view.ShapeView;
 
@@ -37,8 +40,6 @@ import java.util.logging.Logger;
 
 public abstract class BaseConnector<W extends Definition> implements
         Shape<W>,
-        HasPositionMutation,
-        HasSizeMutation,
         HasPropertyMutation,
         HasGraphElementMutation<W, View<W>, Edge<View<W>, Node>> {
 
@@ -103,17 +104,7 @@ public abstract class BaseConnector<W extends Definition> implements
     }
 
     @Override
-    public void applyPosition(double x, double y, MutationContext mutationContext) {
-        // TODO
-    }
-
-    @Override
     public void applyPropertyValue(String propertyId, Object value, MutationContext mutationContext) {
-        // TODO
-    }
-
-    @Override
-    public void applySize(double width, double height, MutationContext mutationContext) {
         // TODO
     }
 

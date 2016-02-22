@@ -17,10 +17,9 @@
 package org.wirez.client.widgets.palette.tooltip;
 
 import com.ait.lienzo.client.core.shape.IPrimitive;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.view.ShapeGlyph;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;

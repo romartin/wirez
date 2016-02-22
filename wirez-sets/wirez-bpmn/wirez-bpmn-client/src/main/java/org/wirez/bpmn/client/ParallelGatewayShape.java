@@ -24,10 +24,9 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.MutationContext;
 
-public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implements HasRadiusMutation {
+public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> {
 
     public ParallelGatewayShape(final WiresPolygonView view) {
         super(view);
@@ -55,8 +54,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> implem
         return this;
     }
 
-    @Override
-    public void applyRadius(final double radius, final MutationContext mutationContext) {
+    protected void applyRadius(final double radius, final MutationContext mutationContext) {
         if (radius > 0) {
             getView().setRadius(radius);
         }

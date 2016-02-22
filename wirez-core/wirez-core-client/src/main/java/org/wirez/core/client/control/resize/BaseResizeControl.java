@@ -21,9 +21,9 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.BaseShapeControl;
 import org.wirez.core.client.impl.BaseShape;
-import org.wirez.core.client.mutation.HasRadiusMutation;
-import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.StaticMutationContext;
+import org.wirez.core.client.view.HasRadius;
+import org.wirez.core.client.view.HasSize;
 
 public abstract class BaseResizeControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E> {
 
@@ -36,22 +36,22 @@ public abstract class BaseResizeControl<S extends Shape, E extends Element> exte
     }
 
     protected void doResizeStep(final S shape, final E element, final double width, final double height) {
-        if (shape instanceof HasSizeMutation) {
-            ( (HasSizeMutation) shape).applySize(width, height, new StaticMutationContext());
-        } else if (shape instanceof HasRadiusMutation) {
+        if (shape.getShapeView() instanceof HasSize) {
+            ( (HasSize) shape.getShapeView()).setSize(width, height);
+        } else if (shape.getShapeView() instanceof HasRadius) {
             final double radius = getRadius(width, height);
-            ( (HasRadiusMutation) shape).applyRadius(radius, new StaticMutationContext());
+            ( (HasRadius) shape).setRadius(radius);
         }
     }
     
     protected void doResizeEnd(final S shape, final E element, final double width, final double height) {
         
-        if (shape instanceof HasSizeMutation) {
+        if (shape.getShapeView() instanceof HasSize) {
 
             execute( commandFactory.UPDATE_PROPERTY(element, "width", width));
             execute( commandFactory.UPDATE_PROPERTY(element, "height", height));
             
-        } else if (shape instanceof HasRadiusMutation) {
+        } else if (shape instanceof HasRadius) {
 
             final double radius = getRadius(width, height);
             execute( commandFactory.UPDATE_PROPERTY(element, "radius", radius));

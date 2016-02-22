@@ -16,9 +16,6 @@
 
 package org.wirez.core.client;
 
-import com.ait.lienzo.client.core.shape.IContainer;
-import com.ait.lienzo.client.core.shape.IPrimitive;
-import com.ait.lienzo.client.core.shape.Node;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.view.ShapeView;
 
@@ -36,12 +33,12 @@ public interface Shape<W extends Definition> {
     Shape<W> setId(String id);
 
     /**
-     * Returns the view for the shape.
+     * Returns the view representation on the canvas for the shape.
      */
     ShapeView getShapeView();
     
     /**
-     * Destroy the shape and any related components.
+     * Destroy the shape and any related components and assets.
      */
     void destroy();
 

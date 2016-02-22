@@ -17,34 +17,39 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.Task;
+import org.wirez.bpmn.client.BPMNViewFactory;
 import org.wirez.bpmn.client.TaskShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.TaskGlyph;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresRectangleView;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
+import org.wirez.core.client.view.ShapeGlyph;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
 public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
+
+    BPMNViewFactory bpmnViewFactory;
     
     public TaskShapeFactory() {
     }
     
     @Inject
     public TaskShapeFactory(final ShapeViewFactory shapeViewFactory,
+                            final BPMNViewFactory bpmnViewFactory,
                             final DefaultShapeControlFactories defaultShapeControlFactories,
                             final ShapeGlyphDragHandler shapeGlyphDragHandler,
                             final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
         super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+        this.bpmnViewFactory = bpmnViewFactory;
     }
 
     @Override
@@ -71,7 +76,7 @@ public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
     public TaskShape build(final Task definition, final CanvasHandler canvasHandler) {
 
         final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas(); 
-        final WiresRectangleView view = shapeViewFactory.rectangle( Task.WIDTH, Task.HEIGHT, wiresCanvas.getWiresManager());
+        final WiresRectangleView view = bpmnViewFactory.task( Task.WIDTH, Task.HEIGHT, wiresCanvas.getWiresManager());
         return new TaskShape(view);
 
     }

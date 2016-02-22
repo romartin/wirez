@@ -1,5 +1,7 @@
 - Immediately
 *************
+    - glyphDragHandler
+        - highlight allowed containers
     - Explorer
         - explorer tree items - improve
         - get glyph for a given size
@@ -40,25 +42,20 @@
     - Create a doc with requirements ( field types, etc )
     - custom property types
     - composite props - depenens on the other properties' values
+    - avoid custom forks!?!?
     
 - Client
 *********
-
-    - client views
-        - add children into shape views
-        - text un-positioned after updating from toolbox
+    - Glyph
+        - create default glyphs on wirez-shapes
         
-    - Review logic/view separation
-        - use a producer for the different traverse, index, managers etc?
-        - ModelFactory has producer methods, so the model can be injected ( if no producer, use the modelfactory iface methods )
-        - DefManager.getDefSet - call producer method to obtain a singleton instance
-        - use producers for commands, so beans can be injected
-        - producers for views, so in ShapeFactory or in a Shape you can do: ViewFactory.rectangle.setWProp(..).setBgProp(..)...build() - so default shape impls can manage the views
-
     - Widgets
         - Notifications
             - notificate command errors with alerts
             - custom level for "loading..." popups
+            - commands - info,warn,error etc 
+            - exceptions on client code - use notif cdi events & gwt logging
+            - use bootstrap3 "notify" (extras)
             
         - Raw view of the graph
           - Draw all kind of content for nodes/edges as
@@ -75,6 +72,7 @@
     
 
     - Commands
+        - ensure only single parent/edge connections between nodes
          CommManager
             - executions async - use callbacks as expensive ops can be executed on backend
             -  basic impl
@@ -96,6 +94,12 @@ Backend
           
 - House keeping & others
 ************************
+
+    - CDI Producers
+        - use a producer for the different traverse, index, managers etc?
+        - ModelFactory has producer methods, so the model can be injected ( if no producer, use the modelfactory iface methods )
+        - DefManager.getDefSet - call producer method to obtain a singleton instance
+        - use producers for commands, so beans can be injected
 
     - BPMN marshalling / unmarshalling
         - Remove code from "legacy" package and use the jbpm-designer-backend artifact as a required dependency.

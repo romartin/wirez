@@ -89,16 +89,14 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     @Override
     public T setTitle(final String title) {
         
-        if ( null != text ) {
-            text.removeFromParent();
-        }
-
-        if ( null != title ) {
+        if ( null == text) {
             text = buildText(title);
             this.addChild(text, getTextPosition());
-            text.moveToTop();
+        } else {
+            text.setText(title);
         }
-        
+        text.moveToTop();
+
         return (T) this;
     }
 

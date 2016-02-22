@@ -16,20 +16,12 @@
 
 package org.wirez.bpmn.client;
 
-import com.ait.lienzo.client.core.shape.DecoratableLine;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.client.shapes.WiresConnectorView;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.mutation.HasCanvasStateMutation;
 
-public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> implements HasCanvasStateMutation {
+public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> {
 
-    DecoratableLine decorator;
-
-    private Double strokeWidth;
-    private String color;
-    
     public SequenceFlowShape(final WiresConnectorView view) {
         super(view);
     }
@@ -53,19 +45,4 @@ public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> implemen
 
     }
 
-    @Override
-    public void applyState(final ShapeState shapeState) {
-        
-        if ( ShapeState.SELECTED.equals(shapeState) ) {
-            getView().applySelectedState();
-        } else if ( ShapeState.HIGHLIGHT.equals(shapeState) ) {
-            getView().applyHighlightState();
-        } else if ( ShapeState.DESELECTED.equals(shapeState) ) {
-            getView().applyUnSelectedState();
-        } else if ( ShapeState.UNHIGHLIGHT.equals(shapeState) ) {
-            getView().applyUnHighlightState();
-        }
-        
-    }
-    
 }

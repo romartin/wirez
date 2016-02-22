@@ -27,13 +27,21 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.view.ShapeView;
 
-public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
+public class TaskShape extends BPMNBasicShape<Task> {
 
-    private static final Shadow SHADOW = new Shadow(Color.fromColorString(Task.COLOR).setA(0.80), 10, -10, -10);
-
+    public interface TaskView<T extends TaskView> extends ShapeView<T> {
+        
+        enum TaskType {
+            USER;    
+        }
+        
+        T setTaskType(TaskType type);
+        
+    }
+    
     public TaskShape(final WiresRectangleView view) {
         super(view);
     }
@@ -66,8 +74,7 @@ public class TaskShape extends BPMNBasicShape<Task> implements HasSizeMutation {
         return "TaskShape{}";
     }
 
-    @Override
-    public void applySize(final double width, final double height, final MutationContext mutationContext) {
+    protected void applySize(final double width, final double height, final MutationContext mutationContext) {
         getView().setSize(width, height);
     }
 

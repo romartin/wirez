@@ -24,11 +24,10 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.MutationContext;
 import org.wirez.core.client.view.HasTitle;
 
-public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implements HasRadiusMutation {
+public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> {
 
     public StartNoneEventShape(final WiresCircleView view) {
         super(view);
@@ -56,9 +55,7 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> implemen
         }
         return this;
     }
-
-    @Override
-    public void applyRadius(double radius, MutationContext mutationContext) {
+    protected void applyRadius(double radius, MutationContext mutationContext) {
         if (radius > 0) {
             getView().setRadius(radius);
         }

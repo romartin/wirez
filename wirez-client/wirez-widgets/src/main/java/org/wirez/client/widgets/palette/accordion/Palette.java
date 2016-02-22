@@ -17,7 +17,6 @@
 package org.wirez.client.widgets.palette.accordion;
 
 import com.ait.lienzo.client.widget.LienzoPanel;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,7 +31,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.service.definition.DefinitionSetServiceResponse;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.view.ShapeGlyph;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.control.HasShapeGlyphDragHandler;

@@ -18,10 +18,8 @@ package org.wirez.bpmn.client.glyph;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Rectangle;
-import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.bpmn.api.Lane;
-import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.util.ShapeUtils;
+import org.wirez.core.client.view.ShapeGlyph;
 
 public class BPMNDiagramGlyph implements ShapeGlyph {
 

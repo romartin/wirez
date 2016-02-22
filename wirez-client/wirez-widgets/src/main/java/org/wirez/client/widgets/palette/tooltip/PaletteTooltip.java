@@ -17,7 +17,7 @@
 package org.wirez.client.widgets.palette.tooltip;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.view.ShapeGlyph;
 
 public interface PaletteTooltip extends IsWidget {
     

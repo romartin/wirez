@@ -35,7 +35,7 @@ import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeHighlightAnimation;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.mutation.HasCanvasStateMutation;
+import org.wirez.core.client.view.HasCanvasState;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -67,9 +67,9 @@ public class CanvasHighlightVisitor {
         if (index < shapes.size()) {
             final Shape shape = shapes.get(index);
 
-            if (shape instanceof HasCanvasStateMutation) {
+            if (shape instanceof HasCanvasState) {
                 
-                final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
+                final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
 
                 Timer t = new Timer() {
                     @Override

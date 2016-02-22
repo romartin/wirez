@@ -24,11 +24,10 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.mutation.HasRadiusMutation;
 import org.wirez.core.client.mutation.MutationContext;
 import org.wirez.core.client.view.HasTitle;
 
-public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> implements HasRadiusMutation {
+public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> {
 
     public EndTerminateEventShape(final WiresCircleView view) {
         super(view);
@@ -47,8 +46,7 @@ public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> im
         _applyRadius(element, mutationContext);
     }
 
-    @Override
-    public void applyRadius(double radius, MutationContext mutationContext) {
+    protected void applyRadius(double radius, MutationContext mutationContext) {
         if (radius > 0) {
             getView().setRadius(radius);
         }

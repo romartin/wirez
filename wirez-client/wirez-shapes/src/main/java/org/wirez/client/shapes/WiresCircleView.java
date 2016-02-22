@@ -12,8 +12,8 @@ import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
 import org.wirez.core.client.view.event.ViewHandler;
 
-public class WiresCircleView extends AbstractWiresShapeView<WiresCircleView> 
-        implements HasRadius<WiresCircleView> {
+public class WiresCircleView<T extends WiresCircleView> extends AbstractWiresShapeView<T> 
+        implements HasRadius<T> {
 
     protected Circle circle;
     protected Circle decorator;
@@ -71,11 +71,11 @@ public class WiresCircleView extends AbstractWiresShapeView<WiresCircleView>
     }
 
     @Override
-    public WiresCircleView setRadius(final double radius) {
+    public T setRadius(final double radius) {
         if (radius > 0) {
             circle.setRadius(radius);
             decorator.setRadius(radius);
         }
-        return this;
+        return (T) this;
     }
 }

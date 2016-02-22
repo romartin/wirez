@@ -17,7 +17,7 @@ package org.wirez.core.client.factory;
 
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.view.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 
 /**

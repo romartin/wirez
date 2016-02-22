@@ -19,8 +19,8 @@ package org.wirez.bpmn.client.glyph;
 import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.Group;
 import org.wirez.bpmn.api.StartNoneEvent;
-import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.util.ShapeUtils;
+import org.wirez.core.client.view.ShapeGlyph;
 
 public class StartNoneEventGlyph implements ShapeGlyph {
 

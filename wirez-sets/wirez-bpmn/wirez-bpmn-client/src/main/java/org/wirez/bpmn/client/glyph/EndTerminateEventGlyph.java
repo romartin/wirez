@@ -19,12 +19,10 @@ package org.wirez.bpmn.client.glyph;
 import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Ring;
-import com.ait.lienzo.shared.core.types.ColorName;
-import org.wirez.bpmn.api.EndNoneEvent;
 import org.wirez.bpmn.api.EndTerminateEvent;
 import org.wirez.bpmn.client.EndTerminateEventShape;
-import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.util.ShapeUtils;
+import org.wirez.core.client.view.ShapeGlyph;
 
 public class EndTerminateEventGlyph implements ShapeGlyph {
 

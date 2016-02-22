@@ -25,11 +25,10 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.MutationContext;
 import org.wirez.core.client.view.HasTitle;
 
-public class LaneShape extends BPMNBasicShape<Lane> implements HasSizeMutation {
+public class LaneShape extends BPMNBasicShape<Lane> {
 
     public LaneShape(final WiresRectangleView view) {
         super(view);
@@ -64,8 +63,7 @@ public class LaneShape extends BPMNBasicShape<Lane> implements HasSizeMutation {
         return "LaneShape{}";
     }
 
-    @Override
-    public void applySize(final double width, final double height, final MutationContext mutationContext) {
+    protected void applySize(final double width, final double height, final MutationContext mutationContext) {
         getView().setSize(width, height);
     }
 

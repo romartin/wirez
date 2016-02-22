@@ -7,8 +7,8 @@ import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.mutation.HasCanvasStateMutation;
 import org.wirez.core.client.util.SVGUtils;
+import org.wirez.core.client.view.HasCanvasState;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -101,8 +101,8 @@ public class AddConnectionCommand implements ToolboxCommand {
             if ( null != shape ) {
                 this.shape = shape;
 
-                if (shape instanceof HasCanvasStateMutation) {
-                    final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
+                if (shape.getShapeView() instanceof HasCanvasState) {
+                    final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
                     canvasStateMutation.applyState(ShapeState.HIGHLIGHT);
                 } else if (shape.getShapeView() instanceof HasDecorators) {
                     view.highlight(context.getCanvasHandler().getCanvas(), shape);
@@ -116,8 +116,8 @@ public class AddConnectionCommand implements ToolboxCommand {
     private void unhighLightShape() {
         if ( null != this.shape ) {
 
-            if (shape instanceof HasCanvasStateMutation) {
-                final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
+            if (shape instanceof HasCanvasState) {
+                final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
                 canvasStateMutation.applyState(ShapeState.UNHIGHLIGHT);
             } else if (shape.getShapeView() instanceof HasDecorators) {
                 view.unhighlight(context.getCanvasHandler().getCanvas(), shape);

@@ -21,7 +21,7 @@ import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.shared.core.types.ArrowType;
 import org.wirez.bpmn.api.SequenceFlow;
-import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.view.ShapeGlyph;
 
 public class SequenceFlowGlyph implements ShapeGlyph {
 

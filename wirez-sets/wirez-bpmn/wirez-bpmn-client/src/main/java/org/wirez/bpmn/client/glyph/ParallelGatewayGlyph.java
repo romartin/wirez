@@ -18,10 +18,9 @@ package org.wirez.bpmn.client.glyph;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.RegularPolygon;
-import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.api.ParallelGateway;
-import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.util.ShapeUtils;
+import org.wirez.core.client.view.ShapeGlyph;
 
 public class ParallelGatewayGlyph implements ShapeGlyph {
 

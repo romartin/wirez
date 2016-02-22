@@ -16,9 +16,9 @@
 
 package org.wirez.core.client.canvas.wires;
 
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
-import com.ait.lienzo.client.core.shape.wires.*;
+import com.ait.lienzo.client.core.shape.wires.IConnectionAcceptor;
+import com.ait.lienzo.client.core.shape.wires.IContainmentAcceptor;
+import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -32,7 +32,7 @@ import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.impl.BaseConnector;
-import org.wirez.core.client.mutation.HasCanvasStateMutation;
+import org.wirez.core.client.view.HasCanvasState;
 import org.wirez.core.client.view.ShapeView;
 import org.wirez.core.client.view.event.MouseClickEvent;
 import org.wirez.core.client.view.event.MouseClickHandler;
@@ -40,7 +40,6 @@ import org.wirez.core.client.view.event.ViewEventType;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -230,8 +229,8 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
 
     protected void selectShape(final Shape shape) {
         
-        if (shape instanceof HasCanvasStateMutation) {
-            final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
+        if (shape.getShapeView() instanceof HasCanvasState) {
+            final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
             canvasStateMutation.applyState(ShapeState.SELECTED);
         } else if (shape.getShapeView() instanceof HasDecorators) {
             new ShapeSelectionAnimation(shape)
@@ -244,8 +243,8 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
     protected void deselectShape(final Shape shape) {
         final boolean isConnector = shape instanceof BaseConnector;
 
-        if (shape instanceof HasCanvasStateMutation) {
-            final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
+        if (shape.getShapeView() instanceof HasCanvasState) {
+            final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
             canvasStateMutation.applyState(ShapeState.DESELECTED);
         } else if (shape.getShapeView() instanceof HasDecorators) {
             new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK)

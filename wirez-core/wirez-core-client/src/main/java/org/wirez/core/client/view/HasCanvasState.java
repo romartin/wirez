@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.mutation;
+package org.wirez.core.client.view;
 
-public interface HasPositionMutation extends HasMutation {
+import org.wirez.core.client.canvas.ShapeState;
+
+/**
+ * A shape that its size depends on width and height properties present in the Definition.
+ */
+public interface HasCanvasState {
     
-    void applyPosition(double x, double y, MutationContext mutationContext);
+    void applyState(ShapeState shapeState);
     
 }

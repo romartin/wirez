@@ -16,25 +16,20 @@
 
 package org.wirez.core.client.impl;
 
-import com.ait.lienzo.client.core.shape.*;
-import com.ait.lienzo.client.core.shape.Node;
-import com.ait.lienzo.client.core.shape.Shape;
-import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.client.core.shape.wires.WiresShape;
-import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaults.Name;
-import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.control.*;
+import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.resize.BaseResizeControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
-import org.wirez.core.client.mutation.*;
+import org.wirez.core.client.mutation.HasGraphElementMutation;
+import org.wirez.core.client.mutation.HasPropertyMutation;
+import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.mutation.MutationType;
 import org.wirez.core.client.view.HasFillGradient;
 import org.wirez.core.client.view.HasTitle;
 import org.wirez.core.client.view.ShapeView;
@@ -44,7 +39,6 @@ import org.wirez.core.client.view.ShapeView;
  */
 public abstract class BaseShape<W extends Definition> implements 
         org.wirez.core.client.Shape<W>,
-        HasPositionMutation,
         HasPropertyMutation,
         HasGraphElementMutation<W, View<W>, org.wirez.core.api.graph.Node<View<W>, Edge>> {
 
@@ -92,7 +86,7 @@ public abstract class BaseShape<W extends Definition> implements
         final Double[] position = ElementUtils.getPosition(element.getContent());
         final double x = position[0];
         final double y = position[1];
-        applyPosition(x, y, mutationContext);
+        view.setShapeX(x).setShapeY(y);
     }
 
     @Override
@@ -103,11 +97,6 @@ public abstract class BaseShape<W extends Definition> implements
         // The graph element's name.
         _applyElementName(element, mutationContext);
         
-    }
-
-    @Override
-    public void applyPosition(final double x, final double y, final MutationContext mutationContext) {
-        view.setShapeX(x).setShapeY(y);
     }
 
     @Override

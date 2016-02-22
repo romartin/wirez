@@ -12,8 +12,8 @@ import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
 import org.wirez.core.client.view.event.ViewHandler;
 
-public class WiresRectangleView extends AbstractWiresShapeView<WiresRectangleView> 
-        implements HasSize<WiresRectangleView> {
+public class WiresRectangleView<T extends WiresRectangleView> extends AbstractWiresShapeView<T> 
+        implements HasSize<T> {
 
     private Rectangle decorator;
     
@@ -59,14 +59,14 @@ public class WiresRectangleView extends AbstractWiresShapeView<WiresRectangleVie
     }
     
     @Override
-    public WiresRectangleView setSize(final double width, final double height) {
+    public T setSize(final double width, final double height) {
         final double x = getPath().getX();
         final double y = getPath().getY();
         getPath().clear().rect(x, y, width, height);
         decorator.setWidth(width);
         decorator.setHeight(height);
         this.moveChild(decorator, getDecoratorCoordinate(width), getDecoratorCoordinate(height));
-        return this;
+        return (T) this;
     }
 
 

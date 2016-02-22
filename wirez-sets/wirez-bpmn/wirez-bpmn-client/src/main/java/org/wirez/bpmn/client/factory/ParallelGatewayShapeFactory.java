@@ -17,17 +17,18 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.ParallelGateway;
+import org.wirez.bpmn.client.BPMNViewFactory;
 import org.wirez.bpmn.client.ParallelGatewayShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.ParallelGatewayGlyph;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresPolygonView;
 import org.wirez.core.api.definition.Definition;
-import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
+import org.wirez.core.client.view.ShapeGlyph;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -35,17 +36,20 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGateway, ParallelGatewayShape> {
 
-    
+    BPMNViewFactory bpmnViewFactory;
+            
     public ParallelGatewayShapeFactory() {
         
     }
     
     @Inject
     public ParallelGatewayShapeFactory(final ShapeViewFactory shapeViewFactory,
+                                       final BPMNViewFactory bpmnViewFactory,
                                        final DefaultShapeControlFactories defaultShapeControlFactories,
                                        final ShapeGlyphDragHandler shapeGlyphDragHandler,
                                        final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
         super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+        this.bpmnViewFactory = bpmnViewFactory;
     }
 
     @Override
@@ -66,7 +70,7 @@ public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGa
     @Override
     public ParallelGatewayShape build(final ParallelGateway definition, final CanvasHandler canvasHandler) {
         final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
-        final WiresPolygonView view = shapeViewFactory.polygon(ParallelGateway.RADIUS, ParallelGateway.COLOR, wiresCanvas.getWiresManager());
+        final WiresPolygonView view = bpmnViewFactory.parallelGateway(ParallelGateway.RADIUS, ParallelGateway.COLOR, wiresCanvas.getWiresManager());
         return new ParallelGatewayShape(view);
     }
 

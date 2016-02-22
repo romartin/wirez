@@ -13,8 +13,8 @@ import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
 import org.wirez.core.client.view.event.ViewHandler;
 
-public class WiresPolygonView extends AbstractWiresShapeView<WiresPolygonView> 
-        implements HasRadius<WiresPolygonView> {
+public class WiresPolygonView<T extends WiresPolygonView> extends AbstractWiresShapeView<T> 
+        implements HasRadius<T> {
 
     protected RegularPolygon decorator;
 
@@ -68,10 +68,10 @@ public class WiresPolygonView extends AbstractWiresShapeView<WiresPolygonView>
     }
 
     @Override
-    public WiresPolygonView setRadius(final double radius) {
+    public T setRadius(final double radius) {
         if (radius > 0) {
             decorator.setRadius(radius);
         }
-        return this;
+        return (T) this;
     }
 }

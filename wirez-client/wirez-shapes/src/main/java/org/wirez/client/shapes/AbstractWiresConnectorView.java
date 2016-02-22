@@ -8,10 +8,8 @@ import com.ait.lienzo.client.core.types.Point2DArray;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import org.wirez.core.client.view.HasEventHandlers;
-import org.wirez.core.client.view.HasTitle;
-import org.wirez.core.client.view.IsConnector;
-import org.wirez.core.client.view.ShapeView;
+import org.wirez.core.client.canvas.ShapeState;
+import org.wirez.core.client.view.*;
 import org.wirez.core.client.view.event.MouseClickEvent;
 import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
@@ -25,7 +23,8 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
         ShapeView<T>,
         IsConnector<T>,
         HasTitle<T>,
-        HasEventHandlers<T> {
+        HasEventHandlers<T>,
+        HasCanvasState {
 
     protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
     protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
@@ -111,6 +110,21 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
         return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
     }
 
+    @Override
+    public void applyState(final ShapeState shapeState) {
+
+        if ( ShapeState.SELECTED.equals(shapeState) ) {
+            applySelectedState();
+        } else if ( ShapeState.HIGHLIGHT.equals(shapeState) ) {
+            applyHighlightState();
+        } else if ( ShapeState.DESELECTED.equals(shapeState) ) {
+            applyUnSelectedState();
+        } else if ( ShapeState.UNHIGHLIGHT.equals(shapeState) ) {
+            applyUnHighlightState();
+        }
+
+    }
+    
     public T applySelectedState() {
         return applyActiveState(true);
     }

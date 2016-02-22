@@ -17,7 +17,7 @@
 package org.wirez.core.client.canvas.control;
 
 import com.ait.lienzo.client.widget.LienzoPanel;
-import org.wirez.core.client.ShapeGlyph;
+import org.wirez.core.client.view.ShapeGlyph;
 
 public interface ShapeGlyphDragHandler {
 

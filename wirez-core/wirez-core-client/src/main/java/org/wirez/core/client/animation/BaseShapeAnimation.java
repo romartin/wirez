@@ -110,8 +110,8 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
     };
 
     public Collection<com.ait.lienzo.client.core.shape.Shape> getDecorators() {
-        if ( shape instanceof HasDecorators) {
-            return ( (HasDecorators) shape).getDecorators();
+        if ( shape.getShapeView() instanceof HasDecorators) {
+            return ( (HasDecorators) shape.getShapeView()).getDecorators();
         }
         return null;
     }

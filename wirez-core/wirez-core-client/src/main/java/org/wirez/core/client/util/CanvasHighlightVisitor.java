@@ -82,7 +82,7 @@ public class CanvasHighlightVisitor {
                 canvasStateMutation.applyState(ShapeState.HIGHLIGHT);
                 t.schedule( (int) DURATION );
                 
-            } else if (shape instanceof HasDecorators) {
+            } else if (shape.getShapeView() instanceof HasDecorators) {
 
                 new ShapeHighlightAnimation(shape)
                         .setColor(ColorName.BLUE)

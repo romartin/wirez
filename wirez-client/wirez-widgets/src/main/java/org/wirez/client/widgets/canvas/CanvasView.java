@@ -122,6 +122,14 @@ public class CanvasView extends Composite implements WiresCanvas.View {
     }
 
     @Override
+    public WiresCanvas.View addChildShape(final ShapeView<?> parent, final ShapeView<?> child) {
+        final WiresShape parentShape = (WiresShape) parent;
+        final WiresShape childShape = (WiresShape) child;
+        parentShape.add( childShape );
+        return this;
+    }
+
+    @Override
     public WiresCanvas.View setConnectionAcceptor(final IConnectionAcceptor connectionAcceptor) {
         wiresManager.setConnectionAcceptor(connectionAcceptor);
         return this;

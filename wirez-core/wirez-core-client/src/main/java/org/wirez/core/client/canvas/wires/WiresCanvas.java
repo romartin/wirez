@@ -64,6 +64,8 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
         
         View removeShape(ShapeView<?> shapeView);
         
+        View addChildShape(ShapeView<?> parent, ShapeView<?> child);
+        
         View setConnectionAcceptor(IConnectionAcceptor connectionAcceptor);
         
         View setContainmentAcceptor(IContainmentAcceptor containmentAcceptor);
@@ -118,6 +120,11 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
         return null;
     }
 
+    public Canvas addChildShape(final Shape parent, final Shape child) {
+        getView().addChildShape(parent.getShapeView(), child.getShapeView());
+        return this;
+    }
+    
     @Override
     public Canvas addShape(final Shape shape) {
 
@@ -226,7 +233,7 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
         if (shape instanceof HasCanvasStateMutation) {
             final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
             canvasStateMutation.applyState(ShapeState.SELECTED);
-        } else if (shape instanceof HasDecorators) {
+        } else if (shape.getShapeView() instanceof HasDecorators) {
             new ShapeSelectionAnimation(shape)
                     .setCanvas(WiresCanvas.this)
                     .setDuration(ANIMATION_SELECTION_DURATION)
@@ -240,7 +247,7 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
         if (shape instanceof HasCanvasStateMutation) {
             final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
             canvasStateMutation.applyState(ShapeState.DESELECTED);
-        } else if (shape instanceof HasDecorators) {
+        } else if (shape.getShapeView() instanceof HasDecorators) {
             new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK)
                     .setCanvas(WiresCanvas.this)
                     .setDuration(ANIMATION_SELECTION_DURATION)

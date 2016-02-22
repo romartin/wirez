@@ -104,7 +104,7 @@ public class AddConnectionCommand implements ToolboxCommand {
                 if (shape instanceof HasCanvasStateMutation) {
                     final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
                     canvasStateMutation.applyState(ShapeState.HIGHLIGHT);
-                } else if (shape instanceof HasDecorators) {
+                } else if (shape.getShapeView() instanceof HasDecorators) {
                     view.highlight(context.getCanvasHandler().getCanvas(), shape);
                     
                 }
@@ -119,7 +119,7 @@ public class AddConnectionCommand implements ToolboxCommand {
             if (shape instanceof HasCanvasStateMutation) {
                 final HasCanvasStateMutation canvasStateMutation = (HasCanvasStateMutation) shape;
                 canvasStateMutation.applyState(ShapeState.UNHIGHLIGHT);
-            } else if (shape instanceof HasDecorators) {
+            } else if (shape.getShapeView() instanceof HasDecorators) {
                 view.unhighlight(context.getCanvasHandler().getCanvas(), shape);
             }
 

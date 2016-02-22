@@ -43,14 +43,13 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
 
     protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
     protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
-    protected final Collection<Shape> decorators= new LinkedList<>();
+    protected Collection<Shape> decorators = null;
     protected Text text;
     protected String uuid;
     
     public AbstractWiresShapeView(final MultiPath path, 
                                   final WiresManager manager) {
         super(path, new WiresLayoutContainer(), manager);
-        this.decorators.add(getDecorator());
         
     }
 
@@ -61,6 +60,11 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
 
     @Override
     public Collection<Shape> getDecorators() {
+        if ( null == decorators ) {
+            decorators = new LinkedList<>();
+            this.decorators.add(getDecorator());
+        }
+
         return decorators;
     }
 
@@ -68,6 +72,10 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     public T setUUID(final String uuid) {
         this.uuid = uuid;
         return (T) this;
+    }
+
+    protected Shape getShape() {
+        return getPath();
     }
 
     @Override
@@ -209,66 +217,66 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     public T setFillGradient(final Type type, 
                              final String startColor, 
                              final String endColor) {
-        final BoundingBox bb = getPath().getBoundingBox();
+        final BoundingBox bb = getShape().getBoundingBox();
         final double width = bb.getWidth();
         final double height = bb.getHeight();
         final LinearGradient gradient = ShapeUtils.getLinearGradient(startColor, endColor, width, height);
-        getPath().setFillGradient(gradient);
+        getShape().setFillGradient(gradient);
         return (T) this;
     }
 
     @Override
     public String getFillColor() {
-        return getPath().getFillColor();
+        return getShape().getFillColor();
     }
 
     @Override
     public T setFillColor(final String color) {
-        getPath().setFillColor(color);
+        getShape().setFillColor(color);
         return (T) this;
     }
 
     @Override
     public double getFillAlpha() {
-        return getPath().getFillAlpha();
+        return getShape().getFillAlpha();
     }
 
     @Override
     public T setFillAlpha(final double alpha) {
-        getPath().setFillAlpha(alpha);
+        getShape().setFillAlpha(alpha);
         return (T) this;
     }
 
     @Override
     public String getStrokeColor() {
-        return getPath().getStrokeColor();
+        return getShape().getStrokeColor();
     }
 
     @Override
     public T setStrokeColor(final String color) {
-        getPath().setStrokeColor(color);
+        getShape().setStrokeColor(color);
         return (T) this;
     }
 
     @Override
     public double getStrokeAlpha() {
-        return getPath().getStrokeAlpha();
+        return getShape().getStrokeAlpha();
     }
 
     @Override
     public T setStrokeAlpha(final double alpha) {
-        getPath().setStrokeAlpha(alpha);
+        getShape().setStrokeAlpha(alpha);
         return (T) this;
     }
 
     @Override
     public double getStrokeWidth() {
-        return getPath().getStrokeWidth();
+        return getShape().getStrokeWidth();
     }
 
     @Override
     public T setStrokeWidth(final double width) {
-        getPath().setStrokeWidth(width);
+        getShape().setStrokeWidth(width);
         return (T) this;
     }
 

@@ -44,7 +44,6 @@ import org.wirez.core.client.control.ShapeControl;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
-import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.mutation.HasGraphElementMutation;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
@@ -259,11 +258,11 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         @Override
         public boolean containmentAllowed(final WiresContainer wiresContainer, final WiresShape wiresShape) {
 
-            final Shape parent = (Shape) wiresContainer;
-            final Shape child = (Shape) wiresShape;
+            final ShapeView parent = (ShapeView) wiresContainer;
+            final ShapeView child = (ShapeView) wiresShape;
 
-            final Node childNode = getGraphIndex().getNode(child.getId());
-            final Node parentNode = getGraphIndex().getNode(parent.getId());
+            final Node childNode = getGraphIndex().getNode(child.getUUID());
+            final Node parentNode = getGraphIndex().getNode(parent.getUUID());
 
             return getContainmentAcceptor().allow(WiresCanvasHandler.this, parentNode, childNode);
         }
@@ -271,11 +270,11 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         @Override
         public boolean acceptContainment(final WiresContainer wiresContainer, final WiresShape wiresShape) {
 
-            final Shape parent = (Shape) wiresContainer;
-            final Shape child = (Shape) wiresShape;
+            final ShapeView parent = (ShapeView) wiresContainer;
+            final ShapeView child = (ShapeView) wiresShape;
 
-            final Node childNode = getGraphIndex().getNode(child.getId());
-            final Node parentNode = getGraphIndex().getNode(parent.getId());
+            final Node childNode = getGraphIndex().getNode(child.getUUID());
+            final Node parentNode = getGraphIndex().getNode(parent.getUUID());
             
            return getContainmentAcceptor().accept(WiresCanvasHandler.this, parentNode, childNode);
         }

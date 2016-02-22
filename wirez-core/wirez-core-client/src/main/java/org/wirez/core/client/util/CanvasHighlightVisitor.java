@@ -25,6 +25,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
@@ -122,42 +123,22 @@ public class CanvasHighlightVisitor {
 
         shapes.clear();
 
-        final DefinitionManager definitionManager = ClientDefinitionManager.get();
-        
-        
-        new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
+        new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AbstractFullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
+
             @Override
-            public void traverseViewEdge(final Edge<Object, Node> edge) {
+            public void startViewEdgeTraversal(Edge<Object, Node> edge) {
+                super.startViewEdgeTraversal(edge);
                 addShape(edge.getUUID());
             }
 
             @Override
-            public void traverseChildEdge(final Edge<Object, Node> edge) {
-
-            }
-
-            @Override
-            public void traverseParentEdge(final Edge<Object, Node> edge) {
-
-            }
-
-            @Override
-            public void traverse(final Edge<Object, Node> edge) {
-
-            }
-
-            @Override
-            public void traverseView(final Graph<View, Node<View, Edge>> graph) {
-
-            }
-
-            @Override
-            public void traverseView(final Node<View, Edge> node) {
+            public void startNodeTraversal(Node<View, Edge> node) {
+                super.startNodeTraversal(node);
                 addShape(node.getUUID());
             }
 
             @Override
-            public void traverseCompleted() {
+            public void endGraphTraversal() {
                 command.execute();
             }
 

@@ -24,7 +24,7 @@ public final class ParentTraverseProcessorImpl extends AbstractContentTraversePr
     }
 
     @Override
-    protected boolean doTraverse(final Edge edge) {
+    protected boolean doStartEdgeTraversal(final Edge edge) {
         return edge.getContent() instanceof Parent;
     }
 

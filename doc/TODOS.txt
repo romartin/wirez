@@ -1,7 +1,5 @@
 - Immediately
 *************
-    - glyphDragHandler
-        - highlight allowed containers
     - Explorer
         - explorer tree items - improve
         - get glyph for a given size

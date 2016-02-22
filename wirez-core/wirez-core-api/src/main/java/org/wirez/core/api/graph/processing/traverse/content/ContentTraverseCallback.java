@@ -7,12 +7,16 @@ import org.wirez.core.api.graph.content.view.View;
 
 public interface ContentTraverseCallback<C, N extends Node<View, Edge>, E extends Edge<C, Node>> {
 
-    void traverse(E edge);
+    void startGraphTraversal(Graph<View, N> graph);
 
-    void traverseView(Graph<View, N> graph);
+    void startEdgeTraversal(E edge);
+
+    void endEdgeTraversal(E edge);
+
+    void startNodeTraversal(N node);
     
-    void traverseView(N node);
-    
-    void traverseCompleted();
+    void endNodeTraversal(N node);
+
+    void endGraphTraversal();
     
 }

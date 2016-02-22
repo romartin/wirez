@@ -19,7 +19,9 @@ package org.wirez.core.client.util;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
@@ -86,82 +88,106 @@ public class WirezLogger {
     }
     
     private static final FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>> TREE_TRAVERSE_CALLBACK = 
-            new FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
+            new AbstractFullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
+                
+                private String indent = "";
+                
                 @Override
-                public void traverseViewEdge(final Edge<Object, Node> edge) {
-                    log("(View) Edge UUID: " + edge.getUUID());
+                public void startViewEdgeTraversal(final Edge<Object, Node> edge) {
+                    log(indent + "(View) Edge UUID: " + edge.getUUID());
                     final View viewContent = (View) edge.getContent();
-                    log("(View) Edge Id: " + viewContent.getDefinition().getId());
+                    log(indent + "(View) Edge Id: " + viewContent.getDefinition().getId());
 
                     final Node outNode = (Node) edge.getTargetNode();
                     if (outNode == null) {
-                        log("  No outgoing node found");
+                        log(indent + "  No outgoing node found");
                     } else {
-                        log("  Outgoing Node");
-                        log("  ==============");
+                        log(indent + "  Outgoing Node");
+                        log(indent + "  ==============");
                     }
                 }
 
                 @Override
-                public void traverseChildEdge(final Edge<Object, Node> edge) {
+                public void startChildEdgeTraversal(final Edge<Object, Node> edge) {
                     log("(Child= Edge UUID: " + edge.getUUID());
 
                     final Node outNode = edge.getTargetNode();
                     if (outNode == null) {
-                        log("  No outgoing node found");
+                        log(indent + "  No outgoing node found");
                     } else {
-                        log("  Outgoing Node");
-                        log("  ==============");
+                        log(indent + "  Outgoing Node");
+                        log(indent + "  ==============");
                     }
                 }
 
                 @Override
-                public void traverseParentEdge(final Edge<Object, Node> edge) {
+                public void startParentEdgeTraversal(final Edge<Object, Node> edge) {
 
                 }
 
                 @Override
-                public void traverse(final Edge<Object, Node> edge) {
-                    log("Edge UUID: " + edge.getUUID());
+                public void startEdgeTraversal(final Edge<Object, Node> edge) {
+                    log(indent + "Edge UUID: " + edge.getUUID());
 
                     final Node outNode = (Node) edge.getTargetNode();
                     if (outNode == null) {
-                        log("  No outgoing node found");
+                        log(indent + "  No outgoing node found");
                     } else {
-                        log("  Outgoing Node");
-                        log("  ==============");
+                        log(indent + "  Outgoing Node");
+                        log(indent + "  ==============");
                     }
                 }
 
                 @Override
-                public void traverseView(final Graph<View, Node<View, Edge>> graph) {
+                public void startGraphTraversal(final Graph<View, Node<View, Edge>> graph) {
                     if (graph == null) {
                         error("Graph is null!");
                     } else {
-                        log("Graph UUID: " + graph.getUUID());
-                        log("  Graph Starting nodes");
-                        log("  ====================");
+                        log(indent + "Graph UUID: " + graph.getUUID());
+                        log(indent + "  Graph Starting nodes");
+                        log(indent + "  ====================");
                     }
                 }
 
                 @Override
-                public void traverseView(final Node<View, Edge> node) {
-                    log("(View) Node UUID: " + node.getUUID());
-                    log("(View) Node Id: " + node.getContent().getDefinition().getId());
+                public void startNodeTraversal(final Node<View, Edge> node) {
+
+                    
+                    log(indent + "(View) Node UUID: " + node.getUUID());
+                    log(indent + "(View) Node Id: " + node.getContent().getDefinition().getId());
+
+                    final Node parent = getParent(node);
+                    if ( null != parent ) {
+                        log(indent + "(View) Node Parent is: " + parent.getUUID());
+                    }
+                    
                     List<Edge> outEdges = (List<Edge>) node.getOutEdges();
                     if (outEdges == null || outEdges.isEmpty()) {
-                        log("  No outgoing edges found");
+                        log(indent + "  No outgoing edges found");
                     } else {
-                        log("  Outgoing edges");
-                        log("  ==============");
+                        log(indent + "  Outgoing edges");
+                        log(indent + "  ==============");
                     }
                 }
 
                 @Override
-                public void traverseCompleted() {
+                public void endGraphTraversal() {
 
                 }
+                
             };
+    
+    private static Node getParent(final Node node) {
+        List<Edge> inEdges = node.getInEdges();
+        if ( null != inEdges && !inEdges.isEmpty() ) {
+            for ( final Edge edge : inEdges) {
+                if (edge.getContent() instanceof Child) {
+                    return edge.getSourceNode();
+                }
+            }
+        }
+        return null;
+    }
     
     public static void log(final Graph graph) {
         new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())

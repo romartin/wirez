@@ -19,7 +19,7 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
     }
 
-    protected abstract boolean doTraverse(final Edge edge);
+    protected abstract boolean doStartEdgeTraversal(final Edge edge);
 
     protected abstract TreeWalkTraverseProcessor.TraversePolicy getPolicy();
     
@@ -32,33 +32,45 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
                 .traverse(graph, new TreeTraverseCallback<Graph, Node, Edge>() {
 
                     @Override
-                    public void traverseGraph(final Graph graph) {
+                    public void startGraphTraversal(final Graph graph) {
                         if (graph.getContent() instanceof View) {
-                            callback.traverseView(graph);
+                            callback.startGraphTraversal(graph);
                         }
                     }
 
                     @Override
-                    public boolean traverseNode(final Node node) {
+                    public boolean startNodeTraversal(final Node node) {
                         if (node.getContent() instanceof View) {
-                            callback.traverseView((N) node);
+                            callback.startNodeTraversal((N) node);
                             return true;
                         }
                         return false;
                     }
 
                     @Override
-                    public boolean traverseEdge(final Edge edge) {
-                        if (doTraverse(edge)) {
-                            callback.traverse((E) edge);
+                    public boolean startEdgeTraversal(final Edge edge) {
+                        if (doStartEdgeTraversal(edge)) {
+                            callback.startEdgeTraversal((E) edge);
                             return true;
                         }
                         return false;
                     }
 
                     @Override
-                    public void traverseCompleted() {
-                        callback.traverseCompleted();
+                    public void endNodeTraversal(final Node node) {
+                        if (node.getContent() instanceof View) {
+                            callback.endNodeTraversal((N) node);
+                        }
+                    }
+
+                    @Override
+                    public void endEdgeTraversal(final Edge edge) {
+                        callback.endEdgeTraversal((E) edge);
+                    }
+
+                    @Override
+                    public void endGraphTraversal() {
+                        callback.endGraphTraversal();
                     }
                 });
 

@@ -6,12 +6,18 @@ import org.wirez.core.api.graph.Node;
 
 public interface TreeTraverseCallback<G extends Graph, N extends Node, E extends Edge> {
 
-    void traverseGraph(G graph);
+    void startGraphTraversal(G graph);
 
-    boolean traverseNode(N node);
+    boolean startNodeTraversal(N node);
 
-    boolean traverseEdge(E edge);
+    boolean startEdgeTraversal(E edge);
 
-    void traverseCompleted();
+    void endNodeTraversal(N node);
+
+    void endEdgeTraversal(E edge);
+    
+    void endGraphTraversal();
+    
+    
     
 }

@@ -11,8 +11,8 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessor;
-import org.wirez.core.api.graph.processing.traverse.content.ContentTraverseCallback;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
@@ -88,38 +88,55 @@ public class TreeExplorer implements IsWidget {
 
         clear();
 
-        childrenTraverseProcessor.traverse(graph, new ContentTraverseCallback<Child, Node<org.wirez.core.api.graph.content.view.View, Edge>, Edge<Child, Node>>() {
+        childrenTraverseProcessor.traverse(graph, new AbstractContentTraverseCallback<Child, Node<org.wirez.core.api.graph.content.view.View, Edge>, Edge<Child, Node>>() {
 
-            final Stack<Integer> idxStack = new Stack<Integer>();
             Node parent = null;
+            int level = 0;
+            final List<Integer> levelIdx = new LinkedList<Integer>();
             
             @Override
-            public void traverse(final Edge<Child, Node> edge) {
+            public void startEdgeTraversal(final Edge<Child, Node> edge) {
+                super.startEdgeTraversal(edge);
                 final Node newParent = edge.getSourceNode();
                 assert newParent != null;
                 
                 if ( null == parent || ( !parent.equals(newParent) ) ) {
-                    idxStack.push(-1);
-                } 
+                    level++;
+                }
                 
                 this.parent = edge.getSourceNode();
             }
 
             @Override
-            public void traverseView(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
-                idxStack.clear();
-                idxStack.push(-1);
+            public void endEdgeTraversal(final Edge<Child, Node> edge) {
+                super.endEdgeTraversal(edge);
+
+                final Node newParent = edge.getSourceNode();
+                assert newParent != null;
+                
+                if ( !parent.equals(newParent) ) {
+                    level--;
+                    this.parent = newParent;
+                }
             }
 
             @Override
-            public void traverseView(final Node<org.wirez.core.api.graph.content.view.View, Edge> node) {
-                LOGGER.log(Level.INFO, " Start of Traverse View Node " + node.getUUID());
+            public void startGraphTraversal(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
+                super.startGraphTraversal(graph);
+                levelIdx.clear();
+                levelIdx.add(-1);
+            }
 
-                inc(idxStack);
+            @Override
+            public void startNodeTraversal(final Node<org.wirez.core.api.graph.content.view.View, Edge> node) {
+                super.startNodeTraversal(node);
+                LOGGER.log(Level.FINE, " Start of Traverse View Node " + node.getUUID());
+
+                inc(levelIdx, level);
                 
                 if ( null == parent ) {
 
-                    LOGGER.log(Level.INFO, " Traverse for View Node " + node.getUUID() + " with no parent");
+                    LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with no parent");
 
                     view.addItem(node.getUUID(), getItemText(node));
 
@@ -127,44 +144,41 @@ public class TreeExplorer implements IsWidget {
                 } else {
                     
                     final String parentUUID = parent.getUUID();
+                    int[] parentsIdx = getParentsIdx(levelIdx, level);
+                    
+                    LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with parent " + parentUUID 
+                            + " and parentsIdx=" + parentsIdx + " / level=" + level);
 
-                    LOGGER.log(Level.INFO, " Traverse for View Node " + node.getUUID() + " with parent " + parentUUID);
-
-                    view.addItem(node.getUUID(), getItemText(node), getParentsIds(idxStack));
-
+                    view.addItem(node.getUUID(), getItemText(node), parentsIdx);
+                    
                 }
 
-                LOGGER.log(Level.INFO, " End of Traverse View Node " + node.getUUID());
+                LOGGER.log(Level.FINE, " End of Traverse View Node " + node.getUUID());
             }
-
-            @Override
-            public void traverseCompleted() {
-
-            }
+          
         });
 
     }
     
-    private void inc(final Stack<Integer> stack) {
-        final Integer currentIdx = stack.pop();
-        stack.push(currentIdx + 1);
-    }
-    
-    private int[] getParentsIds(final Stack<Integer> stack) {
-        final int parentsLength = stack.size();
-        List<Integer> result = new LinkedList<>();
-        for ( int x = 0; x < parentsLength; x++) {
-            result.add( stack.get(x) );
+    private void inc(final List<Integer> levels, final int level) {
+        if ( levels.size() < ( level + 1 ) ) {
+            levels.add(0);
+        } else {
+            final int idx = levels.get(level);
+            levels.set(level, idx + 1);
         }
-        
-        if ( !result.isEmpty() ) {
-            final int[] resultArray = new int[result.size()];
-            for (int x = 0; x < result.size(); x++) {
-                resultArray[x] = result.get(x);
+    }
+
+    private int[] getParentsIdx(final List<Integer> idxList, final int maxLevel) {
+        if ( !idxList.isEmpty() ) {
+            final int targetPos = ( idxList.size() - ( idxList.size() - maxLevel ) ) + 1;
+            final int[] resultArray = new int[targetPos];
+            for (int x = 0; x < targetPos ; x++) {
+                resultArray[x] = idxList.get(x);
             }
             return resultArray;
         }
-        
+
         return new int[] { };
     }
     
@@ -209,7 +223,7 @@ public class TreeExplorer implements IsWidget {
             @Override
             public void onElementModified(final Element _element) {
                 super.onElementModified(_element);
-                // doShow(getGraph());
+                doShow(getGraph());
             }
 
             @Override

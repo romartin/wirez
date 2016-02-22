@@ -40,76 +40,86 @@ public final class TreeWalkTraverseProcessorImpl implements TreeWalkTraverseProc
     }
 
     protected void startTraverse() {
-        traverseGraph();
-        endTraverse();
+        startGraphTraversal();
+        endGraphTraversal();
     }
 
-    protected void endTraverse() {
-        callback.traverseCompleted();
+    protected void endGraphTraversal() {
+        callback.endGraphTraversal();
     }
 
-    protected void traverseGraph() {
+    protected void startGraphTraversal() {
         assert graph != null && callback != null;
 
-        doTraverseGraph();
+        doStartGraphTraversal();
 
         Collection<Node> startingNodes = getStartingNodes(graph);
         if (!startingNodes.isEmpty()) {
             for (Node node : startingNodes) {
-                traverseNode(node);
+                startNodeTraversal(node);
             }
         }
     }
 
-    protected void doTraverseGraph() {
-        callback.traverseGraph(graph);
+    protected void doStartGraphTraversal() {
+        callback.startGraphTraversal(graph);
     }
 
-    protected void traverseNode(final Node graphNode) {
+    protected void startNodeTraversal(final Node graphNode) {
         final String uuid = graphNode.getUUID();
         if ( !this.processesNodes.contains(uuid) ) {
             this.processesNodes.add(uuid);
-            if ( doTraverseNode(graphNode) ) {
+            if ( doStartNodeTraversal(graphNode) ) {
                 List<Edge> outEdges = graphNode.getOutEdges();
                 if (outEdges != null && !outEdges.isEmpty()) {
                     for (Edge edge : outEdges) {
-                        traverseEdge(edge);
+                        startEdgeTraversal(edge);
                     }
                 }
-                
             }
+            doEndNodeTraversal(graphNode);
         }
     }
 
-    protected boolean doTraverseNode(final Node node) {
-        return callback.traverseNode(node);
+    protected boolean doStartNodeTraversal(final Node node) {
+        return callback.startNodeTraversal(node);
     }
 
-    protected void traverseEdge(final Edge edge) {
+    protected void doEndNodeTraversal(final Node node) {
+        callback.endNodeTraversal(node);
+    }
+
+    protected void startEdgeTraversal(final Edge edge) {
         final String uuid = edge.getUUID();
         if (!this.processesEdges.contains(uuid)) {
             processesEdges.add(uuid);
 
             boolean isTraverNode = true;
             if (TraversePolicy.VISIT_EDGE_BEFORE_TARGET_NODE.equals(policy)) {
-                isTraverNode = doTraverseEdge(edge);
+                isTraverNode = doStartEdgeTraversal(edge);
             }
 
             if ( isTraverNode ) {
                 final Node outNode = edge.getTargetNode();
                 if (outNode != null) {
-                    traverseNode(outNode);
+                    startNodeTraversal(outNode);
                 }
             }
 
             if (TraversePolicy.VISIT_EDGE_AFTER_TARGET_NODE.equals(policy)) {
-                doTraverseEdge(edge);
+                doStartEdgeTraversal(edge);
             }
+            
+            doEndEdgeTraversal(edge);
         }
     }
 
-    protected boolean doTraverseEdge(final Edge edge) {
-        return callback.traverseEdge(edge);
+    protected boolean doStartEdgeTraversal(final Edge edge) {
+        return callback.startEdgeTraversal(edge);
+    }
+    
+    protected void doEndEdgeTraversal(final Edge edge) {
+        callback.endEdgeTraversal(edge);
     }
 
     protected Collection<Node> getStartingNodes(final Graph graph) {

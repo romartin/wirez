@@ -25,27 +25,28 @@ public class GraphBoundsIndexer {
     public Node traverseChildren(final double x, final double y) {
         final Node[] result = new Node[1];
 
-        
-        new ChildrenTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new ContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>() {
+
+        new ChildrenTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AbstractContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>() {
 
             Node parent = null;
-            
-            @Override
-            public void traverse(final Edge<Child, Node> edge) {
-                this.parent = edge.getSourceNode();
-            }
 
             @Override
-            public void traverseView(final Graph<View, Node<View, Edge>> graph) {
+            public void startGraphTraversal(Graph<View, Node<View, Edge>> graph) {
+                super.startGraphTraversal(graph);
                 parent = null;
             }
 
             @Override
-            public void traverseView(final Node<View, Edge> node) {
+            public void startEdgeTraversal(Edge<Child, Node> edge) {
+                this.parent = edge.getSourceNode();
+            }
 
+            @Override
+            public void startNodeTraversal(final Node<View, Edge> node) {
+                super.startNodeTraversal(node);
                 double parentX = 0;
                 double parentY = 0;
-                
+
                 if ( null != parent ) {
                     final Object content = parent.getContent();
 
@@ -55,88 +56,19 @@ public class GraphBoundsIndexer {
                         parentX = parentCoords[0];
                         parentY = parentCoords[1];
                     }
-                    
+
                     parent = null;
                 }
-                
+
                 if (isNodeAt(node, parentX, parentY, x, y)) {
                     result[0] = node;
                 }
-                
-            }
-
-            @Override
-            public void traverseCompleted() {
-
             }
         });
 
         return result[0];
     }
 
-    public Node traverseAll(final double x, final double y) {
-        final Node[] result = new Node[1];
-        
-        visitor.traverse(graph, new FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
-
-            double parentX = 0;
-            double parentY = 0;
-
-            @Override
-            public void traverseViewEdge(final Edge<Object, Node> edge) {
-
-            }
-
-            @Override
-            public void traverseChildEdge(final Edge<Object, Node> edge) {
-
-                final Node parent = edge.getSourceNode();
-                final Object content = parent.getContent();
-
-                if (content instanceof View) {
-                    final View viewContent = (View) content;
-                    final Double[] parentCoords = ElementUtils.getPosition(viewContent);
-                    this.parentX = parentCoords[0];
-                    this.parentY = parentCoords[1];
-                }
-
-            }
-
-            @Override
-            public void traverseParentEdge(final Edge<Object, Node> edge) {
-
-            }
-
-            @Override
-            public void traverse(final Edge<Object, Node> edge) {
-
-            }
-
-            @Override
-            public void traverseView(final Graph<View, Node<View, Edge>> graph) {
-
-            }
-
-            @Override
-            public void traverseView(final Node<View, Edge> node) {
-                if (isNodeAt(node, parentX, parentY, x, y)) {
-                    result[0] = node;
-                }
-
-                this.parentX = 0;
-                this.parentY = 0;
-            }
-
-            @Override
-            public void traverseCompleted() {
-
-            }
-
-        });
-
-        return result[0];
-    }
-    
     private boolean isNodeAt(final Node node,
                              final double parentX, 
                              final double parentY,

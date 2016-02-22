@@ -30,6 +30,7 @@ import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
+import org.wirez.core.api.graph.processing.traverse.tree.AbstractTreeTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.client.Shape;
@@ -118,14 +119,14 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
 
         treeWalkTraverseProcessor
                 .usePolicy(TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_AFTER_TARGET_NODE)
-                .traverse(diagram.getGraph(), new TreeTraverseCallback<Graph, Node, Edge>() {
+                .traverse(diagram.getGraph(), new AbstractTreeTraverseCallback<Graph, Node, Edge>() {
             @Override
-            public void traverseGraph(final Graph graph) {
+            public void startGraphTraversal(final Graph graph) {
                 
             }
 
             @Override
-            public boolean traverseNode(final Node node) {
+            public boolean startNodeTraversal(final Node node) {
                 
                 if ( node.getContent() instanceof View ) {
                     final View viewContent = (View) node.getContent();
@@ -142,7 +143,7 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
             }
 
             @Override
-            public boolean traverseEdge(final Edge edge) {
+            public boolean startEdgeTraversal(final Edge edge) {
                 
                 final Object content = edge.getContent();
 
@@ -179,7 +180,7 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
             }
 
             @Override
-            public void traverseCompleted() {
+            public void endGraphTraversal() {
 
             }
         });

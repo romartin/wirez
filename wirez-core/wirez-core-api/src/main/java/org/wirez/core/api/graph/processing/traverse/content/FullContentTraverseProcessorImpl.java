@@ -31,38 +31,58 @@ public final class FullContentTraverseProcessorImpl implements FullContentTraver
                 .traverse(graph, new TreeTraverseCallback<Graph, Node, Edge>() {
 
                     @Override
-                    public void traverseGraph(final Graph graph) {
+                    public void startGraphTraversal(final Graph graph) {
                         if (graph.getContent() instanceof View) {
-                            callback.traverseView( graph );
+                            callback.startGraphTraversal( graph );
                         }
                     }
 
                     @Override
-                    public boolean traverseNode(final Node node) {
+                    public boolean startNodeTraversal(final Node node) {
                         if (node.getContent() instanceof View) {
-                            callback.traverseView( node );
+                            callback.startNodeTraversal( node );
                             return true;
                         }
                         return false;
                     }
 
                     @Override
-                    public boolean traverseEdge(final Edge edge) {
+                    public boolean startEdgeTraversal(final Edge edge) {
                         if ( edge.getContent() instanceof View ) {
-                            callback.traverseViewEdge( edge );
+                            callback.startViewEdgeTraversal( edge );
                         } else if ( edge.getContent() instanceof Child ) {
-                            callback.traverseChildEdge( edge );
+                            callback.startChildEdgeTraversal( edge );
                         } else if ( edge.getContent() instanceof Parent ) {
-                            callback.traverseParentEdge( edge );
+                            callback.startParentEdgeTraversal( edge );
                         } else {
-                            callback.traverse( edge );
+                            callback.startEdgeTraversal( edge );
                         }
                         return true;
                     }
 
                     @Override
-                    public void traverseCompleted() {
-                        callback.traverseCompleted();
+                    public void endNodeTraversal(final Node node) {
+                        if (node.getContent() instanceof View) {
+                            callback.endNodeTraversal( node );
+                        }
+                    }
+
+                    @Override
+                    public void endEdgeTraversal(final Edge edge) {
+                        if ( edge.getContent() instanceof View ) {
+                            callback.endViewEdgeTraversal( edge );
+                        } else if ( edge.getContent() instanceof Child ) {
+                            callback.endChildEdgeTraversal( edge );
+                        } else if ( edge.getContent() instanceof Parent ) {
+                            callback.endParentEdgeTraversal( edge );
+                        } else {
+                            callback.endEdgeTraversal( edge );
+                        }
+                    }
+
+                    @Override
+                    public void endGraphTraversal() {
+                        callback.endGraphTraversal();
                     }
                 });
         

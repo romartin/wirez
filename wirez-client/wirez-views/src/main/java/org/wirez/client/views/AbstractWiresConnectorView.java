@@ -30,6 +30,7 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
     protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
     protected Text text;
+    protected String uuid;
     private Double strokeWidth;
     private String color;
 
@@ -44,6 +45,17 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     protected abstract HandlerRegistration doAddHandler(final ViewEventType type,
                                                         final ViewHandler<ViewEvent> eventHandler);
 
+    @Override
+    public T setUUID(final String uuid) {
+        this.uuid = uuid;
+        return (T) this;
+    }
+
+    @Override
+    public String getUUID() {
+        return uuid;
+    }
+    
     public T connect(final ShapeView headShapeView, 
                            final int _headMagnetsIndex, 
                            final ShapeView tailShapeView, 
@@ -143,9 +155,9 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     
     @Override
     public T addHandler(final ViewEventType type,
-                        final ViewHandler<ViewEvent> eventHandler) {
+                        final ViewHandler<? extends ViewEvent> eventHandler) {
 
-        final HandlerRegistration registration = doAddHandler(type, eventHandler);
+        final HandlerRegistration registration = doAddHandler(type, (ViewHandler<ViewEvent>) eventHandler);
         if ( null != registration ) {
             registrationMap.put(type, registration);
             registrationManager.register(registration);
@@ -154,7 +166,7 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     }
 
     @Override
-    public T removeHandler(final ViewHandler<ViewEvent> eventHandler) {
+    public T removeHandler(final ViewHandler<? extends ViewEvent> eventHandler) {
         final ViewEventType type = eventHandler.getType();
         if ( registrationMap.containsKey( type ) ) {
             final HandlerRegistration registration = registrationMap.get( type );

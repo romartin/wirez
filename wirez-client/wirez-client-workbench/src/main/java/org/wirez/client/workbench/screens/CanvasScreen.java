@@ -52,9 +52,11 @@ import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.control.SelectionManager;
+import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.canvas.settings.CanvasSettingsFactory;
 import org.wirez.core.client.canvas.settings.WiresCanvasSettings;
+import org.wirez.core.client.canvas.wires.WiresLayer;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientDiagramServices;
@@ -288,7 +290,8 @@ public class CanvasScreen {
             public void execute() {
 
                 if ( null == mousePointerCoordsHandlerReg ) {
-                    mousePointerCoordsHandlerReg = canvasHandler.getCanvas().getLayer().addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
+                    final WiresLayer wiresLayer = (WiresLayer) canvasHandler.getCanvas().getLayer();
+                    mousePointerCoordsHandlerReg = wiresLayer.getLienzoLayer().addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
                         @Override
                         public void onNodeMouseMove(NodeMouseMoveEvent nodeMouseMoveEvent) {
                             LOGGER.log(Level.INFO, "Mouse at [" + nodeMouseMoveEvent.getX() + ", " + nodeMouseMoveEvent.getY() + "]");

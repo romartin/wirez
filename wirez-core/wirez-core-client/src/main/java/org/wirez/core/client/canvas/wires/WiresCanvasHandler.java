@@ -49,6 +49,7 @@ import org.wirez.core.client.mutation.HasGraphElementMutation;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.WirezLogger;
+import org.wirez.core.client.view.ShapeView;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -183,10 +184,10 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         // Set the source Node for the connector.
         @Override
         public boolean acceptHead(WiresConnection head, WiresMagnet magnet) {
-            final BaseConnector connector = (BaseConnector) head.getConnector();
+            final ShapeView connector = (ShapeView) head.getConnector();
             final Shape sourceShape = (Shape) magnet.getMagnets().getWiresShape();
             final Node sourceNode = getGraphIndex().getNode(sourceShape.getId());
-            final Edge edge = getGraphIndex().getEdge(connector.getId());
+            final Edge edge = getGraphIndex().getEdge(connector.getUUID());
             final String sourceUUID = sourceNode != null ? sourceNode.getUUID() : null;
 
             final int mIndex = getMagnetIndex(magnet);
@@ -201,10 +202,10 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         @Override
         public boolean acceptTail(WiresConnection tail, WiresMagnet magnet) {
             WiresConnection head = tail.getConnector().getHeadConnection();
-            final BaseConnector connector = (BaseConnector) head.getConnector();
+            final ShapeView connector = (ShapeView) head.getConnector();
             final Shape targetShape = (Shape) magnet.getMagnets().getWiresShape();
             final Node targetNode = getGraphIndex().getNode(targetShape.getId());
-            final Edge edge = getGraphIndex().getEdge(connector.getId());
+            final Edge edge = getGraphIndex().getEdge(connector.getUUID());
             final String targetUUID = targetNode != null ? targetNode.getUUID() : null;
 
             final int mIndex = getMagnetIndex(magnet);
@@ -219,22 +220,22 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
         public boolean headConnectionAllowed(WiresConnection head, WiresShape shape) {
             WiresConnection tail = head.getConnector().getTailConnection();
 
-            final BaseConnector connector = (BaseConnector) tail.getConnector();
+            final ShapeView connector = (ShapeView) head.getConnector();
             final Shape outNode = (Shape) shape;
 
             final Node sourceNode = getGraphIndex().getNode(outNode.getId());
-            final Edge<View<?>, Node> edge = getGraphIndex().getEdge(connector.getId()); 
+            final Edge<View<?>, Node> edge = getGraphIndex().getEdge(connector.getUUID()); 
             
             return getConnectionAcceptor().allowSource(WiresCanvasHandler.this, sourceNode, edge, 0);
         }
 
         @Override
         public boolean tailConnectionAllowed(WiresConnection tail, WiresShape shape) {
-            final BaseConnector connector = (BaseConnector) tail.getConnector();
+            final ShapeView connector = (ShapeView) tail.getConnector();
             final Shape inNode = (Shape) shape;
 
             final Node targetNode = getGraphIndex().getNode(inNode.getId());
-            final Edge<View<?>, Node> edge = getGraphIndex().getEdge(connector.getId());
+            final Edge<View<?>, Node> edge = getGraphIndex().getEdge(connector.getUUID());
             
             return getConnectionAcceptor().allowTarget(WiresCanvasHandler.this, targetNode, edge, 0);
         }

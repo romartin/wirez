@@ -8,7 +8,7 @@ public interface HasEventHandlers<T> {
     
     boolean supports( ViewEventType type );
     
-    T addHandler(ViewEventType type, ViewHandler<ViewEvent> eventHandler);
+    T addHandler(ViewEventType type, ViewHandler<? extends ViewEvent> eventHandler);
     
-    T removeHandler(ViewHandler<ViewEvent> eventHandler);
+    T removeHandler(ViewHandler<? extends ViewEvent> eventHandler);
 }

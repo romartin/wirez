@@ -7,6 +7,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.core.client.view.HasSize;
+import org.wirez.core.client.view.event.DragHandler;
 import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
 import org.wirez.core.client.view.event.ViewHandler;
@@ -39,15 +40,19 @@ public class WiresRectangleView extends AbstractWiresShapeView<WiresRectangleVie
 
     @Override
     public boolean supports(final ViewEventType type) {
-        return ViewEventType.MOUSE_CLICK.equals( type );
+        return ViewEventType.MOUSE_CLICK.equals( type ) || ViewEventType.DRAG.equals( type );
     }
 
     @Override
     protected HandlerRegistration doAddHandler(final ViewEventType type, 
-                                               final ViewHandler<ViewEvent> eventHandler) {
+                                               final ViewHandler<? extends ViewEvent> eventHandler) {
         
         if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
-            return registerClickHandler(getPath(), eventHandler);
+            return registerClickHandler(getPath(), (ViewHandler<ViewEvent>) eventHandler);
+        }
+
+        if ( ViewEventType.DRAG.equals(type) ) {
+            return registerDragHandler(getPath(), (DragHandler) eventHandler);
         }
 
         return null;

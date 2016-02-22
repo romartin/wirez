@@ -7,4 +7,5 @@ public abstract class MouseMoveHandler extends AbstractViewHandler<MouseMoveEven
         return ViewEventType.MOUSE_MOVE;
     }
 
+    
 }

@@ -2,6 +2,10 @@ package org.wirez.core.client.view;
 
 public interface ShapeView<T> {
 
+    T setUUID(String uuid);
+    
+    String getUUID();
+    
     double getShapeX();
 
     double getShapeY();

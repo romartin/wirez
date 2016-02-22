@@ -83,7 +83,6 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
     protected View view;
     protected List<Shape> shapes = new ArrayList<Shape>();
     protected List<Shape> selectedShapes = new ArrayList<Shape>();
-    
 
     @Inject
     public WiresCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent,
@@ -128,6 +127,7 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
 
         log(Level.FINE, "BaseCanvas#register - " + shape.toString() + " [id=" + shape.getId() + "]");
 
+        shape.getShapeView().setUUID(shape.getId());
         view.addShape( shape.getShapeView() );
 
         shapes.add( shape );

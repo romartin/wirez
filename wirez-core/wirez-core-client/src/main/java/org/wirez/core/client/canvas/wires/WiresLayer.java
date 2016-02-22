@@ -1,4 +1,4 @@
-package org.wirez.client.views;
+package org.wirez.core.client.canvas.wires;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
@@ -59,17 +59,17 @@ public class WiresLayer implements Layer<WiresLayer, ShapeView<?>> {
 
     @Override
     public WiresLayer addHandler(final ViewEventType type,
-                                 final ViewHandler<ViewEvent> eventHandler) {
+                                 final ViewHandler<? extends ViewEvent> eventHandler) {
 
         HandlerRegistration registration = null;
         
         if ( ViewEventType.MOUSE_CLICK.equals( type ) ) {
             
-            registration = registerClickHandler(eventHandler);
+            registration = registerClickHandler((ViewHandler<ViewEvent>) eventHandler);
             
         } else if ( ViewEventType.MOUSE_MOVE.equals( type ) ) {
          
-            registration = registerMouseMoveHandler(eventHandler);
+            registration = registerMouseMoveHandler((ViewHandler<ViewEvent>) eventHandler);
         }
         
         if ( null != registration ) {
@@ -81,11 +81,11 @@ public class WiresLayer implements Layer<WiresLayer, ShapeView<?>> {
     }
 
     @Override
-    public WiresLayer removeHandler(final ViewHandler<ViewEvent> eventHandler) {
+    public WiresLayer removeHandler(final ViewHandler<? extends ViewEvent> eventHandler) {
         final ViewEventType type = eventHandler.getType();
         if ( registrationMap.containsKey( type ) ) {
             final HandlerRegistration registration = registrationMap.get( type );
-            registrationManager.isRegistered(registration);
+            registrationManager.deregister(registration);
         }
         return this;
     }
@@ -111,4 +111,7 @@ public class WiresLayer implements Layer<WiresLayer, ShapeView<?>> {
         });
     }
     
+    public com.ait.lienzo.client.core.shape.Layer getLienzoLayer() {
+        return this.layer;
+    }
 }

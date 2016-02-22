@@ -18,6 +18,9 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.wires.WiresLayer;
+import org.wirez.core.client.view.HasEventHandlers;
+import org.wirez.core.client.view.event.*;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +33,8 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
     private Canvas canvas;
     private IPrimitive<?> connector;
     private Point2D lineStart;
-    private final HandlerRegistrationManager h_manager = new HandlerRegistrationManager();
+    private MouseMoveHandler mouseMoveHandler;
+    private MouseClickHandler mouseClickHandler;
 
     @Override
     public AddConnectionCommand.View init(final AddConnectionCommand presenter) {
@@ -67,7 +71,13 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
 
     @Override
     public AddConnectionCommand.View clear() {
-        h_manager.removeHandler();
+        final WiresLayer layer = (WiresLayer) canvas.getLayer();
+        if ( null != this.mouseClickHandler ) {
+            layer.removeHandler(this.mouseClickHandler);
+        }
+        if ( null != this.mouseMoveHandler ) {
+            layer.removeHandler(this.mouseMoveHandler);
+        }
         if ( null != connector ) {
             connector.removeFromParent();
         }
@@ -77,37 +87,44 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
     }
 
     private void doShow(double x, double y) {
-        final Layer layer = canvas.getLayer();
+        
+        final WiresLayer layer = (WiresLayer) canvas.getLayer();
         
         lineStart = new Point2D(x, y);
         // connector = createLine(x, y,  x + 1, y + 1);
         connector = createArrow(x, y,  x + 1, y + 1);
-        layer.add(connector);
+        layer.getLienzoLayer().add(connector);
 
-        h_manager.register(layer.addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
+        
+        this.mouseMoveHandler = new MouseMoveHandler() {
             @Override
-            public void onNodeMouseMove(NodeMouseMoveEvent event) {
-                int x = event.getX();
-                int y = event.getY();
+            public void handle(final MouseMoveEvent event) {
+                final int x = (int) event.getMouseX();
+                final int y = (int) event.getMouseY();
                 // updateLineTo((OrthogonalPolyLine) connector, x, y);
                 updateArrowTo((Arrow) connector, x, y);
-                
+
                 presenter.onMouseMove(x, y);
                 LOGGER.log(Level.INFO, "Mouse at [" + x + ", " + y+ "]");
-                layer.batch();
+                layer.draw();
             }
-        }));
+        };
+        
+        layer.addHandler(ViewEventType.MOUSE_MOVE, this.mouseMoveHandler);
 
-        h_manager.register(layer.addNodeMouseClickHandler(new NodeMouseClickHandler() {
+        this.mouseClickHandler = new MouseClickHandler() {
+
             @Override
-            public void onNodeMouseClick(NodeMouseClickEvent event) {
-                int x = event.getX();
-                int y = event.getY();
+            public void handle(final MouseClickEvent event) {
+                final int x = (int) event.getMouseX();
+                final int y = (int) event.getMouseY();
                 presenter.onMouseClick(x, y);
             }
-        }));
-
-        layer.batch();
+        };
+        
+        layer.addHandler(ViewEventType.MOUSE_CLICK, this.mouseClickHandler);
+        
+        layer.draw();
     }
 
     private OrthogonalPolyLine createLineEnd2End(final double x0, final double y0, final double x1, final double y1)

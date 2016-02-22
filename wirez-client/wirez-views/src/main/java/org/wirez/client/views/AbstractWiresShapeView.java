@@ -9,6 +9,9 @@ import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
+import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresEvent;
+import com.ait.lienzo.client.core.shape.wires.event.DragEvent;
+import com.ait.lienzo.client.core.shape.wires.event.DragHandler;
 import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import com.ait.lienzo.shared.core.types.ColorName;
@@ -42,6 +45,7 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
     protected final Collection<Shape> decorators= new LinkedList<>();
     protected Text text;
+    protected String uuid;
     
     public AbstractWiresShapeView(final MultiPath path, 
                                   final WiresManager manager) {
@@ -51,13 +55,24 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     }
 
     protected abstract HandlerRegistration doAddHandler(final ViewEventType type,
-                                                        final ViewHandler<ViewEvent> eventHandler);
+                                                        final ViewHandler<? extends ViewEvent> eventHandler);
 
     protected abstract Shape getDecorator();
 
     @Override
     public Collection<Shape> getDecorators() {
         return decorators;
+    }
+
+    @Override
+    public T setUUID(final String uuid) {
+        this.uuid = uuid;
+        return (T) this;
+    }
+
+    @Override
+    public String getUUID() {
+        return uuid;
     }
 
     @Override
@@ -135,6 +150,35 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
             public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
                 final MouseClickEvent event = new MouseClickEvent(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY());
                 eventHandler.handle( event );
+            }
+        });
+    }
+
+    protected HandlerRegistration registerDragHandler(final Node node,
+                                                       final ViewHandler<org.wirez.core.client.view.event.DragEvent> eventHandler) {
+    
+        return setDraggable(true).addWiresHandler(AbstractWiresEvent.DRAG, new DragHandler() {
+            @Override
+            public void onDragStart(final DragEvent dragEvent) {
+                getDragHandler().start(buildEvent(dragEvent.getX(), dragEvent.getY()));
+            }
+
+            @Override
+            public void onDragMove(final DragEvent dragEvent) {
+                getDragHandler().handle(buildEvent(dragEvent.getX(), dragEvent.getY()));
+            }
+
+            @Override
+            public void onDragEnd(final DragEvent dragEvent) {
+                getDragHandler().end(buildEvent(dragEvent.getX(), dragEvent.getY()));
+            }
+            
+            private org.wirez.core.client.view.event.DragHandler getDragHandler() {
+                return (org.wirez.core.client.view.event.DragHandler) eventHandler;
+            }
+            
+            private org.wirez.core.client.view.event.DragEvent buildEvent(final double x, final double y) {
+                return new org.wirez.core.client.view.event.DragEvent(x, y);
             }
         });
     }
@@ -258,7 +302,7 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
 
     @Override
     public T addHandler(final ViewEventType type,
-                        final ViewHandler<ViewEvent> eventHandler) {
+                        final ViewHandler<? extends ViewEvent> eventHandler) {
 
         final HandlerRegistration registration = doAddHandler(type, eventHandler);
         if ( null != registration ) {
@@ -269,7 +313,7 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     }
 
     @Override
-    public T removeHandler(final ViewHandler<ViewEvent> eventHandler) {
+    public T removeHandler(final ViewHandler<? extends ViewEvent> eventHandler) {
         final ViewEventType type = eventHandler.getType();
         if ( registrationMap.containsKey( type ) ) {
             final HandlerRegistration registration = registrationMap.get( type );

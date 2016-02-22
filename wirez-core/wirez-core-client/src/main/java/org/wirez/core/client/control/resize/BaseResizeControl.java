@@ -63,9 +63,10 @@ public abstract class BaseResizeControl<S extends Shape, E extends Element> exte
     @Override
     public void doDisable(final S shape) {
 
-        if (shape instanceof BaseShape) {
+        // TODO
+        /*if (shape instanceof BaseShape) {
             ((BaseShape) shape).setResizable(false);
-        }
+        }*/
         
     }
 

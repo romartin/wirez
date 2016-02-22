@@ -61,6 +61,14 @@ public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent> im
         }
         return this;
     }
+
+    public static Double[] getRingRadius(final double radius) {
+        final double r = radius / 8;
+        final double inner = r * 6;
+        final double outer = inner + r;
+
+        return new Double[] { inner, outer};
+    }
     
     @Override
     public String toString() {

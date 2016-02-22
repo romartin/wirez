@@ -8,6 +8,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.core.client.view.HasRadius;
+import org.wirez.core.client.view.event.DragHandler;
 import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
 import org.wirez.core.client.view.event.ViewHandler;
@@ -53,15 +54,19 @@ public class WiresPolygonView extends AbstractWiresShapeView<WiresPolygonView>
     }
     @Override
     public boolean supports(final ViewEventType type) {
-        return ViewEventType.MOUSE_CLICK.equals( type );
+        return ViewEventType.MOUSE_CLICK.equals( type ) || ViewEventType.DRAG.equals( type );
     }
 
     @Override
     protected HandlerRegistration doAddHandler(final ViewEventType type, 
-                                               final ViewHandler<ViewEvent> eventHandler) {
+                                               final ViewHandler<? extends ViewEvent> eventHandler) {
         
         if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
-            return registerClickHandler(getPath(), eventHandler);
+            return registerClickHandler(getPath(), (ViewHandler<ViewEvent>) eventHandler);
+        }
+
+        if ( ViewEventType.DRAG.equals(type) ) {
+            return registerDragHandler(getPath(), (DragHandler) eventHandler);
         }
 
         return null;

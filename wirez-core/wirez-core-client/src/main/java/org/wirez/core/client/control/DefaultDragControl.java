@@ -23,6 +23,8 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.impl.BaseShape;
+import org.wirez.core.client.view.HasEventHandlers;
+import org.wirez.core.client.view.event.ViewEventType;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -30,6 +32,8 @@ import javax.inject.Inject;
 @Dependent
 public class DefaultDragControl extends BaseDragControl<Shape, Element>  {
 
+    private org.wirez.core.client.view.event.DragHandler handler;
+    
     @Inject
     public DefaultDragControl(CanvasCommandFactory canvasCommandFactory) {
         super(canvasCommandFactory);
@@ -38,38 +42,45 @@ public class DefaultDragControl extends BaseDragControl<Shape, Element>  {
     @Override
     public void doEnable(final Shape shape, final Element element) {
         
-        if (shape instanceof BaseShape) {
-            ( (BaseShape) shape).setDraggable(true).addWiresHandler(AbstractWiresEvent.DRAG, new DragHandler() {
-                @Override
-                public void onDragStart(DragEvent dragEvent) {
-                    
-                }
+        if ( shape.getShapeView() instanceof HasEventHandlers ) {
+            final HasEventHandlers hasEventHandlers = (HasEventHandlers) shape.getShapeView();
+            
+            this.handler = new org.wirez.core.client.view.event.DragHandler() {
 
                 @Override
-                public void onDragMove(DragEvent dragEvent) {
+                public void handle(final org.wirez.core.client.view.event.DragEvent event) {
 
                 }
 
                 @Override
-                public void onDragEnd(DragEvent dragEvent) {
+                public void start(final org.wirez.core.client.view.event.DragEvent event) {
+
+                }
+
+                @Override
+                public void end(final org.wirez.core.client.view.event.DragEvent event) {
                     final double[] xy = getContainerXY(shape);
                     execute( commandFactory.UPDATE_POSITION(element, xy[0], xy[1]) );
                 }
-            });
+            };
+            
+            hasEventHandlers.addHandler(ViewEventType.DRAG, handler);
+            
         }
         
     }
 
     protected double[] getContainerXY(final Shape shape) {
-        return new double[] { shape.getShapeContainer().getAttributes().getX(),
-                shape.getShapeContainer().getAttributes().getY()};
+        return new double[] { shape.getShapeView().getShapeX(),
+                shape.getShapeView().getShapeY()};
     }
     
     @Override
     public void doDisable(final Shape shape) {
 
-        if (shape instanceof BaseShape) {
-            ((BaseShape) shape).setDraggable(false);
+        if ( null != this.handler ) {
+            final HasEventHandlers hasEventHandlers = (HasEventHandlers) shape.getShapeView();
+            hasEventHandlers.removeHandler(this.handler);
         }
         
     }

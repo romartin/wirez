@@ -20,6 +20,8 @@ import org.wirez.bpmn.api.Lane;
 import org.wirez.bpmn.client.LaneShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.LaneGlyph;
+import org.wirez.client.views.ShapeViewFactory;
+import org.wirez.client.views.WiresRectangleView;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -38,10 +40,11 @@ public class LaneShapeFactory extends BaseBPMNShapeFactory<Lane, LaneShape> {
     }
     
     @Inject
-    public LaneShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
+    public LaneShapeFactory(final ShapeViewFactory shapeViewFactory,
+                            final DefaultShapeControlFactories defaultShapeControlFactories,
                             final ShapeGlyphDragHandler shapeGlyphDragHandler,
                             final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+        super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override
@@ -66,11 +69,9 @@ public class LaneShapeFactory extends BaseBPMNShapeFactory<Lane, LaneShape> {
 
     @Override
     public LaneShape build(final Lane definition, final CanvasHandler canvasHandler) {
-
-        final WiresCanvas baseCanvas = (WiresCanvas) canvasHandler.getCanvas();
-        
-        return new LaneShape(baseCanvas.getWiresManager());
-
+        final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
+        final WiresRectangleView view = shapeViewFactory.rectangle( Lane.WIDTH, Lane.HEIGHT, wiresCanvas.getWiresManager());
+        return new LaneShape(view);
     }
 
 }

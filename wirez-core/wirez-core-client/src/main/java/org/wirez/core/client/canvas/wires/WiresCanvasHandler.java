@@ -103,9 +103,9 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
                     }
                 }
 
-                final WiresManager wiresManager = canvas.getWiresManager();
-                wiresManager.setConnectionAcceptor(CONNECTION_ACCEPTOR);
-                wiresManager.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
+                final WiresCanvas.View canvasView = canvas.getView();
+                canvasView.setConnectionAcceptor(CONNECTION_ACCEPTOR);
+                canvasView.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
 
                 sucessCallback.execute();
             }

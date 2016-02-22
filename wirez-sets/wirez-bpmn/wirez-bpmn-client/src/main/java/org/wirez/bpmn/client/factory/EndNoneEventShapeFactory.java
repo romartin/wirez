@@ -20,6 +20,8 @@ import org.wirez.bpmn.api.EndNoneEvent;
 import org.wirez.bpmn.client.EndNoneEventShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.EndNoneEventGlyph;
+import org.wirez.client.views.ShapeViewFactory;
+import org.wirez.client.views.WiresCircleView;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -37,10 +39,11 @@ public class EndNoneEventShapeFactory extends BaseBPMNShapeFactory<EndNoneEvent,
     }
 
     @Inject
-    public EndNoneEventShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                            final ShapeGlyphDragHandler shapeGlyphDragHandler,
-                            final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+    public EndNoneEventShapeFactory(final ShapeViewFactory shapeViewFactory,
+                                    final DefaultShapeControlFactories defaultShapeControlFactories,
+                                    final ShapeGlyphDragHandler shapeGlyphDragHandler,
+                                    final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
+        super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override
@@ -60,13 +63,9 @@ public class EndNoneEventShapeFactory extends BaseBPMNShapeFactory<EndNoneEvent,
 
     @Override
     public EndNoneEventShape build(final EndNoneEvent definition, final CanvasHandler canvasHandler) {
-
-        final WiresCanvas baseWirezCanvas = (WiresCanvas) canvasHandler.getCanvas();
-
-        EndNoneEventShape circleShape = new EndNoneEventShape(baseWirezCanvas.getWiresManager());
-
-        return circleShape;
-
+        final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
+        final WiresCircleView view = shapeViewFactory.circle( EndNoneEvent.RADIUS, wiresCanvas.getWiresManager());
+        return new EndNoneEventShape(view);
     }
 
 }

@@ -1,5 +1,6 @@
 package org.wirez.bpmn.client.factory.control;
 
+import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
@@ -93,7 +94,8 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
         final Canvas canvas = context.getCanvasHandler().getCanvas();
         final BaseShape sourceShape = (BaseShape) canvas.getShape(source.getUUID());
         final BaseShape targetShape = (BaseShape) canvas.getShape(target.getUUID());
-        final int[] magnetIndexes = ShapeUtils.getDefaultMagnetsIndex(sourceShape, targetShape);
+        final int[] magnetIndexes = ShapeUtils.getDefaultMagnetsIndex( (WiresShape) sourceShape.getShapeView(),
+                (WiresShape) targetShape.getShapeView());
         
         final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
 

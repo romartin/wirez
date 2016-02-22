@@ -3,15 +3,14 @@ package org.wirez.client.views;
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.*;
-import com.ait.lienzo.client.core.shape.wires.MagnetManager;
-import com.ait.lienzo.client.core.shape.wires.WiresConnector;
-import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.shape.wires.*;
 import com.ait.lienzo.client.core.types.Point2DArray;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.core.client.view.HasEventHandlers;
+import org.wirez.core.client.view.HasTitle;
+import org.wirez.core.client.view.IsConnector;
 import org.wirez.core.client.view.ShapeView;
 import org.wirez.core.client.view.event.MouseClickEvent;
 import org.wirez.core.client.view.event.ViewEvent;
@@ -24,6 +23,8 @@ import java.util.Map;
 public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     implements 
         ShapeView<T>,
+        IsConnector<T>,
+        HasTitle<T>,
         HasEventHandlers<T> {
 
     protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
@@ -43,9 +44,21 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     protected abstract HandlerRegistration doAddHandler(final ViewEventType type,
                                                         final ViewHandler<ViewEvent> eventHandler);
 
-    protected void connect(MagnetManager.Magnets headMagnets, int headMagnetsIndex, MagnetManager.Magnets tailMagnets, int tailMagnetsIndex,
-                           final boolean tailArrow, final boolean headArrow)
+    public T connect(final ShapeView headShapeView, 
+                           final int _headMagnetsIndex, 
+                           final ShapeView tailShapeView, 
+                           final int _tailMagnetsIndex,
+                           final boolean tailArrow,
+                           final boolean headArrow)
     {
+        final WiresShape headWiresShape = (WiresShape) headShapeView;
+        final WiresShape tailWiresShape = (WiresShape) tailShapeView;
+        final MagnetManager.Magnets headMagnets = headWiresShape.getMagnets();
+        final MagnetManager.Magnets tailMagnets = tailWiresShape.getMagnets();
+
+        int headMagnetsIndex = _headMagnetsIndex;
+        int tailMagnetsIndex = _tailMagnetsIndex;
+        
         if (headMagnetsIndex < 0) {
             headMagnetsIndex = 0;
         }
@@ -75,6 +88,7 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
                 headArrow ? new SimpleArrow(20, 0.75) : null,
                 tailArrow ? new SimpleArrow(20, 0.75) : null);*/
 
+        return (T) this;
     }
 
     private final OrthogonalPolyLine createLine(final double... points)
@@ -82,19 +96,19 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
         return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
     }
 
-    protected T applySelectedState(final boolean isSelectedState) {
+    public T applySelectedState() {
         return applyActiveState(true);
     }
 
-    protected T applyHighlightState(final boolean isSelectedState) {
+    public T applyHighlightState() {
         return applyActiveState(true);
     }
 
-    protected T applyUnSelectedState(final boolean isSelectedState) {
+    public T applyUnSelectedState() {
         return applyDeActiveState();
     }
 
-    protected T applyUnHighlightState(final boolean isSelectedState) {
+    public T applyUnHighlightState() {
         return applyDeActiveState();
     }
 
@@ -102,7 +116,7 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
         if ( null == this.strokeWidth) {
             this.strokeWidth = getDecoratableLine().getStrokeWidth();
         }
-
+        
         if ( null == this.color) {
             this.color = getDecoratableLine().getStrokeColor();
         }
@@ -170,6 +184,41 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
             // TODO
         }
 
+        return (T) this;
+    }
+
+    @Override
+    public T setTitleStrokeColor(final String color) {
+        text.setStrokeColor(color);
+        return (T) this;
+    }
+
+    @Override
+    public T setFontFamily(final String fontFamily) {
+        text.setFontFamily(fontFamily);
+        return (T) this;
+    }
+
+    @Override
+    public T setTitleFontSize(final double fontSize) {
+        text.setFontSize(fontSize);
+        return (T) this;
+    }
+
+    @Override
+    public T setTitleStrokeWidth(final double strokeWidth) {
+        text.setStrokeWidth(strokeWidth);
+        return (T) this;
+    }
+
+    @Override
+    public T moveTitleToTop() {
+        text.moveToTop();
+        return (T) this;
+    }
+
+    @Override
+    public T refreshTitle() {
         return (T) this;
     }
 

@@ -16,13 +16,12 @@
 
 package org.wirez.bpmn.client.factory;
 
-import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
-import com.ait.lienzo.client.core.shape.SimpleArrow;
-import com.ait.lienzo.client.core.types.Point2DArray;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.client.SequenceFlowShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.SequenceFlowGlyph;
+import org.wirez.client.views.ShapeViewFactory;
+import org.wirez.client.views.WiresConnectorView;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -40,10 +39,11 @@ public class SequenceFlowShapeFactory extends BaseBPMNShapeFactory<SequenceFlow,
     }
 
     @Inject
-    public SequenceFlowShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
+    public SequenceFlowShapeFactory(final ShapeViewFactory shapeViewFactory ,
+                                    final DefaultShapeControlFactories defaultShapeControlFactories,
                             final ShapeGlyphDragHandler shapeGlyphDragHandler,
                             final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+        super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override
@@ -63,18 +63,13 @@ public class SequenceFlowShapeFactory extends BaseBPMNShapeFactory<SequenceFlow,
 
     @Override
     public SequenceFlowShape build(final SequenceFlow definition, final CanvasHandler canvasHandler) {
-        final WiresCanvas baseWirezCanvas = (WiresCanvas) canvasHandler.getCanvas();
 
-        OrthogonalPolyLine line = createLine(0,0,100,100);
-        SequenceFlowShape connector = new SequenceFlowShape(line, null, new SimpleArrow(20, 0.75), baseWirezCanvas.getWiresManager());
-
-        return connector;
+        final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
+        final WiresConnectorView view = shapeViewFactory.connector(wiresCanvas.getWiresManager(), 0,0,100,100);
+        return new SequenceFlowShape(view);
     }
 
-    private final OrthogonalPolyLine createLine(final double... points)
-    {
-        return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
-    }
+    
 
    
 

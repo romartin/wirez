@@ -2,6 +2,7 @@ package org.wirez.core.client.util;
 
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.wires.MagnetManager;
+import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
@@ -38,8 +39,8 @@ public class ShapeUtils {
     }
 
     public static double[] getContainerXY(final Shape shape) {
-        return new double[] { shape.getShapeContainer().getAttributes().getX(),
-                shape.getShapeContainer().getAttributes().getY()};
+        return new double[] { shape.getShapeView().getShapeX(),
+                shape.getShapeView().getShapeY()};
     }
 
 
@@ -48,7 +49,7 @@ public class ShapeUtils {
      * them based. The resulting index values are on the min distance between the magnets, which is calculated 
      * by basic trigonometry on a cartesian coordinates graph.  
      */
-    public static int[] getDefaultMagnetsIndex(final BaseShape sourceShape, final BaseShape targetShape) {
+    public static int[] getDefaultMagnetsIndex(final WiresShape sourceShape, final WiresShape targetShape) {
         final MagnetManager.Magnets sourceMagnets = sourceShape.getMagnets();
         final MagnetManager.Magnets targetMagnets = targetShape.getMagnets();
         

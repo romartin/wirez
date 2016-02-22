@@ -11,17 +11,27 @@ import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.view.ShapeView;
 import org.wirez.core.client.view.event.*;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
 
+@Dependent
+@Named( "wires" )
 public class WiresLayer implements Layer<WiresLayer, ShapeView<?>> {
 
     protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
     protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
-    protected final com.ait.lienzo.client.core.shape.Layer layer;
+    protected com.ait.lienzo.client.core.shape.Layer layer;
 
-    public WiresLayer(final com.ait.lienzo.client.core.shape.Layer layer) {
-        this.layer = layer;
+    public WiresLayer() {
+        
+    }
+
+    @Override
+    public WiresLayer initialize(final Object view) {
+        this.layer = (com.ait.lienzo.client.core.shape.Layer) view;
+        return this;
     }
 
     @Override
@@ -33,6 +43,12 @@ public class WiresLayer implements Layer<WiresLayer, ShapeView<?>> {
     @Override
     public WiresLayer removeShape(final ShapeView<?> shape) {
         layer.remove((IPrimitive<?>) shape);
+        return this;
+    }
+
+    @Override
+    public WiresLayer draw() {
+        layer.batch();
         return this;
     }
 

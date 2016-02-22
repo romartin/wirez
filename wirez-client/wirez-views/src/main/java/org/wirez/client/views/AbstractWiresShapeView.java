@@ -9,6 +9,7 @@ import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
+import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
@@ -17,6 +18,7 @@ import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.util.ShapeUtils;
 import org.wirez.core.client.view.HasEventHandlers;
 import org.wirez.core.client.view.HasFillGradient;
+import org.wirez.core.client.view.HasTitle;
 import org.wirez.core.client.view.ShapeView;
 import org.wirez.core.client.view.event.MouseClickEvent;
 import org.wirez.core.client.view.event.ViewEvent;
@@ -30,7 +32,8 @@ import java.util.Map;
 
 public abstract class AbstractWiresShapeView<T> extends WiresShape 
         implements 
-        ShapeView<T>, 
+        ShapeView<T>,
+        HasTitle<T>,
         HasEventHandlers<T>,
         HasFillGradient<T>,
         HasDecorators {
@@ -70,6 +73,49 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
             text.moveToTop();
         }
         
+        return (T) this;
+    }
+
+    @Override
+    public T setTitleStrokeColor(final String color) {
+        text.setStrokeColor(color);
+        return (T) this;
+    }
+
+    @Override
+    public T setFontFamily(final String fontFamily) {
+        text.setFontFamily(fontFamily);
+        return (T) this;
+    }
+    
+    @Override
+    public T setTitleFontSize(final double fontSize) {
+        text.setFontSize(fontSize);
+        return (T) this;
+    }
+
+    @Override
+    public T setTitleStrokeWidth(final double strokeWidth) {
+        text.setStrokeWidth(strokeWidth);
+        return (T) this;
+    }
+
+    @Override
+    public T moveTitleToTop() {
+        text.moveToTop();
+        return (T) this;
+    }
+
+    @Override
+    public T refreshTitle() {
+
+        // Center the text on the parent using the bb calculation.
+        final BoundingBox bb = text.getBoundingBox();
+        final double bbw = bb.getWidth();
+        final double bbh = bb.getHeight();
+        this.moveChild(text, - ( bbw / 2 ), - ( bbh / 2 ) );
+        text.moveToTop();
+
         return (T) this;
     }
 
@@ -118,9 +164,10 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     @Override
     public T setFillGradient(final Type type, 
                              final String startColor, 
-                             final String endColor, 
-                             final double width, 
-                             final double height) {
+                             final String endColor) {
+        final BoundingBox bb = getPath().getBoundingBox();
+        final double width = bb.getWidth();
+        final double height = bb.getHeight();
         final LinearGradient gradient = ShapeUtils.getLinearGradient(startColor, endColor, width, height);
         getPath().setFillGradient(gradient);
         return (T) this;

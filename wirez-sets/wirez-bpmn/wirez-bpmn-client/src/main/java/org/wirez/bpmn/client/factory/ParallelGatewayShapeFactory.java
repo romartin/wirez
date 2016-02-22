@@ -20,6 +20,8 @@ import org.wirez.bpmn.api.ParallelGateway;
 import org.wirez.bpmn.client.ParallelGatewayShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.ParallelGatewayGlyph;
+import org.wirez.client.views.ShapeViewFactory;
+import org.wirez.client.views.WiresPolygonView;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -39,10 +41,11 @@ public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGa
     }
     
     @Inject
-    public ParallelGatewayShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                            final ShapeGlyphDragHandler shapeGlyphDragHandler,
-                            final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+    public ParallelGatewayShapeFactory(final ShapeViewFactory shapeViewFactory,
+                                       final DefaultShapeControlFactories defaultShapeControlFactories,
+                                       final ShapeGlyphDragHandler shapeGlyphDragHandler,
+                                       final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
+        super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override
@@ -62,11 +65,9 @@ public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGa
 
     @Override
     public ParallelGatewayShape build(final ParallelGateway definition, final CanvasHandler canvasHandler) {
-
-        final WiresCanvas baseCanvas = (WiresCanvas) canvasHandler.getCanvas();
-        
-        return new ParallelGatewayShape(baseCanvas.getWiresManager());
-
+        final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
+        final WiresPolygonView view = shapeViewFactory.polygon(ParallelGateway.RADIUS, ParallelGateway.COLOR, wiresCanvas.getWiresManager());
+        return new ParallelGatewayShape(view);
     }
 
 }

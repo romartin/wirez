@@ -18,26 +18,29 @@ package org.wirez.core.client.canvas.wires;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
-import com.ait.lienzo.client.core.shape.IPrimitive;
-import com.ait.lienzo.client.core.shape.Layer;
-import com.ait.lienzo.client.core.shape.wires.WiresConnector;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.client.core.shape.wires.WiresShape;
+import com.ait.lienzo.client.core.shape.wires.*;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.mutation.HasCanvasStateMutation;
+import org.wirez.core.client.view.ShapeView;
+import org.wirez.core.client.view.event.MouseClickEvent;
+import org.wirez.core.client.view.event.MouseClickHandler;
+import org.wirez.core.client.view.event.ViewEventType;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,38 +51,58 @@ import java.util.logging.Logger;
 public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
 
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.wires.WiresCanvas");
+
+    public interface View extends IsWidget {
+
+        View init(Layer layer);
+        
+        View show(int width, int height, int padding);
+
+        View add(IsWidget widget);
+
+        View addShape(ShapeView<?> shapeView);
+        
+        View removeShape(ShapeView<?> shapeView);
+        
+        View setConnectionAcceptor(IConnectionAcceptor connectionAcceptor);
+        
+        View setContainmentAcceptor(IContainmentAcceptor containmentAcceptor);
+        
+        Layer getLayer();
+        
+        WiresManager getWiresManager();
+        
+        View clear();
+
+    }
     
     public static final long ANIMATION_SELECTION_DURATION = 250;
-    
-    Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent;
-    protected WiresManager wiresManager;
+
+    protected Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent;
+    protected Layer layer;
+    protected View view;
     protected List<Shape> shapes = new ArrayList<Shape>();
     protected List<Shape> selectedShapes = new ArrayList<Shape>();
-    protected Layer layer;
+    
 
     @Inject
-    public WiresCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent) {
+    public WiresCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent,
+                       final Layer layer,
+                       final View view) {
         this.canvasShapeStateModifiedEvent = canvasShapeStateModifiedEvent;
+        this.layer = layer;
+        this.view = view;
     }
 
-    /*
-        ******************************************
-        *       Canvas impl methods
-        ******************************************
-     */
-    
-    @Override
-    public WiresCanvas initialize(final Layer lienzoLayer) {
-        this.layer = lienzoLayer;
-        wiresManager = WiresManager.get(lienzoLayer);
-        lienzoLayer.addNodeMouseClickHandler(new NodeMouseClickHandler() {
+    public void init() {
+        view.init(layer);
+        layer.addHandler(ViewEventType.MOUSE_CLICK, new MouseClickHandler() {
             @Override
-            public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
+            public void handle(final MouseClickEvent event) {
                 clearSelection();
                 fireCanvasSelected();
             }
         });
-        return this;
     }
 
     @Override
@@ -105,15 +128,9 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
 
         log(Level.FINE, "BaseCanvas#register - " + shape.toString() + " [id=" + shape.getId() + "]");
 
-        if (shape instanceof WiresShape) {
-            registerWiresShape((WiresShape) shape);
-        } else if (shape instanceof WiresConnector) {
-            registerWiresConnector((WiresConnector) shape);
-        } else {
-            registerContainer(shape);
-        }
+        view.addShape( shape.getShapeView() );
 
-        shapes.add(shape);
+        shapes.add( shape );
 
         return this;
     }
@@ -128,13 +145,7 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
         
         log(Level.FINE, "BaseCanvas#deregister - " + shape.toString() + " [id=" + shape.getId() + "]");
         
-        if (shape instanceof WiresShape) {
-            deregisterWiresShape((WiresShape) shape);
-        } else if (shape instanceof WiresConnector) {
-            deregisterWiresConnector((WiresConnector) shape);
-        } else {
-            deregisterContainer(shape);
-        }
+        view.removeShape( shape.getShapeView() );
 
         shapes.remove(shape);
         
@@ -143,7 +154,7 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
     
     @Override
     public WiresCanvas draw() {
-        wiresManager.getLayer().getLayer().batch();
+        view.getLayer().draw();
         return this;
     }
 
@@ -166,41 +177,6 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
         }
         
         return this;
-    }
-    
-    /*
-        ******************************************
-        *       Shapes register/de-register
-        ******************************************
-     */
-    
-    protected void registerWiresShape(final WiresShape shape) {
-        assert wiresManager != null;
-        wiresManager.createMagnets(shape);
-        wiresManager.registerShape(shape);
-    }
-
-    protected void deregisterWiresShape(final WiresShape shape) {
-        assert wiresManager != null;
-        wiresManager.deregisterShape(shape);
-    }
-
-    protected void registerWiresConnector(final WiresConnector connector) {
-        assert wiresManager != null;
-        wiresManager.registerConnector(connector);
-    }
-
-    protected void deregisterWiresConnector(final WiresConnector connector) {
-        assert wiresManager != null;
-        wiresManager.deregisterConnector(connector);
-    }
-
-    private void deregisterContainer(final Shape shape) {
-        getLayer().getLayer().remove( (IPrimitive<?>) shape.getShapeContainer() );
-    }
-
-    private void registerContainer(final Shape shape) {
-        getLayer().getLayer().add( (IPrimitive<?>) shape.getShapeContainer() );
     }
     
     /*
@@ -296,9 +272,13 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
      */
 
     public WiresManager getWiresManager() {
-        return wiresManager;
+        return view.getWiresManager();
     }
 
+    public View getView() {
+        return view;
+    }
+    
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

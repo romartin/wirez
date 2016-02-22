@@ -6,6 +6,6 @@ public interface HasFillGradient<T> {
         LINEAR;
     }
     
-    T setFillGradient(Type type, String startColor, String endColor, double width, double height);
+    T setFillGradient(Type type, String startColor, String endColor);
     
 }

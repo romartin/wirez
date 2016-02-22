@@ -19,6 +19,7 @@ package org.wirez.client.widgets.canvas;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
+import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 
@@ -26,34 +27,23 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.inject.Named;
 
 @Dependent
 public class Canvas extends WiresCanvas implements IsWidget {
 
     private static final int PADDING = 15;
-    
-    public interface View extends UberView<Canvas> {
-        
-        View show(int width, int height, int padding);
-        
-        View add(IsWidget widget);
-        
-        View clear();
-        
-    }
-
-    View view;
 
     @Inject
-    public Canvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent, 
-                  final View view) {
-        super(canvasShapeStateModifiedEvent);
-        this.view = view;
+    public Canvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent,
+                  final Layer layer,
+                  final WiresCanvas.View view) {
+        super(canvasShapeStateModifiedEvent, layer, view);
     }
 
     @PostConstruct
     public void init() {
-        view.init(this);
+        super.init();
     }
 
     @Override

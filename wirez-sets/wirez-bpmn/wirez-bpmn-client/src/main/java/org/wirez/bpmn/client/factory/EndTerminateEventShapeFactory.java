@@ -20,6 +20,8 @@ import org.wirez.bpmn.api.EndTerminateEvent;
 import org.wirez.bpmn.client.EndTerminateEventShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.EndTerminateEventGlyph;
+import org.wirez.client.views.ShapeViewFactory;
+import org.wirez.client.views.WiresCircleView;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -37,10 +39,11 @@ public class EndTerminateEventShapeFactory extends BaseBPMNShapeFactory<EndTermi
     }
 
     @Inject
-    public EndTerminateEventShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
+    public EndTerminateEventShapeFactory(final ShapeViewFactory shapeViewFactory,
+                                         final DefaultShapeControlFactories defaultShapeControlFactories,
                                          final ShapeGlyphDragHandler shapeGlyphDragHandler,
                                          final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+        super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override
@@ -60,13 +63,9 @@ public class EndTerminateEventShapeFactory extends BaseBPMNShapeFactory<EndTermi
 
     @Override
     public EndTerminateEventShape build(final EndTerminateEvent definition, final CanvasHandler canvasHandler) {
-
-        final WiresCanvas baseWirezCanvas = (WiresCanvas) canvasHandler.getCanvas();
-
-        EndTerminateEventShape circleShape = new EndTerminateEventShape(baseWirezCanvas.getWiresManager());
-
-        return circleShape;
-
+        final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
+        final WiresCircleView view = shapeViewFactory.circle( EndTerminateEvent.RADIUS, wiresCanvas.getWiresManager());
+        return new EndTerminateEventShape(view);
     }
 
 }

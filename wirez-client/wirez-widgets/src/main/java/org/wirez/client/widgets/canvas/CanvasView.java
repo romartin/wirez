@@ -16,35 +16,44 @@
 package org.wirez.client.widgets.canvas;
 
 import com.ait.lienzo.client.core.shape.GridLayer;
+import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Line;
+import com.ait.lienzo.client.core.shape.wires.*;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.wirez.client.views.AbstractWiresConnectorView;
+import org.wirez.client.views.AbstractWiresShapeView;
+import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.view.ShapeView;
 
 import javax.annotation.PostConstruct;
 
 /**
  * This is the root Canvas provided by Wirez
  */
-public class CanvasView extends Composite implements Canvas.View {
+public class CanvasView extends Composite implements WiresCanvas.View {
 
     private FlowPanel mainPanel = new FlowPanel();
     private FlowPanel toolsPanel = new FlowPanel();
     private FocusableLienzoPanel panel;
     protected Layer canvasLayer = new Layer();
-    private Canvas presenter;
+    protected WiresManager wiresManager;
+    protected org.wirez.core.client.canvas.Layer layer;
 
-    @Override
-    public void init(final Canvas presenter) {
-        this.presenter = presenter;
-        presenter.initialize(canvasLayer);
-    }
-    
     @PostConstruct
     public void init() {
         initWidget( mainPanel );
+        wiresManager = WiresManager.get(canvasLayer);
+    }
+
+    @Override
+    public WiresCanvas.View init(final org.wirez.core.client.canvas.Layer layer) {
+        this.layer = layer;
+        layer.initialize( canvasLayer );
+        return this;
     }
 
     @Override
@@ -81,6 +90,57 @@ public class CanvasView extends Composite implements Canvas.View {
     public Canvas.View add(final IsWidget widget) {
         toolsPanel.add(widget);
         return this;
+    }
+
+    @Override
+    public WiresCanvas.View addShape(final ShapeView<?> shapeView) {
+        if ( shapeView instanceof AbstractWiresShapeView ) {
+            WiresShape wiresShape = (WiresShape) shapeView;
+            wiresManager.createMagnets(wiresShape);
+            wiresManager.registerShape(wiresShape);
+        } else if (shapeView instanceof AbstractWiresConnectorView) {
+            WiresConnector wiresConnector = (WiresConnector) shapeView;
+            wiresManager.registerConnector(wiresConnector);
+        } else {
+            wiresManager.getLayer().getLayer().add((IPrimitive<?>) shapeView);
+        }
+        return this;
+    }
+
+    @Override
+    public WiresCanvas.View removeShape(final ShapeView<?> shapeView) {
+        if ( shapeView instanceof AbstractWiresShapeView ) {
+            WiresShape wiresShape = (WiresShape) shapeView;
+            wiresManager.deregisterShape(wiresShape);
+        } else if (shapeView instanceof AbstractWiresConnectorView) {
+            WiresConnector wiresConnector = (WiresConnector) shapeView;
+            wiresManager.deregisterConnector(wiresConnector);
+        } else {
+            wiresManager.getLayer().getLayer().remove((IPrimitive<?>) shapeView);
+        }
+        return this;
+    }
+
+    @Override
+    public WiresCanvas.View setConnectionAcceptor(final IConnectionAcceptor connectionAcceptor) {
+        wiresManager.setConnectionAcceptor(connectionAcceptor);
+        return this;
+    }
+
+    @Override
+    public WiresCanvas.View setContainmentAcceptor(final IContainmentAcceptor containmentAcceptor) {
+        wiresManager.setContainmentAcceptor(containmentAcceptor);
+        return this;
+    }
+
+    @Override
+    public org.wirez.core.client.canvas.Layer getLayer() {
+        return layer;
+    }
+
+    @Override
+    public WiresManager getWiresManager() {
+        return wiresManager;
     }
 
     @Override

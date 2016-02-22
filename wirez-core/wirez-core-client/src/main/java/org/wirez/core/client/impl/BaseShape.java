@@ -35,27 +35,27 @@ import org.wirez.core.client.control.*;
 import org.wirez.core.client.control.resize.BaseResizeControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.mutation.*;
+import org.wirez.core.client.view.HasFillGradient;
+import org.wirez.core.client.view.HasTitle;
+import org.wirez.core.client.view.ShapeView;
 
 /**
  * A default Lienzo Wires based shape.
  */
-public abstract class BaseShape<W extends Definition> extends WiresShape implements 
+public abstract class BaseShape<W extends Definition> implements 
         org.wirez.core.client.Shape<W>,
         HasPositionMutation,
         HasPropertyMutation,
         HasGraphElementMutation<W, View<W>, org.wirez.core.api.graph.Node<View<W>, Edge>> {
 
     protected String id;
-    protected Text text;
+    protected ShapeView<? extends ShapeView> view;
     protected BaseDragControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> dragControl;
     protected BaseResizeControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> resizeControl;
     protected BaseToolboxControl<org.wirez.core.client.Shape<W>, org.wirez.core.api.graph.Node> toolboxControl;
 
-    public BaseShape(final MultiPath path, final LayoutContainer m_layout_container, final WiresManager manager) {
-        super(path, m_layout_container, manager);
-        text = buildText("");
-        this.addChild(text, getTextPosition());
-        text.moveToTop();
+    public BaseShape(final ShapeView view) {
+        this.view = view;
     }
 
     @Override
@@ -70,16 +70,11 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     }
 
     @Override
-    public Shape getShape() {
-        return getPath();
+    public ShapeView getShapeView() {
+        return view;
     }
 
-    @Override
-    public com.ait.lienzo.client.core.shape.Node getShapeContainer() {
-        return (Node) getContainer();
-    }
-
-    /*
+/*
         ****************************************************************************************
         *                       SHAPE MUTATIONS
         ****************************************************************************************
@@ -112,24 +107,66 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
 
     @Override
     public void applyPosition(final double x, final double y, final MutationContext mutationContext) {
-        this.setX(x).setY(y);
+        view.setShapeX(x).setShapeY(y);
     }
 
     @Override
     public void applyPropertyValue(final String propertyId, 
                                    final Object value, 
                                    final MutationContext mutationContext) {
-        
-        if (Name.ID.equals(propertyId)) {
+
+        if ( Name.ID.equals(propertyId) && view instanceof HasTitle ) {
+            final HasTitle hasTitle = (HasTitle) view;
             final String name = (String) value;
             if ( name != null ) {
-                text.setText(name);
+                hasTitle.setTitle(name);
             } else {
-                text.setText("");
+                hasTitle.setTitle(null);
             }
-            text.moveToTop();
+            hasTitle.moveTitleToTop();
         }
         
+    }
+
+    protected void _applyFillColor(final String color) {
+        if (color != null && color.trim().length() > 0) {
+            ( (HasFillGradient) view).setFillGradient(HasFillGradient.Type.LINEAR, color, "#FFFFFF");
+        }
+    }
+
+    protected void  _applyBorders(final String color, final Double width) {
+        if (color != null && color.trim().length() > 0) {
+            view.setStrokeColor(color);
+        }
+        if (width != null) {
+            view.setStrokeWidth(width);
+        }
+    }
+
+    protected void  _applyFont(final String family,
+                               final String color,
+                               final Double size,
+                               final Double borderSize) {
+        if ( view instanceof HasTitle ) {
+            final HasTitle hasTitle = (HasTitle) view;
+            
+            if (family != null && family.trim().length() > 0) {
+                hasTitle.setFontFamily(family);
+            }
+            if (color != null && color.trim().length() > 0) {
+                hasTitle.setTitleStrokeColor(color);
+            }
+            if (size != null && size > 0) {
+                hasTitle.setTitleFontSize(size);
+            }
+            if (borderSize != null && borderSize > 0) {
+                hasTitle.setTitleStrokeWidth(borderSize);
+            }
+
+            // Refresh to update size changes etc.
+            hasTitle.refreshTitle();
+
+        }
     }
 
     @Override
@@ -140,22 +177,9 @@ public abstract class BaseShape<W extends Definition> extends WiresShape impleme
     @Override
     public void afterMutations(final Canvas canvas) {
 
-        // Ensure top primitives in the layer
-        getText().moveToTop();
-        
-    }
-
-    protected Text buildText(String _text) {
-        Text text = new Text(_text).setFontSize(14).setFillColor(ColorName.BLACK).setStrokeWidth(1);
-        return text.moveToTop();
-    }
-
-    protected WiresLayoutContainer.Layout getTextPosition() {
-        return WiresLayoutContainer.Layout.CENTER;
-    }
-
-    public Text getText() {
-        return text;
+        if ( view instanceof HasTitle ) {
+            ( ( HasTitle) view ).moveTitleToTop();
+        }
     }
 
     protected void _applyElementName(final org.wirez.core.api.graph.Node<View<W>, Edge> element,

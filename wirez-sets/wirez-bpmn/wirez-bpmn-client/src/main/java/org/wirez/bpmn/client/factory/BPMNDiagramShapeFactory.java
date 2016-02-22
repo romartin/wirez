@@ -20,6 +20,8 @@ import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.client.BPMNDiagramShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.BPMNDiagramGlyph;
+import org.wirez.client.views.ShapeViewFactory;
+import org.wirez.client.views.WiresRectangleView;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -38,10 +40,11 @@ public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, B
     }
 
     @Inject
-    public BPMNDiagramShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                            final ShapeGlyphDragHandler shapeGlyphDragHandler,
-                            final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+    public BPMNDiagramShapeFactory(final ShapeViewFactory shapeViewFactory ,
+                                   final DefaultShapeControlFactories defaultShapeControlFactories,
+                                   final ShapeGlyphDragHandler shapeGlyphDragHandler,
+                                   final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
+        super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
     
     @Override
@@ -66,11 +69,9 @@ public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, B
     
     @Override
     public BPMNDiagramShape build(final BPMNDiagram definition, final CanvasHandler canvasHandler) {
-
-        final WiresCanvas baseCanvas = (WiresCanvas) canvasHandler.getCanvas();
-        
-        return new BPMNDiagramShape(baseCanvas.getWiresManager());
-
+        final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
+        final WiresRectangleView view = shapeViewFactory.rectangle( BPMNDiagram.WIDTH, BPMNDiagram.HEIGHT, wiresCanvas.getWiresManager());
+        return new BPMNDiagramShape(view);
     }
 
 }

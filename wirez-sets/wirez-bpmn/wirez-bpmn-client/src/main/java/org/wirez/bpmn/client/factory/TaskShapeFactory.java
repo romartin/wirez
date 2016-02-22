@@ -20,6 +20,8 @@ import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.client.TaskShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.TaskGlyph;
+import org.wirez.client.views.ShapeViewFactory;
+import org.wirez.client.views.WiresRectangleView;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -33,15 +35,16 @@ import javax.inject.Inject;
 
 @ApplicationScoped
 public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
-
+    
     public TaskShapeFactory() {
     }
     
     @Inject
-    public TaskShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
+    public TaskShapeFactory(final ShapeViewFactory shapeViewFactory,
+                            final DefaultShapeControlFactories defaultShapeControlFactories,
                             final ShapeGlyphDragHandler shapeGlyphDragHandler,
                             final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+        super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override
@@ -67,9 +70,9 @@ public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
     @Override
     public TaskShape build(final Task definition, final CanvasHandler canvasHandler) {
 
-        final WiresCanvas baseCanvas = (WiresCanvas) canvasHandler.getCanvas();
-        
-        return new TaskShape(baseCanvas.getWiresManager());
+        final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas(); 
+        final WiresRectangleView view = shapeViewFactory.rectangle( Task.WIDTH, Task.HEIGHT, wiresCanvas.getWiresManager());
+        return new TaskShape(view);
 
     }
 

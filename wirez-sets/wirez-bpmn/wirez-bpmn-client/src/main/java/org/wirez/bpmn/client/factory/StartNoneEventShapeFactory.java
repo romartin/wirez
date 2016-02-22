@@ -20,6 +20,8 @@ import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.client.StartNoneEventShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.StartNoneEventGlyph;
+import org.wirez.client.views.ShapeViewFactory;
+import org.wirez.client.views.WiresCircleView;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -37,10 +39,11 @@ public class StartNoneEventShapeFactory extends BaseBPMNShapeFactory<StartNoneEv
     }
     
     @Inject
-    public StartNoneEventShapeFactory(final DefaultShapeControlFactories defaultShapeControlFactories,
-                            final ShapeGlyphDragHandler shapeGlyphDragHandler,
-                            final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
-        super(defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
+    public StartNoneEventShapeFactory(final ShapeViewFactory shapeViewFactory,
+                                      final DefaultShapeControlFactories defaultShapeControlFactories,
+                                      final ShapeGlyphDragHandler shapeGlyphDragHandler,
+                                      final BPMNToolboxControlFactory bpmnToolboxControlFactory) {
+        super(shapeViewFactory, defaultShapeControlFactories, shapeGlyphDragHandler, bpmnToolboxControlFactory);
     }
 
     @Override
@@ -61,11 +64,10 @@ public class StartNoneEventShapeFactory extends BaseBPMNShapeFactory<StartNoneEv
     @Override
     public StartNoneEventShape build(final StartNoneEvent definition, final CanvasHandler canvasHandler) {
 
-        final WiresCanvas baseWirezCanvas = (WiresCanvas) canvasHandler.getCanvas();
 
-        StartNoneEventShape circleShape = new StartNoneEventShape(baseWirezCanvas.getWiresManager());
-
-        return circleShape;
+        final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
+        final WiresCircleView view = shapeViewFactory.circle( StartNoneEvent.RADIUS, wiresCanvas.getWiresManager());
+        return new StartNoneEventShape(view);
 
     }
 

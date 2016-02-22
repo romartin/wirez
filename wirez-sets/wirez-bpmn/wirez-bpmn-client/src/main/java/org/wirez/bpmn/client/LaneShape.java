@@ -16,13 +16,10 @@
 
 package org.wirez.bpmn.client;
 
-import com.ait.lienzo.client.core.shape.MultiPath;
-import com.ait.lienzo.client.core.shape.Shape;
-import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.bpmn.api.Lane;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
+import org.wirez.client.views.WiresRectangleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
@@ -31,25 +28,14 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.HasSizeMutation;
 import org.wirez.core.client.mutation.MutationContext;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class LaneShape extends BPMNBasicShape<Lane> implements HasSizeMutation {
 
-    public LaneShape(WiresManager manager) {
-        super(new MultiPath().rect(0, 0, Lane.WIDTH, Lane.HEIGHT), manager);
+    public LaneShape(final WiresRectangleView view) {
+        super(view);
     }
 
-    @Override
-    public Collection<Shape> getDecorators() {
-        return new ArrayList<Shape>() {{
-            add( getPath() );
-        }};
-    }
-
-    @Override
-    protected WiresLayoutContainer.Layout getTextPosition() {
-        return WiresLayoutContainer.Layout.TOP;
+    protected WiresRectangleView getView() {
+        return (WiresRectangleView) view;
     }
 
     @Override
@@ -78,9 +64,7 @@ public class LaneShape extends BPMNBasicShape<Lane> implements HasSizeMutation {
 
     @Override
     public void applySize(final double width, final double height, final MutationContext mutationContext) {
-        final double x = getPath().getX();
-        final double y = getPath().getY();
-        getPath().clear().rect(x, y, width, height);
+        getView().setSize(width, height);
     }
 
 }

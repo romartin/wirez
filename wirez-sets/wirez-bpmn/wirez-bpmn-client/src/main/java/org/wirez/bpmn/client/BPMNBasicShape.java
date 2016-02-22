@@ -16,31 +16,23 @@
 
 package org.wirez.bpmn.client;
 
-import com.ait.lienzo.client.core.shape.MultiPath;
-import com.ait.lienzo.client.core.shape.Text;
-import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.client.core.types.BoundingBox;
-import com.ait.lienzo.client.core.types.LinearGradient;
 import org.wirez.bpmn.api.property.general.*;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
-import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.mutation.MutationContext;
-import org.wirez.core.client.util.ShapeUtils;
+import org.wirez.core.client.view.HasTitle;
+import org.wirez.core.client.view.ShapeView;
 
 public abstract class BPMNBasicShape<W extends Definition> 
-        extends BaseShape<W>
-        implements HasDecorators {
+        extends BaseShape<W> {
 
-    public BPMNBasicShape(final MultiPath path, 
-                          final WiresManager manager) {
-        super(path, new WiresLayoutContainer(), manager);
+    public BPMNBasicShape(final ShapeView shapeView) {
+        super(shapeView);
     }
 
     @Override
@@ -61,13 +53,7 @@ public abstract class BPMNBasicShape<W extends Definition>
     protected BPMNBasicShape<W> _applyFillColor(Node<View<W>, Edge> element) {
         final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.ID);
         final String color = bgColor.getValue();
-        if (color != null && color.trim().length() > 0) {
-            final BoundingBox bb = getShape().getBoundingBox();
-            final double w = bb.getWidth();
-            final double h = bb.getHeight();
-            final LinearGradient gradient = ShapeUtils.getLinearGradient(color, "#FFFFFF", w, h);
-            getShape().setFillGradient(gradient);
-        }
+        super._applyFillColor(color);
         return this;
     }
 
@@ -76,18 +62,13 @@ public abstract class BPMNBasicShape<W extends Definition>
         final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.ID);
         final String color = borderColor.getValue();
         final Double width = borderSize.getValue();
-        if (color != null && color.trim().length() > 0) {
-            getShape().setStrokeColor(color);
-        }
-        if (width != null) {
-            getShape().setStrokeWidth(width);
-        }
+        super._applyBorders(color, width);
         return this;
     }
 
     protected BPMNBasicShape<W> _applyFont(Node<View<W>, Edge> element) {
-        final Text text = super.getText();
-        if ( null != text ) {
+        
+        if ( view instanceof HasTitle ) {
             final FontFamily fontFamily = (FontFamily) ElementUtils.getProperty(element, FontFamily.ID);
             final FontColor fontColor  = (FontColor) ElementUtils.getProperty(element, FontColor.ID);
             final FontSize fontSize = (FontSize) ElementUtils.getProperty(element, FontSize.ID);
@@ -96,26 +77,9 @@ public abstract class BPMNBasicShape<W extends Definition>
             final String color = fontColor.getValue();
             final Double size = fontSize.getValue();
             final Double borderSize = fontBorderSize.getValue();
-            if (family != null && family.trim().length() > 0) {
-                text.setFontFamily(family);
-            }
-            if (color != null && color.trim().length() > 0) {
-                text.setStrokeColor(color);
-            }
-            if (size != null && size > 0) {
-                text.setFontSize(size);
-            }
-            if (borderSize != null && borderSize > 0) {
-                text.setStrokeWidth(borderSize);
-            }
-
-            // Center the text on the parent using the bb calculation.
-            final BoundingBox bb = text.getBoundingBox();
-            final double bbw = bb.getWidth();
-            final double bbh = bb.getHeight();
-            this.moveChild(text, - ( bbw / 2 ), - ( bbh / 2 ) );
-            text.moveToTop();
+            super._applyFont(family, color, size, borderSize);
         }
+        
 
         return this;
     }

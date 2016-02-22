@@ -2,7 +2,10 @@ package org.wirez.client.views;
 
 import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.Decorator;
+import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
+import com.ait.lienzo.client.core.shape.SimpleArrow;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.types.Point2DArray;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
@@ -11,11 +14,9 @@ import org.wirez.core.client.view.event.ViewHandler;
 public class WiresConnectorView extends AbstractWiresConnectorView<WiresConnectorView> {
 
     
-    public WiresConnectorView(final AbstractDirectionalMultiPointShape<?> line, 
-                              final Decorator<?> head, 
-                              final Decorator<?> tail, 
-                              final WiresManager manager) {
-        super(line, head, tail, manager);
+    public WiresConnectorView(final WiresManager manager, 
+                              final double... points) {
+        super(createLine(points), null, new SimpleArrow(20, 0.75), manager);
     }
 
     @Override
@@ -30,5 +31,10 @@ public class WiresConnectorView extends AbstractWiresConnectorView<WiresConnecto
     @Override
     public boolean supports(final ViewEventType type) {
         return ViewEventType.MOUSE_CLICK.equals( type );
+    }
+
+    private static final OrthogonalPolyLine createLine(final double... points)
+    {
+        return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
     }
 }

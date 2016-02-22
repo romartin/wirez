@@ -20,6 +20,7 @@ import com.ait.lienzo.client.core.shape.IContainer;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Node;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.client.view.ShapeView;
 
 public interface Shape<W extends Definition> {
     
@@ -35,22 +36,13 @@ public interface Shape<W extends Definition> {
     Shape<W> setId(String id);
 
     /**
-     * The lienzo shape. All built-in handlers and controls provided by wirez will be attached to it and will mutate it.
-     * Usually it should return the wires shape's multipath, if it is lienzo wires based.
+     * Returns the view for the shape.
      */
-    com.ait.lienzo.client.core.shape.Shape getShape();
-
-    /**
-     * The shape's container, which must determinate, at least, the absolute position in the canvas.
-     * Usually it should return the wires shape's container, if it is lienzo wires based.
-     */
-    Node getShapeContainer();
-
+    ShapeView getShapeView();
+    
     /**
      * Destroy the shape and any related components.
      */
     void destroy();
 
-    
-    
 }

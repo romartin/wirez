@@ -35,6 +35,11 @@ public class WiresCircleView extends AbstractWiresShapeView<WiresCircleView>
     }
 
     @Override
+    protected WiresLayoutContainer.Layout getTextPosition() {
+        return WiresLayoutContainer.Layout.BOTTOM;
+    }
+
+    @Override
     protected Shape getDecorator() {
         return decorator;
     }

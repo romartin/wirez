@@ -16,9 +16,6 @@
 
 package org.wirez.bpmn.client;
 
-import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
-import com.ait.lienzo.client.core.shape.Decorator;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.bpmn.api.property.general.BgColor;
 import org.wirez.bpmn.api.property.general.BorderColor;
 import org.wirez.bpmn.api.property.general.BorderSize;
@@ -30,16 +27,14 @@ import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.view.ShapeView;
 
 public abstract class BPMNBasicConnector<W extends Definition> 
         extends BaseConnector<W> {
 
 
-    public BPMNBasicConnector(final AbstractDirectionalMultiPointShape<?> line, 
-                              final Decorator<?> head, 
-                              final Decorator<?> tail, 
-                              final WiresManager manager) {
-        super(line, head, tail, manager);
+    public BPMNBasicConnector(final ShapeView view) {
+        super(view);
     }
 
     @Override
@@ -57,9 +52,7 @@ public abstract class BPMNBasicConnector<W extends Definition>
     protected BPMNBasicConnector<W> _applyFillColor(Edge<View<W>, Node> element) {
         final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.ID);
         final String color = bgColor.getValue();
-        if (color != null && color.trim().length() > 0) {
-            getShape().setFillColor(color);
-        }
+        super._applyFillColor(color);
         return this;
     }
 
@@ -68,12 +61,7 @@ public abstract class BPMNBasicConnector<W extends Definition>
         final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.ID);
         final String color = borderColor.getValue();
         final Double width = borderSize.getValue();
-        if (color != null && color.trim().length() > 0) {
-            getShape().setStrokeColor(color);
-        }
-        if (width != null) {
-            getShape().setStrokeWidth(width);
-        }
+        super._applyBorders(color, width);
         return this;
     }
 

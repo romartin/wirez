@@ -1,5 +1,7 @@
 package org.wirez.client.views;
 
+import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
+import com.ait.lienzo.client.core.shape.Decorator;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,6 +28,12 @@ public class ShapeViewFactory {
                                     final String fillColor,
                                     final WiresManager wiresManager) {
         return new WiresPolygonView(radius, fillColor, wiresManager);
+    }
+
+    @Produces
+    public WiresConnectorView connector(final WiresManager manager,
+                                        final double... points) {
+        return new WiresConnectorView(manager, points);
     }
 
 }

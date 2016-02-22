@@ -42,6 +42,11 @@ import org.wirez.core.client.canvas.settings.CanvasSettings;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.mutation.*;
+import org.wirez.core.client.view.HasEventHandlers;
+import org.wirez.core.client.view.ShapeView;
+import org.wirez.core.client.view.event.MouseClickEvent;
+import org.wirez.core.client.view.event.MouseClickHandler;
+import org.wirez.core.client.view.event.ViewEventType;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -229,14 +234,17 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
         shape.setId(candidate.getUUID());
 
         // Selection handling.
-        if (canvas instanceof SelectionManager) {
-            shape.getShape().addNodeMouseClickHandler(new NodeMouseClickHandler() {
+        final ShapeView shapeView = shape.getShapeView();
+        if ( canvas instanceof SelectionManager && shapeView instanceof HasEventHandlers ) {
+            
+            final HasEventHandlers hasEventHandlers = (HasEventHandlers) shapeView;
+            
+            hasEventHandlers.addHandler(ViewEventType.MOUSE_CLICK, new MouseClickHandler() {
                 @Override
-                public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
-
+                public void handle(final MouseClickEvent event) {
                     final boolean isSelected = canvas.isSelected(shape);
-
-                    if (!nodeMouseClickEvent.isShiftKeyDown()) {
+                    
+                    if (!event.isShiftKeyDown()) {
                         canvas.clearSelection();
                     }
 
@@ -247,10 +255,9 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
                         log(Level.FINE, "Select [shape=" + shape.getId() + "]");
                         canvas.select(shape);
                     }
-
                 }
             });
-
+            
         }
 
         

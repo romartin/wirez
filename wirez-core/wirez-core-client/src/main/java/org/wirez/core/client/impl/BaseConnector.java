@@ -16,12 +16,6 @@
 
 package org.wirez.core.client.impl;
 
-import com.ait.lienzo.client.core.shape.*;
-import com.ait.lienzo.client.core.shape.wires.MagnetManager;
-import com.ait.lienzo.client.core.shape.wires.WiresConnector;
-import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.client.core.types.Point2DArray;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
@@ -35,11 +29,13 @@ import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
 import org.wirez.core.client.mutation.*;
+import org.wirez.core.client.view.IsConnector;
+import org.wirez.core.client.view.ShapeView;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class BaseConnector<W extends Definition> extends WiresConnector implements
+public abstract class BaseConnector<W extends Definition> implements
         Shape<W>,
         HasPositionMutation,
         HasSizeMutation,
@@ -49,20 +45,12 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.impl.BaseConnector");
     
     protected String id;
+    protected ShapeView view;
     protected BaseDragControl<Shape<W>, Edge> dragControl;
     protected BaseToolboxControl<Shape<W>, Edge> toolboxControl;
 
-    public BaseConnector(AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
-        super(line, head, tail, manager);
-        init();
-    }
-
-    public BaseConnector(WiresMagnet headMagnet, WiresMagnet tailMagnet, AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
-        super(headMagnet, tailMagnet, line, head, tail, manager);
-        init();
-    }
-
-    protected void init() {
+    public BaseConnector(final ShapeView view) {
+        this.view = view;
     }
 
     @Override
@@ -77,13 +65,8 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
     }
 
     @Override
-    public com.ait.lienzo.client.core.shape.Shape getShape() {
-        return getDecoratableLine();
-    }
-
-    @Override
-    public com.ait.lienzo.client.core.shape.Node getShapeContainer() {
-        return getDecoratableLine();
+    public ShapeView getShapeView() {
+        return view;
     }
 
     @Override
@@ -91,6 +74,22 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         return MutationType.STATIC.equals(type);
     }
 
+    protected void _applyFillColor(final String color) {
+        if (color != null && color.trim().length() > 0) {
+            getShapeView().setFillColor(color);
+        }
+    }
+
+    protected void  _applyBorders(final String color, final Double width) {
+        if (color != null && color.trim().length() > 0) {
+            getShapeView().setStrokeColor(color);
+        }
+        if (width != null) {
+            getShapeView().setStrokeWidth(width);
+        }
+    }
+
+    
     @Override
     public void applyElementPosition(Edge<View<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
         // TODO
@@ -128,7 +127,6 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
 
     }
 
-    // TODO: Move to AddEdge command?
     public Shape<W> applyConnections(final Edge<View<W>, Node> element, final CanvasHandler canvasHandler) {
         final WiresCanvas canvas = (WiresCanvas) canvasHandler.getCanvas();
         final Node sourceNode = element.getSourceNode();
@@ -139,54 +137,14 @@ public abstract class BaseConnector<W extends Definition> extends WiresConnector
         final int targetMagnet = connectionContent.getTargetMagnetIndex();
         
         if (targetNode != null) {
-            final BaseShape outNodeShape = (BaseShape) canvas.getShape(targetNode.getUUID());
+            final Shape outNodeShape = canvas.getShape(targetNode.getUUID());
             if ( null != sourceNode && null != outNodeShape ) {
-                final BaseShape inNodeShape = (BaseShape) canvas.getShape(sourceNode.getUUID());
-                connect(inNodeShape.getMagnets(), sourceMagnet, outNodeShape.getMagnets(), targetMagnet, true, false);
+                final Shape inNodeShape = canvas.getShape(sourceNode.getUUID());
+
+                ( (IsConnector) view).connect(inNodeShape.getShapeView(), sourceMagnet, outNodeShape.getShapeView(), targetMagnet, true, false);
             }
         }
         return this;
-    }
-
-    protected void connect(MagnetManager.Magnets headMagnets, int headMagnetsIndex, MagnetManager.Magnets tailMagnets, int tailMagnetsIndex,
-                           final boolean tailArrow, final boolean headArrow)
-    {
-        if (headMagnetsIndex < 0) {
-            log(Level.SEVERE, "WARN - HeadMagnet index invalid!");
-            headMagnetsIndex = 0;
-        }
-
-        if (tailMagnetsIndex < 0) {
-            log(Level.SEVERE, "WARN - TailMagnet index invalid!");
-            tailMagnetsIndex = 0;
-        }
-        
-        
-        // Obtain the magnets.
-        WiresMagnet m0_1 = headMagnets.getMagnet(headMagnetsIndex);
-        WiresMagnet m1_1 = tailMagnets.getMagnet(tailMagnetsIndex);
-
-        // Update the magnets.
-        this.setHeadMagnet(m0_1);
-        this.setTailMagnet(m1_1);
-
-        double x0 = m0_1.getControl().getX();
-        double y0 = m0_1.getControl().getY();
-        double x1 = m1_1.getControl().getX();
-        double y1 = m1_1.getControl().getY();
-
-        // TODO: Update the connector decorator in order to modify head & tail decorators (connector direction)
-       OrthogonalPolyLine line = createLine(x0, y0, (x0 + ((x1 - x0) / 2)), (y0 + ((y1 - y0) / 2)), x1, y1);
-        /*this.setDecorator(
-                line, 
-                headArrow ? new SimpleArrow(20, 0.75) : null,
-                tailArrow ? new SimpleArrow(20, 0.75) : null);*/
-
-    }
-
-    private final OrthogonalPolyLine createLine(final double... points)
-    {
-        return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
     }
 
     private void log(final Level level, final String message) {

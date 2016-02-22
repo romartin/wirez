@@ -1,7 +1,5 @@
-package org.wirez.client.views;
+package org.wirez.client.shapes;
 
-import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
-import com.ait.lienzo.client.core.shape.Decorator;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 
 import javax.enterprise.context.ApplicationScoped;

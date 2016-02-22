@@ -9,8 +9,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>wirez-views</artifactId>
-  <name>Wirez - Views</name>
+  <artifactId>wirez-shapes</artifactId>
+  <name>Wirez - Shapes</name>
   <packaging>jar</packaging>
 
   <dependencies>
@@ -68,7 +68,7 @@
     </dependency>
 
     <!-- Lienzo. -->
-    
+
     <dependency>
       <groupId>com.ahome-it</groupId>
       <artifactId>lienzo-core</artifactId>

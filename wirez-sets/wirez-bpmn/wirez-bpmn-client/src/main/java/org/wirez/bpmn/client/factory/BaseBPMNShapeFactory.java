@@ -2,7 +2,7 @@ package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
-import org.wirez.client.views.ShapeViewFactory;
+import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.factory.BaseShapeFactory;

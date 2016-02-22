@@ -19,7 +19,7 @@ package org.wirez.bpmn.client;
 import org.wirez.bpmn.api.Lane;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
-import org.wirez.client.views.WiresRectangleView;
+import org.wirez.client.shapes.WiresRectangleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;

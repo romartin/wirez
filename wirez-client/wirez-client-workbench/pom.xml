@@ -81,7 +81,7 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-views</artifactId>
+      <artifactId>wirez-shapes</artifactId>
       <scope>provided</scope>
     </dependency>
     

@@ -22,6 +22,6 @@
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.wirez.core.WirezCoreClient"/>
 
-	<source path="views"/>
+	<source path="shapes"/>
 
 </module>

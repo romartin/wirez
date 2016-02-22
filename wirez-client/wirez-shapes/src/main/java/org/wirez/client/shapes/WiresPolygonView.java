@@ -1,10 +1,11 @@
-package org.wirez.client.views;
+package org.wirez.client.shapes;
 
-import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.MultiPath;
+import com.ait.lienzo.client.core.shape.RegularPolygon;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.core.client.view.HasRadius;
 import org.wirez.core.client.view.event.DragHandler;
@@ -12,26 +13,33 @@ import org.wirez.core.client.view.event.ViewEvent;
 import org.wirez.core.client.view.event.ViewEventType;
 import org.wirez.core.client.view.event.ViewHandler;
 
-public class WiresCircleView extends AbstractWiresShapeView<WiresCircleView> 
-        implements HasRadius<WiresCircleView> {
+public class WiresPolygonView extends AbstractWiresShapeView<WiresPolygonView> 
+        implements HasRadius<WiresPolygonView> {
 
-    protected Circle circle;
-    protected Circle decorator;
+    protected RegularPolygon decorator;
 
-    public WiresCircleView(final double radius, 
-                           final WiresManager manager) {
-        super(new MultiPath().rect(0,0, radius, radius)
-                        .setFillAlpha(0.001)
-                        .setStrokeAlpha(0),
+    public WiresPolygonView(final double radius,
+                            final String fillColor,
+                            final WiresManager manager) {
+        super(new MultiPath()
+                        .M(0 ,radius)
+                        .L(radius, 0)
+                        .L(radius * 2, radius)
+                        .L(radius, ( radius * 2) )
+                        .Z()
+                        .setStrokeColor(ColorName.BLACK)
+                        .setFillColor(fillColor),
                 manager);
-        
+
         init(radius);
     }
 
     protected void init(final double radius) {
-        circle = new Circle(radius).setX(radius).setY(radius);
-        this.addChild(circle, WiresLayoutContainer.Layout.CENTER);
-        decorator = new Circle(radius).setX(radius).setY(radius).setFillAlpha(0).setStrokeAlpha(0);
+        decorator = new RegularPolygon(4, radius)
+                .setStrokeWidth(0)
+                .setStrokeAlpha(0)
+                .setFillAlpha(0)
+                .setStrokeAlpha(0);
         this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
     }
 
@@ -39,7 +47,7 @@ public class WiresCircleView extends AbstractWiresShapeView<WiresCircleView>
     protected WiresLayoutContainer.Layout getTextPosition() {
         return WiresLayoutContainer.Layout.BOTTOM;
     }
-
+    
     @Override
     protected Shape getDecorator() {
         return decorator;
@@ -63,17 +71,10 @@ public class WiresCircleView extends AbstractWiresShapeView<WiresCircleView>
 
         return null;
     }
-    
-    
-
-    private double getDecoratorCoordinate(final double c) {
-        return - ( c / 2 );
-    }
 
     @Override
-    public WiresCircleView setRadius(final double radius) {
+    public WiresPolygonView setRadius(final double radius) {
         if (radius > 0) {
-            circle.setRadius(radius);
             decorator.setRadius(radius);
         }
         return this;

@@ -24,8 +24,8 @@ import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.wirez.client.views.AbstractWiresConnectorView;
-import org.wirez.client.views.AbstractWiresShapeView;
+import org.wirez.client.shapes.AbstractWiresConnectorView;
+import org.wirez.client.shapes.AbstractWiresShapeView;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.view.ShapeView;
 
@@ -94,7 +94,7 @@ public class CanvasView extends Composite implements WiresCanvas.View {
 
     @Override
     public WiresCanvas.View addShape(final ShapeView<?> shapeView) {
-        if ( shapeView instanceof AbstractWiresShapeView ) {
+        if ( shapeView instanceof AbstractWiresShapeView) {
             WiresShape wiresShape = (WiresShape) shapeView;
             wiresManager.createMagnets(wiresShape);
             wiresManager.registerShape(wiresShape);

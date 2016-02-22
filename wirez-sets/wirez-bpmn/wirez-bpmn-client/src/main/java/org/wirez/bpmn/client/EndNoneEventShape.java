@@ -18,7 +18,7 @@ package org.wirez.bpmn.client;
 
 import org.wirez.bpmn.api.EndNoneEvent;
 import org.wirez.bpmn.api.property.Radius;
-import org.wirez.client.views.WiresCircleView;
+import org.wirez.client.shapes.WiresCircleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;

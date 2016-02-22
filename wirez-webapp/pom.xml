@@ -257,7 +257,7 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-views</artifactId>
+      <artifactId>wirez-shapes</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -432,7 +432,7 @@
             <!-- Wirez -->
             <compileSourcesArtifact>org.wirez:wirez-core-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-core-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.wirez:wirez-views</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-shapes</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-lienzo-extensions</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-widgets</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-client-workbench</compileSourcesArtifact>

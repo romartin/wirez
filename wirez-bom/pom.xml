@@ -84,13 +84,13 @@
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-views</artifactId>
+        <artifactId>wirez-shapes</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-views</artifactId>
+        <artifactId>wirez-shapes</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>

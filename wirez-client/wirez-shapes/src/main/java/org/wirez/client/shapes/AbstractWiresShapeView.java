@@ -1,4 +1,4 @@
-package org.wirez.client.views;
+package org.wirez.client.shapes;
 
 import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
 import com.ait.lienzo.client.core.event.NodeMouseClickHandler;

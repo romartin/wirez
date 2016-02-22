@@ -18,7 +18,7 @@ package org.wirez.bpmn.client;
 
 import com.ait.lienzo.client.core.shape.DecoratableLine;
 import org.wirez.bpmn.api.SequenceFlow;
-import org.wirez.client.views.WiresConnectorView;
+import org.wirez.client.shapes.WiresConnectorView;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.mutation.HasCanvasStateMutation;

@@ -18,18 +18,20 @@ package org.wirez.core.api.rule.violations;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleViolation;
 
 @Portable
-public class CardinalityMaxRuleViolation implements RuleViolation {
+public class CardinalityMaxRuleViolation extends AbstractRuleViolation {
     
-    private String target;
-    private String candidate;
+    private Element<? extends View<?>> target;
+    private Element<? extends View<?>> candidate;
     private Long maxOccurrences;
     private Long currentOccurrences;
 
-    public CardinalityMaxRuleViolation(@MapsTo("target") String target,
-                                       @MapsTo("candidate") String candidate,
+    public CardinalityMaxRuleViolation(@MapsTo("target") Element<? extends View<?>> target,
+                                       @MapsTo("candidate") Element<? extends View<?>> candidate,
                                        @MapsTo("maxOccurrences") Long maxOccurrences,
                                        @MapsTo("currentOccurrences") Long currentOccurrences) {
         this.target = target;
@@ -40,7 +42,7 @@ public class CardinalityMaxRuleViolation implements RuleViolation {
 
     @Override
     public String getMessage() {
-        return "'" + target + "' can have a maximum '" + maxOccurrences + "' of '" + candidate + "' nodes. Found '" + currentOccurrences + "'.";
+        return "'" + getDefinitionTitle(target) + "' can have a maximum '" + maxOccurrences + "' of '" + getDefinitionTitle(candidate) + "' nodes. Found '" + currentOccurrences + "'.";
     }
 
     @Override

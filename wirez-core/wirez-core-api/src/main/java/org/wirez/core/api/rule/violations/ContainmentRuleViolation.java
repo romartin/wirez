@@ -18,23 +18,25 @@ package org.wirez.core.api.rule.violations;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleViolation;
 
 @Portable
-public class ContainmentRuleViolation implements RuleViolation {
+public class ContainmentRuleViolation extends AbstractRuleViolation {
     
-    private String target;
-    private String candidate;
+    private Element<? extends View<?>> target;
+    private Element<? extends View<?>> candidate;
 
-    public ContainmentRuleViolation(@MapsTo("target") String target,
-                                    @MapsTo("candidate") String candidate) {
+    public ContainmentRuleViolation(@MapsTo("target") Element<? extends View<?>> target,
+                                    @MapsTo("candidate") Element<? extends View<?>> candidate) {
         this.target = target;
         this.candidate = candidate;
     }
 
     @Override
     public String getMessage() {
-        return "'" + target + "' cannot contain '" + candidate + "'.";
+        return "'" + getDefinitionTitle(target) + "' cannot contain '" + getDefinitionTitle(candidate) + "'.";
     }
 
     @Override

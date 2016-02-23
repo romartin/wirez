@@ -1,5 +1,6 @@
 - Immediately
 *************
+    - Improve children traverse processor -> GgraphBoundsIndexer not working fine (as the TreeExplorer does)
     - Explorer
         - explorer tree items - improve
         - get glyph for a given size
@@ -7,7 +8,6 @@
     - Delete from canvas - ( all children... )
         - Confirm delete alert
     - lanes support
-    - notifications not shown
       
 - Next
 *******

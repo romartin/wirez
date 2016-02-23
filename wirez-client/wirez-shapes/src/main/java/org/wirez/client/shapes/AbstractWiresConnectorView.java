@@ -130,7 +130,7 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     }
 
     public T applyHighlightState() {
-        return applyActiveState(true);
+        return applyActiveState(false);
     }
 
     public T applyUnSelectedState() {

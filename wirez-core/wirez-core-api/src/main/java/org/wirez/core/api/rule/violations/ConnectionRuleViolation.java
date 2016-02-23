@@ -24,7 +24,7 @@ import org.wirez.core.api.rule.RuleViolation;
 import java.util.Set;
 
 @Portable
-public class ConnectionRuleViolation implements RuleViolation {
+public class ConnectionRuleViolation extends AbstractRuleViolation  {
     
     private String role;
     private Set<Pair<String, String>> allowedConnections;

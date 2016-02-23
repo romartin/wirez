@@ -79,7 +79,7 @@ public class DefaultRuleManager implements RuleManager {
             }
         }
 
-        results.addViolation(new ContainmentRuleViolation(target.getUUID(), candidate.getUUID()));
+        results.addViolation(new ContainmentRuleViolation(target, candidate));
         return results;
     }
 
@@ -103,9 +103,9 @@ public class DefaultRuleManager implements RuleManager {
                     }
                 }
                 if ( count < minOccurrences ) {
-                    results.addViolation(new CardinalityMinRuleViolation(target.getUUID(), candidate.getUUID(), minOccurrences, count));
+                    results.addViolation(new CardinalityMinRuleViolation((Element<? extends View<?>>) target, (Element<? extends View<?>>) candidate, minOccurrences, count));
                 } else if ( maxOccurrences > -1 && count > maxOccurrences ) {
-                    results.addViolation(new CardinalityMaxRuleViolation(target.getUUID(), candidate.getUUID(), maxOccurrences, count));
+                    results.addViolation(new CardinalityMaxRuleViolation((Element<? extends View<?>>) target, (Element<? extends View<?>>) candidate, maxOccurrences, count));
                 }
             }
         }
@@ -165,9 +165,9 @@ public class DefaultRuleManager implements RuleManager {
                         }
 
                         if ( count < minOccurrences ) {
-                            results.addViolation(new CardinalityMinRuleViolation(outgoingNode.getUUID(), cr.getId(), minOccurrences, count));
+                            results.addViolation(new CardinalityMinRuleViolation( (Element<? extends View<?>>) outgoingNode, (Element<? extends View<?>>) cr, minOccurrences, count));
                         } else if ( maxOccurrences > -1 && count > maxOccurrences ) {
-                            results.addViolation(new CardinalityMaxRuleViolation(outgoingNode.getUUID(), cr.getId(), maxOccurrences, count));
+                            results.addViolation(new CardinalityMaxRuleViolation((Element<? extends View<?>>) outgoingNode, (Element<? extends View<?>>) cr, maxOccurrences, count));
                         }
                     }
                 }
@@ -187,9 +187,9 @@ public class DefaultRuleManager implements RuleManager {
                         }
 
                         if ( count < minOccurrences ) {
-                            results.addViolation(new CardinalityMinRuleViolation(incomingNode.getUUID(), cr.getId(), minOccurrences, count));
+                            results.addViolation(new CardinalityMinRuleViolation((Element<? extends View<?>>) incomingNode, (Element<? extends View<?>>) cr, minOccurrences, count));
                         } else if ( maxOccurrences > -1 && count > maxOccurrences ) {
-                            results.addViolation(new CardinalityMaxRuleViolation(incomingNode.getUUID(), cr.getId(), maxOccurrences, count));
+                            results.addViolation(new CardinalityMaxRuleViolation((Element<? extends View<?>>) incomingNode, (Element<? extends View<?>>) cr, maxOccurrences, count));
                         }
                     }
                 }

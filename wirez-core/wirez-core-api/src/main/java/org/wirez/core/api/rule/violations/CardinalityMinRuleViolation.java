@@ -18,18 +18,20 @@ package org.wirez.core.api.rule.violations;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleViolation;
 
 @Portable
-public class CardinalityMinRuleViolation implements RuleViolation {
+public class CardinalityMinRuleViolation extends AbstractRuleViolation  {
     
-    private String target;
-    private String candidate;
+    private Element<? extends View<?>> target;
+    private Element<? extends View<?>> candidate;
     private Long minOccurrences;
     private Long currentOccurrences;
 
-    public CardinalityMinRuleViolation(@MapsTo("target") String target,
-                                       @MapsTo("candidate") String candidate,
+    public CardinalityMinRuleViolation(@MapsTo("target") Element<? extends View<?>> target,
+                                       @MapsTo("candidate") Element<? extends View<?>> candidate,
                                        @MapsTo("minOccurrences") Long minOccurrences,
                                        @MapsTo("currentOccurrences") Long currentOccurrences) {
         this.target = target;
@@ -40,7 +42,7 @@ public class CardinalityMinRuleViolation implements RuleViolation {
 
     @Override
     public String getMessage() {
-        return "'" + target + "' needs a minimum '" + minOccurrences + "' of '" + candidate + "' nodes. Found '" + currentOccurrences + "'.";
+        return "'" + getDefinitionTitle(target) + "' requires a minimum '" + minOccurrences + "' of '" + getDefinitionTitle(candidate) + "' nodes. Found '" + currentOccurrences + "'.";
     }
 
     @Override

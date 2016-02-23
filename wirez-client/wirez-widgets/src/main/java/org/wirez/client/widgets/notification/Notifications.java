@@ -103,7 +103,7 @@ public class Notifications implements IsWidget {
             NotifySettings settings = NotifySettings.newSettings();
             settings.makeDefault();
             settings.setType(NotifyType.DANGER);
-            settings.setDelay(2000);
+            settings.setDelay(5000);
             settings.setTimer(100);
             settings.setAllowDismiss(true);
             final String text = getNotificationText(notification);

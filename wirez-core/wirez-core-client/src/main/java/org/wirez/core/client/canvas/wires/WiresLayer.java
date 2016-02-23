@@ -94,7 +94,7 @@ public class WiresLayer implements Layer<WiresLayer, ShapeView<?>> {
         return layer.addNodeMouseClickHandler(new NodeMouseClickHandler() {
             @Override
             public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
-                final MouseClickEvent event = new MouseClickEvent(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY());
+                final MouseClickEvent event = new MouseClickEvent(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY(), nodeMouseClickEvent.isShiftKeyDown());
                 eventHandler.handle( event );
             }
         });
@@ -105,7 +105,7 @@ public class WiresLayer implements Layer<WiresLayer, ShapeView<?>> {
         return layer.addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
             @Override
             public void onNodeMouseMove(final NodeMouseMoveEvent nodeMouseMoveEvent) {
-                final MouseMoveEvent event = new MouseMoveEvent(nodeMouseMoveEvent.getX(), nodeMouseMoveEvent.getX(), nodeMouseMoveEvent.isShiftKeyDown());
+                final MouseMoveEvent event = new MouseMoveEvent(nodeMouseMoveEvent.getX(), nodeMouseMoveEvent.getY(), nodeMouseMoveEvent.isShiftKeyDown());
                 eventHandler.handle( event );
             }
         });

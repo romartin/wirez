@@ -103,7 +103,6 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
                 final int y = (int) event.getMouseY();
                 // updateLineTo((OrthogonalPolyLine) connector, x, y);
                 updateArrowTo((Arrow) connector, x, y);
-
                 presenter.onMouseMove(x, y);
                 LOGGER.log(Level.INFO, "Mouse at [" + x + ", " + y+ "]");
                 layer.draw();

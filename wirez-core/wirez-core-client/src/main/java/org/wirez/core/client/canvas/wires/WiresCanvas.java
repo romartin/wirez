@@ -64,6 +64,8 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
         View removeShape(ShapeView<?> shapeView);
         
         View addChildShape(ShapeView<?> parent, ShapeView<?> child);
+
+        View removeChildShape(ShapeView<?> parent, ShapeView<?> child);
         
         View setConnectionAcceptor(IConnectionAcceptor connectionAcceptor);
         
@@ -121,6 +123,13 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
 
     public Canvas addChildShape(final Shape parent, final Shape child) {
         getView().addChildShape(parent.getShapeView(), child.getShapeView());
+        log(Level.FINE, "Adding child [" + child.getId() + "] into parent [" + parent.getId()  + "]");
+        return this;
+    }
+
+    public Canvas removeChildShape(final Shape parent, final Shape child) {
+        getView().removeChildShape(parent.getShapeView(), child.getShapeView());
+        log(Level.FINE, "Removing child [" + child.getId() + "] from parent [" + parent.getId()  + "]");
         return this;
     }
     

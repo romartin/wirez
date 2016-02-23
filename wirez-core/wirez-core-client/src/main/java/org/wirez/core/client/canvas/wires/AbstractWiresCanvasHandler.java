@@ -311,9 +311,9 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     public void removeChild(final Element parent, final Element child) {
         assert parent != null && child != null;
 
-        final WiresShape parentShape = (WiresShape) canvas.getShape(parent.getUUID()).getShapeView();
-        final WiresShape childShape = (WiresShape) canvas.getShape(child.getUUID()).getShapeView();
-        parentShape.remove(childShape);
+        final Shape parentShape = canvas.getShape(parent.getUUID());
+        final Shape childShape = canvas.getShape(child.getUUID());
+        canvas.removeChildShape(parentShape, childShape);
 
     }
     

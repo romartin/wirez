@@ -135,6 +135,10 @@ public abstract class BaseConnector<W extends Definition> implements
                 ( (IsConnector) view).connect(inNodeShape.getShapeView(), sourceMagnet, outNodeShape.getShapeView(), targetMagnet, true, false);
             }
         }
+        
+        // Connectors sometimes gets below container shapes, so not visible. Improve this in the future.
+        view.moveToTop();
+        
         return this;
     }
 

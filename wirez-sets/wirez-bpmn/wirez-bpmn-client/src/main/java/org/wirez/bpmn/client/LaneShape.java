@@ -24,6 +24,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.mutation.MutationContext;
 import org.wirez.core.client.view.HasTitle;
@@ -46,6 +47,12 @@ public class LaneShape extends BPMNBasicShape<Lane> {
         // Size.
         _applySize(element, mutationContext);
         
+    }
+
+    @Override
+    public void afterMutations(final Canvas canvas) {
+        super.afterMutations(canvas);
+        getView().setFillAlpha(0.8);
     }
 
     protected LaneShape _applySize(final Node<View<Lane>, Edge> element, MutationContext mutationContext) {

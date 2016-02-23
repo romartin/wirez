@@ -159,9 +159,15 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
         return (T) this;
     }
 
+    @Override
+    public T setDragEnabled(boolean isDraggable) {
+        this.setDraggable(isDraggable);
+        return (T) this;
+    }
+
     protected Text buildText(String _text) {
         Text text = new Text(_text).setFontSize(14).setFillColor(ColorName.BLACK).setStrokeWidth(1);
-        return text.moveToTop();
+        return text.moveToTop().setDraggable(false);
     }
     
     private WiresLayoutContainer.Layout getTextPosition() {

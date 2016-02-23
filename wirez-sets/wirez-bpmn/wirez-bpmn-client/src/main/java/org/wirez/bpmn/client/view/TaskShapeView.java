@@ -19,6 +19,7 @@ public class TaskShapeView extends WiresRectangleView<TaskShapeView> implements 
 
     private void init() {
         taskTypeIcon = taskTypeUser();
+        taskTypeIcon.setDraggable(false);
         this.addChild(taskTypeIcon, WiresLayoutContainer.Layout.TOP);
     }
 

@@ -1,4 +1,4 @@
-- Immediately
+- Quick wins
 *************
     - Improve children traverse processor -> GgraphBoundsIndexer not working fine (as the TreeExplorer does)
     - Explorer
@@ -7,11 +7,8 @@
     - custom graph factory for bpmn -> create a diagram by default
     - Delete from canvas - ( all children... )
         - Confirm delete alert
-    - review move to tops on canvas shapes
-        - lanes
-            - connectors not visible inside lanes
-            - after visit -> not insider content visible
-        - diagram sometimes gets on top and nothing can be moved inside...
+    - after containment error on task -> loses fill color (eg: task inside task)
+    - review wires containment. Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
         
 - Next
 *******

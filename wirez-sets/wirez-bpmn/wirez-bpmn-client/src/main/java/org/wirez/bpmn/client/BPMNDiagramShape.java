@@ -51,7 +51,7 @@ public class BPMNDiagramShape extends BPMNBasicShape<BPMNDiagram> {
     @Override
     public void afterMutations(final Canvas canvas) {
         super.afterMutations(canvas);
-        getView().setFillAlpha(0.1);
+        getView().setFillAlpha(0.8);
     }
 
     protected BPMNDiagramShape _applySize(final Node<View<BPMNDiagram>, Edge> element, MutationContext mutationContext) {

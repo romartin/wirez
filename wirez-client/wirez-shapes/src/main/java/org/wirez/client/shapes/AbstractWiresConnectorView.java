@@ -169,7 +169,13 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
         
         return (T) this;
     }
-    
+
+    @Override
+    public T setDragEnabled(final boolean isDraggable) {
+        this.setDraggable();
+        return (T) this;
+    }
+
     @Override
     public T addHandler(final ViewEventType type,
                         final ViewHandler<? extends ViewEvent> eventHandler) {

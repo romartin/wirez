@@ -26,6 +26,7 @@ public class ParallelGatewayShapeView extends WiresPolygonView<ParallelGatewaySh
     protected void init(final double radius) {
         super.init(radius);
         gatewayTypeIcon = new Group();
+        gatewayTypeIcon.setDraggable(false);
         final double[] gwTypeIconSize = updateGwTypeIcon(radius);
 
         this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);

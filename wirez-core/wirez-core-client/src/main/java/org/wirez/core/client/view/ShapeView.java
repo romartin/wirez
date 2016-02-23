@@ -34,6 +34,8 @@ public interface ShapeView<T> {
     
     T setStrokeWidth(double width);
     
+    T setDragEnabled(boolean isDraggable);
+    
     T moveToTop();
 
     T moveToBottom();

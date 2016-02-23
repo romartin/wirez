@@ -11,52 +11,33 @@ import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventB
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.service.definition.DefinitionService;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 
 @ApplicationScoped
 public class BPMNGraphObjectBuilderFactory {
 
     @Inject
-    DefinitionManager definitionManager;
-    
-    @Inject
-    DefinitionService definitionService;
+    Instance<GraphObjectBuilder<? ,?>> graphObjectBuilders;
     
     public GraphObjectBuilder<?, ?> bootstrapBuilder() {
         return new BootstrapObjectBuilder(this);
     }
     
     public GraphObjectBuilder<?, ?> builderFor(String id) {
-
-        /* Nodes */
-        if (BPMNDiagram.ID.equals(id)) {
-            return new BPMNDiagramBuilder(this);
-        } else if (StartNoneEvent.ID.equals(id)) {
-            return new StartNoneEventBuilder(this);
-        } else if (EndNoneEvent.ID.equals(id)) {
-            return new EndNoneEventBuilder(this);
-        } else if (EndTerminateEvent.ID.equals(id)) {
-            return new EndTerminateEventBuilder(this);
-        } else if (Task.ID.equals(id)) {
-            return new TaskBuilder(this);
-        } else if (ParallelGateway.ID.equals(id)) {
-            return new ParallelGatewayBuilder(this);
-        }
-
-        /* Edges */
-        if (SequenceFlow.ID.equals(id)) {
-            return new SequenceFlowBuilder(this);
-        }
+        if ( id == null) throw new NullPointerException();
         
-        throw new RuntimeException("No builder for definition '" + id + "'.");
+        for ( GraphObjectBuilder<? ,?> builder : graphObjectBuilders) {
+            if ( id.equals(builder.getDefinitionId()) ) {
+                return builder;
+            }
+        }
+
+        throw new RuntimeException("No builder for definition [" + id + "]");
     }
 
-    public DefinitionManager getDefinitionManager() {
-        return definitionManager;
-    }
-
-    public DefinitionService getDefinitionService() {
-        return definitionService;
-    }
 }

@@ -18,12 +18,17 @@ import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.diagram.SettingsImpl;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.command.GraphCommandManager;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.rule.EmptyRuleManager;
+import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.service.diagram.DiagramMarshaller;
 import org.wirez.core.api.util.UUID;
 
@@ -42,6 +47,21 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
 
     @Inject
     BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
+
+    @Inject
+    DefinitionManager definitionManager;
+
+    @Inject
+    DefinitionService definitionService;
+            
+    @Inject
+    GraphCommandManager graphCommandManager;
+    
+    @Inject
+    EmptyRuleManager ruleManager;
+    
+    @Inject
+    GraphCommandFactory commandFactory;
     
     private ResourceSet resourceSet;
     
@@ -75,7 +95,12 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
         try {
             
             Definitions definitions = parseDefinitions(inputStream);
-            Bpmn2UnMarshaller parser = new Bpmn2UnMarshaller(bpmnGraphBuilderFactory);
+            Bpmn2UnMarshaller parser = new Bpmn2UnMarshaller(bpmnGraphBuilderFactory, 
+                    definitionManager,
+                    definitionService,
+                    graphCommandManager, 
+                    ruleManager,
+                    commandFactory);
             parser.setProfile(new DefaultProfileImpl());
             final Graph graph = parser.unmarshall(definitions, null);
             final BPMNGraph graphDefinition = (BPMNGraph) ( (View) graph.getContent() ).getDefinition();

@@ -2,50 +2,64 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 
 import org.wirez.bpmn.api.BPMNDefinition;
+import org.wirez.bpmn.api.SequenceFlow;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.impl.AddNodeCommand;
+import org.wirez.core.api.graph.command.impl.SetConnectionTargetNodeCommand;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.service.definition.DefinitionService;
 
+// TODO: Improve error handling.
 public abstract class AbstractEdgeBuilder<W extends Definition, T extends Edge<View<W>, Node>> 
         extends AbstractObjectBuilder<W, T> implements EdgeObjectBuilder<W, T> {
 
-    public AbstractEdgeBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
-        super(wiresFactory);
+    public AbstractEdgeBuilder() {
+        super();
     }
     
-    protected abstract T buildEdge(BuilderContext context, DefinitionService definitionService);
-
     @Override
+    @SuppressWarnings("unchecked")
     protected T doBuild(BuilderContext context) {
 
-        DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
+        DefinitionService definitionService = context.getDefinitionService();
 
-        T result = buildEdge(context, definitionService);
+        T result = (T) definitionService.buildGraphElement(this.nodeId, getDefinitionId());
 
-        setProperties((BPMNDefinition) result.getContent().getDefinition());
+        setProperties(context, (BPMNDefinition) result.getContent().getDefinition());
 
         afterEdgeBuild(context, result);
 
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     protected void afterEdgeBuild(BuilderContext context, T edge) {
         
         // Outgoing connections.
-        if (outgoingNodeIds != null && !outgoingNodeIds.isEmpty()) {
-            for (String outgoingNodeId : outgoingNodeIds) {
+        if (outgoingResourceIds != null && !outgoingResourceIds.isEmpty()) {
+            for (String outgoingNodeId : outgoingResourceIds) {
                 GraphObjectBuilder<?, ?> outgoingNodeBuilder = getBuilder(context, outgoingNodeId);
                 if (outgoingNodeBuilder == null) {
                     throw new RuntimeException("No edge for " + outgoingNodeId);
                 }
 
                 Node node = (Node) outgoingNodeBuilder.build(context);
-                ( (AbstractNodeBuilder) outgoingNodeBuilder).setSourceConnectionMagnetIndex(context, node, edge);
-                edge.setTargetNode(node);
-                node.getInEdges().add(edge);
-                context.getGraph().addNode(node);
+
+                // Command - Add the node into the graph store.
+                AddNodeCommand addNodeCommand = context.getCommandFactory().ADD_NODE(context.getGraph(), node);
+
+                // Command - Set the edge connection's target node.
+                int magnetIdx = ( (AbstractNodeBuilder) outgoingNodeBuilder).getTargetConnectionMagnetIndex(context, node, edge);
+                SetConnectionTargetNodeCommand setTargetNodeCommand = context.getCommandFactory().SET_TARGET_NODE(node, edge, magnetIdx);
+                
+                CommandResults<RuleViolation> results = context.execute( addNodeCommand, setTargetNodeCommand );
+                if ( hasErrors(results) ) {
+                    throw new RuntimeException("Error building BPMN graph. Commands 'addNodeCommand'/'SetConnectionTargetNodeCommand' execution failed.");
+                }
             }
         }
 

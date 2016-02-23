@@ -14,32 +14,19 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 
+import javax.enterprise.context.Dependent;
 import java.util.Set;
 
-// TODO: Bounds.
+@Dependent
 public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<View<BPMNDiagram>, Edge>> {
 
-    public BPMNDiagramBuilder(BPMNGraphObjectBuilderFactory graphObjectBuilderFactory) {
-        super(graphObjectBuilderFactory);
+    public BPMNDiagramBuilder() {
+        super();
     }
 
     @Override
-    protected Node<View<BPMNDiagram>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<View<BPMNDiagram>, Edge>) definitionService.buildGraphElement(this.nodeId, BPMNDiagram.ID);
-    }
-
-    @Override
-    protected void afterNodeBuild(BuilderContext context, Node<View<BPMNDiagram>, Edge> node) {
-        super.afterNodeBuild(context, node);
-
-        StartNoneEventBuilder startProcessNodeBuilder = getStartProcessNode(context);
-        if (startProcessNodeBuilder == null) {
-            throw new RuntimeException("No start process event found!");
-        }
-
-        Node startProcessNode = startProcessNodeBuilder.build(context);
-        final Graph<BPMNGraph, Node> graph = context.getGraph();
-        graph.addNode(startProcessNode);
+    public String getDefinitionId() {
+        return BPMNDiagram.ID;
     }
 
     @Override
@@ -60,18 +47,6 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
         return super.getProperty(defProperties, id);
     }
 
-    // TODO: Support for multiple start nodes.
-    private StartNoneEventBuilder getStartProcessNode(BuilderContext context) {
-        for (String childNodeId : childNodeIds) {
-            GraphObjectBuilder<?, ?>  builder = getBuilder(context, childNodeId);
-            if ( null != builder && builder instanceof StartNoneEventBuilder ) {
-                return (StartNoneEventBuilder) builder;
-            }
-        }
-        
-        return null;
-    }
-    
     @Override
     public String toString() {
         return "[NodeBuilder=BPMNDiagramBuilder] " + super.toString();

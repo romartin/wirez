@@ -8,19 +8,23 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 
+import javax.enterprise.context.Dependent;
+
+@Dependent
 public class SequenceFlowBuilder extends AbstractEdgeBuilder<SequenceFlow, Edge<View<SequenceFlow>, Node>> {
 
-    public SequenceFlowBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
-        super(wiresFactory);
+    public SequenceFlowBuilder() {
+        super();
     }
 
     @Override
-    protected Edge<View<SequenceFlow>, Node> buildEdge(BuilderContext context, DefinitionService definitionService) {
-        return (Edge<View<SequenceFlow>, Node>) definitionService.buildGraphElement(this.nodeId, SequenceFlow.ID);
+    public String getDefinitionId() {
+        return SequenceFlow.ID;
     }
-
+    
     @Override
     public String toString() {
         return "[EdgeBuilder=SequenceFlowBuilder]" + super.toString();
     }
+    
 }

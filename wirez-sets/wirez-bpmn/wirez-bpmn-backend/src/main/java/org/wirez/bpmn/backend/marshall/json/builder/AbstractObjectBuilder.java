@@ -4,10 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.core.api.adapter.DefinitionAdapter;
+import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.ElementUtils;
 
 import java.util.*;
@@ -18,16 +21,14 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
 
     protected String nodeId;
     protected Map<String, String> properties;
-    protected Set<String> outgoingNodeIds;
+    protected Set<String> outgoingResourceIds;
     protected Double[] boundUL;
     protected Double[] boundLR;
-    protected BPMNGraphObjectBuilderFactory bpmnGraphFactory;
     protected T result;
             
-    public AbstractObjectBuilder(BPMNGraphObjectBuilderFactory bpmnGraphFactory) {
-        this.bpmnGraphFactory = bpmnGraphFactory;
+    public AbstractObjectBuilder() {
         properties = new HashMap<String, String>();
-        outgoingNodeIds = new LinkedHashSet<String>();
+        outgoingResourceIds = new LinkedHashSet<String>();
         boundUL = null;
         boundLR = null;
     }
@@ -46,7 +47,7 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
 
     @Override
     public GraphObjectBuilder<W, T> out(String nodeId) {
-        outgoingNodeIds.add(nodeId);
+        outgoingResourceIds.add(nodeId);
         return this;
     }
 
@@ -76,6 +77,10 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
         }
         return this.result;
     }
+    
+    protected boolean hasErrors(CommandResults<RuleViolation> results) {
+        return results.results(CommandResult.Type.ERROR).iterator().hasNext(); 
+    }
 
     protected GraphObjectBuilder<?, ?> getBuilder(BuilderContext context, String nodeId) {
         Collection<GraphObjectBuilder<?, ?>> builders = context.getBuilders();
@@ -90,9 +95,9 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
         return null;
     }
     
-    protected void setProperties(final BPMNDefinition definition) {
+    protected void setProperties(BuilderContext context, BPMNDefinition definition) {
         assert definition != null;
-        DefinitionAdapter adapter = bpmnGraphFactory.getDefinitionManager().getDefinitionAdapter(definition);
+        DefinitionAdapter adapter = context.getDefinitionManager().getDefinitionAdapter(definition);
         Map<Property, Object> defPropertiesMap = adapter.getPropertiesValues(definition);
         Set<Property> defProperties = defPropertiesMap.keySet();
         for (Map.Entry<String, String> entry : properties.entrySet()) {
@@ -103,7 +108,7 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
                 final Object value;
                 try {
                     value = ElementUtils.parseValue(property, pValue);
-                    bpmnGraphFactory.getDefinitionManager().getPropertyAdapter(property).setValue(property, value);
+                    context.getDefinitionManager().getPropertyAdapter(property).setValue(property, value);
                 } catch (Exception e) {
                    LOG.error("Cannot parse value [" + pValue + "] for property [" + pId + "]");
                 }
@@ -122,7 +127,7 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
         StringBuilder builder = new StringBuilder();
         builder.append(" [NodeId=").append(nodeId).append("] ");
         builder.append(" [properties=").append(properties).append("] ");
-        builder.append(" [outgoingNodeIds=").append(outgoingNodeIds).append("] ");
+        builder.append(" [outgoingResourceIds=").append(outgoingResourceIds).append("] ");
         builder.append(" [boundUL=").append(boundUL).append("] ");
         builder.append(" [boundLR=").append(boundLR).append("] ");
         return builder.toString();

@@ -7,15 +7,18 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 
+import javax.enterprise.context.Dependent;
+
+@Dependent
 public class TaskBuilder extends AbstractNodeBuilder<Task, Node<View<Task>, Edge>>  {
 
-    public TaskBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
-        super(wiresFactory);
+    public TaskBuilder() {
+        super();
     }
 
     @Override
-    protected Node<View<Task>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<View<Task>, Edge>) definitionService.buildGraphElement(this.nodeId, Task.ID);
+    public String getDefinitionId() {
+        return Task.ID;
     }
 
     @Override

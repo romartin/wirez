@@ -1,7 +1,13 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.wirez.bpmn.api.BPMNDefinition;
+import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.graph.command.impl.AddChildNodeCommand;
+import org.wirez.core.api.graph.command.impl.AddNodeCommand;
+import org.wirez.core.api.graph.command.impl.SetConnectionSourceNodeCommand;
 import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.Edge;
@@ -11,6 +17,7 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.content.view.BoundImpl;
 import org.wirez.core.api.graph.content.view.BoundsImpl;
 import org.wirez.core.api.graph.impl.EdgeImpl;
+import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.api.util.UUID;
@@ -19,13 +26,14 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+// TODO: Improve error handling.
 public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<View<W>, Edge>> 
         extends AbstractObjectBuilder<W, T> implements NodeObjectBuilder<W, T> {
 
     protected Set<String> childNodeIds;
     
-    public AbstractNodeBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
-        super(wiresFactory);
+    public AbstractNodeBuilder() {
+        super();
         this.childNodeIds = new LinkedHashSet<String>();
     }
 
@@ -35,18 +43,16 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
         return this;
     }
     
-    protected abstract T buildNode(BuilderContext context, DefinitionService definitionService);
-    
     @Override
     protected T doBuild(BuilderContext context) {
 
-        DefinitionService definitionService = bpmnGraphFactory.getDefinitionService();
+        DefinitionService definitionService = context.getDefinitionService();
 
         // Build the graph node for the definition.
-        T result = buildNode(context, definitionService);
+        T result = (T) definitionService.buildGraphElement(this.nodeId, getDefinitionId());
         
         // Set the def properties.
-        setProperties((BPMNDefinition) result.getContent().getDefinition());
+        setProperties(context, (BPMNDefinition) result.getContent().getDefinition());
         
         // View Bounds.
         setBounds(context, result);
@@ -56,7 +62,7 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
         
         return result;
     }
-    
+
     protected void setBounds(BuilderContext context, T node) {
         if ( null != boundUL && null != boundLR ) {
             Bounds bounds = new BoundsImpl(
@@ -76,23 +82,28 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
         // Do nothing by default.
     }
 
+    @SuppressWarnings("unchecked")
     protected void afterNodeBuild(BuilderContext context, T node) {
         
         // Outgoing connections.
-        if (outgoingNodeIds != null && !outgoingNodeIds.isEmpty()) {
-            for (String outgoingNodeId : outgoingNodeIds) {
-                GraphObjectBuilder<?, ?> outgoingNodeBuilder = getBuilder(context, outgoingNodeId);
-                if (outgoingNodeBuilder == null) {
+        if (outgoingResourceIds != null && !outgoingResourceIds.isEmpty()) {
+            for (String outgoingNodeId : outgoingResourceIds) {
+                GraphObjectBuilder<?, ?> outgoingBuilder = getBuilder(context, outgoingNodeId);
+                if (outgoingBuilder == null) {
                     throw new RuntimeException("No outgoing edge builder for " + outgoingNodeId);
                 }
 
-                Edge edge = (Edge) outgoingNodeBuilder.build(context);
-                node.getOutEdges().add(edge);
-                edge.setSourceNode(node);
+                // Create the outgoing edge.
+                Edge edge = (Edge) outgoingBuilder.build(context);
 
-                if ( edge.getContent() instanceof ViewConnector) {
-                    setTargetConnectionMagnetIndex(context, node, edge);
+                // Command - Execute the graph command to set the node as the edge connection's source..  
+                int magnetIdx = getSourceConnectionMagnetIndex(context, node, edge);
+                SetConnectionSourceNodeCommand setSourceNodeCommand = context.getCommandFactory().SET_SOURCE_NODE(node, edge, magnetIdx);
+                CommandResults<RuleViolation> results = context.execute( setSourceNodeCommand );
+                if ( hasErrors(results) ) {
+                    throw new RuntimeException("Error building BPMN graph. Command execution failed.");
                 }
+                
             }
         }
 
@@ -101,29 +112,30 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
             for (String childNodeId : childNodeIds) {
                 GraphObjectBuilder<?, ?> childNodeBuilder = getBuilder(context, childNodeId);
                 if (childNodeBuilder == null) {
-                    throw new RuntimeException("No child builder for " + childNodeId);
+                    throw new RuntimeException("No child node builder for " + childNodeId);
                 }
 
                 if ( childNodeBuilder instanceof NodeObjectBuilder ) {
                     Node childNode = (Node) childNodeBuilder.build(context);
-                    final Edge<Child, Node> childEdge = new EdgeImpl<>(UUID.uuid(), new HashSet<>(), new HashSet<>(), new Child());
-                    childEdge.setSourceNode(node);
-                    childEdge.setTargetNode(childNode);
-                    context.getGraph().addNode(childNode);
-                    node.getOutEdges().add(childEdge);
-                    childNode.getInEdges().add(childEdge);
+                    
+                    // Command - Create the child node and the parent-child relationship.
+                    AddChildNodeCommand addChildNodeCommand = context.getCommandFactory().ADD_CHILD_NODE(context.getGraph(), node, childNode);
+                    CommandResults<RuleViolation> results = context.execute( addChildNodeCommand );
+                    if ( hasErrors(results) ) {
+                        throw new RuntimeException("Error building BPMN graph. Command 'AddChildNodeCommand' execution failed.");
+                    }
                 }
                 
             }
         }
     }
-   
-    public void setSourceConnectionMagnetIndex(BuilderContext context, T node, Edge<ViewConnector<W>, Node> edge) {
-        edge.getContent().setSourceMagnetIndex(3);
+    
+    public int getSourceConnectionMagnetIndex(BuilderContext context, T node, Edge<ViewConnector<W>, Node> edge) {
+        return 3;
     }
 
-    public void setTargetConnectionMagnetIndex(BuilderContext context, T node, Edge<ViewConnector<W>, Node> edge) {
-        edge.getContent().setTargetMagnetIndex(7);
+    public int getTargetConnectionMagnetIndex(BuilderContext context, T node, Edge<ViewConnector<W>, Node> edge) {
+        return 7;
     }
 
     @Override

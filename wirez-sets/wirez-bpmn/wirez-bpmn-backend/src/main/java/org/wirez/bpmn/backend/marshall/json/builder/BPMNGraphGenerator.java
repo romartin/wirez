@@ -4,10 +4,17 @@ import org.codehaus.jackson.*;
 import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.command.Command;
+import org.wirez.core.api.command.CommandManager;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.UUID;
 
@@ -24,6 +31,11 @@ import java.util.Stack;
 public class BPMNGraphGenerator extends JsonGenerator {
 
     BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
+    DefinitionManager definitionManager;
+    DefinitionService definitionService;
+    CommandManager<RuleManager, RuleViolation> commandManager;
+    RuleManager ruleManager;
+    GraphCommandFactory commandFactory;
     Stack<GraphObjectBuilder> nodeBuilders = new LoggableStack<GraphObjectBuilder>("nodeBuilders");
     Stack<GraphObjectParser> parsers = new LoggableStack<GraphObjectParser>("parsers");
     Collection<GraphObjectBuilder<?, ?>> builders = new LinkedList<GraphObjectBuilder<?, ?>>();
@@ -58,8 +70,18 @@ public class BPMNGraphGenerator extends JsonGenerator {
         }
     }
     
-    public BPMNGraphGenerator(BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory) {
+    public BPMNGraphGenerator(final BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory,
+                              final DefinitionManager definitionManager,
+                              final DefinitionService definitionService,
+                              final CommandManager<RuleManager, RuleViolation> commandManager,
+                              final RuleManager ruleManager,
+                              final GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
+        this.definitionManager = definitionManager;
+        this.definitionService = definitionService;
+        this.commandManager = commandManager;
+        this.ruleManager = ruleManager;
+        this.commandFactory = commandFactory;
         this.parsers.push(new RootObjectParser(null));
         this.isClosed = false;
     }
@@ -100,10 +122,10 @@ public class BPMNGraphGenerator extends JsonGenerator {
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public void close() throws IOException {
         logBuilders();
 
-        DefinitionService definitionService = bpmnGraphBuilderFactory.getDefinitionService();
         this.graph = (Graph<View<BPMNGraph>, Node>) definitionService.buildGraphElement(UUID.uuid(), BPMNGraph.ID);
         builderContext.init(graph);
         
@@ -121,7 +143,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
     }
 
     // TODO: Can be multiple
-    protected BPMNDiagramBuilder getDiagramBuilder(GraphObjectBuilder.BuilderContext context) {
+    @SuppressWarnings("unchecked")
+    protected BPMNDiagramBuilder getDiagramBuilder(final GraphObjectBuilder.BuilderContext context) {
         Collection<GraphObjectBuilder<?, ?>> builders = context.getBuilders();
         if (builders != null && !builders.isEmpty()) {
             for (GraphObjectBuilder<?, ?> builder : builders) {
@@ -157,6 +180,25 @@ public class BPMNGraphGenerator extends JsonGenerator {
         @Override
         public Collection<GraphObjectBuilder<?, ?>> getBuilders() {
             return builders;
+        }
+
+        @Override
+        public DefinitionManager getDefinitionManager() {
+            return definitionManager;
+        }
+
+        @Override
+        public DefinitionService getDefinitionService() {
+            return definitionService;
+        }
+
+        @SuppressWarnings("unchecked")
+        public CommandResults<RuleViolation> execute (Command<RuleManager, RuleViolation>... command) {
+            return commandManager.execute( ruleManager, command );
+        }
+        
+        public GraphCommandFactory getCommandFactory() {
+            return commandFactory;
         }
 
     };

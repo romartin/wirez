@@ -8,17 +8,20 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 
+import javax.enterprise.context.Dependent;
+
+@Dependent
 public class ParallelGatewayBuilder extends AbstractNodeBuilder<ParallelGateway, Node<View<ParallelGateway>, Edge>>  {
 
-    public ParallelGatewayBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
-        super(wiresFactory);
+    public ParallelGatewayBuilder() {
+        super();
     }
 
     @Override
-    protected Node<View<ParallelGateway>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<View<ParallelGateway>, Edge>) definitionService.buildGraphElement(this.nodeId, ParallelGateway.ID);
+    public String getDefinitionId() {
+        return ParallelGateway.ID;
     }
-
+    
     @Override
     protected void setSize(BuilderContext context, Node<View<ParallelGateway>, Edge> node, double width, double height) {
         super.setSize(context, node, width, height);
@@ -30,4 +33,5 @@ public class ParallelGatewayBuilder extends AbstractNodeBuilder<ParallelGateway,
     public String toString() {
         return "[NodeBuilder=ParallelGatewayBuilder]" + super.toString();
     }
+    
 }

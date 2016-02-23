@@ -8,15 +8,18 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 
+import javax.enterprise.context.Dependent;
+
+@Dependent
 public class EndNoneEventBuilder extends AbstractNodeBuilder<EndNoneEvent, Node<View<EndNoneEvent>, Edge>> {
     
-    public EndNoneEventBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
-        super(wiresFactory);
+    public EndNoneEventBuilder() {
+        super();
     }
 
     @Override
-    protected Node<View<EndNoneEvent>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<View<EndNoneEvent>, Edge>) definitionService.buildGraphElement(this.nodeId, EndNoneEvent.ID);
+    public String getDefinitionId() {
+        return EndNoneEvent.ID;
     }
 
     @Override
@@ -26,11 +29,6 @@ public class EndNoneEventBuilder extends AbstractNodeBuilder<EndNoneEvent, Node<
         def.getRadius().setValue(width  / 2);
     }
     
-    @Override
-    protected void afterNodeBuild(BuilderContext context, Node<View<EndNoneEvent>, Edge> node) {
-        // Do nothing. No outgoing connections expected.
-    }
-
     @Override
     public String toString() {
         return "[NodeBuilder=EndNoneEventBuilder]" + super.toString();

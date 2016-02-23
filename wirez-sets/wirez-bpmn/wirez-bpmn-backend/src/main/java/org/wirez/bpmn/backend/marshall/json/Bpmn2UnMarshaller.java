@@ -16,7 +16,13 @@ import org.jboss.drools.util.DroolsResourceFactoryImpl;
 import org.wirez.bpmn.backend.legacy.Bpmn2JsonMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphGenerator;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.service.definition.DefinitionService;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -40,12 +46,21 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
         resourceSet.getPackageRegistry().put( "http://www.omg.org/spec/BPMN/20100524/MODEL", Bpmn2Package.eINSTANCE );
     }
     
-    BPMNGraphObjectBuilderFactory elementBuilderFactory;
     BPMNGraphGenerator bpmnGraphGenerator;
 
-    public Bpmn2UnMarshaller(BPMNGraphObjectBuilderFactory elementBuilderFactory) {
-        this.elementBuilderFactory = elementBuilderFactory;
-        this.bpmnGraphGenerator = new BPMNGraphGenerator(elementBuilderFactory);
+    public Bpmn2UnMarshaller(final BPMNGraphObjectBuilderFactory elementBuilderFactory,
+                             final DefinitionManager definitionManager,
+                             final DefinitionService definitionService,
+                             final CommandManager<RuleManager, RuleViolation> commandManager,
+                             final RuleManager ruleManager,
+                             final GraphCommandFactory commandFactory) {
+        
+        this.bpmnGraphGenerator = new BPMNGraphGenerator(elementBuilderFactory, 
+                                                            definitionManager, 
+                                                            definitionService, 
+                                                            commandManager, 
+                                                            ruleManager, 
+                                                            commandFactory);
     }
 
     public Graph unmarshall(String content) throws IOException {

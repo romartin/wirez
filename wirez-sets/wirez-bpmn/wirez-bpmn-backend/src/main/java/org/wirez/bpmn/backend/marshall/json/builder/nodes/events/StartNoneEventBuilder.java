@@ -7,15 +7,19 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.service.definition.DefinitionService;
 
+import javax.enterprise.context.Dependent;
+
+@Dependent
 public class StartNoneEventBuilder extends AbstractNodeBuilder<StartNoneEvent, Node<View<StartNoneEvent>, Edge>> {
     
-    public StartNoneEventBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
-        super(wiresFactory);
+    
+    public StartNoneEventBuilder() {
+        super();
     }
 
     @Override
-    protected Node<View<StartNoneEvent>, Edge> buildNode(BuilderContext context, DefinitionService definitionService) {
-        return (Node<View<StartNoneEvent>, Edge>) definitionService.buildGraphElement(this.nodeId, StartNoneEvent.ID);
+    public String getDefinitionId() {
+        return StartNoneEvent.ID;
     }
 
     @Override

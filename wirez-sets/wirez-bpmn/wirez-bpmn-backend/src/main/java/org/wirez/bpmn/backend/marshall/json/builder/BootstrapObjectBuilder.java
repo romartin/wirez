@@ -8,14 +8,18 @@ import java.util.Map;
 
 public class BootstrapObjectBuilder<W extends Definition, T extends Element<View<W>>> extends AbstractObjectBuilder<W, T> {
 
-    public BootstrapObjectBuilder(BPMNGraphObjectBuilderFactory wiresFactory) {
-        super(wiresFactory);
+    BPMNGraphObjectBuilderFactory buildersFactory;
+            
+    public BootstrapObjectBuilder(BPMNGraphObjectBuilderFactory buildersFactory) {
+        super();
+        this.buildersFactory = buildersFactory;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public AbstractObjectBuilder<W, T> stencil(String stencilId) {
         assert nodeId != null;
-        AbstractObjectBuilder<W, T> builder = (AbstractObjectBuilder<W, T>) bpmnGraphFactory.builderFor(stencilId);
+        AbstractObjectBuilder<W, T> builder = (AbstractObjectBuilder<W, T>) buildersFactory.builderFor(stencilId);
         
         builder.nodeId(this.nodeId);
         
@@ -25,8 +29,8 @@ public class BootstrapObjectBuilder<W extends Definition, T extends Element<View
             }
         }
         
-        if (!outgoingNodeIds.isEmpty()) {
-            for (String outRefId : outgoingNodeIds) {
+        if (!outgoingResourceIds.isEmpty()) {
+            for (String outRefId : outgoingResourceIds) {
                 builder.out(outRefId);
             }
         }
@@ -49,6 +53,11 @@ public class BootstrapObjectBuilder<W extends Definition, T extends Element<View
 
     @Override
     public T build(BuilderContext context) {
+        return null;
+    }
+
+    @Override
+    public String getDefinitionId() {
         return null;
     }
 }

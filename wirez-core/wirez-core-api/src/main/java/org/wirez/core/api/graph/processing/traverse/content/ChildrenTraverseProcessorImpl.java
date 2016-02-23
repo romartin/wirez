@@ -28,4 +28,9 @@ public final class ChildrenTraverseProcessorImpl extends AbstractContentTraverse
         return edge.getContent() instanceof Child;
     }
 
+    @Override
+    protected boolean doEndEdgeTraversal(final Edge edge) {
+        return edge.getContent() instanceof Child;
+    }
+
 }

@@ -32,5 +32,9 @@ public class CanvasCommandViolationImpl implements CanvasCommandViolation {
     public Collection<RuleViolation> getModelViolation() {
         return ruleViolations;
     }
-    
+
+    @Override
+    public String toString() {
+        return getMessage();
+    }
 }

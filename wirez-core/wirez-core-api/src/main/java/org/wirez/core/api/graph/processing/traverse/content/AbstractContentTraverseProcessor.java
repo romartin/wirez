@@ -21,6 +21,8 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
 
     protected abstract boolean doStartEdgeTraversal(final Edge edge);
 
+    protected abstract boolean doEndEdgeTraversal(final Edge edge);
+
     protected abstract TreeWalkTraverseProcessor.TraversePolicy getPolicy();
     
     @Override
@@ -65,7 +67,9 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
 
                     @Override
                     public void endEdgeTraversal(final Edge edge) {
-                        callback.endEdgeTraversal((E) edge);
+                        if (doEndEdgeTraversal( edge )) {
+                            callback.endEdgeTraversal((E) edge);
+                        }
                     }
 
                     @Override

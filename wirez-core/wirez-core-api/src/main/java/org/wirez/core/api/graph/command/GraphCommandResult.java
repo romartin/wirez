@@ -31,5 +31,15 @@ public class GraphCommandResult extends AbstractCommandResult<RuleViolation> {
     public GraphCommandResult(Collection<RuleViolation> violations) {
         super(violations);
     }
-    
+
+    @Override
+    protected boolean isError(final RuleViolation violation) {
+        return RuleViolation.Type.ERROR.equals(violation.getViolationType());
+    }
+
+    @Override
+    protected String getMessage(final RuleViolation violation) {
+        return violation.getMessage();
+    }
+
 }

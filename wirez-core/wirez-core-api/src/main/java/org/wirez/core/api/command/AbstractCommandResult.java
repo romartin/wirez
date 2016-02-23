@@ -33,7 +33,35 @@ public abstract class AbstractCommandResult<V> implements CommandResult<V> {
         this.violations = violations;
         this.type = Type.INFO;
         this.message = "";
+        initViolations(violations);
     }
+
+    protected void initViolations(final Collection<V> violations) {
+        if ( null != violations && !violations.isEmpty() ) {
+            String message = null;
+            int c = 0;
+            for ( final V violation : violations ) {
+                if ( isError(violation) ) {
+                    message = getMessage(violation);
+                    c++;
+                }
+            }
+            
+            if ( c > 1 ) {
+                message = c + " violations found";
+            } 
+            
+            if ( c > 0 ) {
+                this.message = message;
+                this.type = Type.ERROR;
+            }
+        }
+
+    }
+    
+    protected abstract boolean isError(V violation);
+
+    protected abstract String getMessage(V violation);
     
     @Override
     public Type getType() {
@@ -62,6 +90,5 @@ public abstract class AbstractCommandResult<V> implements CommandResult<V> {
     public void setMessage(String message) {
         this.message = message;
     }
-    
     
 }

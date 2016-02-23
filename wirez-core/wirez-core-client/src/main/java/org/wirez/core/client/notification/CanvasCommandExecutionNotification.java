@@ -22,71 +22,16 @@ import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.notification.Notification;
 import org.wirez.core.api.util.UUID;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 
 import java.util.Iterator;
 
-public class CanvasCommandExecutionNotification implements Notification<Command> {
+public class CanvasCommandExecutionNotification extends AbstractCanvasCommandNotification {
 
-    final String notificationUUID;
-    final String canvasUUID;
-    final Command command;
-    final CommandResults results;
-    private Type type;
-
-    public CanvasCommandExecutionNotification(String canvasUUID, Command command, CommandResults results) {
-        this.notificationUUID = UUID.uuid();
-        this.canvasUUID = canvasUUID;
-        this.command = command;
-        this.results = results;
-        this.type = getTypeFromResults();
+    public CanvasCommandExecutionNotification(final String canvasUUID, 
+                                              final CommandResults<CanvasCommandViolation> results,
+                                              final boolean isAllowed) {
+        super(canvasUUID, results, isAllowed);
     }
-
-    @Override
-    public String getNotificationUUID() {
-        return notificationUUID;
-    }
-
-    @Override
-    public Type getType() {
-        return type;
-    }
-
-    @Override
-    public String getSource() {
-        return canvasUUID;
-    }
-
-    @Override
-    public Command getContext() {
-        return command;
-    }
-
-    private Type getTypeFromResults() {
-        boolean hasError = false;
-        boolean hasWarn = false;
-        final Iterator<CommandResult> iterator = results.results().iterator();
-        while (iterator.hasNext()) {
-            final CommandResult result = iterator.next();
-            if (CommandResult.Type.ERROR.equals(result.getType())) {
-                hasError = true;
-            } else if (CommandResult.Type.WARNING.equals(result.getType())) {
-                hasWarn = true;
-            }
-        }
-        
-        if (hasError) {
-            return Type.ERROR;
-        } else if (hasWarn) {
-            return Type.WARNING;
-        } else {
-            return Type.INFO;
-        }
-        
-    }
-
-    @Override
-    public String toString() {
-        return "CanvasCommandExecutionNotification [canvasUUID=" + canvasUUID + ", command=" +  command.toString() + "]";
-    }
-
+    
 }

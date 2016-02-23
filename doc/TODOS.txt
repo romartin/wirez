@@ -110,4 +110,4 @@ Backend
     - UX
         - Loading popups
         - Initially only show wizard screen - when creating/loading a diagram, show all other screens ( palette, props, etc )
-   
+   - I18n

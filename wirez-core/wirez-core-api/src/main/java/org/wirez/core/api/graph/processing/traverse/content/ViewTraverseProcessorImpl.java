@@ -27,4 +27,9 @@ public final class ViewTraverseProcessorImpl extends AbstractContentTraverseProc
         return edge.getContent() instanceof View ;
     }
 
+    @Override
+    protected boolean doEndEdgeTraversal(final Edge edge) {
+        return edge.getContent() instanceof View;
+    }
+
 }

@@ -25,15 +25,25 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.ProvidesKey;
+import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
+import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 import org.uberfire.client.mvp.UberView;
+import org.wirez.core.api.command.Command;
+import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.notification.Notification;
+import org.wirez.core.client.canvas.command.CanvasCommandResult;
+import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.notification.AbstractCanvasCommandNotification;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 @Dependent
@@ -58,6 +68,7 @@ public class Notifications implements IsWidget {
     
     View view;
     final ListDataProvider<Notification> logsProvider = new ListDataProvider<Notification>();
+    private boolean notifyErrors = true;
 
     @Inject
     public Notifications(final View view) {
@@ -70,23 +81,33 @@ public class Notifications implements IsWidget {
         buildViewColumns();
     }
 
+    public void setNotifyErrors(boolean notifyErrors) {
+        this.notifyErrors = notifyErrors;
+    }
+
     @Override
     public Widget asWidget() {
         return view.asWidget();
     }
     
     public void add(final Notification notification) {
-        // showNotificationErrorPopup(notification);
+        showNotificationPopup(notification);
         if ( null != notification ) {
             addLogEntry(notification);
             view.redraw();
         }
     }
     
-    private void showNotificationErrorPopup(final Notification notification) {
-        if ( null != notification 
-                && Notification.Type.ERROR.equals(notification.getType()) ) {
-            Window.alert("[COMMAND ERROR] - " + getNotificationText(notification));
+    private void showNotificationPopup(final Notification notification) {
+        if ( notifyErrors && Notification.Type.ERROR.equals(notification.getType()) ) {
+            NotifySettings settings = NotifySettings.newSettings();
+            settings.makeDefault();
+            settings.setType(NotifyType.DANGER);
+            settings.setDelay(2000);
+            settings.setTimer(100);
+            settings.setAllowDismiss(true);
+            final String text = getNotificationText(notification);
+            Notify.notify(text, settings);
         }
     }
     
@@ -209,8 +230,45 @@ public class Notifications implements IsWidget {
     }
     
     private String getNotificationText(final Notification object) {
+        
+        if ( null != object.getContext() && object.getContext() instanceof CommandResults ) {
+            return getMessage((CommandResults<CanvasCommandViolation>) object.getContext());
+        }
         return object.getContext() != null ? object.getContext().toString(): "-- No Message --";
     }
+
+    private String getMessage(final CommandResults<CanvasCommandViolation> results) {
+        boolean hasError = false;
+        boolean hasWarn = false;
+        final Iterator<CommandResult<CanvasCommandViolation>> iterator = results.results().iterator();
+        int c = 0;
+        String message = null;
+        while (iterator.hasNext()) {
+            final CommandResult<CanvasCommandViolation> result = iterator.next();
+            if (CommandResult.Type.ERROR.equals(result.getType())) {
+                hasError = true;
+                message = result.getMessage();
+                c++;
+            } else if (CommandResult.Type.WARNING.equals(result.getType())) {
+                hasWarn = true;
+                if ( !hasError ) {
+                    message = result.getMessage();
+                }
+            } else {
+                if ( !hasError && !hasWarn ) {
+                    message = result.getMessage();
+                }
+            }
+        }
+
+        if ( c > 1 ) {
+            message = "Found " + c + " violations";
+        }
+        
+        return message;
+
+    }
+
 
     void onNotification(@Observes final NotificationEvent logEvent) {
         add(logEvent.getNotification());

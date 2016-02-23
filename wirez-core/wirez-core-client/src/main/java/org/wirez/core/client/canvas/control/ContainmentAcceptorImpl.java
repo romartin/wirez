@@ -38,13 +38,14 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
         final Edge childEdge = getChildEdge(child);
         final boolean isSameParent = isSameParent(parent, childEdge);
         if ( isSameParent ) {
+            log(Level.FINE, "Is same parent. isAllow=true");
             isAllow = true;
         } else {
             final Command<WiresCanvasHandler, CanvasCommandViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
             isAllow = canvasHandler.allow( command );
+            log(Level.FINE, "isAllow=" + isAllow);
         }
         
-        log(Level.FINE, "isAllow=" + isAllow);
         return isAllow;
     }
 

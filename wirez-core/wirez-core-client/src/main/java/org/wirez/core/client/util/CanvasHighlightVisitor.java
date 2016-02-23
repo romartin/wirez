@@ -68,7 +68,7 @@ public class CanvasHighlightVisitor {
         if (index < shapes.size()) {
             final Shape shape = shapes.get(index);
 
-            if (shape instanceof HasCanvasState) {
+            if (shape.getShapeView() instanceof HasCanvasState) {
                 
                 final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
 
@@ -126,17 +126,35 @@ public class CanvasHighlightVisitor {
         new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AbstractFullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
 
             @Override
-            public void startViewEdgeTraversal(Edge<Object, Node> edge) {
+            public void startViewEdgeTraversal(final Edge<Object, Node> edge) {
                 super.startViewEdgeTraversal(edge);
                 addShape(edge.getUUID());
             }
 
             @Override
-            public void startNodeTraversal(Node<View, Edge> node) {
+            public void startChildEdgeTraversal(final Edge<Object, Node> edge) {
+                super.startChildEdgeTraversal(edge);
+                addShape(edge.getUUID());
+            }
+
+            @Override
+            public void startParentEdgeTraversal(final Edge<Object, Node> edge) {
+                super.startParentEdgeTraversal(edge);
+                addShape(edge.getUUID());
+            }
+
+            @Override
+            public void startEdgeTraversal(final Edge<Object, Node> edge) {
+                super.startEdgeTraversal(edge);
+                addShape(edge.getUUID());
+            }
+
+            @Override
+            public void startNodeTraversal(final Node<View, Edge> node) {
                 super.startNodeTraversal(node);
                 addShape(node.getUUID());
             }
-
+            
             @Override
             public void endGraphTraversal() {
                 command.execute();

@@ -23,7 +23,7 @@ import java.util.Stack;
 
 public abstract class AbstractCommandManager<C, V> implements CommandManager<C, V> {
 
-    Event<NotificationEvent> notificationEvent;
+    protected Event<NotificationEvent> notificationEvent;
     
     private final Stack<Stack<Command<C, V>>> commandHistory = new Stack<Stack<Command<C, V>>>();
 
@@ -37,16 +37,20 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
     public boolean allow(C context, Command<C, V>... commands) {
         PortablePreconditions.checkNotNull( "commands", commands );
 
+        final CommandResults<V> results = buildResults();
+        boolean isError = false;
         for (final Command<C, V> command : commands) {
             final CommandResult<V> result = doAllow( context, command );
-            final CommandResults<V> results = buildResults();
             results.add(result);
             if ( CommandResult.Type.ERROR.equals(result.getType()) ) {
-                return false;
+                isError = true;
+                break;
             }
         }
+
+        fireCommandAllowedNotification(context, results, !isError);
         
-        return  true;
+        return !isError;
     }
 
     protected CommandResult<V> doAllow(final C context, final Command<C, V> command) {
@@ -59,13 +63,21 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
         PortablePreconditions.checkNotNull( "commands",
                                             commands );
 
+        boolean isError = false;
         final CommandResults<V> results = buildResults();
         final Stack<Command<C, V>> commandStack = new Stack<>();
         for (final Command<C, V> command : commands) {
             final CommandResult<V> result = doExecute( context, command );
             commandStack.push(command);
             results.add(result);
+            if ( CommandResult.Type.ERROR.equals(result.getType()) ) {
+                isError = true;
+                break;
+            }
         }
+
+        fireCommandExecutionNotification(context, results, !isError);
+
         commandHistory.push(commandStack);
         return results;
     }
@@ -102,4 +114,14 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
         return results;
     }
 
+    protected void fireCommandAllowedNotification(final C context, 
+                                                  final CommandResults<V> results,                                                  
+                                                  final boolean isAllowed) {
+        
+    }
+
+    protected void fireCommandExecutionNotification(final C context, final CommandResults<V> results,
+                                                    final boolean isAllowed) {
+        
+    }
 }

@@ -16,12 +16,15 @@
 
 package org.wirez.core.client.canvas.command;
 
+import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.command.*;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
+import org.wirez.core.client.notification.CanvasCommandAllowedNotification;
+import org.wirez.core.client.notification.CanvasCommandExecutionNotification;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -88,8 +91,27 @@ public class WiresCanvasCommandManager extends AbstractCommandManager<WiresCanva
         final CanvasCommandViolation violation = new CanvasCommandViolationImpl((Collection<RuleViolation>) ruleViolation.getViolations());
         CanvasCommandResult result = new CanvasCommandResult();
         result.setType(ruleViolation.getType());
+        result.setMessage(ruleViolation.getMessage());
         result.addViolation(violation);
         return result;
+    }
+
+    protected void fireCommandAllowedNotification(final WiresCanvasHandler context,
+                                                  final CommandResults<CanvasCommandViolation> results, 
+                                                  final boolean isAllowed) {
+        final CanvasCommandAllowedNotification notification = new CanvasCommandAllowedNotification(getCanvasTitle(context), results, isAllowed);
+        notificationEvent.fire(new NotificationEvent(notification));
+    }
+
+    protected void fireCommandExecutionNotification(final WiresCanvasHandler context, 
+                                                    final CommandResults<CanvasCommandViolation> results,
+                                                    final boolean isAllowed) {
+        final CanvasCommandExecutionNotification notification = new CanvasCommandExecutionNotification(getCanvasTitle(context), results, isAllowed);
+        notificationEvent.fire(new NotificationEvent(notification));
+    }
+    
+    protected String getCanvasTitle(final WiresCanvasHandler context) {
+        return context.getDiagram().getSettings().getTitle();
     }
     
 }

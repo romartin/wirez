@@ -460,9 +460,11 @@ public class CanvasScreen {
                 if ( _x > -1 && _y > -1) {
                     final GraphBoundsIndexer boundsIndexer = new GraphBoundsIndexer(canvasHandler.getDiagram().getGraph());
                     parent = boundsIndexer.getNodeAt(_x, _y);
-                    final Double[] parentCoords = ElementUtils.getPosition(parent.getContent());
-                    x = _x - parentCoords[0];
-                    y = _y - parentCoords[1];
+                    if ( null != parent) {
+                        final Double[] parentCoords = ElementUtils.getPosition(parent.getContent());
+                        x = _x - parentCoords[0];
+                        y = _y - parentCoords[1];
+                    }
                 }
                 
                 org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> command = null;

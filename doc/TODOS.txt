@@ -7,8 +7,12 @@
     - custom graph factory for bpmn -> create a diagram by default
     - Delete from canvas - ( all children... )
         - Confirm delete alert
-    - lanes support
-      
+    - review move to tops on canvas shapes
+        - lanes
+            - connectors not visible inside lanes
+            - after visit -> not insider content visible
+        - diagram sometimes gets on top and nothing can be moved inside...
+        
 - Next
 *******
 

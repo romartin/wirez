@@ -20,6 +20,7 @@ import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -46,13 +47,13 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
 import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.util.WirezLogger;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.control.SelectionManager;
-import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.canvas.settings.CanvasSettingsFactory;
 import org.wirez.core.client.canvas.settings.WiresCanvasSettings;
@@ -63,7 +64,7 @@ import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.CanvasHighlightVisitor;
-import org.wirez.core.client.util.WirezLogger;
+import org.wirez.core.client.util.WirezClientLogger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -282,8 +283,26 @@ public class CanvasScreen {
                 .newTopLevelMenu("Visit graph")
                 .respondsWith(getVisitGraphCommand())
                 .endMenu()
+                .newTopLevelMenu("Save")
+                .respondsWith(getSaveCommand())
+                .endMenu()
                 .build();
     }
+
+    private Command getSaveCommand() {
+        return () -> clientDiagramServices.save(canvasHandler.getDiagram(), new ServiceCallback<Diagram>() {
+            @Override
+            public void onSuccess(final Diagram item) {
+                Window.alert("Diagram saved successfully");                
+            }
+
+            @Override
+            public void onError(final ClientRuntimeError error) {
+                showError(error);
+            }
+        });
+    }
+    
 
     private Command getMousePointerCoordsCommand() {
         return new Command() {

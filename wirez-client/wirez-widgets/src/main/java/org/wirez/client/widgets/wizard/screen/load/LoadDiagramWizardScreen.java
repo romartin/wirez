@@ -13,7 +13,7 @@ import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.WirezLogger;
+import org.wirez.core.client.util.WirezClientLogger;
 import org.wirez.core.client.util.ShapeUtils;
 
 import javax.annotation.PostConstruct;
@@ -96,7 +96,7 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
 
             @Override
             public void onError(final ClientRuntimeError error) {
-                log( Level.SEVERE, WirezLogger.getErrorMessage(error) );
+                log( Level.SEVERE, WirezClientLogger.getErrorMessage(error) );
             }
         });
     }

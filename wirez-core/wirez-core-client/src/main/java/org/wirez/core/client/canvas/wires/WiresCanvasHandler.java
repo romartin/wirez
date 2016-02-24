@@ -47,7 +47,7 @@ import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.mutation.HasGraphElementMutation;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.WirezLogger;
+import org.wirez.core.client.util.WirezClientLogger;
 import org.wirez.core.client.view.ShapeView;
 
 import javax.enterprise.context.Dependent;
@@ -112,7 +112,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
 
             @Override
             public void onError(final ClientRuntimeError error) {
-                log(Level.SEVERE, WirezLogger.getErrorMessage(error));
+                log(Level.SEVERE, WirezClientLogger.getErrorMessage(error));
                 errorCallback.execute();
             }
         });

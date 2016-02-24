@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.util;
+package org.wirez.core.api.util;
 
-import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
@@ -26,7 +27,6 @@ import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseC
 import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.client.service.ClientRuntimeError;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -39,20 +39,6 @@ public class WirezLogger {
 
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.util.WirezLogger");
 
-    public static String getErrorMessage(final ClientRuntimeError error) {
-        final String message = error.getMessage();
-        final Throwable t1 = error.getThrowable();
-        final Throwable t2 = t1 != null ? t1.getCause() : null;
-
-        if ( null != t2 ) {
-            return t2.getMessage();
-        } else if ( null != t1 ) {
-            return t1.getMessage();
-        } 
-        
-        return message;
-    }
-    
     public static void logCommandResults(final Iterable<CommandResult> results) {
         if (results == null) {
             log("Results is null");
@@ -200,15 +186,11 @@ public class WirezLogger {
     }
 
     private static void log(final String message) {
-        if ( LogConfiguration.loggingIsEnabled() ) {
-            LOGGER.log(Level.INFO, message);
-        }
+        LOGGER.log(Level.INFO, message);
     }
 
     private static void error(final String message) {
-        if ( LogConfiguration.loggingIsEnabled() ) {
-            LOGGER.log(Level.SEVERE, message);
-        }
+        LOGGER.log(Level.SEVERE, message);
     }
 
 }

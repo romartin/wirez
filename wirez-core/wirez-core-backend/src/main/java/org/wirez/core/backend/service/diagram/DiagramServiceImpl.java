@@ -30,6 +30,7 @@ import org.wirez.core.api.service.diagram.*;
 import org.wirez.core.api.service.event.DiagramCreatedEvent;
 import org.wirez.core.api.service.event.DiagramLoadedEvent;
 import org.wirez.core.api.util.UUID;
+import org.wirez.core.api.util.WirezLogger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -188,17 +189,28 @@ public class DiagramServiceImpl implements DiagramService {
 
     }
 
-    // TODO
     @Override
     public ServiceResponse save(DiagramServiceSaveRequest request) {
 
         final Diagram diagram = request.getDiagram();
 
         // Update registry, if necessary.
-        if (diagramRegistry.contains(diagram)) {
+        // Disabled while coding
+        /*if (diagramRegistry.contains(diagram)) {
             diagramRegistry.update(diagram);
         } else {
             diagramRegistry.add(diagram);
+        }*/
+        
+        if ( null == diagram ) {
+            LOG.error("Diagram is null!");
+        } else {
+            Graph graph = diagram.getGraph();
+            if ( null == graph ) {
+                LOG.error("Graph is null!");
+            } else {
+                WirezLogger.log(graph);
+            }
         }
 
         return new ServiceResponseImpl(ResponseStatus.SUCCESS);

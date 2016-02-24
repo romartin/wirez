@@ -48,7 +48,7 @@ import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.WirezLogger;
+import org.wirez.core.client.util.WirezClientLogger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -201,7 +201,7 @@ public class PropertiesEditor implements IsWidget {
     }
 
     private void showError(ClientRuntimeError error) {
-        log(Level.SEVERE, WirezLogger.getErrorMessage(error));
+        log(Level.SEVERE, WirezClientLogger.getErrorMessage(error));
     }
 
     private PropertyEditorCategory buildPropertiesCategory(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element,

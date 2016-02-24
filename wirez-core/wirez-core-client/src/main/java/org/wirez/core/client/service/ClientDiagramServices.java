@@ -32,12 +32,9 @@ public class ClientDiagramServices {
             public void callback(final DiagramsServiceResponse response) {
                 callback.onSuccess(response.getDiagramRepresentations());
             }
-        }, new ErrorCallback<Message>() {
-            @Override
-            public boolean error(final Message message, final Throwable throwable) {
+        }, (message, throwable) -> {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
-            }
         }).search(new DiagramServiceSearchRequestImpl( query ));
 
     }
@@ -51,12 +48,9 @@ public class ClientDiagramServices {
             public void callback(final DiagramServiceResponse response) {
                 callback.onSuccess(response.getDiagram());
             }
-        }, new ErrorCallback<Message>() {
-            @Override
-            public boolean error(final Message message, final Throwable throwable) {
+        }, (message, throwable) -> {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
-            }
         }).create(new DiagramServiceCreateRequestImpl(defSetId, shapeSetId, title));
         
     }
@@ -69,12 +63,9 @@ public class ClientDiagramServices {
             public void callback(final DiagramServiceResponse response) {
                 callback.onSuccess(response.getDiagram());
             }
-        }, new ErrorCallback<Message>() {
-            @Override
-            public boolean error(final Message message, final Throwable throwable) {
+        }, (message, throwable) -> {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
-            }
         }).load(new DiagramServiceLoadRequestImpl(path));
 
     }
@@ -82,17 +73,10 @@ public class ClientDiagramServices {
     public void save(final Diagram diagram,
                     final ServiceCallback<Diagram> callback) {
 
-        diagramService.call(new RemoteCallback<Void>() {
-            @Override
-            public void callback(final Void aVoid) {
-                callback.onSuccess(diagram);
-            }
-        }, new ErrorCallback<Message>() {
-            @Override
-            public boolean error(final Message message, final Throwable throwable) {
-                callback.onError(new ClientRuntimeError(throwable));
-                return false;
-            }
+        diagramService.call(aVoid -> callback.onSuccess(diagram), 
+                (message, throwable) -> {
+                    callback.onError(new ClientRuntimeError(throwable));
+                    return false;
         }).save(new DiagramServiceSaveRequestImpl(diagram));
 
     }
@@ -105,12 +89,9 @@ public class ClientDiagramServices {
             public void callback(final Diagram diagram) {
                 callback.onSuccess(diagram);
             }
-        }, new ErrorCallback<Message>() {
-            @Override
-            public boolean error(final Message message, final Throwable throwable) {
+        }, (message, throwable) -> {
                 callback.onError(new ClientRuntimeError(throwable));
                 return false;
-            }
         }).delete(new DiagramServiceDeleteRequestImpl(uuid));
 
     }

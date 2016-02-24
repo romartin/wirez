@@ -26,8 +26,12 @@ import java.util.*;
 @ApplicationScoped
 public class DefinitionServiceImpl implements DefinitionService {
 
-    @Inject
     DefinitionManager definitionManager;
+    
+    @Inject
+    public DefinitionServiceImpl(DefinitionManager definitionManager) {
+        this.definitionManager = definitionManager;
+    }
 
     @Override
     public DefinitionSetServiceResponse getDefinitionSet(final String id) {

@@ -19,12 +19,18 @@ import java.util.Set;
 @ApplicationScoped
 public class BPMNDefinitionFactory implements DefinitionFactory<BPMNDefinition> {
 
-    @Inject
     BPMNPropertyFactory bpmnPropertyFactory;
+    BPMNPropertySetFactory bpmnPropertySetFactory;
+
+    protected BPMNDefinitionFactory() {
+    }
 
     @Inject
-    BPMNPropertySetFactory bpmnPropertySetFactory;
-    
+    public BPMNDefinitionFactory(BPMNPropertyFactory bpmnPropertyFactory, BPMNPropertySetFactory bpmnPropertySetFactory) {
+        this.bpmnPropertyFactory = bpmnPropertyFactory;
+        this.bpmnPropertySetFactory = bpmnPropertySetFactory;
+    }
+
     private static final Set<String>  SUPPORTED_DEF_IDS = new LinkedHashSet<String>() {{
         add(BPMNGraph.ID);
         add(BPMNDiagram.ID);

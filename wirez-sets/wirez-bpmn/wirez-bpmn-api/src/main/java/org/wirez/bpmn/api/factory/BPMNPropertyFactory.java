@@ -34,7 +34,10 @@ public class BPMNPropertyFactory implements PropertyFactory<BPMNProperty> {
         add(Width.ID);
         add(Radius.ID);
     }};
-    
+
+    public BPMNPropertyFactory() {
+    }
+
     @Override
     public boolean accepts(final String id) {
         return SUPPORTED_PROP_IDS.contains(id);

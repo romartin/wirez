@@ -21,9 +21,16 @@ import java.util.Map;
 @ApplicationScoped
 public class BPMNGraphObjectBuilderFactory {
 
-    @Inject
     Instance<GraphObjectBuilder<? ,?>> graphObjectBuilders;
-    
+
+    @Inject
+    public BPMNGraphObjectBuilderFactory(Instance<GraphObjectBuilder<?, ?>> graphObjectBuilders) {
+        this.graphObjectBuilders = graphObjectBuilders;
+    }
+
+    public BPMNGraphObjectBuilderFactory() {
+    }
+
     public GraphObjectBuilder<?, ?> bootstrapBuilder() {
         return new BootstrapObjectBuilder(this);
     }

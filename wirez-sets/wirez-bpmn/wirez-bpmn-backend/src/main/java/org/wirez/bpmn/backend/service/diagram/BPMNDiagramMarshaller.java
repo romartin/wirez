@@ -45,26 +45,30 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
     public static final String TEST_PATH = "org/wirez/bpmn/backend/examples/wirez-bpmn-test.bpmn2";
     private static final Logger LOG = LoggerFactory.getLogger(BPMNDiagramMarshaller.class);
 
-    @Inject
     BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
-
-    @Inject
     DefinitionManager definitionManager;
-
-    @Inject
     DefinitionService definitionService;
-            
-    @Inject
     GraphCommandManager graphCommandManager;
-    
-    @Inject
     EmptyRuleManager ruleManager;
-    
-    @Inject
     GraphCommandFactory commandFactory;
     
     private ResourceSet resourceSet;
-    
+
+    @Inject
+    public BPMNDiagramMarshaller(BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory, 
+                                 DefinitionManager definitionManager, 
+                                 DefinitionService definitionService, 
+                                 GraphCommandManager graphCommandManager, 
+                                 EmptyRuleManager ruleManager, 
+                                 GraphCommandFactory commandFactory) {
+        this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
+        this.definitionManager = definitionManager;
+        this.definitionService = definitionService;
+        this.graphCommandManager = graphCommandManager;
+        this.ruleManager = ruleManager;
+        this.commandFactory = commandFactory;
+    }
+
     private void initResourceSet() {
 
         resourceSet = new ResourceSetImpl();
@@ -101,6 +105,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
                     graphCommandManager, 
                     ruleManager,
                     commandFactory);
+            
             parser.setProfile(new DefaultProfileImpl());
             final Graph graph = parser.unmarshall(definitions, null);
             final BPMNGraph graphDefinition = (BPMNGraph) ( (View) graph.getContent() ).getDefinition();

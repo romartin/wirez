@@ -28,23 +28,42 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedDefinitionAdapter.class);
 
-    @Inject
     Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances;
-
-    @Inject
     Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances;
-
-    @Inject
     GraphFactory<? extends Definition> graphFactory;
-
-    @Inject
     ViewNodeFactory<? extends Definition> nodeFactory;
-
-    @Inject
     ConnectionEdgeFactory<? extends Definition> edgeFactory;
 
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
     protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();
+
+    protected AnnotatedDefinitionAdapter() {
+    }
+
+    @Inject
+    public AnnotatedDefinitionAdapter(Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances, 
+                                      Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances, 
+                                      GraphFactory<? extends Definition> graphFactory, 
+                                      ViewNodeFactory<? extends Definition> nodeFactory, 
+                                      ConnectionEdgeFactory<? extends Definition> edgeFactory) {
+        this.propertySetAdapterInstances = propertySetAdapterInstances;
+        this.propertyAdapterInstances = propertyAdapterInstances;
+        this.graphFactory = graphFactory;
+        this.nodeFactory = nodeFactory;
+        this.edgeFactory = edgeFactory;
+    }
+
+    public AnnotatedDefinitionAdapter(List<PropertySetAdapter> propertySetAdapters,
+                                      List<PropertyAdapter> propertyAdapters,
+                                      GraphFactory<? extends Definition> graphFactory,
+                                      ViewNodeFactory<? extends Definition> nodeFactory,
+                                      ConnectionEdgeFactory<? extends Definition> edgeFactory) {
+        this.propertySetAdapters.addAll(propertySetAdapters);
+        this.propertyAdapters.addAll(propertyAdapters);
+        this.graphFactory = graphFactory;
+        this.nodeFactory = nodeFactory;
+        this.edgeFactory = edgeFactory;
+    }
 
     @PostConstruct
     public void init() {

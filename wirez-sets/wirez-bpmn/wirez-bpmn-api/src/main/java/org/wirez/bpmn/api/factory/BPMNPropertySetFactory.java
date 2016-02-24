@@ -14,9 +14,16 @@ import java.util.Set;
 @ApplicationScoped
 public class BPMNPropertySetFactory implements PropertySetFactory<BPMNPropertySet> {
 
-    @Inject
     BPMNPropertyFactory bpmnPropertyFactory;
-    
+
+    protected BPMNPropertySetFactory() {
+    }
+
+    @Inject
+    public BPMNPropertySetFactory(BPMNPropertyFactory bpmnPropertyFactory) {
+        this.bpmnPropertyFactory = bpmnPropertyFactory;
+    }
+
     private static final Set<String> SUPPORTED_PROP_SET_IDS = new LinkedHashSet<String>() {{
         add(BPMNGeneral.ID);
         add(DiagramSet.ID);

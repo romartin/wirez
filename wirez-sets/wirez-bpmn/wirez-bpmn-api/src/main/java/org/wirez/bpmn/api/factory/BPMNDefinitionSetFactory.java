@@ -9,9 +9,16 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class BPMNDefinitionSetFactory implements DefinitionSetFactory<BPMNDefinitionSet> {
 
-    @Inject
     BPMNDefinitionFactory bpmnDefinitionFactory;
-    
+
+    protected BPMNDefinitionSetFactory() {
+    }
+
+    @Inject
+    public BPMNDefinitionSetFactory(BPMNDefinitionFactory bpmnDefinitionFactory) {
+        this.bpmnDefinitionFactory = bpmnDefinitionFactory;
+    }
+
     @Override
     public boolean accepts(final String id) {
         return id.equals(BPMNDefinitionSet.ID);

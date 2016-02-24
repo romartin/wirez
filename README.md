@@ -13,7 +13,7 @@ While the development is in progress, you have to build a custom lienzo-core art
     git checkout -b stunner remotes/origin/stunner
     mvn clean install -DskipTests
     
-This build process generates a custom lienzo-core artifact with suffix `-stunner`, which is only used by this tool. 
+This build process generates a custom lienzo-core artifact with suffix `-stunner`, which is only used by this tool, so you will not hit with Maven conflicts if using lienzo in other areas. 
 Once done, you can build Stunner as:
 
     mvn clean install -DskipTests

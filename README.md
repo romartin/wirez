@@ -18,5 +18,9 @@ Once done, you can build Stunner as:
 
     mvn clean install -DskipTests
     
-
+Requirements
+------------
+* Java8+          
+* Maven 3.2.5+       
+* Git 1.8+        
 

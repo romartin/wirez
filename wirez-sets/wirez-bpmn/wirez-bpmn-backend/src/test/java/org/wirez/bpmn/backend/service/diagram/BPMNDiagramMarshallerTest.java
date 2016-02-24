@@ -1,5 +1,6 @@
 package org.wirez.bpmn.backend.service.diagram;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,8 @@ import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.factory.ModelFactory;
+import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactoryImpl;
 import org.wirez.core.api.graph.factory.ConnectionEdgeFactory;
@@ -47,9 +50,12 @@ import org.wirez.core.backend.graph.factory.ViewNodeFactoryImpl;
 import org.wirez.core.backend.service.definition.DefinitionServiceImpl;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -151,11 +157,19 @@ public class BPMNDiagramMarshallerTest {
         
     }
     
+    // TODO: Add more assertions
     @Test
     public void testEvaluation() {
         InputStream is = loadStream(BPMN_EVALUATION);
         Diagram<Settings> diagram = tested.unmarhsall(is);
-        System.out.println(diagram);
+        
+        Graph graph = diagram.getGraph();
+        assertNotNull(graph);
+        Iterator<Node> nodesIterable = graph.nodes().iterator();
+        
+        List<Node> nodes = new ArrayList<>();
+        nodesIterable.forEachRemaining(nodes::add);
+        assertEquals(8, nodes.size());
     }
     
     protected InputStream loadStream(String path) {

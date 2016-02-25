@@ -162,8 +162,7 @@ public class BPMNDiagramMarshallerTest {
     // TODO: Add more assertions
     // @Test
     public void testUmarshallEvaluation() {
-        InputStream is = loadStream(BPMN_EVALUATION);
-        Diagram<Settings> diagram = tested.unmarhsall(is);
+        Diagram<Settings> diagram = unmarshall(BPMN_EVALUATION);
         
         Graph graph = diagram.getGraph();
         assertNotNull(graph);
@@ -173,10 +172,16 @@ public class BPMNDiagramMarshallerTest {
         nodesIterable.forEachRemaining(nodes::add);
         assertEquals(8, nodes.size());
     }
+    
+    private Diagram<Settings> unmarshall(String fileName) {
+        InputStream is = loadStream(fileName);
+        return tested.unmarhsall(is);
+    }
 
     @Test
     public void testMarshallEvaluation() {
-        Diagram<Settings> diagram = new DiagramImpl("uuid", null, new SettingsImpl("title", "bpmnDefSet", "bpmnShapeSet"));
+        //Diagram<Settings> diagram = new DiagramImpl("uuid", null, new SettingsImpl("title", "bpmnDefSet", "bpmnShapeSet"));
+        Diagram<Settings> diagram = unmarshall(BPMN_EVALUATION);
         String result = tested.marshall(diagram);
         System.out.println(result);
         

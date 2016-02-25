@@ -6,6 +6,15 @@ import org.codehaus.jackson.io.IOContext;
 import org.codehaus.jackson.util.BufferRecycler;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.Settings;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
+import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessor;
+import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
+import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -39,6 +48,67 @@ public class BPMN2JsonParser extends JsonParserBase {
         Reader reader = new StringReader("");
         return new IOContext(new BufferRecycler(), reader, true);
     }
+    
+
+    
+    /*
+        ****************************************************************
+        *               Custom wirez logic
+        ****************************************************************
+     */
+    
+    
+    /*
+        JSON structure:
+            {
+                node ( diagram ) {
+                    children: {
+                        - nodes
+                        - edges
+                    }
+                }
+                etc
+            }
+            
+        So:
+            1.- traverse child nodes
+            2.- traverse view edges
+            
+     */
+    
+    @SuppressWarnings("unchecked")
+    private void traverseChildren() {
+
+        Graph graph = diagram.getGraph();
+
+        new ChildrenTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
+                .traverse(graph, new AbstractContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>() {
+
+                    // TODO
+
+                });
+
+        // TODO: Traverse over edge view contents
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+    /*
+        ****************************************************************
+        *               JsonParser interface methods
+        ****************************************************************
+     */
     
     @Override
     protected boolean loadMore() throws IOException {

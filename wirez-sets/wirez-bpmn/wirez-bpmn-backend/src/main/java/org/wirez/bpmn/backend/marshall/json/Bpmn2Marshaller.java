@@ -32,9 +32,8 @@ public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
         res.save(outputStream, new HashMap<Object, Object>());
         return StringEscapeUtils.unescapeHtml4(outputStream.toString("UTF-8"));
     }
-    
+
     private BPMN2JsonParser createParser(Diagram<Settings> diagram) {
         return new BPMN2JsonParser(diagram);
     }
-
 }

@@ -82,11 +82,6 @@ public class Bpmn2JsonMarshaller {
 	    this.profile = profile;
 	}
 
-    /**
-     * NOTE: 
-     * This method has been added for wires support. Wires bpmn parser provides a custom JsonGenerator that 
-     * is used instead of the one used in jbpm-designer-backend.
-     */
     public String marshall(Definitions def, String preProcessingData) throws IOException {
         DroolsPackageImpl.init();
         BpsimPackageImpl.init();
@@ -96,7 +91,12 @@ public class Bpmn2JsonMarshaller {
         marshall(generator, def, preProcessingData);
         return baos.toString("UTF-8");
     }
-    
+
+    /**
+     * NOTE: 
+     * This method has been added for Stunner support. Stunner bpmn parser provides a custom JsonGenerator that 
+     * is used instead of the one used in jbpm-designer-backend.
+     */
     public void marshall(JsonGenerator generator, Definitions def, String preProcessingData) throws IOException {
         if(def.getRelationships() != null && def.getRelationships().size() > 0) {
         	// current support for single relationship

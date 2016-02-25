@@ -136,6 +136,10 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     /**
+     * 
+     * NOTE: This method has been set protected for Stunner support. Stunner bpmn implementation provides a custom JsonParser that 
+     * is used instead of the one used in jbpm-designer-backend.
+     * 
      * Start unmarshalling using the parser.
      * @param parser
      * @param preProcessingData
@@ -143,7 +147,7 @@ public class Bpmn2JsonUnmarshaller {
      * @throws JsonParseException
      * @throws IOException
      */
-    private Bpmn2Resource unmarshall(JsonParser parser, String preProcessingData) throws JsonParseException, IOException {
+    protected Bpmn2Resource unmarshall(JsonParser parser, String preProcessingData) throws JsonParseException, IOException {
         try {
             parser.nextToken(); // open the object
             ResourceSet rSet = new ResourceSetImpl();

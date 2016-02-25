@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
+import org.wirez.bpmn.backend.marshall.json.Bpmn2Marshaller;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.core.api.DefinitionManager;
@@ -85,16 +86,30 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
         
     }
 
-    // TODO
     @Override
     public String marshall(Diagram<Settings> diagram) {
-        return null;
+
+        LOG.info("Starting BPMN diagram marshalling...");
+
+        Bpmn2Marshaller marshaller = new Bpmn2Marshaller(bpmnGraphBuilderFactory);
+
+        String result = null;
+        try {
+            result = marshaller.marshall(diagram);
+            LOG.debug("Marhall result=" + result);
+        } catch (IOException e) {
+            LOG.error("Error marshalling bpmn file.", e);
+        }
+
+        LOG.info("BPMN diagram marshalling finished successfully.");
+        
+        return result;
     }
     
     @Override
     public Diagram<Settings> unmarhsall(InputStream inputStream) {
 
-        LOG.info("Starting BPMN process loading...");
+        LOG.info("Starting BPMN diagram loading...");
         
         try {
             
@@ -118,7 +133,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             final Diagram<Settings> diagram = new DiagramImpl( UUID.uuid(), graph, 
                     new SettingsImpl(title, BPMNDefinitionSet.ID, "BPMNShapeSet"));
 
-            LOG.info("BPMN process loading finished successfully.");
+            LOG.info("BPMN diagram loading finished successfully.");
 
             return diagram;
             

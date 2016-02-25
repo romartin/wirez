@@ -162,6 +162,8 @@ public class DiagramServiceImpl implements DiagramService {
         final Definition graphDefinition = definitionSetServiceResponse.getGraphElement();
         final Graph graph = (Graph) definitionService.buildGraphElement(UUID.uuid(), graphDefinition.getId());
         final Settings diagramSettings = new SettingsImpl(title, defSetId, shapeSetId);
+        // TODO: Externalize
+        diagramSettings.setPath(UUID.uuid() + ".bpmn");
         final Diagram diagram = new DiagramImpl( UUID.uuid(), graph, diagramSettings );
 
         diagramRegistry.add(diagram);
@@ -203,17 +205,35 @@ public class DiagramServiceImpl implements DiagramService {
         }*/
         
         if ( null == diagram ) {
-            LOG.error("Diagram is null!");
+            doLog("Diagram is null!");
         } else {
             Graph graph = diagram.getGraph();
             if ( null == graph ) {
-                LOG.error("Graph is null!");
+                doLog("Graph is null!");
             } else {
+
                 WirezLogger.log(graph);
+
+                String path = diagram.getSettings().getPath();
+                DefinitionSetServices services = getServices( path );
+                
+                if ( null == services ) {
+                    throw new RuntimeException("No service for diagram [" + path + "]");
+                } else {
+                    DiagramMarshaller marshaller = services.getDiagramMarshaller();
+                    String result = marshaller.marshall( diagram );
+                    doLog("Diagram [" + path + "] marhsalled succesfully.");
+                    doLog("Result" + result);
+                }
+                
             }
         }
 
         return new ServiceResponseImpl(ResponseStatus.SUCCESS);
+    }
+    
+    private void doLog(String m) {
+        System.out.println(m);
     }
 
     // TODO

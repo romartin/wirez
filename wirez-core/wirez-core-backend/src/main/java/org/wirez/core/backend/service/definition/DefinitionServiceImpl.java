@@ -27,7 +27,10 @@ import java.util.*;
 public class DefinitionServiceImpl implements DefinitionService {
 
     DefinitionManager definitionManager;
-    
+
+    protected DefinitionServiceImpl() {
+    }
+
     @Inject
     public DefinitionServiceImpl(DefinitionManager definitionManager) {
         this.definitionManager = definitionManager;

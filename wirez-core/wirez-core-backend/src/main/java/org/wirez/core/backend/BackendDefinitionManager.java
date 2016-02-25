@@ -44,7 +44,10 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
     Instance<DefinitionAdapter<? extends Definition>> definitionAdapterInstances;
     Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances;
     Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances;
-    
+
+    protected BackendDefinitionManager() {
+    }
+
     @Inject
     public BackendDefinitionManager(DiagramRegistry<? extends Diagram> diagramRegistry,
                                     Instance<ModelFactory<?>> modelBuilderInstances,

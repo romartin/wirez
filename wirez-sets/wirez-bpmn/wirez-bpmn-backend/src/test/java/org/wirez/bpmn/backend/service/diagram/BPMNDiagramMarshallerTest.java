@@ -29,7 +29,9 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.adapter.PropertyAdapter;
 import org.wirez.core.api.adapter.PropertySetAdapter;
 import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
+import org.wirez.core.api.diagram.SettingsImpl;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.graph.Graph;
@@ -158,8 +160,8 @@ public class BPMNDiagramMarshallerTest {
     }
     
     // TODO: Add more assertions
-    @Test
-    public void testEvaluation() {
+    // @Test
+    public void testUmarshallEvaluation() {
         InputStream is = loadStream(BPMN_EVALUATION);
         Diagram<Settings> diagram = tested.unmarhsall(is);
         
@@ -170,6 +172,14 @@ public class BPMNDiagramMarshallerTest {
         List<Node> nodes = new ArrayList<>();
         nodesIterable.forEachRemaining(nodes::add);
         assertEquals(8, nodes.size());
+    }
+
+    @Test
+    public void testMarshallEvaluation() {
+        Diagram<Settings> diagram = new DiagramImpl("uuid", null, new SettingsImpl("title", "bpmnDefSet", "bpmnShapeSet"));
+        String result = tested.marshall(diagram);
+        System.out.println(result);
+        
     }
     
     protected InputStream loadStream(String path) {

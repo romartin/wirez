@@ -34,10 +34,7 @@ public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
     }
     
     private BPMN2JsonParser createParser(Diagram<Settings> diagram) {
-        
-        // TODO
-        
-        return new BPMN2JsonParser();
+        return new BPMN2JsonParser(diagram);
     }
 
 }

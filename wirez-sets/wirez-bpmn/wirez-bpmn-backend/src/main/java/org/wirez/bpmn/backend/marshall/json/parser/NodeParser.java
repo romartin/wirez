@@ -13,14 +13,13 @@ import java.util.List;
 public class NodeParser extends ElementParser<Node<View, Edge>> {
     
     private final List<Parser> children = new LinkedList<>();
-    private final ArrayParser childrenParser = new ArrayParser( "childShapes" );
     
     public NodeParser(String name, Node<View, Edge> element) {
         super(name, element);
     }
     
     public NodeParser addChild( Parser parser ) {
-        childrenParser.addParser( parser );
+        children.add( parser );
         return this;
     }
 
@@ -29,6 +28,14 @@ public class NodeParser extends ElementParser<Node<View, Edge>> {
         super.initialize(context);
 
         // Children.
+
+        ArrayParser childrenParser = new ArrayParser( "childShapes" );
+        for (Parser childParser : children) {
+            if ( childParser instanceof ContextualParser ) {
+                ( (ContextualParser) childParser).initialize(context);
+                childrenParser.addParser( childParser );
+            }
+        }
         super.addParser( childrenParser );
         
         // Outgoing.

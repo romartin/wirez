@@ -36,13 +36,21 @@ public abstract class CompositeParser<T> extends AbstractParser {
     @Override
     protected JsonToken next() throws IOException, JsonParseException {
         
-        if (  this.tokenCount == 0 ) {
+        if (  this.tokenCount == 0 && hasName() ) {
 
-            setCurrentParser( this.parsers.remove() );
-            return getStartToken();
+            return JsonToken.FIELD_NAME;
             
         } else {
 
+            if ( ( tokenCount == 1 && hasName() ) || ( tokenCount == 0 && !hasName() ) ) {
+                
+                if ( !parsers.isEmpty() ) {
+                    setCurrentParser( this.parsers.remove() );
+                }
+
+                return getStartToken();
+            }
+            
             if ( null != current && !this.current.isConsumed() ) {
 
                 return this.current.nextToken();
@@ -71,7 +79,7 @@ public abstract class CompositeParser<T> extends AbstractParser {
     @Override
     public String getCurrentName() throws IOException, JsonParseException {
         
-        if ( this.tokenCount == 0 && name != null && name.trim().length() > 0 ) {
+        if ( this.tokenCount == 1 && hasName() ) {
             return name;
         } else  {
             return this.current.getCurrentName();
@@ -90,12 +98,11 @@ public abstract class CompositeParser<T> extends AbstractParser {
     }
 
     @Override
-    public JsonParser skipChildren() throws IOException, JsonParseException {
-        return this.current.skipChildren();
-    }
-
-    @Override
     public boolean isConsumed() {
-        return this.tokenCount > 0 && this.current == null;
+        return this.tokenCount > 2 && this.current == null;
+    }
+    
+    private boolean hasName() {
+        return name != null && name.trim().length() > 0;
     }
 }

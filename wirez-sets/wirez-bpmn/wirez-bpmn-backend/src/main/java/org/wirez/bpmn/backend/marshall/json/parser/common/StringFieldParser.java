@@ -18,7 +18,7 @@ public class StringFieldParser extends AbstractParser {
 
     @Override
     protected JsonToken next() throws IOException, JsonParseException {
-        return JsonToken.VALUE_STRING;
+        return tokenCount == 0 ? JsonToken.FIELD_NAME : JsonToken.VALUE_STRING;
     }
 
     @Override
@@ -37,13 +37,8 @@ public class StringFieldParser extends AbstractParser {
     }
 
     @Override
-    public JsonParser skipChildren() throws IOException, JsonParseException {
-        throw new RuntimeException("Should not be called!");
-    }
-
-    @Override
     public boolean isConsumed() {
-        return tokenCount == 1;
+        return tokenCount == 2;
     }
 
 }

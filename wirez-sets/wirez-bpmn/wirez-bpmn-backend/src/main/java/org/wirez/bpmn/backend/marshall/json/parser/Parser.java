@@ -16,8 +16,6 @@ public interface Parser {
 
     int getIntValue() throws IOException, JsonParseException;
 
-    JsonParser skipChildren() throws IOException, JsonParseException;
-
     boolean isConsumed();
     
 }

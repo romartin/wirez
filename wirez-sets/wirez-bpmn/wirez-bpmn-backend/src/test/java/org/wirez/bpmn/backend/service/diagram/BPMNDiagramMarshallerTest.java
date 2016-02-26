@@ -1,5 +1,6 @@
 package org.wirez.bpmn.backend.service.diagram;
 
+import org.eclipse.bpmn2.util.Bpmn2Resource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,9 @@ import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
 import org.wirez.bpmn.api.factory.BPMNDefinitionSetFactory;
 import org.wirez.bpmn.api.factory.BPMNPropertyFactory;
 import org.wirez.bpmn.api.factory.BPMNPropertySetFactory;
+import org.wirez.bpmn.backend.legacy.Bpmn2JsonMarshaller;
+import org.wirez.bpmn.backend.legacy.Bpmn2JsonUnmarshaller;
+import org.wirez.bpmn.backend.marshall.json.Bpmn2Marshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.BootstrapObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
@@ -25,6 +29,7 @@ import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.EndNoneEventBui
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.EndTerminateEventBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.swimlanes.LaneBuilder;
+import org.wirez.bpmn.backend.marshall.json.parser.EvaluationJsonParserTestString;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.adapter.PropertyAdapter;
 import org.wirez.core.api.adapter.PropertySetAdapter;
@@ -51,6 +56,7 @@ import org.wirez.core.backend.graph.factory.GraphFactoryImpl;
 import org.wirez.core.backend.graph.factory.ViewNodeFactoryImpl;
 import org.wirez.core.backend.service.definition.DefinitionServiceImpl;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -185,6 +191,16 @@ public class BPMNDiagramMarshallerTest {
         String result = tested.marshall(diagram);
         System.out.println(result);
         
+    }
+
+    @Test
+    public void testMarshallOld() throws IOException {
+        //Diagram<Settings> diagram = new DiagramImpl("uuid", null, new SettingsImpl("title", "bpmnDefSet", "bpmnShapeSet"));
+        Diagram<Settings> diagram = unmarshall(BPMN_EVALUATION);
+        Bpmn2Marshaller marshaller = new Bpmn2Marshaller( definitionManager );
+        Bpmn2Resource result = marshaller.unmarshall(EvaluationJsonParserTestString.content, "");
+        System.out.println(result);
+
     }
     
     protected InputStream loadStream(String path) {

@@ -28,11 +28,9 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
 
     private Diagram<Settings> diagram;
     private NodeParser rootParser;
-    private boolean isDummyToken;
     
     public BPMN2JsonParser(Diagram<Settings> diagram, ContextualParser.Context parsingContext) {
         this.diagram = diagram;
-        this.isDummyToken = true;
         initialize(parsingContext);
     }
     
@@ -131,23 +129,16 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
 
     @Override
     public ObjectCodec getCodec() {
-        doLog("Call getCodec");
         return null;
     }
 
     @Override
     public void setCodec(ObjectCodec c) {
-        doLog("Call setCodec");
 
     }
 
     @Override
     public JsonToken nextToken() throws IOException, JsonParseException {
-        doLog("Call nextToken");
-        if ( isDummyToken ) {
-            isDummyToken = false;
-            return JsonToken.START_OBJECT;
-        }
         return rootParser.nextToken();
     }
 
@@ -158,7 +149,6 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
 
     @Override
     public String getCurrentName() throws IOException, JsonParseException {
-        doLog("Call getCurrentName");
         return rootParser.getCurrentName();
     }
 
@@ -189,13 +179,11 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
 
     @Override
     public String getText() throws IOException, JsonParseException {
-        doLog("Call getText");
         return rootParser.getText();
     }
 
     @Override
     public char[] getTextCharacters() throws IOException, JsonParseException {
-        doLog("Call getTextCharacters");
         return new char[0];
     }
 
@@ -216,7 +204,6 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
 
     @Override
     public int getIntValue() throws IOException, JsonParseException {
-        doLog("Call getIntValue");
         return rootParser.getIntValue();
     }
 
@@ -247,29 +234,22 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
 
     @Override
     public int getTextLength() throws IOException, JsonParseException {
-        doLog("Call getTextLength");
         return 0;
     }
 
     @Override
     public int getTextOffset() throws IOException, JsonParseException {
-        doLog("Call getTextOffset");
         return 0;
     }
 
     @Override
     public byte[] getBinaryValue(Base64Variant b64variant) throws IOException, JsonParseException {
-        doLog("Call getBinaryValue");
         return new byte[0];
     }
 
     @Override
     public JsonParser skipChildren() throws IOException, JsonParseException {
-        doLog("Call skipChildren");
-        return rootParser.skipChildren();
+        return null;
     }
 
-    private void doLog(String message) {
-        System.out.println("BPMN2JsonParser - " + message);
-    }
 }

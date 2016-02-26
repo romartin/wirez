@@ -66,7 +66,7 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
 
         // Dockers.
         // TODO: Empty array for now.
-        super.addParser( new ArrayParser( "dockers") );
+        // super.addParser( new ArrayParser( "dockers") );
 
     }
 
@@ -74,8 +74,8 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
     protected void setCurrentParser(Parser p) {
         super.setCurrentParser(p);
         
-        if ( p instanceof ContextualParser ) {
-            ( (ContextualParser) p).initialize(context);
+        if ( current instanceof ContextualParser ) {
+            ( (ContextualParser) current).initialize(context);
         }
         
     }

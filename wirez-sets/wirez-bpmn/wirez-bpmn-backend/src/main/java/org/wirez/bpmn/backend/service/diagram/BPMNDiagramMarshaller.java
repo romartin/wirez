@@ -91,7 +91,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
 
         LOG.info("Starting BPMN diagram marshalling...");
 
-        Bpmn2Marshaller marshaller = new Bpmn2Marshaller(bpmnGraphBuilderFactory);
+        Bpmn2Marshaller marshaller = new Bpmn2Marshaller( definitionManager );
 
         String result = null;
         try {

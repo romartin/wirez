@@ -11,11 +11,15 @@ import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
+import org.wirez.core.api.graph.processing.traverse.content.ViewTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 // See org.codehaus.jackson.impl.ReaderBasedParser
@@ -25,8 +29,9 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
     private Diagram<Settings> diagram;
     private NodeParser rootParser;
     
-    public BPMN2JsonParser(Diagram<Settings> diagram) {
+    public BPMN2JsonParser(Diagram<Settings> diagram, ContextualParser.Context parsingContext) {
         this.diagram = diagram;
+        initialize(parsingContext);
     }
     
     /*
@@ -36,11 +41,13 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
      */
     
     @SuppressWarnings("unchecked")
-    private void traverseChildren() {
+    private void initialize(ContextualParser.Context parsingContext) {
 
         Graph graph = diagram.getGraph();
 
-        // TODO: Only support for a single root node.
+        final Map<String, EdgeParser> edgeParsers = new HashMap<>();
+        
+        // TODO: Only support for a single root node for now.
         new ChildrenTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
                 .traverse(graph, new AbstractContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>() {
 
@@ -62,9 +69,19 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
                             parsers.peek().addChild( p );
                         } else {
                             BPMN2JsonParser.this.rootParser = p;
+                            
                         }
 
                         currentParser = p;
+
+                        List<Edge> outEdges = node.getOutEdges();
+                        if ( null != outEdges && !outEdges.isEmpty() ) {
+                            for ( Edge edge : outEdges ) {
+                                if ( edge.getContent() instanceof View && !edgeParsers.containsKey(edge.getUUID()) ) {
+                                    edgeParsers.put( edge.getUUID(), new EdgeParser( "", (Edge) edge ) );
+                                }
+                            }
+                        }
                     }
                     
 
@@ -78,17 +95,27 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
                     @Override
                     public void endEdgeTraversal(Edge<Child, Node> edge) {
                         super.endEdgeTraversal(edge);
-                        parsers.pop();
+                        currentParser = parsers.pop();
                     }
 
                     @Override
                     public void endGraphTraversal() {
                         super.endGraphTraversal();
+                        BPMN2JsonParser.this.rootParser.initialize(parsingContext);
                     }
 
                 });
 
-        // TODO: Initialize parsers with context and start the json processing.
+        // In oryx format, all edges are added into the main BPMNDiagram node.
+        if ( null != rootParser && !edgeParsers.isEmpty() ) {
+            
+            for ( EdgeParser edgeParser : edgeParsers.values() ) {
+                rootParser.addChild( edgeParser );
+            }
+            
+        }
+
+        System.out.println("End of children and view traverse");
 
     }
     

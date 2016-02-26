@@ -40,7 +40,7 @@ public abstract class CompositeParser<T> extends AbstractParser {
         
         if (  existParsers && this.tokenCount == 0 ) {
 
-            this.current = this.parsers.remove();
+            setCurrentParser( this.parsers.remove() );
             return getStartToken();
             
         } else {
@@ -51,19 +51,23 @@ public abstract class CompositeParser<T> extends AbstractParser {
             
             } else if ( null != current && this.current.isConsumed() && !this.parsers.isEmpty() ) {
 
-                this.current = this.parsers.remove();
+                setCurrentParser( this.parsers.remove() );
                 return this.current.nextToken();
                 
             } else {
                 
                 // Finished.
-                this.current = null;
+                setCurrentParser( null );
                 return getEndToken();
                 
             }
         }
         
         // throw new RuntimeException("Invalid token count for this object parser.");
+    }
+    
+    protected void setCurrentParser(Parser p) {
+        this.current = p;
     }
 
     @Override

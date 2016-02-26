@@ -8,6 +8,8 @@ import org.wirez.bpmn.backend.legacy.Bpmn2JsonUnmarshaller;
 import org.wirez.bpmn.backend.legacy.resource.JBPMBpmn2ResourceImpl;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.parser.BPMN2JsonParser;
+import org.wirez.bpmn.backend.marshall.json.parser.ParsingContext;
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.Settings;
 
@@ -17,10 +19,10 @@ import java.util.HashMap;
 
 public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
 
-    BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
+    DefinitionManager definitionManager;
 
-    public Bpmn2Marshaller(BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory) {
-        this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
+    public Bpmn2Marshaller(DefinitionManager definitionManager) {
+        this.definitionManager = definitionManager;
     }
     
     public String marshall(Diagram<Settings> diagram) throws IOException {
@@ -34,6 +36,6 @@ public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
     }
 
     private BPMN2JsonParser createParser(Diagram<Settings> diagram) {
-        return new BPMN2JsonParser(diagram);
+        return new BPMN2JsonParser( diagram, new ParsingContext( definitionManager ) );
     }
 }

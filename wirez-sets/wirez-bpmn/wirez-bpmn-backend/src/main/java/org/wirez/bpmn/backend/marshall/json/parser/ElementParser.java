@@ -15,6 +15,7 @@ import java.util.Set;
 public abstract class ElementParser<T extends Element<View>> extends ObjectParser implements ContextualParser {
     
     protected final T element;
+    private Context context;
 
     public ElementParser(String name, T element) {
         super(name);
@@ -24,6 +25,7 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
     @Override
     public void initialize(Context context) {
 
+        this.context = context;
         Definition definition = element.getContent().getDefinition();
 
         // Resource id field.
@@ -67,6 +69,14 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
         super.addParser( new ArrayParser( "dockers") );
 
     }
-    
-    
+
+    @Override
+    protected void setCurrentParser(Parser p) {
+        super.setCurrentParser(p);
+        
+        if ( p instanceof ContextualParser ) {
+            ( (ContextualParser) p).initialize(context);
+        }
+        
+    }
 }

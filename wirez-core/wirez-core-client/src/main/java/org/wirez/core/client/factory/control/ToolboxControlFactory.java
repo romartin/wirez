@@ -18,6 +18,8 @@ package org.wirez.core.client.factory.control;
 
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.control.toolbox.ToolboxControl;
+import org.wirez.core.client.control.toolbox.command.MoveDownCommand;
+import org.wirez.core.client.control.toolbox.command.MoveUpCommand;
 import org.wirez.core.client.control.toolbox.command.NameToolboxCommand;
 import org.wirez.core.client.control.toolbox.command.RemoveToolboxCommand;
 
@@ -33,14 +35,20 @@ public class ToolboxControlFactory implements ShapeControlFactory<Shape, Toolbox
     ToolboxControl toolboxControl;
     NameToolboxCommand nameToolboxCommand;
     RemoveToolboxCommand removeToolboxCommand;
+    MoveUpCommand moveUpCommand;
+    MoveDownCommand moveDownCommand;
 
     @Inject
     public ToolboxControlFactory(final NameToolboxCommand nameToolboxCommand,
                                  final RemoveToolboxCommand removeToolboxCommand,
-                                 final ToolboxControl toolboxControl) {
+                                 final ToolboxControl toolboxControl,
+                                 final MoveUpCommand moveUpCommand,
+                                 final MoveDownCommand moveDownCommand) {
         this.toolboxControl = toolboxControl;
         this.removeToolboxCommand = removeToolboxCommand;
         this.nameToolboxCommand = nameToolboxCommand;
+        this.moveUpCommand = moveUpCommand;
+        this.moveDownCommand = moveDownCommand;
     }
     
     @PostConstruct
@@ -57,6 +65,8 @@ public class ToolboxControlFactory implements ShapeControlFactory<Shape, Toolbox
         toolboxControl.clearCommands();
         toolboxControl.addCommand(nameToolboxCommand);
         toolboxControl.addCommand(removeToolboxCommand);
+        toolboxControl.addCommand(moveUpCommand);
+        toolboxControl.addCommand(moveDownCommand);
     }
     
 }

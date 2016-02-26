@@ -20,8 +20,8 @@ public class WiresCircleView<T extends WiresCircleView> extends AbstractWiresSha
 
     public WiresCircleView(final double radius, 
                            final WiresManager manager) {
-        super(new MultiPath().rect(0,0, radius, radius)
-                        .setFillAlpha(0.001)
+        super(new MultiPath().rect(0,0, radius * 2, radius * 2)
+                        .setFillAlpha(1)
                         .setStrokeAlpha(0),
                 manager);
         
@@ -63,16 +63,13 @@ public class WiresCircleView<T extends WiresCircleView> extends AbstractWiresSha
 
         return null;
     }
-    
-    
-
-    private double getDecoratorCoordinate(final double c) {
-        return - ( c / 2 );
-    }
 
     @Override
     public T setRadius(final double radius) {
         if (radius > 0) {
+            final double x = getPath().getX();
+            final double y = getPath().getY();
+            getPath().clear().rect(x, y, radius * 2, radius * 2);
             circle.setRadius(radius);
             decorator.setRadius(radius);
         }

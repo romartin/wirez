@@ -19,24 +19,21 @@ package org.wirez.core.api.rule.violations;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.rule.RuleViolation;
 
 @Portable
-public class CardinalityMinRuleViolation extends AbstractCardinalityRuleViolation<Element, Element> {
+public class RoleCardinalityMaxRuleViolation extends AbstractCardinalityRuleViolation<Element, String> {
 
 
-    
-    public CardinalityMinRuleViolation(@MapsTo("target") Element target,
-                                       @MapsTo("candidate") Element candidate,
-                                       @MapsTo("restrictedOccurrences") Long restrictedOccurrences,
-                                       @MapsTo("currentOccurrences") Long currentOccurrences) {
+    public RoleCardinalityMaxRuleViolation(@MapsTo("target") Element target,
+                                           @MapsTo("candidate") String candidate,
+                                           @MapsTo("restrictedOccurrences") Long restrictedOccurrences,
+                                           @MapsTo("currentOccurrences") Long currentOccurrences) {
         super(target, candidate, restrictedOccurrences, currentOccurrences);
     }
 
     @Override
     public String getMessage() {
-        return "'" + getTargetText() + "' requires a minimum '" + restrictedOccurrences + "' of '" + getCandidateText() + "' nodes. Found '" + currentOccurrences + "'.";
+        return "'" + getTargetText() + "' can have a maximum '" + restrictedOccurrences+ "' of '" + getCandidateText() + "' nodes. Found '" + currentOccurrences + "'.";
     }
 
     

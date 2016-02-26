@@ -19,18 +19,16 @@ package org.wirez.core.api.rule.violations;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.rule.RuleViolation;
 
 @Portable
-public class CardinalityMinRuleViolation extends AbstractCardinalityRuleViolation<Element, Element> {
+public class RoleCardinalityMinRuleViolation extends AbstractCardinalityRuleViolation<Element, String> {
 
 
     
-    public CardinalityMinRuleViolation(@MapsTo("target") Element target,
-                                       @MapsTo("candidate") Element candidate,
-                                       @MapsTo("restrictedOccurrences") Long restrictedOccurrences,
-                                       @MapsTo("currentOccurrences") Long currentOccurrences) {
+    public RoleCardinalityMinRuleViolation(@MapsTo("target") Element target,
+                                           @MapsTo("candidate") String candidate,
+                                           @MapsTo("restrictedOccurrences") Long restrictedOccurrences,
+                                           @MapsTo("currentOccurrences") Long currentOccurrences) {
         super(target, candidate, restrictedOccurrences, currentOccurrences);
     }
 

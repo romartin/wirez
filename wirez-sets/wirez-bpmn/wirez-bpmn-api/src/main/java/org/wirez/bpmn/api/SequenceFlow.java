@@ -23,9 +23,13 @@ import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.PropertySet;
+import org.wirez.core.api.annotation.rule.EdgeOccurrences;
+import org.wirez.core.api.annotation.rule.EdgeType;
+import org.wirez.core.api.annotation.rule.Occurrences;
 import org.wirez.core.api.annotation.rule.PermittedConnection;
 import org.wirez.core.api.definition.BaseDefinition;
 import org.wirez.core.api.graph.Edge;
+
 import java.util.HashSet;
 
 @Portable
@@ -35,6 +39,20 @@ import java.util.HashSet;
 @PermittedConnection( startRole = "choreography_sequence_start", endRole = "choreography_sequence_end" )
 @PermittedConnection( startRole = "Exclusive_Eventbased_Gateway", endRole = "FromEventbasedGateway" )
 @PermittedConnection( startRole = "EventbasedGateway", endRole = "FromEventbasedGateway" )
+@Occurrences(
+        role = "Startevents_all",
+        min = 0,
+        value = {
+                @EdgeOccurrences(type = EdgeType.INCOMING, edge = "SequenceFlow", max = 0)
+        }
+)
+@Occurrences(
+        role = "Endevents_all",
+        min = 0,
+        value = {
+                @EdgeOccurrences(type = EdgeType.OUTGOING, edge = "SequenceFlow", max = 0)
+        }
+)
 public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
 
     public static final String ID = "SequenceFlow";

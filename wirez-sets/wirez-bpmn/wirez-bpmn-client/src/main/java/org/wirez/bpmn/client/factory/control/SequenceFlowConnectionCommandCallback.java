@@ -79,7 +79,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     public boolean isAllowed(final Context context, final Node target) {
 
         final boolean allowsSourceConn = context.getCanvasHandler().allow( commandFactory.SET_SOURCE_NODE( (Node) source, edge, 0) );
-        final boolean allowsTargetConn = context.getCanvasHandler().allow( commandFactory.SET_SOURCE_NODE( target, edge, 0) );
+        final boolean allowsTargetConn = context.getCanvasHandler().allow( commandFactory.SET_TARGET_NODE( target, edge, 0) );
                 
         final boolean isAllowed = allowsSourceConn & allowsTargetConn;
         log(Level.FINE, "Connection allowed from [" + source.getUUID() + "] to [" + target.getUUID() + "] = [" 

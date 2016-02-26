@@ -23,10 +23,7 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.rule.violations.CardinalityMaxRuleViolation;
-import org.wirez.core.api.rule.violations.CardinalityMinRuleViolation;
-import org.wirez.core.api.rule.violations.ConnectionRuleViolation;
-import org.wirez.core.api.rule.violations.ContainmentRuleViolation;
+import org.wirez.core.api.rule.violations.*;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Named;
@@ -165,9 +162,9 @@ public class DefaultRuleManager implements RuleManager {
                         }
 
                         if ( count < minOccurrences ) {
-                            results.addViolation(new CardinalityMinRuleViolation( (Element<? extends View<?>>) outgoingNode, (Element<? extends View<?>>) cr, minOccurrences, count));
+                            results.addViolation(new RoleCardinalityMinRuleViolation( (Element<? extends View<?>>) outgoingNode, cr.getId(), minOccurrences, count));
                         } else if ( maxOccurrences > -1 && count > maxOccurrences ) {
-                            results.addViolation(new CardinalityMaxRuleViolation((Element<? extends View<?>>) outgoingNode, (Element<? extends View<?>>) cr, maxOccurrences, count));
+                            results.addViolation(new RoleCardinalityMaxRuleViolation((Element<? extends View<?>>) outgoingNode, cr.getId(), maxOccurrences, count));
                         }
                     }
                 }
@@ -187,9 +184,9 @@ public class DefaultRuleManager implements RuleManager {
                         }
 
                         if ( count < minOccurrences ) {
-                            results.addViolation(new CardinalityMinRuleViolation((Element<? extends View<?>>) incomingNode, (Element<? extends View<?>>) cr, minOccurrences, count));
+                            results.addViolation(new RoleCardinalityMinRuleViolation((Element<? extends View<?>>) incomingNode, cr.getId(), minOccurrences, count));
                         } else if ( maxOccurrences > -1 && count > maxOccurrences ) {
-                            results.addViolation(new CardinalityMaxRuleViolation((Element<? extends View<?>>) incomingNode, (Element<? extends View<?>>) cr, maxOccurrences, count));
+                            results.addViolation(new RoleCardinalityMaxRuleViolation((Element<? extends View<?>>) incomingNode, cr.getId(), maxOccurrences, count));
                         }
                     }
                 }

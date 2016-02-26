@@ -1,6 +1,6 @@
 - Quick wins
 *************
-    - Improve children traverse processor -> GgraphBoundsIndexer not working fine (as the TreeExplorer does)
+    - Improve children traverse processor -> GraphBoundsIndexer not working fine (as the TreeExplorer does)
     - Explorer
         - explorer tree items - improve
         - get glyph for a given size
@@ -9,18 +9,8 @@
         - Confirm delete alert
     - after containment error on task -> loses fill color (eg: task inside task)
     - review wires containment. Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
-        
-- Next
-*******
+    - bpmn-backend -> review and replace dummy uses of sout logging
 
-    - Save services & BPMN marshalling
-    - use commands to build the graph on marshallers/un
-    - improve server-client tx errai marshalling for definitions, graphs, diagrams
-    - review and replace dummy uses of sout logging
-    - Consider performance on marshalling/unmarshalling  & builders/parsers 
-        - current impl does not consider big files, as it just creates all the objects in memory once when initialized.
-        -> incremental approach
-    
 - Lienzo
 ********
 
@@ -71,9 +61,6 @@
 - API
 *****
 
-    - Factory/CDI producers
-    
-
     - Commands
         - ensure only single parent/edge connections between nodes
          CommManager
@@ -93,12 +80,17 @@
 Backend
 *******
     - create snapshot copies of d diagram
+    - Missing diagram services ( such as delete )
+    - improve server-client tx errai marshalling for definitions, graphs, diagrams
+    - Consider performance on marshalling/unmarshalling  & builders/parsers 
+        - current impl does not consider big files, as it just creates all the objects in memory once when initialized.
+        -> incremental approach
 
           
 - House keeping & others
 ************************
 
-    - CDI Producers
+    - Factories/CDI Producers
         - use a producer for the different traverse, index, managers etc?
         - ModelFactory has producer methods, so the model can be injected ( if no producer, use the modelfactory iface methods )
         - DefManager.getDefSet - call producer method to obtain a singleton instance

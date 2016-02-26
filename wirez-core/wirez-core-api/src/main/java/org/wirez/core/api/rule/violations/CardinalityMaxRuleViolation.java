@@ -23,31 +23,20 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleViolation;
 
 @Portable
-public class CardinalityMaxRuleViolation extends AbstractRuleViolation {
-    
-    private Element<? extends View<?>> target;
-    private Element<? extends View<?>> candidate;
-    private Long maxOccurrences;
-    private Long currentOccurrences;
+public class CardinalityMaxRuleViolation extends AbstractCardinalityRuleViolation<Element, Element> {
 
-    public CardinalityMaxRuleViolation(@MapsTo("target") Element<? extends View<?>> target,
-                                       @MapsTo("candidate") Element<? extends View<?>> candidate,
-                                       @MapsTo("maxOccurrences") Long maxOccurrences,
+
+    public CardinalityMaxRuleViolation(@MapsTo("target") Element target,
+                                       @MapsTo("candidate") Element candidate,
+                                       @MapsTo("restrictedOccurrences") Long restrictedOccurrences,
                                        @MapsTo("currentOccurrences") Long currentOccurrences) {
-        this.target = target;
-        this.candidate = candidate;
-        this.maxOccurrences = maxOccurrences;
-        this.currentOccurrences = currentOccurrences;
+        super(target, candidate, restrictedOccurrences, currentOccurrences);
     }
 
     @Override
     public String getMessage() {
-        return "'" + getDefinitionTitle(target) + "' can have a maximum '" + maxOccurrences + "' of '" + getDefinitionTitle(candidate) + "' nodes. Found '" + currentOccurrences + "'.";
+        return "'" + getTargetText() + "' can have a maximum '" + restrictedOccurrences+ "' of '" + getCandidateText() + "' nodes. Found '" + currentOccurrences + "'.";
     }
 
-    @Override
-    public Type getViolationType() {
-        return Type.ERROR;
-    }
     
 }

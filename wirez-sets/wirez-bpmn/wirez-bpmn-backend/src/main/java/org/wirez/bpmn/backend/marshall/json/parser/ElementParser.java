@@ -64,8 +64,7 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
                 .addParser( lrBoundParser );
         super.addParser( boundsParser );
 
-        // Dockers.
-        // TODO: Empty array for now.
+        // TODO: Dockers.
         // super.addParser( new ArrayParser( "dockers") );
 
     }

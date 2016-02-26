@@ -6,9 +6,7 @@ import org.wirez.bpmn.client.StartNoneEventShape;
 import org.wirez.bpmn.client.TaskShape;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.control.toolbox.ToolboxControl;
-import org.wirez.core.client.control.toolbox.command.AddConnectionCommand;
-import org.wirez.core.client.control.toolbox.command.NameToolboxCommand;
-import org.wirez.core.client.control.toolbox.command.RemoveToolboxCommand;
+import org.wirez.core.client.control.toolbox.command.*;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.factory.control.ToolboxControlFactory;
 
@@ -23,6 +21,8 @@ public class BPMNToolboxControlFactory implements ShapeControlFactory<Shape, Too
     NameToolboxCommand nameToolboxCommand;
     RemoveToolboxCommand removeToolboxCommand;
     AddConnectionCommand addConnectionCommand;
+    MoveUpCommand moveUpCommand;
+    MoveDownCommand moveDownCommand;
     SequenceFlowConnectionCommandCallback sequenceFlowConnectionCommandCallback;
     Instance<ToolboxControl> toolboxControlInstances;
     
@@ -31,11 +31,15 @@ public class BPMNToolboxControlFactory implements ShapeControlFactory<Shape, Too
                                      final NameToolboxCommand nameToolboxCommand,
                                      final RemoveToolboxCommand removeToolboxCommand,
                                      final AddConnectionCommand addConnectionCommand,
+                                     final MoveUpCommand moveUpCommand,
+                                     final MoveDownCommand moveDownCommand,
                                      final Instance<ToolboxControl> toolboxControlInstances) {
         this.nameToolboxCommand = nameToolboxCommand;
         this.removeToolboxCommand = removeToolboxCommand;
         this.sequenceFlowConnectionCommandCallback = sequenceFlowConnectionCommandCallback;
         this.addConnectionCommand = addConnectionCommand;
+        this.moveUpCommand = moveUpCommand;
+        this.moveDownCommand = moveDownCommand;
         this.toolboxControlInstances = toolboxControlInstances;
     }
 
@@ -58,6 +62,8 @@ public class BPMNToolboxControlFactory implements ShapeControlFactory<Shape, Too
     protected void defaults(ToolboxControl toolboxControl) {
         toolboxControl.addCommand(nameToolboxCommand);
         toolboxControl.addCommand(removeToolboxCommand);
+        toolboxControl.addCommand(moveUpCommand);
+        toolboxControl.addCommand(moveDownCommand);
     }
     
     protected boolean acceptAddConnectionCommand(final Shape shape) {

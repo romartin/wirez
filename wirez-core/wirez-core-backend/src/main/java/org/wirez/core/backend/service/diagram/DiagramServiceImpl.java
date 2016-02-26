@@ -163,7 +163,7 @@ public class DiagramServiceImpl implements DiagramService {
         final Graph graph = (Graph) definitionService.buildGraphElement(UUID.uuid(), graphDefinition.getId());
         final Settings diagramSettings = new SettingsImpl(title, defSetId, shapeSetId);
         // TODO: Externalize
-        diagramSettings.setPath(UUID.uuid() + ".bpmn");
+        diagramSettings.setPath(buildDiagramPath());
         final Diagram diagram = new DiagramImpl( UUID.uuid(), graph, diagramSettings );
 
         diagramRegistry.add(diagram);
@@ -212,18 +212,38 @@ public class DiagramServiceImpl implements DiagramService {
                 doLog("Graph is null!");
             } else {
 
-                WirezLogger.log(graph);
-
                 String path = diagram.getSettings().getPath();
+                if ( path == null || path.trim().length() == 0 ) {
+                    path = buildDiagramPath(diagram);
+                }
+                
                 DefinitionSetServices services = getServices( path );
                 
                 if ( null == services ) {
                     throw new RuntimeException("No service for diagram [" + path + "]");
                 } else {
-                    DiagramMarshaller marshaller = services.getDiagramMarshaller();
-                    String result = marshaller.marshall( diagram );
-                    doLog("Diagram [" + path + "] marhsalled succesfully.");
-                    doLog("Result" + result);
+                    
+                    
+                    try {
+                        
+                        ioService.startBatch(fileSystem);
+
+                        doLog("Saving diagram with UUID [" + diagram.getUUID() + "] using path [" + path + "]");
+                        DiagramMarshaller marshaller = services.getDiagramMarshaller();
+                        String result = marshaller.marshall( diagram );
+                        doLog("Result" + result);
+                        Path defPath = getDiagramsPath().resolve( path );
+                        ioService.write(defPath, result);
+                        
+                    } catch (Exception e) {
+                        
+                        LOG.error("Error saving diagram.", e);
+                        
+                    } finally {
+                        
+                        ioService.endBatch();
+                    }
+                   
                 }
                 
             }
@@ -486,6 +506,12 @@ public class DiagramServiceImpl implements DiagramService {
         return null;
     }
 
-    
+    private String buildDiagramPath() {
+        return UUID.uuid() + ".bpmn";
+    }
+
+    private String buildDiagramPath(Diagram diagram) {
+        return diagram.getUUID() + ".bpmn";
+    }
     
 }

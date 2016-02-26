@@ -33,6 +33,8 @@ public interface GraphObjectBuilder<W extends Definition, T extends Element<View
 
     GraphObjectBuilder<W, T> boundLR(Double x, Double y);
     
+    // TODO: Dockers.
+    
     T build(BuilderContext context);
     
     interface BuilderContext<W extends Definition> {

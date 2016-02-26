@@ -17,6 +17,9 @@
     - use commands to build the graph on marshallers/un
     - improve server-client tx errai marshalling for definitions, graphs, diagrams
     - review and replace dummy uses of sout logging
+    - Consider performance on marshalling/unmarshalling  & builders/parsers 
+        - current impl does not consider big files, as it just creates all the objects in memory once when initialized.
+        -> incremental approach
     
 - Lienzo
 ********

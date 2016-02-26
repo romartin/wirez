@@ -28,9 +28,11 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
 
     private Diagram<Settings> diagram;
     private NodeParser rootParser;
+    private boolean isDummyToken;
     
     public BPMN2JsonParser(Diagram<Settings> diagram, ContextualParser.Context parsingContext) {
         this.diagram = diagram;
+        this.isDummyToken = true;
         initialize(parsingContext);
     }
     
@@ -82,6 +84,7 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
                                 }
                             }
                         }
+                        
                     }
                     
 
@@ -141,6 +144,10 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
     @Override
     public JsonToken nextToken() throws IOException, JsonParseException {
         doLog("Call nextToken");
+        if ( isDummyToken ) {
+            isDummyToken = false;
+            return JsonToken.START_OBJECT;
+        }
         return rootParser.nextToken();
     }
 

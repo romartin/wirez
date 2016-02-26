@@ -36,9 +36,7 @@ public abstract class CompositeParser<T> extends AbstractParser {
     @Override
     protected JsonToken next() throws IOException, JsonParseException {
         
-        boolean existParsers = !this.parsers.isEmpty();
-        
-        if (  existParsers && this.tokenCount == 0 ) {
+        if (  this.tokenCount == 0 ) {
 
             setCurrentParser( this.parsers.remove() );
             return getStartToken();
@@ -73,7 +71,7 @@ public abstract class CompositeParser<T> extends AbstractParser {
     @Override
     public String getCurrentName() throws IOException, JsonParseException {
         
-        if ( this.tokenCount == 0 ) {
+        if ( this.tokenCount == 0 && name != null && name.trim().length() > 0 ) {
             return name;
         } else  {
             return this.current.getCurrentName();

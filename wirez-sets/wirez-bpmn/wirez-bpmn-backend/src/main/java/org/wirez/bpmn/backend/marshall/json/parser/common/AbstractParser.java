@@ -18,8 +18,9 @@ public abstract class AbstractParser implements Parser {
 
     @Override
     public JsonToken nextToken() throws IOException, JsonParseException {
+        JsonToken token = next();
         tokenCount++;
-        return next();
+        return token;
     }
     
 }

@@ -21,7 +21,6 @@
 
   <ui:style>
     .left {
-      float: left;
       margin-right: 5px;
     }
     .name {
@@ -33,7 +32,7 @@
     }
   </ui:style>
 
-  <g:FlowPanel>
+  <g:HorizontalPanel>
 
     <g:SimplePanel ui:field="glyphPanel" addStyleNames="{style.left}"/>
     
@@ -41,6 +40,6 @@
     
     <g:HTML ui:field="uuid" addStyleNames="{style.uuid}"/>
     
-  </g:FlowPanel>
+  </g:HorizontalPanel>
 
 </ui:UiBinder>

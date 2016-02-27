@@ -13,13 +13,13 @@
     - Fix wires issues
         - WiresLayoutContainer - set positions when resizing
         - WiresManager - addToIndex not working for unconnected connectors
-        - WiresShapeDragHandler -> fixes on highlight / unhighlight
+        - WiresShapeDragHandler -> fixes on highlight / un-highlight
         - Examples
             - Resize -> http://screencast.com/t/TjRkYpMvt
             - Align -> http://screencast.com/t/62lCjZGYDq7i
             
     - Wires refactors
-        - Exctract logics for conttainment & connection ( hightlight parents, show magnets, etc) from drag event handlers
+        - Exctract logics for containment & connection ( highlight parents, show magnets, etc) from drag event handlers
         
     - Others
         - Text orientation
@@ -30,7 +30,7 @@
     - Issues with property change event handlers
     - Create a doc with requirements ( field types, etc )
     - custom property types
-    - composite props - depenens on the other properties' values
+    - composite props - depends on the other properties' values
     - avoid custom forks!?!?
     
 - Client
@@ -38,11 +38,8 @@
 
     - Widgets
         - Notifications
-            - notificate command errors with alerts
             - custom level for "loading..." popups
-            - commands - info,warn,error etc 
             - exceptions on client code - use notif cdi events & gwt logging
-            - use bootstrap3 "notify" (extras)
             
         - Raw view of the graph
           - Draw all kind of content for nodes/edges as

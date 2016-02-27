@@ -17,15 +17,18 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.Lane;
+import org.wirez.bpmn.api.ParallelGateway;
 import org.wirez.bpmn.client.LaneShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
-import org.wirez.bpmn.client.glyph.LaneGlyph;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresRectangleView;
+import org.wirez.client.shapes.glyph.WiresPolygonGlyph;
+import org.wirez.client.shapes.glyph.WiresRectangleGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.factory.ShapeGlyphFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.view.ShapeGlyph;
@@ -34,7 +37,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class LaneShapeFactory extends BaseBPMNShapeFactory<Lane, LaneShape> {
+public class LaneShapeFactory extends BaseBPMNShapeFactory<Lane, LaneShape> implements ShapeGlyphFactory {
 
     public LaneShapeFactory() {
     }
@@ -53,8 +56,8 @@ public class LaneShapeFactory extends BaseBPMNShapeFactory<Lane, LaneShape> {
     }
 
     @Override
-    public ShapeGlyph getGlyph() {
-        return LaneGlyph.INSTANCE;
+    public ShapeGlyphFactory getGlyphFactory() {
+        return this;
     }
 
     @Override
@@ -72,6 +75,16 @@ public class LaneShapeFactory extends BaseBPMNShapeFactory<Lane, LaneShape> {
         final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
         final WiresRectangleView view = shapeViewFactory.rectangle( Lane.WIDTH, Lane.HEIGHT, wiresCanvas.getWiresManager());
         return new LaneShape(view);
+    }
+
+    @Override
+    public ShapeGlyph build() {
+        return build(50, 50);
+    }
+
+    @Override
+    public ShapeGlyph build(double width, double height) {
+        return new WiresRectangleGlyph(width, height, Lane.COLOR);
     }
 
 }

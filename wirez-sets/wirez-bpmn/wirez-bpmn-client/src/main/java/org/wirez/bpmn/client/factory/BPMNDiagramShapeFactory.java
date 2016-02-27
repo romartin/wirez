@@ -17,15 +17,17 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.bpmn.api.Lane;
 import org.wirez.bpmn.client.BPMNDiagramShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
-import org.wirez.bpmn.client.glyph.BPMNDiagramGlyph;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresRectangleView;
+import org.wirez.client.shapes.glyph.WiresRectangleGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.factory.ShapeGlyphFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.view.ShapeGlyph;
@@ -34,7 +36,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, BPMNDiagramShape> {
+public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, BPMNDiagramShape> implements ShapeGlyphFactory {
 
     public BPMNDiagramShapeFactory() {
     }
@@ -53,8 +55,8 @@ public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, B
     }
 
     @Override
-    public ShapeGlyph getGlyph() {
-        return BPMNDiagramGlyph.INSTANCE;
+    public ShapeGlyphFactory getGlyphFactory() {
+        return this;
     }
 
     @Override
@@ -72,6 +74,16 @@ public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, B
         final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
         final WiresRectangleView view = shapeViewFactory.rectangle( BPMNDiagram.WIDTH, BPMNDiagram.HEIGHT, wiresCanvas.getWiresManager());
         return new BPMNDiagramShape(view);
+    }
+
+    @Override
+    public ShapeGlyph build() {
+        return build(50, 50);
+    }
+
+    @Override
+    public ShapeGlyph build(double width, double height) {
+        return new WiresRectangleGlyph(width, height, BPMNDiagram.COLOR);
     }
 
 }

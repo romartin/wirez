@@ -24,6 +24,7 @@ import org.wirez.core.client.service.ClientDefinitionServices;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.logging.Level;
@@ -37,9 +38,9 @@ public class TreeExplorer implements IsWidget {
 
     public interface View extends UberView<TreeExplorer> {
 
-        View addItem(String uuid, boolean state, String itemText);
+        View addItem(String uuid, IsWidget itemView, boolean state);
 
-        View addItem(String uuid, boolean state, String itemText, int... parentIdx);
+        View addItem(String uuid, IsWidget itemView, boolean state, int... parentIdx);
 
         View removeItem(int index);
 
@@ -51,6 +52,7 @@ public class TreeExplorer implements IsWidget {
     ClientDefinitionServices clientDefinitionServices;
     DefinitionManager definitionManager;
     ChildrenTraverseProcessor childrenTraverseProcessor;
+    Instance<TreeExplorerItem> treeExplorerItemInstances;
     View view;
 
     private CanvasHandler canvasHandler;
@@ -60,10 +62,12 @@ public class TreeExplorer implements IsWidget {
     public TreeExplorer(final ClientDefinitionServices clientDefinitionServices,
                         final DefinitionManager definitionManager,
                         final ChildrenTraverseProcessor childrenTraverseProcessor,
+                        final Instance<TreeExplorerItem> treeExplorerItemInstances,
                         final View view) {
         this.definitionManager = definitionManager;
         this.clientDefinitionServices = clientDefinitionServices;
         this.childrenTraverseProcessor = childrenTraverseProcessor;
+        this.treeExplorerItemInstances = treeExplorerItemInstances;
         this.view = view;
     }
 
@@ -139,8 +143,9 @@ public class TreeExplorer implements IsWidget {
 
                     LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with no parent");
 
-                    view.addItem(node.getUUID(), expand, getItemText(node));
-
+                    final TreeExplorerItem item = treeExplorerItemInstances.get();
+                    view.addItem(node.getUUID(), item.asWidget(), expand);
+                    item.show(node);
 
                 } else {
                     
@@ -150,7 +155,9 @@ public class TreeExplorer implements IsWidget {
                     LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with parent " + parentUUID 
                             + " and parentsIdx=" + parentsIdx + " / level=" + level);
 
-                    view.addItem(node.getUUID(), expand, getItemText(node), parentsIdx);
+                    final TreeExplorerItem item = treeExplorerItemInstances.get();
+                    view.addItem(node.getUUID(), item.asWidget(), expand, parentsIdx);
+                    item.show(node);
                     
                 }
 
@@ -191,14 +198,6 @@ public class TreeExplorer implements IsWidget {
         selectShape(canvasHandler.getCanvas(), uuid);
     }
 
-    private String getItemText(final Node item) {
-        final String uuid = item.getUUID();
-        final Property property = ElementUtils.getProperty(item, Name.ID);
-        final String name= (String) definitionManager.getPropertyAdapter(property).getValue(property);
-        return   ( name != null ? name : "- No name -" ) + " [" + uuid + "]";
-    }
-
-    
     private void selectShape(final Canvas canvas, final String uuid) {
         SelectionManager<Shape> selectionManager = canvas instanceof SelectionManager ?
                 (SelectionManager<Shape>) (canvas) : null;

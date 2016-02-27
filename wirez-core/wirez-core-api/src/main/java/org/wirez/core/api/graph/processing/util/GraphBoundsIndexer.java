@@ -1,6 +1,5 @@
 package org.wirez.core.api.graph.processing.util;
 
-import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.Bounds;
@@ -14,11 +13,9 @@ import java.util.Stack;
 public class GraphBoundsIndexer {
 
     private final Graph<View, Node<View, Edge>> graph;
-    private final FullContentTraverseProcessor visitor;
 
     public GraphBoundsIndexer(final Graph<View, Node<View, Edge>> graph) {
         this.graph = graph;
-        this.visitor = new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl());
     }
 
     public Node getNodeAt(final double x, final double y) {
@@ -98,11 +95,9 @@ public class GraphBoundsIndexer {
         
         if ( mouseX >= ulX && mouseX <= lrX && 
                 mouseY >= ulY && mouseY <= lrY ) {
-            GWT.log("Node [" + node.getUUID() + "] with bounds UL [" + ulX + ", " + ulY + "] / LR [" + lrX + ", " + lrY + "] = TRUE");
             return true;
         }
 
-        GWT.log("Node [" + node.getUUID() + "] with bounds UL [" + ulX + ", " + ulY + "] / LR [" + lrX + ", " + lrY + "] = FALSE");
         return false;
     }
     

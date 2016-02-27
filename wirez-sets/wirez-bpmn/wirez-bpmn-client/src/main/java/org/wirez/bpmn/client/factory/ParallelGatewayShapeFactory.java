@@ -17,16 +17,19 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.ParallelGateway;
+import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.client.BPMNViewFactory;
 import org.wirez.bpmn.client.ParallelGatewayShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
-import org.wirez.bpmn.client.glyph.ParallelGatewayGlyph;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresPolygonView;
+import org.wirez.client.shapes.glyph.WiresConnectorGlyph;
+import org.wirez.client.shapes.glyph.WiresPolygonGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.factory.ShapeGlyphFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.view.ShapeGlyph;
 
@@ -34,7 +37,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGateway, ParallelGatewayShape> {
+public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGateway, ParallelGatewayShape> implements ShapeGlyphFactory {
 
     BPMNViewFactory bpmnViewFactory;
             
@@ -58,8 +61,8 @@ public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGa
     }
 
     @Override
-    public ShapeGlyph getGlyph() {
-        return ParallelGatewayGlyph.INSTANCE;
+    public ShapeGlyphFactory getGlyphFactory() {
+        return this;
     }
 
     @Override
@@ -72,6 +75,16 @@ public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGa
         final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
         final WiresPolygonView view = bpmnViewFactory.parallelGateway(ParallelGateway.RADIUS, ParallelGateway.COLOR, wiresCanvas.getWiresManager());
         return new ParallelGatewayShape(view);
+    }
+
+    @Override
+    public ShapeGlyph build() {
+        return build(50, 50);
+    }
+
+    @Override
+    public ShapeGlyph build(double width, double height) {
+        return new WiresPolygonGlyph(width/2, ParallelGateway.COLOR);
     }
 
 }

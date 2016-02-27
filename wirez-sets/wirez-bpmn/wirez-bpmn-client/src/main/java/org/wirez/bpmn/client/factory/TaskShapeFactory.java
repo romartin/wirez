@@ -20,13 +20,14 @@ import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.client.BPMNViewFactory;
 import org.wirez.bpmn.client.TaskShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
-import org.wirez.bpmn.client.glyph.TaskGlyph;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresRectangleView;
+import org.wirez.client.shapes.glyph.WiresRectangleGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.factory.ShapeGlyphFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.view.ShapeGlyph;
@@ -35,7 +36,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
+public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> implements ShapeGlyphFactory {
 
     BPMNViewFactory bpmnViewFactory;
     
@@ -58,8 +59,8 @@ public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
     }
 
     @Override
-    public ShapeGlyph getGlyph() {
-        return TaskGlyph.INSTANCE;
+    public ShapeGlyphFactory getGlyphFactory() {
+        return this;
     }
 
     @Override
@@ -81,4 +82,14 @@ public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> {
 
     }
 
+    @Override
+    public ShapeGlyph build() {
+        return build(50, 50);
+    }
+
+    @Override
+    public ShapeGlyph build(double width, double height) {
+        return new WiresRectangleGlyph(width, height, Task.COLOR);
+    }
+    
 }

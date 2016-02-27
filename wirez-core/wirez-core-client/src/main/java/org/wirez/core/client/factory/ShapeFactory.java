@@ -31,20 +31,18 @@ public interface ShapeFactory<W extends Definition, S extends Shape<W>> {
     boolean accepts(final Definition definition);
     
     /**
-     * Get a glyph to represent the Shape. Used by the Palette Screen and Layers Screen.
-     * @return
+     * Get the glyph factory for this shape. Glyphs are used to represent the Shape in several 
+     * parts on the application, such as the Palette or the Explorer.
      */
-    ShapeGlyph getGlyph();
+    ShapeGlyphFactory getGlyphFactory();
 
     /**
      * Get description of Shape.
-     * @return
      */
     String getDescription();
 
     /**
      * Get a Shape to be created on the Canvas.
-     * @return
      */
     S build(W definition, CanvasHandler canvasHandler);
 

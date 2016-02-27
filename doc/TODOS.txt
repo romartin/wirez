@@ -1,9 +1,5 @@
 - Quick wins
 *************
-    - Improve children traverse processor -> GraphBoundsIndexer not working fine (as the TreeExplorer does)
-    - Explorer
-        - explorer tree items - improve
-        - get glyph for a given size
     - custom graph factory for bpmn -> create a diagram by default
     - Delete from canvas - ( all children... )
         - Confirm delete alert
@@ -39,9 +35,7 @@
     
 - Client
 *********
-    - Glyph
-        - create default glyphs on wirez-shapes
-        
+
     - Widgets
         - Notifications
             - notificate command errors with alerts

@@ -14,41 +14,33 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.client.glyph;
+package org.wirez.client.shapes.glyph;
 
 import com.ait.lienzo.client.core.shape.Circle;
-import com.ait.lienzo.client.core.shape.Group;
-import org.wirez.bpmn.api.EndNoneEvent;
 import org.wirez.core.client.util.ShapeUtils;
-import org.wirez.core.client.view.ShapeGlyph;
 
-public class EndNoneEventGlyph implements ShapeGlyph {
+public class WiresCircleGlyph extends AbstractGlyph {
 
-    public static final EndNoneEventGlyph INSTANCE = new EndNoneEventGlyph();
     private static final double RADIUS = 25;
-    private Group group = new Group();
 
-    public EndNoneEventGlyph() {
-        final Circle circle = new Circle(RADIUS)
-                .setX(RADIUS)
-                .setY(RADIUS)
+    public WiresCircleGlyph() {
+        this(RADIUS, "#3eb870");
+    }
+    
+    public WiresCircleGlyph(final double radius, final String color) {
+        super(radius * 2, radius * 2);
+        build(radius, color);
+    }
+    
+    
+    protected void build(final double radius, final String color) {
+        group.removeAll();
+        final Circle circle = new Circle(radius)
+                .setX(radius)
+                .setY(radius)
                 .setStrokeWidth(0.5)
-                .setFillGradient(ShapeUtils.getLinearGradient(EndNoneEvent.COLOR, "#FFFFFF", RADIUS * 2, RADIUS * 2));
+                .setFillGradient(ShapeUtils.getLinearGradient(color, "#FFFFFF", radius* 2, radius * 2));
         group.add(circle);
     }
 
-    @Override
-    public Group getGroup() {
-        return group;
-    }
-
-    @Override
-    public double getWidth() {
-        return RADIUS * 2;
-    }
-
-    @Override
-    public double getHeight() {
-        return RADIUS * 2;
-    }
 }

@@ -16,50 +16,32 @@
 
 package org.wirez.bpmn.client.glyph;
 
-import com.ait.lienzo.client.core.shape.Circle;
-import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Ring;
 import org.wirez.bpmn.api.EndTerminateEvent;
 import org.wirez.bpmn.client.EndTerminateEventShape;
-import org.wirez.core.client.util.ShapeUtils;
-import org.wirez.core.client.view.ShapeGlyph;
+import org.wirez.client.shapes.glyph.WiresCircleGlyph;
 
-public class EndTerminateEventGlyph implements ShapeGlyph {
-
-    public static final EndTerminateEventGlyph INSTANCE = new EndTerminateEventGlyph();
-    private static final double RADIUS = 25;
-    private Group group = new Group();
+public class EndTerminateEventGlyph extends WiresCircleGlyph {
 
     public EndTerminateEventGlyph() {
-        final Circle circle = new Circle(RADIUS)
-                .setX(RADIUS)
-                .setY(RADIUS)
-                .setStrokeWidth(0.5)
-                .setFillGradient(ShapeUtils.getLinearGradient(EndTerminateEvent.COLOR, "#FFFFFF", RADIUS * 2, RADIUS * 2));
-        
-        final Double[] ringRadius = EndTerminateEventShape.getRingRadius(RADIUS);
+        super();
+    }
+
+    public EndTerminateEventGlyph(double radius, String color) {
+        super(radius, color);
+    }
+
+    @Override
+    protected void build(double radius, String color) {
+        super.build(radius, color);
+        final Double[] ringRadius = EndTerminateEventShape.getRingRadius(radius);
         final Ring ring = new Ring(ringRadius[0], ringRadius[1])
-                .setX(RADIUS)
-                .setY(RADIUS)
+                .setX(radius)
+                .setY(radius)
                 .setStrokeWidth(0)
                 .setFillColor(EndTerminateEvent.RING_COLOR);
-        
-        group.add(circle);
         group.add(ring);
+        
     }
-
-    @Override
-    public Group getGroup() {
-        return group;
-    }
-
-    @Override
-    public double getWidth() {
-        return RADIUS * 2;
-    }
-
-    @Override
-    public double getHeight() {
-        return RADIUS * 2;
-    }
+    
 }

@@ -14,38 +14,29 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.client.glyph;
+package org.wirez.client.shapes.glyph;
 
 import com.ait.lienzo.client.core.shape.Arrow;
-import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.shared.core.types.ArrowType;
-import org.wirez.bpmn.api.SequenceFlow;
-import org.wirez.core.client.view.ShapeGlyph;
 
-public class SequenceFlowGlyph implements ShapeGlyph {
+public class WiresConnectorGlyph extends AbstractGlyph {
 
-    public static final SequenceFlowGlyph INSTANCE = new SequenceFlowGlyph();
-    private Group group = new Group();
-
-    public SequenceFlowGlyph() {
-        final Arrow arrow = new Arrow(new Point2D(0, 50), new Point2D(50, 0), 5, 10, 45, 45, ArrowType.AT_END)
-                .setStrokeWidth(5).setStrokeColor(SequenceFlow.COLOR).setDraggable(true);
+    public WiresConnectorGlyph() {
+        this(50, 50, "#000000");
+    }
+    
+    public WiresConnectorGlyph(final double width, final double height, final String color) {
+        super(width, height);
+        build(width, height, color);
+    }
+    
+    
+    private void build(final double width, final double height, final String color) {
+        group.removeAll();
+        final Arrow arrow = new Arrow(new Point2D(0, height), new Point2D(width, 0), 5, 10, 45, 45, ArrowType.AT_END)
+                .setStrokeWidth(5).setStrokeColor(color).setDraggable(true);
         group.add(arrow);
     }
 
-    @Override
-    public Group getGroup() {
-        return group;
-    }
-
-    @Override
-    public double getWidth() {
-        return 50;
-    }
-
-    @Override
-    public double getHeight() {
-        return 50;
-    }
 }

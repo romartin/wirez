@@ -161,7 +161,7 @@ public class Palette implements IsWidget {
 
                 final String category = definition.getCategory();
                 final String description = factory.getDescription();
-                final ShapeGlyph glyph = factory.getGlyph();
+                final ShapeGlyph glyph = factory.getGlyphFactory().build();
                 
                 // Shapes not considered to be on the palette.
                 if ( null == glyph ) {

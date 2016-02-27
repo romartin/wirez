@@ -17,15 +17,18 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.EndTerminateEvent;
+import org.wirez.bpmn.api.Lane;
 import org.wirez.bpmn.client.EndTerminateEventShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.EndTerminateEventGlyph;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresCircleView;
+import org.wirez.client.shapes.glyph.WiresRectangleGlyph;
 import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.factory.ShapeGlyphFactory;
 import org.wirez.core.client.factory.control.DefaultShapeControlFactories;
 import org.wirez.core.client.view.ShapeGlyph;
 
@@ -33,7 +36,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class EndTerminateEventShapeFactory extends BaseBPMNShapeFactory<EndTerminateEvent, EndTerminateEventShape> {
+public class EndTerminateEventShapeFactory extends BaseBPMNShapeFactory<EndTerminateEvent, EndTerminateEventShape> implements ShapeGlyphFactory {
     
     public EndTerminateEventShapeFactory() {
     }
@@ -52,8 +55,8 @@ public class EndTerminateEventShapeFactory extends BaseBPMNShapeFactory<EndTermi
     }
 
     @Override
-    public ShapeGlyph getGlyph() {
-        return EndTerminateEventGlyph.INSTANCE;
+    public ShapeGlyphFactory getGlyphFactory() {
+        return this;
     }
 
     @Override
@@ -66,6 +69,16 @@ public class EndTerminateEventShapeFactory extends BaseBPMNShapeFactory<EndTermi
         final WiresCanvas wiresCanvas = (WiresCanvas) canvasHandler.getCanvas();
         final WiresCircleView view = shapeViewFactory.circle( EndTerminateEvent.RADIUS, wiresCanvas.getWiresManager());
         return new EndTerminateEventShape(view);
+    }
+
+    @Override
+    public ShapeGlyph build() {
+        return build(50, 50);
+    }
+
+    @Override
+    public ShapeGlyph build(double width, double height) {
+        return new EndTerminateEventGlyph(width/2, EndTerminateEvent.COLOR);
     }
 
 }

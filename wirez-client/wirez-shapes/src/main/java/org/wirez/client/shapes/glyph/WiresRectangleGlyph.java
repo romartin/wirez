@@ -14,40 +14,32 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.client.glyph;
+package org.wirez.client.shapes.glyph;
 
-import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Rectangle;
-import org.wirez.bpmn.api.Task;
 import org.wirez.core.client.util.ShapeUtils;
-import org.wirez.core.client.view.ShapeGlyph;
 
-public class TaskGlyph implements ShapeGlyph {
+public class WiresRectangleGlyph extends AbstractGlyph {
 
-    public static final TaskGlyph INSTANCE = new TaskGlyph();
     private static final double WIDTH = 50;
     private static final double HEIGHT = 50;
-    private Group group = new Group();
 
-    public TaskGlyph() {
-        final Rectangle rectangle = new Rectangle(WIDTH, HEIGHT)
+    public WiresRectangleGlyph() {
+        this(WIDTH, HEIGHT, "#000000");
+    }
+    
+    public WiresRectangleGlyph(final double width, final double height, final String color) {
+        super(width, height);
+        build(width, height, color);
+    }
+    
+    
+    private void build(final double width, final double height, final String color) {
+        group.removeAll();
+        final Rectangle rectangle = new Rectangle(width, height)
                 .setStrokeWidth(0.5)
-                .setFillGradient(ShapeUtils.getLinearGradient(Task.COLOR, "#FFFFFF", WIDTH, HEIGHT));
+                .setFillGradient(ShapeUtils.getLinearGradient(color, "#FFFFFF", WIDTH, HEIGHT));
         group.add(rectangle);
     }
 
-    @Override
-    public Group getGroup() {
-        return group;
-    }
-
-    @Override
-    public double getWidth() {
-        return WIDTH;
-    }
-
-    @Override
-    public double getHeight() {
-        return HEIGHT;
-    }
 }

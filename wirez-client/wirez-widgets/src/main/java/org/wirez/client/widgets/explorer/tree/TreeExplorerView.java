@@ -4,10 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Tree;
-import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 
 public class TreeExplorerView extends Composite implements TreeExplorer.View {
 
@@ -35,19 +32,19 @@ public class TreeExplorerView extends Composite implements TreeExplorer.View {
     }
 
     public TreeExplorer.View addItem(final String uuid, 
-                                     final boolean state,
-                                     final String itemText) {
-        final TreeItem item = buildItem(uuid, itemText);
+                                     final IsWidget itemView,
+                                     final boolean state) {
+        final TreeItem item = buildItem(uuid, itemView);
         tree.addItem(item);
         item.setState(state);
         return this;
     }
 
     public TreeExplorer.View addItem(final String uuid,
+                                     final IsWidget itemView,
                                      final boolean state,
-                                     final String itemText, 
                                      final int... parentsIds) {
-        final TreeItem item = buildItem(uuid, itemText);
+        final TreeItem item = buildItem(uuid, itemView);
         final TreeItem parent = getParent(parentsIds);
         parent.addItem(item);
         parent.setState(state);
@@ -55,10 +52,9 @@ public class TreeExplorerView extends Composite implements TreeExplorer.View {
         return this;
     }
     
-    private TreeItem buildItem(final String uuid,
-                               final String itemText) {
+    private TreeItem buildItem(final String uuid, final IsWidget isWidget) {
         final TreeItem item = new TreeItem();
-        item.setText(itemText);
+        item.setWidget((Widget) isWidget);
         item.setUserObject(uuid);
         item.getElement().getStyle().setCursor(Style.Cursor.POINTER);
         return item;

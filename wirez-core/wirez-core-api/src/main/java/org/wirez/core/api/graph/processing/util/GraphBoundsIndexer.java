@@ -1,5 +1,6 @@
 package org.wirez.core.api.graph.processing.util;
 
+import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.graph.*;
 import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.Bounds;
@@ -7,6 +8,8 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.traverse.content.*;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 import org.wirez.core.api.util.ElementUtils;
+
+import java.util.Stack;
 
 public class GraphBoundsIndexer {
 
@@ -28,17 +31,24 @@ public class GraphBoundsIndexer {
 
         new ChildrenTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AbstractContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>() {
 
-            Node parent = null;
+            final Stack<Node> parents = new Stack<Node>();
 
             @Override
             public void startGraphTraversal(Graph<View, Node<View, Edge>> graph) {
                 super.startGraphTraversal(graph);
-                parent = null;
+                parents.clear();
             }
 
             @Override
             public void startEdgeTraversal(Edge<Child, Node> edge) {
-                this.parent = edge.getSourceNode();
+                Node parent = edge.getSourceNode();
+                parents.push(parent);
+            }
+
+            @Override
+            public void endEdgeTraversal(Edge<Child, Node> edge) {
+                super.endEdgeTraversal(edge);
+                parents.pop();
             }
 
             @Override
@@ -47,17 +57,18 @@ public class GraphBoundsIndexer {
                 double parentX = 0;
                 double parentY = 0;
 
-                if ( null != parent ) {
-                    final Object content = parent.getContent();
-
-                    if (content instanceof View) {
-                        final View viewContent = (View) content;
-                        final Double[] parentCoords = ElementUtils.getPosition(viewContent);
-                        parentX = parentCoords[0];
-                        parentY = parentCoords[1];
+                if ( !parents.isEmpty() ) {
+                    
+                    for ( Node tParent : parents ) {
+                        final Object content = tParent.getContent();
+                        if (content instanceof View) {
+                            final View viewContent = (View) content;
+                            final Double[] parentCoords = ElementUtils.getPosition(viewContent);
+                            parentX += parentCoords[0];
+                            parentY += parentCoords[1];
+                        }
                     }
 
-                    parent = null;
                 }
 
                 if (isNodeAt(node, parentX, parentY, x, y)) {
@@ -83,12 +94,15 @@ public class GraphBoundsIndexer {
         final double ulY = ulBound.getY() + parentY;
         final double lrX = lrBound.getX() + parentX;
         final double lrY = lrBound.getY() + parentY;
+
         
         if ( mouseX >= ulX && mouseX <= lrX && 
                 mouseY >= ulY && mouseY <= lrY ) {
+            GWT.log("Node [" + node.getUUID() + "] with bounds UL [" + ulX + ", " + ulY + "] / LR [" + lrX + ", " + lrY + "] = TRUE");
             return true;
         }
-        
+
+        GWT.log("Node [" + node.getUUID() + "] with bounds UL [" + ulX + ", " + ulY + "] / LR [" + lrX + ", " + lrY + "] = FALSE");
         return false;
     }
     

@@ -24,9 +24,14 @@ import java.util.List;
 public interface Canvas {
 
     /**
-     * Add the shape control widget into the view for this canvas.
+     * Adds the shape control widget into the view for this canvas.
      */
     Canvas addControl(IsWidget control);
+
+    /**
+     * Delete the shape control widget from the view for this canvas.
+     */
+    Canvas deleteControl(IsWidget control);
 
     /**
      * Draws or batches the updates on the canvas. 

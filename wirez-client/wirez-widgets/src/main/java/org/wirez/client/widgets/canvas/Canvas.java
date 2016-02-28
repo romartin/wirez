@@ -62,6 +62,12 @@ public class Canvas extends WiresCanvas implements IsWidget {
         return this;
     }
 
+    @Override
+    public org.wirez.core.client.canvas.Canvas deleteControl(final IsWidget control) {
+        view.remove(control);
+        return this;
+    }
+
     public Canvas clear() {
         super.clear();
         view.clear();

@@ -1,6 +1,7 @@
 package org.wirez.core.client.control.toolbox.command;
 
 import com.ait.lienzo.client.core.shape.Shape;
+import com.google.gwt.user.client.Window;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
@@ -29,6 +30,12 @@ public class RemoveToolboxCommand implements ToolboxCommand {
     @Override
     public void execute(final Context context, 
                         final Element element) {
-        context.getCanvasHandler().execute( commandFactory.DELETE_NODE((Node) element) );
+        
+        // TODO: Remove use of confirm here.
+        if ( Window.confirm("Are you sure?") ) {
+            context.getCanvasHandler().execute( commandFactory.DELETE_NODE((Node) element) );
+        }
+        
     }
+    
 }

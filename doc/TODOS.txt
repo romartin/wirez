@@ -1,8 +1,6 @@
 - Quick wins
 *************
     - custom graph factory for bpmn -> create a diagram by default
-    - Delete from canvas - ( all children... )
-        - Confirm delete alert
     - after containment error on task -> loses fill color (eg: task inside task)
     - review wires containment. Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
     - bpmn-backend -> review and replace dummy uses of sout logging
@@ -54,16 +52,18 @@
 
     - Commands
         - ensure only single parent/edge connections between nodes
-         CommManager
-            - executions async - use callbacks as expensive ops can be executed on backend
-            -  basic impl
-            -  stacked (history)
-            - stacked + batch
-              - for canvas handler internal executions on batch ( startBatch, execute xN, endBatch)
-              - on each batch you can spcify block screen ( modal loading ) or not
-              - canvas listeners fired once per element
-        - Undos
+         - CommManager
+            - executions async - use callbacks as expensive ops can be executed on backend asynchronously
+            - Provide different implementations:
+                - basic
+                - stacked (with history & undo )
+                - stacked + batch
+                      - for canvas handler internal executions on batch ( startBatch, execute xN, endBatch)
+                      - on each batch you can spcify block screen ( modal loading ) or not
+                      - canvas listeners fired once per element
+        - Undo's
         - Restore the graph to a previous state
+   
    - Model
           - compile time generation adapters for Def, DefSet, PropSet
           - use of graph factories in client side 

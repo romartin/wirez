@@ -35,15 +35,9 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public DeleteChildNodeCommand DELETE_CHILD_NODE(final Graph target,
-                                                    final Node oldParent,
-                                                    final Node candidate) {
-        return new DeleteChildNodeCommand(this, target, oldParent, candidate);
-    }
-
-    @Override
-    public DeleteChildNodesCommand DELETE_CHILD_NODES(final Graph target, final Node parent) {
-        return new DeleteChildNodesCommand(this, target, parent);
+    public SafeDeleteNodeCommand SAFE_DELETE_NODE(final Graph target,
+                                                   final Node candidate) {
+        return new SafeDeleteNodeCommand(this, target, candidate);
     }
 
     @Override

@@ -52,7 +52,7 @@ import org.wirez.core.client.view.ShapeView;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import java.util.Collection;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +62,8 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.wires.WiresCanvasHandler");
 
     ClientDefinitionManager clientDefinitionManager;
+    
+    private final Map<String, List<ShapeControl>> shapeControls = new HashMap<>();
     
     @Inject
     public WiresCanvasHandler(final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
@@ -120,9 +122,18 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
     }
 
     @Override
-    protected void doRegister(Shape shape, Element element, ShapeFactory factory) {
+    protected void doRegister(final Shape shape, 
+                              final Element element, 
+                              final ShapeFactory factory) {
         super.doRegister(shape, element, factory);
         doAddShapeControls(shape, element, factory);
+    }
+
+    @Override
+    protected void doDeregister(final Shape shape, 
+                                final Element element) {
+        super.doDeregister(shape, element);
+        doRemoveShapeControls(shape);
     }
 
     protected void doAddShapeControls(final Shape shape,
@@ -135,17 +146,52 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
             final Collection<ShapeControlFactory<?, ?>> factories = ((HasShapeControlFactories) factory).getFactories();
             for (ShapeControlFactory controlFactory : factories) {
                 ShapeControl control = controlFactory.build(shape);
+                addControl(shape, element, control);
+            }
+            
+        }
+        
+    }
+    
+    protected void addControl(final Shape shape,
+                              final Element element,
+                              final ShapeControl control) {
+        // Some controls needs to add elements on the DOM.
+        if (control instanceof IsWidget) {
+            final IsWidget controlWidget = (IsWidget) control;
+            canvas.addControl(controlWidget);
+        }
 
-                // Some controls needs to add elements on the DOM.
+        // Enable the stateful control.
+        control.enable(this, shape, element);
+        
+        // Controls cache.
+        List<ShapeControl> controls = shapeControls.get( shape.getId() );
+        if ( null == controls ) {
+            controls = new LinkedList<>();
+            shapeControls.put( shape.getId(), controls );
+        }
+        controls.add( control );
+    }
+
+    protected void doRemoveShapeControls(final Shape shape) {
+        
+        final String shapeId = shape.getId();
+        final List<ShapeControl> controls = shapeControls.get( shapeId );
+        if ( null != controls && !controls.isEmpty() ) {
+            for ( final ShapeControl control : controls ) {
+                
+                // Some controls needs to remove elements from the DOM.
                 if (control instanceof IsWidget) {
                     final IsWidget controlWidget = (IsWidget) control;
-                    canvas.addControl(controlWidget);
+                    canvas.deleteControl(controlWidget);
                 }
 
                 // Enable the stateful control.
-                control.enable(this, shape, element);
-
+                control.disable(this, shape);
             }
+            
+            shapeControls.remove( shapeId );
         }
         
     }

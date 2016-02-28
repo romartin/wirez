@@ -59,6 +59,8 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
 
         View add(IsWidget widget);
 
+        View remove(IsWidget widget);
+
         View addShape(ShapeView<?> shapeView);
         
         View removeShape(ShapeView<?> shapeView);

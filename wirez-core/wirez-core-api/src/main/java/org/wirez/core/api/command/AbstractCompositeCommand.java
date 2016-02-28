@@ -3,6 +3,7 @@ package org.wirez.core.api.command;
 import java.util.LinkedList;
 import java.util.List;
 
+// TODO: Check all rules from all commands before executing them.
 public abstract class AbstractCompositeCommand<T, V> implements CompositeCommand<T, V> {
     
     protected final List<Command<T, V>> commands = new LinkedList<>();
@@ -14,37 +15,27 @@ public abstract class AbstractCompositeCommand<T, V> implements CompositeCommand
 
     protected abstract CommandResult<V> buildResult();
     
-    @Override
-    public CommandResult<V> allow(final T context) {
-        return allowAll(context);
-    }
+    protected abstract CommandResult<V> doExecute( T context, Command<T, V> command);
 
-    protected CommandResult<V> allowAll(final T context) {
-        final List<CommandResult<V>> results = new LinkedList<>();
-        for ( final Command<T, V> command : commands ) {
-            final CommandResult<V> violations = command.allow( context );
-            results.add(violations);
-        }
-
-        return buildResult(results);
-    }
-
+    protected abstract CommandResult<V> doUndo( T context, Command<T, V> command );
+    
     @Override
     public CommandResult<V> execute(final T context) {
         final List<CommandResult<V>> results = new LinkedList<>();
         for ( final Command<T, V> command : commands ) {
-            final CommandResult<V> violations = command.execute( context );
+            final CommandResult<V> violations = doExecute( context, command );
             results.add(violations);
         }
 
         return buildResult(results);
     }
+    
 
     @Override
     public CommandResult<V> undo(final T context) {
         final List<CommandResult<V>> results = new LinkedList<>();
         for ( final Command<T, V> command : commands ) {
-            final CommandResult<V> violations = command.undo( context );
+            final CommandResult<V> violations = doUndo( context, command );
             results.add(violations);
         }
 

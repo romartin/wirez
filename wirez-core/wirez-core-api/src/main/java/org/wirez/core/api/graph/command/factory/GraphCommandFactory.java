@@ -9,18 +9,19 @@ import org.wirez.core.api.graph.content.view.View;
 
 public interface GraphCommandFactory {
 
-    
-    /* ******************************************************************************************
-                                    Atomic commands.
-       ****************************************************************************************** */
-
     AddNodeCommand ADD_NODE(Graph target,
                             Node candidate);
+
+    AddChildNodeCommand ADD_CHILD_NODE(Graph target,
+                                       Node parent,
+                                       Node candidate);
 
     AddEdgeCommand ADD_EDGE(Node target,
                             Edge edge);
 
-
+    SafeDeleteNodeCommand SAFE_DELETE_NODE(Graph target,
+                                           Node candidate);
+    
     DeleteNodeCommand DELETE_NODE(Graph target,
                                   Node candidate);
 
@@ -56,21 +57,5 @@ public interface GraphCommandFactory {
     UpdateElementPropertyValueCommand UPDATE_PROPERTY_VALUE(Element element,
                                                             String propertyId,
                                                             Object value);
-    
-
-    /* ******************************************************************************************
-                                    Composite commands.
-       ****************************************************************************************** */
-    
-    AddChildNodeCommand ADD_CHILD_NODE(Graph target,
-                                       Node parent,
-                                       Node candidate);
-
-    DeleteChildNodeCommand DELETE_CHILD_NODE(Graph target,
-                                             Node oldParent,
-                                             Node candidate);
-    
-    DeleteChildNodesCommand DELETE_CHILD_NODES(Graph target,
-                                               Node parent);
     
 }

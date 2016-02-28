@@ -23,6 +23,7 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
+import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -30,7 +31,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * A Command to delete a DefaultNode from a DefaultGraph
+ * A Command to delete a DefaultNode from a DefaultGraph. 
+ * Does not take care about node'edges neither children nodes.
  */
 public class DeleteNodeCommand extends AbstractGraphCommand {
 
@@ -49,37 +51,20 @@ public class DeleteNodeCommand extends AbstractGraphCommand {
     
     @Override
     public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
-        return check(ruleManager);
+        return checkRules(ruleManager);
     }
 
     @Override
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final CommandResult<RuleViolation> results = check(ruleManager);
+        CommandResult<RuleViolation> results = checkRules(ruleManager);
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
-            removeNode(candidate);
+            target.removeNode( candidate.getUUID() );
         }
+        
         return results;
     }
     
-    private void removeNode(final Node node) {
-        final List<Edge> inEdges = node.getInEdges();
-        if ( null != inEdges ) {
-            for (final Edge inEdge : inEdges) {
-                inEdge.setTargetNode(null);
-            }
-        }
-
-        final List<Edge> outEdges = node.getOutEdges();
-        if ( null != outEdges ) {
-            for (final Edge outEdge : outEdges) {
-                outEdge.setSourceNode(null);
-            }
-        }
-
-        target.removeNode( candidate.getUUID() );
-    }
-    
-    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
+    private CommandResult<RuleViolation> checkRules(final RuleManager ruleManager) {
 
         boolean isNodeInGraph = false;
         for ( Object node : target.nodes() ) {
@@ -96,12 +81,12 @@ public class DeleteNodeCommand extends AbstractGraphCommand {
         } else {
             results = new GraphCommandResult();
             results.setType(CommandResult.Type.ERROR);
-            results.setMessage("GraphNode was not present in Graph and hence was not deleted");
+            results.setMessage("Node was not present in Graph and hence was not deleted");
         }
 
         return results;
     }
-
+    
     @Override
     public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
         final Command<RuleManager, RuleViolation> undoCommand = commandFactory.ADD_NODE( target, candidate );

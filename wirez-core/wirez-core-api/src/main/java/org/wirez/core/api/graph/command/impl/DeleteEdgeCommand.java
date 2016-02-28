@@ -70,20 +70,8 @@ public class DeleteEdgeCommand extends AbstractGraphCommand {
     }
     
     private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
-        boolean isEdgeInGraph = false;
-
-        GraphCommandResult results;
-        if ( isEdgeInGraph ) {
-            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), (Edge<? extends View<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
-            results = new GraphCommandResult(cardinalityRuleViolations);
-        } else {
-            results = new GraphCommandResult();
-            results.setType(CommandResult.Type.ERROR);
-            results.setMessage("Edge was not present in Graph and hence was not deleted");
-        }
-
-        return results;
-
+        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), (Edge<? extends View<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
+        return new GraphCommandResult(cardinalityRuleViolations);
     }
 
     @Override

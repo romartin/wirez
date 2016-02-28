@@ -277,6 +277,20 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
         
     }
 
+    public void deregister(final Element element) {
+        final Shape shape = canvas.getShape(element.getUUID());
+        // TODO: Delete connector connections to the node being deleted?
+        doDeregister(shape, element);
+        canvas.deleteShape(shape);
+        canvas.draw();
+        afterElementDeleted(element);
+
+    }
+
+    protected void doDeregister(final Shape shape, final Element element) {
+        
+    }
+
     public void applyElementMutation(final Element candidate) {
         final Shape shape = canvas.getShape(candidate.getUUID());
         if (shape instanceof HasMutation) {
@@ -338,15 +352,6 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
         afterElementUpdated(element, shapeMutation);
     }
 
-    public void deregister(final Element element) {
-        final Shape shape = canvas.getShape(element.getUUID());
-        // TODO: Delete connector connections to the node being deleted?
-        canvas.deleteShape(shape);
-        canvas.draw();
-        afterElementDeleted(element);
-
-    }
-    
     public void clear() {
         canvas.clear();
         canvas.draw();

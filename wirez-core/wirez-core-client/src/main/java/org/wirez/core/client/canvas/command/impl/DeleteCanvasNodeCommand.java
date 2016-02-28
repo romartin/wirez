@@ -51,7 +51,7 @@ public class DeleteCanvasNodeCommand extends DeleteCanvasElementCommand<Node> im
 
     @Override
     public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
-        return factory.DELETE_NODE(canvasHandler.getDiagram().getGraph(), candidate);
+        return factory.SAFE_DELETE_NODE(canvasHandler.getDiagram().getGraph(), candidate);
     }
 
     @Override

@@ -93,6 +93,12 @@ public class CanvasView extends Composite implements WiresCanvas.View {
     }
 
     @Override
+    public WiresCanvas.View remove(final IsWidget widget) {
+        toolsPanel.remove(widget);
+        return this;
+    }
+
+    @Override
     public WiresCanvas.View addShape(final ShapeView<?> shapeView) {
         if ( shapeView instanceof AbstractWiresShapeView) {
             WiresShape wiresShape = (WiresShape) shapeView;

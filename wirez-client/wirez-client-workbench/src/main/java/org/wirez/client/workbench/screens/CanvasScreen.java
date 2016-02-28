@@ -459,7 +459,9 @@ public class CanvasScreen {
         final Definition definition = addShapeToCanvasEvent.getDefinition();
         final double x = addShapeToCanvasEvent.getX();
         final double y = addShapeToCanvasEvent.getY();
-        buildShape(definition, factory, x, y);
+        final double cx = canvas.getAbsoluteX();
+        final double cy = canvas.getAbsoluteY();
+        buildShape(definition, factory, x - cx, y - cy);
         canvas.draw();
     }
 

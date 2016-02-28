@@ -58,7 +58,7 @@ public class CanvasView extends Composite implements WiresCanvas.View {
 
     @Override
     public Canvas.View show(final int width, final int height, final int padding) {
-
+        
         panel = new FocusableLienzoPanel( width + padding, height + padding );
         mainPanel.add(toolsPanel);
         mainPanel.add(panel);
@@ -147,6 +147,16 @@ public class CanvasView extends Composite implements WiresCanvas.View {
     public WiresCanvas.View setContainmentAcceptor(final IContainmentAcceptor containmentAcceptor) {
         wiresManager.setContainmentAcceptor(containmentAcceptor);
         return this;
+    }
+
+    @Override
+    public double getAbsoluteX() {
+        return panel.getAbsoluteLeft();
+    }
+
+    @Override
+    public double getAbsoluteY() {
+        return panel.getAbsoluteTop();
     }
 
     @Override

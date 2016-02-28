@@ -43,6 +43,8 @@ public class PaletteGroup implements IsWidget {
         
         View addGlyph(IPrimitive glyphView, double width, double height, double x, double y, GlyphViewCallback callback);
         
+        View setExpanded(boolean isExpanded);
+        
         View clear();
     }
 
@@ -118,10 +120,13 @@ public class PaletteGroup implements IsWidget {
         }
     }
     
-    public void show(final String header, final double width, final Collection<PaletteGroupItem> items) {
+    public void show(final String header,
+                     final boolean isExpanded,
+                     final double width, 
+                     final Collection<PaletteGroupItem> items) {
         
         // Group header.
-        view.setHeader(header);
+        view.setHeader(header).setExpanded(isExpanded);
         
         // Layout item positions calculations.
         final double[] size = buildItemPositions(width, items);

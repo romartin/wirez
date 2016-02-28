@@ -71,6 +71,10 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
         
         View setContainmentAcceptor(IContainmentAcceptor containmentAcceptor);
         
+        double getAbsoluteX();
+
+        double getAbsoluteY();
+        
         Layer getLayer();
         
         WiresManager getWiresManager();
@@ -150,6 +154,14 @@ public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
         return this;
     }
 
+    public double getAbsoluteX() {
+        return view.getAbsoluteX();
+    }
+
+    public double getAbsoluteY() {
+        return view.getAbsoluteY();
+    }
+    
     @Override
     public Layer getLayer() {
         return layer;

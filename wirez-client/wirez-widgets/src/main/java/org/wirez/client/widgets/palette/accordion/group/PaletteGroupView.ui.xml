@@ -32,7 +32,7 @@
           <b:Anchor ui:field="anchor" dataToggle="COLLAPSE"/>
         </b:Heading>
       </b:PanelHeader>
-      <b:PanelCollapse ui:field="panelCollapse" in="true">
+      <b:PanelCollapse ui:field="panelCollapse" in="false">
         <b:PanelBody>
           <g:SimplePanel ui:field="panelShapes"/>
         </b:PanelBody>

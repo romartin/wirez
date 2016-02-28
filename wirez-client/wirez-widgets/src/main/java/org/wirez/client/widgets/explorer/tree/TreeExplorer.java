@@ -135,13 +135,13 @@ public class TreeExplorer implements IsWidget {
             @Override
             public void startNodeTraversal(final Node<org.wirez.core.api.graph.content.view.View, Edge> node) {
                 super.startNodeTraversal(node);
-                LOGGER.log(Level.FINE, " Start of Traverse View Node " + node.getUUID());
+                // LOGGER.log(Level.FINE, " Start of Traverse View Node " + node.getUUID());
 
                 inc(levelIdx, level);
                 
                 if ( null == parent ) {
 
-                    LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with no parent");
+                    // LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with no parent");
 
                     final TreeExplorerItem item = treeExplorerItemInstances.get();
                     view.addItem(node.getUUID(), item.asWidget(), expand);
@@ -151,9 +151,9 @@ public class TreeExplorer implements IsWidget {
                     
                     final String parentUUID = parent.getUUID();
                     int[] parentsIdx = getParentsIdx(levelIdx, level);
-                    
-                    LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with parent " + parentUUID 
-                            + " and parentsIdx=" + parentsIdx + " / level=" + level);
+
+                    //  LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with parent " + parentUUID 
+                    //         + " and parentsIdx=" + parentsIdx + " / level=" + level);
 
                     final TreeExplorerItem item = treeExplorerItemInstances.get();
                     view.addItem(node.getUUID(), item.asWidget(), expand, parentsIdx);
@@ -161,7 +161,7 @@ public class TreeExplorer implements IsWidget {
                     
                 }
 
-                LOGGER.log(Level.FINE, " End of Traverse View Node " + node.getUUID());
+                // LOGGER.log(Level.FINE, " End of Traverse View Node " + node.getUUID());
             }
           
         });

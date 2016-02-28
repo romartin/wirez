@@ -217,7 +217,7 @@ public class Palette implements IsWidget {
                                         @Override
                                         public void onComplete(final LienzoPanel floatingPanel, final double x, final double y) {
                                             log(Level.FINE, "Palette: Adding " + description + " at " + x + "," + y);
-                                            addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory, x - width, y));
+                                            addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory, x, y));
                                         }
                                     });
                                     
@@ -234,14 +234,17 @@ public class Palette implements IsWidget {
         
         // Show palette groups.
         if (!paletteGroupItems.isEmpty()) {
+            
+            int x = 0;
             final Set<Map.Entry<String, List<PaletteGroupItem>>> entries = paletteGroupItems.entrySet();
             for (final Map.Entry<String, List<PaletteGroupItem>> entry : entries) {
                 final String category = entry.getKey();
                 final List<PaletteGroupItem> items = entry.getValue();
 
                 PaletteGroup paletteGroup = buildPaletteGroup();
-                paletteGroup.show(category, width, items);
+                paletteGroup.show(category, x == 0, width, items);
                 view.addGroup(paletteGroup);
+                x++;
             }
         }
         

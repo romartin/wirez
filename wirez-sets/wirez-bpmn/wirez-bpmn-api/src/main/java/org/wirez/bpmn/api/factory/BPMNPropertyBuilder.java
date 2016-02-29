@@ -8,15 +8,14 @@ import org.wirez.bpmn.api.property.diagram.Executable;
 import org.wirez.bpmn.api.property.diagram.Package;
 import org.wirez.bpmn.api.property.general.*;
 import org.wirez.core.api.definition.property.defaults.Name;
-import org.wirez.core.api.factory.DefinitionSetFactory;
-import org.wirez.core.api.factory.PropertyFactory;
+import org.wirez.core.api.factory.PropertyBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @ApplicationScoped
-public class BPMNPropertyFactory implements PropertyFactory<BPMNProperty> {
+public class BPMNPropertyBuilder implements PropertyBuilder<BPMNProperty> {
 
     private static final Set<String> SUPPORTED_PROP_IDS = new LinkedHashSet<String>() {{
         add(Name.ID);
@@ -35,7 +34,7 @@ public class BPMNPropertyFactory implements PropertyFactory<BPMNProperty> {
         add(Radius.ID);
     }};
 
-    public BPMNPropertyFactory() {
+    public BPMNPropertyBuilder() {
     }
 
     @Override

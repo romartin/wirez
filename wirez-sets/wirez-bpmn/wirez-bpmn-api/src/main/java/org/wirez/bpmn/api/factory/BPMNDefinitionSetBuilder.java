@@ -1,21 +1,21 @@
 package org.wirez.bpmn.api.factory;
 
 import org.wirez.bpmn.api.*;
-import org.wirez.core.api.factory.DefinitionSetFactory;
+import org.wirez.core.api.factory.DefinitionSetBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class BPMNDefinitionSetFactory implements DefinitionSetFactory<BPMNDefinitionSet> {
+public class BPMNDefinitionSetBuilder implements DefinitionSetBuilder<BPMNDefinitionSet> {
 
-    BPMNDefinitionFactory bpmnDefinitionFactory;
+    BPMNDefinitionBuilder bpmnDefinitionFactory;
 
-    protected BPMNDefinitionSetFactory() {
+    protected BPMNDefinitionSetBuilder() {
     }
 
     @Inject
-    public BPMNDefinitionSetFactory(BPMNDefinitionFactory bpmnDefinitionFactory) {
+    public BPMNDefinitionSetBuilder(BPMNDefinitionBuilder bpmnDefinitionFactory) {
         this.bpmnDefinitionFactory = bpmnDefinitionFactory;
     }
 

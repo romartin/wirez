@@ -25,7 +25,7 @@ import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.factory.ModelFactory;
+import org.wirez.core.api.factory.ModelBuilder;
 import org.wirez.core.api.registry.DiagramRegistry;
 
 import javax.annotation.PostConstruct;
@@ -38,7 +38,7 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackendDefinitionManager.class);
 
-    Instance<ModelFactory<?>> modelBuilderInstances;
+    Instance<ModelBuilder<?>> modelBuilderInstances;
     Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances;
     Instance<DefinitionSetRuleAdapter<? extends DefinitionSet>> definitionSetRuleAdapterInstances;
     Instance<DefinitionAdapter<? extends Definition>> definitionAdapterInstances;
@@ -50,7 +50,7 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
 
     @Inject
     public BackendDefinitionManager(DiagramRegistry<? extends Diagram> diagramRegistry,
-                                    Instance<ModelFactory<?>> modelBuilderInstances,
+                                    Instance<ModelBuilder<?>> modelBuilderInstances,
                                     Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances,
                                     Instance<DefinitionSetRuleAdapter<? extends DefinitionSet>> definitionSetRuleAdapterInstances,
                                     Instance<DefinitionAdapter<? extends Definition>> definitionAdapterInstances, 
@@ -72,7 +72,7 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
     }
 
     private void initModelFactories() {
-        for (ModelFactory<?> modelBuilder : modelBuilderInstances) {
+        for (ModelBuilder<?> modelBuilder : modelBuilderInstances) {
             modelFactories.add(modelBuilder);
         }
     }

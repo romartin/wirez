@@ -2,7 +2,6 @@ package org.wirez.core.client;
 
 import org.jboss.errai.ioc.client.container.IOC;
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
-import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.BaseDefinitionManager;
 import org.wirez.core.api.adapter.*;
@@ -10,8 +9,7 @@ import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.factory.ModelFactory;
+import org.wirez.core.api.factory.ModelBuilder;
 import org.wirez.core.api.registry.DiagramRegistry;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.service.definition.DefinitionServiceResponse;
@@ -54,9 +52,9 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void init() {
 
         // Client side model builders.
-        Collection<SyncBeanDef<ModelFactory>> modelBuilderDefs = beanManager.lookupBeans(ModelFactory.class);
-        for (SyncBeanDef<ModelFactory> modelBuilder : modelBuilderDefs) {
-            ModelFactory modelBuilderObject = modelBuilder.getInstance();
+        Collection<SyncBeanDef<ModelBuilder>> modelBuilderDefs = beanManager.lookupBeans(ModelBuilder.class);
+        for (SyncBeanDef<ModelBuilder> modelBuilder : modelBuilderDefs) {
+            ModelBuilder modelBuilderObject = modelBuilder.getInstance();
             modelFactories.add(modelBuilderObject);
         }
         

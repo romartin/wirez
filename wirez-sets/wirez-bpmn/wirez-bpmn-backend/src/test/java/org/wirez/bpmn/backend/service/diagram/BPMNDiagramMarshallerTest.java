@@ -7,10 +7,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.mocks.EventSourceMock;
 import org.wirez.bpmn.api.*;
-import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
-import org.wirez.bpmn.api.factory.BPMNDefinitionSetFactory;
-import org.wirez.bpmn.api.factory.BPMNPropertyFactory;
-import org.wirez.bpmn.api.factory.BPMNPropertySetFactory;
+import org.wirez.bpmn.api.factory.BPMNDefinitionBuilder;
+import org.wirez.bpmn.api.factory.BPMNDefinitionSetBuilder;
+import org.wirez.bpmn.api.factory.BPMNPropertyBuilder;
+import org.wirez.bpmn.api.factory.BPMNPropertySetBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.BootstrapObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.edges.SequenceFlowBuilder;
@@ -27,7 +27,7 @@ import org.wirez.core.api.adapter.PropertySetAdapter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.event.NotificationEvent;
-import org.wirez.core.api.factory.ModelFactory;
+import org.wirez.core.api.factory.ModelBuilder;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandManager;
@@ -93,11 +93,11 @@ public class BPMNDiagramMarshallerTest {
         doAnswer(invocationOnMock -> propertyAdapter).when(definitionManager).getPropertyAdapter(any(Object.class));
         doAnswer(invocationOnMock -> propertySetAdapter).when(definitionManager).getPropertySetAdapter(any(Object.class));
 
-        List<ModelFactory> modelFactories = new LinkedList<>();
-        BPMNPropertyFactory propertyFactory = new BPMNPropertyFactory();
-        BPMNPropertySetFactory propertySetFactory = new BPMNPropertySetFactory(propertyFactory);
-        BPMNDefinitionFactory definitionFactory = new BPMNDefinitionFactory(propertyFactory, propertySetFactory);
-        BPMNDefinitionSetFactory definitionSetFactory = new BPMNDefinitionSetFactory(definitionFactory);
+        List<ModelBuilder> modelFactories = new LinkedList<>();
+        BPMNPropertyBuilder propertyFactory = new BPMNPropertyBuilder();
+        BPMNPropertySetBuilder propertySetFactory = new BPMNPropertySetBuilder(propertyFactory);
+        BPMNDefinitionBuilder definitionFactory = new BPMNDefinitionBuilder(propertyFactory, propertySetFactory);
+        BPMNDefinitionSetBuilder definitionSetFactory = new BPMNDefinitionSetBuilder(definitionFactory);
         
         modelFactories.add(definitionSetFactory);
         modelFactories.add(definitionFactory);
@@ -106,7 +106,7 @@ public class BPMNDiagramMarshallerTest {
         doAnswer(invocationOnMock -> {
             String id = (String) invocationOnMock.getArguments()[0];
             
-            for (ModelFactory factory : modelFactories) {
+            for (ModelBuilder factory : modelFactories) {
                 if ( factory.accepts(id)) {
                     return factory;
                 }

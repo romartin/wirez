@@ -17,12 +17,12 @@
 package org.wirez.core.api;
 
 import org.wirez.core.api.adapter.*;
-import org.wirez.core.api.factory.ModelFactory;
+import org.wirez.core.api.factory.ModelBuilder;
 import org.wirez.core.api.registry.DiagramRegistry;
 
 public interface DefinitionManager {
 
-    ModelFactory getModelFactory(String id);
+    ModelBuilder getModelFactory(String id);
 
     DiagramRegistry getDiagramRegistry();
     

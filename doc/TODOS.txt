@@ -5,7 +5,12 @@
         - custom graph factory for bpmn -> create a diagram by default
     - after containment error on task -> loses fill color (eg: task inside task)
     - ModelFactory - rename to Model BUilder and move deaults() methods ( that build each stencils prop values ) to the builder
-    
+    - Import tool
+        - typesafe velocity templates? 
+        - TemplateResult 
+          - add skipped results ( pojos + message )
+        - generated files indentation
+        
 - Lienzo
 ********
 

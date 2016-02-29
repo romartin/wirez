@@ -3,7 +3,7 @@ package org.wirez.bpmn.client.factory.control;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.bpmn.api.SequenceFlow;
-import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
+import org.wirez.bpmn.api.factory.BPMNDefinitionBuilder;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
@@ -39,7 +39,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     GraphCommandFactoryImpl graphCommandFactoryImpl;
     ClientDefinitionServices clientDefinitionServices;
     ShapeManager shapeManager;
-    BPMNDefinitionFactory bpmnDefinitionFactory;
+    BPMNDefinitionBuilder bpmnDefinitionFactory;
 
     private Element source;
     private Edge<ViewConnector<SequenceFlow>, Node> edge;
@@ -49,7 +49,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
                                                  final GraphCommandFactoryImpl graphCommandFactoryImpl,
                                                  final ClientDefinitionServices clientDefinitionServices,
                                                  final ShapeManager shapeManager,
-                                                 final BPMNDefinitionFactory bpmnDefinitionFactory) {
+                                                 final BPMNDefinitionBuilder bpmnDefinitionFactory) {
         this.commandFactory = commandFactory;
         this.graphCommandFactoryImpl = graphCommandFactoryImpl;
         this.clientDefinitionServices = clientDefinitionServices;

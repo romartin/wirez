@@ -79,14 +79,6 @@ public class EndTerminateEvent extends BaseDefinition implements BPMNDefinition 
         this.radius = radius;
     }
 
-    public EndTerminateEvent buildDefaults() {
-        getGeneral().getName().setValue("My terminate event");
-        getBackgroundSet().getBgColor().setValue(COLOR);
-        getBackgroundSet().getBorderColor().setValue(BORDER_COLOR);
-        getRadius().setValue(RADIUS);
-        return this;
-    }
-    
     @Override
     public String getId() {
         return ID;

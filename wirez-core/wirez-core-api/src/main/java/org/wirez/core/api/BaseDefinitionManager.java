@@ -18,7 +18,7 @@ package org.wirez.core.api;
 
 import org.wirez.core.api.adapter.*;
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.factory.ModelFactory;
+import org.wirez.core.api.factory.ModelBuilder;
 import org.wirez.core.api.registry.DiagramRegistry;
 
 import java.util.*;
@@ -27,7 +27,7 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
 
     DiagramRegistry<? extends Diagram> diagramRegistry;
 
-    protected final List<ModelFactory> modelFactories = new ArrayList<ModelFactory>();
+    protected final List<ModelBuilder> modelFactories = new ArrayList<ModelBuilder>();
     protected final List<DefinitionSetAdapter> definitionSetAdapters = new ArrayList<DefinitionSetAdapter>();
     protected final List<DefinitionSetRuleAdapter> definitionSetRuleAdapters = new ArrayList<DefinitionSetRuleAdapter>();
     protected final List<DefinitionAdapter> definitionAdapters = new ArrayList<DefinitionAdapter>();
@@ -47,8 +47,8 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public ModelFactory getModelFactory(final String id) {
-        for (final ModelFactory builder : modelFactories) {
+    public ModelBuilder getModelFactory(final String id) {
+        for (final ModelBuilder builder : modelFactories) {
             if ( builder.accepts( id ) ) {
                 return builder;
             }

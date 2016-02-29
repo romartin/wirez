@@ -52,11 +52,6 @@ public class BPMNGraph extends BaseDefinition implements BPMNDefinition {
         this.general = general;
     }
 
-    public BPMNGraph buildDefaults() {
-        getGeneral().getName().setValue("My BPMN graph");
-        return this;
-    }
-
     @Override
     public String getId() {
         return ID;

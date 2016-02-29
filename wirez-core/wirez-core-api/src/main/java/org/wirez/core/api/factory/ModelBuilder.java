@@ -2,7 +2,7 @@ package org.wirez.core.api.factory;
 
 import org.wirez.core.api.definition.DefinitionSet;
 
-public interface ModelFactory<W> {
+public interface ModelBuilder<W> {
     
     boolean accepts( String id );
 

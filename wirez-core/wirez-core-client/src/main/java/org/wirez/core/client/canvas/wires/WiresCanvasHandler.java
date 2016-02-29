@@ -23,7 +23,7 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.factory.ModelFactory;
+import org.wirez.core.api.factory.ModelBuilder;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
@@ -80,7 +80,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
 
         // Load the rules that apply for the diagram.
         final String defSetId = getDiagram().getSettings().getDefinitionSetId();
-        final ModelFactory modelFactory = clientDefinitionManager.getModelFactory(defSetId);
+        final ModelBuilder modelFactory = clientDefinitionManager.getModelFactory(defSetId);
         final DefinitionSet definitionSet = (DefinitionSet) modelFactory.build(defSetId); 
         
         loadRules(definitionSet, () -> {

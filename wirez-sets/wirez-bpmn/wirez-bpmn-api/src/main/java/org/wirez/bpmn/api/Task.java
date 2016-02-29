@@ -90,15 +90,6 @@ public class Task extends BaseDefinition implements BPMNDefinition {
         this.height = height;
     }
 
-    public Task buildDefaults() {
-        getGeneral().getName().setValue("My task");
-        getBackgroundSet().getBgColor().setValue(COLOR);
-        getBackgroundSet().getBorderSize().setValue(BORDER_SIZE);
-        getWidth().setValue(WIDTH);
-        getHeight().setValue(HEIGHT);
-        return this;
-    }
-    
     @Override
     public String getId() {
         return ID;

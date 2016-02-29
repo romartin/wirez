@@ -79,13 +79,6 @@ public class EndNoneEvent extends BaseDefinition implements BPMNDefinition {
         this.radius = radius;
     }
 
-    public EndNoneEvent buildDefaults() {
-        getGeneral().getName().setValue("My end event");
-        getBackgroundSet().getBgColor().setValue(COLOR);
-        getRadius().setValue(RADIUS);
-        return this;
-    }
-    
     @Override
     public String getId() {
         return ID;

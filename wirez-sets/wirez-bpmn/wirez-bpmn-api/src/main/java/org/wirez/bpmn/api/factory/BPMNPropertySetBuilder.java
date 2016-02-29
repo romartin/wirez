@@ -3,8 +3,7 @@ package org.wirez.bpmn.api.factory;
 import org.wirez.bpmn.api.BPMNPropertySet;
 import org.wirez.bpmn.api.property.diagram.DiagramSet;
 import org.wirez.bpmn.api.property.general.*;
-import org.wirez.core.api.definition.property.defaults.Name;
-import org.wirez.core.api.factory.PropertySetFactory;
+import org.wirez.core.api.factory.PropertySetBuilder;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -12,15 +11,15 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @ApplicationScoped
-public class BPMNPropertySetFactory implements PropertySetFactory<BPMNPropertySet> {
+public class BPMNPropertySetBuilder implements PropertySetBuilder<BPMNPropertySet> {
 
-    BPMNPropertyFactory bpmnPropertyFactory;
+    BPMNPropertyBuilder bpmnPropertyFactory;
 
-    protected BPMNPropertySetFactory() {
+    protected BPMNPropertySetBuilder() {
     }
 
     @Inject
-    public BPMNPropertySetFactory(BPMNPropertyFactory bpmnPropertyFactory) {
+    public BPMNPropertySetBuilder(BPMNPropertyBuilder bpmnPropertyFactory) {
         this.bpmnPropertyFactory = bpmnPropertyFactory;
     }
 

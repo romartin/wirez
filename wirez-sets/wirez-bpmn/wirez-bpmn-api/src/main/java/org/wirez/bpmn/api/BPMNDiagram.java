@@ -91,16 +91,6 @@ public class BPMNDiagram extends BaseDefinition implements BPMNDefinition {
         this.height = height;
     }
 
-    public BPMNDiagram buildDefaults() {
-        getGeneral().getName().setValue("My BPMN diagram");
-        getBackgroundSet().getBgColor().setValue(COLOR);
-        getBackgroundSet().getBorderSize().setValue(BORDER_SIZE);
-        getBackgroundSet().getBorderColor().setValue(BORDER_COLOR);
-        getWidth().setValue(WIDTH);
-        getHeight().setValue(HEIGHT);
-        return this;
-    }
-
     @Override
     public String getId() {
         return ID;

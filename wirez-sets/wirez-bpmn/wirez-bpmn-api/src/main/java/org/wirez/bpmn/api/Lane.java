@@ -85,15 +85,6 @@ public class Lane extends BaseDefinition implements BPMNDefinition {
         this.height = height;
     }
 
-    public Lane buildDefaults() {
-        getGeneral().getName().setValue("My lane");
-        getBackgroundSet().getBgColor().setValue(COLOR);
-        getBackgroundSet().getBorderSize().setValue(BORDER_SIZE);
-        getWidth().setValue(WIDTH);
-        getHeight().setValue(HEIGHT);
-        return this;
-    }
-    
     @Override
     public String getId() {
         return ID;

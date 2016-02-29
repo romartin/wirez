@@ -80,13 +80,6 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
         this.radius = radius;
     }
 
-    public StartNoneEvent buildDefaults() {
-        getGeneral().getName().setValue("My start event");
-        getBackgroundSet().getBgColor().setValue(COLOR);
-        getRadius().setValue(RADIUS);
-        return this;
-    }
-    
     @Override
     public String getId() {
         return ID;

@@ -83,13 +83,6 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
         this.radius = radius;
     }
 
-    public ParallelGateway buildDefaults() {
-        getGeneral().getName().setValue("My gateway");
-        getBackgroundSet().getBgColor().setValue(COLOR);
-        getRadius().setValue(RADIUS);
-        return this;
-    }
-    
     @Override
     public String getId() {
         return ID;

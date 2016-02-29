@@ -4,8 +4,8 @@
         - child/view/parent edges ( use factories in commands, etc - avoid new operators )
         - custom graph factory for bpmn -> create a diagram by default
     - after containment error on task -> loses fill color (eg: task inside task)
-    - bpmn-backend -> review and replace dummy uses of sout logging
-
+    - ModelFactory - rename to Model BUilder and move deaults() methods ( that build each stencils prop values ) to the builder
+    
 - Lienzo
 ********
 

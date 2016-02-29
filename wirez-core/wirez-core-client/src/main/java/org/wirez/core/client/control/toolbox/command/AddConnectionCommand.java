@@ -68,6 +68,11 @@ public class AddConnectionCommand implements ToolboxCommand {
         return icon;
     }
 
+    @Override
+    public String getTitle() {
+        return "Create a new connector";
+    }
+
     public AddConnectionCommand setCallback(final Callback callback) {
         this.callback = callback;
         return this;

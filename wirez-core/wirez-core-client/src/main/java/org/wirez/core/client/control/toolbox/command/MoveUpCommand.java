@@ -28,6 +28,11 @@ public class MoveUpCommand implements ToolboxCommand {
     }
 
     @Override
+    public String getTitle() {
+        return "Move up";
+    }
+
+    @Override
     public void execute(final Context context, 
                         final Element element) {
         Canvas canvas = context.getCanvasHandler().getCanvas();

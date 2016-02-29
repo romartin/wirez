@@ -28,6 +28,11 @@ public class RemoveToolboxCommand implements ToolboxCommand {
     }
 
     @Override
+    public String getTitle() {
+        return "Remove";
+    }
+
+    @Override
     public void execute(final Context context, 
                         final Element element) {
         

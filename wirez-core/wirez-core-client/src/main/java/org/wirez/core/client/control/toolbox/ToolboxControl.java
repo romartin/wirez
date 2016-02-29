@@ -87,6 +87,8 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
 
             for (final ToolboxCommand command : commands) {
                 
+                // TODO: Use command title (tooltip).
+                
                 toolboxBuilder.add(new HoverToolboxButton(command.getIcon().copy(), new NodeMouseClickHandler() {
                     @Override
                     public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {

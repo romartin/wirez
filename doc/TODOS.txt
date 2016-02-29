@@ -1,8 +1,9 @@
 - Quick wins
 *************
-    - custom graph factory for bpmn -> create a diagram by default
+    - Factories
+        - child/view/parent edges ( use factories in commands, etc - avoid new operators )
+        - custom graph factory for bpmn -> create a diagram by default
     - after containment error on task -> loses fill color (eg: task inside task)
-    - review wires containment. Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
     - bpmn-backend -> review and replace dummy uses of sout logging
 
 - Lienzo
@@ -15,7 +16,9 @@
         - Examples
             - Resize -> http://screencast.com/t/TjRkYpMvt
             - Align -> http://screencast.com/t/62lCjZGYDq7i
-            
+
+    - review wires containment. Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
+
     - Wires refactors
         - Exctract logics for containment & connection ( highlight parents, show magnets, etc) from drag event handlers
         
@@ -35,6 +38,11 @@
 *********
 
     - Widgets
+    
+        - Toolbox
+            - Fixings
+            - Icon titles/tooltips
+            
         - Notifications
             - custom level for "loading..." popups
             - exceptions on client code - use notif cdi events & gwt logging

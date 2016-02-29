@@ -27,6 +27,11 @@ public class MoveDownCommand implements ToolboxCommand {
     }
 
     @Override
+    public String getTitle() {
+        return "Move down";
+    }
+
+    @Override
     public void execute(final Context context, 
                         final Element element) {
         Canvas canvas = context.getCanvasHandler().getCanvas();

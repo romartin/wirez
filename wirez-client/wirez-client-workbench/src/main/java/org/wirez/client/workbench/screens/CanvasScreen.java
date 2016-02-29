@@ -16,8 +16,10 @@
 
 package org.wirez.client.workbench.screens;
 
+import com.ait.lienzo.client.core.Context2D;
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
@@ -133,6 +135,7 @@ public class CanvasScreen {
     private String title = "Canvas Screen";
 
     private HandlerRegistration mousePointerCoordsHandlerReg;
+    private boolean isStateSaved = false;
     
     @PostConstruct
     public void init() {
@@ -265,17 +268,8 @@ public class CanvasScreen {
                 .newTopLevelMenu("Clear grid")
                 .respondsWith(getClearGridCommand())
                 .endMenu()
-                .newTopLevelMenu("Clear selection")
-                .respondsWith(getClearSelectionCommand())
-                .endMenu()
-                .newTopLevelMenu("Delete selected")
-                .respondsWith(getDeleteSelectionCommand())
-                .endMenu()
                 .newTopLevelMenu("Undo")
                 .respondsWith(getUndoCommand())
-                .endMenu()
-                .newTopLevelMenu("Log graph")
-                .respondsWith(getLogGraphCommand())
                 .endMenu()
                 .newTopLevelMenu("Resume graph")
                 .respondsWith(getResumeGraphCommand())
@@ -337,6 +331,22 @@ public class CanvasScreen {
             final Level newLevel = Level.SEVERE.equals(level) ? Level.FINE : Level.SEVERE;
             LOGGER.log(Level.SEVERE, "Switching to log level [" + newLevel.getName() + "]");
             Logger.getLogger("").setLevel(newLevel);
+        };
+    }
+
+    private Command getSaveRestoreStateCommand() {
+        return () -> {
+            WiresLayer wiresLayer = (WiresLayer) canvas.getLayer();
+            Context2D context = wiresLayer.getLienzoLayer().getContext();
+            if ( isStateSaved ) {
+                context.restore();
+                GWT.log("State restored");
+                isStateSaved = false;
+            } else {
+                context.save();
+                GWT.log("State saved");
+                isStateSaved = true;
+            }
         };
     }
 

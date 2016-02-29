@@ -7,6 +7,8 @@ public interface ToolboxCommand {
 
     Shape<?> getIcon();
     
+    String getTitle();
+    
     void execute(Context context, Element element);
     
 }

@@ -29,6 +29,11 @@ public class NameToolboxCommand implements ToolboxCommand, IsWidget {
     }
 
     @Override
+    public String getTitle() {
+        return "Edit name";
+    }
+
+    @Override
     public void execute(final Context context, 
                         final Element element) {
         toolbox.initialize(context.getCanvasHandler());

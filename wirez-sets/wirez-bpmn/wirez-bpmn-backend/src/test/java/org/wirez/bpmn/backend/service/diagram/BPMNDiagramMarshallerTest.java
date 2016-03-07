@@ -1,26 +1,18 @@
 package org.wirez.bpmn.backend.service.diagram;
 
-import org.eclipse.bpmn2.util.Bpmn2Resource;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import org.uberfire.mocks.EventSourceMock;
 import org.wirez.bpmn.api.*;
 import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
 import org.wirez.bpmn.api.factory.BPMNDefinitionSetFactory;
 import org.wirez.bpmn.api.factory.BPMNPropertyFactory;
 import org.wirez.bpmn.api.factory.BPMNPropertySetFactory;
-import org.wirez.bpmn.backend.legacy.Bpmn2JsonMarshaller;
-import org.wirez.bpmn.backend.legacy.Bpmn2JsonUnmarshaller;
-import org.wirez.bpmn.backend.marshall.json.Bpmn2Marshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.BootstrapObjectBuilder;
-import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.edges.SequenceFlowBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.activities.ParallelGatewayBuilder;
@@ -29,14 +21,11 @@ import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.EndNoneEventBui
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.EndTerminateEventBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.swimlanes.LaneBuilder;
-import org.wirez.bpmn.backend.marshall.json.parser.EvaluationJsonParserTestString;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.adapter.PropertyAdapter;
 import org.wirez.core.api.adapter.PropertySetAdapter;
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
-import org.wirez.core.api.diagram.SettingsImpl;
 import org.wirez.core.api.event.NotificationEvent;
 import org.wirez.core.api.factory.ModelFactory;
 import org.wirez.core.api.graph.Graph;
@@ -191,16 +180,6 @@ public class BPMNDiagramMarshallerTest {
         String result = tested.marshall(diagram);
         System.out.println(result);
         
-    }
-
-    @Test
-    public void testMarshallOld() throws IOException {
-        //Diagram<Settings> diagram = new DiagramImpl("uuid", null, new SettingsImpl("title", "bpmnDefSet", "bpmnShapeSet"));
-        Diagram<Settings> diagram = unmarshall(BPMN_EVALUATION);
-        Bpmn2Marshaller marshaller = new Bpmn2Marshaller( definitionManager );
-        Bpmn2Resource result = marshaller.unmarshall(EvaluationJsonParserTestString.content, "");
-        System.out.println(result);
-
     }
     
     protected InputStream loadStream(String path) {

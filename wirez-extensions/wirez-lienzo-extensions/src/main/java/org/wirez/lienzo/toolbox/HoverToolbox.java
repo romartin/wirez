@@ -53,8 +53,8 @@ public class HoverToolbox {
                 hoverToolboxButton.getShape().setX(position.getX());
                 hoverToolboxButton.getShape().setY(position.getY());
                 hoverToolboxButton.getShape().animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 500, new AnimationCallback());
-                HandlerRegistration hr1 = hoverToolboxButton.getShape().addNodeMouseEnterHandler(hoverTimer);
-                HandlerRegistration hr2 = hoverToolboxButton.getShape().addNodeMouseExitHandler(hoverTimer);
+                HandlerRegistration hr1 = hoverToolboxButton.getDecorator().addNodeMouseEnterHandler(hoverTimer);
+                HandlerRegistration hr2 = hoverToolboxButton.getDecorator().addNodeMouseExitHandler(hoverTimer);
                 handlerRegistrationManager.register(hr1);
                 handlerRegistrationManager.register(hr2);
                 this.shape.addChild(hoverToolboxButton.getShape());

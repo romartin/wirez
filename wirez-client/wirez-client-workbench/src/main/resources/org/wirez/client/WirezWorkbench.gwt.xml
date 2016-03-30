@@ -21,6 +21,7 @@
 
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.uberfire.commons.UberfireCommons"/>
+	<inherits name="org.uberfire.ext.widgets.common.UberfireWidgetsCommons"/>
 	<inherits name="org.wirez.client.WirezWidgets"/>
 
 	<inherits name="org.wirez.bpmn.WirezBpmnApi"/>

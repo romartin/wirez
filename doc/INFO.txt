@@ -20,6 +20,7 @@
         - lanes -> https://grapholite.com/Diagrams/Swimlane
         - subprocess on new canvas (when click)
         - copy elements between canvas
+        - user task panels - https://docs.google.com/document/d/1iCee5GnjmWAwJI2bXV522KEWl4uvlWGvztTsP9ndllM/edit#
         
     - QE
         - Lienzo testing -> https://docs.google.com/document/d/1QITse3Guo-p1mA33JLzBLN9qDOburaS_3ubWeNN0Dgo/edit#heading=h.32egv0z2klab

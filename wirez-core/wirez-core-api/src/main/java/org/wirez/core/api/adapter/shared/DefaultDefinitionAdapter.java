@@ -2,17 +2,13 @@ package org.wirez.core.api.adapter.shared;
 
 import org.wirez.core.api.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.DefaultDefinition;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.HasValue;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.definition.property.PropertySet;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.factory.*;
+import org.wirez.core.api.graph.factory.ElementFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -20,20 +16,8 @@ import java.util.Set;
 @ApplicationScoped
 public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefinition> {
 
-    GraphFactory<? extends Definition> graphFactory;
-    ViewNodeFactory<? extends Definition> nodeFactory;
-    ConnectionEdgeFactory<? extends Definition> edgeFactory;
-
+    
     public DefaultDefinitionAdapter() {
-    }
-
-    @Inject
-    public DefaultDefinitionAdapter(GraphFactory<? extends Definition> graphFactory, 
-                                    ViewNodeFactory<? extends Definition> nodeFactory, 
-                                    ConnectionEdgeFactory<? extends Definition> edgeFactory) {
-        this.graphFactory = graphFactory;
-        this.nodeFactory = nodeFactory;
-        this.edgeFactory = edgeFactory;
     }
 
     @Override
@@ -80,18 +64,20 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefaultDefini
     }
 
     @Override
+    public String getGraphElementFactory(DefaultDefinition pojo) {
+        // TODO
+        return null;
+    }
+
+    @Override
     public ElementFactory getElementFactory(final DefaultDefinition definition) {
         if ( null != definition ) {
 
             Class<? extends Element> item = getGraphElementType(definition);
-
-            if (item.equals(Graph.class)) {
-                return graphFactory;
-            } else if (item.equals(Node.class)) {
-                return nodeFactory;
-            } else if (item.equals(Node.class)) {
-                return edgeFactory;
-            }
+            String factory = getGraphElementFactory(definition);
+            
+            // TODO
+           
 
         }
 

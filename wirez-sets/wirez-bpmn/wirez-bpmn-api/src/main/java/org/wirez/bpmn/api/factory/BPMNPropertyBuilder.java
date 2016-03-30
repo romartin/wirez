@@ -7,6 +7,7 @@ import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.diagram.Executable;
 import org.wirez.bpmn.api.property.diagram.Package;
 import org.wirez.bpmn.api.property.general.*;
+import org.wirez.bpmn.api.property.simulation.*;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.factory.PropertyBuilder;
 
@@ -32,6 +33,16 @@ public class BPMNPropertyBuilder implements PropertyBuilder<BPMNProperty> {
         add(Height.ID);
         add(Width.ID);
         add(Radius.ID);
+        add(Min.ID);
+        add(Max.ID);
+        add(Mean.ID);
+        add(DistributionType.ID);
+        add(Currency.ID);
+        add(Quantity.ID);
+        add(StandardDeviation.ID);
+        add(TimeUnit.ID);
+        add(UnitCost.ID);
+        add(WorkingHours.ID);
     }};
 
     public BPMNPropertyBuilder() {
@@ -87,12 +98,82 @@ public class BPMNPropertyBuilder implements PropertyBuilder<BPMNProperty> {
         if (Radius.ID.equals(id)) {
             return buildRadius();
         }
+        if (Min.ID.equals(id)) {
+            return buildMin();
+        }
+        if (Max.ID.equals(id)) {
+            return buildMax();
+        }
+        if (Mean.ID.equals(id)) {
+            return buildMean();
+        }
+        if (DistributionType.ID.equals(id)) {
+            return buildDistributionType();
+        }
+        if (Currency.ID.equals(id)) {
+            return buildCurrency();
+        }
+        if (Quantity.ID.equals(id)) {
+            return buildQuantity();
+        }
+        if (StandardDeviation.ID.equals(id)) {
+            return buildStandardDeviation();
+        }
+        if (TimeUnit.ID.equals(id)) {
+            return buildTimeUnit();
+        }
+        if (UnitCost.ID.equals(id)) {
+            return buildUnitCost();
+        }
+        if (WorkingHours.ID.equals(id)) {
+            return buildWorkingHours();
+        }
         
         throw new RuntimeException("Instance expected to be build here.");
     }
 
     public org.wirez.bpmn.api.property.general.Name buildName() {
         return new org.wirez.bpmn.api.property.general.Name();
+    }
+
+    public Min buildMin() {
+        return new Min();
+    }
+
+    public Max buildMax() {
+        return new Max();
+    }
+
+    public Mean buildMean() {
+        return new Mean();
+    }
+    
+    public DistributionType buildDistributionType() {
+        return new DistributionType();
+    }
+
+    public Currency buildCurrency() {
+        return new Currency();
+    }
+
+    public Quantity buildQuantity() {
+        return new Quantity();
+    }
+
+    public StandardDeviation buildStandardDeviation() {
+        return new StandardDeviation();
+    }
+
+    public TimeUnit buildTimeUnit() {
+        return new TimeUnit();
+    }
+
+    public UnitCost buildUnitCost() {
+        return new UnitCost();
+    }
+
+    public WorkingHours buildWorkingHours() {
+        return new WorkingHours();
     }
 
     public Executable buildExecutable() {

@@ -24,6 +24,7 @@ import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
+import org.wirez.bpmn.api.property.simulation.*;
 import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.definition.PropertySet;
@@ -60,6 +61,36 @@ public class Task extends BaseDefinition implements BPMNDefinition {
 
     @Property
     private Height height;
+
+    @Property
+    private Min min;
+
+    @Property
+    private Max max;
+
+    @Property
+    private Mean mean;
+
+    @Property
+    private TimeUnit timeUnit;
+
+    @Property
+    private StandardDeviation standardDeviation;
+
+    @Property
+    private DistributionType distributionType;
+
+    @Property
+    private Quantity quantity;
+
+    @Property
+    private WorkingHours workingHours;
+
+    @Property
+    private UnitCost unitCost;
+
+    @Property
+    private Currency currency;
     
     public Task() {
         super("Activities", "Task", "A task is a unit of work - the job to be performed",
@@ -81,13 +112,34 @@ public class Task extends BaseDefinition implements BPMNDefinition {
                 @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                 @MapsTo("fontSet") FontSet fontSet,
                 @MapsTo("width") Width width,
-                @MapsTo("height") Height height) {
+                @MapsTo("height") Height height,
+                @MapsTo("min") Min min,
+                @MapsTo("max") Max max,
+                @MapsTo("mean") Mean mean,
+                @MapsTo("timeUnit") TimeUnit timeUnit,
+                @MapsTo("standardDeviation") StandardDeviation standardDeviation,
+                @MapsTo("distributionType") DistributionType distributionType,
+                @MapsTo("quantity") Quantity quantity,
+                @MapsTo("workingHours") WorkingHours workingHours,
+                @MapsTo("unitCost") UnitCost unitCost,
+                @MapsTo("currency") Currency currency) {
         this();
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.width = width;
         this.height = height;
+        this.min = min;
+        this.max = max;
+        this.mean = mean;
+        this.timeUnit = timeUnit;
+        this.standardDeviation = standardDeviation;
+        this.distributionType = distributionType;
+        this.quantity = quantity;
+        this.workingHours = workingHours;
+        this.unitCost = unitCost;
+        this.currency = currency;
+        
     }
 
     @Override
@@ -133,5 +185,85 @@ public class Task extends BaseDefinition implements BPMNDefinition {
 
     public void setHeight(Height height) {
         this.height = height;
+    }
+
+    public Min getMin() {
+        return min;
+    }
+
+    public void setMin(Min min) {
+        this.min = min;
+    }
+
+    public Max getMax() {
+        return max;
+    }
+
+    public void setMax(Max max) {
+        this.max = max;
+    }
+
+    public Mean getMean() {
+        return mean;
+    }
+
+    public void setMean(Mean mean) {
+        this.mean = mean;
+    }
+
+    public TimeUnit getTimeUnit() {
+        return timeUnit;
+    }
+
+    public void setTimeUnit(TimeUnit timeUnit) {
+        this.timeUnit = timeUnit;
+    }
+
+    public StandardDeviation getStandardDeviation() {
+        return standardDeviation;
+    }
+
+    public void setStandardDeviation(StandardDeviation standardDeviation) {
+        this.standardDeviation = standardDeviation;
+    }
+
+    public DistributionType getDistributionType() {
+        return distributionType;
+    }
+
+    public void setDistributionType(DistributionType distributionType) {
+        this.distributionType = distributionType;
+    }
+
+    public Quantity getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Quantity quantity) {
+        this.quantity = quantity;
+    }
+
+    public WorkingHours getWorkingHours() {
+        return workingHours;
+    }
+
+    public void setWorkingHours(WorkingHours workingHours) {
+        this.workingHours = workingHours;
+    }
+
+    public UnitCost getUnitCost() {
+        return unitCost;
+    }
+
+    public void setUnitCost(UnitCost unitCost) {
+        this.unitCost = unitCost;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
     }
 }

@@ -23,6 +23,7 @@ import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
+import org.wirez.bpmn.api.property.simulation.ThrowEventAttributes;
 import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.definition.PropertySet;
@@ -49,6 +50,9 @@ public class EndTerminateEvent extends BaseDefinition implements BPMNDefinition 
     private BackgroundSet backgroundSet;
 
     @PropertySet
+    private ThrowEventAttributes throwEventAttributes;
+
+    @PropertySet
     private FontSet fontSet;
     
     @Property
@@ -71,11 +75,13 @@ public class EndTerminateEvent extends BaseDefinition implements BPMNDefinition 
     public EndTerminateEvent(@MapsTo("general") BPMNGeneral general,
                              @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                              @MapsTo("fontSet") FontSet fontSet,
+                             @MapsTo("throwEventAttributes") ThrowEventAttributes throwEventAttributes,
                              @MapsTo("radius") Radius radius) {
         this();
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
+        this.throwEventAttributes = throwEventAttributes;
         this.radius = radius;
     }
 
@@ -114,5 +120,13 @@ public class EndTerminateEvent extends BaseDefinition implements BPMNDefinition 
 
     public void setRadius(Radius radius) {
         this.radius = radius;
+    }
+
+    public ThrowEventAttributes getThrowEventAttributes() {
+        return throwEventAttributes;
+    }
+
+    public void setThrowEventAttributes(ThrowEventAttributes throwEventAttributes) {
+        this.throwEventAttributes = throwEventAttributes;
     }
 }

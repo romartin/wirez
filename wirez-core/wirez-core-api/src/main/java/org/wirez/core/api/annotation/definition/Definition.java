@@ -26,4 +26,6 @@ public @interface Definition {
 
     Class<? extends Element> type();
     
+    String factory() default "";
+    
 }

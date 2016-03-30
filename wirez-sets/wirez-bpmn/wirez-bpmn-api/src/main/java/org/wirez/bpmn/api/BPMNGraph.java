@@ -19,7 +19,7 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.wirez.bpmn.api.property.diagram.DiagramSet;
+import org.wirez.bpmn.api.factory.BPMNAbstractGraphFactory;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.PropertySet;
@@ -31,7 +31,7 @@ import java.util.HashSet;
 
 @Portable
 @Bindable
-@Definition( type = Graph.class )
+@Definition( type = Graph.class, factory = BPMNAbstractGraphFactory.FACTORY_NAME )
 @CanContain( roles = { "diagram" } )
 public class BPMNGraph extends BaseDefinition implements BPMNDefinition {
 

@@ -23,6 +23,8 @@ import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
+import org.wirez.bpmn.api.property.simulation.CatchEventAttributes;
+import org.wirez.bpmn.api.property.simulation.ThrowEventAttributes;
 import org.wirez.core.api.annotation.definition.Definition;
 import org.wirez.core.api.annotation.definition.Property;
 import org.wirez.core.api.annotation.definition.PropertySet;
@@ -51,6 +53,9 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
 
     @PropertySet
     private FontSet fontSet;
+
+    @PropertySet
+    private CatchEventAttributes catchEventAttributes;
     
     @Property
     private Radius radius;
@@ -72,11 +77,13 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
     public StartNoneEvent(@MapsTo("general") BPMNGeneral general,
                           @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                           @MapsTo("fontSet") FontSet fontSet,
+                          @MapsTo("catchEventAttributes") CatchEventAttributes catchEventAttributes,
                           @MapsTo("radius") Radius radius) {
         this();
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
+        this.catchEventAttributes = catchEventAttributes;
         this.radius = radius;
     }
 
@@ -111,6 +118,14 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
 
     public void setFontSet(FontSet fontSet) {
         this.fontSet = fontSet;
+    }
+
+    public CatchEventAttributes getCatchEventAttributes() {
+        return catchEventAttributes;
+    }
+
+    public void setCatchEventAttributes(CatchEventAttributes catchEventAttributes) {
+        this.catchEventAttributes = catchEventAttributes;
     }
 
     public void setRadius(Radius radius) {

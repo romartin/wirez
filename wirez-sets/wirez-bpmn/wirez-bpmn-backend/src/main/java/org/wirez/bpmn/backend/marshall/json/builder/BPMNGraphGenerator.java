@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -127,6 +128,14 @@ public class BPMNGraphGenerator extends JsonGenerator {
         logBuilders();
 
         this.graph = (Graph<View<BPMNGraph>, Node>) definitionService.buildGraphElement(UUID.uuid(), BPMNGraph.ID);
+        
+        // TODO: Improve this - Remove the default diagram built by the bpmn graph factory.
+        Iterator<Node> nodes = this.graph.nodes().iterator();
+        while ( nodes.hasNext() ) {
+            graph.removeNode(nodes.next().getUUID());
+        }
+        
+        // Initialize the builder context.
         builderContext.init(graph);
         
         BPMNDiagramBuilder diagramBuilder = getDiagramBuilder(builderContext);

@@ -9,35 +9,39 @@
  *  
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * DefaultDefinitionITHOUT DefaultDefinitionARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * DefinitionITHOUT DefinitionARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
-package org.wirez.core.client.graph.factory;
+package org.wirez.core.api.graph.factory;
 
-import org.wirez.core.api.definition.DefaultDefinition;
+import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.ViewConnectorImpl;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.factory.BaseElementFactory;
-import org.wirez.core.api.graph.factory.ConnectionEdgeFactory;
+import org.wirez.core.api.graph.content.view.ViewConnectorImpl;
 import org.wirez.core.api.graph.impl.EdgeImpl;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
+import javax.inject.Named;
 import java.util.Set;
 
-@ApplicationScoped
+@Dependent
+@Named( ConnectionEdgeFactoryImpl.FACTORY_NAME )
 public class ConnectionEdgeFactoryImpl 
-        extends BaseElementFactory<DefaultDefinition, View<DefaultDefinition>, Edge<View<DefaultDefinition>, Node>> 
-        implements ConnectionEdgeFactory<DefaultDefinition> {
+        extends BaseElementFactory<Definition, View<Definition>, Edge<View<Definition>, Node>> implements ConnectionEdgeFactory<Definition> {
+
+    public static final String FACTORY_NAME = "connectorEdgeFactoryImpl";
+    
+    protected ConnectionEdgeFactoryImpl() {
+    }
 
     @Override
-    public Edge<View<DefaultDefinition>, Node> build(String uuid, DefaultDefinition definition, Set<Property> properties, Set<String> labels) {
-        Edge<View<DefaultDefinition>, Node> edge =
-                new EdgeImpl<View<DefaultDefinition>>( uuid,
+    public Edge<View<Definition>, Node> build(String uuid, Definition definition, Set<Property> properties, Set<String> labels) {
+        Edge<View<Definition>, Node> edge =
+                new EdgeImpl<View<Definition>>( uuid,
                         properties,
                         labels,
                         new ViewConnectorImpl<>( definition, buildBounds()));

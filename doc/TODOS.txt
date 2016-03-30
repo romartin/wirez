@@ -1,15 +1,20 @@
-- Quick wins
+- End2end
 *************
-    - Factories
-        - child/view/parent edges ( use factories in commands, etc - avoid new operators )
-        - custom graph factory for bpmn -> create a diagram by default
-    - after containment error on task -> loses fill color (eg: task inside task)
-    - ModelFactory - rename to Model BUilder and move deaults() methods ( that build each stencils prop values ) to the builder
-    - Import tool
-        - typesafe velocity templates? 
-        - TemplateResult 
-          - add skipped results ( pojos + message )
-        - generated files indentation
+
+    - Undo command if user action not allowed - redo canvas state
+        - drag control + failed command -> use dragContxt.reset()?
+    - BPMN Marshalling -> saved bound x/y coordinates and size (is negative) on bpmn file are not the right ones
+    - Dynamic forms integration
+    - Factories - child/view/parent edges ( use factories in commands, etc - avoid new operators )
+    
+    - managers & services
+      - simplify + share impls
+        - managers on api as services
+        - managers on client client as caller/sender of the service itself
+      - definition manager -> remove adapters from api and use them internally
+        - sync/async command managers
+        - performance
+          - annot processors + client graph factories -> all ops on client side
         
 - Lienzo
 ********
@@ -22,6 +27,7 @@
             - Resize -> http://screencast.com/t/TjRkYpMvt
             - Align -> http://screencast.com/t/62lCjZGYDq7i
 
+    - Shape order ( flows, parent/child nodes, etc )
     - review wires containment. Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
 
     - Wires refactors
@@ -89,8 +95,18 @@ Backend
     - Consider performance on marshalling/unmarshalling  & builders/parsers 
         - current impl does not consider big files, as it just creates all the objects in memory once when initialized.
         -> incremental approach
+    - BPMN marshalling
+        - The resulting bpmn file contains negative size for bpmn elements
+        - Resulting positions in bpmn file are not correct
 
-          
+Import tool
+************
+
+  - typesafe velocity templates? 
+  - TemplateResult 
+    - add skipped results ( pojos + message )
+  - generated files indentation
+  
 - House keeping & others
 ************************
 

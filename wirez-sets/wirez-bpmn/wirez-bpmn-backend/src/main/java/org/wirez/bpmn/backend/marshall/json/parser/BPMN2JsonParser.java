@@ -9,6 +9,7 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.content.ViewTraverseProcessorImpl;
@@ -77,7 +78,8 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
                         List<Edge> outEdges = node.getOutEdges();
                         if ( null != outEdges && !outEdges.isEmpty() ) {
                             for ( Edge edge : outEdges ) {
-                                if ( edge.getContent() instanceof View && !edgeParsers.containsKey(edge.getUUID()) ) {
+                                // Only add the edges with view connector types into the resulting structure to generate the bpmn definition.
+                                if ( edge.getContent() instanceof ViewConnector && !edgeParsers.containsKey(edge.getUUID()) ) {
                                     edgeParsers.put( edge.getUUID(), new EdgeParser( "", (Edge) edge ) );
                                 }
                             }
@@ -102,7 +104,6 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
                     @Override
                     public void endGraphTraversal() {
                         super.endGraphTraversal();
-                        BPMN2JsonParser.this.rootParser.initialize(parsingContext);
                     }
 
                 });
@@ -115,6 +116,9 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
             }
             
         }
+
+        // Initialize all the element parsers added in the tree.
+        BPMN2JsonParser.this.rootParser.initialize(parsingContext);
 
         System.out.println("End of children and view traverse");
 

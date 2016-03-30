@@ -80,7 +80,6 @@ public class DefinitionServiceImpl implements DefinitionService {
         return new DefinitionServiceResponseImpl(ResponseStatus.SUCCESS, definition, elementClass.getName(), properties, propertySetSetMap);
     }
 
-    // TODO: Clone definition pojos.
     @Override
     public Element buildGraphElement(final String uuid, final String definitionId) {
         

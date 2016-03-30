@@ -9,14 +9,14 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class BPMNDefinitionSetBuilder implements DefinitionSetBuilder<BPMNDefinitionSet> {
 
-    BPMNDefinitionBuilder bpmnDefinitionFactory;
+    BPMNDefinitionBuilder bpmnDefinitionBuilder;
 
     protected BPMNDefinitionSetBuilder() {
     }
 
     @Inject
-    public BPMNDefinitionSetBuilder(BPMNDefinitionBuilder bpmnDefinitionFactory) {
-        this.bpmnDefinitionFactory = bpmnDefinitionFactory;
+    public BPMNDefinitionSetBuilder(BPMNDefinitionBuilder bpmnDefinitionBuilder) {
+        this.bpmnDefinitionBuilder = bpmnDefinitionBuilder;
     }
 
     @Override
@@ -26,15 +26,15 @@ public class BPMNDefinitionSetBuilder implements DefinitionSetBuilder<BPMNDefini
 
     @Override
     public BPMNDefinitionSet build(final String id) {
-        return new BPMNDefinitionSet(bpmnDefinitionFactory.buildBPMNGraph(), 
-                bpmnDefinitionFactory.buildBPMNDiagram(),
-                bpmnDefinitionFactory.buildStartNoneEvent(),
-                bpmnDefinitionFactory.buildEndNoneEvent(),
-                bpmnDefinitionFactory.buildTask(),
-                bpmnDefinitionFactory.buildSequenceFlow(),
-                bpmnDefinitionFactory.buildParallelGateway(),
-                bpmnDefinitionFactory.buildEndTerminateEvent(),
-                bpmnDefinitionFactory.buildLane());
+        return new BPMNDefinitionSet(bpmnDefinitionBuilder.buildBPMNGraph(),
+                bpmnDefinitionBuilder.buildBPMNDiagram(),
+                bpmnDefinitionBuilder.buildStartNoneEvent(),
+                bpmnDefinitionBuilder.buildEndNoneEvent(),
+                bpmnDefinitionBuilder.buildTask(),
+                bpmnDefinitionBuilder.buildSequenceFlow(),
+                bpmnDefinitionBuilder.buildParallelGateway(),
+                bpmnDefinitionBuilder.buildEndTerminateEvent(),
+                bpmnDefinitionBuilder.buildLane());
     }
     
 }

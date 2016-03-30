@@ -105,45 +105,53 @@ public class DiagramServiceImpl implements DiagramService {
         
         if ( isAll ) {
 
-            final Collection<DiagramRepresentation> result = new ArrayList<DiagramRepresentation>();
+            try {
 
-            if (ioService.exists(root)) {
-                walkFileTree(checkNotNull("root", root),
-                        new SimpleFileVisitor<Path>() {
-                            @Override
-                            public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-                                    checkNotNull("file", file);
-                                checkNotNull("attrs", attrs);
-                                
-                                String name = file.getFileName().toString();
-                                if ( isAccepted( name ) ) {
+                final Collection<DiagramRepresentation> result = new ArrayList<DiagramRepresentation>();
+    
+                if (ioService.exists(root)) {
+                    walkFileTree(checkNotNull("root", root),
+                            new SimpleFileVisitor<Path>() {
+                                @Override
+                                public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+                                        checkNotNull("file", file);
+                                    checkNotNull("attrs", attrs);
                                     
-                                    // TODO: Do not load & process the whole bpmn file. Just the necessary to build the
-                                    // portable diagram representation.
-                                    Diagram diagram = doLoad( file );
-
-                                    if ( null != diagram ) {
-
-                                        Settings settings = diagram.getSettings();
-                                        DiagramRepresentation representation =
-                                                new DiagramRepresentationImpl(diagram.getUUID(), 
-                                                        settings.getTitle(),
-                                                        settings.getDefinitionSetId(),
-                                                        settings.getShapeSetId(), 
-                                                        settings.getPath());
+                                    String name = file.getFileName().toString();
+                                    if ( isAccepted( name ) ) {
                                         
-                                        result.add(representation);
+                                        // TODO: Do not load & process the whole bpmn file. Just the necessary to build the
+                                        // portable diagram representation.
+                                        Diagram diagram = doLoad( file );
+    
+                                        if ( null != diagram ) {
+    
+                                            Settings settings = diagram.getSettings();
+                                            DiagramRepresentation representation =
+                                                    new DiagramRepresentationImpl(diagram.getUUID(), 
+                                                            settings.getTitle(),
+                                                            settings.getDefinitionSetId(),
+                                                            settings.getShapeSetId(), 
+                                                            settings.getPath());
+                                            
+                                            result.add(representation);
+                                        }
+                                        
                                     }
-                                    
+                                        
+                                    return FileVisitResult.CONTINUE;
                                 }
-                                    
-                                return FileVisitResult.CONTINUE;
-                            }
-                        });
+                            });
+                }
+                
+                    
+                return new DiagramsServiceResponseImpl(ResponseStatus.SUCCESS, result);
+                
+            } catch (Exception e) {
+                LOG.error("Error during diagram search operation.", e);
+                throw e;
             }
-            
-            return new DiagramsServiceResponseImpl(ResponseStatus.SUCCESS, result);
-            
+
         } else {
             
             throw new UnsupportedOperationException("Search with criteria is not supported yet.");
@@ -175,9 +183,19 @@ public class DiagramServiceImpl implements DiagramService {
     @Override
     public DiagramServiceResponse load(DiagramServiceLoadRequest request) {
 
-        final String fileName = request.getPath();
-        
-        Diagram diagram = doLoad( fileName );
+        Diagram diagram = null;
+        try {
+                
+            final String fileName = request.getPath();
+            
+            diagram = doLoad( fileName );
+
+        } catch (Exception e) {
+
+            LOG.error("Error during diagram load operation.", e);
+            throw e;
+            
+        }
         
         if ( null != diagram ) {
             
@@ -194,62 +212,71 @@ public class DiagramServiceImpl implements DiagramService {
     @Override
     public ServiceResponse save(DiagramServiceSaveRequest request) {
 
-        final Diagram diagram = request.getDiagram();
-
-        // Update registry, if necessary.
-        // Disabled while coding
-        /*if (diagramRegistry.contains(diagram)) {
-            diagramRegistry.update(diagram);
-        } else {
-            diagramRegistry.add(diagram);
-        }*/
+        try {
         
-        if ( null == diagram ) {
-            doLog("Diagram is null!");
-        } else {
-            Graph graph = diagram.getGraph();
-            if ( null == graph ) {
-                doLog("Graph is null!");
+            final Diagram diagram = request.getDiagram();
+    
+            // Update registry, if necessary.
+            // Disabled while coding
+            /*if (diagramRegistry.contains(diagram)) {
+                diagramRegistry.update(diagram);
             } else {
-
-                String path = diagram.getSettings().getPath();
-                if ( path == null || path.trim().length() == 0 ) {
-                    path = buildDiagramPath(diagram);
-                }
-                
-                DefinitionSetServices services = getServices( path );
-                
-                if ( null == services ) {
-                    throw new RuntimeException("No service for diagram [" + path + "]");
+                diagramRegistry.add(diagram);
+            }*/
+            
+            if ( null == diagram ) {
+                doLog("Diagram is null!");
+            } else {
+                Graph graph = diagram.getGraph();
+                if ( null == graph ) {
+                    doLog("Graph is null!");
                 } else {
-                    
-                    
-                    try {
-                        
-                        ioService.startBatch(fileSystem);
-
-                        doLog("Saving diagram with UUID [" + diagram.getUUID() + "] using path [" + path + "]");
-                        DiagramMarshaller marshaller = services.getDiagramMarshaller();
-                        String result = marshaller.marshall( diagram );
-                        doLog("Result" + result);
-                        Path defPath = getDiagramsPath().resolve( path );
-                        ioService.write(defPath, result);
-                        
-                    } catch (Exception e) {
-                        
-                        LOG.error("Error saving diagram.", e);
-                        
-                    } finally {
-                        
-                        ioService.endBatch();
+    
+                    String path = diagram.getSettings().getPath();
+                    if ( path == null || path.trim().length() == 0 ) {
+                        path = buildDiagramPath(diagram);
                     }
-                   
+                    
+                    DefinitionSetServices services = getServices( path );
+                    
+                    if ( null == services ) {
+                        throw new RuntimeException("No service for diagram [" + path + "]");
+                    } else {
+                        
+                        
+                        try {
+                            
+                            ioService.startBatch(fileSystem);
+    
+                            doLog("Saving diagram with UUID [" + diagram.getUUID() + "] using path [" + path + "]");
+                            DiagramMarshaller marshaller = services.getDiagramMarshaller();
+                            String result = marshaller.marshall( diagram );
+                            doLog("Result" + result);
+                            Path defPath = getDiagramsPath().resolve( path );
+                            ioService.write(defPath, result);
+                            
+                        } catch (Exception e) {
+                            
+                            LOG.error("Error saving diagram.", e);
+                            
+                        } finally {
+                            
+                            ioService.endBatch();
+                        }
+                       
+                    }
+                    
                 }
-                
             }
-        }
+    
+            return new ServiceResponseImpl(ResponseStatus.SUCCESS);
 
-        return new ServiceResponseImpl(ResponseStatus.SUCCESS);
+        } catch (Exception e) {
+
+            LOG.error("Error during diagram save operation.", e);
+            throw e;
+            
+        }
     }
     
     private void doLog(String m) {

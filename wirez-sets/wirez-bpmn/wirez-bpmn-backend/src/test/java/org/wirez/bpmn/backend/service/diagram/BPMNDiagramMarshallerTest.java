@@ -32,19 +32,15 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactoryImpl;
-import org.wirez.core.api.graph.factory.ConnectionEdgeFactory;
-import org.wirez.core.api.graph.factory.GraphFactory;
-import org.wirez.core.api.graph.factory.ViewNodeFactory;
+import org.wirez.core.api.graph.factory.*;
 import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.backend.adapter.AnnotatedDefinitionAdapter;
 import org.wirez.core.backend.adapter.AnnotatedPropertyAdapter;
 import org.wirez.core.backend.adapter.AnnotatedPropertySetAdapter;
-import org.wirez.core.backend.graph.factory.ConnectionEdgeFactoryImpl;
-import org.wirez.core.backend.graph.factory.GraphFactoryImpl;
-import org.wirez.core.backend.graph.factory.ViewNodeFactoryImpl;
 import org.wirez.core.backend.service.definition.DefinitionServiceImpl;
 
+import javax.enterprise.inject.spi.BeanManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -55,21 +51,24 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 // TODO: Mock the different objects created here.
 @RunWith(MockitoJUnitRunner.class)
 public class BPMNDiagramMarshallerTest {
 
     protected static final String BPMN_EVALUATION = "org/wirez/bpmn/backend/service/diagram/evaluation.bpmn";
+    protected static final String BPMN_BASIC = "org/wirez/bpmn/backend/service/diagram/basic.bpmn";
 
     private BPMNDiagramMarshaller tested;
     
     @Mock BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
     @Mock DefinitionManager definitionManager;
     @Mock EventSourceMock<NotificationEvent> notificationEvent;
-
+    @Mock BeanManager beanManager;
     private DefinitionService definitionService;
 
     @Before
@@ -82,12 +81,13 @@ public class BPMNDiagramMarshallerTest {
         propertySetAdapters.add(propertySetAdapter);
         List<PropertyAdapter> propertyAdapters = new LinkedList<>();
         propertyAdapters.add(propertyAdapter);
-        GraphFactory graphFactory = new GraphFactoryImpl<>();
-        ViewNodeFactory nodeFactory = new ViewNodeFactoryImpl<>();
-        ConnectionEdgeFactory edgeFactory = new ConnectionEdgeFactoryImpl<>();
+        
+        // Bean manager & factories.
+        // TODO: Mock bean manager to return the element factories.
+
         this.definitionService = new DefinitionServiceImpl(definitionManager);
         AnnotatedDefinitionAdapter definitionAdapter = new AnnotatedDefinitionAdapter(propertySetAdapters, 
-                propertyAdapters, graphFactory, nodeFactory, edgeFactory);
+                propertyAdapters, null);
 
         doAnswer(invocationOnMock -> definitionAdapter).when(definitionManager).getDefinitionAdapter(any(Object.class));
         doAnswer(invocationOnMock -> propertyAdapter).when(definitionManager).getPropertyAdapter(any(Object.class));
@@ -185,5 +185,13 @@ public class BPMNDiagramMarshallerTest {
     protected InputStream loadStream(String path) {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
     }
-    
+
+
+    @Test
+    public void testMarshallBasic() {
+        Diagram<Settings> diagram = unmarshall(BPMN_BASIC);
+        String result = tested.marshall(diagram);
+        System.out.println(result);
+    }
+
 }

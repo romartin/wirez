@@ -18,7 +18,10 @@ import org.wirez.core.api.graph.factory.*;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Instance;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -30,10 +33,8 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
     Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances;
     Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances;
-    GraphFactory<? extends Definition> graphFactory;
-    ViewNodeFactory<? extends Definition> nodeFactory;
-    ConnectionEdgeFactory<? extends Definition> edgeFactory;
-
+    BeanManager beanManager;
+    
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
     protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();
 
@@ -42,27 +43,19 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
 
     @Inject
     public AnnotatedDefinitionAdapter(Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances, 
-                                      Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances, 
-                                      GraphFactory<? extends Definition> graphFactory, 
-                                      ViewNodeFactory<? extends Definition> nodeFactory, 
-                                      ConnectionEdgeFactory<? extends Definition> edgeFactory) {
+                                      Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances,
+                                      BeanManager beanManager) {
         this.propertySetAdapterInstances = propertySetAdapterInstances;
         this.propertyAdapterInstances = propertyAdapterInstances;
-        this.graphFactory = graphFactory;
-        this.nodeFactory = nodeFactory;
-        this.edgeFactory = edgeFactory;
+        this.beanManager = beanManager;
     }
 
     public AnnotatedDefinitionAdapter(List<PropertySetAdapter> propertySetAdapters,
                                       List<PropertyAdapter> propertyAdapters,
-                                      GraphFactory<? extends Definition> graphFactory,
-                                      ViewNodeFactory<? extends Definition> nodeFactory,
-                                      ConnectionEdgeFactory<? extends Definition> edgeFactory) {
+                                      BeanManager beanManager) {
         this.propertySetAdapters.addAll(propertySetAdapters);
         this.propertyAdapters.addAll(propertyAdapters);
-        this.graphFactory = graphFactory;
-        this.nodeFactory = nodeFactory;
-        this.edgeFactory = edgeFactory;
+        this.beanManager = beanManager;
     }
 
     @PostConstruct
@@ -193,19 +186,25 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
     }
 
     @Override
+    public String getGraphElementFactory(Definition definition) {
+        String result = null;
+
+        if ( null != definition ) {
+            org.wirez.core.api.annotation.definition.Definition annotation = definition.getClass().getAnnotation(org.wirez.core.api.annotation.definition.Definition.class);
+            result = annotation.factory();
+        }
+
+        return result;
+    }
+
+    @Override
     public ElementFactory getElementFactory(Definition definition) {
        
         if ( null != definition ) {
 
             Class<? extends Element> item = getGraphElementType(definition);
-
-            if (item.equals(Graph.class)) {
-                return graphFactory;
-            } else if (item.equals(Node.class)) {
-                return nodeFactory;
-            } else if (item.equals(Edge.class)) {
-                return edgeFactory;
-            }
+            String factory = getGraphElementFactory(definition);
+            return getElementFactory(item, factory);
 
         }
         
@@ -233,6 +232,31 @@ public class AnnotatedDefinitionAdapter implements DefinitionAdapter<Definition>
             }
         }
         return null;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private ElementFactory getElementFactory(Class<? extends Element> item, String factory) {
+
+        String ref = item.getName();
+        if ( factory != null && factory.trim().length() > 0 ) {
+            ref = factory;
+        } else if (item.equals(Graph.class)) {
+            ref = GraphFactoryImpl.FACTORY_NAME;
+        } else if (item.equals(Node.class)) {
+            ref = ViewNodeFactoryImpl.FACTORY_NAME;
+        } else if (item.equals(Edge.class)) {
+            ref = ConnectionEdgeFactoryImpl.FACTORY_NAME;
+        }
+
+        Bean<?>  bean = beanManager.getBeans(ref).iterator().next();
+        
+        if ( null == bean ) {
+            throw new RuntimeException( "No factory found for class " + ref );
+        }
+
+        // Return the element's factory instance.
+        CreationalContext ctx = beanManager.createCreationalContext(bean);
+        return (ElementFactory) beanManager.getReference(bean, bean.getBeanClass(), ctx);
     }
     
 }

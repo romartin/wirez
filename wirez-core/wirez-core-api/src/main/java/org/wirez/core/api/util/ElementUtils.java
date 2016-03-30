@@ -84,7 +84,7 @@ public class ElementUtils {
         final Bounds.Bound lr = element.getBounds().getLowerRight();
         final double w = lr.getX() - ul.getX();
         final double h = lr.getY() - ul.getY();
-        return new Double[] { w, h };
+        return new Double[] { Math.abs(w), Math.abs(h) };
     }
 
     public static void updateBounds(final double radius, 

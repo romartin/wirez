@@ -6,6 +6,7 @@ import org.wirez.bpmn.backend.marshall.json.parser.common.StringFieldParser;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.view.ViewConnector;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,7 +29,6 @@ public class NodeParser extends ElementParser<Node<View, Edge>> {
         super.initialize(context);
 
         // Children.
-
         ArrayParser childrenParser = new ArrayParser( "childShapes" );
         for (Parser childParser : children) {
             if ( childParser instanceof ContextualParser ) {
@@ -44,8 +44,11 @@ public class NodeParser extends ElementParser<Node<View, Edge>> {
         List<Edge> outEdges = element.getOutEdges();
         if ( null != outEdges && !outEdges.isEmpty() ) {
             for ( Edge edge : outEdges ) {
-                String edgeId = edge.getUUID();
-                outgoingParser.addParser( new ObjectParser( "" ).addParser( new StringFieldParser( "resourceId", edgeId ) ) );
+                // Only add the edges with view connector types into the resulting structure to generate the bpmn definition.
+                if ( edge.getContent() instanceof ViewConnector) {
+                    String edgeId = edge.getUUID();
+                    outgoingParser.addParser( new ObjectParser( "" ).addParser( new StringFieldParser( "resourceId", edgeId ) ) );
+                }
             }
         }
         

@@ -60,6 +60,7 @@ public class DefaultDragControl extends BaseDragControl<Shape, Element>  {
                 @Override
                 public void end(final org.wirez.core.client.view.event.DragEvent event) {
                     final double[] xy = getContainerXY(shape);
+                    // TODO: Check result. If failed -> dragContext#reset()
                     execute( commandFactory.UPDATE_POSITION(element, xy[0], xy[1]) );
                 }
             };

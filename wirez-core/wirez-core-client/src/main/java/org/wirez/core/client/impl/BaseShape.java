@@ -16,7 +16,6 @@
 
 package org.wirez.core.client.impl;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.content.view.View;
@@ -37,7 +36,7 @@ import org.wirez.core.client.view.ShapeView;
 /**
  * A default Lienzo Wires based shape.
  */
-public abstract class BaseShape<W extends Definition> implements 
+public abstract class BaseShape<W> implements 
         org.wirez.core.client.Shape<W>,
         HasPropertyMutation,
         HasGraphElementMutation<W, View<W>, org.wirez.core.api.graph.Node<View<W>, Edge>> {

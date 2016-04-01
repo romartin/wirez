@@ -18,7 +18,6 @@ package org.wirez.core.api.graph.content.view;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.graph.content.view.Bounds;
 
 @Portable
 public final class BoundImpl implements Bounds.Bound {

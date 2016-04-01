@@ -17,14 +17,11 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.SequenceFlow;
-import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.client.SequenceFlowShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresConnectorView;
-import org.wirez.client.shapes.glyph.WiresCircleGlyph;
 import org.wirez.client.shapes.glyph.WiresConnectorGlyph;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
@@ -50,7 +47,7 @@ public class SequenceFlowShapeFactory extends BaseBPMNShapeFactory<SequenceFlow,
     }
 
     @Override
-    public boolean accepts(final Definition definition) {
+    public boolean accepts(final Object definition) {
         return definition instanceof SequenceFlow;
     }
 

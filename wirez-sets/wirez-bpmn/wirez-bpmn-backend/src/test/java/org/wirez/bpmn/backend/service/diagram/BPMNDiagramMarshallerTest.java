@@ -7,10 +7,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.mocks.EventSourceMock;
 import org.wirez.bpmn.api.*;
-import org.wirez.bpmn.api.factory.BPMNDefinitionBuilder;
-import org.wirez.bpmn.api.factory.BPMNDefinitionSetBuilder;
-import org.wirez.bpmn.api.factory.BPMNPropertyBuilder;
-import org.wirez.bpmn.api.factory.BPMNPropertySetBuilder;
+import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
+import org.wirez.bpmn.api.factory.BPMNDefinitionSetFactory;
+import org.wirez.bpmn.api.factory.BPMNPropertyFactory;
+import org.wirez.bpmn.api.factory.BPMNPropertySetFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.BootstrapObjectBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.edges.SequenceFlowBuilder;
@@ -22,26 +22,21 @@ import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.EndTerminateEve
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.swimlanes.LaneBuilder;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.adapter.PropertyAdapter;
-import org.wirez.core.api.adapter.PropertySetAdapter;
+import org.wirez.core.api.definition.adapter.PropertyAdapter;
+import org.wirez.core.api.definition.adapter.PropertySetAdapter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.event.NotificationEvent;
-import org.wirez.core.api.factory.ModelBuilder;
+import org.wirez.core.api.definition.factory.ModelFactory;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactoryImpl;
 import org.wirez.core.api.graph.factory.*;
 import org.wirez.core.api.rule.EmptyRuleManager;
-import org.wirez.core.api.service.definition.DefinitionService;
-import org.wirez.core.backend.adapter.AnnotatedDefinitionAdapter;
-import org.wirez.core.backend.adapter.AnnotatedPropertyAdapter;
-import org.wirez.core.backend.adapter.AnnotatedPropertySetAdapter;
-import org.wirez.core.backend.service.definition.DefinitionServiceImpl;
+import org.wirez.core.backend.definition.adapter.AnnotatedPropertyAdapter;
+import org.wirez.core.backend.definition.adapter.AnnotatedPropertySetAdapter;
 
-import javax.enterprise.inject.spi.BeanManager;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,7 +49,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 // TODO: Mock the different objects created here.
 @RunWith(MockitoJUnitRunner.class)
@@ -68,8 +62,8 @@ public class BPMNDiagramMarshallerTest {
     @Mock BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
     @Mock DefinitionManager definitionManager;
     @Mock EventSourceMock<NotificationEvent> notificationEvent;
-    @Mock BeanManager beanManager;
-    private DefinitionService definitionService;
+    /*@Mock ElementFactoryLocator elementFactoryLocator;
+    private DefinitionService definitionService;*/
 
     @Before
     @SuppressWarnings("unchecked")
@@ -82,38 +76,48 @@ public class BPMNDiagramMarshallerTest {
         List<PropertyAdapter> propertyAdapters = new LinkedList<>();
         propertyAdapters.add(propertyAdapter);
         
-        // Bean manager & factories.
-        // TODO: Mock bean manager to return the element factories.
+        // Element factories.
+        ViewNodeFactory nodeFactory = new ViewNodeFactoryImpl() {
+        };
+        ConnectionEdgeFactory edgeFactory = new ConnectionEdgeFactoryImpl() {
+        };
+        // TODO: Use bpmn graph factory class.
+        GraphFactory graphFactory = new GraphFactoryImpl() {
+        };
+        /*when(elementFactoryLocator.getElementFactory(eq(Node.class), anyString())).thenReturn(nodeFactory);
+        when(elementFactoryLocator.getElementFactory(eq(Edge.class), anyString())).thenReturn(edgeFactory);
+        when(elementFactoryLocator.getElementFactory(eq(Graph.class), anyString())).thenReturn(graphFactory);
 
-        this.definitionService = new DefinitionServiceImpl(definitionManager);
+        // TODO: this.definitionService = new DefinitionServiceImpl(definitionManager);
         AnnotatedDefinitionAdapter definitionAdapter = new AnnotatedDefinitionAdapter(propertySetAdapters, 
                 propertyAdapters, null);
+*/
+        /*doAnswer(invocationOnMock -> definitionAdapter).when(definitionManager).getDefinitionAdapter(any(Class.class));
+        */doAnswer(invocationOnMock -> propertyAdapter).when(definitionManager).getPropertyAdapter(any(Class.class));
+        doAnswer(invocationOnMock -> propertySetAdapter).when(definitionManager).getPropertySetAdapter(any(Class.class));
 
-        doAnswer(invocationOnMock -> definitionAdapter).when(definitionManager).getDefinitionAdapter(any(Object.class));
-        doAnswer(invocationOnMock -> propertyAdapter).when(definitionManager).getPropertyAdapter(any(Object.class));
-        doAnswer(invocationOnMock -> propertySetAdapter).when(definitionManager).getPropertySetAdapter(any(Object.class));
-
-        List<ModelBuilder> modelFactories = new LinkedList<>();
-        BPMNPropertyBuilder propertyFactory = new BPMNPropertyBuilder();
-        BPMNPropertySetBuilder propertySetFactory = new BPMNPropertySetBuilder(propertyFactory);
-        BPMNDefinitionBuilder definitionFactory = new BPMNDefinitionBuilder(propertyFactory, propertySetFactory);
-        BPMNDefinitionSetBuilder definitionSetFactory = new BPMNDefinitionSetBuilder(definitionFactory);
+        List<ModelFactory> modelFactories = new LinkedList<>();
+        BPMNPropertyFactory propertyFactory = new BPMNPropertyFactory();
+        BPMNPropertySetFactory propertySetFactory = new BPMNPropertySetFactory(propertyFactory);
+        BPMNDefinitionFactory definitionFactory = new BPMNDefinitionFactory(propertyFactory, propertySetFactory);
+        BPMNDefinitionSetFactory definitionSetFactory = new BPMNDefinitionSetFactory(definitionFactory);
         
         modelFactories.add(definitionSetFactory);
         modelFactories.add(definitionFactory);
         modelFactories.add(propertySetFactory);
         modelFactories.add(propertyFactory);
-        doAnswer(invocationOnMock -> {
+        // TODO
+        /*doAnswer(invocationOnMock -> {
             String id = (String) invocationOnMock.getArguments()[0];
             
-            for (ModelBuilder factory : modelFactories) {
+            for (ModelFactory factory : modelFactories) {
                 if ( factory.accepts(id)) {
                     return factory;
                 }
             }
             
             return null;
-        }).when(definitionManager).getModelFactory(anyString());
+        }).when(definitionManager).getModelFactory(anyString());*/
         
         BootstrapObjectBuilder bootstrapObjectBuilder = new BootstrapObjectBuilder(bpmnGraphBuilderFactory);
         doReturn(bootstrapObjectBuilder).when(bpmnGraphBuilderFactory).bootstrapBuilder();
@@ -121,24 +125,24 @@ public class BPMNDiagramMarshallerTest {
             String id = (String) invocationOnMock.getArguments()[0];
             
             /* Nodes */
-            if (BPMNDiagram.ID.equals(id)) {
+            if (BPMNDiagram.class.getSimpleName().equals(id)) {
                 return new BPMNDiagramBuilder();
-            } else if (StartNoneEvent.ID.equals(id)) {
+            } else if (StartNoneEvent.class.getSimpleName().equals(id)) {
                 return new StartNoneEventBuilder();
-            } else if (EndNoneEvent.ID.equals(id)) {
+            } else if (EndNoneEvent.class.getSimpleName().equals(id)) {
                 return new EndNoneEventBuilder();
-            } else if (EndTerminateEvent.ID.equals(id)) {
+            } else if (EndTerminateEvent.class.getSimpleName().equals(id)) {
                 return new EndTerminateEventBuilder();
-            } else if (Task.ID.equals(id)) {
+            } else if (Task.class.getSimpleName().equals(id)) {
                 return new TaskBuilder();
-            } else if (ParallelGateway.ID.equals(id)) {
+            } else if (ParallelGateway.class.getSimpleName().equals(id)) {
                 return new ParallelGatewayBuilder();
-            } else if (Lane.ID.equals(id)) {
+            } else if (Lane.class.getSimpleName().equals(id)) {
                 return new LaneBuilder();
             }
 
             /* Edges */
-            if (SequenceFlow.ID.equals(id)) {
+            if (SequenceFlow.class.getSimpleName().equals(id)) {
                 return new SequenceFlowBuilder();
             }
             
@@ -147,7 +151,7 @@ public class BPMNDiagramMarshallerTest {
         
         this.tested = new BPMNDiagramMarshaller(bpmnGraphBuilderFactory, 
                                                 definitionManager, 
-                                                definitionService, 
+                                                null, 
                                                 new GraphCommandManager(notificationEvent), 
                                                 new EmptyRuleManager(), 
                                                 new GraphCommandFactoryImpl(definitionManager));

@@ -16,8 +16,6 @@
 
 package org.wirez.core.api.graph;
 
-import org.wirez.core.api.definition.Definition;
-
 /**
  * <p>The graph implementation is based on the <b>Labeled Property Graph Model</b>:</p>
  * 

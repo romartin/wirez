@@ -19,37 +19,65 @@ package org.wirez.bpmn.api.property.simulation;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
-import org.wirez.core.api.annotation.property.DefaultValue;
-import org.wirez.core.api.annotation.property.Property;
-import org.wirez.core.api.annotation.property.Value;
-import org.wirez.core.api.definition.property.BaseProperty;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.property.*;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.DoubleType;
 
 @Portable
 @Bindable
 @Property
-public class UnitCost extends BaseProperty implements BPMNProperty {
+public class UnitCost implements BPMNProperty {
 
-    public static final String ID = "unitcost";
+    @Caption
+    public static final String caption = "Cost per time unit";
+
+    @Description
+    public static final String description = "Cost per time unit";
+
+    @ReadOnly
+    public static final Boolean readOnly = false;
+
+    @Optional
+    public static final Boolean optional = false;
+
+    @Type
+    public static final PropertyType type = new DoubleType();
+
 
     @DefaultValue
-    public static final Double DEFAULT_VALUE = 0d;
+    public static final Double defaultValue = 0d;
 
     @Value
-    private Double value = DEFAULT_VALUE;
-    
+    private Double value = defaultValue;
+
     public UnitCost() {
-        super(ID, "Cost per time unit", "Cost per time unit", false, false);
+        
     }
 
-    @Override
-    public PropertyType getType() {
-        return new DoubleType();
+    public String getCaption() {
+        return caption;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public boolean isOptional() {
+        return optional;
+    }
+
+    public PropertyType getType() {
+        return type;
+    }
+
 
     public Double getDefaultValue() {
-        return DEFAULT_VALUE;
+        return defaultValue;
     }
     
     public Double getValue() {

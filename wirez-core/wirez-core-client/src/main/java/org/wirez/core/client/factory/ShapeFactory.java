@@ -15,20 +15,18 @@
  */
 package org.wirez.core.client.factory;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.view.ShapeGlyph;
 import org.wirez.core.client.canvas.CanvasHandler;
 
 /**
  * Factory for building shapes available for authoring.
  */
-public interface ShapeFactory<W extends Definition, S extends Shape<W>> {
+public interface ShapeFactory<W, S extends Shape<W>> {
 
     /**
      * Does the Factory builds the given Wirez definition.
      */
-    boolean accepts(final Definition definition);
+    boolean accepts(final Object definition);
     
     /**
      * Get the glyph factory for this shape. Glyphs are used to represent the Shape in several 

@@ -2,19 +2,17 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 
 import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.bpmn.api.SequenceFlow;
+import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.CommandResults;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.AddNodeCommand;
 import org.wirez.core.api.graph.command.impl.SetConnectionTargetNodeCommand;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.service.definition.DefinitionService;
 
 // TODO: Improve error handling.
-public abstract class AbstractEdgeBuilder<W extends Definition, T extends Edge<View<W>, Node>> 
+public abstract class AbstractEdgeBuilder<W, T extends Edge<View<W>, Node>> 
         extends AbstractObjectBuilder<W, T> implements EdgeObjectBuilder<W, T> {
 
     public AbstractEdgeBuilder() {
@@ -25,9 +23,9 @@ public abstract class AbstractEdgeBuilder<W extends Definition, T extends Edge<V
     @SuppressWarnings("unchecked")
     protected T doBuild(BuilderContext context) {
 
-        DefinitionService definitionService = context.getDefinitionService();
+        FactoryManager factoryManager = context.getFactoryManager();
 
-        T result = (T) definitionService.buildGraphElement(this.nodeId, getDefinitionId());
+        T result = (T) factoryManager.element(this.nodeId, getDefinitionId());
 
         setProperties(context, (BPMNDefinition) result.getContent().getDefinition());
 

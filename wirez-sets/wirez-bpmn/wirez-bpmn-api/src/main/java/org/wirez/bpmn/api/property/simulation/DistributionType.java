@@ -19,39 +19,63 @@ package org.wirez.bpmn.api.property.simulation;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
-import org.wirez.core.api.annotation.property.DefaultValue;
-import org.wirez.core.api.annotation.property.Property;
-import org.wirez.core.api.annotation.property.Value;
-import org.wirez.core.api.definition.property.BaseProperty;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.property.*;
 import org.wirez.core.api.definition.property.PropertyType;
-import org.wirez.core.api.definition.property.type.ColorType;
+import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
 @Bindable
 @Property
-public class DistributionType extends BaseProperty implements BPMNProperty {
+public class DistributionType implements BPMNProperty {
 
-    public static final String ID = "distributiontype";
+    @Caption
+    public static final String caption = "The Distribution Type";
+
+    @Description
+    public static final String description = "The width";
+
+    @ReadOnly
+    public static final Boolean readOnly = false;
+
+    @Optional
+    public static final Boolean optional = false;
+
+    @Type
+    public static final PropertyType type = new StringType();
 
     @DefaultValue
-    public static final String DEFAULT_VALUE = "normal";
+    public static final String defaultValue = "normal";
 
     @Value
-    private String value = DEFAULT_VALUE;
-    
+    private String value = defaultValue;
+
     public DistributionType() {
-        super(ID, 
-                "Distribution Type", "Distribution Type.", 
-                false, false);
     }
 
-    @Override
-    public PropertyType getType() {
-        return new ColorType();
+    public String getCaption() {
+        return caption;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public boolean isOptional() {
+        return optional;
+    }
+
+    public PropertyType getType() {
+        return type;
+    }
+
 
     public String getDefaultValue() {
-        return DEFAULT_VALUE;
+        return defaultValue;
     }
     
     public String getValue() {

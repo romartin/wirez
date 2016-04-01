@@ -4,21 +4,20 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNPropertySet;
-import org.wirez.core.api.annotation.propertyset.Property;
-import org.wirez.core.api.definition.property.PropertySet;
-
-import javax.inject.Inject;
+import org.wirez.core.api.definition.annotation.Name;
+import org.wirez.core.api.definition.annotation.propertyset.Property;
+import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 
 @Portable
 @Bindable
-@org.wirez.core.api.annotation.propertyset.PropertySet
+@PropertySet
 public class DiagramSet implements BPMNPropertySet {
-    
-    public static final String ID = "diagramSet";
-    public static final String NAME = "BPMN Diagram";
+
+    @Name
+    public static final String propertySetName = "BPMN Diagram";
 
     @Property
-    private Package thePackage;
+    private Package packageProperty;
 
     @Property
     private Executable executable;
@@ -26,36 +25,23 @@ public class DiagramSet implements BPMNPropertySet {
     public DiagramSet() {
         
     }
-
-    public DiagramSet(@MapsTo("thePackage") Package thePackage,
+    
+    public DiagramSet(@MapsTo("packageProperty") Package packageProperty,
                       @MapsTo("executable") Executable executable) {
-        this.thePackage = thePackage;
+        this.packageProperty = packageProperty;
         this.executable = executable;
     }
 
-    @Override
-    public String getPropertySetId() {
-        return ID;
-    }
-
-    @Override
     public String getPropertySetName() {
-        return NAME;
+        return propertySetName;
     }
 
-    public Package getPackage() {
-        return thePackage;
+    public Package getPackageProperty() {
+        return packageProperty;
     }
 
     public Executable getExecutable() {
         return executable;
     }
 
-    public void setThePackage(Package thePackage) {
-        this.thePackage = thePackage;
-    }
-
-    public void setExecutable(Executable executable) {
-        this.executable = executable;
-    }
 }

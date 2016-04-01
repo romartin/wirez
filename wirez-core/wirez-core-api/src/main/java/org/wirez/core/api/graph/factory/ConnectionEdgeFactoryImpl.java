@@ -16,22 +16,20 @@
 
 package org.wirez.core.api.graph.factory;
 
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.content.view.ViewConnectorImpl;
 import org.wirez.core.api.graph.impl.EdgeImpl;
 
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import java.util.Set;
 
-@Dependent
+@ApplicationScoped
 @Named( ConnectionEdgeFactoryImpl.FACTORY_NAME )
-public class ConnectionEdgeFactoryImpl 
-        extends BaseElementFactory<Definition, View<Definition>, Edge<View<Definition>, Node>> implements ConnectionEdgeFactory<Definition> {
+public class ConnectionEdgeFactoryImpl
+        extends BaseViewElementFactory<Object, View<Object>, Edge<View<Object>, Node>> implements ConnectionEdgeFactory<Object> {
 
     public static final String FACTORY_NAME = "connectorEdgeFactoryImpl";
     
@@ -39,10 +37,10 @@ public class ConnectionEdgeFactoryImpl
     }
 
     @Override
-    public Edge<View<Definition>, Node> build(String uuid, Definition definition, Set<Property> properties, Set<String> labels) {
-        Edge<View<Definition>, Node> edge =
-                new EdgeImpl<View<Definition>>( uuid,
-                        properties,
+    public Edge<View<Object>, Node> build(String uuid, Object definition, Set<?> properties, Set<String> labels) {
+        Edge<View<Object>, Node> edge =
+                new EdgeImpl<View<Object>>( uuid,
+                        (Set<Object>) properties,
                         labels,
                         new ViewConnectorImpl<>( definition, buildBounds()));
         

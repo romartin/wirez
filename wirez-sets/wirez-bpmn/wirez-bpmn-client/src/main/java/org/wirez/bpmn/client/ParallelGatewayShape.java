@@ -45,7 +45,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> {
     }
 
     protected ParallelGatewayShape _applyRadius(final Node<View<ParallelGateway>, Edge> element, final MutationContext mutationContext) {
-        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
+        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.class);
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
             applyRadius(radius, mutationContext);

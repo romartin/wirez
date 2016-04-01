@@ -17,7 +17,6 @@
 package org.wirez.core.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import java.util.Collection;
@@ -53,5 +52,5 @@ public interface ShapeSet {
      * The shape factories available in this set.
      * @return The available shapes' factories.
      */
-    Collection<ShapeFactory<? extends Definition, ? extends Shape>> getFactories();
+    Collection<ShapeFactory<?, ? extends Shape>> getFactories();
 }

@@ -16,9 +16,9 @@
 
 package org.wirez.core.api;
 
-import org.wirez.core.api.adapter.*;
+import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.definition.adapter.*;
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.factory.ModelBuilder;
 import org.wirez.core.api.registry.DiagramRegistry;
 
 import java.util.*;
@@ -27,14 +27,14 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
 
     DiagramRegistry<? extends Diagram> diagramRegistry;
 
-    protected final List<ModelBuilder> modelFactories = new ArrayList<ModelBuilder>();
+    protected final List<DefinitionSet> definitionSets = new ArrayList<DefinitionSet>();
     protected final List<DefinitionSetAdapter> definitionSetAdapters = new ArrayList<DefinitionSetAdapter>();
     protected final List<DefinitionSetRuleAdapter> definitionSetRuleAdapters = new ArrayList<DefinitionSetRuleAdapter>();
     protected final List<DefinitionAdapter> definitionAdapters = new ArrayList<DefinitionAdapter>();
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
     protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();
 
-    public BaseDefinitionManager() {
+    protected BaseDefinitionManager() {
     }
 
     public BaseDefinitionManager(final DiagramRegistry<? extends Diagram> diagramRegistry) {
@@ -42,15 +42,19 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public DiagramRegistry getDiagramRegistry() {
-        return diagramRegistry;
+    public Collection<DefinitionSet> getDefinitionSets() {
+        return Collections.unmodifiableCollection( definitionSets );
     }
 
     @Override
-    public ModelBuilder getModelFactory(final String id) {
-        for (final ModelBuilder builder : modelFactories) {
-            if ( builder.accepts( id ) ) {
-                return builder;
+    public DefinitionSet getDefinitionSet(final String id) {
+        if ( null != id && id.trim().length() > 0 ) {
+            for ( final DefinitionSet definitionSet : definitionSets ) {
+                final DefinitionSetAdapter adapter = getDefinitionSetAdapter( definitionSet.getClass() );
+                final String defSetId = adapter.getId( definitionSet );
+                if ( defSetId.equals(id) ) {
+                    return definitionSet;
+                }
             }
         }
         
@@ -58,7 +62,7 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public DefinitionSetAdapter getDefinitionSetAdapter(Object pojo) {
+    public <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(Class<?> pojo) {
         for (DefinitionSetAdapter adapter : definitionSetAdapters) {
             if ( adapter.accepts(pojo) ) {
                 return adapter;
@@ -69,7 +73,7 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public DefinitionSetRuleAdapter getDefinitionSetRuleAdapter(Object pojo) {
+    public <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(Class<?> pojo) {
         for (DefinitionSetRuleAdapter adapter : definitionSetRuleAdapters) {
             if ( adapter.accepts(pojo) ) {
                 return adapter;
@@ -80,7 +84,7 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public DefinitionAdapter getDefinitionAdapter(Object pojo) {
+    public <T> DefinitionAdapter<T> getDefinitionAdapter(Class<?> pojo) {
         for (DefinitionAdapter adapter : definitionAdapters) {
             if ( adapter.accepts(pojo) ) {
                 return adapter;
@@ -91,7 +95,7 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public PropertySetAdapter getPropertySetAdapter(Object pojo) {
+    public<T> PropertySetAdapter<T> getPropertySetAdapter(Class<?> pojo) {
         for (PropertySetAdapter adapter : propertySetAdapters) {
             if ( adapter.accepts(pojo) ) {
                 return adapter;
@@ -102,7 +106,7 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public PropertyAdapter getPropertyAdapter(Object pojo) {
+    public<T> PropertyAdapter<T> getPropertyAdapter(Class<?> pojo) {
         for (PropertyAdapter adapter : propertyAdapters) {
             if ( adapter.accepts(pojo) ) {
                 return adapter;

@@ -17,17 +17,16 @@ import org.wirez.bpmn.backend.legacy.Bpmn2JsonMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphGenerator;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.service.definition.DefinitionService;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,14 +49,14 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
 
     public Bpmn2UnMarshaller(final BPMNGraphObjectBuilderFactory elementBuilderFactory,
                              final DefinitionManager definitionManager,
-                             final DefinitionService definitionService,
+                             final FactoryManager factoryManager,
                              final CommandManager<RuleManager, RuleViolation> commandManager,
                              final RuleManager ruleManager,
                              final GraphCommandFactory commandFactory) {
         
         this.bpmnGraphGenerator = new BPMNGraphGenerator(elementBuilderFactory, 
-                                                            definitionManager, 
-                                                            definitionService, 
+                                                            definitionManager,
+                                                            factoryManager, 
                                                             commandManager, 
                                                             ruleManager, 
                                                             commandFactory);

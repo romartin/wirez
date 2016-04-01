@@ -17,15 +17,12 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.ParallelGateway;
-import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.client.BPMNViewFactory;
 import org.wirez.bpmn.client.ParallelGatewayShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresPolygonView;
-import org.wirez.client.shapes.glyph.WiresConnectorGlyph;
 import org.wirez.client.shapes.glyph.WiresPolygonGlyph;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
@@ -56,7 +53,7 @@ public class ParallelGatewayShapeFactory extends BaseBPMNShapeFactory<ParallelGa
     }
 
     @Override
-    public boolean accepts(final Definition definition) {
+    public boolean accepts(final Object definition) {
         return definition instanceof ParallelGateway;
     }
 

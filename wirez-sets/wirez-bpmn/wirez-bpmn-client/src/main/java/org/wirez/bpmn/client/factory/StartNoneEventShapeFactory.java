@@ -22,7 +22,6 @@ import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresCircleView;
 import org.wirez.client.shapes.glyph.WiresCircleGlyph;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
@@ -48,7 +47,7 @@ public class StartNoneEventShapeFactory extends BaseBPMNShapeFactory<StartNoneEv
     }
 
     @Override
-    public boolean accepts(final Definition definition) {
+    public boolean accepts(final Object definition) {
         return definition instanceof StartNoneEvent;
     }
 

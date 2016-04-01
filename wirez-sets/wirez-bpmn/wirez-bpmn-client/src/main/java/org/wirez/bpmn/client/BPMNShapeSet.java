@@ -20,7 +20,6 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.client.factory.*;
 import org.wirez.bpmn.client.resources.BPMNImageResources;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.factory.ShapeFactory;
@@ -46,7 +45,7 @@ public class BPMNShapeSet implements ShapeSet {
     ParallelGatewayShapeFactory parallelGatewayShapeFactory;
     LaneShapeFactory laneShapeFactory;
     
-    private List<ShapeFactory<? extends Definition, ? extends Shape>> factories;
+    private List<ShapeFactory<?, ? extends Shape>> factories;
 
     public BPMNShapeSet() {
     }
@@ -72,7 +71,7 @@ public class BPMNShapeSet implements ShapeSet {
 
     @PostConstruct
     public void init() {
-        factories = new LinkedList<ShapeFactory<? extends Definition, ? extends Shape>>() {{
+        factories = new LinkedList<ShapeFactory<?, ? extends Shape>>() {{
             add( bpmnDiagramShapeFactory );
             add( startNoneEventShapeFactory );
             add( endNoneEventShapeFactory );
@@ -106,11 +105,11 @@ public class BPMNShapeSet implements ShapeSet {
 
     @Override
     public String getDefinitionSetId() {
-        return BPMNDefinitionSet.ID;
+        return BPMNDefinitionSet.class.getSimpleName();
     }
 
     @Override
-    public Collection<ShapeFactory<? extends Definition, ? extends Shape>> getFactories() {
+    public Collection<ShapeFactory<?, ? extends Shape>> getFactories() {
         return factories;
     }
 }

@@ -18,7 +18,6 @@ package org.wirez.core.api.graph.impl;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 
@@ -33,7 +32,7 @@ public class NodeImpl<C> extends ElementImpl<C> implements Node<C, Edge> {
     private List<Edge> outEdges = new ArrayList<Edge>();
     
     public NodeImpl(@MapsTo("uuid") String uuid,
-                    @MapsTo("properties") Set<Property> properties,
+                    @MapsTo("properties") Set<Object> properties,
                     @MapsTo("labels") Set<String> labels,
                     @MapsTo("content") C content) {
         super(uuid, properties, labels, content);

@@ -28,10 +28,12 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.property.PropertiesEditor;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 
 import javax.annotation.PostConstruct;
@@ -48,6 +50,9 @@ public class PropertiesScreen {
 
     public static final String SCREEN_ID = "PropertiesScreen";
 
+    @Inject
+    ClientDefinitionManager clientDefinitionManager;
+    
     @Inject
     PropertiesEditor propertiesEditor;
     
@@ -70,7 +75,13 @@ public class PropertiesScreen {
                 if ( null != element ) {
                     final Name nameProperty = (Name) ElementUtils.getProperty(element, Name.ID);
                     String name = nameProperty.getValue();
-                    name = name != null ? name : element.getContent().getDefinition().getTitle();
+                    final Object def = element.getContent().getDefinition();
+
+                    if ( null == name ) {
+                        final DefinitionAdapter definitionAdapter = clientDefinitionManager.getDefinitionAdapter( def.getClass() );
+                        name = definitionAdapter.getTitle( def );
+                    }
+                    
                     changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, name + " Properties"));
                 } else {
                     changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));

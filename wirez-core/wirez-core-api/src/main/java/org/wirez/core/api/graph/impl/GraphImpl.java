@@ -19,7 +19,6 @@ package org.wirez.core.api.graph.impl;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.store.GraphNodeStore;
@@ -31,7 +30,7 @@ public class GraphImpl<C> extends ElementImpl<C> implements Graph<C, Node> {
     private final GraphNodeStore<Node> nodeStore;
 
     public GraphImpl(@MapsTo("uuid") String uuid,
-                     @MapsTo("properties") Set<Property> properties,
+                     @MapsTo("properties") Set<Object> properties,
                      @MapsTo("labels") Set<String> labels,
                      @MapsTo("content") C content,
                      @MapsTo("nodeStore") GraphNodeStore<Node> nodeStore) {

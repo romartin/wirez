@@ -6,8 +6,12 @@ import org.wirez.core.api.rule.RuleViolation;
 
 public abstract class AbstractRuleViolation implements RuleViolation {
 
-    protected String getDefinitionTitle(final Element<? extends View<?>> element) {
-        return element.getContent().getDefinition().getTitle();
+    protected String getDefinitionTitle(final Element<?> element) {
+        if ( element.getContent() instanceof View ) {
+            return ((View) element.getContent()).getDefinition().toString();
+        } else {
+            return element.getContent().toString();
+        }
     }
     
 }

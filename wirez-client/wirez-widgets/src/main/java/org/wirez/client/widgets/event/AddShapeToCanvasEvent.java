@@ -17,8 +17,6 @@
 package org.wirez.client.widgets.event;
 
 import org.uberfire.workbench.events.UberFireEvent;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.factory.ShapeFactory;
 
@@ -28,21 +26,21 @@ import org.wirez.core.client.factory.ShapeFactory;
  */
 public class AddShapeToCanvasEvent implements UberFireEvent {
 
-    private Definition definition;
-    private ShapeFactory<? extends Definition, ? extends Shape> shapeFactory;
+    private Object definition;
+    private ShapeFactory<?, ? extends Shape> shapeFactory;
     private double x;
     private double y;
 
-    public AddShapeToCanvasEvent(final Definition definition,
-                                 final ShapeFactory<? extends Definition, ? extends Shape> shapeFactory) {
+    public AddShapeToCanvasEvent(final Object definition,
+                                 final ShapeFactory<? , ? extends Shape> shapeFactory) {
         this.definition = definition;
         this.shapeFactory = shapeFactory;
         this.x = -1;
         this.y = -1;
     }
 
-    public AddShapeToCanvasEvent(final Definition definition,
-                                 final ShapeFactory<? extends Definition, ? extends Shape> shapeFactory,
+    public AddShapeToCanvasEvent(final Object definition,
+                                 final ShapeFactory<? , ? extends Shape> shapeFactory,
                                  final double x,
                                  final double y) {
         this.definition = definition;
@@ -51,11 +49,11 @@ public class AddShapeToCanvasEvent implements UberFireEvent {
         this.y = y;
     }
 
-    public Definition getDefinition() {
+    public Object getDefinition() {
         return definition;
     }
 
-    public ShapeFactory<? extends Definition, ? extends Shape> getShapeFactory() {
+    public ShapeFactory<? , ? extends Shape> getShapeFactory() {
         return shapeFactory;
     }
 
@@ -69,7 +67,7 @@ public class AddShapeToCanvasEvent implements UberFireEvent {
 
     @Override
     public String toString() {
-        return "PaletteShapeSelectedEvent [definition=" + definition.getId() + ", factory=" + shapeFactory.toString() + 
+        return "PaletteShapeSelectedEvent [definition=" + definition + ", factory=" + shapeFactory.toString() + 
                 ", x=" + x + ", y=" + y + "]";
     }
 

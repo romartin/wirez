@@ -16,7 +16,6 @@
 
 package org.wirez.core.client.factory;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.control.HasShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
@@ -29,7 +28,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class BaseShapeFactory<W extends Definition, S extends Shape<W>> 
+public abstract class BaseShapeFactory<W, S extends Shape<W>> 
         implements ShapeFactory<W, S>, HasShapeControlFactories, HasShapeGlyphDragHandler {
 
     protected DefaultShapeControlFactories defaultShapeControlFactories;

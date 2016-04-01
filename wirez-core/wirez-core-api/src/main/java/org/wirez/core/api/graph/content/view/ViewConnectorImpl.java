@@ -18,10 +18,9 @@ package org.wirez.core.api.graph.content.view;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.definition.Definition;
 
 @Portable
-public final class ViewConnectorImpl<W extends Definition> implements ViewConnector<W> {
+public final class ViewConnectorImpl<W> implements ViewConnector<W> {
     protected W definition;
     protected Bounds bounds;
     protected Integer sourceMagnetIndex;

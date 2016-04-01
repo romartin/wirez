@@ -4,8 +4,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
@@ -13,21 +11,19 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.Child;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessor;
-import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.SelectionManager;
 import org.wirez.core.client.canvas.listener.AbstractCanvasModelListener;
 import org.wirez.core.client.canvas.listener.CanvasModelListener;
-import org.wirez.core.client.service.ClientDefinitionServices;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 // TODO: Use incremental updates, do not visit whole graph on each model update.
@@ -49,7 +45,6 @@ public class TreeExplorer implements IsWidget {
         View clear();
     }
     
-    ClientDefinitionServices clientDefinitionServices;
     DefinitionManager definitionManager;
     ChildrenTraverseProcessor childrenTraverseProcessor;
     Instance<TreeExplorerItem> treeExplorerItemInstances;
@@ -59,13 +54,11 @@ public class TreeExplorer implements IsWidget {
     private CanvasModelListener canvasListener;
 
     @Inject
-    public TreeExplorer(final ClientDefinitionServices clientDefinitionServices,
-                        final DefinitionManager definitionManager,
+    public TreeExplorer(final DefinitionManager definitionManager,
                         final ChildrenTraverseProcessor childrenTraverseProcessor,
                         final Instance<TreeExplorerItem> treeExplorerItemInstances,
                         final View view) {
         this.definitionManager = definitionManager;
-        this.clientDefinitionServices = clientDefinitionServices;
         this.childrenTraverseProcessor = childrenTraverseProcessor;
         this.treeExplorerItemInstances = treeExplorerItemInstances;
         this.view = view;

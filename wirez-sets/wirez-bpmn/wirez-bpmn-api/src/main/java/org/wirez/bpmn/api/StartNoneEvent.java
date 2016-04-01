@@ -24,24 +24,28 @@ import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.bpmn.api.property.simulation.CatchEventAttributes;
-import org.wirez.bpmn.api.property.simulation.ThrowEventAttributes;
-import org.wirez.core.api.annotation.definition.Definition;
-import org.wirez.core.api.annotation.definition.Property;
-import org.wirez.core.api.annotation.definition.PropertySet;
-import org.wirez.core.api.definition.BaseDefinition;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.definition.*;
 import org.wirez.core.api.graph.Node;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
 @Portable
 @Bindable
 @Definition( type = Node.class )
-public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
+public class StartNoneEvent implements BPMNDefinition {
 
-    public static final String ID = "StartNoneEvent";
+    @Category
+    public static final String category = "Start Events";
+
+    @Title
+    public static final String title = "Start Event";
+
+    @Description
+    public static final String description = "Untyped start event";
+    
+    
     public static final String COLOR = "#3eb870";
     public static final Double RADIUS = 15d;
     
@@ -59,27 +63,28 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
     
     @Property
     private Radius radius;
-    
+
+    @Labels
+    private final Set<String> labels = new HashSet<String>() {{
+        add( "all" );
+        add( "Startevents_all" );
+        add( "sequence_start" );
+        add( "choreography_sequence_start" );
+        add( "to_task_event" );
+        add( "from_task_event" );
+        add( "fromtoall" );
+        add( "StartEventsMorph" );
+    }};
+
     public StartNoneEvent() {
-        super("Start Events", "Start Event", "Untyped start event",
-                new HashSet<String>(){{
-                    add( "all" );
-                    add( "Startevents_all" );
-                    add( "sequence_start" );
-                    add( "choreography_sequence_start" );
-                    add( "to_task_event" );
-                    add( "from_task_event" );
-                    add( "fromtoall" );
-                    add( "StartEventsMorph" );
-                }});
+        
     }
     
     public StartNoneEvent(@MapsTo("general") BPMNGeneral general,
-                          @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                          @MapsTo("fontSet") FontSet fontSet,
-                          @MapsTo("catchEventAttributes") CatchEventAttributes catchEventAttributes,
-                          @MapsTo("radius") Radius radius) {
-        this();
+                   @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                   @MapsTo("fontSet") FontSet fontSet,
+                   @MapsTo("catchEventAttributes") CatchEventAttributes catchEventAttributes,
+                   @MapsTo("radius") Radius radius) {
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
@@ -87,11 +92,22 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
         this.radius = radius;
     }
 
-    @Override
-    public String getId() {
-        return ID;
+    public String getCategory() {
+        return category;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Set<String> getLabels() {
+        return labels;
+    }
+    
     public Radius getRadius() {
         return radius;
     }
@@ -108,27 +124,8 @@ public class StartNoneEvent extends BaseDefinition implements BPMNDefinition {
         return fontSet;
     }
 
-    public void setGeneral(BPMNGeneral general) {
-        this.general = general;
-    }
-
-    public void setBackgroundSet(BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet(FontSet fontSet) {
-        this.fontSet = fontSet;
-    }
-
     public CatchEventAttributes getCatchEventAttributes() {
         return catchEventAttributes;
     }
 
-    public void setCatchEventAttributes(CatchEventAttributes catchEventAttributes) {
-        this.catchEventAttributes = catchEventAttributes;
-    }
-
-    public void setRadius(Radius radius) {
-        this.radius = radius;
-    }
 }

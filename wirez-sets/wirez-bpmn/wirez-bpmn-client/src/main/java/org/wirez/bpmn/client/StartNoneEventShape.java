@@ -47,7 +47,7 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> {
     }
 
     protected StartNoneEventShape _applyRadius(final Node<View<StartNoneEvent>, Edge> element, MutationContext mutationContext) {
-        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
+        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.class);
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
             applyRadius(radius, mutationContext);

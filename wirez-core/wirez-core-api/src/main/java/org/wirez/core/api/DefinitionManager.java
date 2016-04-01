@@ -16,25 +16,26 @@
 
 package org.wirez.core.api;
 
-import org.wirez.core.api.adapter.*;
-import org.wirez.core.api.factory.ModelBuilder;
-import org.wirez.core.api.registry.DiagramRegistry;
+import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.definition.adapter.*;
+
+import java.util.Collection;
 
 public interface DefinitionManager {
 
-    ModelBuilder getModelFactory(String id);
+    Collection<DefinitionSet> getDefinitionSets();
 
-    DiagramRegistry getDiagramRegistry();
+    DefinitionSet getDefinitionSet( String id );
+
+    <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(Class<?> pojo);
+
+    <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(Class<?> pojo);
     
-    DefinitionSetAdapter getDefinitionSetAdapter(Object pojo);
-    
-    DefinitionSetRuleAdapter getDefinitionSetRuleAdapter(Object pojo);
-    
-    DefinitionAdapter getDefinitionAdapter(Object pojo);
-    
-    PropertySetAdapter getPropertySetAdapter(Object pojo);
-    
-    PropertyAdapter getPropertyAdapter(Object pojo);
+    <T> DefinitionAdapter<T> getDefinitionAdapter(Class<?> pojo);
+
+    <T> PropertySetAdapter<T> getPropertySetAdapter(Class<?> pojo);
+
+    <T> PropertyAdapter<T> getPropertyAdapter(Class<?> pojo);
     
     
 }

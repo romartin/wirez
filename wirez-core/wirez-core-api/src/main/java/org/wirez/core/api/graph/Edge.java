@@ -16,8 +16,6 @@
 
 package org.wirez.core.api.graph;
 
-import org.wirez.core.api.definition.Definition;
-
 /**
  * <p>A graph edge/relationship. It provides directed relationships between two nodes in order to provider
  * multi-directional graphs.</p>

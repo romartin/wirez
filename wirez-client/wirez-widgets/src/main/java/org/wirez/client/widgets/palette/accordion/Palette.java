@@ -27,19 +27,18 @@ import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroup;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
 import org.wirez.client.widgets.palette.tooltip.PaletteTooltip;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.service.definition.DefinitionSetServiceResponse;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.view.ShapeGlyph;
-import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.canvas.control.HasShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.factory.ShapeFactory;
-import org.wirez.core.client.service.ClientDefinitionServices;
+import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
+import org.wirez.core.client.view.ShapeGlyph;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -69,7 +68,8 @@ public class Palette implements IsWidget {
     }
 
     ShapeManager shapeManager;
-    ClientDefinitionServices clientDefinitionServices;
+    DefinitionManager definitionManager;
+    ClientFactoryServices clientFactoryServices;
     Event<AddShapeToCanvasEvent> addShapeToCanvasEvent;
     SyncBeanManager beanManager;
     PaletteTooltip paletteTooltip;
@@ -80,14 +80,16 @@ public class Palette implements IsWidget {
     public Palette(final View view,
                    final ErrorPopupPresenter errorPopupPresenter,
                    final ShapeManager shapeManager,
-                   final ClientDefinitionServices clientDefinitionServices,
+                   final DefinitionManager definitionManager,
+                   final ClientFactoryServices clientFactoryServices,
                    final SyncBeanManager beanManager,
                    final Event<AddShapeToCanvasEvent> addShapeToCanvasEvent,
                    final PaletteTooltip paletteTooltip) {
         this.view = view;
         this.errorPopupPresenter = errorPopupPresenter;
         this.shapeManager = shapeManager;
-        this.clientDefinitionServices = clientDefinitionServices;
+        this.definitionManager = definitionManager;
+        this.clientFactoryServices = clientFactoryServices;
         this.beanManager = beanManager;
         this.addShapeToCanvasEvent = addShapeToCanvasEvent;
         this.paletteTooltip = paletteTooltip;
@@ -114,11 +116,11 @@ public class Palette implements IsWidget {
         clear();
         final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
         final String definitionSetId = wirezShapeSet.getDefinitionSetId();
-        
-        clientDefinitionServices.getDefinitionSetResponse(definitionSetId, new ServiceCallback<DefinitionSetServiceResponse>() {
+
+        clientFactoryServices.model(definitionSetId, new ServiceCallback<Object>() {
             @Override
-            public void onSuccess(final DefinitionSetServiceResponse definitionSetResponse) {
-                doShow(width, wirezShapeSet, definitionSetResponse.getDefinitionSet(), definitionSetResponse.getDefinitions());
+            public void onSuccess(final Object definitionSet) {
+                doShow(width, wirezShapeSet, definitionSet);
                 view.setNoCanvasViewVisible(false);
                 view.setGroupsViewVisible(true);
             }
@@ -145,21 +147,24 @@ public class Palette implements IsWidget {
         view.clear();
     }
 
-    private void doShow(final int width, final ShapeSet wirezShapeSet, final DefinitionSet definitionSet, final Collection<Definition> definitions) {
+    private void doShow(final int width, final ShapeSet wirezShapeSet, final Object definitionSet) {
 
         // Clear current palette groups.
         view.clearGroups();
 
-        final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
+        final Collection<String> definitions = definitionManager.getDefinitionSetAdapter( definitionSet.getClass() ).getDefinitions( definitionSet );
+        final Collection<ShapeFactory<? , ? extends Shape>> factories = wirezShapeSet.getFactories();
 
         // Load entries.
         final Map<String, List<PaletteGroupItem>> paletteGroupItems = new HashMap<>();
-        for (final ShapeFactory<? extends Definition, ? extends Shape> factory : factories) {
-            final Definition definition = getDefinition(definitions, factory);
+        for (final ShapeFactory<? , ? extends Shape> factory : factories) {
+            final Object definition = getDefinition(definitions, factory);
 
             if ( null != definition ) {
+                
+                final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
 
-                final String category = definition.getCategory();
+                final String category = definitionAdapter.getCategory( definition );
                 final String description = factory.getDescription();
                 final ShapeGlyph glyph = factory.getGlyphFactory().build();
                 
@@ -250,8 +255,10 @@ public class Palette implements IsWidget {
         
     }
     
-    private Definition getDefinition(final Collection<Definition> definitions, final ShapeFactory factory) {
-        for (final Definition definition : definitions) {
+    private Object getDefinition(final Collection<String> definitions, final ShapeFactory factory) {
+        for (final String definitionId : definitions) {
+            // TODO: Do not build the instance just to check if factory#accepts. Use callback method.
+            Object definition = clientFactoryServices.model( definitionId );
             if (factory.accepts(definition)) {
                 return definition;
             }

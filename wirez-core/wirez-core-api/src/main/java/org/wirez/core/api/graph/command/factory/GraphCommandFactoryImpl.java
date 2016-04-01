@@ -1,8 +1,7 @@
 package org.wirez.core.api.graph.command.factory;
 
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.adapter.PropertyAdapter;
-import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
@@ -112,14 +111,14 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     public UpdateElementPropertyValueCommand UPDATE_PROPERTY_VALUE(final Element element,
                                                                    final String propertyId,
                                                                    final Object value) {
-        final Property p = ElementUtils.getProperty(element, propertyId);
-        PropertyAdapter adapter = getPropertyAdapter(p);
+        final Object p = ElementUtils.getProperty(element, propertyId);
+        PropertyAdapter adapter = getPropertyAdapter(p.getClass());
         return adapter != null ? new UpdateElementPropertyValueCommand(this, adapter, element, propertyId, value) : null;
     }
     
     
-    protected PropertyAdapter getPropertyAdapter(final Property property) {
-        return definitionManager.getPropertyAdapter(property);
+    protected PropertyAdapter getPropertyAdapter(final Class<?> propertyClass) {
+        return definitionManager.getPropertyAdapter(propertyClass);
     }
     
 }

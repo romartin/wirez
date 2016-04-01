@@ -24,22 +24,32 @@ import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
-import org.wirez.core.api.annotation.definition.Definition;
-import org.wirez.core.api.annotation.definition.Property;
-import org.wirez.core.api.annotation.definition.PropertySet;
-import org.wirez.core.api.annotation.rule.CanContain;
-import org.wirez.core.api.definition.BaseDefinition;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.definition.*;
+import org.wirez.core.api.definition.annotation.rule.CanContain;
 import org.wirez.core.api.graph.Node;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Portable
 @Bindable
 @Definition( type = Node.class )
 @CanContain( roles = { "all" } )
-public class Lane extends BaseDefinition implements BPMNDefinition {
+public class Lane implements BPMNDefinition {
 
-    public static final String ID = "Lane";
+    @Category
+    public static final String category = "Swimlanes";
+
+    @Title
+    public static final String title = "Lane";
+
+    @Description
+    public static final String description = "Pools and Lanes represent responsibilities for activities in a process. " +
+            "A pool or a lane can be an organization, a role, or a system. " +
+            "Lanes sub-divide pools or other lanes hierarchically.";
+    
+    
     public static final String COLOR = "#ffffff";
     public static final Double WIDTH = 450d;
     public static final Double HEIGHT = 250d;
@@ -59,25 +69,24 @@ public class Lane extends BaseDefinition implements BPMNDefinition {
 
     @Property
     private Height height;
-    
-    public Lane() {
-        super("Swimlanes", "Lane", "Pools and Lanes represent responsibilities for activities in a process. " +
-                "A pool or a lane can be an organization, a role, or a system. " +
-                "Lanes sub-divide pools or other lanes hierarchically.",
-                new HashSet<String>(){{
-                    add( "all" );
-                    add( "PoolChild" );
-                    add( "fromtoall" );
-                    add( "canContainArtifacts" );
-                }});
-    }
 
+    @Labels
+    private final Set<String> labels = new HashSet<String>() {{
+        add( "all" );
+        add( "PoolChild" );
+        add( "fromtoall" );
+        add( "canContainArtifacts" );
+    }};
+
+    public Lane() {
+        
+    }
+    
     public Lane(@MapsTo("general") BPMNGeneral general,
                 @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                 @MapsTo("fontSet") FontSet fontSet,
                 @MapsTo("width") Width width,
                 @MapsTo("height") Height height) {
-        this();
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
@@ -85,9 +94,20 @@ public class Lane extends BaseDefinition implements BPMNDefinition {
         this.height = height;
     }
 
-    @Override
-    public String getId() {
-        return ID;
+    public String getCategory() {
+        return category;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Set<String> getLabels() {
+        return labels;
     }
 
     public BPMNGeneral getGeneral() {
@@ -110,23 +130,4 @@ public class Lane extends BaseDefinition implements BPMNDefinition {
         return height;
     }
 
-    public void setGeneral(BPMNGeneral general) {
-        this.general = general;
-    }
-
-    public void setBackgroundSet(BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet(FontSet fontSet) {
-        this.fontSet = fontSet;
-    }
-
-    public void setWidth(Width width) {
-        this.width = width;
-    }
-
-    public void setHeight(Height height) {
-        this.height = height;
-    }
 }

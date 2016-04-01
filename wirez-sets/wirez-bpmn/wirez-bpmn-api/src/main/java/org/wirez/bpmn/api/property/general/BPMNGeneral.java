@@ -4,17 +4,16 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNPropertySet;
-import org.wirez.core.api.annotation.propertyset.Property;
-
-import javax.inject.Inject;
+import org.wirez.core.api.definition.annotation.propertyset.Property;
+import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 
 @Portable
 @Bindable
-@org.wirez.core.api.annotation.propertyset.PropertySet
+@PropertySet
 public class BPMNGeneral implements BPMNPropertySet {
 
-    public static final String ID = "bpmnGeneral";
-    public static final String NAME = "BPMN General";
+    @org.wirez.core.api.definition.annotation.Name
+    public static final String propertySetName = "BPMN General";
 
     @Property
     private Name name;
@@ -23,22 +22,17 @@ public class BPMNGeneral implements BPMNPropertySet {
     private Documentation documentation;
 
     public BPMNGeneral() {
+        
     }
-
+    
     public BPMNGeneral(@MapsTo("name") Name name,
                        @MapsTo("documentation") Documentation documentation) {
         this.name = name;
         this.documentation = documentation;
     }
 
-    @Override
-    public String getPropertySetId() {
-        return ID;
-    }
-
-    @Override
     public String getPropertySetName() {
-        return NAME;
+        return propertySetName;
     }
 
     public Name getName() {
@@ -49,11 +43,4 @@ public class BPMNGeneral implements BPMNPropertySet {
         return documentation;
     }
 
-    public void setName(Name name) {
-        this.name = name;
-    }
-
-    public void setDocumentation(Documentation documentation) {
-        this.documentation = documentation;
-    }
 }

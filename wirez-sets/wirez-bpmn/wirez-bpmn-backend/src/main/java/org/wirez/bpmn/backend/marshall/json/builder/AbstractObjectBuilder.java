@@ -3,11 +3,10 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.core.api.adapter.DefinitionAdapter;
+import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleViolation;
@@ -15,7 +14,7 @@ import org.wirez.core.api.util.ElementUtils;
 
 import java.util.*;
 
-public abstract class AbstractObjectBuilder<W extends Definition, T extends Element<View<W>>> implements GraphObjectBuilder<W, T> {
+public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> implements GraphObjectBuilder<W, T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractObjectBuilder.class);
 
@@ -97,29 +96,29 @@ public abstract class AbstractObjectBuilder<W extends Definition, T extends Elem
     
     protected void setProperties(BuilderContext context, BPMNDefinition definition) {
         assert definition != null;
-        DefinitionAdapter adapter = context.getDefinitionManager().getDefinitionAdapter(definition);
-        Map<Property, Object> defPropertiesMap = adapter.getPropertiesValues(definition);
-        Set<Property> defProperties = defPropertiesMap.keySet();
+        Set<?> defProperties = ElementUtils.getAllProperties( context.getDefinitionManager(), definition );
         for (Map.Entry<String, String> entry : properties.entrySet()) {
-            final String pId = entry.getKey();
+            final String oryxId = entry.getKey();
             final String pValue = entry.getValue();
-            final Property property = getProperty(defProperties, pId);
+            final String pId = Bpmn2OryxMappings.getId( oryxId );
+            final Object property = getProperty(defProperties, pId);
             if ( null != property ) {
                 final Object value;
                 try {
-                    value = ElementUtils.parseValue(property, pValue);
-                    context.getDefinitionManager().getPropertyAdapter(property).setValue(property, value);
+                    PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter( property.getClass() );
+                    value = ElementUtils.parseValue(propertyAdapter, property, pValue);
+                    context.getDefinitionManager().getPropertyAdapter(property.getClass()).setValue(property, value);
                 } catch (Exception e) {
                    LOG.error("Cannot parse value [" + pValue + "] for property [" + pId + "]");
                 }
             } else {
-                LOG.warn("Property [" + pId + "] not found for definition [" + definition.getId() + "]");
+                LOG.warn("Property [" + pId + "] not found for definition [" + pId + "]");
             }
         }
     }
     
-    protected Property getProperty(final Set<Property> defProperties, final String id) {
-        return ElementUtils.getPropertyIgnoreCase(defProperties, id);
+    protected Object getProperty(final Set<?> defProperties, final String id) {
+        return ElementUtils.getProperty(defProperties, id);
     }
     
     @Override

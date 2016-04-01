@@ -18,10 +18,9 @@ package org.wirez.core.api.graph.content.view;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.wirez.core.api.definition.Definition;
 
 @Portable
-public final class ViewImpl<W extends Definition> implements View<W> {
+public final class ViewImpl<W> implements View<W> {
     protected W definition;
     protected Bounds bounds;
 

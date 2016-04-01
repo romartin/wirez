@@ -21,16 +21,16 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
-import org.wirez.core.api.annotation.definition.Definition;
-import org.wirez.core.api.annotation.definition.PropertySet;
-import org.wirez.core.api.annotation.rule.EdgeOccurrences;
-import org.wirez.core.api.annotation.rule.EdgeType;
-import org.wirez.core.api.annotation.rule.Occurrences;
-import org.wirez.core.api.annotation.rule.PermittedConnection;
-import org.wirez.core.api.definition.BaseDefinition;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.definition.*;
+import org.wirez.core.api.definition.annotation.rule.EdgeOccurrences;
+import org.wirez.core.api.definition.annotation.rule.EdgeType;
+import org.wirez.core.api.definition.annotation.rule.Occurrences;
+import org.wirez.core.api.definition.annotation.rule.PermittedConnection;
 import org.wirez.core.api.graph.Edge;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Portable
 @Bindable
@@ -43,19 +43,28 @@ import java.util.HashSet;
         role = "Startevents_all",
         min = 0,
         value = {
-                @EdgeOccurrences(type = EdgeType.INCOMING, edge = "SequenceFlow", max = 0)
+                @EdgeOccurrences(type = EdgeType.INCOMING, edge = SequenceFlow.class, max = 0)
         }
 )
 @Occurrences(
         role = "Endevents_all",
         min = 0,
         value = {
-                @EdgeOccurrences(type = EdgeType.OUTGOING, edge = "SequenceFlow", max = 0)
+                @EdgeOccurrences(type = EdgeType.OUTGOING, edge = SequenceFlow.class, max = 0)
         }
 )
-public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
+public class SequenceFlow implements BPMNDefinition {
 
-    public static final String ID = "SequenceFlow";
+    @Category
+    public static final String category = "Connecting Objects";
+
+    @Title
+    public static final String title = "Sequence Flow";
+
+    @Description
+    public static final String description = "A Sequence Flow";
+    
+    
     public static final String COLOR = "#000000";
     public static final String BORDER_COLOR = "#000000";
     public static final Double BORDER_SIZE = 3d;
@@ -66,40 +75,44 @@ public class SequenceFlow extends BaseDefinition implements BPMNDefinition {
     @PropertySet
     private BackgroundSet backgroundSet;
 
+    @Labels
+    private final Set<String> labels = new HashSet<String>() {{
+        add( "all" );
+        add( "ConnectingObjectsMorph" );
+    }};
+
     public SequenceFlow() {
-        super("Connecting Objects", "Sequence Flow", "A Sequence Flow",
-                new HashSet<String>(){{
-                    add( "all" );
-                    add( "ConnectingObjectsMorph" );
-                }});
+        
     }
     
     public SequenceFlow(@MapsTo("general") BPMNGeneral general,
-                        @MapsTo("backgroundSet") BackgroundSet backgroundSet) {
-        this();
+                 @MapsTo("backgroundSet") BackgroundSet backgroundSet) {
         this.general = general;
         this.backgroundSet = backgroundSet;
     }
 
-    @Override
-    public String getId() {
-        return ID;
+    public String getCategory() {
+        return category;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Set<String> getLabels() {
+        return labels;
+    }
+    
     public BPMNGeneral getGeneral() {
         return general;
     }
 
     public BackgroundSet getBackgroundSet() {
         return backgroundSet;
-    }
-
-    public void setGeneral(BPMNGeneral general) {
-        this.general = general;
-    }
-
-    public void setBackgroundSet(BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
     }
 
 }

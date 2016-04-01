@@ -17,14 +17,11 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.api.EndTerminateEvent;
-import org.wirez.bpmn.api.Lane;
 import org.wirez.bpmn.client.EndTerminateEventShape;
 import org.wirez.bpmn.client.factory.control.BPMNToolboxControlFactory;
 import org.wirez.bpmn.client.glyph.EndTerminateEventGlyph;
 import org.wirez.client.shapes.ShapeViewFactory;
 import org.wirez.client.shapes.WiresCircleView;
-import org.wirez.client.shapes.glyph.WiresRectangleGlyph;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
@@ -50,7 +47,7 @@ public class EndTerminateEventShapeFactory extends BaseBPMNShapeFactory<EndTermi
     }
 
     @Override
-    public boolean accepts(final Definition definition) {
+    public boolean accepts(final Object definition) {
         return definition instanceof EndTerminateEvent;
     }
 

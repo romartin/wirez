@@ -1,10 +1,11 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.codehaus.jackson.*;
+import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
 import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.command.CommandResults;
@@ -12,10 +13,10 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.content.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.UUID;
 
 import java.io.IOException;
@@ -33,14 +34,14 @@ public class BPMNGraphGenerator extends JsonGenerator {
 
     BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
     DefinitionManager definitionManager;
-    DefinitionService definitionService;
+    FactoryManager factoryManager;
     CommandManager<RuleManager, RuleViolation> commandManager;
     RuleManager ruleManager;
     GraphCommandFactory commandFactory;
     Stack<GraphObjectBuilder> nodeBuilders = new LoggableStack<GraphObjectBuilder>("nodeBuilders");
     Stack<GraphObjectParser> parsers = new LoggableStack<GraphObjectParser>("parsers");
     Collection<GraphObjectBuilder<?, ?>> builders = new LinkedList<GraphObjectBuilder<?, ?>>();
-    Graph<View<BPMNGraph>, Node> graph;
+    Graph<DefinitionSet, Node> graph;
     boolean isClosed;
     
     // Just for development & testing
@@ -73,13 +74,13 @@ public class BPMNGraphGenerator extends JsonGenerator {
     
     public BPMNGraphGenerator(final BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory,
                               final DefinitionManager definitionManager,
-                              final DefinitionService definitionService,
+                              final FactoryManager factoryManager,
                               final CommandManager<RuleManager, RuleViolation> commandManager,
                               final RuleManager ruleManager,
                               final GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
-        this.definitionService = definitionService;
+        this.factoryManager = factoryManager;
         this.commandManager = commandManager;
         this.ruleManager = ruleManager;
         this.commandFactory = commandFactory;
@@ -127,7 +128,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
     public void close() throws IOException {
         logBuilders();
 
-        this.graph = (Graph<View<BPMNGraph>, Node>) definitionService.buildGraphElement(UUID.uuid(), BPMNGraph.ID);
+        this.graph = (Graph<DefinitionSet, Node>) factoryManager.graph(UUID.uuid(), BPMNDefinitionSet.class.getSimpleName());
         
         // TODO: Improve this - Remove the default diagram built by the bpmn graph factory.
         Iterator<Node> nodes = this.graph.nodes().iterator();
@@ -144,8 +145,6 @@ public class BPMNGraphGenerator extends JsonGenerator {
         }
 
         Node<View<BPMNDiagram>, Edge> diagramNode = diagramBuilder.build(builderContext);
-        String diagramName = diagramNode.getContent().getDefinition().getGeneral().getName().getValue();
-        graph.getContent().getDefinition().getGeneral().getName().setValue( diagramName );
         graph.addNode(diagramNode);
         
         this.isClosed = true;
@@ -167,22 +166,22 @@ public class BPMNGraphGenerator extends JsonGenerator {
         return null;
     }
 
-    public Graph<View<BPMNGraph>, Node> getGraph() {
+    public Graph<DefinitionSet, Node> getGraph() {
         assert isClosed();
         return this.graph;
     }
     
-    final GraphObjectBuilder.BuilderContext<BPMNGraph> builderContext = new GraphObjectBuilder.BuilderContext<BPMNGraph>() {
+    final GraphObjectBuilder.BuilderContext builderContext = new GraphObjectBuilder.BuilderContext() {
 
-        Graph<View<BPMNGraph>, Node> graph;
+        Graph<DefinitionSet, Node> graph;
 
         @Override
-        public void init(final Graph<View<BPMNGraph>, Node> graph) {
+        public void init(final Graph<DefinitionSet, Node> graph) {
             this.graph = graph;
         }
 
         @Override
-        public Graph<View<BPMNGraph>, Node> getGraph() {
+        public Graph<DefinitionSet, Node> getGraph() {
             return graph;
         }
 
@@ -197,8 +196,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
         }
 
         @Override
-        public DefinitionService getDefinitionService() {
-            return definitionService;
+        public FactoryManager getFactoryManager() {
+            return factoryManager;
         }
 
         @SuppressWarnings("unchecked")

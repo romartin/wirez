@@ -16,10 +16,10 @@
 
 package org.wirez.bpmn.client;
 
+import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.bpmn.api.property.general.BgColor;
 import org.wirez.bpmn.api.property.general.BorderColor;
 import org.wirez.bpmn.api.property.general.BorderSize;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
@@ -29,7 +29,7 @@ import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.mutation.MutationContext;
 import org.wirez.core.client.view.ShapeView;
 
-public abstract class BPMNBasicConnector<W extends Definition> 
+public abstract class BPMNBasicConnector<W extends BPMNDefinition> 
         extends BaseConnector<W> {
 
 
@@ -50,15 +50,15 @@ public abstract class BPMNBasicConnector<W extends Definition>
     }
 
     protected BPMNBasicConnector<W> _applyFillColor(Edge<View<W>, Node> element) {
-        final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.ID);
+        final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.class);
         final String color = bgColor.getValue();
         super._applyFillColor(color);
         return this;
     }
 
     protected BPMNBasicConnector<W> _applyBorders(Edge<View<W>, Node> element) {
-        final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.ID);
-        final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.ID);
+        final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.class);
+        final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.class);
         final String color = borderColor.getValue();
         final Double width = borderSize.getValue();
         super._applyBorders(color, width);

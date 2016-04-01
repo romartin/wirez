@@ -4,40 +4,40 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNPropertySet;
-import org.wirez.bpmn.api.property.general.BgColor;
-import org.wirez.bpmn.api.property.general.BorderColor;
-import org.wirez.bpmn.api.property.general.BorderSize;
-import org.wirez.core.api.annotation.propertyset.Property;
+import org.wirez.core.api.definition.annotation.Name;
+import org.wirez.core.api.definition.annotation.propertyset.Property;
+import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 
 @Portable
 @Bindable
-@org.wirez.core.api.annotation.propertyset.PropertySet
+@PropertySet
 public class CatchEventAttributes implements BPMNPropertySet {
 
-    public static final String ID = "catchEventAttributes";
-    public static final String NAME = "CatchEventAttributes";
+    @Name
+    public static final String propertySetName = "Catch Event Attributes";
 
-    @org.wirez.core.api.annotation.definition.Property
+    @Property
     private Min min;
 
-    @org.wirez.core.api.annotation.definition.Property
+    @Property
     private Max max;
 
-    @org.wirez.core.api.annotation.definition.Property
+    @Property
     private Mean mean;
 
-    @org.wirez.core.api.annotation.definition.Property
+    @Property
     private TimeUnit timeUnit;
 
-    @org.wirez.core.api.annotation.definition.Property
+    @Property
     private StandardDeviation standardDeviation;
 
-    @org.wirez.core.api.annotation.definition.Property
+    @Property
     private DistributionType distributionType;
 
     public CatchEventAttributes() {
+        
     }
-
+    
     public CatchEventAttributes(@MapsTo("min") Min min,
                                 @MapsTo("max") Max max,
                                 @MapsTo("mean") Mean mean,
@@ -52,61 +52,32 @@ public class CatchEventAttributes implements BPMNPropertySet {
         this.distributionType = distributionType;
     }
 
-    @Override
-    public String getPropertySetId() {
-        return ID;
-    }
-
-    @Override
     public String getPropertySetName() {
-        return NAME;
+        return propertySetName;
     }
 
     public Min getMin() {
         return min;
     }
 
-    public void setMin(Min min) {
-        this.min = min;
-    }
-
     public Max getMax() {
         return max;
-    }
-
-    public void setMax(Max max) {
-        this.max = max;
     }
 
     public Mean getMean() {
         return mean;
     }
 
-    public void setMean(Mean mean) {
-        this.mean = mean;
-    }
-
     public TimeUnit getTimeUnit() {
         return timeUnit;
-    }
-
-    public void setTimeUnit(TimeUnit timeUnit) {
-        this.timeUnit = timeUnit;
     }
 
     public StandardDeviation getStandardDeviation() {
         return standardDeviation;
     }
 
-    public void setStandardDeviation(StandardDeviation standardDeviation) {
-        this.standardDeviation = standardDeviation;
-    }
-
     public DistributionType getDistributionType() {
         return distributionType;
     }
 
-    public void setDistributionType(DistributionType distributionType) {
-        this.distributionType = distributionType;
-    }
 }

@@ -4,18 +4,16 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNPropertySet;
-import org.wirez.core.api.annotation.propertyset.Property;
-import org.wirez.core.api.definition.property.PropertySet;
-
-import javax.inject.Inject;
+import org.wirez.core.api.definition.annotation.propertyset.Property;
+import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 
 @Portable
 @Bindable
-@org.wirez.core.api.annotation.propertyset.PropertySet
+@PropertySet
 public class BackgroundSet implements BPMNPropertySet {
 
-    public static final String ID = "background";
-    public static final String NAME = "Background";
+    @org.wirez.core.api.definition.annotation.Name
+    public static final String propertySetName = "Background Set";
 
     @Property
     private BgColor bgColor;
@@ -27,8 +25,9 @@ public class BackgroundSet implements BPMNPropertySet {
     private BorderSize borderSize;
 
     public BackgroundSet() {
+        
     }
-
+    
     public BackgroundSet(@MapsTo("bgColor") BgColor bgColor,
                          @MapsTo("borderColor") BorderColor borderColor,
                          @MapsTo("borderSize") BorderSize borderSize) {
@@ -37,14 +36,8 @@ public class BackgroundSet implements BPMNPropertySet {
         this.borderSize = borderSize;
     }
 
-    @Override
-    public String getPropertySetId() {
-        return ID;
-    }
-
-    @Override
     public String getPropertySetName() {
-        return NAME;
+        return propertySetName;
     }
 
     public BgColor getBgColor() {
@@ -59,15 +52,4 @@ public class BackgroundSet implements BPMNPropertySet {
         return borderSize;
     }
 
-    public void setBgColor(BgColor bgColor) {
-        this.bgColor = bgColor;
-    }
-
-    public void setBorderColor(BorderColor borderColor) {
-        this.borderColor = borderColor;
-    }
-
-    public void setBorderSize(BorderSize borderSize) {
-        this.borderSize = borderSize;
-    }
 }

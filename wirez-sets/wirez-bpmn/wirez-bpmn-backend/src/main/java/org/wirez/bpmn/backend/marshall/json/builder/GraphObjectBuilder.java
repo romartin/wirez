@@ -2,22 +2,21 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 
 import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.command.CommandResults;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.content.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.service.definition.DefinitionService;
 
 import java.util.Collection;
 
-public interface GraphObjectBuilder<W extends Definition, T extends Element<View<W>>> {
+public interface GraphObjectBuilder<W, T extends Element<View<W>>> {
     
     String getDefinitionId();
     
@@ -37,17 +36,17 @@ public interface GraphObjectBuilder<W extends Definition, T extends Element<View
     
     T build(BuilderContext context);
     
-    interface BuilderContext<W extends Definition> {
+    interface BuilderContext {
 
-        void init(Graph<View<W>, Node> graph);
+        void init(Graph<DefinitionSet, Node> graph);
 
-        Graph<View<W>, Node> getGraph();
+        Graph<DefinitionSet, Node> getGraph();
         
         Collection<GraphObjectBuilder<?, ?>> getBuilders();
 
         DefinitionManager getDefinitionManager();
         
-        DefinitionService getDefinitionService();
+        FactoryManager getFactoryManager();
         
         GraphCommandFactory getCommandFactory();
         

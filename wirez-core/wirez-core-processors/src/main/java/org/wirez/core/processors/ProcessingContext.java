@@ -1,16 +1,18 @@
 package org.wirez.core.processors;
 
-import org.wirez.core.api.definition.property.Property;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProcessingContext {
 
     private static ProcessingContext context;
     private ProcessingEntity definitionSet;
-    private static final List<ProcessingRule> rules = new ArrayList<>();
-    private static final Map<String, String> propertyValueFieldNames = new HashMap<>();
-    private static final Map<String, String> propertyDefaultValueFieldNames = new HashMap<>();
+    private final List<ProcessingRule> rules = new ArrayList<>();
+
+    private final ProcessingDefinitionSetAnnotations defSetAnnotations = new ProcessingDefinitionSetAnnotations();
+    private final ProcessingDefinitionAnnotations definitionAnnotations = new ProcessingDefinitionAnnotations();
+    private final ProcessingPropertySetAnnotations propertySetAnnotations = new ProcessingPropertySetAnnotations();
+    private final ProcessingPropertyAnnotations propertyAnnotations = new ProcessingPropertyAnnotations();
 
     public synchronized static ProcessingContext getInstance() {
         if ( null == context ) {
@@ -23,22 +25,6 @@ public class ProcessingContext {
     public ProcessingContext() {
     }
     
-    public void addValueFieldName(String propClassName, String valueFieldName) {
-        propertyValueFieldNames.put(propClassName, valueFieldName);
-    }
-
-    public Map<String, String> getValueFieldNames() {
-        return propertyValueFieldNames;
-    }
-
-    public void addDefaultValueFieldName(String propClassName, String valueFieldName) {
-        propertyDefaultValueFieldNames.put(propClassName, valueFieldName);
-    }
-
-    public Map<String, String> getDefaultValueFieldNames() {
-        return propertyDefaultValueFieldNames;
-    }
-
     public ProcessingEntity getDefinitionSet() {
         return definitionSet;
     }
@@ -56,5 +42,21 @@ public class ProcessingContext {
     
     public List<ProcessingRule> getRules() {
         return rules;
+    }
+
+    public ProcessingDefinitionSetAnnotations getDefSetAnnotations() {
+        return defSetAnnotations;
+    }
+
+    public ProcessingDefinitionAnnotations getDefinitionAnnotations() {
+        return definitionAnnotations;
+    }
+
+    public ProcessingPropertySetAnnotations getPropertySetAnnotations() {
+        return propertySetAnnotations;
+    }
+
+    public ProcessingPropertyAnnotations getPropertyAnnotations() {
+        return propertyAnnotations;
     }
 }

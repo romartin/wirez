@@ -19,29 +19,31 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Radius;
-import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
-import org.wirez.core.api.annotation.definition.Definition;
-import org.wirez.core.api.annotation.definition.Property;
-import org.wirez.core.api.annotation.definition.PropertySet;
-import org.wirez.core.api.definition.BaseDefinition;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.definition.*;
 import org.wirez.core.api.graph.Node;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
 @Portable
 @Bindable
 @Definition( type = Node.class )
-public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
+public class ParallelGateway implements BPMNDefinition {
 
-    public static final String ID = "ParallelGateway";
+    @Category
+    public static final String category = "Gateways";
+
+    @Title
+    public static final String title = "BPMN Diagram";
+
+    @Description
+    public static final String description = "Parallel Gateway";
+    
     public static final String COLOR = "#f0e68c";
     public static final Double RADIUS = 20d;
     
@@ -56,36 +58,46 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
 
     @Property
     private Radius radius;
+    
+    @Labels
+    private final Set<String> labels = new HashSet<String>() {{
+        add( "all" );
+        add( "sequence_start" );
+        add( "sequence_end" );
+        add( "choreography_sequence_start" );
+        add( "choreography_sequence_end" );
+        add( "fromtoall" );
+        add( "GatewaysMorph" );
+    }};
 
     public ParallelGateway() {
-        super("Gateways", "Parallel Gateway", "When used to split the sequence flow, " +
-                        "all outgoing branches are activated simultaneously. " +
-                        "When merging parallel branches it waits for all incoming branches to complete before triggering the outgoing flow",
-                new HashSet<String>(){{
-                    add( "all" );
-                    add( "sequence_start" );
-                    add( "sequence_end" );
-                    add( "choreography_sequence_start" );
-                    add( "choreography_sequence_end" );
-                    add( "fromtoall" );
-                    add( "GatewaysMorph" );
-                }});
+        
     }
-
+    
     public ParallelGateway(@MapsTo("general") BPMNGeneral general,
                            @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                            @MapsTo("fontSet") FontSet fontSet,
                            @MapsTo("radius") Radius radius) {
-        this();
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.radius = radius;
     }
 
-    @Override
-    public String getId() {
-        return ID;
+    public String getCategory() {
+        return category;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Set<String> getLabels() {
+        return labels;
     }
 
     public BPMNGeneral getGeneral() {
@@ -104,19 +116,4 @@ public class ParallelGateway extends BaseDefinition implements BPMNDefinition {
         return radius;
     }
 
-    public void setGeneral(BPMNGeneral general) {
-        this.general = general;
-    }
-
-    public void setBackgroundSet(BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet(FontSet fontSet) {
-        this.fontSet = fontSet;
-    }
-
-    public void setRadius(Radius radius) {
-        this.radius = radius;
-    }
 }

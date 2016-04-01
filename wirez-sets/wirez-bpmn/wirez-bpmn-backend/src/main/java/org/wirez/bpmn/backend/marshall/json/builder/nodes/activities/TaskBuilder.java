@@ -1,11 +1,11 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes.activities;
 
 import org.wirez.bpmn.api.Task;
-import org.wirez.bpmn.backend.marshall.json.builder.*;
+import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
+import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.service.definition.DefinitionService;
 
 import javax.enterprise.context.Dependent;
 
@@ -18,7 +18,7 @@ public class TaskBuilder extends AbstractNodeBuilder<Task, Node<View<Task>, Edge
 
     @Override
     public String getDefinitionId() {
-        return Task.ID;
+        return Bpmn2OryxMappings.getOryxId(Task.class);
     }
 
     @Override

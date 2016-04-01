@@ -19,39 +19,64 @@ package org.wirez.bpmn.api.property;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
-import org.wirez.core.api.annotation.property.DefaultValue;
-import org.wirez.core.api.annotation.property.Property;
-import org.wirez.core.api.annotation.property.Value;
-import org.wirez.core.api.definition.property.BaseProperty;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.property.*;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.DoubleType;
-import org.wirez.core.api.definition.property.type.IntegerType;
-import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
 @Bindable
 @Property
-public class Radius extends BaseProperty implements BPMNProperty {
+public class Radius implements BPMNProperty {
 
-    public static final String ID = "radius";
+    @Caption
+    public static final String caption = "Radius";
 
+    @Description
+    public static final String description = "The radius";
+
+    @ReadOnly
+    public static final Boolean readOnly = false;
+
+    @Optional
+    public static final Boolean optional = false;
+
+    @Type
+    public static final PropertyType type = new DoubleType();
+    
     @DefaultValue
-    public static final Double DEFAULT_VALUE = 25d;
+    public static final Double defaultValue = 25d;
 
     @Value
-    private Double value = DEFAULT_VALUE;
-    
+    private Double value = defaultValue;
+
     public Radius() {
-        super(ID, "Radius", "The radius", false, false);
+        
     }
 
-    @Override
-    public PropertyType getType() {
-        return new DoubleType();
+    public String getCaption() {
+        return caption;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public boolean isOptional() {
+        return optional;
+    }
+
+    public PropertyType getType() {
+        return type;
+    }
+
 
     public Double getDefaultValue() {
-        return DEFAULT_VALUE;
+        return defaultValue;
     }
     
     public Double getValue() {

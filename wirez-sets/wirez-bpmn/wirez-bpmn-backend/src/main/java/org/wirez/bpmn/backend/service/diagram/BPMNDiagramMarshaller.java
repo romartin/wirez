@@ -14,12 +14,12 @@ import org.jboss.drools.util.DroolsResourceFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
-import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2Marshaller;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
@@ -27,9 +27,9 @@ import org.wirez.core.api.diagram.SettingsImpl;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.Definition;
+import org.wirez.core.api.graph.content.DefinitionSet;
 import org.wirez.core.api.rule.EmptyRuleManager;
-import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.service.diagram.DiagramMarshaller;
 import org.wirez.core.api.util.UUID;
 
@@ -48,7 +48,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
 
     BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
     DefinitionManager definitionManager;
-    DefinitionService definitionService;
+    FactoryManager factoryManager;
     GraphCommandManager graphCommandManager;
     EmptyRuleManager ruleManager;
     GraphCommandFactory commandFactory;
@@ -57,14 +57,14 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
 
     @Inject
     public BPMNDiagramMarshaller(BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory, 
-                                 DefinitionManager definitionManager, 
-                                 DefinitionService definitionService, 
+                                 DefinitionManager definitionManager,
+                                 FactoryManager factoryManager, 
                                  GraphCommandManager graphCommandManager, 
                                  EmptyRuleManager ruleManager, 
                                  GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
-        this.definitionService = definitionService;
+        this.factoryManager = factoryManager;
         this.graphCommandManager = graphCommandManager;
         this.ruleManager = ruleManager;
         this.commandFactory = commandFactory;
@@ -116,22 +116,24 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             Definitions definitions = parseDefinitions(inputStream);
             Bpmn2UnMarshaller parser = new Bpmn2UnMarshaller(bpmnGraphBuilderFactory, 
                     definitionManager,
-                    definitionService,
+                    factoryManager,
                     graphCommandManager, 
                     ruleManager,
                     commandFactory);
             
             parser.setProfile(new DefaultProfileImpl());
             final Graph graph = parser.unmarshall(definitions, null);
-            final BPMNGraph graphDefinition = (BPMNGraph) ( (View) graph.getContent() ).getDefinition();
-            String title = graphDefinition.getGeneral().getName().getValue();
+            final String definitionSetId = (String) ( (DefinitionSet) graph.getContent() ).getDefinition();
+            
+            // TODO: Get title from diagram node.
+            String title = definitionSetId;
             
             if ( title == null || title.trim().length() == 0 ) {
                 title = "Untitled BPMN diagram";
             }
             
             final Diagram<Settings> diagram = new DiagramImpl( UUID.uuid(), graph, 
-                    new SettingsImpl(title, BPMNDefinitionSet.ID, "BPMNShapeSet"));
+                    new SettingsImpl(title, BPMNDefinitionSet.class.getSimpleName(), "BPMNShapeSet"));
 
             LOG.info("BPMN diagram loading finished successfully.");
 

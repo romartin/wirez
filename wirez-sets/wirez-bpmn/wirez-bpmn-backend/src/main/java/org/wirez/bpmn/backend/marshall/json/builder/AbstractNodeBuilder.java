@@ -1,33 +1,21 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.CommandResults;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.graph.command.impl.AddChildNodeCommand;
-import org.wirez.core.api.graph.command.impl.AddNodeCommand;
-import org.wirez.core.api.graph.command.impl.SetConnectionSourceNodeCommand;
-import org.wirez.core.api.graph.content.Child;
-import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.ViewConnector;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.content.view.BoundImpl;
-import org.wirez.core.api.graph.content.view.BoundsImpl;
-import org.wirez.core.api.graph.impl.EdgeImpl;
+import org.wirez.core.api.graph.command.impl.AddChildNodeCommand;
+import org.wirez.core.api.graph.command.impl.SetConnectionSourceNodeCommand;
+import org.wirez.core.api.graph.content.view.*;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.service.definition.DefinitionService;
 import org.wirez.core.api.util.ElementUtils;
-import org.wirez.core.api.util.UUID;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 // TODO: Improve error handling.
-public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<View<W>, Edge>> 
+public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>> 
         extends AbstractObjectBuilder<W, T> implements NodeObjectBuilder<W, T> {
 
     protected Set<String> childNodeIds;
@@ -46,10 +34,10 @@ public abstract class AbstractNodeBuilder<W extends Definition, T extends Node<V
     @Override
     protected T doBuild(BuilderContext context) {
 
-        DefinitionService definitionService = context.getDefinitionService();
+        FactoryManager factoryManager = context.getFactoryManager();
 
         // Build the graph node for the definition.
-        T result = (T) definitionService.buildGraphElement(this.nodeId, getDefinitionId());
+        T result = (T) factoryManager.element(this.nodeId, getDefinitionId());
         
         // Set the def properties.
         setProperties(context, (BPMNDefinition) result.getContent().getDefinition());

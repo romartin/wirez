@@ -17,13 +17,13 @@
 package org.wirez.core.client.canvas.wires;
 
 import com.ait.lienzo.client.core.shape.wires.*;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.command.CommandResults;
-import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.factory.ModelBuilder;
+import org.wirez.core.api.definition.adapter.DefinitionSetRuleAdapter;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
@@ -45,9 +45,9 @@ import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.factory.control.HasShapeControlFactories;
 import org.wirez.core.client.factory.control.ShapeControlFactory;
 import org.wirez.core.client.mutation.HasGraphElementMutation;
+import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.WirezClientLogger;
 import org.wirez.core.client.view.ShapeView;
 
 import javax.enterprise.context.Dependent;
@@ -62,6 +62,7 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.wires.WiresCanvasHandler");
 
     ClientDefinitionManager clientDefinitionManager;
+    ClientFactoryServices clientFactoryServices;
     
     private final Map<String, List<ShapeControl>> shapeControls = new HashMap<>();
     
@@ -69,9 +70,11 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
     public WiresCanvasHandler(final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
                               final ShapeManager shapeManager,
                               final CanvasCommandFactory commandFactory,
-                              final ClientDefinitionManager clientDefinitionManager) {
+                              final ClientDefinitionManager clientDefinitionManager,
+                              final ClientFactoryServices clientFactoryServices) {
         super(treeWalkTraverseProcessor, shapeManager, commandFactory);
         this.clientDefinitionManager = clientDefinitionManager;
+        this.clientFactoryServices = clientFactoryServices;
     }
 
 
@@ -80,25 +83,17 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
 
         // Load the rules that apply for the diagram.
         final String defSetId = getDiagram().getSettings().getDefinitionSetId();
-        final ModelBuilder modelFactory = clientDefinitionManager.getModelFactory(defSetId);
-        final DefinitionSet definitionSet = (DefinitionSet) modelFactory.build(defSetId); 
-        
-        loadRules(definitionSet, () -> {
-            // Initialization complete.
-            doAfterInitialize();
-        }, () -> {
-            // Do nothing
-        });
-        
-        
-    }
 
-    private void loadRules(final DefinitionSet definitionSet, final org.uberfire.mvp.Command sucessCallback, final org.uberfire.mvp.Command errorCallback) {
-
-        clientDefinitionManager.getRules(definitionSet, new ServiceCallback<Collection<Rule>>() {
+        clientFactoryServices.model( defSetId, new ServiceCallback<Object>() {
             @Override
-            public void onSuccess(final Collection<Rule> rules) {
+            public void onSuccess(Object definitionSet) {
 
+                // ***************** TODO ***********************
+                // Create missing client adapters (annot. processing) - Definition, DefinitionSet, PropertySet
+                
+                DefinitionSetRuleAdapter adapter = clientDefinitionManager.getDefinitionSetRuleAdapter( definitionSet.getClass() );
+
+                final Collection<Rule> rules = adapter.getRules( definitionSet );
                 if (rules != null) {
                     for (final Rule rule : rules) {
                         settings.getRuleManager().addRule(rule);
@@ -108,17 +103,17 @@ public class WiresCanvasHandler extends AbstractWiresCanvasHandler<WiresCanvasSe
                 final WiresCanvas.View canvasView = canvas.getView();
                 canvasView.setConnectionAcceptor(CONNECTION_ACCEPTOR);
                 canvasView.setContainmentAcceptor(CONTAINMENT_ACCEPTOR);
-
-                sucessCallback.execute();
+               
+                doAfterInitialize();
+                
             }
 
             @Override
-            public void onError(final ClientRuntimeError error) {
-                log(Level.SEVERE, WirezClientLogger.getErrorMessage(error));
-                errorCallback.execute();
+            public void onError(ClientRuntimeError error) {
+                GWT.log("Error");
             }
         });
-
+        
     }
 
     @Override

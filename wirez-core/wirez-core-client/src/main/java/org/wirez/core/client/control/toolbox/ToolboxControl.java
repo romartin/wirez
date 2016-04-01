@@ -29,7 +29,6 @@ import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.toolbox.command.Context;
 import org.wirez.core.client.control.toolbox.command.ContextImpl;
 import org.wirez.core.client.control.toolbox.command.ToolboxCommand;
-import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.lienzo.toolbox.ButtonsOrRegister;
 import org.wirez.lienzo.toolbox.HoverToolbox;
 import org.wirez.lienzo.toolbox.HoverToolboxButton;
@@ -50,7 +49,6 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
         
     }
     
-    ClientDefinitionServices clientDefinitionServices;
     HoverToolbox hoverToolbox;
     View view;
     
@@ -58,11 +56,9 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
     
     @Inject
     public ToolboxControl(final CanvasCommandFactory commandFactory,
-                          final ClientDefinitionServices clientDefinitionServices,
                           final View view) {
         super(commandFactory);
         this.view = view;
-        this.clientDefinitionServices = clientDefinitionServices;
     }
     
     public ToolboxControl addCommand(final ToolboxCommand command) {

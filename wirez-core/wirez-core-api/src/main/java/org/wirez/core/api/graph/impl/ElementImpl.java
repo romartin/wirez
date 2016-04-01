@@ -19,7 +19,6 @@ package org.wirez.core.api.graph.impl;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Element;
 
 import java.util.Set;
@@ -28,12 +27,12 @@ import java.util.Set;
 public class ElementImpl<C> implements Element<C> {
 
     protected String uuid;
-    protected Set<Property> properties;
+    protected Set<Object> properties;
     protected Set<String> labels;
     protected C content;
 
     public ElementImpl(@MapsTo("uuid") String uuid,
-                       @MapsTo("properties") Set<Property> properties,
+                       @MapsTo("properties") Set<Object> properties,
                        @MapsTo("labels") Set<String> labels,
                        @MapsTo("content") C content) {
         this.uuid = PortablePreconditions.checkNotNull( "uuid",
@@ -52,7 +51,7 @@ public class ElementImpl<C> implements Element<C> {
     }
 
     @Override
-    public Set<Property> getProperties() {
+    public Set<Object> getProperties() {
         return properties;
     }
 

@@ -17,6 +17,8 @@
 package org.wirez.core.api.util;
 
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
+import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
@@ -39,6 +41,10 @@ public class WirezLogger {
 
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.util.WirezLogger");
 
+    private static String getDefinitionId( Object o ) {
+        return o.getClass().getSimpleName();
+    }
+    
     public static void logCommandResults(final Iterable<CommandResult> results) {
         if (results == null) {
             log("Results is null");
@@ -82,7 +88,8 @@ public class WirezLogger {
                 public void startViewEdgeTraversal(final Edge<Object, Node> edge) {
                     log(indent + "(View) Edge UUID: " + edge.getUUID());
                     final View viewContent = (View) edge.getContent();
-                    log(indent + "(View) Edge Id: " + viewContent.getDefinition().getId());
+                    final String dId = getDefinitionId( viewContent.getDefinition() );
+                    log(indent + "(View) Edge Id: " + dId);
 
                     final Node outNode = (Node) edge.getTargetNode();
                     if (outNode == null) {
@@ -140,7 +147,8 @@ public class WirezLogger {
 
                     
                     log(indent + "(View) Node UUID: " + node.getUUID());
-                    log(indent + "(View) Node Id: " + node.getContent().getDefinition().getId());
+                    final String nId = getDefinitionId( node.getContent().getDefinition() );
+                    log(indent + "(View) Node Id: " + nId );
 
                     final Node parent = getParent(node);
                     if ( null != parent ) {

@@ -1,10 +1,8 @@
 package org.wirez.bpmn.backend.marshall.json.parser.common;
 
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonToken;
 import org.wirez.bpmn.backend.marshall.json.parser.Parser;
 
-import java.io.IOException;
 import java.util.Queue;
 
 public class ArrayParser extends CompositeParser<ArrayParser> {

@@ -16,13 +16,11 @@
 
 package org.wirez.core.api.graph.content.view;
 
-import org.wirez.core.api.definition.Definition;
-
 /**
  * Indicates that the view for the node/edge represents a physical connector that will the drawn in the canvas.
  * @param <W> The Definition of the connector's graphical view representation.
  */
-public interface ViewConnector<W extends Definition> extends View<W> {
+public interface ViewConnector<W> extends View<W> {
 
     Integer getSourceMagnetIndex();
 

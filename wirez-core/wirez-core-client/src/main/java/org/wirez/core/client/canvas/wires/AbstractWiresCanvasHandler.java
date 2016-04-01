@@ -16,11 +16,7 @@
 
 package org.wirez.core.client.canvas.wires;
 
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
-import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
@@ -31,7 +27,6 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
 import org.wirez.core.api.graph.processing.traverse.tree.AbstractTreeTraverseCallback;
-import org.wirez.core.api.graph.processing.traverse.tree.TreeTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
@@ -228,7 +223,7 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
         final Object content = candidate.getContent();
         assert content instanceof View;
         
-        final Definition wirez = ( (View) candidate.getContent()).getDefinition();
+        final Object wirez = ( (View) candidate.getContent()).getDefinition();
         final Shape shape = factory.build(wirez, this);
 
         // Set the same identifier as the graph element's one.

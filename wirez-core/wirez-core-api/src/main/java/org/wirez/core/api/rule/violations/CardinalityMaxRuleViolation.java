@@ -19,8 +19,6 @@ package org.wirez.core.api.rule.violations;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.rule.RuleViolation;
 
 @Portable
 public class CardinalityMaxRuleViolation extends AbstractCardinalityRuleViolation<Element, Element> {

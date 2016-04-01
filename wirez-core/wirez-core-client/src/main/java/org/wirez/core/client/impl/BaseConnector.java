@@ -17,7 +17,6 @@
 package org.wirez.core.client.impl;
 
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
@@ -38,7 +37,7 @@ import org.wirez.core.client.view.ShapeView;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class BaseConnector<W extends Definition> implements
+public abstract class BaseConnector<W> implements
         Shape<W>,
         HasPropertyMutation,
         HasGraphElementMutation<W, View<W>, Edge<View<W>, Node>> {

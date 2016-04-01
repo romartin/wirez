@@ -19,40 +19,63 @@ package org.wirez.bpmn.api.property.general;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
-import org.wirez.core.api.annotation.property.DefaultValue;
-import org.wirez.core.api.annotation.property.Property;
-import org.wirez.core.api.annotation.property.Value;
-import org.wirez.core.api.definition.property.BaseProperty;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.property.*;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
 @Bindable
 @Property
-public class Documentation extends BaseProperty implements BPMNProperty {
+public class Documentation implements BPMNProperty {
 
-    public static final String ID = "documentation";
+    @Caption
+    public static final String caption = "Documentation";
 
+    @Description
+    public static final String description = "This attribute is used to annotate the BPMN element, " +
+            "such as descriptions and other documentation";
+
+    @ReadOnly
+    public static final Boolean readOnly = false;
+
+    @Optional
+    public static final Boolean optional = false;
+
+    @Type
+    public static final PropertyType type = new StringType();
+    
     @DefaultValue
-    public static final String DEFAULT_VALUE = "";
+    public static final String defaultValue = "";
 
     @Value
-    private String value = DEFAULT_VALUE;
-    
+    private String value = defaultValue;
+
     public Documentation() {
-        super(ID, 
-                "Documentation", "This attribute is used to annotate the BPMN element, " +
-                "such as descriptions and other documentation", 
-                false, false);
     }
 
-    @Override
+    public String getCaption() {
+        return caption;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public boolean isOptional() {
+        return optional;
+    }
+
     public PropertyType getType() {
-        return new StringType();
+        return type;
     }
 
     public String getDefaultValue() {
-        return DEFAULT_VALUE;
+        return defaultValue;
     }
     
     public String getValue() {

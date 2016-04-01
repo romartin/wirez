@@ -12,7 +12,6 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
-import org.wirez.core.api.graph.processing.traverse.content.ViewTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 
 import java.io.IOException;

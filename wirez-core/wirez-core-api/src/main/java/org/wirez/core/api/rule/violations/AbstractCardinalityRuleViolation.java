@@ -16,11 +16,8 @@
 
 package org.wirez.core.api.rule.violations;
 
-import org.jboss.errai.common.client.api.annotations.MapsTo;
-import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.rule.violations.AbstractRuleViolation;
 
 public abstract class AbstractCardinalityRuleViolation<T, S> extends AbstractRuleViolation {
     

@@ -15,7 +15,6 @@
  */
 package org.wirez.core.api.rule;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
@@ -35,14 +34,14 @@ public class EmptyRuleManager implements RuleManager {
     }
     
     @Override
-    public RuleViolations checkContainment(final Element<? extends View<?>> target,
+    public RuleViolations checkContainment(final Element<?> target,
                                            final Element<? extends View<?>> candidate ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();
         return results;
     }
 
     @Override
-    public RuleViolations checkCardinality(final Graph<? extends Definition, ? extends Node> target,
+    public RuleViolations checkCardinality(final Graph<?, ? extends Node> target,
                                            final Node<? extends View, ? extends Edge> candidate,
                                            final Operation operation ) {
         final DefaultRuleViolations results = new DefaultRuleViolations();

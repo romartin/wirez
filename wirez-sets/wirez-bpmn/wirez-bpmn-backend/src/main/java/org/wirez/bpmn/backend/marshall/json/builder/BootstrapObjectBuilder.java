@@ -1,12 +1,12 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
-import org.wirez.core.api.definition.Definition;
+import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
 
 import java.util.Map;
 
-public class BootstrapObjectBuilder<W extends Definition, T extends Element<View<W>>> extends AbstractObjectBuilder<W, T> {
+public class BootstrapObjectBuilder<W, T extends Element<View<W>>> extends AbstractObjectBuilder<W, T> {
 
     BPMNGraphObjectBuilderFactory buildersFactory;
             
@@ -17,8 +17,10 @@ public class BootstrapObjectBuilder<W extends Definition, T extends Element<View
 
     @Override
     @SuppressWarnings("unchecked")
-    public AbstractObjectBuilder<W, T> stencil(String stencilId) {
+    public AbstractObjectBuilder<W, T> stencil(String oryxStencilId) {
         assert nodeId != null;
+        
+        String stencilId = Bpmn2OryxMappings.getId( oryxStencilId );
         AbstractObjectBuilder<W, T> builder = (AbstractObjectBuilder<W, T>) buildersFactory.builderFor(stencilId);
         
         builder.nodeId(this.nodeId);

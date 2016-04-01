@@ -16,8 +16,6 @@
 
 package org.wirez.bpmn.client;
 
-import com.ait.lienzo.client.core.types.Shadow;
-import com.ait.lienzo.shared.core.types.Color;
 import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
@@ -60,8 +58,8 @@ public class TaskShape extends BPMNBasicShape<Task> {
     }
 
     protected TaskShape _applySize(final Node<View<Task>, Edge> element, MutationContext mutationContext) {
-        final Width widthProperty  = (Width) ElementUtils.getProperty(element, Width.ID);
-        final Height heightProperty  = (Height) ElementUtils.getProperty(element, Height.ID);
+        final Width widthProperty  = (Width) ElementUtils.getProperty(element, Width.class);
+        final Height heightProperty  = (Height) ElementUtils.getProperty(element, Height.class);
         final Double width = widthProperty.getValue();
         final Double height = heightProperty.getValue();
         applySize(width, height, mutationContext);

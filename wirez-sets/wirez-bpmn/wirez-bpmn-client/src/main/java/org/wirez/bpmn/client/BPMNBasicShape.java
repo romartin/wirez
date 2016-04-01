@@ -16,8 +16,8 @@
 
 package org.wirez.bpmn.client;
 
+import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.bpmn.api.property.general.*;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
@@ -28,7 +28,7 @@ import org.wirez.core.client.mutation.MutationContext;
 import org.wirez.core.client.view.HasTitle;
 import org.wirez.core.client.view.ShapeView;
 
-public abstract class BPMNBasicShape<W extends Definition> 
+public abstract class BPMNBasicShape<W extends BPMNDefinition> 
         extends BaseShape<W> {
 
     public BPMNBasicShape(final ShapeView shapeView) {
@@ -51,15 +51,15 @@ public abstract class BPMNBasicShape<W extends Definition>
     }
 
     protected BPMNBasicShape<W> _applyFillColor(Node<View<W>, Edge> element) {
-        final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.ID);
+        final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.class);
         final String color = bgColor.getValue();
         super._applyFillColor(color);
         return this;
     }
 
     protected BPMNBasicShape<W> _applyBorders(Node<View<W>, Edge> element) {
-        final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.ID);
-        final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.ID);
+        final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.class);
+        final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.class);
         final String color = borderColor.getValue();
         final Double width = borderSize.getValue();
         super._applyBorders(color, width);
@@ -69,10 +69,10 @@ public abstract class BPMNBasicShape<W extends Definition>
     protected BPMNBasicShape<W> _applyFont(Node<View<W>, Edge> element) {
         
         if ( view instanceof HasTitle ) {
-            final FontFamily fontFamily = (FontFamily) ElementUtils.getProperty(element, FontFamily.ID);
-            final FontColor fontColor  = (FontColor) ElementUtils.getProperty(element, FontColor.ID);
-            final FontSize fontSize = (FontSize) ElementUtils.getProperty(element, FontSize.ID);
-            final FontBorderSize fontBorderSize = (FontBorderSize) ElementUtils.getProperty(element, FontBorderSize.ID);
+            final FontFamily fontFamily = (FontFamily) ElementUtils.getProperty(element, FontFamily.class);
+            final FontColor fontColor  = (FontColor) ElementUtils.getProperty(element, FontColor.class);
+            final FontSize fontSize = (FontSize) ElementUtils.getProperty(element, FontSize.class);
+            final FontBorderSize fontBorderSize = (FontBorderSize) ElementUtils.getProperty(element, FontBorderSize.class);
             final String family = fontFamily.getValue();
             final String color = fontColor.getValue();
             final Double size = fontSize.getValue();

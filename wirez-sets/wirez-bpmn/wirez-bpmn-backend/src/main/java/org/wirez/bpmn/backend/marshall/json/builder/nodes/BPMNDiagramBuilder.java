@@ -1,18 +1,12 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes;
 
 import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.bpmn.api.BPMNGraph;
 import org.wirez.bpmn.api.property.general.Name;
+import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
-import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.wirez.bpmn.backend.marshall.json.builder.GraphObjectBuilder;
-import org.wirez.bpmn.backend.marshall.json.builder.nodes.events.StartNoneEventBuilder;
-import org.wirez.core.api.definition.property.Property;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.service.definition.DefinitionService;
 
 import javax.enterprise.context.Dependent;
 import java.util.Set;
@@ -26,7 +20,7 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
 
     @Override
     public String getDefinitionId() {
-        return BPMNDiagram.ID;
+        return Bpmn2OryxMappings.getOryxId(BPMNDiagram.class);
     }
 
     @Override
@@ -38,10 +32,10 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
     }
 
     @Override
-    protected Property getProperty(Set<Property> defProperties, String id) {
+    protected Object getProperty(Set<?> defProperties, String id) {
         if ( "processn".equals(id) ) {
             return super.getProperty(defProperties, Name.ID);
-        } else if ( Name.ID.equals(id)) {
+        } else if ( Bpmn2OryxMappings.getOryxPropertyId(Name.ID).equals(id)) {
             return null;
         }
         return super.getProperty(defProperties, id);

@@ -56,8 +56,8 @@ public class LaneShape extends BPMNBasicShape<Lane> {
     }
 
     protected LaneShape _applySize(final Node<View<Lane>, Edge> element, MutationContext mutationContext) {
-        final Width widthProperty  = (Width) ElementUtils.getProperty(element, Width.ID);
-        final Height heightProperty  = (Height) ElementUtils.getProperty(element, Height.ID);
+        final Width widthProperty  = (Width) ElementUtils.getProperty(element, Width.class);
+        final Height heightProperty  = (Height) ElementUtils.getProperty(element, Height.class);
         final Double width = widthProperty.getValue();
         final Double height = heightProperty.getValue();
         applySize(width, height, mutationContext);

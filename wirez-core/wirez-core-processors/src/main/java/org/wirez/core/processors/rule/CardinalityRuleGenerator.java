@@ -16,15 +16,13 @@
 
 package org.wirez.core.processors.rule;
 
-import org.jboss.errai.bus.client.api.messaging.Message;
 import org.uberfire.annotations.processors.AbstractGenerator;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.uberfire.relocated.freemarker.template.Template;
 import org.uberfire.relocated.freemarker.template.TemplateException;
-import org.wirez.core.api.annotation.rule.EdgeOccurrences;
-import org.wirez.core.api.annotation.rule.EdgeType;
-import org.wirez.core.api.annotation.rule.Occurrences;
-import org.wirez.core.api.annotation.rule.PermittedConnection;
+import org.wirez.core.api.definition.annotation.rule.EdgeOccurrences;
+import org.wirez.core.api.definition.annotation.rule.EdgeType;
+import org.wirez.core.api.definition.annotation.rule.Occurrences;
 import org.wirez.core.processors.MainProcessor;
 import org.wirez.core.processors.ProcessingContext;
 import org.wirez.core.processors.ProcessingRule;
@@ -34,6 +32,8 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.MirroredTypeException;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.BufferedWriter;
@@ -109,7 +109,17 @@ public class CardinalityRuleGenerator extends AbstractGenerator  {
                 if ( null != edgeOccurrences ) {
                     for (EdgeOccurrences edgeOccurrence : edgeOccurrences) {
                         EdgeType type = edgeOccurrence.type();
-                        String edgeDefId = edgeOccurrence.edge();
+                        TypeMirror mirror = null;
+                        try {
+                            Class<?> edgeDefClass = edgeOccurrence.edge();
+                        } catch( MirroredTypeException mte ) {
+                            mirror =  mte.getTypeMirror();
+                        }
+                        if ( null == mirror ) {
+                            throw new RuntimeException("No edge class specifyed for the @EdgeOccurrence.");
+                        }
+                        String fqcn = mirror.toString();
+                        String edgeDefId = fqcn.substring( fqcn.lastIndexOf(".") + 1, fqcn.length() );
                         long edgeMin = edgeOccurrence.min();
                         long edgeMax = edgeOccurrence.max();
                         if ( EdgeType.INCOMING.equals(type)) {

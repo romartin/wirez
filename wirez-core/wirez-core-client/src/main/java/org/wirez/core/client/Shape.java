@@ -16,10 +16,9 @@
 
 package org.wirez.core.client;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.view.ShapeView;
 
-public interface Shape<W extends Definition> {
+public interface Shape<W> {
     
     /**
      * Get the identifier for the Shape.

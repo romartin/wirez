@@ -16,10 +16,6 @@
 
 package org.wirez.core.api.graph;
 
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.Property;
-
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -34,7 +30,7 @@ public interface Element<C> {
     
     String getUUID();
 
-    Set<Property> getProperties();
+    Set<?> getProperties();
     
     Set<String> getLabels();
     

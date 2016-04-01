@@ -19,7 +19,6 @@ package org.wirez.core.api.rule.violations;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.data.Pair;
-import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.Set;
 

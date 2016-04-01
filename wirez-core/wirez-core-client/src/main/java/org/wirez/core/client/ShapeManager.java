@@ -16,7 +16,6 @@
 
 package org.wirez.core.client;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import java.util.Collection;
@@ -25,6 +24,6 @@ public interface ShapeManager {
     
     Collection<ShapeSet> getShapeSets();
 
-    ShapeFactory getFactory(Definition definition);
+    ShapeFactory getFactory(Object definition);
     
 }

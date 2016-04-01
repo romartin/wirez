@@ -3,7 +3,7 @@ package org.wirez.bpmn.client.factory.control;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.bpmn.api.SequenceFlow;
-import org.wirez.bpmn.api.factory.BPMNDefinitionBuilder;
+import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
@@ -19,7 +19,7 @@ import org.wirez.core.client.control.toolbox.command.AddConnectionCommand;
 import org.wirez.core.client.control.toolbox.command.Context;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.impl.BaseShape;
-import org.wirez.core.client.service.ClientDefinitionServices;
+import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.WirezClientLogger;
@@ -37,9 +37,9 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
 
     CanvasCommandFactory commandFactory;
     GraphCommandFactoryImpl graphCommandFactoryImpl;
-    ClientDefinitionServices clientDefinitionServices;
+    ClientFactoryServices clientFactoryServices;
     ShapeManager shapeManager;
-    BPMNDefinitionBuilder bpmnDefinitionFactory;
+    BPMNDefinitionFactory bpmnDefinitionFactory;
 
     private Element source;
     private Edge<ViewConnector<SequenceFlow>, Node> edge;
@@ -47,12 +47,12 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     @Inject
     public SequenceFlowConnectionCommandCallback(final CanvasCommandFactory commandFactory,
                                                  final GraphCommandFactoryImpl graphCommandFactoryImpl,
-                                                 final ClientDefinitionServices clientDefinitionServices,
+                                                 final ClientFactoryServices clientFactoryServices,
                                                  final ShapeManager shapeManager,
-                                                 final BPMNDefinitionBuilder bpmnDefinitionFactory) {
+                                                 final BPMNDefinitionFactory bpmnDefinitionFactory) {
         this.commandFactory = commandFactory;
         this.graphCommandFactoryImpl = graphCommandFactoryImpl;
-        this.clientDefinitionServices = clientDefinitionServices;
+        this.clientFactoryServices = clientFactoryServices;
         this.shapeManager = shapeManager;
         this.bpmnDefinitionFactory = bpmnDefinitionFactory;
     }
@@ -60,7 +60,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     @Override
     public void init(final Element element) {
         final SequenceFlow sequenceFlow = bpmnDefinitionFactory.buildSequenceFlow();
-        clientDefinitionServices.buildGraphElement(UUID.uuid(), sequenceFlow, new ServiceCallback<Element>() {
+        clientFactoryServices.element(UUID.uuid(), sequenceFlow.getClass().getSimpleName(), new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element item) {
                 SequenceFlowConnectionCommandCallback.this.source = element;

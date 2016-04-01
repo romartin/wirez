@@ -19,13 +19,10 @@ package org.wirez.core.backend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.BaseDefinitionManager;
-import org.wirez.core.api.adapter.*;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.definition.DefinitionSet;
-import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.definition.adapter.*;
+import org.wirez.core.api.definition.factory.ModelFactory;
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.factory.ModelBuilder;
 import org.wirez.core.api.registry.DiagramRegistry;
 
 import javax.annotation.PostConstruct;
@@ -38,26 +35,27 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackendDefinitionManager.class);
 
-    Instance<ModelBuilder<?>> modelBuilderInstances;
-    Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances;
-    Instance<DefinitionSetRuleAdapter<? extends DefinitionSet>> definitionSetRuleAdapterInstances;
-    Instance<DefinitionAdapter<? extends Definition>> definitionAdapterInstances;
-    Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances;
-    Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances;
+    Instance<DefinitionSet> definitionSetsInstances;
+    Instance<DefinitionSetAdapter<?>> definitionSetAdapterInstances;
+    Instance<DefinitionSetRuleAdapter<?>> definitionSetRuleAdapterInstances;
+    Instance<DefinitionAdapter<?>> definitionAdapterInstances;
+    Instance<PropertySetAdapter<?>> propertySetAdapterInstances;
+    Instance<PropertyAdapter<?>> propertyAdapterInstances;
 
     protected BackendDefinitionManager() {
     }
 
     @Inject
     public BackendDefinitionManager(DiagramRegistry<? extends Diagram> diagramRegistry,
-                                    Instance<ModelBuilder<?>> modelBuilderInstances,
-                                    Instance<DefinitionSetAdapter<? extends DefinitionSet>> definitionSetAdapterInstances,
-                                    Instance<DefinitionSetRuleAdapter<? extends DefinitionSet>> definitionSetRuleAdapterInstances,
-                                    Instance<DefinitionAdapter<? extends Definition>> definitionAdapterInstances, 
-                                    Instance<PropertySetAdapter<? extends PropertySet>> propertySetAdapterInstances, 
-                                    Instance<PropertyAdapter<? extends Property>> propertyAdapterInstances) {
+                                    Instance<DefinitionSet> definitionSetsInstances,
+                                    Instance<ModelFactory<?>> modelBuilderInstances,
+                                    Instance<DefinitionSetAdapter<?>> definitionSetAdapterInstances,
+                                    Instance<DefinitionSetRuleAdapter<?>> definitionSetRuleAdapterInstances,
+                                    Instance<DefinitionAdapter<?>> definitionAdapterInstances, 
+                                    Instance<PropertySetAdapter<?>> propertySetAdapterInstances, 
+                                    Instance<PropertyAdapter<?>> propertyAdapterInstances) {
         super(diagramRegistry);
-        this.modelBuilderInstances = modelBuilderInstances;
+        this.definitionSetsInstances = definitionSetsInstances;
         this.definitionSetAdapterInstances = definitionSetAdapterInstances;
         this.definitionSetRuleAdapterInstances = definitionSetRuleAdapterInstances;
         this.definitionAdapterInstances = definitionAdapterInstances;
@@ -67,13 +65,13 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
 
     @PostConstruct
     public void init() {
-        initModelFactories();
+        initDefSets();
         initAdapters();
     }
-
-    private void initModelFactories() {
-        for (ModelBuilder<?> modelBuilder : modelBuilderInstances) {
-            modelFactories.add(modelBuilder);
+    
+    private void initDefSets() {
+        for (DefinitionSet definitionSet : definitionSetsInstances ) {
+            definitionSets.add( definitionSet );
         }
     }
     

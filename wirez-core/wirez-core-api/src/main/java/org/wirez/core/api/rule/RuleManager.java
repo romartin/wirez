@@ -16,7 +16,6 @@
 
 package org.wirez.core.api.rule;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
@@ -50,7 +49,7 @@ public interface RuleManager {
      * @param candidate Candidate node
      * @return
      */
-    RuleViolations checkContainment(final Element<? extends View<?>> target,
+    RuleViolations checkContainment(final Element<?> target,
                                     final Element<? extends View<?>> candidate);
     
     /**
@@ -60,7 +59,7 @@ public interface RuleManager {
      * @param operation Is the candidate Node being added or removed
      * @return
      */
-    RuleViolations checkCardinality(final Graph<? extends Definition, ? extends Node> target,
+    RuleViolations checkCardinality(final Graph<?, ? extends Node> target,
                                     final Node<? extends View, ? extends Edge> candidate,
                                     final Operation operation);
 

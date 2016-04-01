@@ -16,11 +16,10 @@
 
 package org.wirez.core.api.graph.factory;
 
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.DefinitionSet;
 
-public interface GraphFactory<W extends Definition> extends ElementFactory<W, View<W>, Graph<View<W>, Node>> {
+public interface GraphFactory extends ElementFactory<String, DefinitionSet, Graph<DefinitionSet, Node>> {
     
 }

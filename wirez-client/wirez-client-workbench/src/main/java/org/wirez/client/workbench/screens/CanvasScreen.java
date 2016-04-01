@@ -38,13 +38,13 @@ import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.canvas.Canvas;
 import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
 import org.wirez.core.api.rule.EmptyRuleManager;
@@ -56,17 +56,16 @@ import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.control.SelectionManager;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.canvas.settings.CanvasSettingsFactory;
 import org.wirez.core.client.canvas.settings.WiresCanvasSettings;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.canvas.wires.WiresLayer;
 import org.wirez.core.client.factory.ShapeFactory;
-import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientDiagramServices;
+import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.CanvasHighlightVisitor;
-import org.wirez.core.client.util.WirezClientLogger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -104,7 +103,7 @@ public class CanvasScreen {
     ClientDefinitionManager clientDefinitionManager;
     
     @Inject
-    ClientDefinitionServices clientDefinitionServices;
+    ClientFactoryServices clientFactoryServices;
     
     @Inject
     ClientDiagramServices clientDiagramServices;
@@ -204,14 +203,12 @@ public class CanvasScreen {
         final String title = diagram.getSettings().getTitle();
         final Graph graph = diagram.getGraph();
         
-        final View viewContent = (View) graph.getContent();
-        final Double[] graphSize = ElementUtils.getSize(viewContent);
-        
+        final DefinitionSet definitionSetContent = (DefinitionSet) graph.getContent();
         
         // Show the graph a canvas instance.
         WiresCanvasSettings settings = settingsFactory.getDefaultSettings();
 
-        canvas.show( graphSize[0].intValue() , graphSize[1].intValue() );
+        canvas.show( 1000, 1000 );
         
         canvasHandler.initialize(canvas, diagram, settings);
 
@@ -399,7 +396,7 @@ public class CanvasScreen {
     }
 
     private interface DefinitionSetRequestCallback {
-        void onSuccess ( DefinitionSet definitionSet );
+        void onSuccess ( Object definitionSet );
     }
     
     
@@ -466,7 +463,7 @@ public class CanvasScreen {
     void AddShapeToCanvasEvent(@Observes AddShapeToCanvasEvent addShapeToCanvasEvent) {
         checkNotNull("addShapeToPaletteEvent", addShapeToCanvasEvent);
         final ShapeFactory factory = addShapeToCanvasEvent.getShapeFactory();
-        final Definition definition = addShapeToCanvasEvent.getDefinition();
+        final Object definition = addShapeToCanvasEvent.getDefinition();
         final double x = addShapeToCanvasEvent.getX();
         final double y = addShapeToCanvasEvent.getY();
         final double cx = canvas.getAbsoluteX();
@@ -475,15 +472,14 @@ public class CanvasScreen {
         canvas.draw();
     }
 
-    private void buildShape(final Definition definition, final ShapeFactory factory,
+    private void buildShape(final Object definition, final ShapeFactory factory,
                             final double _x, final double _y) {
         
-        
-        clientDefinitionServices.buildGraphElement(org.wirez.core.api.util.UUID.uuid(), definition, new ServiceCallback<Element>() {
+        final DefinitionAdapter definitionAdapter = clientDefinitionManager.getDefinitionAdapter( definition. getClass() );
+        final String defId = definitionAdapter.getId( definition );
+        clientFactoryServices.element(org.wirez.core.api.util.UUID.uuid(), defId, new ServiceCallback<Element>() {
             @Override
-            public void onSuccess(final Element item) {
-                final Element<?> element = (Element<?>) item;
-
+            public void onSuccess(final Element element) {
                 double x = _x > -1 ? _x : 100d;
                 double y = _y > -1 ? _y : 100d;
 
@@ -497,10 +493,10 @@ public class CanvasScreen {
                         y = _y - parentCoords[1];
                     }
                 }
-                
+
                 org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> command = null;
                 if ( element instanceof Node) {
-                    
+
                     if ( null != parent ) {
                         command = canvasCommandFactory.ADD_CHILD_NODE( parent, (Node) element, factory );
                     } else {
@@ -514,9 +510,9 @@ public class CanvasScreen {
                 }
 
                 // Execute both add element and move commands in batch, so undo will be done in batch as well.
-                org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> moveCanvasElementCommand = 
+                org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> moveCanvasElementCommand =
                         canvasCommandFactory.UPDATE_POSITION(element, x ,y);
-                
+
                 // TODO: Use no rules.
                 // canvasHandler.getCommandManager().execute( emptyRuleManager, command, moveCanvasElementCommand);
                 canvasHandler.execute( command, moveCanvasElementCommand);
@@ -527,8 +523,7 @@ public class CanvasScreen {
                 showError(error);
             }
         });
-       
-
+        
     }
 
     private void log(final Level level, final String message) {

@@ -1,21 +1,24 @@
 package org.wirez.core.api.util;
 
-import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
+import org.wirez.core.api.definition.adapter.PropertyAdapter;
+import org.wirez.core.api.definition.adapter.PropertySetAdapter;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.*;
-import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.content.view.BoundImpl;
+import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.content.view.BoundsImpl;
+import org.wirez.core.api.graph.content.view.View;
 
 import java.util.Set;
 
+// TODO: Remove this class - avoid statics.
 public class ElementUtils {
 
-    // TODO: Remove from here.
-    public static Object parseValue(final Property property, String raw) {
-        final PropertyType type = property.getType();
+    public static Object parseValue(final PropertyAdapter adapter, final Object property, String raw) {
+        final PropertyType type = adapter.getType( property );
         
         if (StringType.name.equals(type.getName())) {
             return raw;
@@ -39,8 +42,12 @@ public class ElementUtils {
 
         throw new RuntimeException("Unsupported property type [" + type.getName() + "]");
     }
+
+    public static Object getProperty(final Element element, final Class<?> propertyClass) {
+        return getProperty( element, propertyClass.getSimpleName() );
+    }
     
-    public static Property getProperty(final Element element, final String id) {
+    public static Object getProperty(final Element element, final String id) {
         if ( null != element ) {
             return getProperty(element.getProperties(), id);
         }
@@ -48,10 +55,16 @@ public class ElementUtils {
         return null;
     }
 
-    public static Property getProperty(final Set<Property> properties, final String id) {
+    public static Object getProperty(final Set<?> properties, final Class<?> propertyClass) {
+        return getProperty(properties, propertyClass.getSimpleName());
+    }
+
+    public static Object getProperty(final Set<?> properties, final String id) {
         if ( null != id && null != properties ) {
-            for (final Property property : properties) {
-                if (property.getId().equals(id)) {
+            for (final Object property : properties) {
+                // TODO: Use property adapters.
+                String pId = property.getClass().getSimpleName();
+                if (pId.equals(id)) {
                     return property;
                 }
             }
@@ -60,16 +73,27 @@ public class ElementUtils {
         return null;
     }
 
-    public static Property getPropertyIgnoreCase(final Set<Property> properties, final String id) {
-        if ( null != id && null != properties ) {
-            for (final Property property : properties) {
-                if (property.getId().equalsIgnoreCase(id)) {
-                    return property;
+    /**
+     * Returns all properties, the ones from property sets as wellm for a given Definition.
+     */
+    public static Set<?> getAllProperties(DefinitionManager definitionManager, Object definition ) {
+
+        DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+        Set<Object> properties = definitionAdapter.getProperties(definition);
+
+        // And properties on each definition's annotated PropertySet.
+        Set<?> propertySets = definitionAdapter.getPropertySets(definition);
+        if ( null != propertySets && !propertySets.isEmpty() ) {
+            for (Object propertySet : propertySets) {
+                PropertySetAdapter propertySetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
+                Set<?> setProperties = propertySetAdapter.getProperties(propertySet);
+                if( null != setProperties ) {
+                    properties.addAll(setProperties);
                 }
             }
         }
 
-        return null;
+        return properties;
     }
 
     public static Double[] getPosition(final View element) {

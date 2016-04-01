@@ -26,35 +26,36 @@ import org.uberfire.ext.properties.editor.model.PropertyEditorFieldInfo;
 import org.uberfire.ext.properties.editor.model.PropertyEditorType;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.command.Command;
-import org.wirez.core.api.definition.Definition;
-import org.wirez.core.api.definition.property.Property;
-import org.wirez.core.api.definition.property.PropertySet;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
+import org.wirez.core.api.definition.adapter.PropertyAdapter;
+import org.wirez.core.api.definition.adapter.PropertySetAdapter;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.*;
-import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.service.definition.DefinitionServiceResponse;
+import org.wirez.core.api.graph.content.view.Bounds;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.canvas.listener.AbstractCanvasModelListener;
 import org.wirez.core.client.canvas.listener.CanvasModelListener;
+import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
-import org.wirez.core.client.service.ClientDefinitionServices;
 import org.wirez.core.client.service.ClientRuntimeError;
-import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.util.WirezClientLogger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,7 +78,6 @@ public class PropertiesEditor implements IsWidget {
         void onShowElement(Element<? extends org.wirez.core.api.graph.content.view.View<?>> element);
     }
 
-    ClientDefinitionServices clientDefinitionServices;
     DefinitionManager definitionManager;
     ShapeManager wirezClientManager;
     CanvasCommandFactory canvasCommandFactory;
@@ -88,12 +88,10 @@ public class PropertiesEditor implements IsWidget {
     private String elementUUID;
 
     @Inject
-    public PropertiesEditor(final ClientDefinitionServices clientDefinitionServices,
-                            final DefinitionManager definitionManager,
+    public PropertiesEditor(final DefinitionManager definitionManager,
                             final View view,
                             final ShapeManager wirezClientManager,
                             final CanvasCommandFactory canvasCommandFactory) {
-        this.clientDefinitionServices = clientDefinitionServices;
         this.definitionManager = definitionManager;
         this.view = view;
         this.wirezClientManager = wirezClientManager;
@@ -133,8 +131,8 @@ public class PropertiesEditor implements IsWidget {
         
         this.elementUUID = element.getUUID();
         
-        final String elementId = element.getUUID();
-        final Definition definition = element.getContent().getDefinition();
+        final Object definition = element.getContent().getDefinition();
+        final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
         
         final List<PropertyEditorCategory> categories = new ArrayList<PropertyEditorCategory>();
         final Set<String> processedProperties = new HashSet<String>();
@@ -144,59 +142,49 @@ public class PropertiesEditor implements IsWidget {
         categories.add(elementCategory);
 
         // Definition property packages.
+        final Set<?> propertyPackageSet = definitionAdapter.getPropertySets( definition );
+        for (final Object propertyPackage : propertyPackageSet) {
+            final PropertySetAdapter propertySetAdapter = definitionManager.getPropertySetAdapter( propertyPackage.getClass() );
+            final Set<?> properties = propertySetAdapter.getProperties( propertyPackage );
 
-        clientDefinitionServices.getDefinitionResponse(definition.getId(), new ServiceCallback<DefinitionServiceResponse>() {
-            @Override
-            public void onSuccess(final DefinitionServiceResponse definitionResponse) {
-                final Set<PropertySet> propertyPackageSet = definitionResponse.getPropertySets().keySet();
-                for (final PropertySet propertyPackage : propertyPackageSet) {
-                    final Set<Property> properties = definitionResponse.getPropertySets().get(propertyPackage);
-                    
-                    final PropertyEditorCategory category = new PropertyEditorCategory(propertyPackage.getPropertySetName());
-                    if (properties != null) {
-                        for (final Property _property : properties) {
-                            final String propertyId = _property.getId();
-                            final Property property = ElementUtils.getProperty(element, propertyId);
-                            final Object value = definitionManager.getPropertyAdapter(property).getValue(property);
-                            final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
-                                @Override
-                                public void onValueChanged(final Object value) {
-                                    executeUpdateProperty(element, property, value);
-                                }
-                            });
-
-                            if (propFieldInfo != null) {
-                                processedProperties.add(propertyId);
-                                category.withField(propFieldInfo);
-                            }
-
+            final PropertyEditorCategory category = new PropertyEditorCategory(propertySetAdapter.getName(propertyPackage));
+            if (properties != null) {
+                for (final Object _property : properties) {
+                    final PropertyAdapter propertyAdapter = definitionManager.getPropertyAdapter(_property.getClass());
+                    final String propertyId = propertyAdapter.getId(_property);
+                    final Object property = ElementUtils.getProperty(element, propertyId);
+                    final Object value = propertyAdapter.getValue(property);
+                    final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
+                        @Override
+                        public void onValueChanged(final Object value) {
+                            executeUpdateProperty(element, propertyId, value);
                         }
+                    });
+
+                    if (propFieldInfo != null) {
+                        processedProperties.add(propertyId);
+                        category.withField(propFieldInfo);
                     }
-                    
-                    categories.add(category);
-                    
-                }
 
-                PropertyEditorCategory pCategory = buildPropertiesCategory(element, processedProperties, definitionResponse.getProperties());
-
-                categories.add(pCategory);
-
-                // Show the categories.
-                view.handle(new PropertyEditorEvent("wirezPropertiesEditorEvent", categories));
-
-                // Editor callback notifications.
-                if ( null != editorCallback ) {
-                    editorCallback.onShowElement(element);
                 }
             }
 
-            @Override
-            public void onError(ClientRuntimeError error) {
-                showError(error);
-            }
-        });
-        
-        
+            categories.add(category);
+
+        }
+
+        final Set<?> properties = definitionAdapter.getProperties( definition );
+        PropertyEditorCategory pCategory = buildPropertiesCategory(element, processedProperties, properties);
+
+        categories.add(pCategory);
+
+        // Show the categories.
+        view.handle(new PropertyEditorEvent("wirezPropertiesEditorEvent", categories));
+
+        // Editor callback notifications.
+        if ( null != editorCallback ) {
+            editorCallback.onShowElement(element);
+        }
         
     }
 
@@ -206,21 +194,23 @@ public class PropertiesEditor implements IsWidget {
 
     private PropertyEditorCategory buildPropertiesCategory(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element,
                                                            final Set<String> processedPropertyIds,
-                                                           final Map<Property, Object> propertySet) {
-        final Definition definition = element.getContent().getDefinition();
-        final String title = definition.getTitle();
+                                                           final Set<?> properties ) {
+        final Object definition = element.getContent().getDefinition();
+        final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+        final String title = definitionAdapter.getTitle( definition );
         final PropertyEditorCategory result = new PropertyEditorCategory(title, 1);
 
-        if (propertySet != null) {
-            for (final Map.Entry<Property, Object> entry : propertySet.entrySet()) {
-                final Property _property = entry.getKey();
-                final Property property = ElementUtils.getProperty(element, _property.getId());
-                final Object value = definitionManager.getPropertyAdapter(property).getValue(property);
-                if (!processedPropertyIds.contains(property.getId())) {
+        if (properties != null) {
+            
+            for ( final Object property : properties ) {
+                final PropertyAdapter propertyAdapter = definitionManager.getPropertyAdapter(property.getClass());
+                String pId = propertyAdapter.getId(property);
+                if (!processedPropertyIds.contains(pId)) {
+                    final Object value = propertyAdapter.getValue(property);
                     final PropertyEditorFieldInfo fieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                         @Override
                         public void onValueChanged(final Object value) {
-                            executeUpdateProperty(element, property, value);
+                            executeUpdateProperty(element, pId, value);
                         }
                     });
 
@@ -229,6 +219,7 @@ public class PropertiesEditor implements IsWidget {
                     }
                 }
             }
+            
         }
 
         return result;
@@ -236,35 +227,37 @@ public class PropertiesEditor implements IsWidget {
     }
     
     private PropertyEditorFieldInfo buildGenericFieldInfo(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element,
-                                                          final Property property,
+                                                          final Object property,
                                                           final Object value,
                                                           final PropertyValueChangedHandler changedHandler) {
+        final PropertyAdapter propertyAdapter = definitionManager.getPropertyAdapter(property.getClass());
+        final PropertyType sourceType = propertyAdapter.getType( property );
         PropertyEditorType type = null;
-        if (property.getType() instanceof StringType) {
+        if (sourceType instanceof StringType) {
             type = PropertyEditorType.TEXT;
-        } else if (property.getType() instanceof ColorType) {
+        } else if (sourceType instanceof ColorType) {
             type = PropertyEditorType.COLOR;
-        } else if (property.getType() instanceof IntegerType) {
+        } else if (sourceType instanceof IntegerType) {
             type = PropertyEditorType.NATURAL_NUMBER;
-        } else if (property.getType() instanceof DoubleType) {
+        } else if (sourceType instanceof DoubleType) {
             type = PropertyEditorType.NATURAL_NUMBER;
-        } else if (property.getType() instanceof BooleanType) {
+        } else if (sourceType instanceof BooleanType) {
             type = PropertyEditorType.BOOLEAN;
         }
 
         if (type == null) {
-            throw new RuntimeException("Unsupported property type for properties adaptor. [PropertyId=" + property.getId() + ", type=" + property.getType().getName() + "].");
+            throw new RuntimeException("Unsupported property type for properties adaptor. [PropertyId=" + propertyAdapter.getId(property) + ", type=" + sourceType.getName() + "].");
         }
 
         final PropertyEditorType theType = type;
-        return new PropertyEditorFieldInfo( property.getCaption() ,
+        return new PropertyEditorFieldInfo( propertyAdapter.getCaption(property) ,
                 toEditorValue(theType, value),
                 type) {
 
             @Override
             public void setCurrentStringValue( final String currentStringValue ) {
                 super.setCurrentStringValue( currentStringValue );
-                Object _v = fromEditorValue(property.getType(), theType, currentStringValue);
+                Object _v = fromEditorValue(sourceType, theType, currentStringValue);
                 changedHandler.onValueChanged(_v);
             }
         };
@@ -362,9 +355,9 @@ public class PropertiesEditor implements IsWidget {
     }
     
     private void executeUpdateProperty(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element, 
-                                       final Property property,
+                                       final String propertyId,
                                        final Object value) {
-        execute( canvasCommandFactory.UPDATE_PROPERTY(element, property.getId(), value) );
+        execute( canvasCommandFactory.UPDATE_PROPERTY(element, propertyId, value) );
     }
 
     private void executeMove(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element,
@@ -395,21 +388,10 @@ public class PropertiesEditor implements IsWidget {
     }
     
     private void doClear() {
-        canvasHandler = null;
         elementUUID = null;
         view.clear();
     }
     
-    private void showDefault() {
-        final Graph defaultGraph = PropertiesEditor.this.canvasHandler.getDiagram().getGraph();
-        if ( null != defaultGraph) {
-            this.elementUUID = defaultGraph.getUUID();
-            show(defaultGraph);
-        } else {
-            doClear();
-        }
-    }
-
     void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
         checkNotNull("event", event);
         final ShapeState state = event.getState();
@@ -425,7 +407,7 @@ public class PropertiesEditor implements IsWidget {
             }
         } else {
             // If shape is null means no shape selected, so show the properties for the underlying graph.
-            showDefault();
+            doClear();
         }
         
     }
@@ -454,13 +436,13 @@ public class PropertiesEditor implements IsWidget {
                 final String _elementUUID = _element.getUUID();
                 if (PropertiesEditor.this.elementUUID != null
                         && PropertiesEditor.this.elementUUID.equals(_elementUUID)) {
-                    showDefault();
+                    doClear();
                 }
             }
 
             @Override
             public void onClear() {
-                showDefault();
+                doClear();
             }
         };
         canvasHandler.addListener(canvasListener);

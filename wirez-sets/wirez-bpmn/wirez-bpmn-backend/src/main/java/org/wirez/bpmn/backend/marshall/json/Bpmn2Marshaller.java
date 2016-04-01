@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.jboss.drools.impl.DroolsFactoryImpl;
 import org.wirez.bpmn.backend.legacy.Bpmn2JsonUnmarshaller;
 import org.wirez.bpmn.backend.legacy.resource.JBPMBpmn2ResourceImpl;
-import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.parser.BPMN2JsonParser;
 import org.wirez.bpmn.backend.marshall.json.parser.ParsingContext;
 import org.wirez.core.api.DefinitionManager;

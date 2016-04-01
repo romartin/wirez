@@ -18,7 +18,6 @@ package org.wirez.core.client;
 
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
-import org.wirez.core.api.definition.Definition;
 import org.wirez.core.client.factory.ShapeFactory;
 
 import javax.annotation.PostConstruct;
@@ -62,11 +61,11 @@ public class ShapeManagerImpl implements ShapeManager {
     }
 
     @Override
-    public ShapeFactory getFactory(final Definition definition) {
+    public ShapeFactory getFactory(final Object definition) {
         final Collection<ShapeSet> shapeSets = getShapeSets();
         for (final ShapeSet wirezShapeSet : shapeSets) {
-            final Collection<ShapeFactory<? extends Definition, ? extends Shape>> factories = wirezShapeSet.getFactories();
-            for (final ShapeFactory<? extends Definition, ? extends Shape> factory : factories) {
+            final Collection<ShapeFactory<?, ? extends Shape>> factories = wirezShapeSet.getFactories();
+            for (final ShapeFactory<?, ? extends Shape> factory : factories) {
                 if (factory.accepts(definition)) {
                     return factory;
                 }

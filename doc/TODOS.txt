@@ -3,18 +3,31 @@
 
     - Undo command if user action not allowed - redo canvas state
         - drag control + failed command -> use dragContxt.reset()?
-    - BPMN Marshalling -> saved bound x/y coordinates and size (is negative) on bpmn file are not the right ones
+    - BPMN Marshalling 
+        -> saved bound x/y coordinates and size (is negative) on bpmn file are not the right ones
+        -> simplify to avoid creating classes for each new definition...
+        -> mock / stub for existing unit tests
     - Dynamic forms integration
     - Factories - child/view/parent edges ( use factories in commands, etc - avoid new operators )
     
-    - managers & services
-      - simplify + share impls
-        - managers on api as services
-        - managers on client client as caller/sender of the service itself
-      - definition manager -> remove adapters from api and use them internally
-        - sync/async command managers
-        - performance
-          - annot processors + client graph factories -> all ops on client side
+    - Usability
+    
+    - model
+        - Definition Impls -> finish implementation & generate from ifaces and the adapter as well
+        - Performance
+            - private constructors
+            - review inmutability (final fields) -> bindable needs pub no-arg const! How 2 deal with finals?
+            - if making fields static -> marhsalls as null... ( eg: DefSet#labels )
+            - builders
+                - mark as @NonPortable
+                - auto generate when using annotated models?
+    
+    - ElementUtils -> Remove and refactor usages.  
+    
+    - sync/async command managers
+    
+    - Client
+        - ShapeFactory#accepts forces to build a model instance from the id ( see Palette#getDefinition )
         
 - Lienzo
 ********
@@ -44,6 +57,7 @@
     - custom property types
     - composite props - depends on the other properties' values
     - avoid custom forks!?!?
+    - bean validations
     
 - Client
 *********
@@ -89,6 +103,7 @@
           - Clone definitions and properties when creating graph elements -> errai low level serialization?- Cloning models
 Backend
 *******
+    - Adapters -> deal with #accept(Class<?>) in client side code
     - create snapshot copies of d diagram
     - Missing diagram services ( such as delete )
     - improve server-client tx errai marshalling for definitions, graphs, diagrams

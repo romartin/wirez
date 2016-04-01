@@ -53,7 +53,7 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent> {
     }
 
     protected EndNoneEventShape _applyRadius(final Node<View<EndNoneEvent>, Edge> element, MutationContext mutationContext) {
-        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.ID);
+        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.class);
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
             applyRadius(radius, mutationContext);

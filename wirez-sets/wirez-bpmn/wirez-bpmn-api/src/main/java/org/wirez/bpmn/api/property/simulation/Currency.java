@@ -19,39 +19,62 @@ package org.wirez.bpmn.api.property.simulation;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
-import org.wirez.core.api.annotation.property.DefaultValue;
-import org.wirez.core.api.annotation.property.Property;
-import org.wirez.core.api.annotation.property.Value;
-import org.wirez.core.api.definition.property.BaseProperty;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.property.*;
 import org.wirez.core.api.definition.property.PropertyType;
-import org.wirez.core.api.definition.property.type.ColorType;
+import org.wirez.core.api.definition.property.type.StringType;
 
 @Portable
 @Bindable
 @Property
-public class Currency extends BaseProperty implements BPMNProperty {
+public class Currency implements BPMNProperty {
 
-    public static final String ID = "currency";
+    @Caption
+    public static final String caption = "Currency";
+
+    @Description
+    public static final String description = "Base currency (ISO 4217).";
+
+    @ReadOnly
+    public static final Boolean readOnly = false;
+
+    @Optional
+    public static final Boolean optional = false;
+
+    @Type
+    public static final PropertyType type = new StringType();
 
     @DefaultValue
-    public static final String DEFAULT_VALUE = "";
+    public static final String defaultValue = "";
 
     @Value
-    private String value = DEFAULT_VALUE;
-    
+    private String value = defaultValue;
+
     public Currency() {
-        super(ID, 
-                "Currency", "Base currency (ISO 4217).", 
-                false, false);
     }
 
-    @Override
+    public String getCaption() {
+        return caption;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public boolean isOptional() {
+        return optional;
+    }
+
     public PropertyType getType() {
-        return new ColorType();
+        return type;
     }
 
     public String getDefaultValue() {
-        return DEFAULT_VALUE;
+        return defaultValue;
     }
     
     public String getValue() {

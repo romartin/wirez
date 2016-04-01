@@ -20,15 +20,14 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.rule.RuleViolation;
 
 @Portable
 public class ContainmentRuleViolation extends AbstractRuleViolation {
     
-    private Element<? extends View<?>> target;
+    private Element<?> target;
     private Element<? extends View<?>> candidate;
 
-    public ContainmentRuleViolation(@MapsTo("target") Element<? extends View<?>> target,
+    public ContainmentRuleViolation(@MapsTo("target") Element<?> target,
                                     @MapsTo("candidate") Element<? extends View<?>> candidate) {
         this.target = target;
         this.candidate = candidate;

@@ -16,8 +16,6 @@
 
 package org.wirez.core.api.graph;
 
-import org.wirez.core.api.definition.Definition;
-
 import java.util.List;
 
 /**

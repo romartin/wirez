@@ -1,7 +1,6 @@
 package org.wirez.core.backend.service.diagram;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.errai.bus.server.annotations.Service;
 import org.jboss.errai.bus.server.api.RpcContext;
@@ -13,7 +12,7 @@ import org.uberfire.java.nio.IOException;
 import org.uberfire.java.nio.file.*;
 import org.uberfire.java.nio.file.attribute.BasicFileAttributes;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.Definition;
+import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
@@ -24,31 +23,23 @@ import org.wirez.core.api.service.DefinitionSetServices;
 import org.wirez.core.api.service.ResponseStatus;
 import org.wirez.core.api.service.ServiceResponse;
 import org.wirez.core.api.service.ServiceResponseImpl;
-import org.wirez.core.api.service.definition.DefinitionService;
-import org.wirez.core.api.service.definition.DefinitionSetServiceResponse;
 import org.wirez.core.api.service.diagram.*;
-import org.wirez.core.api.service.event.DiagramCreatedEvent;
-import org.wirez.core.api.service.event.DiagramLoadedEvent;
 import org.wirez.core.api.util.UUID;
-import org.wirez.core.api.util.WirezLogger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletContext;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.InputStream;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
-import static org.uberfire.java.nio.file.Files.readAllBytes;
 import static org.uberfire.java.nio.file.Files.walkFileTree;
 
 @Service
@@ -65,7 +56,7 @@ public class DiagramServiceImpl implements DiagramService {
     DefinitionManager definitionManager;
     
     @Inject
-    DefinitionService definitionService;
+    FactoryManager factoryManager;
     
     @Inject
     DiagramRegistry<Diagram> diagramRegistry;
@@ -166,10 +157,9 @@ public class DiagramServiceImpl implements DiagramService {
         final String shapeSetId = request.getShapeSetId();
         final String title = request.getTitle();
 
-        final DefinitionSetServiceResponse definitionSetServiceResponse = definitionService.getDefinitionSet(defSetId);
-        final Definition graphDefinition = definitionSetServiceResponse.getGraphElement();
-        final Graph graph = (Graph) definitionService.buildGraphElement(UUID.uuid(), graphDefinition.getId());
+        final Graph graph = factoryManager.graph( UUID.uuid(), defSetId );
         final Settings diagramSettings = new SettingsImpl(title, defSetId, shapeSetId);
+        
         // TODO: Externalize
         diagramSettings.setPath(buildDiagramPath());
         final Diagram diagram = new DiagramImpl( UUID.uuid(), graph, diagramSettings );

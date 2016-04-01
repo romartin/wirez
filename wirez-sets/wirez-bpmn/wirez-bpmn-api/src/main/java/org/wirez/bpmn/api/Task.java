@@ -25,23 +25,27 @@ import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.bpmn.api.property.simulation.*;
-import org.wirez.core.api.annotation.definition.Definition;
-import org.wirez.core.api.annotation.definition.Property;
-import org.wirez.core.api.annotation.definition.PropertySet;
-import org.wirez.core.api.definition.BaseDefinition;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.definition.*;
 import org.wirez.core.api.graph.Node;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
 @Portable
 @Bindable
 @Definition( type = Node.class )
-public class Task extends BaseDefinition implements BPMNDefinition {
+public class Task implements BPMNDefinition {
 
-    public static final String ID = "Task";
+    @Category
+    public static final String category = "Activities";
+
+    @Title
+    public static final String title = "A Task";
+
+    @Description
+    public static final String description = "A task is a unit of work - the job to be performed";
+    
     public static final String COLOR = "#dfeff8";
     public static final Double WIDTH = 136d;
     public static final Double HEIGHT = 48d;
@@ -91,23 +95,25 @@ public class Task extends BaseDefinition implements BPMNDefinition {
 
     @Property
     private Currency currency;
-    
-    public Task() {
-        super("Activities", "Task", "A task is a unit of work - the job to be performed",
-                new HashSet<String>(){{
-                    add( "all" );
-                    add( "sequence_start" );
-                    add( "sequence_end" );
-                    add( "from_task_event" );
-                    add( "to_task_event" );
-                    add( "FromEventbasedGateway" );
-                    add( "messageflow_start" );
-                    add( "messageflow_end" );
-                    add( "fromtoall" );
-                    add( "ActivitiesMorph" );
-                }});
-    }
 
+    @Labels
+    private final Set<String> labels = new HashSet<String>() {{
+        add( "all" );
+        add( "sequence_start" );
+        add( "sequence_end" );
+        add( "from_task_event" );
+        add( "to_task_event" );
+        add( "FromEventbasedGateway" );
+        add( "messageflow_start" );
+        add( "messageflow_end" );
+        add( "fromtoall" );
+        add( "ActivitiesMorph" );
+    }};
+
+    public Task() {
+        
+    }
+    
     public Task(@MapsTo("general") BPMNGeneral general,
                 @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                 @MapsTo("fontSet") FontSet fontSet,
@@ -123,7 +129,6 @@ public class Task extends BaseDefinition implements BPMNDefinition {
                 @MapsTo("workingHours") WorkingHours workingHours,
                 @MapsTo("unitCost") UnitCost unitCost,
                 @MapsTo("currency") Currency currency) {
-        this();
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
@@ -142,11 +147,22 @@ public class Task extends BaseDefinition implements BPMNDefinition {
         
     }
 
-    @Override
-    public String getId() {
-        return ID;
+    public String getCategory() {
+        return category;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Set<String> getLabels() {
+        return labels;
+    }
+    
     public BPMNGeneral getGeneral() {
         return general;
     }
@@ -167,103 +183,44 @@ public class Task extends BaseDefinition implements BPMNDefinition {
         return height;
     }
 
-    public void setGeneral(BPMNGeneral general) {
-        this.general = general;
-    }
-
-    public void setBackgroundSet(BackgroundSet backgroundSet) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet(FontSet fontSet) {
-        this.fontSet = fontSet;
-    }
-
-    public void setWidth(Width width) {
-        this.width = width;
-    }
-
-    public void setHeight(Height height) {
-        this.height = height;
-    }
-
     public Min getMin() {
         return min;
-    }
-
-    public void setMin(Min min) {
-        this.min = min;
     }
 
     public Max getMax() {
         return max;
     }
 
-    public void setMax(Max max) {
-        this.max = max;
-    }
-
     public Mean getMean() {
         return mean;
-    }
-
-    public void setMean(Mean mean) {
-        this.mean = mean;
     }
 
     public TimeUnit getTimeUnit() {
         return timeUnit;
     }
 
-    public void setTimeUnit(TimeUnit timeUnit) {
-        this.timeUnit = timeUnit;
-    }
-
     public StandardDeviation getStandardDeviation() {
         return standardDeviation;
-    }
-
-    public void setStandardDeviation(StandardDeviation standardDeviation) {
-        this.standardDeviation = standardDeviation;
     }
 
     public DistributionType getDistributionType() {
         return distributionType;
     }
 
-    public void setDistributionType(DistributionType distributionType) {
-        this.distributionType = distributionType;
-    }
-
     public Quantity getQuantity() {
         return quantity;
-    }
-
-    public void setQuantity(Quantity quantity) {
-        this.quantity = quantity;
     }
 
     public WorkingHours getWorkingHours() {
         return workingHours;
     }
 
-    public void setWorkingHours(WorkingHours workingHours) {
-        this.workingHours = workingHours;
-    }
-
     public UnitCost getUnitCost() {
         return unitCost;
-    }
-
-    public void setUnitCost(UnitCost unitCost) {
-        this.unitCost = unitCost;
     }
 
     public Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
 }

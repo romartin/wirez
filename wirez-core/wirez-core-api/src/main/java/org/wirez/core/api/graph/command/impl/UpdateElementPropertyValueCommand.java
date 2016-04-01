@@ -16,13 +16,12 @@
 package org.wirez.core.api.graph.command.impl;
 
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.adapter.PropertyAdapter;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.definition.property.Property;
+import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.command.GraphCommandResult;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.ElementUtils;
@@ -65,7 +64,7 @@ public class UpdateElementPropertyValueCommand extends AbstractGraphCommand {
 
     @Override
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final Property p = ElementUtils.getProperty(element, propertyId);
+        final Object p = ElementUtils.getProperty(element, propertyId);
         oldValue = adapter.getValue(p);
         adapter.setValue(p, value);
         return new GraphCommandResult(new ArrayList<RuleViolation>());

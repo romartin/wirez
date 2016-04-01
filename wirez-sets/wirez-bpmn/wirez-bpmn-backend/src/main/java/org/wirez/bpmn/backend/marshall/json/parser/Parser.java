@@ -1,7 +1,6 @@
 package org.wirez.bpmn.backend.marshall.json.parser;
 
 import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 
 import java.io.IOException;

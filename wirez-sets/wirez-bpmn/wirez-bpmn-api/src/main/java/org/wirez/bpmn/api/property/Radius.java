@@ -74,7 +74,6 @@ public class Radius implements BPMNProperty {
         return type;
     }
 
-
     public Double getDefaultValue() {
         return defaultValue;
     }

@@ -1,6 +1,7 @@
 package org.wirez.bpmn.backend.service.diagram;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -52,6 +53,7 @@ import static org.mockito.Mockito.doReturn;
 
 // TODO: Mock the different objects created here.
 @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class BPMNDiagramMarshallerTest {
 
     protected static final String BPMN_EVALUATION = "org/wirez/bpmn/backend/service/diagram/evaluation.bpmn";

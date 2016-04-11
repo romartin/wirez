@@ -32,13 +32,15 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
     }
 
     @Override
-    protected Object getProperty(Set<?> defProperties, String id) {
+    protected Object getProperty(final BuilderContext context,
+                                 final Set<?> defProperties, 
+                                 final String id) {
         if ( "processn".equals(id) ) {
-            return super.getProperty(defProperties, Name.ID);
+            return super.getProperty(context, defProperties, Name.ID);
         } else if ( Bpmn2OryxMappings.getOryxPropertyId(Name.ID).equals(id)) {
             return null;
         }
-        return super.getProperty(defProperties, id);
+        return super.getProperty(context, defProperties, id);
     }
 
     @Override

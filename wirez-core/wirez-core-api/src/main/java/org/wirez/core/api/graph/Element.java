@@ -22,7 +22,7 @@ import java.util.Set;
  * <p>This interface provides the basic contract for any element of a graph (node/edge).</p>
  * 
  * <p>The graph implementation is based on the <b>Labeled Property Graph Model</b>, so all graph elements 
- * must have a unique identifier, a collection of properties, a set of labels and a generic content.
+ * must have a unique identifier, a generic content, a collection of properties (based on the content, not always present) and a set of labels.
  * The content gives the graph the different processing semantics, or some view representation for the element on the canvas,</p>
  * 
  */
@@ -30,8 +30,6 @@ public interface Element<C> {
     
     String getUUID();
 
-    Set<?> getProperties();
-    
     Set<String> getLabels();
     
     C getContent();

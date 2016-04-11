@@ -18,13 +18,16 @@ package org.wirez.bpmn.client;
 
 import org.wirez.bpmn.api.StartNoneEvent;
 import org.wirez.bpmn.api.property.Radius;
+import org.wirez.bpmn.api.property.general.BackgroundSet;
+import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.client.shapes.WiresCircleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.mutation.Context;
+import org.wirez.core.client.mutation.GraphContext;
 import org.wirez.core.client.view.HasTitle;
 
 public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> {
@@ -39,26 +42,37 @@ public class StartNoneEventShape extends BPMNBasicShape<StartNoneEvent> {
     }
 
     @Override
-    public void applyElementProperties(Node<View<StartNoneEvent>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<View<StartNoneEvent>, Edge> element, CanvasHandler wirezCanvas, GraphContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Radius.
         _applyRadius(element, mutationContext);
     }
 
-    protected StartNoneEventShape _applyRadius(final Node<View<StartNoneEvent>, Edge> element, MutationContext mutationContext) {
-        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.class);
+    protected StartNoneEventShape _applyRadius(final Node<View<StartNoneEvent>, Edge> element, GraphContext mutationContext) {
+        final Radius radiusProperty  = element.getContent().getDefinition().getRadius();
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
             applyRadius(radius, mutationContext);
-            ElementUtils.updateBounds(radius, element.getContent());
+            GraphUtils.updateBounds(radius, element.getContent());
         }
         return this;
     }
-    protected void applyRadius(double radius, MutationContext mutationContext) {
+    
+    protected void applyRadius(double radius, Context mutationContext) {
         if (radius > 0) {
             getView().setRadius(radius);
         }
+    }
+
+    @Override
+    protected BackgroundSet getBackgroundSet(final Node<View<StartNoneEvent>, Edge> element) {
+        return element.getContent().getDefinition().getBackgroundSet();
+    }
+
+    @Override
+    protected FontSet getFontSet(final Node<View<StartNoneEvent>, Edge> element) {
+        return element.getContent().getDefinition().getFontSet();
     }
     
     @Override

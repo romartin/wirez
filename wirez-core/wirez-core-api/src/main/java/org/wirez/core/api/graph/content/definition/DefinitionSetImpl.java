@@ -1,4 +1,4 @@
-package org.wirez.core.api.graph.content;
+package org.wirez.core.api.graph.content.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -13,7 +13,7 @@ public class DefinitionSetImpl implements DefinitionSet {
     }
 
     @Override
-    public String getDefinition() {
+    public String getId() {
         return id;
     }
 

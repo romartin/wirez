@@ -18,13 +18,16 @@ package org.wirez.bpmn.client;
 
 import org.wirez.bpmn.api.ParallelGateway;
 import org.wirez.bpmn.api.property.Radius;
+import org.wirez.bpmn.api.property.general.BackgroundSet;
+import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.client.shapes.WiresPolygonView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.mutation.Context;
+import org.wirez.core.client.mutation.GraphContext;
 
 public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> {
 
@@ -36,7 +39,7 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> {
         return (WiresPolygonView) view;
     }
 
-    public void applyElementProperties(Node<View<ParallelGateway>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<View<ParallelGateway>, Edge> element, CanvasHandler wirezCanvas, GraphContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
 
         // Radius.
@@ -44,20 +47,30 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway> {
         
     }
 
-    protected ParallelGatewayShape _applyRadius(final Node<View<ParallelGateway>, Edge> element, final MutationContext mutationContext) {
-        final Radius radiusProperty  = (Radius) ElementUtils.getProperty(element, Radius.class);
+    protected ParallelGatewayShape _applyRadius(final Node<View<ParallelGateway>, Edge> element, final GraphContext mutationContext) {
+        final Radius radiusProperty  = element.getContent().getDefinition().getRadius();
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
             applyRadius(radius, mutationContext);
-            ElementUtils.updateBounds(radius, element.getContent());
+            GraphUtils.updateBounds(radius, element.getContent());
         }
         return this;
     }
 
-    protected void applyRadius(final double radius, final MutationContext mutationContext) {
+    protected void applyRadius(final double radius, final Context mutationContext) {
         if (radius > 0) {
             getView().setRadius(radius);
         }
+    }
+
+    @Override
+    protected BackgroundSet getBackgroundSet(final Node<View<ParallelGateway>, Edge> element) {
+        return element.getContent().getDefinition().getBackgroundSet();
+    }
+
+    @Override
+    protected FontSet getFontSet(final Node<View<ParallelGateway>, Edge> element) {
+        return element.getContent().getDefinition().getFontSet();
     }
 
     @Override

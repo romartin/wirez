@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.content;
+package org.wirez.core.client.mutation;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
+import org.wirez.core.api.graph.util.GraphUtils;
 
-/**
- * Indicates that the target node is the parent of the source node.
- * This content has no view representation on the canvas.
- */
-@Portable
-public final class Parent implements Relationship {
+public interface GraphContext extends Context {
     
-    private static final transient String RELATIONSHIP = "parent";
-    
-    @Override
-    public String getName() {
-        return RELATIONSHIP;
-    }
+    GraphUtils getGraphUtils();
     
 }

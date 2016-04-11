@@ -5,9 +5,10 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.DefinitionSet;
-import org.wirez.core.api.graph.content.DefinitionSetImpl;
+import org.wirez.core.api.graph.content.definition.DefinitionSet;
+import org.wirez.core.api.graph.content.definition.DefinitionSetImpl;
 import org.wirez.core.api.graph.factory.BaseElementFactory;
+import org.wirez.core.api.graph.factory.BaseGraphFactory;
 import org.wirez.core.api.graph.factory.GraphFactory;
 import org.wirez.core.api.graph.impl.GraphImpl;
 import org.wirez.core.api.graph.store.GraphNodeStoreImpl;
@@ -17,10 +18,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Set;
 
-public abstract class BPMNAbstractGraphFactory extends BaseElementFactory<String, DefinitionSet, Graph<DefinitionSet, Node>>
-        implements GraphFactory {
+public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<DefinitionSet, Graph<DefinitionSet, Node>> {
 
-    public static final String FACTORY_NAME = "bpmnGraphFactory";
+    public static final transient String FACTORY_NAME = "bpmnGraphFactory";
 
     BPMNDefinitionFactory bpmnDefinitionBuilder;
     GraphCommandManager graphCommandManager;
@@ -44,11 +44,10 @@ public abstract class BPMNAbstractGraphFactory extends BaseElementFactory<String
     protected abstract Node buildGraphElement( String id );
 
     @Override
-    public Graph<DefinitionSet, Node> build(String uuid, String definitionSetId , Set<?> properties, Set<String> labels) {
+    public Graph<DefinitionSet, Node> build(String uuid, String definitionSetId , Set<String> labels) {
 
         Graph<DefinitionSet, Node> graph =
                 new GraphImpl<DefinitionSet>( uuid,
-                        (Set<Object>) properties,
                         labels,
                         new DefinitionSetImpl( definitionSetId ),
                         new GraphNodeStoreImpl());

@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.ColorType;
 public class BorderColor implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Border Color";
+    public static final transient String caption = "Border Color";
 
     @Description
-    public static final String description = "The Border Color";
+    public static final transient String description = "The Border Color";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -45,7 +45,7 @@ public class BorderColor implements BPMNProperty {
     public static final PropertyType type = new ColorType();
 
     @DefaultValue
-    public static final String defaultValue = "#000000";
+    public static final transient String defaultValue = "#000000";
 
     @Value
     private String value = defaultValue;

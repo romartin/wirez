@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class Mean implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Processing time (mean)";
+    public static final transient String caption = "Processing time (mean)";
 
     @Description
-    public static final String description = "Processing time (mean)";
+    public static final transient String description = "Processing time (mean)";
 
     @ReadOnly
     public static final Boolean readOnly = false;

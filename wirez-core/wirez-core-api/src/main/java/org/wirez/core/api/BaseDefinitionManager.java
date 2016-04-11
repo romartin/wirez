@@ -16,7 +16,6 @@
 
 package org.wirez.core.api;
 
-import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.adapter.*;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.registry.DiagramRegistry;
@@ -27,7 +26,7 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
 
     DiagramRegistry<? extends Diagram> diagramRegistry;
 
-    protected final List<DefinitionSet> definitionSets = new ArrayList<DefinitionSet>();
+    protected final List definitionSets = new ArrayList<>();
     protected final List<DefinitionSetAdapter> definitionSetAdapters = new ArrayList<DefinitionSetAdapter>();
     protected final List<DefinitionSetRuleAdapter> definitionSetRuleAdapters = new ArrayList<DefinitionSetRuleAdapter>();
     protected final List<DefinitionAdapter> definitionAdapters = new ArrayList<DefinitionAdapter>();
@@ -42,18 +41,18 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public Collection<DefinitionSet> getDefinitionSets() {
-        return Collections.unmodifiableCollection( definitionSets );
+    public <T> Collection<T> getDefinitionSets() {
+        return Collections.unmodifiableCollection((Collection<? extends T>) definitionSets);
     }
 
     @Override
-    public DefinitionSet getDefinitionSet(final String id) {
+    public <T> T getDefinitionSet(final String id) {
         if ( null != id && id.trim().length() > 0 ) {
-            for ( final DefinitionSet definitionSet : definitionSets ) {
+            for ( final Object definitionSet : definitionSets ) {
                 final DefinitionSetAdapter adapter = getDefinitionSetAdapter( definitionSet.getClass() );
                 final String defSetId = adapter.getId( definitionSet );
                 if ( defSetId.equals(id) ) {
-                    return definitionSet;
+                    return (T) definitionSet;
                 }
             }
         }

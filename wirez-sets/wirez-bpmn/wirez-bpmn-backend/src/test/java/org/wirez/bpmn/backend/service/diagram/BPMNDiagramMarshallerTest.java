@@ -83,9 +83,6 @@ public class BPMNDiagramMarshallerTest {
         };
         ConnectionEdgeFactory edgeFactory = new ConnectionEdgeFactoryImpl() {
         };
-        // TODO: Use bpmn graph factory class.
-        GraphFactory graphFactory = new GraphFactoryImpl() {
-        };
         /*when(elementFactoryLocator.getElementFactory(eq(Node.class), anyString())).thenReturn(nodeFactory);
         when(elementFactoryLocator.getElementFactory(eq(Edge.class), anyString())).thenReturn(edgeFactory);
         when(elementFactoryLocator.getElementFactory(eq(Graph.class), anyString())).thenReturn(graphFactory);
@@ -154,9 +151,10 @@ public class BPMNDiagramMarshallerTest {
         this.tested = new BPMNDiagramMarshaller(bpmnGraphBuilderFactory, 
                                                 definitionManager, 
                                                 null, 
+                                                null,
                                                 new GraphCommandManager(notificationEvent), 
                                                 new EmptyRuleManager(), 
-                                                new GraphCommandFactoryImpl(definitionManager));
+                                                new GraphCommandFactoryImpl(definitionManager, null));
         
     }
     

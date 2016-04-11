@@ -39,18 +39,18 @@ import java.util.Set;
 public class Lane implements BPMNDefinition {
 
     @Category
-    public static final String category = "Swimlanes";
+    public static final transient String category = "Swimlanes";
 
     @Title
-    public static final String title = "Lane";
+    public static final transient String title = "Lane";
 
     @Description
-    public static final String description = "Pools and Lanes represent responsibilities for activities in a process. " +
+    public static final transient String description = "Pools and Lanes represent responsibilities for activities in a process. " +
             "A pool or a lane can be an organization, a role, or a system. " +
             "Lanes sub-divide pools or other lanes hierarchically.";
     
     
-    public static final String COLOR = "#ffffff";
+    public static final transient String COLOR = "#ffffff";
     public static final Double WIDTH = 450d;
     public static final Double HEIGHT = 250d;
     public static final Double BORDER_SIZE = 1d;

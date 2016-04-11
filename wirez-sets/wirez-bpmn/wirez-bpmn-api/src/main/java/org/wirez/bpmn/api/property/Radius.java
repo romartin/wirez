@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class Radius implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Radius";
+    public static final transient String caption = "Radius";
 
     @Description
-    public static final String description = "The radius";
+    public static final transient String description = "The radius";
 
     @ReadOnly
     public static final Boolean readOnly = false;

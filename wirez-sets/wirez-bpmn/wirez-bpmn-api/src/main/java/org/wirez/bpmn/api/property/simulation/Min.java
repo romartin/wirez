@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class Min implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Processing time (min)";
+    public static final transient String caption = "Processing time (min)";
 
     @Description
-    public static final String description = "Processing time (min)";
+    public static final transient String description = "Processing time (min)";
 
     @ReadOnly
     public static final Boolean readOnly = false;

@@ -22,8 +22,8 @@ import org.wirez.core.client.canvas.CanvasHandler;
 
 public interface HasGraphElementMutation<W, C extends View<W>, E extends Element<C>> extends HasMutation {
     
-    void applyElementPosition(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
+    void applyElementPosition(E element, CanvasHandler canvasHandler, GraphContext mutationContext);
 
-    void applyElementProperties(E element, CanvasHandler canvasHandler, MutationContext mutationContext);
+    void applyElementProperties(E element, CanvasHandler canvasHandler, GraphContext mutationContext);
     
 }

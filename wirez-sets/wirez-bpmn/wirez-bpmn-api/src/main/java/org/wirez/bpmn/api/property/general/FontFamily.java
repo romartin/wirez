@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.StringType;
 public class FontFamily implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Font Family";
+    public static final transient String caption = "Font Family";
 
     @Description
-    public static final String description = "The Font Family";
+    public static final transient String description = "The Font Family";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -45,7 +45,7 @@ public class FontFamily implements BPMNProperty {
     public static final PropertyType type = new StringType();
 
     @DefaultValue
-    public static final String defaultValue = "Verdana";
+    public static final transient String defaultValue = "Verdana";
 
     @Value
     private String value = defaultValue;

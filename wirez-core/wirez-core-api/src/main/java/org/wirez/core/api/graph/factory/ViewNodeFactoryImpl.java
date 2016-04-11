@@ -36,10 +36,9 @@ public class ViewNodeFactoryImpl extends BaseViewElementFactory<Object, View<Obj
     }
 
     @Override
-    public Node<View<Object>, Edge> build(final String uuid, final Object definition, final Set<?> properties, final Set<String> labels) {
+    public Node<View<Object>, Edge> build(final String uuid, final Object definition, final Set<String> labels) {
         Node<View<Object>, Edge> node =
                 new NodeImpl<View<Object>>(uuid,
-                        (Set<Object>) properties,
                         labels,
                         new ViewImpl<>( definition, buildBounds())
 

@@ -37,10 +37,9 @@ public class ConnectionEdgeFactoryImpl
     }
 
     @Override
-    public Edge<View<Object>, Node> build(String uuid, Object definition, Set<?> properties, Set<String> labels) {
+    public Edge<View<Object>, Node> build(String uuid, Object definition, Set<String> labels) {
         Edge<View<Object>, Node> edge =
                 new EdgeImpl<View<Object>>( uuid,
-                        (Set<Object>) properties,
                         labels,
                         new ViewConnectorImpl<>( definition, buildBounds()));
         

@@ -22,12 +22,13 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
 import org.wirez.core.api.graph.processing.traverse.tree.AbstractTreeTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -55,6 +56,7 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.wires.AbstractWiresCanvasHandler");
 
     protected ShapeManager shapeManager;
+    protected GraphUtils graphUtils;
     protected CanvasCommandFactory commandFactory;
     protected TreeWalkTraverseProcessor treeWalkTraverseProcessor;
     protected WiresCanvas canvas;
@@ -66,9 +68,11 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
     @Inject
     public AbstractWiresCanvasHandler(final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
                                       final ShapeManager shapeManager,
+                                      final GraphUtils graphUtils,
                                       final CanvasCommandFactory commandFactory) {
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
         this.shapeManager = shapeManager;
+        this.graphUtils = graphUtils;
         this.commandFactory = commandFactory;
     }
 
@@ -294,7 +298,8 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
 
             if (hasMutation.accepts(MutationType.STATIC)) {
 
-                MutationContext context = new StaticMutationContext();
+                // The mutation context.
+                final GraphContext context = buildGraphContext();
 
                 if (shape instanceof HasGraphElementMutation) {
                     final HasGraphElementMutation hasGraphElement = (HasGraphElementMutation) shape;
@@ -306,6 +311,17 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
             }
 
         }
+    }
+    
+    private GraphContext buildGraphContext() {
+        
+        // The mutation context.
+        final Context context = new StaticMutationContext();
+
+        // The graph mutation context.
+        final GraphContext graphContext = new GraphContextImpl( context, graphUtils );
+        
+        return graphContext;
     }
     
     public void addChild(final Element parent, final Element child) {
@@ -329,27 +345,34 @@ public abstract class AbstractWiresCanvasHandler<S extends CanvasSettings, L ext
 
     public void updateElementPosition(final Element element) {
         final Shape shape = canvas.getShape(element.getUUID());
-
         final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
-        final MutationContext context = new StaticMutationContext();
+        
+        // The mutation context.
+        final GraphContext context = buildGraphContext();
         shapeMutation.applyElementPosition(element, this, context);
+        
         canvas.draw();
+        
         afterElementUpdated(element, shapeMutation);
     }
 
     public void updateElementProperties(final Element element) {
         final Shape shape = canvas.getShape(element.getUUID());
-
         final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
-        final MutationContext context = new StaticMutationContext();
+
+        // The mutation context.
+        final GraphContext context = buildGraphContext();
         shapeMutation.applyElementProperties(element, this, context);
+
         canvas.draw();
+
         afterElementUpdated(element, shapeMutation);
     }
 
     public void clear() {
         canvas.clear();
         canvas.draw();
+        
         afterClear();
     }
     

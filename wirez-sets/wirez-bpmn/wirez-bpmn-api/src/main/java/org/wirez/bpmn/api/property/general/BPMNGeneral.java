@@ -13,7 +13,7 @@ import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 public class BPMNGeneral implements BPMNPropertySet {
 
     @org.wirez.core.api.definition.annotation.Name
-    public static final String propertySetName = "BPMN General";
+    public static final transient String propertySetName = "BPMN General";
 
     @Property
     private Name name;

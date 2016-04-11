@@ -1,6 +1,5 @@
 package org.wirez.core.api;
 
-import org.wirez.core.api.definition.DefinitionSet;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.definition.factory.ModelFactory;
@@ -9,7 +8,6 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.factory.*;
-import org.wirez.core.api.util.ElementUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,7 +35,7 @@ public abstract class BaseFactoryManager implements FactoryManager {
     @Override
     public <W extends Graph> W graph( String uuid, String definitionSetId ) {
 
-        DefinitionSet definitionSet = definitionManager.getDefinitionSet( definitionSetId );
+        Object definitionSet = definitionManager.getDefinitionSet( definitionSetId );
         if ( null == definitionSet ) {
             throw new RuntimeException("No DefinitionSet found for id [" + definitionSetId + "]");
         }
@@ -45,11 +43,10 @@ public abstract class BaseFactoryManager implements FactoryManager {
         DefinitionSetAdapter definitionSetAdapter = definitionManager.getDefinitionSetAdapter( definitionSet.getClass() );
         Class<?> graphElementClass = definitionSetAdapter.getGraph( definitionSet );
         String factory = definitionSetAdapter.getGraphFactory( definitionSet );
-        ElementFactory elementFactory = getElementFactory( definitionSet, graphElementClass, factory );
-        Set<Object> properties = new HashSet<>();
+        GraphFactory elementFactory = getGraphFactory( definitionSet, graphElementClass, factory );
         Set<String> labels = new HashSet<>();
 
-        return (W) elementFactory.build(uuid, definitionSetId, properties, labels);
+        return (W) elementFactory.build(uuid, definitionSetId, labels);
     }
 
     @Override
@@ -67,18 +64,19 @@ public abstract class BaseFactoryManager implements FactoryManager {
         String factory = definitionAdapter.getElementFactory( definition );
         ElementFactory elementFactory = getElementFactory( definition, graphElementClass, factory );
 
-        // Cache on element properties the annotated Property's on the definition.
-        Set<?> properties = ElementUtils.getAllProperties( definitionManager, definition );
-        
         // Graph element's labels.
         Set<?> labels = definitionAdapter.getLabels( definition );
         
-        return (W) elementFactory.build(uuid, definition, properties, labels);
+        return (W) elementFactory.build(uuid, definition, labels);
     }
 
     protected abstract ElementFactory getElementFactory(Object definition,
                                                         Class<?> graphElementClass,
                                                         String factory);
+
+    protected abstract GraphFactory getGraphFactory(Object definition,
+                                                    Class<?> graphElementClass,
+                                                    String factory);
 
     protected String getFactoryReference(Class<?> graphElementClass,
                                          String factory) {

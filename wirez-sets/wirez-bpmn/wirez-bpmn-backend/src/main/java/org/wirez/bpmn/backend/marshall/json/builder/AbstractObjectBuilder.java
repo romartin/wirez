@@ -10,7 +10,7 @@ import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 
 import java.util.*;
 
@@ -96,17 +96,17 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
     
     protected void setProperties(BuilderContext context, BPMNDefinition definition) {
         assert definition != null;
-        Set<?> defProperties = ElementUtils.getAllProperties( context.getDefinitionManager(), definition );
+        Set<?> defProperties = context.getGraphUtils().getAllProperties( definition );
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             final String oryxId = entry.getKey();
             final String pValue = entry.getValue();
             final String pId = Bpmn2OryxMappings.getId( oryxId );
-            final Object property = getProperty(defProperties, pId);
+            final Object property = getProperty(context, defProperties, pId);
             if ( null != property ) {
                 final Object value;
                 try {
                     PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter( property.getClass() );
-                    value = ElementUtils.parseValue(propertyAdapter, property, pValue);
+                    value = GraphUtils.parseValue(propertyAdapter, property, pValue);
                     context.getDefinitionManager().getPropertyAdapter(property.getClass()).setValue(property, value);
                 } catch (Exception e) {
                    LOG.error("Cannot parse value [" + pValue + "] for property [" + pId + "]");
@@ -117,8 +117,8 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
         }
     }
     
-    protected Object getProperty(final Set<?> defProperties, final String id) {
-        return ElementUtils.getProperty(defProperties, id);
+    protected Object getProperty(final BuilderContext context, final Set<?> defProperties, final String id) {
+        return context.getGraphUtils().getProperty(defProperties, id);
     }
     
     @Override

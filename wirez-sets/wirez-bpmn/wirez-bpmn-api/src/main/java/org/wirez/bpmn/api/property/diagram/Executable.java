@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.BooleanType;
 public class Executable implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Executable";
+    public static final transient String caption = "Executable";
 
     @Description
-    public static final String description = "Is Executable";
+    public static final transient String description = "Is Executable";
 
     @ReadOnly
     public static final Boolean readOnly = false;

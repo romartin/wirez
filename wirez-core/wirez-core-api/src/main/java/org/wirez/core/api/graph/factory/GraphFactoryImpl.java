@@ -2,8 +2,8 @@ package org.wirez.core.api.graph.factory;
 
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.DefinitionSetImpl;
-import org.wirez.core.api.graph.content.DefinitionSet;
+import org.wirez.core.api.graph.content.definition.DefinitionSet;
+import org.wirez.core.api.graph.content.definition.DefinitionSetImpl;
 import org.wirez.core.api.graph.impl.GraphImpl;
 import org.wirez.core.api.graph.store.GraphNodeStoreImpl;
 
@@ -13,8 +13,7 @@ import java.util.Set;
 
 @ApplicationScoped
 @Named( GraphFactoryImpl.FACTORY_NAME )
-public class GraphFactoryImpl extends BaseElementFactory<String, DefinitionSet, Graph<DefinitionSet, Node>> 
-        implements GraphFactory {
+public class GraphFactoryImpl extends BaseGraphFactory<DefinitionSet, Graph<DefinitionSet, Node>> {
 
     public static final String FACTORY_NAME = "graphFactoryImpl";
     
@@ -22,16 +21,13 @@ public class GraphFactoryImpl extends BaseElementFactory<String, DefinitionSet, 
     }
     
     @Override
-    public Graph<DefinitionSet, Node> build(String uuid, String definitionSetId, Set<?> properties, Set<String> labels) {
-
+    public Graph<DefinitionSet, Node> build(String uuid, String definitionSetId, Set<String> labels) {
         Graph<DefinitionSet, Node> graph =
                 new GraphImpl<DefinitionSet>( uuid,
-                        (Set<Object>) properties,
                         labels,
                         new DefinitionSetImpl( definitionSetId ),
                         new GraphNodeStoreImpl());
-        
+
         return graph;
     }
-
 }

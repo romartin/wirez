@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class Width implements BPMNProperty {
 
     @Caption
-    public static final String caption = "width";
+    public static final transient String caption = "width";
     
     @Description
-    public static final String description = "The width";
+    public static final transient String description = "The width";
 
     @Type
     public static final PropertyType type = new DoubleType();

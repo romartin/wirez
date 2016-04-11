@@ -32,10 +32,9 @@ public class NodeImpl<C> extends ElementImpl<C> implements Node<C, Edge> {
     private List<Edge> outEdges = new ArrayList<Edge>();
     
     public NodeImpl(@MapsTo("uuid") String uuid,
-                    @MapsTo("properties") Set<Object> properties,
                     @MapsTo("labels") Set<String> labels,
                     @MapsTo("content") C content) {
-        super(uuid, properties, labels, content);
+        super(uuid, labels, content);
     }
 
     @Override

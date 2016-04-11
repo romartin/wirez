@@ -17,12 +17,12 @@
 package org.wirez.core.api.graph.factory;
 
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.Definition;
+import org.wirez.core.api.graph.content.definition.Definition;
 
 import java.util.Set;
 
 public interface ElementFactory<W, C extends Definition<W>, T extends Element<C>> {
     
-    T build(String uuid, W definition, Set<?> properties, Set<String> labels);
+    T build(String uuid, W definition, Set<String> labels);
     
 }

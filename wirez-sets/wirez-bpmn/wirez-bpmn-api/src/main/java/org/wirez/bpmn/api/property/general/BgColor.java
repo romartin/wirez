@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.ColorType;
 public class BgColor implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Background Color";
+    public static final transient String caption = "Background Color";
 
     @Description
-    public static final String description = "The Background Color";
+    public static final transient String description = "The Background Color";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -45,7 +45,7 @@ public class BgColor implements BPMNProperty {
     public static final PropertyType type = new ColorType();
 
     @DefaultValue
-    public static final String defaultValue = "#ffffff";
+    public static final transient String defaultValue = "#ffffff";
 
     @Value
     private String value = defaultValue;

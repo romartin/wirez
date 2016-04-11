@@ -11,6 +11,7 @@ import org.wirez.bpmn.backend.marshall.json.parser.ParsingContext;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.Settings;
+import org.wirez.core.api.graph.util.GraphUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,9 +20,12 @@ import java.util.HashMap;
 public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
 
     DefinitionManager definitionManager;
+    GraphUtils graphUtils;
 
-    public Bpmn2Marshaller(DefinitionManager definitionManager) {
+    public Bpmn2Marshaller(DefinitionManager definitionManager,
+                           GraphUtils graphUtils) {
         this.definitionManager = definitionManager;
+        this.graphUtils = graphUtils;
     }
     
     public String marshall(Diagram<Settings> diagram) throws IOException {
@@ -35,6 +39,6 @@ public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
     }
 
     private BPMN2JsonParser createParser(Diagram<Settings> diagram) {
-        return new BPMN2JsonParser( diagram, new ParsingContext( definitionManager ) );
+        return new BPMN2JsonParser( diagram, new ParsingContext( definitionManager, graphUtils ) );
     }
 }

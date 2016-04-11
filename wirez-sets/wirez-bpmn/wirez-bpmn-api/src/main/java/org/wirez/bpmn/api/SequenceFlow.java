@@ -56,17 +56,17 @@ import java.util.Set;
 public class SequenceFlow implements BPMNDefinition {
 
     @Category
-    public static final String category = "Connecting Objects";
+    public static final transient String category = "Connecting Objects";
 
     @Title
-    public static final String title = "Sequence Flow";
+    public static final transient String title = "Sequence Flow";
 
     @Description
-    public static final String description = "A Sequence Flow";
+    public static final transient String description = "A Sequence Flow";
     
     
-    public static final String COLOR = "#000000";
-    public static final String BORDER_COLOR = "#000000";
+    public static final transient String COLOR = "#000000";
+    public static final transient String BORDER_COLOR = "#000000";
     public static final Double BORDER_SIZE = 3d;
     
     @PropertySet

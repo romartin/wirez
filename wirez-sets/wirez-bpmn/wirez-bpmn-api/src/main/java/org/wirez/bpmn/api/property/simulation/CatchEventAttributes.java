@@ -14,7 +14,7 @@ import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 public class CatchEventAttributes implements BPMNPropertySet {
 
     @Name
-    public static final String propertySetName = "Catch Event Attributes";
+    public static final transient String propertySetName = "Catch Event Attributes";
 
     @Property
     private Min min;

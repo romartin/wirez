@@ -20,8 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.util.ElementUtils;
-import org.wirez.core.client.canvas.command.WiresCanvasCommandManager;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.toolbox.BaseToolbox;
 
@@ -42,11 +41,15 @@ public class NameToolbox extends BaseToolbox {
 
     View view;
     CanvasCommandFactory canvasCommandFactory;
+    GraphUtils graphUtils;
     private Element element;
 
     @Inject
-    public NameToolbox(final CanvasCommandFactory canvasCommandFactory, final View view) {
+    public NameToolbox(final CanvasCommandFactory canvasCommandFactory, 
+                       final GraphUtils graphUtils,
+                       final View view) {
         this.canvasCommandFactory = canvasCommandFactory;
+        this.graphUtils = graphUtils;
         this.view = view;
     }
 
@@ -58,7 +61,7 @@ public class NameToolbox extends BaseToolbox {
     @Override
     public void show(final Element element, final double x, final double y) {
         this.element = element;
-        final Name nameProperty = (Name) ElementUtils.getProperty(element, Name.ID);
+        final Name nameProperty = (Name) graphUtils.getProperty(element, Name.ID);
         final String name = nameProperty.getValue();
         view.show(name, x, y);
     }

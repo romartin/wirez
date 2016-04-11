@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package org.wirez.core.client.mutation;
+package org.wirez.core.api.graph.content.relationship;
 
-public interface MutationContext {
+import org.jboss.errai.common.client.api.annotations.Portable;
+
+/**
+ * Indicates that the target node is a child of the source node.
+ * This content has no view representation on the canvas.
+ */
+@Portable
+public final class Child implements Relationship {
     
-    MutationType getType();
+    private static final transient String RELATIONSHIP = "child";
+    
+    @Override
+    public String getName() {
+        return RELATIONSHIP;
+    }
     
 }

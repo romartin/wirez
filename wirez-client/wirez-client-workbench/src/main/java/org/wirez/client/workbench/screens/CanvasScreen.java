@@ -44,11 +44,11 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.DefinitionSet;
+import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
 import org.wirez.core.api.rule.EmptyRuleManager;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.util.WirezLogger;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.Shape;
@@ -488,7 +488,7 @@ public class CanvasScreen {
                     final GraphBoundsIndexer boundsIndexer = new GraphBoundsIndexer(canvasHandler.getDiagram().getGraph());
                     parent = boundsIndexer.getNodeAt(_x, _y);
                     if ( null != parent) {
-                        final Double[] parentCoords = ElementUtils.getPosition(parent.getContent());
+                        final Double[] parentCoords = GraphUtils.getPosition(parent.getContent());
                         x = _x - parentCoords[0];
                         y = _y - parentCoords[1];
                     }

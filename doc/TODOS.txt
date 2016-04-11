@@ -11,8 +11,11 @@
     - Factories - child/view/parent edges ( use factories in commands, etc - avoid new operators )
     
     - Usability
+
+    - Split API module - extract impls?
     
     - model
+        - Property API
         - Definition Impls -> finish implementation & generate from ifaces and the adapter as well
         - Performance
             - private constructors
@@ -21,8 +24,6 @@
             - builders
                 - mark as @NonPortable
                 - auto generate when using annotated models?
-    
-    - ElementUtils -> Remove and refactor usages.  
     
     - sync/async command managers
     

@@ -37,18 +37,18 @@ import java.util.Set;
 public class EndTerminateEvent implements BPMNDefinition {
 
     @Category
-    public static final String category = "End Events";
+    public static final transient String category = "End Events";
 
     @Title
-    public static final String title = "End Terminate Event";
+    public static final transient String title = "End Terminate Event";
 
     @Description
-    public static final String description = "Triggering the immediate termination of a process instance. " +
+    public static final transient String description = "Triggering the immediate termination of a process instance. " +
             "All steps still in execution in parallel branches are terminated";
     
-    public static final String COLOR = "#000000";
-    public static final String BORDER_COLOR = "#000000";
-    public static final String RING_COLOR = "#FF0000";
+    public static final transient String COLOR = "#000000";
+    public static final transient String BORDER_COLOR = "#000000";
+    public static final transient String RING_COLOR = "#FF0000";
     public static final Double RADIUS = 14d;
     
     @PropertySet

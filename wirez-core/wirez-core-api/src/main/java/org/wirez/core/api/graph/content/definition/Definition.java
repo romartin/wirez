@@ -1,4 +1,4 @@
-package org.wirez.core.api.graph.content;
+package org.wirez.core.api.graph.content.definition;
 
 public interface Definition<T> {
 

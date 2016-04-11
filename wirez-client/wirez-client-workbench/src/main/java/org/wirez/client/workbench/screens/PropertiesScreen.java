@@ -32,7 +32,7 @@ import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 
@@ -54,6 +54,9 @@ public class PropertiesScreen {
     ClientDefinitionManager clientDefinitionManager;
     
     @Inject
+    GraphUtils graphUtils;
+    
+    @Inject
     PropertiesEditor propertiesEditor;
     
     @Inject
@@ -73,7 +76,7 @@ public class PropertiesScreen {
             @Override
             public void onShowElement(Element<? extends View<?>> element) {
                 if ( null != element ) {
-                    final Name nameProperty = (Name) ElementUtils.getProperty(element, Name.ID);
+                    final Name nameProperty = (Name) graphUtils.getProperty(element, Name.ID);
                     String name = nameProperty.getValue();
                     final Object def = element.getContent().getDefinition();
 

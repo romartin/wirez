@@ -16,7 +16,7 @@
 
 package org.wirez.core.api.graph.content.view;
 
-import org.wirez.core.api.graph.content.Definition;
+import org.wirez.core.api.graph.content.definition.Definition;
 
 /**
  * Indicates that the content of a node/edge is given by a Definition of the graphical representation.

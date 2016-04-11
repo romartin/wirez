@@ -7,7 +7,7 @@ import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;

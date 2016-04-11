@@ -14,7 +14,7 @@ import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 public class DiagramSet implements BPMNPropertySet {
 
     @Name
-    public static final String propertySetName = "BPMN Diagram";
+    public static final transient String propertySetName = "BPMN Diagram";
 
     @Property
     private Package packageProperty;

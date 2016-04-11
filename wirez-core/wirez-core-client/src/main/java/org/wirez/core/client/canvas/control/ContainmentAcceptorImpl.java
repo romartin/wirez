@@ -6,7 +6,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.client.canvas.command.CanvasCommandViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.wires.WiresCanvasHandler;

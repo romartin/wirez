@@ -30,11 +30,10 @@ public class GraphImpl<C> extends ElementImpl<C> implements Graph<C, Node> {
     private final GraphNodeStore<Node> nodeStore;
 
     public GraphImpl(@MapsTo("uuid") String uuid,
-                     @MapsTo("properties") Set<Object> properties,
                      @MapsTo("labels") Set<String> labels,
                      @MapsTo("content") C content,
                      @MapsTo("nodeStore") GraphNodeStore<Node> nodeStore) {
-        super(uuid, properties, labels, content);
+        super(uuid, labels, content);
         this.nodeStore = PortablePreconditions.checkNotNull( "nodeStore",
                 nodeStore );
     }

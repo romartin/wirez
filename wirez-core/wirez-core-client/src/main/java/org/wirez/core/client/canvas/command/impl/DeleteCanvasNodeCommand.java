@@ -6,7 +6,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;

@@ -37,15 +37,15 @@ import java.util.Set;
 public class EndNoneEvent implements BPMNDefinition {
 
     @Category
-    public static final String category = "End Events";
+    public static final transient String category = "End Events";
 
     @Title
-    public static final String title = "End Event";
+    public static final transient String title = "End Event";
 
     @Description
-    public static final String description = "Untyped end event";
+    public static final transient String description = "Untyped end event";
     
-    public static final String COLOR = "#ff0000";
+    public static final transient String COLOR = "#ff0000";
     public static final Double RADIUS = 14d;
     
     @PropertySet

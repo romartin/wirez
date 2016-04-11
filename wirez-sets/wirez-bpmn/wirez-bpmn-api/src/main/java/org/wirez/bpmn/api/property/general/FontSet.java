@@ -13,7 +13,7 @@ import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 public class FontSet implements BPMNPropertySet {
 
     @org.wirez.core.api.definition.annotation.Name
-    public static final String propertySetName = "Font";
+    public static final transient String propertySetName = "Font";
 
     @Property
     private FontFamily fontFamily;

@@ -4,7 +4,7 @@ import org.jboss.errai.ioc.client.container.IOC;
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.BaseDefinitionManager;
-import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.definition.DefinitionSetProxy;
 import org.wirez.core.api.definition.adapter.*;
 import org.wirez.core.api.registry.DiagramRegistry;
 
@@ -39,10 +39,10 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
     public void init() {
 
         // Definition Sets.
-        Collection<SyncBeanDef<DefinitionSet>> beanDefSets = beanManager.lookupBeans(DefinitionSet.class);
-        for (SyncBeanDef<DefinitionSet> defSet : beanDefSets) {
-            DefinitionSet definitionSet = defSet.getInstance();
-            definitionSets.add(definitionSet);
+        Collection<SyncBeanDef<DefinitionSetProxy>> beanDefSets = beanManager.lookupBeans(DefinitionSetProxy.class);
+        for (SyncBeanDef<DefinitionSetProxy> defSet : beanDefSets) {
+            DefinitionSetProxy definitionSet = defSet.getInstance();
+            definitionSets.add( definitionSet.getDefinitionSet() );
         }
         
         // DefinitionSet client adapters.

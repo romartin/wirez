@@ -9,8 +9,9 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.DefinitionSet;
+import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -47,6 +48,8 @@ public interface GraphObjectBuilder<W, T extends Element<View<W>>> {
         DefinitionManager getDefinitionManager();
         
         FactoryManager getFactoryManager();
+        
+        GraphUtils getGraphUtils();
         
         GraphCommandFactory getCommandFactory();
         

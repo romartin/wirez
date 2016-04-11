@@ -17,7 +17,6 @@
 package org.wirez.core.client.mutation;
 
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.CanvasHandler;
 
 public interface HasMutation {
     

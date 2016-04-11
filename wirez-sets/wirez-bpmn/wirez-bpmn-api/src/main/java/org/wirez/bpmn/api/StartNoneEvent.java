@@ -37,16 +37,16 @@ import java.util.Set;
 public class StartNoneEvent implements BPMNDefinition {
 
     @Category
-    public static final String category = "Start Events";
+    public static final transient String category = "Start Events";
 
     @Title
-    public static final String title = "Start Event";
+    public static final transient String title = "Start Event";
 
     @Description
-    public static final String description = "Untyped start event";
+    public static final transient String description = "Untyped start event";
     
     
-    public static final String COLOR = "#3eb870";
+    public static final transient String COLOR = "#3eb870";
     public static final Double RADIUS = 15d;
     
     @PropertySet

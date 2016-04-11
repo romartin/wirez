@@ -4,6 +4,7 @@ import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
 import org.wirez.bpmn.backend.marshall.json.parser.common.IntegerFieldParser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.ObjectParser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.StringFieldParser;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.Bounds;
@@ -32,7 +33,8 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
 
         
         // Properties array.
-        Set<?> properties = element.getProperties();
+        Object def = element.getContent().getDefinition();
+        Set<?> properties = context.getGraphUtils().getAllProperties( def );
         ObjectParser propertiesParser = new ObjectParser("properties");
         super.addParser( propertiesParser );
         if ( null != properties && !properties.isEmpty() ) {

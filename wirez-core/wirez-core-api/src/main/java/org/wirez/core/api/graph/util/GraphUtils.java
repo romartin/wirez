@@ -1,4 +1,4 @@
-package org.wirez.core.api.util;
+package org.wirez.core.api.graph.util;
 
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
@@ -7,19 +7,86 @@ import org.wirez.core.api.definition.adapter.PropertySetAdapter;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.definition.Definition;
 import org.wirez.core.api.graph.content.view.BoundImpl;
 import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.content.view.BoundsImpl;
 import org.wirez.core.api.graph.content.view.View;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.Set;
 
-// TODO: Remove this class - avoid statics.
-public class ElementUtils {
+@ApplicationScoped
+public class GraphUtils {
 
+    DefinitionManager definitionManager;
+
+    protected GraphUtils() {
+        
+    }
+    
+    @Inject
+    public GraphUtils(DefinitionManager definitionManager) {
+        this.definitionManager = definitionManager;
+    }
+
+    public Object getProperty(final Element<? extends Definition> element, final String id) {
+        if ( null != element ) {
+            final Object def = element.getContent().getDefinition();
+            Set<?> properties = getAllProperties( def );
+            return getProperty(properties, id);
+        }
+
+        return null;
+    }
+
+    public Object getProperty(final Set<?> properties, final Class<?> propertyClass) {
+        return getProperty(properties, propertyClass.getSimpleName());
+    }
+
+    public Object getProperty(final Set<?> properties, final String id) {
+        if ( null != id && null != properties ) {
+            for (final Object property : properties) {
+                PropertyAdapter<Object> adapter = definitionManager.getPropertyAdapter( property.getClass() );
+                String pId = adapter.getId( property );
+                if (pId.equals(id)) {
+                    return property;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns all properties, the ones from property sets as well, for a given Definition.
+     */
+    // TODO: Refactor this into DefAdapter?
+    public Set<?> getAllProperties( final Object definition ) {
+
+        DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+        Set<Object> properties = definitionAdapter.getProperties(definition);
+
+        // And properties on each definition's annotated PropertySet.
+        Set<?> propertySets = definitionAdapter.getPropertySets(definition);
+        if ( null != propertySets && !propertySets.isEmpty() ) {
+            for (Object propertySet : propertySets) {
+                PropertySetAdapter propertySetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
+                Set<?> setProperties = propertySetAdapter.getProperties(propertySet);
+                if( null != setProperties ) {
+                    properties.addAll(setProperties);
+                }
+            }
+        }
+
+        return properties;
+    }
+
+    // TODO: Refactor this.
     public static Object parseValue(final PropertyAdapter adapter, final Object property, String raw) {
         final PropertyType type = adapter.getType( property );
-        
+
         if (StringType.name.equals(type.getName())) {
             return raw;
         }
@@ -43,58 +110,6 @@ public class ElementUtils {
         throw new RuntimeException("Unsupported property type [" + type.getName() + "]");
     }
 
-    public static Object getProperty(final Element element, final Class<?> propertyClass) {
-        return getProperty( element, propertyClass.getSimpleName() );
-    }
-    
-    public static Object getProperty(final Element element, final String id) {
-        if ( null != element ) {
-            return getProperty(element.getProperties(), id);
-        }
-
-        return null;
-    }
-
-    public static Object getProperty(final Set<?> properties, final Class<?> propertyClass) {
-        return getProperty(properties, propertyClass.getSimpleName());
-    }
-
-    public static Object getProperty(final Set<?> properties, final String id) {
-        if ( null != id && null != properties ) {
-            for (final Object property : properties) {
-                // TODO: Use property adapters.
-                String pId = property.getClass().getSimpleName();
-                if (pId.equals(id)) {
-                    return property;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns all properties, the ones from property sets as wellm for a given Definition.
-     */
-    public static Set<?> getAllProperties(DefinitionManager definitionManager, Object definition ) {
-
-        DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-        Set<Object> properties = definitionAdapter.getProperties(definition);
-
-        // And properties on each definition's annotated PropertySet.
-        Set<?> propertySets = definitionAdapter.getPropertySets(definition);
-        if ( null != propertySets && !propertySets.isEmpty() ) {
-            for (Object propertySet : propertySets) {
-                PropertySetAdapter propertySetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
-                Set<?> setProperties = propertySetAdapter.getProperties(propertySet);
-                if( null != setProperties ) {
-                    properties.addAll(setProperties);
-                }
-            }
-        }
-
-        return properties;
-    }
 
     public static Double[] getPosition(final View element) {
         final Bounds.Bound ul = element.getBounds().getUpperLeft();

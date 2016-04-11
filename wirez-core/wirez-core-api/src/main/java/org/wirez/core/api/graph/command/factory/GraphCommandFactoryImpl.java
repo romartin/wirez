@@ -8,7 +8,7 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.*;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,13 +17,16 @@ import javax.inject.Inject;
 public class GraphCommandFactoryImpl implements GraphCommandFactory {
 
     DefinitionManager definitionManager;
+    GraphUtils graphUtils;
 
     public GraphCommandFactoryImpl() {
     }
 
     @Inject
-    public GraphCommandFactoryImpl(final DefinitionManager definitionManager) {
+    public GraphCommandFactoryImpl(final DefinitionManager definitionManager,
+                                   final GraphUtils graphUtils) {
         this.definitionManager = definitionManager;
+        this.graphUtils = graphUtils;
     }
 
     @Override
@@ -111,9 +114,9 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     public UpdateElementPropertyValueCommand UPDATE_PROPERTY_VALUE(final Element element,
                                                                    final String propertyId,
                                                                    final Object value) {
-        final Object p = ElementUtils.getProperty(element, propertyId);
+        final Object p = graphUtils.getProperty(element, propertyId);
         PropertyAdapter adapter = getPropertyAdapter(p.getClass());
-        return adapter != null ? new UpdateElementPropertyValueCommand(this, adapter, element, propertyId, value) : null;
+        return adapter != null ? new UpdateElementPropertyValueCommand(this, graphUtils, adapter, element, propertyId, value) : null;
     }
     
     

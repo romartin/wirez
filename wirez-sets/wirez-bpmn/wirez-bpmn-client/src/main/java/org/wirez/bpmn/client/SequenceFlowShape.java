@@ -17,7 +17,11 @@
 package org.wirez.bpmn.client;
 
 import org.wirez.bpmn.api.SequenceFlow;
+import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.client.shapes.WiresConnectorView;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.canvas.Canvas;
 
 public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> {
@@ -41,8 +45,13 @@ public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow> {
     }
 
     @Override
+    protected BackgroundSet getBackgroundSet(final Edge<View<SequenceFlow>, Node> element) {
+        return element.getContent().getDefinition().getBackgroundSet();
+    }
+    
+    @Override
     public void destroy() {
 
     }
-
+   
 }

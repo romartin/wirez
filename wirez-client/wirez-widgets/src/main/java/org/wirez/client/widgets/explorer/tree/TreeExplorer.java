@@ -8,7 +8,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessor;
 import org.wirez.core.client.Shape;

@@ -27,18 +27,14 @@ import java.util.Set;
 public class ElementImpl<C> implements Element<C> {
 
     protected String uuid;
-    protected Set<Object> properties;
     protected Set<String> labels;
     protected C content;
 
     public ElementImpl(@MapsTo("uuid") String uuid,
-                       @MapsTo("properties") Set<Object> properties,
                        @MapsTo("labels") Set<String> labels,
                        @MapsTo("content") C content) {
         this.uuid = PortablePreconditions.checkNotNull( "uuid",
                 uuid );
-        this.properties = PortablePreconditions.checkNotNull( "properties",
-                properties );
         this.labels = PortablePreconditions.checkNotNull( "labels",
                 labels );
         this.content = PortablePreconditions.checkNotNull( "content",
@@ -48,11 +44,6 @@ public class ElementImpl<C> implements Element<C> {
     @Override
     public String getUUID() {
         return uuid;
-    }
-
-    @Override
-    public Set<Object> getProperties() {
-        return properties;
     }
 
     @Override
@@ -70,7 +61,6 @@ public class ElementImpl<C> implements Element<C> {
     public String toString() {
         return "ElementImpl{" +
                 "uuid=" + uuid +
-                ", properties=" + properties +
                 ", labels=" + labels + 
                 '}';
     }

@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.ColorType;
 public class FontColor implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Font Color";
+    public static final transient String caption = "Font Color";
 
     @Description
-    public static final String description = "The Font Color";
+    public static final transient String description = "The Font Color";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -45,7 +45,7 @@ public class FontColor implements BPMNProperty {
     public static final PropertyType type = new ColorType();
 
     @DefaultValue
-    public static final String defaultValue = "#000000";
+    public static final transient String defaultValue = "#000000";
 
     @Value
     private String value = defaultValue;

@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package org.wirez.core.api.graph.content;
+package org.wirez.core.api.graph.content.relationship;
+
+import org.jboss.errai.common.client.api.annotations.Portable;
 
 /**
- * Indicates any kind of an edge/relationship that has no view representation on the canvas 
- * but provides graph processing semantics ( such as when performing traverse / transform ).
+ * Indicates that the target node is the parent of the source node.
+ * This content has no view representation on the canvas.
  */
-public interface Relationship {
+@Portable
+public final class Parent implements Relationship {
     
-    String getName();
+    private static final transient String RELATIONSHIP = "parent";
+    
+    @Override
+    public String getName() {
+        return RELATIONSHIP;
+    }
     
 }

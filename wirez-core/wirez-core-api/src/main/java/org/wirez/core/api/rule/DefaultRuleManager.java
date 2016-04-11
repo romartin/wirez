@@ -19,12 +19,11 @@ import org.uberfire.commons.data.Pair;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.definition.adapter.DefinitionSetAdapter;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.DefinitionSet;
+import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.violations.*;
 
@@ -82,7 +81,7 @@ public class DefaultRuleManager implements RuleManager {
             Object definition = ((View) target.getContent()).getDefinition();
             targetId = getDefinitionId( definition );
         } else if ( target.getContent() instanceof DefinitionSet ) {
-            targetId = ((DefinitionSet) target.getContent()).getDefinition();
+            targetId = ((DefinitionSet) target.getContent()).getId();
         }
         
         for ( ContainmentRule rule : containmentRules ) {

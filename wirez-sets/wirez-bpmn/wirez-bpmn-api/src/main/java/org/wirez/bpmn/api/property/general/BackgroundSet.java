@@ -13,7 +13,7 @@ import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 public class BackgroundSet implements BPMNPropertySet {
 
     @org.wirez.core.api.definition.annotation.Name
-    public static final String propertySetName = "Background Set";
+    public static final transient String propertySetName = "Background Set";
 
     @Property
     private BgColor bgColor;

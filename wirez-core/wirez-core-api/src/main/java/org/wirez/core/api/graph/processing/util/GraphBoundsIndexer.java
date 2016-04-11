@@ -1,12 +1,12 @@
 package org.wirez.core.api.graph.processing.util;
 
 import org.wirez.core.api.graph.*;
-import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.traverse.content.*;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 
 import java.util.Stack;
 
@@ -60,7 +60,7 @@ public class GraphBoundsIndexer {
                         final Object content = tParent.getContent();
                         if (content instanceof View) {
                             final View viewContent = (View) content;
-                            final Double[] parentCoords = ElementUtils.getPosition(viewContent);
+                            final Double[] parentCoords = GraphUtils.getPosition(viewContent);
                             parentX += parentCoords[0];
                             parentY += parentCoords[1];
                         }

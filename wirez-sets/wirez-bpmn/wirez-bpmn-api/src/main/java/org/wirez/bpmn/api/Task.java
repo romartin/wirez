@@ -38,15 +38,15 @@ import java.util.Set;
 public class Task implements BPMNDefinition {
 
     @Category
-    public static final String category = "Activities";
+    public static final transient String category = "Activities";
 
     @Title
-    public static final String title = "A Task";
+    public static final transient String title = "A Task";
 
     @Description
-    public static final String description = "A task is a unit of work - the job to be performed";
+    public static final transient String description = "A task is a unit of work - the job to be performed";
     
-    public static final String COLOR = "#dfeff8";
+    public static final transient String COLOR = "#dfeff8";
     public static final Double WIDTH = 136d;
     public static final Double HEIGHT = 48d;
     public static final Double BORDER_SIZE = 0.5d;

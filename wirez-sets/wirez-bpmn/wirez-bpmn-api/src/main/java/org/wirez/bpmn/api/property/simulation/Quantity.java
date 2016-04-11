@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class Quantity implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Staff availability";
+    public static final transient String caption = "Staff availability";
 
     @Description
-    public static final String description = "Staff availability";
+    public static final transient String description = "Staff availability";
 
     @ReadOnly
     public static final Boolean readOnly = false;

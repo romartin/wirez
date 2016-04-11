@@ -23,12 +23,13 @@ import org.wirez.core.api.definition.annotation.definition.Definition;
 import org.wirez.core.api.definition.annotation.definitionset.DefinitionSet;
 import org.wirez.core.processors.definition.BindableDefinitionAdapterGenerator;
 import org.wirez.core.processors.definitionset.BindableDefinitionSetAdapterGenerator;
+import org.wirez.core.processors.definitionset.DefinitionSetProxyGenerator;
 import org.wirez.core.processors.property.BindablePropertyAdapterGenerator;
 import org.wirez.core.processors.propertyset.BindablePropertySetAdapterGenerator;
+import org.wirez.core.processors.rule.BindableDefinitionSetRuleAdapterGenerator;
 import org.wirez.core.processors.rule.CardinalityRuleGenerator;
 import org.wirez.core.processors.rule.ConnectionRuleGenerator;
 import org.wirez.core.processors.rule.ContainmentRuleGenerator;
-import org.wirez.core.processors.rule.BindableDefinitionSetRuleAdapterGenerator;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
@@ -90,9 +91,10 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     public static final String RULE_CONTAINMENT_SUFFIX_CLASSNAME = "ContainmentRule";
     public static final String RULE_CONNECTION_SUFFIX_CLASSNAME = "ConnectionRule";
     public static final String RULE_CARDINALITY_SUFFIX_CLASSNAME = "CardinalityRule";
-    
-    public static final String DEFINITION_ADAPTER_CLASSNAME = "BindableDefinitionAdapterImpl";
+
     public static final String DEFINITIONSET_ADAPTER_CLASSNAME = "BindableDefinitionSetAdapterImpl";
+    public static final String DEFINITIONSET_PROXY_CLASSNAME = "DefinitionSetProxyImpl";
+    public static final String DEFINITION_ADAPTER_CLASSNAME = "BindableDefinitionAdapterImpl";
     public static final String PROPERTYSET_ADAPTER_CLASSNAME = "BindablePropertySetAdapterImpl";
     public static final String PROPERTY_ADAPTER_CLASSNAME = "BindablePropertyAdapterImpl";
     public static final String RULE_ADAPTER_CLASSNAME = "RuleAdapterImpl";
@@ -106,6 +108,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     private BindablePropertySetAdapterGenerator propertySetAdapterGenerator;
     private BindablePropertyAdapterGenerator propertyAdapterGenerator;
     private BindableDefinitionSetRuleAdapterGenerator ruleAdapterGenerator;
+    private DefinitionSetProxyGenerator definitionSetProxyGenerator;
     
     public MainProcessor() {
         ContainmentRuleGenerator ruleGenerator = null;
@@ -116,6 +119,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         BindablePropertySetAdapterGenerator propertySetAdapterGenerator = null;
         BindablePropertyAdapterGenerator propertyAdapter = null;
         BindableDefinitionSetRuleAdapterGenerator ruleAdapter = null;
+        DefinitionSetProxyGenerator definitionSetProxyGenerator = null;
         
         try {
             ruleGenerator = new ContainmentRuleGenerator();
@@ -126,6 +130,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             definitionAdapterGenerator = new BindableDefinitionAdapterGenerator();
             definitionSetAdapterGenerator = new BindableDefinitionSetAdapterGenerator();
             propertySetAdapterGenerator = new BindablePropertySetAdapterGenerator();
+            definitionSetProxyGenerator = new DefinitionSetProxyGenerator();
         } catch (Throwable t) {
             rememberInitializationError(t);
         }
@@ -137,6 +142,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         this.propertySetAdapterGenerator = propertySetAdapterGenerator;
         this.propertyAdapterGenerator = propertyAdapter;
         this.ruleAdapterGenerator = ruleAdapter;
+        this.definitionSetProxyGenerator = definitionSetProxyGenerator;
     }
 
     @Override
@@ -502,6 +508,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     }
 
     protected boolean processLastRound(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+        processLastRoundDefinitionSetProxyAdapter(set, roundEnv);
         processLastRoundDefinitionSetAdapter(set, roundEnv);
         processLastRoundPropertySetAdapter(set, roundEnv);
         processLastRoundDefinitionAdapter(set, roundEnv);
@@ -550,6 +557,35 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
             final StringBuffer ruleClassCode = definitionSetAdapterGenerator.generate(packageName, className,
                     processingContext.getDefSetAnnotations(), messager);
+
+            writeCode( packageName,
+                    className,
+                    ruleClassCode );
+
+        } catch ( GenerationException ge ) {
+            final String msg = ge.getMessage();
+            processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg);
+        }
+        return true;
+
+    }
+
+    protected boolean processLastRoundDefinitionSetProxyAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+        final Messager messager = processingEnv.getMessager();
+        try {
+
+            final String defSetId = processingContext.getDefinitionSet().getId();
+            // Ensure visible on both backend and client sides.
+            final String packageName = "org.wirez.core.api.adapter." + defSetId.toLowerCase() + ".definitionset";
+            final String className = DEFINITIONSET_PROXY_CLASSNAME;
+            final String classFQName = packageName + "." + className;
+            messager.printMessage(Diagnostic.Kind.WARNING, "Starting DefinitionSetProxyAdapter generation for class named " + classFQName);
+
+            final StringBuffer ruleClassCode = definitionSetProxyGenerator.
+                    generate(packageName,
+                            className,
+                            processingContext.getDefinitionSet(),
+                            messager);
 
             writeCode( packageName,
                     className,

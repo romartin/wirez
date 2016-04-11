@@ -32,10 +32,8 @@ import org.wirez.core.api.definition.adapter.PropertySetAdapter;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.content.view.Bounds;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.ShapeState;
@@ -79,6 +77,7 @@ public class PropertiesEditor implements IsWidget {
     }
 
     DefinitionManager definitionManager;
+    GraphUtils graphUtils;
     ShapeManager wirezClientManager;
     CanvasCommandFactory canvasCommandFactory;
     View view;
@@ -89,10 +88,12 @@ public class PropertiesEditor implements IsWidget {
 
     @Inject
     public PropertiesEditor(final DefinitionManager definitionManager,
+                            final GraphUtils graphUtils,
                             final View view,
                             final ShapeManager wirezClientManager,
                             final CanvasCommandFactory canvasCommandFactory) {
         this.definitionManager = definitionManager;
+        this.graphUtils = graphUtils;
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.canvasCommandFactory = canvasCommandFactory;
@@ -152,7 +153,7 @@ public class PropertiesEditor implements IsWidget {
                 for (final Object _property : properties) {
                     final PropertyAdapter propertyAdapter = definitionManager.getPropertyAdapter(_property.getClass());
                     final String propertyId = propertyAdapter.getId(_property);
-                    final Object property = ElementUtils.getProperty(element, propertyId);
+                    final Object property = graphUtils.getProperty(element, propertyId);
                     final Object value = propertyAdapter.getValue(property);
                     final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
                         @Override

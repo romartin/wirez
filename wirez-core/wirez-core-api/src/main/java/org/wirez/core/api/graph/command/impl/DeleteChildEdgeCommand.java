@@ -22,9 +22,8 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.command.impl.AbstractGraphCommand;
-import org.wirez.core.api.graph.content.Child;
-import org.wirez.core.api.graph.content.Parent;
+import org.wirez.core.api.graph.content.relationship.Child;
+import org.wirez.core.api.graph.content.relationship.Parent;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 

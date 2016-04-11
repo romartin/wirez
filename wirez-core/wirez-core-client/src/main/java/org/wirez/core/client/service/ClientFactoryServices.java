@@ -13,6 +13,7 @@ import org.wirez.core.api.definition.factory.ModelFactory;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.factory.ElementFactory;
+import org.wirez.core.api.graph.factory.GraphFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -117,20 +118,34 @@ public class ClientFactoryServices extends BaseFactoryManager {
     protected ElementFactory getElementFactory(final Object definition,
                                                    final Class<?> graphElementClass,
                                                    final String factory) {
+        return getFactory( definition, graphElementClass, factory );
+    }
+
+    @Override
+    protected GraphFactory getGraphFactory(final Object definition,
+                                             final Class<?> graphElementClass,
+                                             final String factory) {
+        return getFactory( definition, graphElementClass, factory );
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T getFactory(final Object definition,
+                                               final Class<?> graphElementClass,
+                                               final String factory) {
 
         String ref = getFactoryReference( graphElementClass, factory );
 
         // DefinitionSet client adapters.
         Collection<SyncBeanDef> graphFactories = beanManager.lookupBeans(ref);
-        
+
         if ( graphFactories.size() == 0 ) {
             throw new RuntimeException(" No beans for graph element factory with name [" + ref + "]");
         } else  if ( graphFactories.size() > 1 ) {
             throw new RuntimeException(" More than one bean matches for graph element factory with name [" + ref + "]");
         }
-        
-        
-        return (ElementFactory) graphFactories.iterator().next().getInstance();
+
+
+        return (T) graphFactories.iterator().next().getInstance();
     }
     
 }

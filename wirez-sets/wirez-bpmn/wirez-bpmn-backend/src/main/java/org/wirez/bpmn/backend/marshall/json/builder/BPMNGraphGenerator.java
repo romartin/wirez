@@ -13,8 +13,9 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.DefinitionSet;
+import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.UUID;
@@ -35,6 +36,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
     BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
     DefinitionManager definitionManager;
     FactoryManager factoryManager;
+    GraphUtils graphUtils;
     CommandManager<RuleManager, RuleViolation> commandManager;
     RuleManager ruleManager;
     GraphCommandFactory commandFactory;
@@ -75,12 +77,14 @@ public class BPMNGraphGenerator extends JsonGenerator {
     public BPMNGraphGenerator(final BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory,
                               final DefinitionManager definitionManager,
                               final FactoryManager factoryManager,
+                              final GraphUtils graphUtils,
                               final CommandManager<RuleManager, RuleViolation> commandManager,
                               final RuleManager ruleManager,
                               final GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
         this.factoryManager = factoryManager;
+        this.graphUtils = graphUtils;
         this.commandManager = commandManager;
         this.ruleManager = ruleManager;
         this.commandFactory = commandFactory;
@@ -198,6 +202,11 @@ public class BPMNGraphGenerator extends JsonGenerator {
         @Override
         public FactoryManager getFactoryManager() {
             return factoryManager;
+        }
+
+        @Override
+        public GraphUtils getGraphUtils() {
+            return graphUtils;
         }
 
         @SuppressWarnings("unchecked")

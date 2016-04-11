@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.StringType;
 public class Currency implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Currency";
+    public static final transient String caption = "Currency";
 
     @Description
-    public static final String description = "Base currency (ISO 4217).";
+    public static final transient String description = "Base currency (ISO 4217).";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -45,7 +45,7 @@ public class Currency implements BPMNProperty {
     public static final PropertyType type = new StringType();
 
     @DefaultValue
-    public static final String defaultValue = "";
+    public static final transient String defaultValue = "";
 
     @Value
     private String value = defaultValue;

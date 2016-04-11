@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class Height implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Height";
+    public static final transient String caption = "Height";
 
     @Description
-    public static final String description = "The height";
+    public static final transient String description = "The height";
 
     @ReadOnly
     public static final Boolean readOnly = false;

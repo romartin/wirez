@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.StringType;
 public class Documentation implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Documentation";
+    public static final transient String caption = "Documentation";
 
     @Description
-    public static final String description = "This attribute is used to annotate the BPMN element, " +
+    public static final transient String description = "This attribute is used to annotate the BPMN element, " +
             "such as descriptions and other documentation";
 
     @ReadOnly
@@ -46,7 +46,7 @@ public class Documentation implements BPMNProperty {
     public static final PropertyType type = new StringType();
     
     @DefaultValue
-    public static final String defaultValue = "";
+    public static final transient String defaultValue = "";
 
     @Value
     private String value = defaultValue;

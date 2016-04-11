@@ -26,7 +26,7 @@ import org.wirez.core.api.graph.content.view.BoundImpl;
 import org.wirez.core.api.graph.content.view.BoundsImpl;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -67,8 +67,8 @@ public class UpdateElementPositionCommand extends AbstractGraphCommand {
 
     @Override
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final Double[] oldPosition = ElementUtils.getPosition((View) element.getContent());
-        final Double[] oldSize = ElementUtils.getSize((View) element.getContent());
+        final Double[] oldPosition = GraphUtils.getPosition((View) element.getContent());
+        final Double[] oldSize = GraphUtils.getSize((View) element.getContent());
         this.oldX = oldPosition[0];
         this.oldY = oldPosition[1];
         final double w = oldSize[0];

@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class FontSize implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Font size";
+    public static final transient String caption = "Font size";
 
     @Description
-    public static final String description = "The Font size.";
+    public static final transient String description = "The Font size.";
 
     @ReadOnly
     public static final Boolean readOnly = false;

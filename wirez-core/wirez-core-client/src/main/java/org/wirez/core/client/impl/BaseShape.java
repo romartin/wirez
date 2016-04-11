@@ -19,16 +19,13 @@ package org.wirez.core.client.impl;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.resize.BaseResizeControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
-import org.wirez.core.client.mutation.HasGraphElementMutation;
-import org.wirez.core.client.mutation.HasPropertyMutation;
-import org.wirez.core.client.mutation.MutationContext;
-import org.wirez.core.client.mutation.MutationType;
+import org.wirez.core.client.mutation.*;
 import org.wirez.core.client.view.HasFillGradient;
 import org.wirez.core.client.view.HasTitle;
 import org.wirez.core.client.view.ShapeView;
@@ -81,8 +78,8 @@ public abstract class BaseShape<W> implements
     @Override
     public void applyElementPosition(final org.wirez.core.api.graph.Node<View<W>, Edge> element,
                                      final CanvasHandler wirezCanvas,
-                                     final MutationContext mutationContext) {
-        final Double[] position = ElementUtils.getPosition(element.getContent());
+                                     final GraphContext mutationContext) {
+        final Double[] position = GraphUtils.getPosition(element.getContent());
         final double x = position[0];
         final double y = position[1];
         view.setShapeX(x).setShapeY(y);
@@ -91,7 +88,7 @@ public abstract class BaseShape<W> implements
     @Override
     public void applyElementProperties(final org.wirez.core.api.graph.Node<View<W>, Edge> element,
                                        final CanvasHandler wirezCanvas,
-                                       final MutationContext mutationContext) {
+                                       final GraphContext mutationContext) {
         
         // The graph element's name.
         _applyElementName(element, mutationContext);
@@ -101,7 +98,7 @@ public abstract class BaseShape<W> implements
     @Override
     public void applyPropertyValue(final String propertyId, 
                                    final Object value, 
-                                   final MutationContext mutationContext) {
+                                   final Context mutationContext) {
 
         if ( Name.ID.equals(propertyId) && view instanceof HasTitle ) {
             final HasTitle hasTitle = (HasTitle) view;
@@ -171,8 +168,8 @@ public abstract class BaseShape<W> implements
     }
 
     protected void _applyElementName(final org.wirez.core.api.graph.Node<View<W>, Edge> element,
-                                     final MutationContext mutationContext) {
-        final Name nameProperty = (Name) ElementUtils.getProperty(element, Name.ID);
+                                     final GraphContext mutationContext) {
+        final Name nameProperty = (Name) mutationContext.getGraphUtils().getProperty(element, Name.ID);
         String name = nameProperty.getValue();
         applyPropertyValue(Name.ID, name, mutationContext);
     }

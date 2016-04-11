@@ -18,6 +18,6 @@ package org.wirez.core.client.mutation;
 
 public interface HasPropertyMutation extends HasMutation {
     
-    void applyPropertyValue(final String propertyId, Object value, MutationContext mutationContext);
+    void applyPropertyValue(final String propertyId, Object value, Context mutationContext);
     
 }

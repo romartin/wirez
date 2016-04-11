@@ -27,8 +27,8 @@ import org.wirez.core.api.diagram.SettingsImpl;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.Definition;
-import org.wirez.core.api.graph.content.DefinitionSet;
+import org.wirez.core.api.graph.content.definition.DefinitionSet;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.service.diagram.DiagramMarshaller;
 import org.wirez.core.api.util.UUID;
@@ -48,6 +48,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
 
     BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
     DefinitionManager definitionManager;
+    GraphUtils graphUtils;
     FactoryManager factoryManager;
     GraphCommandManager graphCommandManager;
     EmptyRuleManager ruleManager;
@@ -58,12 +59,14 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
     @Inject
     public BPMNDiagramMarshaller(BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory, 
                                  DefinitionManager definitionManager,
+                                 GraphUtils graphUtils,
                                  FactoryManager factoryManager, 
                                  GraphCommandManager graphCommandManager, 
                                  EmptyRuleManager ruleManager, 
                                  GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
+        this.graphUtils = graphUtils;
         this.factoryManager = factoryManager;
         this.graphCommandManager = graphCommandManager;
         this.ruleManager = ruleManager;
@@ -91,7 +94,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
 
         LOG.info("Starting BPMN diagram marshalling...");
 
-        Bpmn2Marshaller marshaller = new Bpmn2Marshaller( definitionManager );
+        Bpmn2Marshaller marshaller = new Bpmn2Marshaller( definitionManager, graphUtils );
 
         String result = null;
         try {
@@ -117,13 +120,14 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             Bpmn2UnMarshaller parser = new Bpmn2UnMarshaller(bpmnGraphBuilderFactory, 
                     definitionManager,
                     factoryManager,
+                    graphUtils,
                     graphCommandManager, 
                     ruleManager,
                     commandFactory);
             
             parser.setProfile(new DefaultProfileImpl());
             final Graph graph = parser.unmarshall(definitions, null);
-            final String definitionSetId = (String) ( (DefinitionSet) graph.getContent() ).getDefinition();
+            final String definitionSetId = (String) ( (DefinitionSet) graph.getContent() ).getId();
             
             // TODO: Get title from diagram node.
             String title = definitionSetId;

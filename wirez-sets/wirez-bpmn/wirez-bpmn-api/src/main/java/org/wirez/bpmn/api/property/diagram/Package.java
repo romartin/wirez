@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.StringType;
 public class Package implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Package";
+    public static final transient String caption = "Package";
 
     @Description
-    public static final String description = "The diagram's package";
+    public static final transient String description = "The diagram's package";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -45,7 +45,7 @@ public class Package implements BPMNProperty {
     public static final PropertyType type = new StringType();
 
     @DefaultValue
-    public static final String defaultValue = "/defaultPackage/defaultPackage";
+    public static final transient String defaultValue = "/defaultPackage/defaultPackage";
 
     @Value
     private String value = defaultValue;

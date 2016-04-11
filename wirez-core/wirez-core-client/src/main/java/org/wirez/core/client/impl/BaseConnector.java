@@ -27,10 +27,7 @@ import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.control.BaseDragControl;
 import org.wirez.core.client.control.toolbox.BaseToolboxControl;
-import org.wirez.core.client.mutation.HasGraphElementMutation;
-import org.wirez.core.client.mutation.HasPropertyMutation;
-import org.wirez.core.client.mutation.MutationContext;
-import org.wirez.core.client.mutation.MutationType;
+import org.wirez.core.client.mutation.*;
 import org.wirez.core.client.view.IsConnector;
 import org.wirez.core.client.view.ShapeView;
 
@@ -91,19 +88,19 @@ public abstract class BaseConnector<W> implements
 
     
     @Override
-    public void applyElementPosition(Edge<View<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementPosition(Edge<View<W>, Node> element, CanvasHandler canvasHandler, GraphContext mutationContext) {
         // TODO
     }
 
     @Override
-    public void applyElementProperties(Edge<View<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementProperties(Edge<View<W>, Node> element, CanvasHandler canvasHandler, GraphContext mutationContext) {
         
         // TODO
 
     }
 
     @Override
-    public void applyPropertyValue(String propertyId, Object value, MutationContext mutationContext) {
+    public void applyPropertyValue(String propertyId, Object value, Context mutationContext) {
         // TODO
     }
 

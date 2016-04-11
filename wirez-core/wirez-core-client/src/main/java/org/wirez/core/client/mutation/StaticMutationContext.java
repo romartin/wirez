@@ -16,7 +16,7 @@
 
 package org.wirez.core.client.mutation;
 
-public class StaticMutationContext implements MutationContext {
+public class StaticMutationContext implements Context {
     
     @Override
     public MutationType getType() {

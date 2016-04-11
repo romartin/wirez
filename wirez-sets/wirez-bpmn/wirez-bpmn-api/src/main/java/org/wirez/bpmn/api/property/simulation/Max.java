@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class Max implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Processing time (max)";
+    public static final transient String caption = "Processing time (max)";
 
     @Description
-    public static final String description = "Processing time (max)";
+    public static final transient String description = "Processing time (max)";
 
     @ReadOnly
     public static final Boolean readOnly = false;

@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.StringType;
 public class TimeUnit implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Time Unit";
+    public static final transient String caption = "Time Unit";
 
     @Description
-    public static final String description = "Time unit options (seconds, minutes, hours).";
+    public static final transient String description = "Time unit options (seconds, minutes, hours).";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -46,7 +46,7 @@ public class TimeUnit implements BPMNProperty {
 
 
     @DefaultValue
-    public static final String defaultValue = "ms";
+    public static final transient String defaultValue = "ms";
 
     @Value
     private String value = defaultValue;

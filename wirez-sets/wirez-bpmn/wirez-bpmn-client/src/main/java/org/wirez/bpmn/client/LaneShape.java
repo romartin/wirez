@@ -19,14 +19,17 @@ package org.wirez.bpmn.client;
 import org.wirez.bpmn.api.Lane;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
+import org.wirez.bpmn.api.property.general.BackgroundSet;
+import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.client.shapes.WiresRectangleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.mutation.Context;
+import org.wirez.core.client.mutation.GraphContext;
 import org.wirez.core.client.view.HasTitle;
 
 public class LaneShape extends BPMNBasicShape<Lane> {
@@ -41,7 +44,7 @@ public class LaneShape extends BPMNBasicShape<Lane> {
     }
 
     @Override
-    public void applyElementProperties(Node<View<Lane>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<View<Lane>, Edge> element, CanvasHandler wirezCanvas, GraphContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
         
         // Size.
@@ -55,22 +58,32 @@ public class LaneShape extends BPMNBasicShape<Lane> {
         getView().setFillAlpha(0.8);
     }
 
-    protected LaneShape _applySize(final Node<View<Lane>, Edge> element, MutationContext mutationContext) {
-        final Width widthProperty  = (Width) ElementUtils.getProperty(element, Width.class);
-        final Height heightProperty  = (Height) ElementUtils.getProperty(element, Height.class);
+    protected LaneShape _applySize(final Node<View<Lane>, Edge> element, GraphContext mutationContext) {
+        final Width widthProperty  = element.getContent().getDefinition().getWidth();
+        final Height heightProperty  = element.getContent().getDefinition().getHeight();
         final Double width = widthProperty.getValue();
         final Double height = heightProperty.getValue();
         applySize(width, height, mutationContext);
-        ElementUtils.updateBounds(width, height, element.getContent());
+        GraphUtils.updateBounds(width, height, element.getContent());
         return this;
     }
 
+    @Override
+    protected BackgroundSet getBackgroundSet(final Node<View<Lane>, Edge> element) {
+        return element.getContent().getDefinition().getBackgroundSet();
+    }
+
+    @Override
+    protected FontSet getFontSet(final Node<View<Lane>, Edge> element) {
+        return element.getContent().getDefinition().getFontSet();
+    }
+    
     @Override
     public String toString() {
         return "LaneShape{}";
     }
 
-    protected void applySize(final double width, final double height, final MutationContext mutationContext) {
+    protected void applySize(final double width, final double height, final Context mutationContext) {
         getView().setSize(width, height);
     }
 

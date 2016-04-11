@@ -19,7 +19,7 @@ package org.wirez.core.backend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.BaseDefinitionManager;
-import org.wirez.core.api.definition.DefinitionSet;
+import org.wirez.core.api.definition.DefinitionSetProxy;
 import org.wirez.core.api.definition.adapter.*;
 import org.wirez.core.api.definition.factory.ModelFactory;
 import org.wirez.core.api.diagram.Diagram;
@@ -35,7 +35,7 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
 
     private static final Logger LOG = LoggerFactory.getLogger(BackendDefinitionManager.class);
 
-    Instance<DefinitionSet> definitionSetsInstances;
+    Instance<DefinitionSetProxy<?>> definitionSetsInstances;
     Instance<DefinitionSetAdapter<?>> definitionSetAdapterInstances;
     Instance<DefinitionSetRuleAdapter<?>> definitionSetRuleAdapterInstances;
     Instance<DefinitionAdapter<?>> definitionAdapterInstances;
@@ -47,7 +47,7 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
 
     @Inject
     public BackendDefinitionManager(DiagramRegistry<? extends Diagram> diagramRegistry,
-                                    Instance<DefinitionSet> definitionSetsInstances,
+                                    Instance<DefinitionSetProxy<?>> definitionSetsInstances,
                                     Instance<ModelFactory<?>> modelBuilderInstances,
                                     Instance<DefinitionSetAdapter<?>> definitionSetAdapterInstances,
                                     Instance<DefinitionSetRuleAdapter<?>> definitionSetRuleAdapterInstances,
@@ -70,8 +70,8 @@ public class BackendDefinitionManager extends BaseDefinitionManager {
     }
     
     private void initDefSets() {
-        for (DefinitionSet definitionSet : definitionSetsInstances ) {
-            definitionSets.add( definitionSet );
+        for (DefinitionSetProxy definitionSet : definitionSetsInstances ) {
+            definitionSets.add( definitionSet.getDefinitionSet() );
         }
     }
     

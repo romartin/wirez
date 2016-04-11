@@ -6,7 +6,7 @@ import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.view.ShapeGlyph;
@@ -32,14 +32,17 @@ public class TreeExplorerItem implements IsWidget {
     }
     
     ShapeManager shapeManager;
+    GraphUtils graphUtils;
     DefinitionManager definitionManager;
     View view;
 
     @Inject
-    public TreeExplorerItem(final ShapeManager shapeManager, 
+    public TreeExplorerItem(final ShapeManager shapeManager,
+                            final GraphUtils graphUtils,
                             final DefinitionManager definitionManager, 
                             final View view) {
         this.shapeManager = shapeManager;
+        this.graphUtils = graphUtils;
         this.definitionManager = definitionManager;
         this.view = view;
     }
@@ -66,7 +69,7 @@ public class TreeExplorerItem implements IsWidget {
     }
 
     private String getItemText(final Element item) {
-        final Object property = ElementUtils.getProperty(item, Name.ID);
+        final Object property = graphUtils.getProperty(item, Name.ID);
         final String name= (String) definitionManager.getPropertyAdapter(property.getClass()).getValue(property);
         return   ( name != null ? name : "- No name -" );
     }

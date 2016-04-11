@@ -36,15 +36,15 @@ import java.util.Set;
 public class ParallelGateway implements BPMNDefinition {
 
     @Category
-    public static final String category = "Gateways";
+    public static final transient String category = "Gateways";
 
     @Title
-    public static final String title = "BPMN Diagram";
+    public static final transient String title = "BPMN Diagram";
 
     @Description
-    public static final String description = "Parallel Gateway";
+    public static final transient String description = "Parallel Gateway";
     
-    public static final String COLOR = "#f0e68c";
+    public static final transient String COLOR = "#f0e68c";
     public static final Double RADIUS = 20d;
     
     @PropertySet

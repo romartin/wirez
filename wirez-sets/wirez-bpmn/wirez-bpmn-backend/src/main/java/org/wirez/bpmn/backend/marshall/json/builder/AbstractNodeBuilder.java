@@ -9,7 +9,7 @@ import org.wirez.core.api.graph.command.impl.AddChildNodeCommand;
 import org.wirez.core.api.graph.command.impl.SetConnectionSourceNodeCommand;
 import org.wirez.core.api.graph.content.view.*;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -62,7 +62,7 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
     }
 
     protected void setSize(BuilderContext context, T node) {
-        final Double[] size = ElementUtils.getSize(node.getContent());
+        final Double[] size = GraphUtils.getSize(node.getContent());
         setSize(context, node, size[0], size[1]);
     }
 

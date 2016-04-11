@@ -19,13 +19,16 @@ package org.wirez.bpmn.client;
 import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
+import org.wirez.bpmn.api.property.general.BackgroundSet;
+import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.client.shapes.WiresRectangleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.mutation.Context;
+import org.wirez.core.client.mutation.GraphContext;
 import org.wirez.core.client.view.ShapeView;
 
 public class TaskShape extends BPMNBasicShape<Task> {
@@ -49,7 +52,7 @@ public class TaskShape extends BPMNBasicShape<Task> {
     }
     
     @Override
-    public void applyElementProperties(Node<View<Task>, Edge> element, CanvasHandler wirezCanvas, MutationContext mutationContext) {
+    public void applyElementProperties(Node<View<Task>, Edge> element, CanvasHandler wirezCanvas, GraphContext mutationContext) {
         super.applyElementProperties(element, wirezCanvas, mutationContext);
         
         // Size.
@@ -57,23 +60,34 @@ public class TaskShape extends BPMNBasicShape<Task> {
         
     }
 
-    protected TaskShape _applySize(final Node<View<Task>, Edge> element, MutationContext mutationContext) {
-        final Width widthProperty  = (Width) ElementUtils.getProperty(element, Width.class);
-        final Height heightProperty  = (Height) ElementUtils.getProperty(element, Height.class);
+    protected TaskShape _applySize(final Node<View<Task>, Edge> element, GraphContext mutationContext) {
+        final Width widthProperty  = element.getContent().getDefinition().getWidth();
+        final Height heightProperty  = element.getContent().getDefinition().getHeight();
         final Double width = widthProperty.getValue();
         final Double height = heightProperty.getValue();
         applySize(width, height, mutationContext);
-        ElementUtils.updateBounds(width, height, element.getContent());
+        GraphUtils.updateBounds(width, height, element.getContent());
         return this;
     }
 
+    protected void applySize(final double width, final double height, final Context mutationContext) {
+        getView().setSize(width, height);
+    }
+
+    @Override
+    protected BackgroundSet getBackgroundSet(final Node<View<Task>, Edge> element) {
+        return element.getContent().getDefinition().getBackgroundSet();
+    }
+
+    @Override
+    protected FontSet getFontSet(final Node<View<Task>, Edge> element) {
+        return element.getContent().getDefinition().getFontSet();
+    }
+    
     @Override
     public String toString() {
         return "TaskShape{}";
     }
 
-    protected void applySize(final double width, final double height, final MutationContext mutationContext) {
-        getView().setSize(width, height);
-    }
-
+    
 }

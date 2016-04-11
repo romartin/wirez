@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.StringType;
 public class WorkingHours implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Working Hours";
+    public static final transient String caption = "Working Hours";
 
     @Description
-    public static final String description = "Working Hours";
+    public static final transient String description = "Working Hours";
 
     @ReadOnly
     public static final Boolean readOnly = false;

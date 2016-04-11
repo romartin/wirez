@@ -26,10 +26,10 @@ import javax.enterprise.context.ApplicationScoped;
         }
 )
 @CanContain( roles = { "diagram" } )
-public class BPMNDefinitionSet implements org.wirez.core.api.definition.DefinitionSet {
+public class BPMNDefinitionSet {
 
     @Description
-    public static final String description = "BPMN2 Definition Set";
+    public static final transient String description = "BPMN2 Definition Set";
 
     public BPMNDefinitionSet() {
         

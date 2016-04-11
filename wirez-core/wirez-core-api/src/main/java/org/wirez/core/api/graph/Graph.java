@@ -17,7 +17,7 @@
 package org.wirez.core.api.graph;
 
 /**
- * <p>The graph implementation is based on the <b>Labeled Property Graph Model</b>:</p>
+ * <p>The graph implementation is given by it's content, basically based on the <b>Labeled Property Graph Model</b>:</p>
  * 
  * <ul>
  *     <li>

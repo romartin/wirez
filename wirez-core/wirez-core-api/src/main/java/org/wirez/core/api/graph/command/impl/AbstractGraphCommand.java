@@ -7,7 +7,7 @@ import org.wirez.core.api.rule.RuleViolation;
 
 public abstract class AbstractGraphCommand implements Command<RuleManager, RuleViolation> {
     
-    protected GraphCommandFactory commandFactory;
+    protected transient GraphCommandFactory commandFactory;
 
     public AbstractGraphCommand(GraphCommandFactory commandFactory) {
         this.commandFactory = commandFactory;

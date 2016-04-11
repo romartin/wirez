@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class StandardDeviation implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Standard Deviation";
+    public static final transient String caption = "Standard Deviation";
 
     @Description
-    public static final String description = "Standard Deviation";
+    public static final transient String description = "Standard Deviation";
 
     @ReadOnly
     public static final Boolean readOnly = false;

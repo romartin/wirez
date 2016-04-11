@@ -6,6 +6,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.factory.ModelFactory;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.factory.ElementFactory;
+import org.wirez.core.api.graph.factory.GraphFactory;
 import org.wirez.core.api.graph.factory.ViewElementFactory;
 
 import javax.annotation.PostConstruct;
@@ -48,6 +49,27 @@ public class BackendFactoryManager extends BaseFactoryManager {
                                                Class<?> graphElementClass,
                                                String factory) {
         
+        Bean<?> bean = getFactoryBean( graphElementClass, factory );
+        
+        // Return the element's factory instance.
+        return getFactory( bean );
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected GraphFactory getGraphFactory(Object definition,
+                                             Class<?> graphElementClass,
+                                             String factory) {
+
+        Bean<?> bean = getFactoryBean( graphElementClass, factory );
+
+        // Return the element's factory instance.
+        return getFactory( bean );
+    }
+    
+    protected Bean<?> getFactoryBean(Class<?> graphElementClass,
+                                      String factory) {
+
         String ref = getFactoryReference( graphElementClass, factory );
 
         Bean<?> bean = beanManager.getBeans(ref).iterator().next();
@@ -55,11 +77,14 @@ public class BackendFactoryManager extends BaseFactoryManager {
         if ( null == bean ) {
             throw new RuntimeException( "No factory found for class " + ref );
         }
-
-        // Return the element's factory instance.
-        CreationalContext ctx = beanManager.createCreationalContext(bean);
-        return (ElementFactory) beanManager.getReference(bean, bean.getBeanClass(), ctx);
         
+        return bean;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <T> T getFactory(Bean<?> bean) {
+        CreationalContext ctx = beanManager.createCreationalContext(bean);
+        return (T) beanManager.getReference(bean, bean.getBeanClass(), ctx);
     }
 
 }

@@ -17,12 +17,10 @@
 package org.wirez.core.api.util;
 
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseCallback;

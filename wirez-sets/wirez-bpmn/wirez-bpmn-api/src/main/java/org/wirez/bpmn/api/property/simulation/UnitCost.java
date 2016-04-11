@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.DoubleType;
 public class UnitCost implements BPMNProperty {
 
     @Caption
-    public static final String caption = "Cost per time unit";
+    public static final transient String caption = "Cost per time unit";
 
     @Description
-    public static final String description = "Cost per time unit";
+    public static final transient String description = "Cost per time unit";
 
     @ReadOnly
     public static final Boolean readOnly = false;

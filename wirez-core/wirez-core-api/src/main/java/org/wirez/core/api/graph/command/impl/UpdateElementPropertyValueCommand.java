@@ -24,7 +24,7 @@ import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.ElementUtils;
+import org.wirez.core.api.graph.util.GraphUtils;
 
 import java.util.ArrayList;
 
@@ -34,6 +34,7 @@ import java.util.ArrayList;
 public class UpdateElementPropertyValueCommand extends AbstractGraphCommand {
 
     private PropertyAdapter adapter;
+    private GraphUtils graphUtils;
     private Element element;
     private String propertyId;
     private Object value;
@@ -41,11 +42,13 @@ public class UpdateElementPropertyValueCommand extends AbstractGraphCommand {
 
 
     public UpdateElementPropertyValueCommand(final GraphCommandFactory commandFactory,
+                                             final GraphUtils graphUtils,
                                              final PropertyAdapter adapter,
                                              final Element element,
                                              final String propertyId,
                                              final Object value) {
         super(commandFactory);
+        this.graphUtils = graphUtils;
         this.adapter = PortablePreconditions.checkNotNull( "adapter",
                 adapter );;
         this.element = PortablePreconditions.checkNotNull( "element",
@@ -64,7 +67,7 @@ public class UpdateElementPropertyValueCommand extends AbstractGraphCommand {
 
     @Override
     public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final Object p = ElementUtils.getProperty(element, propertyId);
+        final Object p = graphUtils.getProperty(element, propertyId);
         oldValue = adapter.getValue(p);
         adapter.setValue(p, value);
         return new GraphCommandResult(new ArrayList<RuleViolation>());

@@ -22,7 +22,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandResult;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.content.Child;
+import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.impl.EdgeImpl;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
@@ -61,9 +61,8 @@ public class AddChildEdgeCommand extends AbstractGraphCommand {
 
             // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
             final String uuid = UUID.uuid();
-            final Map<String, Object> properties = new HashMap<>();
             final Set<String> labels = new HashSet<>(1);
-            final Edge<Child, Node> edge = new EdgeImpl<>(uuid, new HashSet<>(), labels, new Child());
+            final Edge<Child, Node> edge = new EdgeImpl<>(uuid, labels, new Child());
 
             edge.setSourceNode(parent);
             edge.setTargetNode(candidate);

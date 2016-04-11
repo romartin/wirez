@@ -17,16 +17,13 @@
 package org.wirez.bpmn.client;
 
 import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.bpmn.api.property.general.BgColor;
-import org.wirez.bpmn.api.property.general.BorderColor;
-import org.wirez.bpmn.api.property.general.BorderSize;
+import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseConnector;
-import org.wirez.core.client.mutation.MutationContext;
+import org.wirez.core.client.mutation.GraphContext;
 import org.wirez.core.client.view.ShapeView;
 
 public abstract class BPMNBasicConnector<W extends BPMNDefinition> 
@@ -38,7 +35,7 @@ public abstract class BPMNBasicConnector<W extends BPMNDefinition>
     }
 
     @Override
-    public void applyElementProperties(Edge<View<W>, Node> element, CanvasHandler canvasHandler, MutationContext mutationContext) {
+    public void applyElementProperties(Edge<View<W>, Node> element, CanvasHandler canvasHandler, GraphContext mutationContext) {
         super.applyElementProperties(element, canvasHandler, mutationContext);
 
         // Fill color.
@@ -48,19 +45,18 @@ public abstract class BPMNBasicConnector<W extends BPMNDefinition>
         _applyBorders(element);
 
     }
-
-    protected BPMNBasicConnector<W> _applyFillColor(Edge<View<W>, Node> element) {
-        final BgColor bgColor = (BgColor) ElementUtils.getProperty(element, BgColor.class);
-        final String color = bgColor.getValue();
+    
+    protected abstract BackgroundSet getBackgroundSet(Edge<View<W>, Node> element);
+    
+    protected BPMNBasicConnector<W> _applyFillColor(final Edge<View<W>, Node> element) {
+        final String color = getBackgroundSet( element ).getBgColor().getValue();
         super._applyFillColor(color);
         return this;
     }
 
-    protected BPMNBasicConnector<W> _applyBorders(Edge<View<W>, Node> element) {
-        final BorderColor borderColor  = (BorderColor) ElementUtils.getProperty(element, BorderColor.class);
-        final BorderSize borderSize = (BorderSize) ElementUtils.getProperty(element, BorderSize.class);
-        final String color = borderColor.getValue();
-        final Double width = borderSize.getValue();
+    protected BPMNBasicConnector<W> _applyBorders(final Edge<View<W>, Node> element) {
+        final String color = getBackgroundSet( element ).getBorderColor().getValue();
+        final Double width = getBackgroundSet( element ).getBorderSize().getValue();
         super._applyBorders(color, width);
         return this;
     }

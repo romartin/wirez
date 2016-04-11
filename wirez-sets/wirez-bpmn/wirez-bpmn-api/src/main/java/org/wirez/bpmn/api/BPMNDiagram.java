@@ -40,16 +40,16 @@ import java.util.Set;
 public class BPMNDiagram implements BPMNDefinition {
 
     @Category
-    public static final String category = "Diagram";
+    public static final transient String category = "Diagram";
     
     @Title
-    public static final String title = "BPMN Diagram";
+    public static final transient String title = "BPMN Diagram";
     
     @Description
-    public static final String description = "BPMN Diagam";
+    public static final transient String description = "BPMN Diagam";
     
-    public static final String COLOR = "#FFFFFF";
-    public static final String BORDER_COLOR = "#000000";
+    public static final transient String COLOR = "#FFFFFF";
+    public static final transient String BORDER_COLOR = "#000000";
     public static final Double BORDER_SIZE = 1d;
     public static final Double WIDTH = 950d;
     public static final Double HEIGHT = 950d;

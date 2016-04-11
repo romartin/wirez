@@ -30,10 +30,10 @@ import org.wirez.core.api.definition.property.type.StringType;
 public class DistributionType implements BPMNProperty {
 
     @Caption
-    public static final String caption = "The Distribution Type";
+    public static final transient String caption = "The Distribution Type";
 
     @Description
-    public static final String description = "The width";
+    public static final transient String description = "The width";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -45,7 +45,7 @@ public class DistributionType implements BPMNProperty {
     public static final PropertyType type = new StringType();
 
     @DefaultValue
-    public static final String defaultValue = "normal";
+    public static final transient String defaultValue = "normal";
 
     @Value
     private String value = defaultValue;

@@ -23,6 +23,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Form modeler. -->
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-api</artifactId>
+    </dependency>
+    
     <!-- Uberfire & Errai. -->
     <dependency>
       <groupId>org.jboss.errai</groupId>

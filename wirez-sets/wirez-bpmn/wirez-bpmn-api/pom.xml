@@ -52,6 +52,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Form modeler API. -->
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-api</artifactId>
+    </dependency>
+    
     <!-- Uberfire & Errai. -->
 
     <dependency>

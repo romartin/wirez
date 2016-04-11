@@ -163,9 +163,36 @@
       <groupId>com.ahome-it</groupId>
       <artifactId>lienzo-core</artifactId>
     </dependency>
-    
-    <!-- Test scope. -->
 
+    <!-- Forms integration. -->
+    
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-crud-component</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-dynamic-renderer-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-dynamic-renderer-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-dynamic-renderer-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
     <!-- Test scope. -->
 
     <dependency>

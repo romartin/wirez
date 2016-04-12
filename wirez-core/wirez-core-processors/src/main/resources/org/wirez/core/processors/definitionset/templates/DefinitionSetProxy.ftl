@@ -16,23 +16,17 @@
 
 package ${packageName};
 
-import ${parentFQCName};
-import ${defSetFQCName};
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import javax.annotation.Generated;
 
+@Generated("${generatedByClassName}")
 @ApplicationScoped
 public class ${className} implements ${parentFQCName}<${defSetFQCName}> {
 
     ${defSetFQCName} instance;
 
-    protected ${className}() {
-
-    }
-
-    @Inject
-    public ${className}(${defSetFQCName} i) {
-        this.instance = i;
+    public ${className}() {
+        this.instance = new  ${defSetFQCName}();
     }
 
     @Override

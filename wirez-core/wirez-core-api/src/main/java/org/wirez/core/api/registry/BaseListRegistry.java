@@ -1,15 +1,18 @@
 package org.wirez.core.api.registry;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class BaseListRegistry<T> implements Registry<T> {
 
-    protected final List<T> items = new ArrayList<T>();
+    protected final List<T> items;
 
-    protected abstract String getItemId(T item);
+    public BaseListRegistry(final List<T> items) {
+        this.items = items;
+    }
+
+    protected abstract String getItemId(final T item);
     
     public void add(final T item) {
         items.add(item);

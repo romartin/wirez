@@ -16,13 +16,9 @@
 
 package org.wirez.core.client.control.resize;
 
-import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresEvent;
-import com.ait.lienzo.client.core.shape.wires.event.ResizeEvent;
-import com.ait.lienzo.client.core.shape.wires.event.ResizeHandler;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.impl.BaseShape;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -31,8 +27,8 @@ import javax.inject.Inject;
 public class LienzoResizeControl extends BaseResizeControl<Shape, Element> {
 
     @Inject
-    public LienzoResizeControl(CanvasCommandFactory commandFactory) {
-        super(commandFactory);
+    public LienzoResizeControl(final CanvasCommandFactory commandFactory) {
+        super( commandFactory );
     }
 
     @Override

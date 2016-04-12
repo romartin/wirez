@@ -29,7 +29,6 @@ import org.wirez.core.api.rule.violations.*;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +36,7 @@ import java.util.Set;
  * Belief graph propagation Rule Manager's implementation.
  */
 @Dependent
-@Named( "default" )
+@Default
 public class DefaultRuleManager implements RuleManager {
 
     protected DefinitionManager definitionManager;

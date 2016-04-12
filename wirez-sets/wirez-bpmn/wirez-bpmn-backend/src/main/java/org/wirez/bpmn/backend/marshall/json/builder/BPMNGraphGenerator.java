@@ -10,10 +10,12 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandManager;
-import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContextImpl;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
@@ -41,7 +43,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
     GraphUtils graphUtils;
     Bpmn2OryxIdMappings oryxIdMappings;
     Bpmn2OryxPropertyManager oryxPropertyManager;
-    CommandManager<RuleManager, RuleViolation> commandManager;
+    CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager;
     RuleManager ruleManager;
     GraphCommandFactory commandFactory;
     Stack<GraphObjectBuilder> nodeBuilders = new LoggableStack<GraphObjectBuilder>("nodeBuilders");
@@ -84,7 +86,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
                               final GraphUtils graphUtils,
                               final Bpmn2OryxIdMappings oryxIdMappings,
                               final Bpmn2OryxPropertyManager oryxPropertyManager,
-                              final CommandManager<RuleManager, RuleViolation> commandManager,
+                              final CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager,
                               final RuleManager ruleManager,
                               final GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
@@ -140,7 +142,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
     public void close() throws IOException {
         logBuilders();
 
-        this.graph = (Graph<DefinitionSet, Node>) factoryManager.graph(UUID.uuid(), BPMNDefinitionSet.class.getSimpleName());
+        this.graph = (Graph<DefinitionSet, Node>) factoryManager.newGraph(UUID.uuid(), BPMNDefinitionSet.class.getSimpleName());
         
         // TODO: Improve this - Remove the default diagram built by the bpmn graph factory.
         Iterator<Node> nodes = this.graph.nodes().iterator();
@@ -228,8 +230,11 @@ public class BPMNGraphGenerator extends JsonGenerator {
         }
 
         @SuppressWarnings("unchecked")
-        public CommandResults<RuleViolation> execute (Command<RuleManager, RuleViolation>... command) {
-            return commandManager.execute( ruleManager, command );
+        public CommandResult<RuleViolation> execute (Command<GraphCommandExecutionContext, RuleViolation> command) {
+            GraphCommandExecutionContext executionContext = 
+                    new GraphCommandExecutionContextImpl( definitionManager, factoryManager, ruleManager,
+                            commandFactory, graphUtils);
+            return commandManager.execute( executionContext, command );
         }
         
         public GraphCommandFactory getCommandFactory() {

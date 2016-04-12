@@ -26,10 +26,10 @@ import java.util.Stack;
 
 public class BPMN2JsonParser extends JsonParserMinimalBase {
 
-    private Diagram<Settings> diagram;
+    private Diagram<Graph, Settings> diagram;
     private NodeParser rootParser;
     
-    public BPMN2JsonParser(Diagram<Settings> diagram, ContextualParser.Context parsingContext) {
+    public BPMN2JsonParser(Diagram<Graph, Settings> diagram, ContextualParser.Context parsingContext) {
         this.diagram = diagram;
         initialize(parsingContext);
     }

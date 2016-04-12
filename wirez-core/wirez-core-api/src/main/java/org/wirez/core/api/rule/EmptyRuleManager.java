@@ -22,12 +22,13 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Named;
 
 @Dependent
-@Named( "empty" )
+@Empty
 public class EmptyRuleManager implements RuleManager {
 
+    public static final EmptyRuleManager INSTANCE = new EmptyRuleManager();
+    
     @Override
     public RuleManager addRule( final Rule rule ) {
         throw new UnsupportedOperationException("No rule additions supported");

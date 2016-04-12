@@ -20,11 +20,13 @@ import org.jboss.errai.security.shared.api.identity.User;
 import org.jboss.errai.security.shared.service.AuthenticationService;
 import org.uberfire.backend.server.IOWatchServiceNonDotImpl;
 import org.uberfire.io.IOService;
-import org.uberfire.io.impl.IOServiceDotFileImpl;
 import org.uberfire.io.impl.IOServiceNio2WrapperImpl;
 import org.uberfire.security.authz.AuthorizationManager;
 import org.uberfire.security.impl.authz.RuntimeAuthorizationManager;
-import org.wirez.core.api.service.diagram.DiagramService;
+import org.wirez.core.api.DiagramManager;
+import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.backend.VFS;
+import org.wirez.core.backend.diagram.vfs.VFSDiagramManagerImpl;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -43,14 +45,15 @@ public class ApplicationScopedProducer {
     private AuthenticationService authenticationService;
     
     @Inject
-    private DiagramService diagramService;
+    @VFS
+    private DiagramManager<Diagram> diagramManager;
 
     private IOService ioService;
 
     @PostConstruct
     public void setup() {
         ioService  = new IOServiceNio2WrapperImpl("1", watchService );
-        diagramService.registerAppDefinitions();
+        ( (VFSDiagramManagerImpl) diagramManager).registerAppDefinitions();
     }
 
     @Produces

@@ -2,7 +2,6 @@ package org.wirez.core.client.control.toolbox.command;
 
 import com.ait.lienzo.client.core.shape.Shape;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.util.SVGUtils;

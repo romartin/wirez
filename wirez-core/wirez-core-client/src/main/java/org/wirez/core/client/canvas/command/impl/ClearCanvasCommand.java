@@ -2,34 +2,29 @@ package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.client.canvas.command.HasGraphCommand;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 
-public class ClearCanvasCommand extends AbstractCanvasCommand implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
-
-    public ClearCanvasCommand(CanvasCommandFactory canvasCommandFactory) {
-        super(canvasCommandFactory);
-    }
+public final class ClearCanvasCommand extends AbstractCanvasGraphCommand {
 
     @Override
-    public CommandResult<CanvasCommandViolation> execute(final WiresCanvasHandler context) {
+    public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
         context.clear();
         return buildResult();
     }
 
     @Override
-    public CommandResult<CanvasCommandViolation> undo(final WiresCanvasHandler context) {
-        // TODO
+    public CommandResult<CanvasViolation> undo(final AbstractCanvasHandler context) {
+        // TODO: Return to previous snapshot?
         return null;
     }
 
     @Override
-    public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
-        return factory.CLEAR_GRAPH(canvasHandler.getDiagram().getGraph());
+    protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(AbstractCanvasHandler context) {
+        return context.getGraphCommandFactory().CLEAR_GRAPH( context.getDiagram().getGraph() );
     }
+
 }

@@ -1,8 +1,8 @@
 package org.wirez.core.client.view;
 
 import org.wirez.core.client.view.event.ViewEvent;
-import org.wirez.core.client.view.event.ViewHandler;
 import org.wirez.core.client.view.event.ViewEventType;
+import org.wirez.core.client.view.event.ViewHandler;
 
 public interface HasEventHandlers<T> {
     

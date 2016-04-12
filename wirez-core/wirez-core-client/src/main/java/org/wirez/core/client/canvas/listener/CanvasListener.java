@@ -16,9 +16,6 @@
 
 package org.wirez.core.client.canvas.listener;
 
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.client.canvas.CanvasHandler;
-
 /**
  * Listen to canvas events.
  */

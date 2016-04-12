@@ -14,6 +14,7 @@ import org.jboss.drools.util.DroolsResourceFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
+import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2Marshaller;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
@@ -26,24 +27,31 @@ import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.diagram.SettingsImpl;
+import org.wirez.core.api.diagram.marshall.DiagramMarshaller;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.content.definition.Definition;
 import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.api.rule.Empty;
 import org.wirez.core.api.rule.EmptyRuleManager;
-import org.wirez.core.api.service.diagram.DiagramMarshaller;
+import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.util.UUID;
+import org.wirez.core.backend.Application;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 @Dependent
-public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Settings> {
+public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputStream, String> {
 
     public static final String TEST_PATH = "org/wirez/bpmn/backend/examples/wirez-bpmn-test.bpmn2";
     private static final Logger LOG = LoggerFactory.getLogger(BPMNDiagramMarshaller.class);
@@ -55,7 +63,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
     Bpmn2OryxPropertyManager oryxPropertyManager;
     FactoryManager factoryManager;
     GraphCommandManager graphCommandManager;
-    EmptyRuleManager ruleManager;
+    RuleManager ruleManager;
     GraphCommandFactory commandFactory;
     
     private ResourceSet resourceSet;
@@ -66,9 +74,9 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
                                  GraphUtils graphUtils,
                                  Bpmn2OryxIdMappings oryxIdMappings,
                                  Bpmn2OryxPropertyManager oryxPropertyManager,
-                                 FactoryManager factoryManager, 
-                                 GraphCommandManager graphCommandManager, 
-                                 EmptyRuleManager ruleManager, 
+                                 @Application FactoryManager factoryManager, 
+                                 GraphCommandManager graphCommandManager,
+                                 @Empty RuleManager ruleManager, 
                                  GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
@@ -98,7 +106,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
     }
 
     @Override
-    public String marshall(Diagram<Settings> diagram) {
+    public String marshall(Diagram diagram) {
 
         LOG.info("Starting BPMN diagram marshalling...");
 
@@ -118,7 +126,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
     }
     
     @Override
-    public Diagram<Settings> unmarhsall(InputStream inputStream) {
+    public Diagram unmarhsall(InputStream inputStream) {
 
         LOG.info("Starting BPMN diagram loading...");
         
@@ -137,16 +145,9 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             
             parser.setProfile(new DefaultProfileImpl());
             final Graph graph = parser.unmarshall(definitions, null);
-            final String definitionSetId = (String) ( (DefinitionSet) graph.getContent() ).getId();
+            final String title = getFirstDiagramTitle( graph );
             
-            // TODO: Get title from diagram node.
-            String title = definitionSetId;
-            
-            if ( title == null || title.trim().length() == 0 ) {
-                title = "Untitled BPMN diagram";
-            }
-            
-            final Diagram<Settings> diagram = new DiagramImpl( UUID.uuid(), graph, 
+            final Diagram<Graph, Settings> diagram = new DiagramImpl( UUID.uuid(), graph, 
                     new SettingsImpl(title, BPMNDefinitionSet.class.getSimpleName(), "BPMNShapeSet"));
 
             LOG.info("BPMN diagram loading finished successfully.");
@@ -181,5 +182,35 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
             }
         }
         return null;
+    }
+    
+    @SuppressWarnings("unchecked")
+    protected String getFirstDiagramTitle( final Graph graph ) {
+        String title = null;
+        
+        if ( null != graph ) {
+            Iterable<Node> nodesIterable = graph.nodes();
+            if ( null != nodesIterable ) {
+                Iterator<Node> nodesIt = nodesIterable.iterator();
+                if ( null != nodesIt ) {
+                    while ( nodesIt.hasNext() ) {
+                        Node node = nodesIt.next();
+                        Object content = node.getContent();
+                        if ( content instanceof Definition ) {
+                            Definition definitionContent = (Definition) content;
+                            if (  definitionContent.getDefinition() instanceof BPMNDiagram ) {
+                                BPMNDiagram diagram = (BPMNDiagram) definitionContent.getDefinition();
+                                title = diagram.getGeneral().getName().getValue();
+                                break;
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            
+        }
+        
+        return title != null && title.trim().length() > 0 ? title : "-- Untitled BPMN2 diagram --";
     }
 }

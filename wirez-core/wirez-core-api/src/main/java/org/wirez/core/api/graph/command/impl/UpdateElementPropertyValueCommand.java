@@ -15,42 +15,31 @@
  */
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.graph.util.GraphUtils;
-
-import java.util.ArrayList;
 
 /**
  * A Command to update an element's property.
  */
-public class UpdateElementPropertyValueCommand extends AbstractGraphCommand {
+@Portable
+public final class UpdateElementPropertyValueCommand extends AbstractGraphCommand {
 
-    private PropertyAdapter adapter;
-    private GraphUtils graphUtils;
     private Element element;
     private String propertyId;
     private Object value;
     private Object oldValue;
 
 
-    public UpdateElementPropertyValueCommand(final GraphCommandFactory commandFactory,
-                                             final GraphUtils graphUtils,
-                                             final PropertyAdapter adapter,
-                                             final Element element,
-                                             final String propertyId,
-                                             final Object value) {
-        super(commandFactory);
-        this.graphUtils = graphUtils;
-        this.adapter = PortablePreconditions.checkNotNull( "adapter",
-                adapter );;
+    public UpdateElementPropertyValueCommand(@MapsTo("element") Element element,
+                                             @MapsTo("propertyId") String propertyId,
+                                             @MapsTo("value") Object value) {
         this.element = PortablePreconditions.checkNotNull( "element",
                 element );;
         this.propertyId = PortablePreconditions.checkNotNull( "propertyId",
@@ -60,23 +49,24 @@ public class UpdateElementPropertyValueCommand extends AbstractGraphCommand {
     }
     
     @Override
-    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
-        // TODO: Check value.
-        return new GraphCommandResult();
+    public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
+        return GraphCommandResultBuilder.OK_COMMAND;
     }
 
     @Override
-    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final Object p = graphUtils.getProperty(element, propertyId);
+    @SuppressWarnings("unchecked")
+    public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
+        final Object p = context.getGraphUtils().getProperty(element, propertyId);
+        PropertyAdapter<Object> adapter = context.getDefinitionManager().getPropertyAdapter( p.getClass() ); 
         oldValue = adapter.getValue(p);
         adapter.setValue(p, value);
-        return new GraphCommandResult(new ArrayList<RuleViolation>());
+        return GraphCommandResultBuilder.OK_COMMAND;
     }
     
     @Override
-    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.UPDATE_PROPERTY_VALUE( element, propertyId, oldValue );
-        return undoCommand.execute( ruleManager );
+    public CommandResult<RuleViolation> undo(final GraphCommandExecutionContext context) {
+        final UpdateElementPropertyValueCommand undoCommand = context.getCommandFactory().UPDATE_PROPERTY_VALUE( element, propertyId, oldValue );
+        return undoCommand.execute( context );
     }
 
     public Object getOldValue() {

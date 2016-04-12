@@ -15,8 +15,8 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.control.SelectionManager;
-import org.wirez.core.client.canvas.listener.AbstractCanvasModelListener;
-import org.wirez.core.client.canvas.listener.CanvasModelListener;
+import org.wirez.core.client.canvas.listener.AbstractCanvasElementListener;
+import org.wirez.core.client.canvas.listener.CanvasElementListener;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -51,7 +51,7 @@ public class TreeExplorer implements IsWidget {
     View view;
 
     private CanvasHandler canvasHandler;
-    private CanvasModelListener canvasListener;
+    private CanvasElementListener canvasListener;
 
     @Inject
     public TreeExplorer(final DefinitionManager definitionManager,
@@ -206,7 +206,7 @@ public class TreeExplorer implements IsWidget {
     private void addCanvasListener(final CanvasHandler canvasHandler) {
         removeCanvasListener();
 
-        canvasListener = new AbstractCanvasModelListener(canvasHandler) {
+        canvasListener = new AbstractCanvasElementListener(canvasHandler) {
             @Override
             public void onElementAdded(final Element element) {
                 super.onElementAdded(element);

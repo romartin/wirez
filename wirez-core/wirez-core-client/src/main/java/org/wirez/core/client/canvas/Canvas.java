@@ -24,6 +24,11 @@ import java.util.List;
 public interface Canvas {
 
     /**
+     * Initializes a canvas with the given size.
+     */
+    Canvas initialize(int width, int height);
+    
+    /**
      * Adds the shape control widget into the view for this canvas.
      */
     Canvas addControl(IsWidget control);

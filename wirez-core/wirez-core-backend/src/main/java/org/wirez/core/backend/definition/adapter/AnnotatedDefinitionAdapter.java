@@ -97,11 +97,9 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
                 result = new HashSet<>();
                 for (Field field : fields) {
                     org.wirez.core.api.definition.annotation.definition.PropertySet annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.definition.PropertySet.class);
-                    if ( null != annotation) {
+                    if ( null != annotation ) {
                         try {
-                            field.setAccessible(true);
-                            Object propertySet = field.get(definition);
-                            result.add(propertySet);
+                            result.add( _getValue( field, annotation, definition) );
                         } catch (Exception e) {
                             LOG.error("Error obtaining annotated property sets for Definition with id " + getId( definition ));
                         }
@@ -131,11 +129,9 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
                 // Find annotated runtime properties on the pojo.
                 for (Field field : fields) {
                     org.wirez.core.api.definition.annotation.definition.Property annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.definition.Property.class);
-                    if ( null != annotation) {
+                    if ( null != annotation ) {
                         try {
-                            field.setAccessible(true);
-                            Object property = field.get(definition);
-                            result.add(property);
+                            result.add( _getValue( field, annotation, definition) );
                         } catch (Exception e) {
                             LOG.error("Error obtaining annotated properties for Definition with id " + getId( definition ));
                         }
@@ -146,6 +142,16 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
         
         return result;
     }
+    
+    @SuppressWarnings("unchecked")
+    private <V> V _getValue( Field field, Object annotation, T definition) throws IllegalAccessException {
+        if ( null != annotation) {
+            field.setAccessible(true);
+            V property = (V) field.get(definition);
+            return property;
+        }
+        return null;
+    }
 
     @Override
     public Class<? extends Element> getGraphElement(T definition) {
@@ -154,7 +160,9 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
 
         if ( null != definition ) {
             org.wirez.core.api.definition.annotation.definition.Definition annotation = definition.getClass().getAnnotation(org.wirez.core.api.definition.annotation.definition.Definition.class);
-            result = annotation.type();
+            if ( null != annotation ) {
+                result = annotation.type();
+            }
         }
         
         return result;
@@ -166,7 +174,9 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
 
         if ( null != definition ) {
             org.wirez.core.api.definition.annotation.definition.Definition annotation = definition.getClass().getAnnotation(org.wirez.core.api.definition.annotation.definition.Definition.class);
-            result = annotation.factory();
+            if ( null != annotation ) {
+                result = annotation.factory();
+            }
         }
 
         return result;

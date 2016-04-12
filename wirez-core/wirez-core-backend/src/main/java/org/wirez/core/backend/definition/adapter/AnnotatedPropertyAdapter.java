@@ -84,10 +84,9 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
             if ( null != fields ) {
                 for (Field field : fields) {
                     org.wirez.core.api.definition.annotation.property.Value annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.property.Value.class);
-                    if ( null != annotation) {
+                    if ( null != annotation ) {
                         try {
-                            field.setAccessible(true);
-                            result = field.get(property);
+                            return _getValue( field, annotation, property );
                         } catch (Exception e) {
                             LOG.error("Error obtaining annotated value for T with id " + getId( property ));
                         }
@@ -110,10 +109,9 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
             if ( null != fields ) {
                 for (Field field : fields) {
                     org.wirez.core.api.definition.annotation.property.DefaultValue annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.property.DefaultValue.class);
-                    if ( null != annotation) {
+                    if ( null != annotation ) {
                         try {
-                            field.setAccessible(true);
-                            result = field.get(property);
+                            return _getValue( field, annotation, property );
                         } catch (Exception e) {
                             LOG.error("Error obtaining annotated default value for T with id " + getId( property ));
                         }
@@ -124,6 +122,15 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
 
         return result;
         
+    }
+
+    @SuppressWarnings("unchecked")
+    private <V> V _getValue( Field field, Object annotation, T property) throws IllegalAccessException {
+        if ( null != annotation) {
+            V result = (V) field.get(property);
+            return result;
+        }
+        return null;
     }
 
     @Override

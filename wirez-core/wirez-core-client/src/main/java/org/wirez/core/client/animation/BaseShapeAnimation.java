@@ -21,11 +21,9 @@ import com.ait.lienzo.client.core.animation.IAnimationHandle;
 import org.wirez.core.client.HasDecorators;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.impl.BaseConnector;
 import org.wirez.core.client.impl.BaseShape;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public abstract class BaseShapeAnimation implements ShapeAnimation {

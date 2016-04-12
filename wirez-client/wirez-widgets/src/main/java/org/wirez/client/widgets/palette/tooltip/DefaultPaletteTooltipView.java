@@ -26,8 +26,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import org.wirez.client.widgets.canvas.FocusableLienzoPanel;
 
-import javax.annotation.PostConstruct;
-
 public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPaletteTooltip.View {
 
     private static final double PADDING = 50;

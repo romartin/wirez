@@ -16,31 +16,31 @@
 
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.content.relationship.Parent;
-import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.List;
 
 /**
- * Deletes a child edge ( from the parent to the child node ).
+ * Deletes a child edge ( the outgoing edge from the parent that targets the given candidate ).
  */
-public class DeleteChildEdgeCommand extends AbstractGraphCommand {
+@Portable
+public final class DeleteChildEdgeCommand extends AbstractGraphCommand {
 
     private Node parent;
     private Node candidate;
 
-    public DeleteChildEdgeCommand(final GraphCommandFactory commandFactory,
-                                  final Node parent,
-                                  final Node candidate) {
-        super(commandFactory);
+    public DeleteChildEdgeCommand(@MapsTo("parent") Node parent,
+                                  @MapsTo("candidate") Node candidate) {
         this.parent = PortablePreconditions.checkNotNull( "parent",
                 parent );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
@@ -48,13 +48,13 @@ public class DeleteChildEdgeCommand extends AbstractGraphCommand {
     }
     
     @Override
-    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
-        return check(ruleManager);
+    public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
+        return check( context );
     }
 
     @Override
-    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final CommandResult<RuleViolation> results = check(ruleManager);
+    public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
+        final CommandResult<RuleViolation> results = check( context );
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
             final Edge<Parent, Node>  edge = getEdgeForTarget();
             if ( null != edge ) {
@@ -66,7 +66,8 @@ public class DeleteChildEdgeCommand extends AbstractGraphCommand {
         }
         return results;
     }
-    
+
+    @SuppressWarnings("unchecked")
     private Edge<Parent, Node> getEdgeForTarget() {
         final List<Edge<?, Node>> outEdges = parent.getOutEdges();
         if ( null != outEdges && !outEdges.isEmpty() ) {
@@ -83,14 +84,14 @@ public class DeleteChildEdgeCommand extends AbstractGraphCommand {
         return null;
     }
 
-    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
-        return new GraphCommandResult();
+    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+        return GraphCommandResultBuilder.OK_COMMAND;
     }
 
     @Override
-    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        // TODO
-        return null;
+    public CommandResult<RuleViolation> undo(final GraphCommandExecutionContext context) {
+        final AddChildEdgeCommand undoCommand = context.getCommandFactory().ADD_CHILD_EDGE( parent, candidate );
+        return undoCommand.execute( context );
     }
 
     @Override

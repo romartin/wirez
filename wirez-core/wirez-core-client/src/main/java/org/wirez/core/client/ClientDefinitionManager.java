@@ -3,10 +3,9 @@ package org.wirez.core.client;
 import org.jboss.errai.ioc.client.container.IOC;
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
-import org.wirez.core.api.BaseDefinitionManager;
+import org.wirez.core.api.AbstractDefinitionManager;
 import org.wirez.core.api.definition.DefinitionSetProxy;
 import org.wirez.core.api.definition.adapter.*;
-import org.wirez.core.api.registry.DiagramRegistry;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -14,7 +13,7 @@ import javax.inject.Inject;
 import java.util.Collection;
 
 @ApplicationScoped
-public class ClientDefinitionManager extends BaseDefinitionManager {
+public class ClientDefinitionManager extends AbstractDefinitionManager {
     
     SyncBeanManager beanManager;
 
@@ -25,13 +24,11 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
         return beanDef.getInstance();
     }
 
-    public ClientDefinitionManager() {
+    protected ClientDefinitionManager() {
     }
 
     @Inject
-    public ClientDefinitionManager(final DiagramRegistry diagramRegistry,
-                                   final SyncBeanManager beanManager) {
-        super(diagramRegistry);
+    public ClientDefinitionManager(final SyncBeanManager beanManager) {
         this.beanManager = beanManager;
     }
     
@@ -41,8 +38,9 @@ public class ClientDefinitionManager extends BaseDefinitionManager {
         // Definition Sets.
         Collection<SyncBeanDef<DefinitionSetProxy>> beanDefSets = beanManager.lookupBeans(DefinitionSetProxy.class);
         for (SyncBeanDef<DefinitionSetProxy> defSet : beanDefSets) {
-            DefinitionSetProxy definitionSet = defSet.getInstance();
-            definitionSets.add( definitionSet.getDefinitionSet() );
+            DefinitionSetProxy definitionSetProxy = defSet.getInstance();
+            Object definitionSet = definitionSetProxy.getDefinitionSet();
+            definitionSets.add( definitionSet );
         }
         
         // DefinitionSet client adapters.

@@ -22,7 +22,6 @@ import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.shared.core.types.ColorName;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 
 public class DefaultPaletteItemDecorator extends Group implements PaletteItemDecorator {

@@ -15,13 +15,14 @@
  */
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.command.GraphCommandResult;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
@@ -29,28 +30,27 @@ import org.wirez.core.api.rule.RuleViolation;
 import java.util.Collection;
 
 /**
- * A Command to delete a DefaultEdge from a Graph
+ * A Command to delete an edge from a graph
  */
-public class DeleteEdgeCommand extends AbstractGraphCommand {
+@Portable
+public final class DeleteEdgeCommand extends AbstractGraphCommand {
 
     private Edge<? extends View, Node> edge;
     private Node parent;
 
-    public DeleteEdgeCommand(final GraphCommandFactory commandFactory,
-                             final Edge<? extends View, Node> edge) {
-        super(commandFactory);
+    public DeleteEdgeCommand(@MapsTo("edge") Edge<? extends View, Node> edge) {
         this.edge = PortablePreconditions.checkNotNull( "edge",
                 edge );;
     }
     
     @Override
-    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
-        return check(ruleManager);
+    public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
+        return check( context );
     }
 
     @Override
-    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final CommandResult<RuleViolation> results = check(ruleManager);
+    public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
+        final CommandResult<RuleViolation> results = check( context );
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
             
             final Node outNode = edge.getTargetNode();
@@ -69,15 +69,18 @@ public class DeleteEdgeCommand extends AbstractGraphCommand {
         return results;
     }
     
-    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
-        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(edge.getTargetNode(), edge.getSourceNode(), (Edge<? extends View<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
-        return new GraphCommandResult(cardinalityRuleViolations);
+    @SuppressWarnings("unchecked")
+    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+        final Collection<RuleViolation> cardinalityRuleViolations = 
+                (Collection<RuleViolation>) context.getRuleManager().checkCardinality( edge.getTargetNode(), edge.getSourceNode(), 
+                        (Edge<? extends View<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
+        return new GraphCommandResultBuilder( cardinalityRuleViolations ).build();
     }
 
     @Override
-    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.ADD_EDGE( parent, edge );
-        return undoCommand.execute( ruleManager );
+    public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
+        final AddEdgeCommand undoCommand = context.getCommandFactory().ADD_EDGE( parent, edge );
+        return undoCommand.execute( context );
     }
 
     @Override

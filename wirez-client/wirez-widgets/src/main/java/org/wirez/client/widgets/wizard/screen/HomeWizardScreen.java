@@ -3,7 +3,6 @@ package org.wirez.client.widgets.wizard.screen;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.client.widgets.wizard.BaseWizardScreen;
-import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.widgets.wizard.CanvasWizardScreen;
 import org.wirez.client.widgets.wizard.screen.load.LoadDiagramWizardScreen;
 

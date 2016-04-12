@@ -7,20 +7,24 @@ import org.uberfire.client.mvp.UberView;
 import org.wirez.client.widgets.event.LoadDiagramEvent;
 import org.wirez.client.widgets.wizard.BaseWizardScreen;
 import org.wirez.client.widgets.wizard.CanvasWizardScreen;
-import org.wirez.core.api.service.diagram.DiagramRepresentation;
+import org.wirez.core.api.lookup.LookupManager;
+import org.wirez.core.api.lookup.diagram.DiagramLookupRequest;
+import org.wirez.core.api.lookup.diagram.DiagramLookupRequestImpl;
+import org.wirez.core.api.lookup.diagram.DiagramRepresentation;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.WirezClientLogger;
 import org.wirez.core.client.util.ShapeUtils;
+import org.wirez.core.client.util.WirezClientLogger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +37,7 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
         
         View showEmpty();
         
-        View add(String title, String path, SafeUri thumbUri);
+        View add(String uuid, String title, String path, SafeUri thumbUri);
         
         View clear();
         
@@ -44,7 +48,7 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
     Event<LoadDiagramEvent> loadDiagramEventEvent;
     View view;
     
-    private String selectedPath = null;
+    private String selecteUUID = null;
 
     @Inject
     public LoadDiagramWizardScreen(final ShapeManager shapeManager,
@@ -75,21 +79,24 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
 
         wizard.setNextButtonEnabled(false);
         
-        clientDiagramServices.search("", new ServiceCallback<Collection<DiagramRepresentation>>() {
+        final DiagramLookupRequest request = new DiagramLookupRequestImpl( null, 0, 10 );
+        clientDiagramServices.lookup( request, new ServiceCallback<LookupManager.LookupResponse<DiagramRepresentation>>() {
             @Override
-            public void onSuccess(final Collection<DiagramRepresentation> items) {
+            public void onSuccess(final LookupManager.LookupResponse<DiagramRepresentation> response) {
+
+                final List<DiagramRepresentation> items = response.getResults();
                 
                 if ( null == items || items.isEmpty() ) {
-                    
+
                     view.showEmpty();
-                    
+
                 } else {
-                    
+
                     for (final DiagramRepresentation diagram : items) {
-                        
+
                         addEntry( diagram );
                     }
-                    
+
                 }
                 
             }
@@ -99,13 +106,14 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
                 log( Level.SEVERE, WirezClientLogger.getErrorMessage(error) );
             }
         });
+        
     }
     
-    private void addEntry(final DiagramRepresentation diagram) {
-        assert diagram != null;
+    private void addEntry(final DiagramRepresentation diagramRepresentation) {
+        assert diagramRepresentation != null;
         final Collection<ShapeSet> shapeSets = shapeManager.getShapeSets();
-        final SafeUri thumbUri = ShapeUtils.getShapeSet(shapeSets, diagram.getShapeSetId()).getThumbnailUri();
-        view.add( diagram.getName(), diagram.getPath(), thumbUri );
+        final SafeUri thumbUri = ShapeUtils.getShapeSet(shapeSets, diagramRepresentation.getShapeSetId()).getThumbnailUri();
+        view.add( diagramRepresentation.getUUID(), diagramRepresentation.getTitle(), diagramRepresentation.getVFSPath(), thumbUri );
     }
 
     @Override
@@ -119,7 +127,7 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
                 wizard.clear();
 
                 // Fire the load diagram event for others.
-                loadDiagramEventEvent.fire(new LoadDiagramEvent( selectedPath ));
+                loadDiagramEventEvent.fire(new LoadDiagramEvent( selecteUUID ));
                 
             }
 
@@ -132,14 +140,14 @@ public class LoadDiagramWizardScreen extends BaseWizardScreen implements CanvasW
     }
     
     public void clear() {
-        selectedPath = null;
+        selecteUUID = null;
         view.clear();
     }
     
-    void onItemClick(final String path) {
-        this.selectedPath = path;
+    void onItemClick(final String uuid) {
+        this.selecteUUID = uuid;
         
-        if ( selectedPath != null ) {
+        if ( this.selecteUUID != null ) {
             
             wizard.setNextButtonEnabled(true);
             

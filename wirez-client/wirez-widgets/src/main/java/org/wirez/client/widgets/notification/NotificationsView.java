@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.Row;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
-import org.wirez.core.api.notification.Notification;
 
 public class NotificationsView extends Composite implements Notifications.View {
 

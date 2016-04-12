@@ -24,19 +24,19 @@ import org.uberfire.workbench.events.UberFireEvent;
  */
 public class LoadDiagramEvent implements UberFireEvent {
 
-    private String path;
+    private String uuid;
 
-    public LoadDiagramEvent(final String path) {
-        this.path = path;
+    public LoadDiagramEvent(final String uuid) {
+        this.uuid = uuid;
     }
 
-    public String getPath() {
-        return path;
+    public String getUUID() {
+        return uuid;
     }
 
     @Override
     public String toString() {
-        return "LoadDiagramEvent [path=" + path + "]";
+        return "LoadDiagramEvent [uuid=" + uuid + "]";
     }
 
 }

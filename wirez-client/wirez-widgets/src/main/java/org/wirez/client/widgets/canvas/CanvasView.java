@@ -19,45 +19,38 @@ import com.ait.lienzo.client.core.shape.GridLayer;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Line;
-import com.ait.lienzo.client.core.shape.wires.*;
+import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.wirez.client.shapes.AbstractWiresConnectorView;
-import org.wirez.client.shapes.AbstractWiresShapeView;
-import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.view.ShapeView;
 
 import javax.annotation.PostConstruct;
 
-/**
- * This is the root Canvas provided by Wirez
- */
-public class CanvasView extends Composite implements WiresCanvas.View {
+public class CanvasView extends Composite implements org.wirez.core.client.canvas.AbstractCanvas.View {
 
-    private FlowPanel mainPanel = new FlowPanel();
-    private FlowPanel toolsPanel = new FlowPanel();
-    private FocusableLienzoPanel panel;
+    protected FlowPanel mainPanel = new FlowPanel();
+    protected FlowPanel toolsPanel = new FlowPanel();
+    protected FocusableLienzoPanel panel;
     protected Layer canvasLayer = new Layer();
-    protected WiresManager wiresManager;
     protected org.wirez.core.client.canvas.Layer layer;
 
     @PostConstruct
     public void init() {
         initWidget( mainPanel );
-        wiresManager = WiresManager.get(canvasLayer);
     }
 
     @Override
-    public WiresCanvas.View init(final org.wirez.core.client.canvas.Layer layer) {
+    public org.wirez.core.client.canvas.AbstractCanvas.View init(final org.wirez.core.client.canvas.Layer layer) {
         this.layer = layer;
         layer.initialize( canvasLayer );
         return this;
     }
 
     @Override
-    public Canvas.View show(final int width, final int height, final int padding) {
+    public AbstractCanvas.View show(final int width, final int height, final int padding) {
         
         panel = new FocusableLienzoPanel( width + padding, height + padding );
         mainPanel.add(toolsPanel);
@@ -87,48 +80,31 @@ public class CanvasView extends Composite implements WiresCanvas.View {
     }
 
     @Override
-    public Canvas.View add(final IsWidget widget) {
+    public AbstractCanvas.View add(final IsWidget widget) {
         toolsPanel.add(widget);
         return this;
     }
 
     @Override
-    public WiresCanvas.View remove(final IsWidget widget) {
+    public org.wirez.core.client.canvas.AbstractCanvas.View remove(final IsWidget widget) {
         toolsPanel.remove(widget);
         return this;
     }
 
     @Override
-    public WiresCanvas.View addShape(final ShapeView<?> shapeView) {
-        if ( shapeView instanceof AbstractWiresShapeView) {
-            WiresShape wiresShape = (WiresShape) shapeView;
-            wiresManager.createMagnets(wiresShape);
-            wiresManager.registerShape(wiresShape);
-        } else if (shapeView instanceof AbstractWiresConnectorView) {
-            WiresConnector wiresConnector = (WiresConnector) shapeView;
-            wiresManager.registerConnector(wiresConnector);
-        } else {
-            wiresManager.getLayer().getLayer().add((IPrimitive<?>) shapeView);
-        }
+    public org.wirez.core.client.canvas.AbstractCanvas.View addShape(final ShapeView<?> shapeView) {
+        canvasLayer.add((IPrimitive<?>) shapeView);
         return this;
     }
 
     @Override
-    public WiresCanvas.View removeShape(final ShapeView<?> shapeView) {
-        if ( shapeView instanceof AbstractWiresShapeView ) {
-            WiresShape wiresShape = (WiresShape) shapeView;
-            wiresManager.deregisterShape(wiresShape);
-        } else if (shapeView instanceof AbstractWiresConnectorView) {
-            WiresConnector wiresConnector = (WiresConnector) shapeView;
-            wiresManager.deregisterConnector(wiresConnector);
-        } else {
-            wiresManager.getLayer().getLayer().remove((IPrimitive<?>) shapeView);
-        }
+    public org.wirez.core.client.canvas.AbstractCanvas.View removeShape(final ShapeView<?> shapeView) {
+        canvasLayer.getLayer().getLayer().remove((IPrimitive<?>) shapeView);
         return this;
     }
 
     @Override
-    public WiresCanvas.View addChildShape(final ShapeView<?> parent, final ShapeView<?> child) {
+    public org.wirez.core.client.canvas.AbstractCanvas.View addChildShape(final ShapeView<?> parent, final ShapeView<?> child) {
         final WiresShape parentShape = (WiresShape) parent;
         final WiresShape childShape = (WiresShape) child;
         parentShape.add( childShape );
@@ -136,22 +112,10 @@ public class CanvasView extends Composite implements WiresCanvas.View {
     }
 
     @Override
-    public WiresCanvas.View removeChildShape(final ShapeView<?> parent, final ShapeView<?> child) {
+    public org.wirez.core.client.canvas.AbstractCanvas.View removeChildShape(final ShapeView<?> parent, final ShapeView<?> child) {
         final WiresShape parentShape = (WiresShape) parent;
         final WiresShape childShape = (WiresShape) child;
         parentShape.remove( childShape );
-        return this;
-    }
-
-    @Override
-    public WiresCanvas.View setConnectionAcceptor(final IConnectionAcceptor connectionAcceptor) {
-        wiresManager.setConnectionAcceptor(connectionAcceptor);
-        return this;
-    }
-
-    @Override
-    public WiresCanvas.View setContainmentAcceptor(final IContainmentAcceptor containmentAcceptor) {
-        wiresManager.setContainmentAcceptor(containmentAcceptor);
         return this;
     }
 
@@ -171,12 +135,7 @@ public class CanvasView extends Composite implements WiresCanvas.View {
     }
 
     @Override
-    public WiresManager getWiresManager() {
-        return wiresManager;
-    }
-
-    @Override
-    public Canvas.View clear() {
+    public AbstractCanvas.View clear() {
         canvasLayer.clear();
         return this;
     }

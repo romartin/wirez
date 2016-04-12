@@ -1,99 +1,120 @@
 package org.wirez.core.client.service;
 
-import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.Caller;
-import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.jboss.errai.ioc.client.container.SyncBeanManager;
+import org.wirez.core.api.AbstractDiagramManager;
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.service.diagram.*;
+import org.wirez.core.api.lookup.LookupManager;
+import org.wirez.core.api.lookup.diagram.DiagramLookupRequest;
+import org.wirez.core.api.lookup.diagram.DiagramRepresentation;
+import org.wirez.core.api.registry.DiagramRegistry;
+import org.wirez.core.api.registry.List;
+import org.wirez.core.api.remote.DiagramLookupService;
+import org.wirez.core.api.remote.DiagramService;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Collection;
 
+/**
+ * Provides the client side and remote caller for the diagram manager and services.
+ * If the requested manager is present on client side, it will use the manager's service 
+ * in order to perform the operation. 
+ */
 @ApplicationScoped
-public class ClientDiagramServices {
-    
-    Caller<DiagramService> diagramService;
+public class ClientDiagramServices extends AbstractDiagramManager<Diagram> {
 
-    public ClientDiagramServices() {
+    SyncBeanManager beanManager;
+    DefinitionManager definitionManager;
+    Caller<DiagramService> diagramServiceCaller;
+    Caller<DiagramLookupService> diagramLookupServiceCaller;
+    
+    protected ClientDiagramServices() {
+
     }
 
     @Inject
-    public ClientDiagramServices(Caller<DiagramService> diagramService) {
-        this.diagramService = diagramService;
+    public ClientDiagramServices(final SyncBeanManager beanManager,
+                                 final DefinitionManager definitionManager,
+                                 final Caller<DiagramService> diagramServiceCaller,
+                                 final Caller<DiagramLookupService> diagramLookupServiceCaller,
+                                 final @List DiagramRegistry<Diagram> registry) {
+        super( registry );
+        this.beanManager = beanManager;
+        this.definitionManager = definitionManager;
+        this.diagramServiceCaller = diagramServiceCaller;
+        this.diagramLookupServiceCaller = diagramLookupServiceCaller;
     }
 
-    public void search(final String query,
-                       final ServiceCallback<Collection<DiagramRepresentation>> callback) {
+    @PostConstruct
+    public void init() {
 
-        diagramService.call(new RemoteCallback<DiagramsServiceResponse>() {
-            @Override
-            public void callback(final DiagramsServiceResponse response) {
-                callback.onSuccess(response.getDiagramRepresentations());
-            }
-        }, (message, throwable) -> {
-                callback.onError(new ClientRuntimeError(throwable));
-                return false;
-        }).search(new DiagramServiceSearchRequestImpl( query ));
+    }
+
+    public void update(final Diagram diagram, final ServiceCallback<Diagram> callback ) {
+
+        if ( registry.contains( diagram ) ) {
+            
+            registry.update( diagram );
+            
+            diagramServiceCaller.call(v -> callback.onSuccess (diagram ), (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; }).update( diagram );
+            
+        } else {
+            
+            add( diagram, callback );
+            
+        }
+        
+    }
+
+    public void add(final Diagram diagram, final ServiceCallback<Diagram> callback ) {
+
+        if ( !registry.contains( diagram ) ) {
+
+            registry.add( diagram );
+
+            diagramServiceCaller.call(v -> callback.onSuccess (diagram ), (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; } ).update( diagram );
+            
+        }
+
+    }
+
+    public void get(final String uuid, final ServiceCallback<Diagram> callback ) {
+
+        final Diagram registryDiagram = registry.get( uuid );
+        
+        if ( null != registryDiagram ) {
+
+            callback.onSuccess( registryDiagram );
+
+        } else {
+
+            diagramServiceCaller.call(new RemoteCallback<Diagram>() {
+                @Override
+                public void callback(final Diagram diagram) {
+                    
+                    ClientDiagramServices.this.registry.add( diagram );
+                    callback.onSuccess( diagram );
+                }
+            }, (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; }).get( uuid );
+
+        }
 
     }
     
-    public void create(final String defSetId,
-                       final String shapeSetId,
-                       final String title, final ServiceCallback<Diagram> callback) {
-        
-        diagramService.call(new RemoteCallback<DiagramServiceResponse>() {
+    public void lookup(final DiagramLookupRequest request, final ServiceCallback<LookupManager.LookupResponse<DiagramRepresentation>> callback ) {
+
+        diagramLookupServiceCaller.call(new RemoteCallback<LookupManager.LookupResponse<DiagramRepresentation>>() {
             @Override
-            public void callback(final DiagramServiceResponse response) {
-                callback.onSuccess(response.getDiagram());
+            public void callback(final LookupManager.LookupResponse<DiagramRepresentation> response) {
+
+                callback.onSuccess( response );
             }
-        }, (message, throwable) -> {
-                callback.onError(new ClientRuntimeError(throwable));
-                return false;
-        }).create(new DiagramServiceCreateRequestImpl(defSetId, shapeSetId, title));
+        }, (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; }).lookup( request );
         
     }
-
-    public void load(final String path,
-                   final ServiceCallback<Diagram> callback) {
-
-        diagramService.call(new RemoteCallback<DiagramServiceResponse>() {
-            @Override
-            public void callback(final DiagramServiceResponse response) {
-                callback.onSuccess(response.getDiagram());
-            }
-        }, (message, throwable) -> {
-                callback.onError(new ClientRuntimeError(throwable));
-                return false;
-        }).load(new DiagramServiceLoadRequestImpl(path));
-
-    }
-
-    public void save(final Diagram diagram,
-                    final ServiceCallback<Diagram> callback) {
-
-        diagramService.call(aVoid -> callback.onSuccess(diagram), 
-                (message, throwable) -> {
-                    callback.onError(new ClientRuntimeError(throwable));
-                    return false;
-        }).save(new DiagramServiceSaveRequestImpl(diagram));
-
-    }
-
-    public void delete(final String uuid,
-                     final ServiceCallback<Diagram> callback) {
-
-        diagramService.call(new RemoteCallback<Diagram>() {
-            @Override
-            public void callback(final Diagram diagram) {
-                callback.onSuccess(diagram);
-            }
-        }, (message, throwable) -> {
-                callback.onError(new ClientRuntimeError(throwable));
-                return false;
-        }).delete(new DiagramServiceDeleteRequestImpl(uuid));
-
-    }
+    
     
 }

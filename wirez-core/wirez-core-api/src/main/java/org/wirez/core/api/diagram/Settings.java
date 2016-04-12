@@ -8,8 +8,8 @@ public interface Settings {
     
     String getShapeSetId();
     
-    String getPath();
+    String getVFSPath();
     
-    void setPath( String path );
+    void setVFSPath(String path );
     
 }

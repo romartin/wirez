@@ -17,29 +17,51 @@
 package org.wirez.core.client.canvas.wires;
 
 import com.google.gwt.logging.client.LogConfiguration;
+import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.graph.command.GraphCommandManager;
+import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.api.rule.Default;
+import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.listener.CanvasListener;
-import org.wirez.core.client.canvas.settings.CanvasViewSettings;
+import org.wirez.core.client.service.ClientFactoryServices;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Lightweight wires canvas handler class that do no provide shape controls neither rule constrains.
+ */
 @Dependent
-public class WiresCanvasViewHandler extends AbstractWiresCanvasHandler<CanvasViewSettings, CanvasListener> {
+public class WiresCanvasViewHandler<D extends Diagram, C extends WiresCanvas> extends AbstractCanvasHandler<D, C, CanvasListener> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.wires.WiresCanvasViewHandler");
+    private static Logger LOGGER = Logger.getLogger(WiresCanvasViewHandler.class.getName());
 
     @Inject
-    public WiresCanvasViewHandler(final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
-                                  final ShapeManager shapeManager,
+    public WiresCanvasViewHandler(final ClientDefinitionManager clientDefinitionManager,
+                                  final ClientFactoryServices clientFactoryServices,
+                                  final @Default  RuleManager ruleManager,
+                                  final GraphCommandManager graphCommandManager,
+                                  final GraphCommandFactory graphCommandFactory,
                                   final GraphUtils graphUtils,
-                                  final CanvasCommandFactory commandFactory) {
-        super(treeWalkTraverseProcessor, shapeManager, graphUtils, commandFactory);
+                                  final IncrementalIndexBuilder indexBuilder,
+                                  final CanvasCommandFactory commandFactory,
+                                  final TreeWalkTraverseProcessor treeWalkTraverseProcessor, 
+                                  final ShapeManager shapeManager,
+                                  final CanvasCommandManager<AbstractCanvasHandler> commandManager) {
+        
+        super( clientDefinitionManager, clientFactoryServices, ruleManager, graphCommandManager,
+                graphCommandFactory, graphUtils, indexBuilder, commandFactory, treeWalkTraverseProcessor, 
+                shapeManager, commandManager);
     }
 
     private void log(final Level level, final String message) {

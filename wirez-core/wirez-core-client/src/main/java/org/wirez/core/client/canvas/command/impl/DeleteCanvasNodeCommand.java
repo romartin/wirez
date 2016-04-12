@@ -5,28 +5,25 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
-import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
-import org.wirez.core.client.canvas.command.HasGraphCommand;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 
 import java.util.List;
 
-public class DeleteCanvasNodeCommand extends DeleteCanvasElementCommand<Node> implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
+public final class DeleteCanvasNodeCommand extends DeleteCanvasElementCommand<Node> {
 
-    public DeleteCanvasNodeCommand(final CanvasCommandFactory canvasCommandFactory, final Node candidate) {
-        super(canvasCommandFactory, candidate);
+    public DeleteCanvasNodeCommand(final Node candidate) {
+        super( candidate );
     }
 
     @Override
-    protected void doDeregister(WiresCanvasHandler context) {
+    protected void doDeregister(AbstractCanvasHandler context) {
         super.doDeregister(context);
         final IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> indexBuilder = context.getIndexBuilder();
         if ( indexBuilder instanceof IncrementalIndexBuilder) {
@@ -47,18 +44,18 @@ public class DeleteCanvasNodeCommand extends DeleteCanvasElementCommand<Node> im
         }
         return null;
     }
-    
+
 
     @Override
-    public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
-        return factory.SAFE_DELETE_NODE(canvasHandler.getDiagram().getGraph(), candidate);
+    protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(final AbstractCanvasHandler context) {
+        return context.getGraphCommandFactory().SAFE_DELETE_NODE(context.getDiagram().getGraph(), candidate);
     }
 
     @Override
-    public CommandResult<CanvasCommandViolation> undo(WiresCanvasHandler context) {
-        final Command<WiresCanvasHandler, CanvasCommandViolation> command = parent != null ?
-                canvasCommandFactory.ADD_CHILD_NODE( parent, candidate, factory) : 
-                canvasCommandFactory.ADD_NODE( candidate, factory);
+    public CommandResult<CanvasViolation> undo(AbstractCanvasHandler context) {
+        final Command<AbstractCanvasHandler, CanvasViolation> command = parent != null ?
+                context.getCommandFactory().ADD_CHILD_NODE( parent, candidate, factory) :
+                context.getCommandFactory().ADD_NODE( candidate, factory);
         return command.execute( context );
     }
 }

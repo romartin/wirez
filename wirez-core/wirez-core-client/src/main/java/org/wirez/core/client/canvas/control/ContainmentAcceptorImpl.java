@@ -3,11 +3,11 @@ package org.wirez.core.client.canvas.control;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.relationship.Child;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
 
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 @Dependent
 public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasHandler> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.control.ContainmentAcceptorImpl");
+    private static Logger LOGGER = Logger.getLogger(ContainmentAcceptorImpl.class.getName());
 
     CanvasCommandFactory commandFactory;
 
@@ -41,8 +41,9 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
             log(Level.FINE, "Is same parent. isAllow=true");
             isAllow = true;
         } else {
-            final Command<WiresCanvasHandler, CanvasCommandViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
-            isAllow = canvasHandler.allow( command );
+            final Command<AbstractCanvasHandler, CanvasViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
+            CommandResult<CanvasViolation> violations = canvasHandler.allow( command );
+            isAllow = isAccept(violations);
             log(Level.FINE, "isAllow=" + isAllow);
         }
         
@@ -62,13 +63,13 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
 
             // Remove current child relationship.
             if ( null != childEdge ) {
-                // TODO: Check command results?
-                canvasHandler.execute( commandFactory.DELETE_CHILD_EDGE( childEdge.getSourceNode() , child ) );
+                // TODO: Check command results
+                CommandResult<CanvasViolation> result = canvasHandler.execute( commandFactory.DELETE_CHILD_EDGE( childEdge.getSourceNode() , child ) );
             }
 
             // Add a new child relationship.
-            final Command<WiresCanvasHandler, CanvasCommandViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
-            final CommandResults<CanvasCommandViolation> violations = canvasHandler.execute( command );
+            final Command<AbstractCanvasHandler, CanvasViolation> command = commandFactory.ADD_CHILD_EDGE(parent,child);
+            final CommandResult<CanvasViolation> violations = canvasHandler.execute( command );
             isAccept = isAccept(violations);
             
         }
@@ -105,10 +106,8 @@ public class ContainmentAcceptorImpl implements ContainmentAcceptor<WiresCanvasH
         return null;
     }
 
-    private boolean isAccept(final CommandResults<CanvasCommandViolation> results) {
-        final boolean hasCommandErrors = results.results(CommandResult.Type.ERROR) != null
-                && results.results(CommandResult.Type.ERROR).iterator().hasNext();
-        return !hasCommandErrors;
+    private boolean isAccept(final CommandResult<CanvasViolation> result) {
+        return !CommandResult.Type.ERROR.equals( result.getType() );
     }
 
     private void log(final Level level, final String message) {

@@ -6,7 +6,6 @@ import org.uberfire.client.mvp.UberView;
 import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.event.CreateEmptyDiagramEvent;
 import org.wirez.client.widgets.wizard.BaseWizardScreen;
-import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.client.widgets.wizard.CanvasWizardScreen;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;

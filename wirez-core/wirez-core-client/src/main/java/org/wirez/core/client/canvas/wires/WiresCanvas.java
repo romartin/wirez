@@ -19,295 +19,45 @@ package org.wirez.core.client.canvas.wires;
 import com.ait.lienzo.client.core.shape.wires.IConnectionAcceptor;
 import com.ait.lienzo.client.core.shape.wires.IContainmentAcceptor;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.ui.IsWidget;
-import org.wirez.core.client.HasDecorators;
-import org.wirez.core.client.Shape;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
-import org.wirez.core.client.animation.ShapeSelectionAnimation;
-import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.Layer;
-import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.canvas.control.SelectionManager;
+import org.wirez.core.client.canvas.lienzo.Lienzo;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
-import org.wirez.core.client.impl.BaseConnector;
-import org.wirez.core.client.view.HasCanvasState;
-import org.wirez.core.client.view.ShapeView;
-import org.wirez.core.client.view.event.MouseClickEvent;
-import org.wirez.core.client.view.event.MouseClickHandler;
-import org.wirez.core.client.view.event.ViewEventType;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Canvas impl based on Lienzo Wires.
+ * Lienzo "Wires" based Canvas .
  */
-public abstract class WiresCanvas implements Canvas, SelectionManager<Shape> {
+public abstract class WiresCanvas extends AbstractCanvas<WiresCanvas.View> {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.canvas.wires.WiresCanvas");
+    private static Logger LOGGER = Logger.getLogger(WiresCanvas.class.getName());
 
-    public interface View extends IsWidget {
+    public interface View extends AbstractCanvas.View {
 
-        View init(Layer layer);
-        
-        View show(int width, int height, int padding);
-
-        View add(IsWidget widget);
-
-        View remove(IsWidget widget);
-
-        View addShape(ShapeView<?> shapeView);
-        
-        View removeShape(ShapeView<?> shapeView);
-        
-        View addChildShape(ShapeView<?> parent, ShapeView<?> child);
-
-        View removeChildShape(ShapeView<?> parent, ShapeView<?> child);
-        
         View setConnectionAcceptor(IConnectionAcceptor connectionAcceptor);
         
         View setContainmentAcceptor(IContainmentAcceptor containmentAcceptor);
         
-        double getAbsoluteX();
-
-        double getAbsoluteY();
-        
-        Layer getLayer();
-        
         WiresManager getWiresManager();
         
-        View clear();
-
     }
     
-    public static final long ANIMATION_SELECTION_DURATION = 250;
-
-    protected Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent;
-    protected Layer layer;
-    protected View view;
-    protected List<Shape> shapes = new ArrayList<Shape>();
-    protected List<Shape> selectedShapes = new ArrayList<Shape>();
-
     @Inject
     public WiresCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent,
-                       final Layer layer,
+                       final @Lienzo Layer layer,
                        final View view) {
-        this.canvasShapeStateModifiedEvent = canvasShapeStateModifiedEvent;
-        this.layer = layer;
-        this.view = view;
+        super( canvasShapeStateModifiedEvent, layer, view );
     }
-
-    public void init() {
-        view.init(layer);
-        layer.addHandler(ViewEventType.MOUSE_CLICK, new MouseClickHandler() {
-            @Override
-            public void handle(final MouseClickEvent event) {
-                clearSelection();
-                fireCanvasSelected();
-            }
-        });
-    }
-
-    @Override
-    public List<Shape> getShapes() {
-        return shapes;
-    }
-
-    public Shape getShape(final String id) {
-        if ( null != shapes) {
-            for (final Shape shape : shapes) {
-                if (shape.getId().equals(id)) return shape;
-            }
-        }
-        return null;
-    }
-
-    public Canvas addChildShape(final Shape parent, final Shape child) {
-        getView().addChildShape(parent.getShapeView(), child.getShapeView());
-        log(Level.FINE, "Adding child [" + child.getId() + "] into parent [" + parent.getId()  + "]");
-        return this;
-    }
-
-    public Canvas removeChildShape(final Shape parent, final Shape child) {
-        getView().removeChildShape(parent.getShapeView(), child.getShapeView());
-        log(Level.FINE, "Removing child [" + child.getId() + "] from parent [" + parent.getId()  + "]");
-        return this;
-    }
-    
-    @Override
-    public Canvas addShape(final Shape shape) {
-
-        if (shape.getId() == null) {
-            shape.setId(org.wirez.core.api.util.UUID.uuid());
-        }
-
-        log(Level.FINE, "BaseCanvas#register - " + shape.toString() + " [id=" + shape.getId() + "]");
-
-        shape.getShapeView().setUUID(shape.getId());
-        view.addShape( shape.getShapeView() );
-
-        shapes.add( shape );
-
-        return this;
-    }
-
-    public double getAbsoluteX() {
-        return view.getAbsoluteX();
-    }
-
-    public double getAbsoluteY() {
-        return view.getAbsoluteY();
-    }
-    
-    @Override
-    public Layer getLayer() {
-        return layer;
-    }
-
-    @Override
-    public Canvas deleteShape(final Shape shape) {
-        
-        log(Level.FINE, "BaseCanvas#deregister - " + shape.toString() + " [id=" + shape.getId() + "]");
-        
-        view.removeShape( shape.getShapeView() );
-
-        shapes.remove(shape);
-        
-        return this;
-    }
-    
-    @Override
-    public WiresCanvas draw() {
-        view.getLayer().draw();
-        return this;
-    }
-
-    public WiresCanvas clear() {
-
-        if ( !shapes.isEmpty() ) {
-            final List<Shape> shapesToRemove = new LinkedList<>(shapes);
-            // Clear shapes.
-            for (Shape shape : shapesToRemove) {
-                deleteShape(shape);
-            }
-
-            // Clear state.
-            shapes.clear();
-            
-        }
-
-        if ( !selectedShapes.isEmpty() ) {
-            selectedShapes.clear();
-        }
-        
-        return this;
-    }
-    
-    /*
-        ******************************************
-        *       Selection management
-        ******************************************
-     */
-
-    @Override
-    public SelectionManager<Shape> select(final Shape shape) {
-        selectedShapes.add(shape);
-        updateViewShapesState().draw();
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, shape, ShapeState.SELECTED));
-        return this;
-    }
-
-    @Override
-    public SelectionManager<Shape> deselect(final Shape shape) {
-        selectedShapes.remove(shape);
-        updateViewShapesState().draw();
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, shape, ShapeState.DESELECTED));
-        return this;
-    }
-
-    @Override
-    public boolean isSelected(final Shape shape) {
-        return shape != null && selectedShapes.contains(shape);
-    }
-
-    @Override
-    public Collection<Shape> getSelectedItems() {
-        return Collections.unmodifiableCollection(selectedShapes);
-    }
-
-    @Override
-    public SelectionManager<Shape> clearSelection() {
-        for (final Shape shape : selectedShapes) {
-            deselectShape(shape);
-        }
-        selectedShapes.clear();
-        draw();
-        return this;
-    }
-
-    protected void selectShape(final Shape shape) {
-        
-        if (shape.getShapeView() instanceof HasCanvasState) {
-            final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
-            canvasStateMutation.applyState(ShapeState.SELECTED);
-        } else if (shape.getShapeView() instanceof HasDecorators) {
-            new ShapeSelectionAnimation(shape)
-                    .setCanvas(WiresCanvas.this)
-                    .setDuration(ANIMATION_SELECTION_DURATION)
-                    .run();
-        }
-    }
-
-    protected void deselectShape(final Shape shape) {
-        final boolean isConnector = shape instanceof BaseConnector;
-
-        if (shape.getShapeView() instanceof HasCanvasState) {
-            final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
-            canvasStateMutation.applyState(ShapeState.DESELECTED);
-        } else if (shape.getShapeView() instanceof HasDecorators) {
-            new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK)
-                    .setCanvas(WiresCanvas.this)
-                    .setDuration(ANIMATION_SELECTION_DURATION)
-                    .run();
-        }
-    }
-
-    protected WiresCanvas updateViewShapesState() {
-        final List<Shape> shapes = getShapes();
-        for (final Shape shape : shapes) {
-            final boolean isSelected = !selectedShapes.isEmpty() && selectedShapes.contains(shape);
-            if (isSelected) {
-                selectShape(shape);
-            } else {
-                deselectShape(shape);
-            }
-        }
-        return this;
-    }
-    
-    protected void fireCanvasSelected() {
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, null, ShapeState.SELECTED));
-    }
-
-    /*
-        ******************************************
-        *       Other helper methods.
-        ******************************************
-     */
 
     public WiresManager getWiresManager() {
         return view.getWiresManager();
     }
 
-    public View getView() {
-        return view;
-    }
-    
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

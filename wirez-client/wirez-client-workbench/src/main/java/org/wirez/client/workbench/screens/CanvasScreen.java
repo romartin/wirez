@@ -35,31 +35,33 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.widgets.canvas.Canvas;
 import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.diagram.Settings;
+import org.wirez.core.api.diagram.SettingsImpl;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
-import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.api.rule.Empty;
+import org.wirez.core.api.rule.EmptyRuleManager;
+import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.util.UUID;
 import org.wirez.core.api.util.WirezLogger;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.Shape;
-import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.control.SelectionManager;
-import org.wirez.core.client.canvas.settings.CanvasSettingsFactory;
-import org.wirez.core.client.canvas.settings.WiresCanvasSettings;
+import org.wirez.core.client.canvas.lienzo.LienzoLayer;
+import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
-import org.wirez.core.client.canvas.wires.WiresLayer;
 import org.wirez.core.client.factory.ShapeFactory;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientFactoryServices;
@@ -82,7 +84,7 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 @WorkbenchScreen(identifier = CanvasScreen.SCREEN_ID )
 public class CanvasScreen {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.client.workbench.screens.CanvasScreen");
+    private static Logger LOGGER = Logger.getLogger(CanvasScreen.class.getName());
     
     public static final String SCREEN_ID = "CanvasScreen";
 
@@ -91,14 +93,11 @@ public class CanvasScreen {
     }
 
     @Inject
-    Canvas canvas;
+    WiresCanvas canvas;
 
     @Inject
-    WiresCanvasHandler canvasHandler;
+    WiresCanvasHandler<Diagram, WiresCanvas> canvasHandler;
     
-    @Inject
-    CanvasSettingsFactory settingsFactory;
-
     @Inject
     ClientDefinitionManager clientDefinitionManager;
     
@@ -109,18 +108,13 @@ public class CanvasScreen {
     ClientDiagramServices clientDiagramServices;
     
     @Inject
-    ShapeManager shapeManager;
-
-    @Inject
-    CanvasCommandFactory canvasCommandFactory;
-
-    @Inject
     ErrorPopupPresenter errorPopupPresenter;
 
     @Inject
     PlaceManager placeManager;
     
     @Inject
+    @Empty
     EmptyRuleManager emptyRuleManager;
 
     @Inject
@@ -141,36 +135,28 @@ public class CanvasScreen {
 
     }
 
-    /**
-     * Expected settings:
-     * - existing diagram
-     *      - path
-     * - new diagram
-     *      - defSetId
-     *      - shapeSetId
-     *      - title
-     */
     @OnStartup
     public void onStartup(final PlaceRequest placeRequest) {
 
         this.placeRequest = placeRequest;
-        final String path = placeRequest.getParameter( "path", "" );
+        final String _uuid = placeRequest.getParameter( "uuid", "" );
 
         CanvasScreen.this.menu = makeMenuBar();
         
-        
-        
-        final boolean isCreate = path == null || path.trim().length() == 0;
+        final boolean isCreate = _uuid == null || _uuid.trim().length() == 0;
         
         if (isCreate) {
 
             final String defSetId = placeRequest.getParameter( "defSetId", "" );
-            final String shapeSetUUID = placeRequest.getParameter( "shapeSetId", "" );
+            final String shapeSetd = placeRequest.getParameter( "shapeSetId", "" );
             final String title = placeRequest.getParameter( "title", "" );
-
-            clientDiagramServices.create(defSetId, shapeSetUUID, title, new ServiceCallback<Diagram>() {
+            
+            
+            clientFactoryServices.newGraph(UUID.uuid(), defSetId, new ServiceCallback<Graph>() {
                 @Override
-                public void onSuccess(final Diagram diagram) {
+                public void onSuccess(final Graph graph) {
+                    final Settings diagramSettings = new SettingsImpl( title, defSetId, shapeSetd );
+                    Diagram<Graph, Settings> diagram = clientFactoryServices.newDiagram( UUID.uuid(), graph, diagramSettings );
                     open(diagram);
                 }
 
@@ -179,10 +165,10 @@ public class CanvasScreen {
                     showError(error);
                 }
             });
-            
+
         } else {
          
-            clientDiagramServices.load(path, new ServiceCallback<Diagram>() {
+            clientDiagramServices.get(_uuid, new ServiceCallback<Diagram>() {
                 @Override
                 public void onSuccess(final Diagram diagram) {
                     open(diagram);
@@ -190,7 +176,7 @@ public class CanvasScreen {
 
                 @Override
                 public void onError(final ClientRuntimeError error) {
-                    showError(error);
+                    showError( error );
                 }
             });
             
@@ -201,16 +187,12 @@ public class CanvasScreen {
     private void open(final Diagram diagram) {
 
         final String title = diagram.getSettings().getTitle();
-        final Graph graph = diagram.getGraph();
         
-        final DefinitionSet definitionSetContent = (DefinitionSet) graph.getContent();
+        // Create the canvas with a fixed size.
+        canvas.initialize( 1000, 1000 );
         
-        // Show the graph a canvas instance.
-        WiresCanvasSettings settings = settingsFactory.getDefaultSettings();
-
-        canvas.show( 1000, 1000 );
-        
-        canvasHandler.initialize(canvas, diagram, settings);
+        // Draw the graph on the canvas.
+        canvasHandler.draw(diagram, canvas);
 
         // Change screen title.
         CanvasScreen.this.title = title;
@@ -281,7 +263,7 @@ public class CanvasScreen {
     }
 
     private Command getSaveCommand() {
-        return () -> clientDiagramServices.save(canvasHandler.getDiagram(), new ServiceCallback<Diagram>() {
+        return () -> clientDiagramServices.update(canvasHandler.getDiagram(), new ServiceCallback<Diagram>() {
             @Override
             public void onSuccess(final Diagram item) {
                 Window.alert("Diagram saved successfully");                
@@ -300,7 +282,7 @@ public class CanvasScreen {
             public void execute() {
 
                 if ( null == mousePointerCoordsHandlerReg ) {
-                    final WiresLayer wiresLayer = (WiresLayer) canvasHandler.getCanvas().getLayer();
+                    final LienzoLayer wiresLayer = (LienzoLayer) canvasHandler.getCanvas().getLayer();
                     mousePointerCoordsHandlerReg = wiresLayer.getLienzoLayer().addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
                         @Override
                         public void onNodeMouseMove(NodeMouseMoveEvent nodeMouseMoveEvent) {
@@ -333,7 +315,7 @@ public class CanvasScreen {
 
     private Command getSaveRestoreStateCommand() {
         return () -> {
-            WiresLayer wiresLayer = (WiresLayer) canvas.getLayer();
+            LienzoLayer wiresLayer = (LienzoLayer) canvas.getLayer();
             Context2D context = wiresLayer.getLienzoLayer().getContext();
             if ( isStateSaved ) {
                 context.restore();
@@ -348,7 +330,7 @@ public class CanvasScreen {
     }
 
     private Command getClearGridCommand() {
-        return () -> CanvasScreen.this.execute( canvasCommandFactory.CLEAR_CANVAS() );
+        return () -> CanvasScreen.this.execute( canvasHandler.getCommandFactory().CLEAR_CANVAS() );
     }
 
     private Command getClearSelectionCommand() {
@@ -365,11 +347,11 @@ public class CanvasScreen {
                         element = canvasHandler.getGraphIndex().getEdge(shape.getId());
                         if (element != null) {
                             log(Level.FINE, "Deleting edge with id " + element.getUUID());
-                            CanvasScreen.this.execute( canvasCommandFactory.DELETE_EDGE( (Edge) element ));
+                            CanvasScreen.this.execute( canvasHandler.getCommandFactory().DELETE_EDGE( (Edge) element ));
                         }
                     } else {
                         log(Level.FINE, "Deleting node with id " + element.getUUID());
-                        CanvasScreen.this.execute( canvasCommandFactory.DELETE_NODE( (Node) element ));
+                        CanvasScreen.this.execute( canvasHandler.getCommandFactory().DELETE_NODE( (Node) element ));
 
                     }
                 }
@@ -409,12 +391,12 @@ public class CanvasScreen {
         }
     };
     
-    private void execute(final org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> command) {
+    private void execute(final org.wirez.core.api.command.Command<AbstractCanvasHandler, CanvasViolation> command) {
         canvasHandler.execute( command );
     }
     
     private void undo() {
-        canvasHandler.undo();
+        canvasHandler.undo( );
     }
 
     private void resumeGraph() {
@@ -449,7 +431,7 @@ public class CanvasScreen {
 
     @WorkbenchPartView
     public IsWidget getWidget() {
-        return canvas;
+        return canvas.getView();
     }
 
     @WorkbenchContextId
@@ -477,7 +459,7 @@ public class CanvasScreen {
         
         final DefinitionAdapter definitionAdapter = clientDefinitionManager.getDefinitionAdapter( definition. getClass() );
         final String defId = definitionAdapter.getId( definition );
-        clientFactoryServices.element(org.wirez.core.api.util.UUID.uuid(), defId, new ServiceCallback<Element>() {
+        clientFactoryServices.newElement(org.wirez.core.api.util.UUID.uuid(), defId, new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element element) {
                 double x = _x > -1 ? _x : 100d;
@@ -494,28 +476,31 @@ public class CanvasScreen {
                     }
                 }
 
-                org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> command = null;
+                org.wirez.core.api.command.Command<AbstractCanvasHandler, CanvasViolation> command = null;
                 if ( element instanceof Node) {
 
                     if ( null != parent ) {
-                        command = canvasCommandFactory.ADD_CHILD_NODE( parent, (Node) element, factory );
+                        command = canvasHandler.getCommandFactory().ADD_CHILD_NODE( parent, (Node) element, factory );
                     } else {
-                        command = canvasCommandFactory.ADD_NODE((Node) element, factory);
+                        command = canvasHandler.getCommandFactory().ADD_NODE((Node) element, factory);
                     }
 
                 } else if ( element instanceof Edge && null != parent ) {
-                    command = canvasCommandFactory.ADD_EDGE( parent, (Edge) element, factory );
+                    command = canvasHandler.getCommandFactory().ADD_EDGE( parent, (Edge) element, factory );
                 } else {
                     throw new RuntimeException("Unrecognized element type for " + element);
                 }
 
                 // Execute both add element and move commands in batch, so undo will be done in batch as well.
-                org.wirez.core.api.command.Command<WiresCanvasHandler, CanvasCommandViolation> moveCanvasElementCommand =
-                        canvasCommandFactory.UPDATE_POSITION(element, x ,y);
+                org.wirez.core.api.command.Command<AbstractCanvasHandler, CanvasViolation> moveCanvasElementCommand =
+                        canvasHandler.getCommandFactory().UPDATE_POSITION(element, x ,y);
 
                 // TODO: Use no rules.
                 // canvasHandler.getCommandManager().execute( emptyRuleManager, command, moveCanvasElementCommand);
-                canvasHandler.execute( command, moveCanvasElementCommand);
+                canvasHandler
+                        .batch( command)
+                        .batch( moveCanvasElementCommand )
+                        .executeBatch();
             }
 
             @Override

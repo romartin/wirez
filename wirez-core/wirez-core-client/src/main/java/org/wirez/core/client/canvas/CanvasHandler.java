@@ -18,28 +18,27 @@ package org.wirez.core.client.canvas;
 
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.client.canvas.listener.CanvasListener;
-import org.wirez.core.client.canvas.settings.CanvasSettings;
 
-public interface CanvasHandler<C extends Canvas, S extends CanvasSettings, L extends CanvasListener> {
-
-    /**
-     * Load a given graph and displays it into the canvas..
-     */
-    CanvasHandler<C, S, L> initialize(C canvas, Diagram<?> diagram, S settings);
+public interface CanvasHandler<D extends Diagram, C extends Canvas, L extends CanvasListener> {
 
     /**
-     * Listens to events from elements in the canvas.
+     * Loads the given diagram and displays it on the canvas..
      */
-    CanvasHandler<C, S, L> addListener(L listener);
+    CanvasHandler<D, C, L> draw( D diagram, C canvas );
 
     /**
-     * The managed canvas instance.
+     * Listens to events from this canvas handler.
      */
-    C getCanvas();
+    CanvasHandler<D, C, L> addListener( L listener );
 
     /**
      * The managed diagram instance.
      */
-    Diagram<?> getDiagram();
+    D getDiagram();
+    
+    /**
+     * The managed canvas instance.
+     */
+    C getCanvas();
     
 }

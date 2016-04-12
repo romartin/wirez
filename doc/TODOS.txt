@@ -1,22 +1,31 @@
 - End2end
 *************
 
-    - Undo command if user action not allowed - redo canvas state
-        - drag control + failed command -> use dragContxt.reset()?
     - BPMN Marshalling 
         -> saved bound x/y coordinates and size (is negative) on bpmn file are not the right ones
         -> simplify to avoid creating classes for each new definition...
         -> mock / stub for existing unit tests
-    - Dynamic forms integration
-    - Factories - child/view/parent edges ( use factories in commands, etc - avoid new operators )
     
     - Usability
+        - dragging constrained just for diagram bounds?
+        - Load diagram screen
+            - Design
+            - Pagination
+        - Notifcations
+            - Design
+            - Pagination
+            
 
     - Split API module - extract impls?
-        
-    - sync/async command managers
     
+    - Commands
+            - UNDO's
+                - ClearGraph
+                - SetConnectionSourceNodeCommand
+                - SetConnectionTargetNodeCommand
+                
     - Client
+        - Shape controls refactoring
         - ShapeFactory#accepts forces to build a model instance from the id ( see Palette#getDefinition )
         
 - Lienzo
@@ -29,6 +38,7 @@
         - Examples
             - Resize -> http://screencast.com/t/TjRkYpMvt
             - Align -> http://screencast.com/t/62lCjZGYDq7i
+        - Drag event -> cannot get the DragContext
 
     - Shape order ( flows, parent/child nodes, etc )
     - review wires containment. Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
@@ -82,6 +92,9 @@
             - builders
                 - mark as @NonPortable
                 - auto generate when using annotated models?
+        - avoid @Portable and @Bindable and generate the Errai.properties for the annotated pojos.
+        
+    - Graph Processors - declare as @Remote ifaces
 
     - Commands
         - ensure only single parent/edge connections between nodes

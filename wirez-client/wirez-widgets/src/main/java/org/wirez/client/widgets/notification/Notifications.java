@@ -19,7 +19,6 @@ package org.wirez.client.widgets.notification;
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.HasData;
@@ -31,12 +30,12 @@ import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.CommandResults;
-import org.wirez.core.api.event.NotificationEvent;
-import org.wirez.core.api.notification.Notification;
-import org.wirez.core.client.canvas.command.CanvasCommandResult;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
-import org.wirez.core.client.notification.AbstractCanvasCommandNotification;
+import org.wirez.core.api.command.batch.BatchCommandResult;
+import org.wirez.core.api.event.command.AbstractGraphCommandEvent;
+import org.wirez.core.api.event.local.CommandExecutedEvent;
+import org.wirez.core.api.event.local.IsCommandAllowedEvent;
+import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -201,17 +200,11 @@ public class Notifications implements IsWidget {
                 contextCell) {
             @Override
             public String getValue(final Notification object) {
-                return object.getSource() != null ? object.getSource() : "-- No Context --";
+                return object.getSource() != null ? object.getSource().toString() : "-- No Context --";
             }
         };
-        contextColumn.setSortable(true);
-        sortHandler.setComparator(contextColumn, new Comparator<Notification>() {
-            @Override
-            public int compare(Notification o1, Notification o2) {
-                return o1.getSource().compareTo(o2.getSource());
-            }
-        });
-
+        contextColumn.setSortable(false);
+        
         return contextColumn;
     }
 
@@ -226,25 +219,31 @@ public class Notifications implements IsWidget {
             }
         };
         messageColumn.setSortable(false);
+        
         return messageColumn;
     }
     
     private String getNotificationText(final Notification object) {
-        
-        if ( null != object.getContext() && object.getContext() instanceof CommandResults ) {
-            return getMessage((CommandResults<CanvasCommandViolation>) object.getContext());
+        if ( null != object.getContext() && object.getContext() instanceof BatchCommandResult) {
+            return getMessage((BatchCommandResult<RuleViolation>) object.getContext());
+        } else  if ( null != object.getContext() && object.getContext() instanceof CommandResult) {
+            return getMessage((CommandResult<RuleViolation>) object.getContext());
         }
         return object.getContext() != null ? object.getContext().toString(): "-- No Message --";
     }
 
-    private String getMessage(final CommandResults<CanvasCommandViolation> results) {
+    private String getMessage(final CommandResult<RuleViolation> results) {
+        return results.getMessage();
+    }
+    
+    private String getMessage(final BatchCommandResult<RuleViolation> results) {
         boolean hasError = false;
         boolean hasWarn = false;
-        final Iterator<CommandResult<CanvasCommandViolation>> iterator = results.results().iterator();
+        final Iterator<CommandResult<RuleViolation>> iterator = results.iterator();
         int c = 0;
         String message = null;
         while (iterator.hasNext()) {
-            final CommandResult<CanvasCommandViolation> result = iterator.next();
+            final CommandResult<RuleViolation> result = iterator.next();
             if (CommandResult.Type.ERROR.equals(result.getType())) {
                 hasError = true;
                 message = result.getMessage();
@@ -269,9 +268,29 @@ public class Notifications implements IsWidget {
 
     }
 
+    void onGraphCommandAllowed(@Observes IsCommandAllowedEvent isCommandAllowedEvent) {
+        Notification notification = translate( isCommandAllowedEvent );
+        add( notification );
+    }
 
-    void onNotification(@Observes final NotificationEvent logEvent) {
-        add(logEvent.getNotification());
+    void onGraphCommandExecued(@Observes CommandExecutedEvent commandExecutedEvent) {
+        Notification notification = translate( commandExecutedEvent );
+        add( notification );
+    }
+    
+    private Notification translate(final AbstractGraphCommandEvent commandExecutedEvent) {
+
+        if ( null != commandExecutedEvent ) {
+
+            final Command<?, ?> command = commandExecutedEvent.getCommand();
+            final CommandResult<?> result = commandExecutedEvent.getResult();
+            Notification.Type type = CommandResult.Type.ERROR.equals( result.getType() )
+                    ? Notification.Type.ERROR : Notification.Type.INFO;
+            return new NotificationImpl<>( UUID.uuid(), type, command, result );
+
+        }
+
+        return  null;
     }
     
 }

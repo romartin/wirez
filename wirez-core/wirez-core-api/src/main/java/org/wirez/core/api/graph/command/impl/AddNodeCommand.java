@@ -15,13 +15,14 @@
  */
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.command.GraphCommandResult;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -29,17 +30,16 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * A Command to add a DefaultNode to a DefaultGraph
+ * A Command to add a node into a graph
  */
-public class AddNodeCommand extends AbstractGraphCommand {
+@Portable
+public final class AddNodeCommand extends AbstractGraphCommand {
 
     private Graph target;
     private Node candidate;
 
-    public AddNodeCommand(final GraphCommandFactory commandFactory,
-                          final Graph target,
-                          final Node candidate ) {
-        super(commandFactory);
+    public AddNodeCommand(@MapsTo("target") Graph target,
+                          @MapsTo("candidate") Node candidate ) {
         this.target = PortablePreconditions.checkNotNull( "target",
                                                           target );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
@@ -47,32 +47,36 @@ public class AddNodeCommand extends AbstractGraphCommand {
     }
     
     @Override
-    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
-        return check(ruleManager);
+    public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
+        return check( context );
     }
 
     @Override
-    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final CommandResult<RuleViolation> results = check(ruleManager);
+    @SuppressWarnings("unchecked")
+    public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
+        final CommandResult<RuleViolation> results = check( context );
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
             target.addNode( candidate );
         }
         return results;
     }
-    
-    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
-        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) ruleManager.checkContainment( target, candidate).violations();
-        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
+
+    @SuppressWarnings("unchecked")
+    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+        final Collection<RuleViolation> containmentRuleViolations = 
+                (Collection<RuleViolation>) context.getRuleManager().checkContainment( target, candidate).violations();
+        final Collection<RuleViolation> cardinalityRuleViolations = 
+                (Collection<RuleViolation>) context.getRuleManager().checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(containmentRuleViolations);
         violations.addAll(cardinalityRuleViolations);
-        return new GraphCommandResult(violations);
+        return new GraphCommandResultBuilder( violations ).build();
     }
 
     @Override
-    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.DELETE_NODE( target, candidate );
-        return undoCommand.execute( ruleManager );
+    public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
+        final DeleteNodeCommand undoCommand = context.getCommandFactory().DELETE_NODE( target, candidate );
+        return undoCommand.execute( context );
     }
 
     @Override

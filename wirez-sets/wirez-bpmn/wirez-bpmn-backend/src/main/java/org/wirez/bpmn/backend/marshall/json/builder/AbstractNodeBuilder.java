@@ -3,7 +3,7 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.AddChildNodeCommand;
@@ -40,7 +40,7 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
         FactoryManager factoryManager = context.getFactoryManager();
 
         // Build the graph node for the definition.
-        T result = (T) factoryManager.element(this.nodeId, getDefinitionId());
+        T result = (T) factoryManager.newElement(this.nodeId, getDefinitionId());
         
         // Set the def properties.
         setProperties(context, (BPMNDefinition) result.getContent().getDefinition());
@@ -90,7 +90,7 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
                 // Command - Execute the graph command to set the node as the edge connection's source..  
                 int magnetIdx = getSourceConnectionMagnetIndex(context, node, edge);
                 SetConnectionSourceNodeCommand setSourceNodeCommand = context.getCommandFactory().SET_SOURCE_NODE(node, edge, magnetIdx);
-                CommandResults<RuleViolation> results = context.execute( setSourceNodeCommand );
+                CommandResult<RuleViolation> results = context.execute( setSourceNodeCommand );
                 if ( hasErrors(results) ) {
                     throw new RuntimeException("Error building BPMN graph. Command execution failed.");
                 }
@@ -111,7 +111,7 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
                     
                     // Command - Create the child node and the parent-child relationship.
                     AddChildNodeCommand addChildNodeCommand = context.getCommandFactory().ADD_CHILD_NODE(context.getGraph(), node, childNode);
-                    CommandResults<RuleViolation> results = context.execute( addChildNodeCommand );
+                    CommandResult<RuleViolation> results = context.execute( addChildNodeCommand );
                     if ( hasErrors(results) ) {
                         throw new RuntimeException("Error building BPMN graph. Command 'AddChildNodeCommand' execution failed.");
                     }

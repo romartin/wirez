@@ -1,66 +1,68 @@
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
+import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.impl.EdgeImpl;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.UUID;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * Creates a new node on the target graph and creates/defines a new parent-child connection so new node will be added as a child of 
  * given parent.
  */
-public class AddChildNodeCommand extends AbstractGraphCompositeCommand {
+@Portable
+public final class AddChildNodeCommand extends AbstractGraphCompositeCommand {
 
     private Graph target;
     private Node parent;
     private Node candidate;
     
-    public AddChildNodeCommand(final GraphCommandFactory commandFactory,
-                               final Graph target,
-                               final Node parent,
-                               final Node candidate) {
-        super(commandFactory);
+    public AddChildNodeCommand(@MapsTo("target") Graph target,
+                               @MapsTo("parent") Node parent,
+                               @MapsTo("candidate") Node candidate) {
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );
         this.parent = PortablePreconditions.checkNotNull( "parent",
                 parent );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
                 candidate );
-        initCommands();
     }
     
-    private void initCommands() {
+    protected void initialize( final GraphCommandExecutionContext context ) {
 
-        this.addCommand( commandFactory.ADD_NODE(target, candidate) )
-            .addCommand( commandFactory.ADD_CHILD_EDGE(parent, candidate) );
+        this.addCommand( context.getCommandFactory().ADD_NODE(target, candidate) )
+            .addCommand( context.getCommandFactory().ADD_CHILD_EDGE(parent, candidate) );
+    }
+
+    @Override
+    protected CommandResult<RuleViolation> doAllow(GraphCommandExecutionContext context, Command<GraphCommandExecutionContext, RuleViolation> command) {
+        return check( context );
+    }
+
+    @SuppressWarnings("unchecked")
+    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+        final Collection<RuleViolation> containmentRuleViolations = 
+                (Collection<RuleViolation>) context.getRuleManager().checkContainment( parent, candidate).violations();
+        final Collection<RuleViolation> cardinalityRuleViolations = 
+                (Collection<RuleViolation>) context.getRuleManager().checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
+        final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
+        violations.addAll(containmentRuleViolations);
+        violations.addAll(cardinalityRuleViolations);
+        return new GraphCommandResultBuilder( violations ).build();
     }
 
     @Override
     public String toString() {
         return "AddChildNodeCommand [parent=" + parent.getUUID() + ", candidate=" + candidate.getUUID() + "]";
-    }
-
-    @Override
-    public CommandResult<RuleViolation> allow(final RuleManager context) {
-        return check( context );
-    }
-
-    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
-        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) ruleManager.checkContainment( parent, candidate).violations();
-        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
-        final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
-        violations.addAll(containmentRuleViolations);
-        violations.addAll(cardinalityRuleViolations);
-        return new GraphCommandResult(violations);
     }
     
 }

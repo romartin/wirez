@@ -16,41 +16,18 @@
 package org.wirez.core.api.command;
 
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.event.NotificationEvent;
-
-import javax.enterprise.event.Event;
-import java.util.Stack;
 
 public abstract class AbstractCommandManager<C, V> implements CommandManager<C, V> {
 
-    protected Event<NotificationEvent> notificationEvent;
+    protected Command<C, V> command;
     
-    private final Stack<Stack<Command<C, V>>> commandHistory = new Stack<Stack<Command<C, V>>>();
-
-    public AbstractCommandManager(final Event<NotificationEvent> notificationEvent) {
-        this.notificationEvent = notificationEvent;
+    public AbstractCommandManager() {
     }
     
-    protected abstract CommandResults<V> buildResults();
-
     @Override
-    public boolean allow(C context, Command<C, V>... commands) {
-        PortablePreconditions.checkNotNull( "commands", commands );
-
-        final CommandResults<V> results = buildResults();
-        boolean isError = false;
-        for (final Command<C, V> command : commands) {
-            final CommandResult<V> result = doAllow( context, command );
-            results.add(result);
-            if ( CommandResult.Type.ERROR.equals(result.getType()) ) {
-                isError = true;
-                break;
-            }
-        }
-
-        fireCommandAllowedNotification(context, results, !isError);
-        
-        return !isError;
+    public CommandResult<V>  allow(C context, Command<C, V> command ) {
+        PortablePreconditions.checkNotNull( "command", command );
+        return doAllow( context, command );
     }
 
     protected CommandResult<V> doAllow(final C context, final Command<C, V> command) {
@@ -58,28 +35,17 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
     }
 
     @Override
-    public CommandResults<V> execute(final C context,
-                                             final Command<C, V>... commands) {
-        PortablePreconditions.checkNotNull( "commands",
-                                            commands );
+    public CommandResult<V> execute(final C context,
+                                         final Command<C, V> command) {
+        PortablePreconditions.checkNotNull( "command", command );
 
-        boolean isError = false;
-        final CommandResults<V> results = buildResults();
-        final Stack<Command<C, V>> commandStack = new Stack<>();
-        for (final Command<C, V> command : commands) {
-            final CommandResult<V> result = doExecute( context, command );
-            commandStack.push(command);
-            results.add(result);
-            if ( CommandResult.Type.ERROR.equals(result.getType()) ) {
-                isError = true;
-                break;
-            }
+        CommandResult<V> result = doExecute( context, command );
+        
+        if ( ! CommandUtils.isError(result) ) {
+            this.command = command;
         }
-
-        fireCommandExecutionNotification(context, results, !isError);
-
-        commandHistory.push(commandStack);
-        return results;
+        
+        return result;
     }
     
     protected CommandResult<V> doExecute(final C context, final Command<C, V> command) {
@@ -87,41 +53,12 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
     }
 
     @Override
-    public CommandResults<V> undo( final C context ) {
-        
-        Stack<Command<C, V>> commandStack = commandHistory.isEmpty() ? null : commandHistory.pop();
-        if ( null != commandStack ) {
-            return undo( commandStack, context );
-        }
-        
-        return buildResults();
+    public CommandResult<V> undo(final C context ) {
+        return doUndo( context, command );
     }
 
-    private CommandResults<V> undo( final Stack<Command<C, V>> commandStack, final C context ) {
-        final CommandResults<V> results = buildResults();
-
-        if (!commandStack.isEmpty()) {
-            
-            final int size = commandStack.size();
-            for ( int x = 0; x < size; x++) {
-                Command<C, V> undoCommand  = commandStack.pop();
-                final CommandResult<V> undoResult = undoCommand.undo(context);
-                results.add(undoResult);
-            }
-            
-        }
-        
-        return results;
+    protected CommandResult<V> doUndo( final C context, final Command<C, V> command ) {
+        return command.undo( context );
     }
 
-    protected void fireCommandAllowedNotification(final C context, 
-                                                  final CommandResults<V> results,                                                  
-                                                  final boolean isAllowed) {
-        
-    }
-
-    protected void fireCommandExecutionNotification(final C context, final CommandResults<V> results,
-                                                    final boolean isAllowed) {
-        
-    }
 }

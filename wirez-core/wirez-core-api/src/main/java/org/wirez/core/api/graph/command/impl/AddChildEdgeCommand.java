@@ -16,33 +16,36 @@
 
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.impl.EdgeImpl;
-import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.UUID;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * Creates/defines a new parent-child connection from the given nodes.
  * Both nodes must already be crated and present on the graph storage.
  */
-public class AddChildEdgeCommand extends AbstractGraphCommand {
+@Portable
+public final class AddChildEdgeCommand extends AbstractGraphCommand {
 
     private Node parent;
     private Node candidate;
 
-    public AddChildEdgeCommand(final GraphCommandFactory commandFactory,
-                               final Node parent,
-                               final Node candidate) {
-        super(commandFactory);
+    public AddChildEdgeCommand(@MapsTo("parent")  Node parent,
+                               @MapsTo("candidate")  Node candidate) {
         this.parent = PortablePreconditions.checkNotNull( "parent",
                 parent );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
@@ -50,13 +53,15 @@ public class AddChildEdgeCommand extends AbstractGraphCommand {
     }
     
     @Override
-    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
-        return check(ruleManager);
+    public CommandResult<RuleViolation> allow( final GraphCommandExecutionContext context ) {
+        return check( context );
     }
 
     @Override
-    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final CommandResult<RuleViolation> results = check(ruleManager);
+    @SuppressWarnings("unchecked")
+    public CommandResult<RuleViolation> execute( final GraphCommandExecutionContext context ) {
+        final CommandResult<RuleViolation> results = check( context );
+
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
 
             // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
@@ -70,20 +75,22 @@ public class AddChildEdgeCommand extends AbstractGraphCommand {
             candidate.getInEdges().add( edge );
             
         }
+
         return results;
     }
-    
-    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
-        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) ruleManager.checkContainment( parent, candidate).violations();
+
+    @SuppressWarnings("unchecked")
+    private CommandResult<RuleViolation> check( final GraphCommandExecutionContext context ) {
+        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) context.getRuleManager().checkContainment( parent, candidate).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(containmentRuleViolations);
-        return new GraphCommandResult(violations);
+        return new GraphCommandResultBuilder( violations ).build();
     }
 
     @Override
-    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        // TODO
-        return null;
+    public CommandResult<RuleViolation> undo( final GraphCommandExecutionContext context ) {
+        DeleteChildEdgeCommand undoCommand = context.getCommandFactory().DELETE_CHILD_EDGE( parent, candidate );
+        return undoCommand.execute( context );
     }
 
     @Override

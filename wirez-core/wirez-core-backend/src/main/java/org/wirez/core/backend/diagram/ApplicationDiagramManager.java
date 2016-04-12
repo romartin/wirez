@@ -1,0 +1,49 @@
+package org.wirez.core.backend.diagram;
+
+import org.wirez.core.api.AbstractDiagramManager;
+import org.wirez.core.api.DiagramManager;
+import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.registry.DiagramRegistry;
+import org.wirez.core.backend.Application;
+import org.wirez.core.backend.VFS;
+import org.wirez.core.backend.registry.SyncRegistry;
+
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Collection;
+
+/**
+ * The application's global diagram manager.
+ */
+@ApplicationScoped
+@Application
+public class ApplicationDiagramManager extends AbstractDiagramManager<Diagram> {
+
+    DiagramManager<Diagram> vfsDiagramManager;
+    
+    protected ApplicationDiagramManager() {
+    }
+    
+    @Inject
+    public ApplicationDiagramManager(@SyncRegistry DiagramRegistry<Diagram> registry,
+                                     @VFS  DiagramManager<Diagram> vfsDiagramManager) {
+        super(registry);
+        this.vfsDiagramManager = vfsDiagramManager;
+    }
+    
+    @PostConstruct
+    public void init() {
+        
+        // Load vfs diagrams and put into the registry.
+        final Collection<Diagram> diagrams = vfsDiagramManager.getItems();
+        if ( null != diagrams && !diagrams.isEmpty() ) {
+            for ( Diagram diagram : diagrams ) {
+                this.add( diagram );
+            }
+        }
+        
+    }
+    
+    
+}

@@ -24,8 +24,8 @@ import org.uberfire.client.mvp.UberView;
 import org.wirez.client.widgets.palette.accordion.group.layout.HorizLayoutBuilder;
 import org.wirez.client.widgets.palette.accordion.group.layout.HorizLayoutSettings;
 import org.wirez.client.widgets.palette.accordion.group.layout.LayoutBuilder;
-import org.wirez.core.client.view.ShapeGlyph;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.view.ShapeGlyph;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;

@@ -117,7 +117,7 @@ public class Palette implements IsWidget {
         final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
         final String definitionSetId = wirezShapeSet.getDefinitionSetId();
 
-        clientFactoryServices.model(definitionSetId, new ServiceCallback<Object>() {
+        clientFactoryServices.newDomainObject(definitionSetId, new ServiceCallback<Object>() {
             @Override
             public void onSuccess(final Object definitionSet) {
                 doShow(width, wirezShapeSet, definitionSet);
@@ -258,7 +258,7 @@ public class Palette implements IsWidget {
     private Object getDefinition(final Collection<String> definitions, final ShapeFactory factory) {
         for (final String definitionId : definitions) {
             // TODO: Do not build the instance just to check if factory#accepts. Use callback method.
-            Object definition = clientFactoryServices.model( definitionId );
+            Object definition = clientFactoryServices.newDomainObject( definitionId );
             if (factory.accepts(definition)) {
                 return definition;
             }

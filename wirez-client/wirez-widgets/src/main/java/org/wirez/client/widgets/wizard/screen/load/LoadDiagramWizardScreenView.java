@@ -20,6 +20,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -64,10 +65,10 @@ public class LoadDiagramWizardScreenView extends Composite implements LoadDiagra
     }
 
     @Override
-    public LoadDiagramWizardScreen.View add(final String title, final String path, final SafeUri thumbUri) {
+    public LoadDiagramWizardScreen.View add(final String uuid, final String title, final String path, final SafeUri thumbUri) {
         emptyPanel.setVisible(false);
         diagramsPanel.setVisible(true);
-        insertDiagramEntry( title, path, thumbUri );
+        insertDiagramEntry( uuid, title, path, thumbUri );
         return this;
     }
 
@@ -79,7 +80,7 @@ public class LoadDiagramWizardScreenView extends Composite implements LoadDiagra
         return this;
     }
     
-    private void insertDiagramEntry(final String title, final String path, final SafeUri thumbUri) {
+    private void insertDiagramEntry(final String uuid, final String title, final String path, final SafeUri thumbUri) {
         
         final HorizontalPanel panel = new HorizontalPanel();
         panel.getElement().getStyle().setWidth(100, Style.Unit.PCT);
@@ -97,13 +98,13 @@ public class LoadDiagramWizardScreenView extends Composite implements LoadDiagra
         panel.add( image );
         
         final Heading heading = new Heading(HeadingSize.H3);
-        heading.setText( title );
+        heading.setText( new SafeHtmlBuilder().appendEscaped(title).toSafeHtml().asString() );
         panel.add( heading );
         
         panel.addDomHandler(new ClickHandler() {
             @Override
             public void onClick(final ClickEvent event) {
-                presenter.onItemClick( path );
+                presenter.onItemClick( uuid );
             }
         }, ClickEvent.getType());
         

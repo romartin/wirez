@@ -18,7 +18,6 @@ package org.wirez.client.widgets.wizard;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.client.widgets.wizard.screen.HomeWizardScreen;
 

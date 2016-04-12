@@ -48,7 +48,9 @@ public class AnnotatedDefinitionSetAdapter<T> extends AbstractAnnotatedAdapter<T
 
         if ( null != definitionSet ) {
             org.wirez.core.api.definition.annotation.definitionset.DefinitionSet annotation = definitionSet.getClass().getAnnotation(org.wirez.core.api.definition.annotation.definitionset.DefinitionSet.class);
-            result = annotation.type();
+            if ( null != annotation ) {
+                result = annotation.type();
+            }
         }
 
         return result;
@@ -60,7 +62,9 @@ public class AnnotatedDefinitionSetAdapter<T> extends AbstractAnnotatedAdapter<T
 
         if ( null != definitionSet ) {
             org.wirez.core.api.definition.annotation.definitionset.DefinitionSet annotation = definitionSet.getClass().getAnnotation(org.wirez.core.api.definition.annotation.definitionset.DefinitionSet.class);
-            result = annotation.factory();
+            if ( null != annotation ) {
+                result = annotation.factory();
+            }
         }
 
         return result;
@@ -84,11 +88,13 @@ public class AnnotatedDefinitionSetAdapter<T> extends AbstractAnnotatedAdapter<T
         if ( null != definitionSet ) {
 
             org.wirez.core.api.definition.annotation.definitionset.DefinitionSet annotation = definitionSet.getClass().getAnnotation(org.wirez.core.api.definition.annotation.definitionset.DefinitionSet.class);
-            Class<?>[] definitions = annotation.definitions();
-            if ( null != definitions ) {
-                result = new HashSet<String>( definitions.length );
-                for ( Class<?> defClass : definitions ) {
-                    result.add(defClass.getSimpleName());
+            if ( null != annotation ) {
+                Class<?>[] definitions = annotation.definitions();
+                if ( null != definitions ) {
+                    result = new HashSet<String>( definitions.length );
+                    for ( Class<?> defClass : definitions ) {
+                        result.add(defClass.getSimpleName());
+                    }
                 }
             }
             

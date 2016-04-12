@@ -1,11 +1,13 @@
 package org.wirez.bpmn.backend;
 
 import org.wirez.bpmn.backend.service.diagram.BPMNDiagramMarshaller;
-import org.wirez.core.api.service.DefinitionSetServices;
-import org.wirez.core.api.service.diagram.DiagramMarshaller;
+import org.wirez.core.api.definition.DefinitionSetServices;
+import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.diagram.marshall.DiagramMarshaller;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.io.InputStream;
 
 @ApplicationScoped
 public class BPMNBackendServices implements DefinitionSetServices {
@@ -25,7 +27,7 @@ public class BPMNBackendServices implements DefinitionSetServices {
     }
 
     @Override
-    public DiagramMarshaller getDiagramMarshaller() {
+    public DiagramMarshaller<Diagram, InputStream, String> getDiagramMarshaller() {
         return bpmnDiagramMarshaller;
     }
     

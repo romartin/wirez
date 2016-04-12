@@ -17,22 +17,22 @@
 package org.wirez.core.client.control.toolbox;
 
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
-import org.wirez.core.client.canvas.listener.AbstractCanvasModelListener;
-import org.wirez.core.client.canvas.listener.CanvasModelListener;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.listener.AbstractCanvasElementListener;
+import org.wirez.core.client.canvas.listener.CanvasElementListener;
 
 public abstract class BaseToolbox<E extends Element> implements Toolbox<E> {
 
-    protected WiresCanvasHandler canvasHandler;
+    protected AbstractCanvasHandler canvasHandler;
     
     @Override
-    public void initialize(final WiresCanvasHandler canvasHandler) {
+    public void initialize(final AbstractCanvasHandler canvasHandler) {
         this.canvasHandler = canvasHandler;
         this.canvasHandler.addListener(canvasListener);
         
     }
 
-    protected final CanvasModelListener canvasListener = new AbstractCanvasModelListener(canvasHandler) {
+    protected final CanvasElementListener canvasListener = new AbstractCanvasElementListener(canvasHandler) {
 
         @Override
         public void onElementAdded(final Element element) {

@@ -6,7 +6,7 @@ import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.command.batch.BatchCommandResult;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.definition.property.PropertyType;
@@ -79,8 +79,22 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
         return this.result;
     }
     
-    protected boolean hasErrors(CommandResults<RuleViolation> results) {
-        return results.results(CommandResult.Type.ERROR).iterator().hasNext(); 
+    protected boolean hasErrors(BatchCommandResult<RuleViolation> results) {
+        
+        Iterator<CommandResult<RuleViolation>> iterator = results.iterator();
+        while ( iterator.hasNext() ) {
+            CommandResult<RuleViolation> result = iterator.next();
+            if ( CommandResult.Type.ERROR.equals( result.getType() )) {
+                return true;
+            }
+        }
+        
+        
+        return false; 
+    }
+
+    protected boolean hasErrors(CommandResult<RuleViolation> results) {
+        return CommandResult.Type.ERROR.equals( results.getType() );
     }
 
     protected GraphObjectBuilder<?, ?> getBuilder(BuilderContext context, String nodeId) {

@@ -1,30 +1,37 @@
 package org.wirez.core.client.service;
 
-import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.Caller;
-import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
-import org.wirez.core.api.BaseFactoryManager;
+import org.wirez.core.api.AbstractFactoryManager;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.definition.factory.ModelFactory;
+import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.diagram.DiagramImpl;
+import org.wirez.core.api.diagram.Settings;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.factory.ElementFactory;
 import org.wirez.core.api.graph.factory.GraphFactory;
+import org.wirez.core.api.remote.FactoryService;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Collection;
 
+/**
+ * Provides the client side and remote caller for the factory manager and services.
+ * If the requested factory is present on client side, it will create the object using it.
+ * If the requested factory is not present on client side, whether it's not implemented or the object 
+ * cannot be created on client, it performs the service calls to the factory service. 
+ */
 @ApplicationScoped
-public class ClientFactoryServices extends BaseFactoryManager {
+public class ClientFactoryServices extends AbstractFactoryManager {
 
     SyncBeanManager beanManager;
-    Caller<FactoryManager> factoryManagerCaller;
+    Caller<FactoryService> factoryServiceCaller;
 
     protected ClientFactoryServices() {
         super(null);
@@ -33,10 +40,10 @@ public class ClientFactoryServices extends BaseFactoryManager {
     @Inject
     public ClientFactoryServices(final SyncBeanManager beanManager,
                                  final DefinitionManager definitionManager,
-                                 final Caller<FactoryManager> factoryManagerCaller) {
+                                 final Caller<FactoryService> factoryServiceCaller) {
         super( definitionManager );
         this.beanManager = beanManager;
-        this.factoryManagerCaller = factoryManagerCaller;
+        this.factoryServiceCaller = factoryServiceCaller;
     }
 
     @PostConstruct
@@ -51,67 +58,57 @@ public class ClientFactoryServices extends BaseFactoryManager {
 
     }
 
-    public <W> void model( final String id, final ServiceCallback<W> callback ) {
+    public <W> void newDomainObject(final String id, final ServiceCallback<W> callback ) {
 
-        W result = super.model( id );
+        W result = super.newDomainObject( id );
         if ( null != result ) {
             callback.onSuccess( result );
         } else {
-            factoryManagerCaller.call(new RemoteCallback<W>() {
+            factoryServiceCaller.call(new RemoteCallback<W>() {
                 @Override
                 public void callback(final W w) {
                     callback.onSuccess(w);
                 }
-            }, new ErrorCallback<Message>() {
-                @Override
-                public boolean error(Message message, Throwable throwable) {
-                    return false;
-                }
-            }).model( id );
+            }, (message, throwable) -> false).newDomainObject( id );
         }
         
     }
 
-    public <W extends Graph> void graph(String uuid, String id, final ServiceCallback<W> callback) {
+    public <W extends Graph> void newGraph(String uuid, String definitionSetId, final ServiceCallback<W> callback) {
 
-        W result = super.element( uuid, id );
+        W result = super.newGraph( uuid, definitionSetId );
         if ( null != result ) {
             callback.onSuccess( result );
         } else {
-            factoryManagerCaller.call(new RemoteCallback<W>() {
+            factoryServiceCaller.call(new RemoteCallback<W>() {
                 @Override
                 public void callback(final W w) {
                     callback.onSuccess(w);
                 }
-            }, new ErrorCallback<Message>() {
-                @Override
-                public boolean error(Message message, Throwable throwable) {
-                    return false;
-                }
-            }).graph( uuid, id );
+            }, (message, throwable) -> false).newGraph( uuid, definitionSetId );
         }
 
     }
     
-    public <W extends Element> void element(String uuid, String id, final ServiceCallback<W> callback) {
+    public <W extends Element> void newElement(String uuid, String id, final ServiceCallback<W> callback) {
 
-        W result = super.element( uuid, id );
+        W result = super.newElement( uuid, id );
         if ( null != result ) {
             callback.onSuccess( result );
         } else {
-            factoryManagerCaller.call(new RemoteCallback<W>() {
+            factoryServiceCaller.call(new RemoteCallback<W>() {
                 @Override
                 public void callback(final W w) {
                     callback.onSuccess(w);
                 }
-            }, new ErrorCallback<Message>() {
-                @Override
-                public boolean error(Message message, Throwable throwable) {
-                    return false;
-                }
-            }).element( uuid, id );
+            }, (message, throwable) -> false).newElement( uuid, id );
         }
         
+    }
+
+    @Override
+    public <G extends Graph, S extends Settings> Diagram<G, S> newDiagram(String uuid, G graph, S settings) {
+        return (Diagram<G, S>) new DiagramImpl( uuid, graph, settings );
     }
 
     @Override
@@ -138,9 +135,13 @@ public class ClientFactoryServices extends BaseFactoryManager {
         // DefinitionSet client adapters.
         Collection<SyncBeanDef> graphFactories = beanManager.lookupBeans(ref);
 
-        if ( graphFactories.size() == 0 ) {
-            throw new RuntimeException(" No beans for graph element factory with name [" + ref + "]");
-        } else  if ( graphFactories.size() > 1 ) {
+        // If no beans found, no problem, then try on backend.
+        if ( graphFactories.isEmpty() ) {
+            return null;
+        }
+        
+        // If more that one bean, throw error.
+        if ( graphFactories.size() > 1 ) {
             throw new RuntimeException(" More than one bean matches for graph element factory with name [" + ref + "]");
         }
 

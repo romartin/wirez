@@ -26,10 +26,8 @@ import org.wirez.core.client.control.toolbox.command.RemoveToolboxCommand;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 @Dependent
-@Named("defaultToolboxControlFactory")
 public class ToolboxControlFactory implements ShapeControlFactory<Shape, ToolboxControl> {
 
     ToolboxControl toolboxControl;

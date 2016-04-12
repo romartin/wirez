@@ -16,9 +16,7 @@
 
 package org.wirez.client.widgets.palette.accordion.group.decorator;
 
-import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
-import com.ait.lienzo.client.core.shape.Rectangle;
 
 public interface PaletteItemDecorator  {
 

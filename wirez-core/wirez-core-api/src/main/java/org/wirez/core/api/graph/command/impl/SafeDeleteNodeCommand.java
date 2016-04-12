@@ -1,12 +1,15 @@
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.GraphCommandResult;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.content.view.View;
@@ -20,25 +23,26 @@ import java.util.List;
 /**
  * Deletes a node taking into account its ingoing / outgoing edges and safe remove all node's children as well, if any.
  */
-public class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
+@Portable
+public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
 
     private Graph target;
     private Node candidate;
     
-    public SafeDeleteNodeCommand(final GraphCommandFactory commandFactory,
-                                 final Graph target,
-                                 final Node candidate) {
-        super(commandFactory);
+    public SafeDeleteNodeCommand(@MapsTo("target") Graph target,
+                                 @MapsTo("candidate") Node candidate) {
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
                 candidate );
-        initCommands();
     }
-    
-    private void initCommands() {
+
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void initialize(final GraphCommandExecutionContext context) {
         
-        final List<Command<RuleManager, RuleViolation>> commands = new LinkedList<>();
+        final GraphCommandFactory commandFactory = context.getCommandFactory();
+        final List<Command<GraphCommandExecutionContext, RuleViolation>> commands = new LinkedList<>();
         
         // Check node's children, if any.
         final List<Node> children = getChildNodes( candidate );
@@ -69,7 +73,7 @@ public class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
         }
         
         // Add the commands above.
-        for ( Command<RuleManager, RuleViolation> command : commands ) {
+        for ( Command<GraphCommandExecutionContext, RuleViolation> command : commands ) {
             this.addCommand( command );
         }
         
@@ -79,11 +83,11 @@ public class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
     }
 
     @Override
-    public CommandResult<RuleViolation> allow(RuleManager context) {
+    protected CommandResult<RuleViolation> doAllow(GraphCommandExecutionContext context, Command<GraphCommandExecutionContext, RuleViolation> command) {
         return check( context );
     }
 
-    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
+    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
 
         // Check node exist on the store.
         boolean isNodeInGraph = false;
@@ -94,31 +98,39 @@ public class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
             }
         }
 
-        GraphCommandResult results;
+        final GraphCommandResultBuilder builder = new GraphCommandResultBuilder();
         if ( isNodeInGraph ) {
-            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality( target, candidate, RuleManager.Operation.DELETE).violations();
-            results = new GraphCommandResult(cardinalityRuleViolations);
-        } else {
-            results = new GraphCommandResult();
-            results.setType(CommandResult.Type.ERROR);
-            results.setMessage("Node was not present in Graph and hence was not deleted");
-        }
-        
-        // Check nodes has no children.
-        if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
+            
+            final Collection<RuleViolation> cardinalityRuleViolations = 
+                    (Collection<RuleViolation>) context.getRuleManager().checkCardinality( target, candidate, RuleManager.Operation.DELETE).violations();
+            builder.addViolations( cardinalityRuleViolations );
+
+            for ( final RuleViolation violation : cardinalityRuleViolations ) {
+                if ( builder.isError( violation ) ) {
+                    return builder.build();
+                }    
+            }
+            
+            
+            // Check nodes has no children.
             final List<Edge> outEdges = candidate.getOutEdges();
-            if ( null != outEdges && !outEdges.isEmpty() ) {
+            if (null != outEdges && !outEdges.isEmpty()) {
                 for (final Edge outEdge : outEdges) {
-                    if ( outEdge.getContent() instanceof Child) {
-                        results.setType(CommandResult.Type.ERROR);
-                        results.setMessage("Node contains children nodes. It cannot be removed using this command [DeleteNodeCommand].");
-                        return results;
+                    if (outEdge.getContent() instanceof Child) {
+                        builder.setType(CommandResult.Type.ERROR);
+                        builder.setMessage("Node contains children nodes. It cannot be removed using this command [DeleteNodeCommand].");
                     }
                 }
             }
+            
+        } else {
+            
+            builder.setType(CommandResult.Type.ERROR);
+            builder.setMessage("Node was not present in Graph and hence was not deleted");
+
         }
-        
-        return results;
+
+        return builder.build();
     }
 
     private List<Node> getChildNodes(final Node node) {

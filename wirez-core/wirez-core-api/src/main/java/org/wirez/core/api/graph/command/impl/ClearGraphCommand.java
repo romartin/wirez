@@ -15,49 +15,51 @@
  */
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.rule.RuleViolation;
 
 /**
  * A Command to clear all elements in a graph
+ * 
+ * TODO: Undo.
  */
-public class ClearGraphCommand extends AbstractGraphCommand {
+@Portable
+public final class ClearGraphCommand extends AbstractGraphCommand {
 
     private Graph target;
 
-    public ClearGraphCommand(final GraphCommandFactory commandFactory,
-                             Graph target) {
-        super(commandFactory);
+    public ClearGraphCommand(@MapsTo("target") Graph target) {
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );;
     }
     
     @Override
-    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
-        return check(ruleManager);
+    public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
+        return check( context );
     }
 
     @Override
-    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final CommandResult<RuleViolation> results = check(ruleManager);
+    public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
+        final CommandResult<RuleViolation> results = check( context );
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
             target.clear();
         }
         return results;
     }
     
-    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
-        return new GraphCommandResult();        
+    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+        return GraphCommandResultBuilder.OK_COMMAND;        
     }
 
     @Override
-    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        // TODO
+    public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
+        // TODO: Return to previous snapshot?
         return null;
     }
 

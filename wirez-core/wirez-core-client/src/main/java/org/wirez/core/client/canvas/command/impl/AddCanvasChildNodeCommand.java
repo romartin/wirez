@@ -5,32 +5,29 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
-import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
-import org.wirez.core.client.canvas.command.HasGraphCommand;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.factory.ShapeFactory;
 
 /**
  * TODO: Register the new edge into the canvas hander's index for the graph. 
  */
-public class AddCanvasChildNodeCommand extends AddCanvasElementCommand<Node> implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
+public final class AddCanvasChildNodeCommand extends AddCanvasElementCommand<Node> {
 
     protected Node parent;
 
-    public AddCanvasChildNodeCommand(final CanvasCommandFactory canvasCommandFactory, final Node parent, final Node candidate, final ShapeFactory factory) {
-        super(canvasCommandFactory, candidate, factory);
+    public AddCanvasChildNodeCommand(final Node parent, final Node candidate, final ShapeFactory factory) {
+        super( candidate, factory );
         this.parent = parent;
     }
     
     @Override
-    protected void doRegister(WiresCanvasHandler context) {
+    protected void doRegister(AbstractCanvasHandler context) {
         super.doRegister(context);
         context.addChild(parent, candidate);
         final IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> indexBuilder = context.getIndexBuilder();
@@ -40,12 +37,13 @@ public class AddCanvasChildNodeCommand extends AddCanvasElementCommand<Node> imp
     }
 
     @Override
-    public Command<RuleManager, RuleViolation> getGraphCommand(final WiresCanvasHandler handler, final GraphCommandFactory factory) {
-        return factory.ADD_CHILD_NODE(handler.getDiagram().getGraph(), parent, candidate);
+    protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(final AbstractCanvasHandler context) {
+        return context.getGraphCommandFactory().ADD_CHILD_NODE(context.getDiagram().getGraph(), parent, candidate);
     }
 
     @Override
-    public CommandResult<CanvasCommandViolation> undo(WiresCanvasHandler context) {
-        return null;
+    public CommandResult<CanvasViolation> undo(final AbstractCanvasHandler context) {
+        return context.getCommandFactory().DELETE_NODE(candidate).execute( context );
     }
+    
 }

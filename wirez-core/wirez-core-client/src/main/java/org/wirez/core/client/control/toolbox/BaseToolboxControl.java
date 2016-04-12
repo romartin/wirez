@@ -5,10 +5,13 @@ import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.BaseShapeControl;
 
+import javax.inject.Inject;
+
 public abstract class BaseToolboxControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E> {
     
-    public BaseToolboxControl(CanvasCommandFactory commandFactory) {
-        super(commandFactory);
+    @Inject
+    public BaseToolboxControl(final CanvasCommandFactory commandFactory) {
+        super( commandFactory );
     }
     
 }

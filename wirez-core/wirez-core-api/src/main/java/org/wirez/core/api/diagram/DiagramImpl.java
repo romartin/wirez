@@ -5,7 +5,7 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.graph.Graph;
 
 @Portable
-public class DiagramImpl implements Diagram<Settings> {
+public final class DiagramImpl implements Diagram<Graph, Settings> {
     
     private final String uuid;
     private final Graph graph;

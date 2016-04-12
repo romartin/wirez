@@ -6,15 +6,15 @@ import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.Collection;
@@ -59,7 +59,7 @@ public interface GraphObjectBuilder<W, T extends Element<View<W>>> {
         
         GraphCommandFactory getCommandFactory();
         
-        CommandResults<RuleViolation> execute (Command<RuleManager, RuleViolation>... command);
+        CommandResult<RuleViolation> execute (Command<GraphCommandExecutionContext, RuleViolation> command);
         
     }
     

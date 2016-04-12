@@ -4,7 +4,7 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.AddNodeCommand;
@@ -29,7 +29,7 @@ public abstract class AbstractEdgeBuilder<W, T extends Edge<View<W>, Node>>
 
         FactoryManager factoryManager = context.getFactoryManager();
 
-        T result = (T) factoryManager.element(this.nodeId, getDefinitionId());
+        T result = (T) factoryManager.newElement(this.nodeId, getDefinitionId());
 
         setProperties(context, (BPMNDefinition) result.getContent().getDefinition());
 
@@ -58,9 +58,14 @@ public abstract class AbstractEdgeBuilder<W, T extends Edge<View<W>, Node>>
                 int magnetIdx = ( (AbstractNodeBuilder) outgoingNodeBuilder).getTargetConnectionMagnetIndex(context, node, edge);
                 SetConnectionTargetNodeCommand setTargetNodeCommand = context.getCommandFactory().SET_TARGET_NODE(node, edge, magnetIdx);
                 
-                CommandResults<RuleViolation> results = context.execute( addNodeCommand, setTargetNodeCommand );
-                if ( hasErrors(results) ) {
-                    throw new RuntimeException("Error building BPMN graph. Commands 'addNodeCommand'/'SetConnectionTargetNodeCommand' execution failed.");
+                CommandResult<RuleViolation> results1 = context.execute( addNodeCommand );
+                if ( hasErrors(results1) ) {
+                    throw new RuntimeException("Error building BPMN graph. Command 'addNodeCommand' execution failed.");
+                }
+
+                CommandResult<RuleViolation> results2 = context.execute( setTargetNodeCommand );
+                if ( hasErrors(results2) ) {
+                    throw new RuntimeException("Error building BPMN graph. Command 'SetConnectionTargetNodeCommand' execution failed.");
                 }
             }
         }

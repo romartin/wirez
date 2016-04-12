@@ -16,13 +16,12 @@
 
 package org.wirez.core.client.control;
 
-import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresEvent;
-import com.ait.lienzo.client.core.shape.wires.event.DragEvent;
-import com.ait.lienzo.client.core.shape.wires.event.DragHandler;
+import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandUtils;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.view.HasEventHandlers;
 import org.wirez.core.client.view.event.ViewEventType;
 
@@ -35,8 +34,8 @@ public class DefaultDragControl extends BaseDragControl<Shape, Element>  {
     private org.wirez.core.client.view.event.DragHandler handler;
     
     @Inject
-    public DefaultDragControl(CanvasCommandFactory canvasCommandFactory) {
-        super(canvasCommandFactory);
+    public DefaultDragControl(final CanvasCommandFactory canvasCommandFactory) {
+        super( canvasCommandFactory );
     }
 
     @Override
@@ -60,8 +59,10 @@ public class DefaultDragControl extends BaseDragControl<Shape, Element>  {
                 @Override
                 public void end(final org.wirez.core.client.view.event.DragEvent event) {
                     final double[] xy = getContainerXY(shape);
-                    // TODO: Check result. If failed -> dragContext#reset()
-                    execute( commandFactory.UPDATE_POSITION(element, xy[0], xy[1]) );
+                    CommandResult<CanvasViolation> result = execute( commandFactory.UPDATE_POSITION(element, xy[0], xy[1]) );
+                    if (CommandUtils.isError( result) ) {
+                        // TODO: DragContext#reset
+                    }
                 }
             };
             

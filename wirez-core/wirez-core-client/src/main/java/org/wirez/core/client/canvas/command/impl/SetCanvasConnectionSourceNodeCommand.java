@@ -4,40 +4,36 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
-import org.wirez.core.client.canvas.command.HasGraphCommand;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.impl.BaseConnector;
 
-public class SetCanvasConnectionSourceNodeCommand extends AbstractCanvasCommand implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
+public final class SetCanvasConnectionSourceNodeCommand extends AbstractCanvasGraphCommand {
 
 
     Node<? extends View<?>, Edge> node;
     Edge<? extends View<?>, Node> edge;
     int magnetIndex;
             
-    public SetCanvasConnectionSourceNodeCommand(final CanvasCommandFactory canvasCommandFactory,
-                                                final Node<? extends View<?>, Edge> node,
+    public SetCanvasConnectionSourceNodeCommand(final Node<? extends View<?>, Edge> node,
                                                 final Edge<? extends View<?>, Node> edge,
                                                 final int magnetIndex) {
-        super(canvasCommandFactory);
         this.node = node;
         this.edge = edge;
         this.magnetIndex = magnetIndex;
     }
 
     @Override
-    public Command<RuleManager, RuleViolation> getGraphCommand(final WiresCanvasHandler handler, final GraphCommandFactory factory) {
-        return factory.SET_SOURCE_NODE( node, edge, magnetIndex );
+    protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(final AbstractCanvasHandler context) {
+        return context.getGraphCommandFactory().SET_SOURCE_NODE( node, edge, magnetIndex );
     }
 
     @Override
-    public CommandResult<CanvasCommandViolation> execute(final WiresCanvasHandler context) {
+    public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
         final String uuid = edge.getUUID();
         BaseConnector connector = (BaseConnector) context.getCanvas().getShape(uuid);
         connector.applyConnections( edge, context );
@@ -45,8 +41,7 @@ public class SetCanvasConnectionSourceNodeCommand extends AbstractCanvasCommand 
     }
 
     @Override
-    public CommandResult<CanvasCommandViolation> undo(final WiresCanvasHandler context) {
-        // TODO
-        return null;
+    public CommandResult<CanvasViolation> undo(final AbstractCanvasHandler context) {
+        return execute( context );
     }
 }

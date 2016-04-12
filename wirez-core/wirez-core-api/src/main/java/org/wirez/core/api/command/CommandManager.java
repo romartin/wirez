@@ -18,25 +18,27 @@ package org.wirez.core.api.command;
 
 
 /**
- * Manager to handle execution of commands.
+ * Manager to handle execution of commands in a given context.
+ * @param <T> The execution context
+ * @param <V> The resulting violations of the command execution in the given context.
  */
 public interface CommandManager<T, V> {
 
     /**
-     * Check whether the given commands can be executed.
+     * Check whether the given command can be executed.
      */
-    boolean allow(final T context,
-                  final Command<T, V>... command);
-    
+    CommandResult<V> allow(final T context,
+                           Command<T, V> command);
+
     /**
-     * Execute the given commands.
+     * Execute the given command.
      */
-    CommandResults<V> execute(final T context,
-              final Command<T, V>... command);
+    CommandResult<V> execute(final T context,
+                             Command<T, V> command);
 
     /**
      * Undo the most recent command execution.
      */
-    CommandResults<V> undo(final T context);
+    CommandResult<V> undo(T context);
 
 }

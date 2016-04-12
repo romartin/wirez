@@ -18,11 +18,11 @@ package org.wirez.core.client.control.toolbox;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
 
 public interface Toolbox<E extends Element> extends IsWidget {
 
-    void initialize(WiresCanvasHandler canvasHandler);
+    void initialize(AbstractCanvasHandler canvasHandler);
 
     void show(E element, double x, double y);
 

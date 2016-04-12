@@ -4,7 +4,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
 @Portable
-public class SettingsImpl implements Settings {
+public final class SettingsImpl implements Settings {
     
     private final String title;
     private final String defSetId;
@@ -35,12 +35,12 @@ public class SettingsImpl implements Settings {
     }
 
     @Override
-    public String getPath() {
+    public String getVFSPath() {
         return path;
     }
 
     @Override
-    public void setPath(final String path) {
+    public void setVFSPath(final String path) {
         this.path = path;
     }
 

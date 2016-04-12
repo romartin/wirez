@@ -42,6 +42,8 @@ public class DefinitionSetProxyGenerator extends AbstractAdapterGenerator {
                 packageName);
         root.put("className",
                 className);
+        root.put("generatedByClassName",
+                DefinitionSetProxyGenerator.class.getName());
         root.put("parentFQCName",
                 DefinitionSetProxy.class.getName());
         root.put("defSetFQCName",

@@ -1,0 +1,8 @@
+package org.wirez.core.client.canvas.command;
+
+import org.wirez.core.api.command.batch.BatchCommandManager;
+import org.wirez.core.client.canvas.CanvasHandler;
+
+public interface CanvasCommandManager<H extends CanvasHandler> extends BatchCommandManager<H, CanvasViolation> {
+    
+}

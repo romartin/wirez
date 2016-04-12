@@ -10,7 +10,7 @@ public interface Registry<T> {
     
     void remove(T item);
     
-    T get(String uuid);
+    T get(String criteria);
     
     Collection<T> getItems();
     

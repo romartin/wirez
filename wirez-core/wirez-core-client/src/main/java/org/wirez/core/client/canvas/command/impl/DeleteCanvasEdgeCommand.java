@@ -5,22 +5,18 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.index.Index;
 import org.wirez.core.api.graph.processing.index.IndexBuilder;
-import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
-import org.wirez.core.client.canvas.command.HasGraphCommand;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 
-public class DeleteCanvasEdgeCommand extends DeleteCanvasElementCommand<Edge> implements HasGraphCommand<WiresCanvasHandler, GraphCommandFactory> {
+public final class DeleteCanvasEdgeCommand extends DeleteCanvasElementCommand<Edge> {
     
-    public DeleteCanvasEdgeCommand(final CanvasCommandFactory canvasCommandFactory, 
-                                   final Edge candidate) {
-        super(canvasCommandFactory, candidate);
+    public DeleteCanvasEdgeCommand(final Edge candidate) {
+        super( candidate );
     }
 
     @Override
@@ -29,7 +25,7 @@ public class DeleteCanvasEdgeCommand extends DeleteCanvasElementCommand<Edge> im
     }
 
     @Override
-    protected void doDeregister(WiresCanvasHandler context) {
+    protected void doDeregister(AbstractCanvasHandler context) {
         super.doDeregister(context);
         final IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> indexBuilder = context.getIndexBuilder();
         if ( indexBuilder instanceof IncrementalIndexBuilder) {
@@ -38,12 +34,12 @@ public class DeleteCanvasEdgeCommand extends DeleteCanvasElementCommand<Edge> im
     }
 
     @Override
-    public Command<RuleManager, RuleViolation> getGraphCommand(WiresCanvasHandler canvasHandler, GraphCommandFactory factory) {
-        return factory.DELETE_EDGE(candidate);
+    protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(final AbstractCanvasHandler context) {
+        return context.getGraphCommandFactory().DELETE_EDGE(candidate);
     }
 
     @Override
-    public CommandResult<CanvasCommandViolation> undo(WiresCanvasHandler context) {
-        return canvasCommandFactory.ADD_EDGE( parent, candidate, factory ).execute( context );
+    public CommandResult<CanvasViolation> undo(final AbstractCanvasHandler context) {
+        return context.getCommandFactory().ADD_EDGE( parent, candidate, factory ).execute( context );
     }
 }

@@ -132,9 +132,9 @@ public class CanvasWizardScreen {
     void onLoadDiagramEvent(@Observes LoadDiagramEvent loadDiagramEvent) {
         checkNotNull("loadDiagramEvent", loadDiagramEvent);
 
-        final String path = loadDiagramEvent.getPath();
+        final String uuid = loadDiagramEvent.getUUID();
         Map<String, String> params = new HashMap<String, String>();
-        params.put( "path", path );
+        params.put( "uuid", uuid );
 
         PlaceRequest placeRequest = new DefaultPlaceRequest( CanvasScreen.SCREEN_ID , params );
         placeManager.goTo(placeRequest);

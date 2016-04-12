@@ -15,31 +15,31 @@
  */
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.command.GraphCommandResult;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.Collection;
 
 /**
- * A Command to delete a DefaultNode from a DefaultGraph. 
+ * A Command to delete a node from a graph. 
  * Does not take care about node'edges neither children nodes.
  */
-public class DeleteNodeCommand extends AbstractGraphCommand {
+@Portable
+public final class DeleteNodeCommand extends AbstractGraphCommand {
 
     private Graph target;
     private Node candidate;
 
-    public DeleteNodeCommand(final GraphCommandFactory commandFactory,
-                             final Graph target,
-                             final Node candidate ) {
-        super(commandFactory);
+    public DeleteNodeCommand(@MapsTo("target") Graph target,
+                             @MapsTo("candidate") Node candidate ) {
         this.target = PortablePreconditions.checkNotNull( "target",
                                                           target );
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
@@ -47,13 +47,13 @@ public class DeleteNodeCommand extends AbstractGraphCommand {
     }
     
     @Override
-    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
-        return checkRules(ruleManager);
+    public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
+        return checkRules( context );
     }
 
     @Override
-    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        CommandResult<RuleViolation> results = checkRules(ruleManager);
+    public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
+        CommandResult<RuleViolation> results = checkRules( context );
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
             target.removeNode( candidate.getUUID() );
         }
@@ -61,7 +61,7 @@ public class DeleteNodeCommand extends AbstractGraphCommand {
         return results;
     }
     
-    private CommandResult<RuleViolation> checkRules(final RuleManager ruleManager) {
+    private CommandResult<RuleViolation> checkRules(final GraphCommandExecutionContext context) {
 
         boolean isNodeInGraph = false;
         for ( Object node : target.nodes() ) {
@@ -71,23 +71,24 @@ public class DeleteNodeCommand extends AbstractGraphCommand {
             }
         }
 
-        GraphCommandResult results;
+        final GraphCommandResultBuilder builder = new GraphCommandResultBuilder();
         if ( isNodeInGraph ) {
-            final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality( target, candidate, RuleManager.Operation.DELETE).violations();
-            results = new GraphCommandResult(cardinalityRuleViolations);
+            final Collection<RuleViolation> cardinalityRuleViolations = 
+                    (Collection<RuleViolation>) context.getRuleManager().checkCardinality( target, candidate, 
+                            RuleManager.Operation.DELETE).violations();
+            builder.addViolations( cardinalityRuleViolations );
         } else {
-            results = new GraphCommandResult();
-            results.setType(CommandResult.Type.ERROR);
-            results.setMessage("Node was not present in Graph and hence was not deleted");
+            builder.setType(CommandResult.Type.ERROR);
+            builder.setMessage("Node was not present in Graph and hence was not deleted");
         }
 
-        return results;
+        return builder.build();
     }
     
     @Override
-    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
-        final Command<RuleManager, RuleViolation> undoCommand = commandFactory.ADD_NODE( target, candidate );
-        return undoCommand.execute( ruleManager );
+    public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
+        final AddNodeCommand undoCommand = context.getCommandFactory().ADD_NODE( target, candidate );
+        return undoCommand.execute( context );
     }
 
     @Override

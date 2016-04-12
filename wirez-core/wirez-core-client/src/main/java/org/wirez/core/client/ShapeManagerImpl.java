@@ -33,7 +33,7 @@ public class ShapeManagerImpl implements ShapeManager {
     protected SyncBeanManager beanManager;
     private final List<ShapeSet> shapeSets = new ArrayList<ShapeSet>();
 
-    public ShapeManagerImpl() {
+    protected ShapeManagerImpl() {
     }
 
     @Inject

@@ -57,7 +57,7 @@ public class ToolboxControl extends BaseToolboxControl<Shape, Element> implement
     @Inject
     public ToolboxControl(final CanvasCommandFactory commandFactory,
                           final View view) {
-        super(commandFactory);
+        super( commandFactory );
         this.view = view;
     }
     

@@ -13,6 +13,7 @@ import org.wirez.bpmn.backend.marshall.json.parser.ParsingContext;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.Settings;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.util.GraphUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -36,7 +37,7 @@ public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
         this.oryxPropertyManager = oryxPropertyManager;
     }
     
-    public String marshall(Diagram<Settings> diagram) throws IOException {
+    public String marshall(Diagram<Graph, Settings> diagram) throws IOException {
         DroolsFactoryImpl.init();
         BpsimFactoryImpl.init();
         BPMN2JsonParser parser = createParser(diagram);
@@ -46,7 +47,7 @@ public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
         return StringEscapeUtils.unescapeHtml4(outputStream.toString("UTF-8"));
     }
 
-    private BPMN2JsonParser createParser(Diagram<Settings> diagram) {
+    private BPMN2JsonParser createParser(Diagram<Graph, Settings> diagram) {
         return new BPMN2JsonParser( diagram, new ParsingContext( definitionManager, graphUtils, oryxIdMappings, oryxPropertyManager) );
     }
 }

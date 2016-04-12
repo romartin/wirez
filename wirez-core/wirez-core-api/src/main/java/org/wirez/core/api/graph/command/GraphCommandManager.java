@@ -15,34 +15,13 @@
  */
 package org.wirez.core.api.graph.command;
 
-import org.wirez.core.api.command.AbstractCommandManager;
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResults;
-import org.wirez.core.api.event.NotificationEvent;
-import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.command.CommandManager;
+import org.wirez.core.api.command.batch.BatchCommandManager;
 import org.wirez.core.api.rule.RuleViolation;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-import java.util.Stack;
-
 /**
- * Default implementation of a CommandManager for a graph.
+ * CommandManager that uses an execution context for a given graph.
  */
-@Dependent
-public class GraphCommandManager extends AbstractCommandManager<RuleManager, RuleViolation> {
-
-    private final Stack<Stack<Command<RuleManager, RuleViolation>>> commandHistory = new Stack<Stack<Command<RuleManager, RuleViolation>>>();
-
-    @Inject
-    public GraphCommandManager(final Event<NotificationEvent> notificationEvent) {
-        super(notificationEvent);
-    }
-
-    @Override
-    protected CommandResults<RuleViolation> buildResults() {
-        return new GraphCommandResults();
-    }
+public interface GraphCommandManager extends BatchCommandManager<GraphCommandExecutionContext, RuleViolation> {
 
 }

@@ -4,16 +4,19 @@ import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
-import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.batch.BatchCommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactoryImpl;
 import org.wirez.core.api.graph.content.view.ViewConnector;
+import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.toolbox.command.AddConnectionCommand;
 import org.wirez.core.client.control.toolbox.command.Context;
@@ -22,8 +25,8 @@ import org.wirez.core.client.impl.BaseShape;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.util.WirezClientLogger;
 import org.wirez.core.client.util.ShapeUtils;
+import org.wirez.core.client.util.WirezClientLogger;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -60,7 +63,7 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     @Override
     public void init(final Element element) {
         final SequenceFlow sequenceFlow = bpmnDefinitionFactory.buildSequenceFlow();
-        clientFactoryServices.element(UUID.uuid(), sequenceFlow.getClass().getSimpleName(), new ServiceCallback<Element>() {
+        clientFactoryServices.newElement(UUID.uuid(), sequenceFlow.getClass().getSimpleName(), new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element item) {
                 SequenceFlowConnectionCommandCallback.this.source = element;
@@ -78,8 +81,13 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
     @Override
     public boolean isAllowed(final Context context, final Node target) {
 
-        final boolean allowsSourceConn = context.getCanvasHandler().allow( commandFactory.SET_SOURCE_NODE( (Node) source, edge, 0) );
-        final boolean allowsTargetConn = context.getCanvasHandler().allow( commandFactory.SET_TARGET_NODE( target, edge, 0) );
+        final AbstractCanvasHandler<?, ? ,?> wch = context.getCanvasHandler();
+        
+        final CommandResult<CanvasViolation> cr1 = wch.allow( commandFactory.SET_SOURCE_NODE( (Node) source, edge, 0) ); 
+        final boolean allowsSourceConn = isAllowed( cr1 );
+
+        final CommandResult<CanvasViolation> cr2 = wch.allow( commandFactory.SET_TARGET_NODE( target, edge, 0) );
+        final boolean allowsTargetConn = isAllowed( cr2 );
                 
         final boolean isAllowed = allowsSourceConn & allowsTargetConn;
         log(Level.FINE, "Connection allowed from [" + source.getUUID() + "] to [" + target.getUUID() + "] = [" 
@@ -90,8 +98,10 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
 
     @Override
     public void accept(final Context context, final Node target) {
-
+        
+        final AbstractCanvasHandler<?, ? ,?> wch = context.getCanvasHandler();
         final Canvas canvas = context.getCanvasHandler().getCanvas();
+        
         final BaseShape sourceShape = (BaseShape) canvas.getShape(source.getUUID());
         final BaseShape targetShape = (BaseShape) canvas.getShape(target.getUUID());
         final int[] magnetIndexes = ShapeUtils.getDefaultMagnetsIndex( (WiresShape) sourceShape.getShapeView(),
@@ -99,11 +109,13 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
         
         final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
 
-        final CommandResults<CanvasCommandViolation> results =
-                context.getCanvasHandler().execute( commandFactory.ADD_EDGE( (Node) source, edge, factory),
-                                            commandFactory.SET_SOURCE_NODE( (Node) source, edge, magnetIndexes[0]),
-                                            commandFactory.SET_TARGET_NODE( target, edge, magnetIndexes[1]));
-
+        final BatchCommandResult<CanvasViolation> results = 
+                wch
+                .batch( commandFactory.ADD_EDGE( (Node) source, edge, factory) )
+                .batch( commandFactory.SET_SOURCE_NODE( (Node) source, edge, magnetIndexes[0]) )
+                .batch( commandFactory.SET_TARGET_NODE( target, edge, magnetIndexes[1]) )
+                .executeBatch();
+        
         // TODO: Check results.
 
         log(Level.FINE, "Connection performed from [" + source.getUUID() + "] to [" + target.getUUID() + "]");
@@ -113,6 +125,10 @@ public class SequenceFlowConnectionCommandCallback implements AddConnectionComma
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);
         }
+    }
+    
+    private boolean isAllowed(CommandResult<CanvasViolation> result ) {
+        return !CommandResult.Type.ERROR.equals( result.getType() );
     }
     
 }

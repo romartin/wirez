@@ -6,7 +6,6 @@ import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.impl.BaseShape;
 
 import java.util.Collection;
 

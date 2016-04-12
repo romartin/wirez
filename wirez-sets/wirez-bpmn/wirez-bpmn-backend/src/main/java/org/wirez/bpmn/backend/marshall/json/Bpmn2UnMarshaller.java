@@ -22,6 +22,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.RuleManager;
@@ -56,7 +57,7 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
                              final GraphUtils graphUtils,
                              final Bpmn2OryxIdMappings oryxIdMappings,
                              final Bpmn2OryxPropertyManager oryxPropertyManager,
-                             final CommandManager<RuleManager, RuleViolation> commandManager,
+                             final CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager,
                              final RuleManager ruleManager,
                              final GraphCommandFactory commandFactory) {
         

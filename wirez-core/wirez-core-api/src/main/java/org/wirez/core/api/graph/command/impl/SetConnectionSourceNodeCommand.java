@@ -15,14 +15,16 @@
  */
 package org.wirez.core.api.graph.command.impl;
 
+import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.command.GraphCommandResult;
-import org.wirez.core.api.graph.content.view.ViewConnector;
+import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -30,39 +32,41 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * A Command to set the outgoing connection for a DefaultEdge in a Graph.
+ * A Command to set the outgoing connection for an edge.
+ * 
+ * TODO: Undo.
  */
-public class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
+@Portable
+public final class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
 
     private Node<? extends View<?>, Edge> targetNode;
     private Node<? extends View<?>, Edge> lastSourceNode;
     private Node<? extends View<?>, Edge> sourceNode;
     private Edge<? extends View<?>, Node> edge;
-    private int magnetIndex;
+    private Integer magnetIndex;
 
-    public SetConnectionSourceNodeCommand(final GraphCommandFactory commandFactory,
-                                          final Node<? extends View<?>, Edge> sourceNode,
-                                          final Edge<? extends View<?>, Node> edge, 
-                                          final int magnetIndex) {
-        super(commandFactory);
+    @SuppressWarnings("unchecked")
+    public SetConnectionSourceNodeCommand(@MapsTo("sourceNode") Node<? extends View<?>, Edge> sourceNode,
+                                          @MapsTo("edge") Edge<? extends View<?>, Node> edge,
+                                          @MapsTo("magnetIndex") Integer magnetIndex) {
         this.edge = PortablePreconditions.checkNotNull( "edge",
                 edge );;
         this.sourceNode = PortablePreconditions.checkNotNull( "sourceNode",
                 sourceNode);;
+        this.magnetIndex = PortablePreconditions.checkNotNull( "magnetIndex",
+                magnetIndex);;
         this.lastSourceNode = edge.getSourceNode();
         this.targetNode = edge.getTargetNode();
-        this.magnetIndex = magnetIndex;
     }
     
     @Override
-    public CommandResult<RuleViolation> allow(final RuleManager ruleManager) {
-        final CommandResult<RuleViolation> results = check(ruleManager);
-        return results;
+    public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
+        return check( context );
     }
 
     @Override
-    public CommandResult<RuleViolation> execute(final RuleManager ruleManager) {
-        final CommandResult<RuleViolation> results = check(ruleManager);
+    public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
+        final CommandResult<RuleViolation> results = check( context );
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
             if (lastSourceNode != null) {
                 lastSourceNode.getOutEdges().remove( edge );
@@ -75,18 +79,20 @@ public class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
         return results;
     }
     
-    private CommandResult<RuleViolation> check(final RuleManager ruleManager) {
-        final Collection<RuleViolation> connectionRuleViolations = (Collection<RuleViolation>) ruleManager.checkConnectionRules(sourceNode, targetNode, edge).violations();
-        final Collection<RuleViolation> cardinalityRuleViolations = (Collection<RuleViolation>) ruleManager.checkCardinality(sourceNode, targetNode, edge, RuleManager.Operation.ADD).violations();
+    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+        final Collection<RuleViolation> connectionRuleViolations = 
+                (Collection<RuleViolation>) context.getRuleManager().checkConnectionRules(sourceNode, targetNode, edge).violations();
+        final Collection<RuleViolation> cardinalityRuleViolations = 
+                (Collection<RuleViolation>) context.getRuleManager().checkCardinality(sourceNode, targetNode, edge, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(connectionRuleViolations);
         violations.addAll(cardinalityRuleViolations);
 
-        return new GraphCommandResult(violations);        
+        return new GraphCommandResultBuilder( violations ).build();        
     }
 
     @Override
-    public CommandResult<RuleViolation> undo(RuleManager ruleManager) {
+    public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
         throw new UnsupportedOperationException("Undo for this command not supported yet.");
     }
 

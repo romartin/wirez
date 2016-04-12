@@ -26,6 +26,7 @@ public class GraphUtils {
     }
     
     @Inject
+    @SuppressWarnings("all")
     public GraphUtils(DefinitionManager definitionManager) {
         this.definitionManager = definitionManager;
     }
@@ -64,14 +65,14 @@ public class GraphUtils {
      */
     public Set<?> getPropertiesFromPropertySets( final Object definition ) {
 
-        DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+        DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
         final Set<Object> properties = new HashSet<>();
 
         // And properties on each definition's annotated PropertySet.
         Set<?> propertySets = definitionAdapter.getPropertySets(definition);
         if ( null != propertySets && !propertySets.isEmpty() ) {
             for (Object propertySet : propertySets) {
-                PropertySetAdapter propertySetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
+                PropertySetAdapter<Object> propertySetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
                 Set<?> setProperties = propertySetAdapter.getProperties(propertySet);
                 if( null != setProperties ) {
                     properties.addAll(setProperties);

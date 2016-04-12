@@ -20,15 +20,16 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.control.BaseShapeControl;
-import org.wirez.core.client.impl.BaseShape;
-import org.wirez.core.client.mutation.StaticMutationContext;
 import org.wirez.core.client.view.HasRadius;
 import org.wirez.core.client.view.HasSize;
 
+import javax.inject.Inject;
+
 public abstract class BaseResizeControl<S extends Shape, E extends Element> extends BaseShapeControl<S, E> {
 
-    public BaseResizeControl(CanvasCommandFactory commandFactory) {
-        super(commandFactory);
+    @Inject
+    public BaseResizeControl(final CanvasCommandFactory commandFactory) {
+        super( commandFactory );
     }
 
     protected void doResizeStart(final S shape, final E element, final double width, final double height) {

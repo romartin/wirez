@@ -18,7 +18,6 @@ package org.wirez.core.client.factory.control;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 
 @ApplicationScoped
 public class DefaultShapeControlFactories {
@@ -35,7 +34,7 @@ public class DefaultShapeControlFactories {
     public DefaultShapeControlFactories(final DefaultDragControlFactory dragControlFactory, 
                                         final DefaultResizeControlFactory defaultResizeControlFactory, 
                                         final LienzoResizeControlFactory lienzoResizeControlFactory,
-                                        final @Named("defaultToolboxControlFactory") ToolboxControlFactory toolboxControlFactory) {
+                                        final ToolboxControlFactory toolboxControlFactory) {
         this.dragControlFactory = dragControlFactory;
         this.defaultResizeControlFactory = defaultResizeControlFactory;
         this.lienzoResizeControlFactory = lienzoResizeControlFactory;

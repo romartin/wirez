@@ -14,10 +14,11 @@ import javax.inject.Inject;
 public class RemoveToolboxCommand implements ToolboxCommand {
 
     CanvasCommandFactory commandFactory;
+    
     private final Shape<?> icon;
 
     @Inject
-    public RemoveToolboxCommand(CanvasCommandFactory commandFactory) {
+    public RemoveToolboxCommand(final CanvasCommandFactory commandFactory) {
         this.commandFactory = commandFactory;
         this.icon = (Shape<?>) SVGUtils.createSVGIcon(SVGUtils.getRemove());;
     }
@@ -36,7 +37,7 @@ public class RemoveToolboxCommand implements ToolboxCommand {
     public void execute(final Context context, 
                         final Element element) {
         
-        // TODO: Remove use of confirm here.
+        // TODO: Remove use of hardcoded confirm box here.
         if ( Window.confirm("Are you sure?") ) {
             context.getCanvasHandler().execute( commandFactory.DELETE_NODE((Node) element) );
         }

@@ -1,25 +1,17 @@
 package org.wirez.core.client.control.toolbox.command;
 
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
-import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
-import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
 import com.ait.lienzo.client.core.shape.Arrow;
 import com.ait.lienzo.client.core.shape.IPrimitive;
-import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.client.core.types.Point2DArray;
 import com.ait.lienzo.shared.core.types.ArrowType;
 import com.ait.lienzo.shared.core.types.ColorName;
-import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
-import com.google.gwt.core.client.GWT;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.animation.ShapeSelectionAnimation;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.wires.WiresLayer;
-import org.wirez.core.client.view.HasEventHandlers;
+import org.wirez.core.client.canvas.lienzo.LienzoLayer;
 import org.wirez.core.client.view.event.*;
 
 import java.util.logging.Level;
@@ -71,7 +63,7 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
 
     @Override
     public AddConnectionCommand.View clear() {
-        final WiresLayer layer = (WiresLayer) canvas.getLayer();
+        final LienzoLayer layer = (LienzoLayer) canvas.getLayer();
         if ( null != this.mouseClickHandler ) {
             layer.removeHandler(this.mouseClickHandler);
         }
@@ -88,7 +80,7 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
 
     private void doShow(double x, double y) {
         
-        final WiresLayer layer = (WiresLayer) canvas.getLayer();
+        final LienzoLayer layer = (LienzoLayer) canvas.getLayer();
         
         lineStart = new Point2D(x, y);
         // connector = createLine(x, y,  x + 1, y + 1);

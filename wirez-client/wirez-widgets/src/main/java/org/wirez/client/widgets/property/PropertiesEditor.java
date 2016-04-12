@@ -25,7 +25,6 @@ import org.uberfire.ext.properties.editor.model.PropertyEditorEvent;
 import org.uberfire.ext.properties.editor.model.PropertyEditorFieldInfo;
 import org.uberfire.ext.properties.editor.model.PropertyEditorType;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.command.Command;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.definition.adapter.PropertySetAdapter;
@@ -36,12 +35,12 @@ import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.canvas.command.CanvasCommandViolation;
+import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.listener.AbstractCanvasModelListener;
-import org.wirez.core.client.canvas.listener.CanvasModelListener;
-import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
+import org.wirez.core.client.canvas.listener.AbstractCanvasElementListener;
+import org.wirez.core.client.canvas.listener.CanvasElementListener;
 import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.util.WirezClientLogger;
@@ -76,13 +75,15 @@ public class PropertiesEditor implements IsWidget {
         void onShowElement(Element<? extends org.wirez.core.api.graph.content.view.View<?>> element);
     }
 
+    
     DefinitionManager definitionManager;
     GraphUtils graphUtils;
     ShapeManager wirezClientManager;
     CanvasCommandFactory canvasCommandFactory;
     View view;
-    private WiresCanvasHandler canvasHandler;
-    private CanvasModelListener canvasListener;
+    
+    private AbstractCanvasHandler canvasHandler;
+    private CanvasElementListener canvasListener;
     private EditorCallback editorCallback;
     private String elementUUID;
 
@@ -109,7 +110,7 @@ public class PropertiesEditor implements IsWidget {
         return view.asWidget();
     }
 
-    public void show(final WiresCanvasHandler canvasHandler) {
+    public void show(final AbstractCanvasHandler canvasHandler) {
         if ( this.canvasHandler != null ) {
             removeCanvasListener();
         }
@@ -367,8 +368,8 @@ public class PropertiesEditor implements IsWidget {
         execute( canvasCommandFactory.UPDATE_POSITION(element, x, y) );
     }
     
-    private void execute(final Command<WiresCanvasHandler, CanvasCommandViolation> command) {
-        canvasHandler.execute( command );   
+    private void execute(final CanvasCommand<AbstractCanvasHandler> command) {
+        canvasHandler.execute( command );
     }
 
     private double getWidth(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element) {
@@ -416,7 +417,7 @@ public class PropertiesEditor implements IsWidget {
     private void addCanvasListener() {
         removeCanvasListener();
 
-        canvasListener = new AbstractCanvasModelListener(canvasHandler) {
+        canvasListener = new AbstractCanvasElementListener(canvasHandler) {
             @Override
             public void onElementAdded(final Element element) {
 

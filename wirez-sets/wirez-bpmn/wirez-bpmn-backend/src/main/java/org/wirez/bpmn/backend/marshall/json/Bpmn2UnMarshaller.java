@@ -16,6 +16,8 @@ import org.jboss.drools.util.DroolsResourceFactoryImpl;
 import org.wirez.bpmn.backend.legacy.Bpmn2JsonMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphGenerator;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.CommandManager;
@@ -52,6 +54,8 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
                              final DefinitionManager definitionManager,
                              final FactoryManager factoryManager,
                              final GraphUtils graphUtils,
+                             final Bpmn2OryxIdMappings oryxIdMappings,
+                             final Bpmn2OryxPropertyManager oryxPropertyManager,
                              final CommandManager<RuleManager, RuleViolation> commandManager,
                              final RuleManager ruleManager,
                              final GraphCommandFactory commandFactory) {
@@ -60,6 +64,8 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
                                                             definitionManager,
                                                             factoryManager,
                                                             graphUtils,
+                                                            oryxIdMappings,
+                                                            oryxPropertyManager,
                                                             commandManager, 
                                                             ruleManager, 
                                                             commandFactory);

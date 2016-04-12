@@ -4,8 +4,6 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.adapter.PropertyAdapter;
 import org.wirez.core.api.definition.adapter.PropertySetAdapter;
-import org.wirez.core.api.definition.property.PropertyType;
-import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.definition.Definition;
 import org.wirez.core.api.graph.content.view.BoundImpl;
@@ -15,6 +13,7 @@ import org.wirez.core.api.graph.content.view.View;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.HashSet;
 import java.util.Set;
 
 @ApplicationScoped
@@ -34,7 +33,8 @@ public class GraphUtils {
     public Object getProperty(final Element<? extends Definition> element, final String id) {
         if ( null != element ) {
             final Object def = element.getContent().getDefinition();
-            Set<?> properties = getAllProperties( def );
+            DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( def.getClass() );
+            Set<?> properties = adapter.getProperties( def );
             return getProperty(properties, id);
         }
 
@@ -60,13 +60,12 @@ public class GraphUtils {
     }
 
     /**
-     * Returns all properties, the ones from property sets as well, for a given Definition.
+     * Returns all properties from Definition's property sets.
      */
-    // TODO: Refactor this into DefAdapter?
-    public Set<?> getAllProperties( final Object definition ) {
+    public Set<?> getPropertiesFromPropertySets( final Object definition ) {
 
         DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-        Set<Object> properties = definitionAdapter.getProperties(definition);
+        final Set<Object> properties = new HashSet<>();
 
         // And properties on each definition's annotated PropertySet.
         Set<?> propertySets = definitionAdapter.getPropertySets(definition);
@@ -82,34 +81,6 @@ public class GraphUtils {
 
         return properties;
     }
-
-    // TODO: Refactor this.
-    public static Object parseValue(final PropertyAdapter adapter, final Object property, String raw) {
-        final PropertyType type = adapter.getType( property );
-
-        if (StringType.name.equals(type.getName())) {
-            return raw;
-        }
-
-        if (ColorType.name.equals(type.getName())) {
-            return raw;
-        }
-
-        if (IntegerType.name.equals(type.getName())) {
-            return Integer.parseInt(raw);
-        }
-
-        if (DoubleType.name.equals(type.getName())) {
-            return Double.parseDouble(raw);
-        }
-
-        if (BooleanType.name.equals(type.getName())) {
-            return Boolean.parseBoolean(raw);
-        }
-
-        throw new RuntimeException("Unsupported property type [" + type.getName() + "]");
-    }
-
 
     public static Double[] getPosition(final View element) {
         final Bounds.Bound ul = element.getBounds().getUpperLeft();

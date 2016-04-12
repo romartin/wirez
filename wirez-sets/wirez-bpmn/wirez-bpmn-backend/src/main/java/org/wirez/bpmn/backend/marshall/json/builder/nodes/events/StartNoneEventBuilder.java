@@ -1,25 +1,26 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes.events;
 
 import org.wirez.bpmn.api.StartNoneEvent;
-import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 @Dependent
 public class StartNoneEventBuilder extends AbstractNodeBuilder<StartNoneEvent, Node<View<StartNoneEvent>, Edge>> {
     
-    
-    public StartNoneEventBuilder() {
-        super();
+    @Inject
+    public StartNoneEventBuilder(Bpmn2OryxIdMappings oryxIdMappings) {
+        super(oryxIdMappings);
     }
 
     @Override
     public String getDefinitionId() {
-        return Bpmn2OryxMappings.getOryxId(StartNoneEvent.class);
+        return oryxIdMappings.getOryxId(StartNoneEvent.class);
     }
 
     @Override

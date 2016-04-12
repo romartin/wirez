@@ -1,24 +1,26 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes.activities;
 
 import org.wirez.bpmn.api.ParallelGateway;
-import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 @Dependent
 public class ParallelGatewayBuilder extends AbstractNodeBuilder<ParallelGateway, Node<View<ParallelGateway>, Edge>>  {
 
-    public ParallelGatewayBuilder() {
-        super();
+    @Inject
+    public ParallelGatewayBuilder(Bpmn2OryxIdMappings oryxIdMappings) {
+        super(oryxIdMappings);
     }
 
     @Override
     public String getDefinitionId() {
-        return Bpmn2OryxMappings.getOryxId(ParallelGateway.class);
+        return oryxIdMappings.getOryxId(ParallelGateway.class);
     }
     
     @Override

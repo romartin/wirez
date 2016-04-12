@@ -18,6 +18,8 @@ import org.wirez.bpmn.backend.legacy.profile.impl.DefaultProfileImpl;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2Marshaller;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.diagram.Diagram;
@@ -49,6 +51,8 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
     BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
     DefinitionManager definitionManager;
     GraphUtils graphUtils;
+    Bpmn2OryxIdMappings oryxIdMappings;
+    Bpmn2OryxPropertyManager oryxPropertyManager;
     FactoryManager factoryManager;
     GraphCommandManager graphCommandManager;
     EmptyRuleManager ruleManager;
@@ -60,6 +64,8 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
     public BPMNDiagramMarshaller(BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory, 
                                  DefinitionManager definitionManager,
                                  GraphUtils graphUtils,
+                                 Bpmn2OryxIdMappings oryxIdMappings,
+                                 Bpmn2OryxPropertyManager oryxPropertyManager,
                                  FactoryManager factoryManager, 
                                  GraphCommandManager graphCommandManager, 
                                  EmptyRuleManager ruleManager, 
@@ -67,6 +73,8 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
         this.graphUtils = graphUtils;
+        this.oryxIdMappings = oryxIdMappings;
+        this.oryxPropertyManager = oryxPropertyManager;
         this.factoryManager = factoryManager;
         this.graphCommandManager = graphCommandManager;
         this.ruleManager = ruleManager;
@@ -94,7 +102,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
 
         LOG.info("Starting BPMN diagram marshalling...");
 
-        Bpmn2Marshaller marshaller = new Bpmn2Marshaller( definitionManager, graphUtils );
+        Bpmn2Marshaller marshaller = new Bpmn2Marshaller( definitionManager, graphUtils, oryxIdMappings, oryxPropertyManager );
 
         String result = null;
         try {
@@ -121,6 +129,8 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<InputStream, Set
                     definitionManager,
                     factoryManager,
                     graphUtils,
+                    oryxIdMappings,
+                    oryxPropertyManager,
                     graphCommandManager, 
                     ruleManager,
                     commandFactory);

@@ -2,11 +2,19 @@ package org.wirez.core.api.definition.adapter.binding;
 
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.util.GraphUtils;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public abstract class BindableDefinitionAdapter<T> extends AbstractBindableAdapter<T> implements DefinitionAdapter<T> {
+
+    protected GraphUtils graphUtils;
+
+    public BindableDefinitionAdapter(GraphUtils graphUtils) {
+        this.graphUtils = graphUtils;
+    }
 
     protected abstract Map<Class, Set<String>> getPropertySetsFieldNames();
     protected abstract Map<Class, Set<String>> getPropertiesFieldNames();
@@ -49,7 +57,22 @@ public abstract class BindableDefinitionAdapter<T> extends AbstractBindableAdapt
 
     @Override
     public Set<?> getProperties(T pojo) {
-        return getProxiedSet( pojo, getPropertiesFieldNames().get(pojo.getClass()) );
+        final Set<Object> result = new HashSet<>();
+        
+        // Obtain all properties from property sets.
+        final Set<?> propertySetProperties = graphUtils.getPropertiesFromPropertySets( pojo );
+        if ( null != propertySetProperties ) {
+            result.addAll( propertySetProperties );
+        }
+
+        // Find annotated runtime properties on the pojo.
+        
+        Set<?> proxiedProps = getProxiedSet( pojo, getPropertiesFieldNames().get(pojo.getClass()) );
+        if ( null != proxiedProps ) {
+            result.addAll( propertySetProperties );
+        }
+        
+        return result;
     }
 
     @Override

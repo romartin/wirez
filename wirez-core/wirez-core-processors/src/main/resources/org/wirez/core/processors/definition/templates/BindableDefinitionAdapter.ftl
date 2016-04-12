@@ -17,9 +17,11 @@
 package ${packageName};
 
 import ${parentAdapterClassName};
+import ${utilsClassName};
 
 import javax.annotation.Generated;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,6 +30,11 @@ import java.util.Set;
 @Generated("${generatedByClassName}")
 @ApplicationScoped
 public class ${className} extends ${parentAdapterClassName} {
+
+    @Inject
+    public ${className}(${utilsClassName} utils) {
+        super(utils);
+    }
 
     private static final Map<Class, String> categoryFieldNames = new HashMap<Class, String>(${categoryFieldNamesSize}) {{
         <#list categoryFieldNames as categoryFieldName>

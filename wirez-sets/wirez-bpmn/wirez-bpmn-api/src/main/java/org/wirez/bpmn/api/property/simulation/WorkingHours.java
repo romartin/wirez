@@ -22,7 +22,7 @@ import org.wirez.bpmn.api.BPMNProperty;
 import org.wirez.core.api.definition.annotation.Description;
 import org.wirez.core.api.definition.annotation.property.*;
 import org.wirez.core.api.definition.property.PropertyType;
-import org.wirez.core.api.definition.property.type.StringType;
+import org.wirez.core.api.definition.property.type.DoubleType;
 
 @Portable
 @Bindable
@@ -42,7 +42,7 @@ public class WorkingHours implements BPMNProperty {
     public static final Boolean optional = false;
 
     @Type
-    public static final PropertyType type = new StringType();
+    public static final PropertyType type = new DoubleType();
 
     @DefaultValue
     public static final Double defaultValue = 8d;

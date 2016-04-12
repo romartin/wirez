@@ -3,14 +3,16 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResults;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.adapter.PropertyAdapter;
+import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.graph.util.GraphUtils;
 
 import java.util.*;
 
@@ -96,17 +98,21 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
     
     protected void setProperties(BuilderContext context, BPMNDefinition definition) {
         assert definition != null;
-        Set<?> defProperties = context.getGraphUtils().getAllProperties( definition );
+        Bpmn2OryxPropertyManager propertyManager = context.getOryxPropertyManager();
+        Bpmn2OryxIdMappings idMappings = context.getOryxIdMappings();
+
+        DefinitionAdapter<BPMNDefinition> adapter = context.getDefinitionManager().getDefinitionAdapter( definition.getClass() );
+        Set<?> defProperties = adapter.getProperties( definition );
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             final String oryxId = entry.getKey();
             final String pValue = entry.getValue();
-            final String pId = Bpmn2OryxMappings.getId( oryxId );
+            final String pId = idMappings.getId( oryxId );
             final Object property = getProperty(context, defProperties, pId);
             if ( null != property ) {
-                final Object value;
                 try {
                     PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter( property.getClass() );
-                    value = GraphUtils.parseValue(propertyAdapter, property, pValue);
+                    PropertyType propertyType = propertyAdapter.getType( property );
+                    Object value = propertyManager.parse( propertyType, pValue );
                     context.getDefinitionManager().getPropertyAdapter(property.getClass()).setValue(property, value);
                 } catch (Exception e) {
                    LOG.error("Cannot parse value [" + pValue + "] for property [" + pId + "]");

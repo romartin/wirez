@@ -1,4 +1,4 @@
-package org.wirez.bpmn.backend.marshall.json;
+package org.wirez.bpmn.backend.marshall.json.oryx;
 
 import org.wirez.bpmn.api.BPMNProperty;
 import org.wirez.bpmn.api.property.diagram.DiagramSet;
@@ -6,6 +6,7 @@ import org.wirez.bpmn.api.property.general.*;
 import org.wirez.bpmn.api.property.simulation.CatchEventAttributes;
 import org.wirez.bpmn.api.property.simulation.ThrowEventAttributes;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +15,8 @@ import java.util.Set;
  * This class contains the mappings for the different stencil identifiers that are different from 
  * the patterns used in this tool.
  */
-public class Bpmn2OryxMappings {
+@ApplicationScoped
+public class Bpmn2OryxIdMappings {
     
     private static final Map<Class<?>, String> mappings = new HashMap<Class<?>, String>() {{
         put( CatchEventAttributes.class, "catchEventAttributes" );
@@ -33,7 +35,7 @@ public class Bpmn2OryxMappings {
         put( Name.class, "name" );
     }};
     
-    public static String getOryxId(Class<?> clazz ) {
+    public String getOryxId(Class<?> clazz ) {
         
         String result = mappings.get( clazz );
         
@@ -49,7 +51,7 @@ public class Bpmn2OryxMappings {
         return result;
     }
 
-    public static String getOryxPropertyId(String className ) {
+    public String getOryxPropertyId(String className ) {
 
         Set<Map.Entry<Class<?>, String>> entrySet = mappings.entrySet();
         for ( Map.Entry<Class<?>, String> entry : entrySet ) {
@@ -63,7 +65,7 @@ public class Bpmn2OryxMappings {
         return className.toLowerCase();
     }
 
-    public static String getId( String oryxId ) {
+    public String getId( String oryxId ) {
 
         Set<Map.Entry<Class<?>, String>> entrySet = mappings.entrySet();
         for ( Map.Entry<Class<?>, String> entry : entrySet ) {

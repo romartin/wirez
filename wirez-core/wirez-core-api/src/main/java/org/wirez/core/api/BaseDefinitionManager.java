@@ -26,12 +26,12 @@ public abstract class BaseDefinitionManager implements DefinitionManager {
 
     DiagramRegistry<? extends Diagram> diagramRegistry;
 
-    protected final List definitionSets = new ArrayList<>();
-    protected final List<DefinitionSetAdapter> definitionSetAdapters = new ArrayList<DefinitionSetAdapter>();
-    protected final List<DefinitionSetRuleAdapter> definitionSetRuleAdapters = new ArrayList<DefinitionSetRuleAdapter>();
-    protected final List<DefinitionAdapter> definitionAdapters = new ArrayList<DefinitionAdapter>();
+    protected final List definitionSets = new LinkedList<>();
+    protected final List<DefinitionSetAdapter> definitionSetAdapters = new LinkedList<>();
+    protected final List<DefinitionSetRuleAdapter> definitionSetRuleAdapters = new LinkedList<>();
+    protected final List<DefinitionAdapter> definitionAdapters = new LinkedList<>();
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
-    protected final List<PropertyAdapter> propertyAdapters = new ArrayList<PropertyAdapter>();
+    protected final List<PropertyAdapter> propertyAdapters = new LinkedList<>();
 
     protected BaseDefinitionManager() {
     }

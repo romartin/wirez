@@ -1,5 +1,7 @@
 package org.wirez.bpmn.backend.marshall.json.parser;
 
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.util.GraphUtils;
 
@@ -7,11 +9,15 @@ public class ParsingContext implements ContextualParser.Context {
 
     private final DefinitionManager definitionManager;
     private final GraphUtils graphUtils;
+    private final Bpmn2OryxIdMappings oryxIdMappings;
+    private final Bpmn2OryxPropertyManager oryxPropertyManager;
     
     public ParsingContext(DefinitionManager definitionManager,
-                          GraphUtils graphUtils) {
+                          GraphUtils graphUtils, Bpmn2OryxIdMappings oryxIdMappings, Bpmn2OryxPropertyManager oryxPropertyManager) {
         this.definitionManager = definitionManager;
         this.graphUtils = graphUtils;
+        this.oryxIdMappings = oryxIdMappings;
+        this.oryxPropertyManager = oryxPropertyManager;
     }
 
     @Override
@@ -23,5 +29,15 @@ public class ParsingContext implements ContextualParser.Context {
     public GraphUtils getGraphUtils() {
         return graphUtils;
     }
-    
+
+    @Override
+    public Bpmn2OryxPropertyManager getOryxPropertyManager() {
+        return oryxPropertyManager;
+    }
+
+    @Override
+    public Bpmn2OryxIdMappings getOryxIdMappings() {
+        return oryxIdMappings;
+    }
+
 }

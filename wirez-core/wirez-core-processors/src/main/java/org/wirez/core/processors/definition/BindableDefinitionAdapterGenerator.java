@@ -18,6 +18,7 @@ package org.wirez.core.processors.definition;
 
 import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.wirez.core.api.definition.adapter.binding.BindableDefinitionAdapter;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
 import org.wirez.core.processors.ProcessingDefinitionAnnotations;
 
@@ -46,6 +47,7 @@ public class BindableDefinitionAdapterGenerator extends AbstractBindableAdapterG
                 BindableDefinitionAdapter.class.getName());
         root.put("generatedByClassName",
                 BindableDefinitionAdapterGenerator.class.getName());
+        root.put("utilsClassName", GraphUtils.class.getName());
         
         addFields("categoryFieldNames", root, processingDefinitionAnnotations.getCategoryFieldNames());
         addFields("titleFieldNames", root, processingDefinitionAnnotations.getTitleFieldNames());

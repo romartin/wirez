@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.annotation.definition.Definition;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.util.GraphUtils;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +17,13 @@ import java.util.Set;
 public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> implements DefinitionAdapter<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedDefinitionAdapter.class);
+
+    GraphUtils graphUtils;
+
+    @Inject
+    public AnnotatedDefinitionAdapter(GraphUtils graphUtils) {
+        this.graphUtils = graphUtils;
+    }
 
     @Override
     public boolean accepts(Class<?> pojo) {
@@ -112,6 +121,14 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
             Field[] fields = definition.getClass().getDeclaredFields();
             if ( null != fields ) {
                 result = new HashSet<>();
+                
+                // Obtain all properties from property sets.
+                Set<?> propertySetProperties = graphUtils.getPropertiesFromPropertySets( definition );
+                if ( null != propertySetProperties ) {
+                    result.addAll( propertySetProperties );
+                }
+
+                // Find annotated runtime properties on the pojo.
                 for (Field field : fields) {
                     org.wirez.core.api.definition.annotation.definition.Property annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.definition.Property.class);
                     if ( null != annotation) {

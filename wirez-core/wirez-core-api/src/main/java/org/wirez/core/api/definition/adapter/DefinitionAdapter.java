@@ -40,7 +40,9 @@ public interface DefinitionAdapter<T> extends Adapter<T> {
     Set<?> getPropertySets(T pojo);
 
     /**
-     * Returns the definition's properties for a given pojo.
+     * Returns all the definition's properties for a given pojo.
+     * Must return the properties from the different 
+     * definition's property sets as well.
      */
     Set<?> getProperties(T pojo);
 

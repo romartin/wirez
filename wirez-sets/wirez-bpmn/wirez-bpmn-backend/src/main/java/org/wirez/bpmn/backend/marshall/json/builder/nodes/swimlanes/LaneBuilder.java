@@ -1,24 +1,26 @@
 package org.wirez.bpmn.backend.marshall.json.builder.nodes.swimlanes;
 
 import org.wirez.bpmn.api.Lane;
-import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 @Dependent
 public class LaneBuilder extends AbstractNodeBuilder<Lane, Node<View<Lane>, Edge>>  {
 
-    public LaneBuilder() {
-        super();
+    @Inject
+    public LaneBuilder(Bpmn2OryxIdMappings oryxIdMappings) {
+        super(oryxIdMappings);
     }
 
     @Override
     public String getDefinitionId() {
-        return Bpmn2OryxMappings.getOryxId(Lane.class);
+        return oryxIdMappings.getOryxId(Lane.class);
     }
 
     @Override

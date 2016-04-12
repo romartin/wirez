@@ -13,18 +13,7 @@
     - Usability
 
     - Split API module - extract impls?
-    
-    - model
-        - Property API
-        - Definition Impls -> finish implementation & generate from ifaces and the adapter as well
-        - Performance
-            - private constructors
-            - review inmutability (final fields) -> bindable needs pub no-arg const! How 2 deal with finals?
-            - if making fields static -> marhsalls as null... ( eg: DefSet#labels )
-            - builders
-                - mark as @NonPortable
-                - auto generate when using annotated models?
-    
+        
     - sync/async command managers
     
     - Client
@@ -83,6 +72,16 @@
       
 - API
 *****
+
+    - model
+        - Definition Impls -> finish implementation & generate from ifaces and the adapter as well
+        - Performance
+            - private constructors
+            - review inmutability (final fields) -> bindable needs pub no-arg const! How 2 deal with finals?
+            - if making fields static -> marhsalls as null... ( eg: DefSet#labels )
+            - builders
+                - mark as @NonPortable
+                - auto generate when using annotated models?
 
     - Commands
         - ensure only single parent/edge connections between nodes

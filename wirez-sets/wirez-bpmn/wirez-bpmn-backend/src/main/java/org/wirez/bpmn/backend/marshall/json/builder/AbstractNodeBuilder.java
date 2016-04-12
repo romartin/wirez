@@ -1,6 +1,7 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.wirez.bpmn.api.BPMNDefinition;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.CommandResults;
 import org.wirez.core.api.graph.Edge;
@@ -8,8 +9,8 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.impl.AddChildNodeCommand;
 import org.wirez.core.api.graph.command.impl.SetConnectionSourceNodeCommand;
 import org.wirez.core.api.graph.content.view.*;
-import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.api.rule.RuleViolation;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -18,10 +19,12 @@ import java.util.Set;
 public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>> 
         extends AbstractObjectBuilder<W, T> implements NodeObjectBuilder<W, T> {
 
+    protected Bpmn2OryxIdMappings oryxIdMappings;
     protected Set<String> childNodeIds;
     
-    public AbstractNodeBuilder() {
+    public AbstractNodeBuilder(Bpmn2OryxIdMappings oryxIdMappings) {
         super();
+        this.oryxIdMappings = oryxIdMappings;
         this.childNodeIds = new LinkedHashSet<String>();
     }
 

@@ -9,15 +9,15 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.factory.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 public abstract class BaseFactoryManager implements FactoryManager {
 
     protected DefinitionManager definitionManager;
-    protected final List<ModelFactory> modelFactories = new ArrayList<ModelFactory>();
+    protected final List<ModelFactory> modelFactories = new LinkedList<>();
 
     private BaseFactoryManager() {
     }

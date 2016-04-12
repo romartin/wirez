@@ -1,11 +1,11 @@
 package org.wirez.bpmn.backend.marshall.json.parser;
 
-import org.wirez.bpmn.backend.marshall.json.Bpmn2OryxMappings;
 import org.wirez.bpmn.backend.marshall.json.parser.common.IntegerFieldParser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.ObjectParser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.StringFieldParser;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.adapter.PropertyAdapter;
+import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.content.view.View;
@@ -34,24 +34,25 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
         
         // Properties array.
         Object def = element.getContent().getDefinition();
-        Set<?> properties = context.getGraphUtils().getAllProperties( def );
+        DefinitionAdapter<Object> adapter = context.getDefinitionManager().getDefinitionAdapter( def.getClass() );
+        Set<?> properties = adapter.getProperties( def );
         ObjectParser propertiesParser = new ObjectParser("properties");
         super.addParser( propertiesParser );
         if ( null != properties && !properties.isEmpty() ) {
             for ( Object property : properties ) {
-                final PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter(property.getClass()); 
-                final String pId = propertyAdapter.getId( property );
-                final String oryxPropId = Bpmn2OryxMappings.getOryxPropertyId( pId );
+                PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter(property.getClass()); 
+                String pId = propertyAdapter.getId( property );
+                PropertyType propertyType = propertyAdapter.getType( property );
+                String oryxPropId = context.getOryxIdMappings().getOryxPropertyId( pId );
                 Object value = propertyAdapter.getValue(property);
-                // TODO: Use property specific formatting/parsing
-                String valueStr = value != null ? value.toString() : "";
-                
+                String valueStr = value != null ?
+                        context.getOryxPropertyManager().serialize( propertyType, value ) : "";
                 propertiesParser.addParser( new StringFieldParser( oryxPropId, valueStr ) );
             }
         }
 
         // Stencil id field.
-        String defId = Bpmn2OryxMappings.getOryxId( definition.getClass() );
+        String defId = context.getOryxIdMappings().getOryxId( definition.getClass() );
         super.addParser( new ObjectParser( "stencil" ).addParser( new StringFieldParser( "id", defId ) ) );
 
         // Bounds.

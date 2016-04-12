@@ -118,31 +118,31 @@ public class BPMNDiagramMarshallerTest {
             return null;
         }).when(definitionManager).getModelFactory(anyString());*/
         
-        BootstrapObjectBuilder bootstrapObjectBuilder = new BootstrapObjectBuilder(bpmnGraphBuilderFactory);
+        BootstrapObjectBuilder bootstrapObjectBuilder = new BootstrapObjectBuilder(bpmnGraphBuilderFactory, null);
         doReturn(bootstrapObjectBuilder).when(bpmnGraphBuilderFactory).bootstrapBuilder();
         doAnswer(invocationOnMock -> {
             String id = (String) invocationOnMock.getArguments()[0];
             
             /* Nodes */
             if (BPMNDiagram.class.getSimpleName().equals(id)) {
-                return new BPMNDiagramBuilder();
+                return new BPMNDiagramBuilder(null);
             } else if (StartNoneEvent.class.getSimpleName().equals(id)) {
-                return new StartNoneEventBuilder();
+                return new StartNoneEventBuilder(null);
             } else if (EndNoneEvent.class.getSimpleName().equals(id)) {
-                return new EndNoneEventBuilder();
+                return new EndNoneEventBuilder(null);
             } else if (EndTerminateEvent.class.getSimpleName().equals(id)) {
-                return new EndTerminateEventBuilder();
+                return new EndTerminateEventBuilder(null);
             } else if (Task.class.getSimpleName().equals(id)) {
-                return new TaskBuilder();
+                return new TaskBuilder(null);
             } else if (ParallelGateway.class.getSimpleName().equals(id)) {
-                return new ParallelGatewayBuilder();
+                return new ParallelGatewayBuilder(null);
             } else if (Lane.class.getSimpleName().equals(id)) {
-                return new LaneBuilder();
+                return new LaneBuilder(null);
             }
 
             /* Edges */
             if (SequenceFlow.class.getSimpleName().equals(id)) {
-                return new SequenceFlowBuilder();
+                return new SequenceFlowBuilder(null);
             }
             
             return null;
@@ -151,6 +151,8 @@ public class BPMNDiagramMarshallerTest {
         this.tested = new BPMNDiagramMarshaller(bpmnGraphBuilderFactory, 
                                                 definitionManager, 
                                                 null, 
+                                                null,
+                                                null,
                                                 null,
                                                 new GraphCommandManager(notificationEvent), 
                                                 new EmptyRuleManager(), 

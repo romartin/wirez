@@ -4,6 +4,8 @@ import org.codehaus.jackson.*;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.Command;
@@ -37,6 +39,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
     DefinitionManager definitionManager;
     FactoryManager factoryManager;
     GraphUtils graphUtils;
+    Bpmn2OryxIdMappings oryxIdMappings;
+    Bpmn2OryxPropertyManager oryxPropertyManager;
     CommandManager<RuleManager, RuleViolation> commandManager;
     RuleManager ruleManager;
     GraphCommandFactory commandFactory;
@@ -78,6 +82,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
                               final DefinitionManager definitionManager,
                               final FactoryManager factoryManager,
                               final GraphUtils graphUtils,
+                              final Bpmn2OryxIdMappings oryxIdMappings,
+                              final Bpmn2OryxPropertyManager oryxPropertyManager,
                               final CommandManager<RuleManager, RuleViolation> commandManager,
                               final RuleManager ruleManager,
                               final GraphCommandFactory commandFactory) {
@@ -85,6 +91,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
         this.definitionManager = definitionManager;
         this.factoryManager = factoryManager;
         this.graphUtils = graphUtils;
+        this.oryxIdMappings = oryxIdMappings;
+        this.oryxPropertyManager = oryxPropertyManager;
         this.commandManager = commandManager;
         this.ruleManager = ruleManager;
         this.commandFactory = commandFactory;
@@ -207,6 +215,16 @@ public class BPMNGraphGenerator extends JsonGenerator {
         @Override
         public GraphUtils getGraphUtils() {
             return graphUtils;
+        }
+
+        @Override
+        public Bpmn2OryxPropertyManager getOryxPropertyManager() {
+            return oryxPropertyManager;
+        }
+
+        @Override
+        public Bpmn2OryxIdMappings getOryxIdMappings() {
+            return oryxIdMappings;
         }
 
         @SuppressWarnings("unchecked")

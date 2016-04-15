@@ -16,6 +16,7 @@
 
 package org.wirez.client.workbench.screens;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.livespark.formmodeler.renderer.client.DynamicFormRenderer;
 import org.uberfire.client.annotations.*;
@@ -25,6 +26,7 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
+import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
@@ -132,28 +134,34 @@ public class FormsPropertiesScreen {
             final String shapeUUID = shape.getUUID();
             final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element = this.canvasHandler.getGraphIndex().get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
-                formRenderer.renderDefaultForm( element.getContent().getDefinition() );
-                
+                formRenderer.renderDefaultForm( element.getContent().getDefinition(), new Command() {
+                    @Override
+                    public void execute() {
+                        formRenderer.addFieldChangeHandler( ( fieldName, newValue, model ) ->
+                                FormsPropertiesScreen.this.executeUpdateProperty( element, fieldName, model ));
+                    }
+                } );
+
                 /*
                     TODO: Tip for Pere :)
-                    
+
                     Imagine that at this point, for example, we can do this:
-                    
-                        formRenderer.addCallback( new FormRendererCallback() { 
-                            
+
+                        formRenderer.addCallback( new FormRendererCallback() {
+
                             @Override
                             public void onPropertyUpdated( final String propertyId, final Object value ) {
-                                
+
                                 // This will update the pojo property on the graph and the canvas will be re-drawn with the updates.
                                 // All updates have to be done through commands in order to perform further undos
                                 FormsPropertiesScreen.this.executeUpdateProperty( element, propertyId, value );
-                                
+
                             }
-                            
+
                         } )
-                    
+
                  */
-                
+
             } else if (ShapeState.DESELECTED.equals(state)) {
                 doClear();
             }
@@ -171,17 +179,17 @@ public class FormsPropertiesScreen {
     private void executeUpdateProperty(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element,
                                        final String propertyId,
                                        final Object value) {
-        
+
         canvasHandler.execute( canvasHandler.getCommandFactory().UPDATE_PROPERTY(element, propertyId, value) );
-        
+
     }
 
     private void executeMove(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element,
                              final double x,
                              final double y) {
-        
+
         canvasHandler.execute( canvasHandler.getCommandFactory().UPDATE_POSITION(element, x, y) );
-        
+
     }
 
 }

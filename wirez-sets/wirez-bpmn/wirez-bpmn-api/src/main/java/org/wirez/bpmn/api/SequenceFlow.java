@@ -64,11 +64,10 @@ public class SequenceFlow implements BPMNDefinition {
     @Description
     public static final transient String description = "A Sequence Flow";
     
-    
     public static final transient String COLOR = "#000000";
     public static final transient String BORDER_COLOR = "#000000";
     public static final Double BORDER_SIZE = 3d;
-    
+
     @PropertySet
     private BPMNGeneral general;
 
@@ -82,9 +81,9 @@ public class SequenceFlow implements BPMNDefinition {
     }};
 
     public SequenceFlow() {
-        
+
     }
-    
+
     public SequenceFlow(@MapsTo("general") BPMNGeneral general,
                  @MapsTo("backgroundSet") BackgroundSet backgroundSet) {
         this.general = general;
@@ -106,7 +105,7 @@ public class SequenceFlow implements BPMNDefinition {
     public Set<String> getLabels() {
         return labels;
     }
-    
+
     public BPMNGeneral getGeneral() {
         return general;
     }
@@ -115,4 +114,11 @@ public class SequenceFlow implements BPMNDefinition {
         return backgroundSet;
     }
 
+    public void setGeneral( BPMNGeneral general ) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet( BackgroundSet backgroundSet ) {
+        this.backgroundSet = backgroundSet;
+    }
 }

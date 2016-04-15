@@ -49,11 +49,13 @@ public class StartNoneEvent implements BPMNDefinition {
     
     public static final transient String COLOR = "#3eb870";
     public static final Double RADIUS = 15d;
-    
+
     @PropertySet
+    @FieldDef( label = "BPMN General Settings")
     private BPMNGeneral general;
 
     @PropertySet
+    @FieldDef( label = "Background Settings")
     private BackgroundSet backgroundSet;
 
     @PropertySet
@@ -61,7 +63,7 @@ public class StartNoneEvent implements BPMNDefinition {
 
     @PropertySet
     private CatchEventAttributes catchEventAttributes;
-    
+
     @Property
     @FieldDef(label = "Radius", property = "value")
     private Radius radius;
@@ -79,9 +81,9 @@ public class StartNoneEvent implements BPMNDefinition {
     }};
 
     public StartNoneEvent() {
-        
+
     }
-    
+
     public StartNoneEvent(@MapsTo("general") BPMNGeneral general,
                    @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                    @MapsTo("fontSet") FontSet fontSet,
@@ -109,7 +111,7 @@ public class StartNoneEvent implements BPMNDefinition {
     public Set<String> getLabels() {
         return labels;
     }
-    
+
     public Radius getRadius() {
         return radius;
     }
@@ -130,4 +132,23 @@ public class StartNoneEvent implements BPMNDefinition {
         return catchEventAttributes;
     }
 
+    public void setGeneral( BPMNGeneral general ) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet( BackgroundSet backgroundSet ) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setFontSet( FontSet fontSet ) {
+        this.fontSet = fontSet;
+    }
+
+    public void setCatchEventAttributes( CatchEventAttributes catchEventAttributes ) {
+        this.catchEventAttributes = catchEventAttributes;
+    }
+
+    public void setRadius( Radius radius ) {
+        this.radius = radius;
+    }
 }

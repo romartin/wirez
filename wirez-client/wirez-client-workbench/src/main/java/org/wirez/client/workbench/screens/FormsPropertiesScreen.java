@@ -57,32 +57,32 @@ public class FormsPropertiesScreen {
 
     @Inject
     ClientDefinitionManager clientDefinitionManager;
-    
+
     @Inject
     private DynamicFormRenderer formRenderer;
-    
+
     @Inject
     ErrorPopupPresenter errorPopupPresenter;
-    
+
     @Inject
     PlaceManager placeManager;
 
     @Inject
     Event<ChangeTitleWidgetEvent> changeTitleNotification;
-    
+
     private PlaceRequest placeRequest;
     private WiresCanvasHandler canvasHandler;
-    
+
     @PostConstruct
     public void init() {
-        
+
     }
 
     @OnStartup
     public void onStartup(final PlaceRequest placeRequest) {
         this.placeRequest = placeRequest;
     }
-    
+
     @OnOpen
     public void onOpen() {
 
@@ -90,7 +90,7 @@ public class FormsPropertiesScreen {
 
     @OnClose
     public void onClose() {
-        
+
     }
 
 
@@ -112,7 +112,7 @@ public class FormsPropertiesScreen {
     public IsWidget getWidget() {
         return formRenderer.asWidget();
     }
-    
+
     @WorkbenchContextId
     public String getMyContextRef() {
         return "wirezPropertiesScreenContext";
@@ -128,7 +128,7 @@ public class FormsPropertiesScreen {
             doClear();
         }
     }
-    
+
     void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
         checkNotNull("event", event);
         final ShapeState state = event.getState();
@@ -148,9 +148,9 @@ public class FormsPropertiesScreen {
         }
 
     }
-    
+
     private void doClear() {
-        
+
     }
-    
+
 }

@@ -19,6 +19,7 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
@@ -46,7 +47,7 @@ public class ParallelGateway implements BPMNDefinition {
     
     public static final transient String COLOR = "#f0e68c";
     public static final Double RADIUS = 20d;
-    
+
     @PropertySet
     private BPMNGeneral general;
 
@@ -57,8 +58,9 @@ public class ParallelGateway implements BPMNDefinition {
     private FontSet fontSet;
 
     @Property
+    @FieldDef(label = "Radius", property = "value")
     private Radius radius;
-    
+
     @Labels
     private final Set<String> labels = new HashSet<String>() {{
         add( "all" );
@@ -71,9 +73,9 @@ public class ParallelGateway implements BPMNDefinition {
     }};
 
     public ParallelGateway() {
-        
+
     }
-    
+
     public ParallelGateway(@MapsTo("general") BPMNGeneral general,
                            @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                            @MapsTo("fontSet") FontSet fontSet,
@@ -116,4 +118,19 @@ public class ParallelGateway implements BPMNDefinition {
         return radius;
     }
 
+    public void setGeneral( BPMNGeneral general ) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet( BackgroundSet backgroundSet ) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setFontSet( FontSet fontSet ) {
+        this.fontSet = fontSet;
+    }
+
+    public void setRadius( Radius radius ) {
+        this.radius = radius;
+    }
 }

@@ -19,6 +19,7 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
@@ -47,7 +48,7 @@ public class EndNoneEvent implements BPMNDefinition {
     
     public static final transient String COLOR = "#ff0000";
     public static final Double RADIUS = 14d;
-    
+
     @PropertySet
     private BPMNGeneral general;
 
@@ -56,11 +57,12 @@ public class EndNoneEvent implements BPMNDefinition {
 
     @PropertySet
     private ThrowEventAttributes throwEventAttributes;
-    
+
     @PropertySet
     private FontSet fontSet;
-    
+
     @Property
+    @FieldDef(label = "Radius", property = "value")
     private Radius radius;
 
     @Labels
@@ -76,9 +78,9 @@ public class EndNoneEvent implements BPMNDefinition {
     }};
 
     public EndNoneEvent()  {
-        
+
     }
-    
+
     public EndNoneEvent(@MapsTo("general") BPMNGeneral general,
                  @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                  @MapsTo("fontSet") FontSet fontSet,
@@ -127,4 +129,23 @@ public class EndNoneEvent implements BPMNDefinition {
         return throwEventAttributes;
     }
 
+    public void setGeneral( BPMNGeneral general ) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet( BackgroundSet backgroundSet ) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setThrowEventAttributes( ThrowEventAttributes throwEventAttributes ) {
+        this.throwEventAttributes = throwEventAttributes;
+    }
+
+    public void setFontSet( FontSet fontSet ) {
+        this.fontSet = fontSet;
+    }
+
+    public void setRadius( Radius radius ) {
+        this.radius = radius;
+    }
 }

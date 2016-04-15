@@ -19,6 +19,7 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
@@ -48,13 +49,13 @@ public class Lane implements BPMNDefinition {
     public static final String description = "Pools and Lanes represent responsibilities for activities in a process. " +
             "A pool or a lane can be an organization, a role, or a system. " +
             "Lanes sub-divide pools or other lanes hierarchically.";
-    
-    
+
+
     public static final String COLOR = "#ffffff";
     public static final Double WIDTH = 450d;
     public static final Double HEIGHT = 250d;
     public static final Double BORDER_SIZE = 1d;
-    
+
     @PropertySet
     private BPMNGeneral general;
 
@@ -65,9 +66,11 @@ public class Lane implements BPMNDefinition {
     private FontSet fontSet;
 
     @Property
+    @FieldDef(label = "Width", property = "value")
     private Width width;
 
     @Property
+    @FieldDef(label = "Height", property = "value")
     private Height height;
 
     @Labels
@@ -79,9 +82,9 @@ public class Lane implements BPMNDefinition {
     }};
 
     public Lane() {
-        
+
     }
-    
+
     public Lane(@MapsTo("general") BPMNGeneral general,
                 @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                 @MapsTo("fontSet") FontSet fontSet,
@@ -130,4 +133,23 @@ public class Lane implements BPMNDefinition {
         return height;
     }
 
+    public void setHeight( Height height ) {
+        this.height = height;
+    }
+
+    public void setWidth( Width width ) {
+        this.width = width;
+    }
+
+    public void setFontSet( FontSet fontSet ) {
+        this.fontSet = fontSet;
+    }
+
+    public void setBackgroundSet( BackgroundSet backgroundSet ) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setGeneral( BPMNGeneral general ) {
+        this.general = general;
+    }
 }

@@ -36,7 +36,7 @@ public class ThrowEventAttributes implements BPMNPropertySet {
 
     public ThrowEventAttributes() {
     }
-    
+
     public ThrowEventAttributes(@MapsTo("min") Min min,
                                 @MapsTo("max") Max max,
                                 @MapsTo("mean") Mean mean,
@@ -79,4 +79,27 @@ public class ThrowEventAttributes implements BPMNPropertySet {
         return distributionType;
     }
 
+    public void setMin( Min min ) {
+        this.min = min;
+    }
+
+    public void setMax( Max max ) {
+        this.max = max;
+    }
+
+    public void setMean( Mean mean ) {
+        this.mean = mean;
+    }
+
+    public void setTimeUnit( TimeUnit timeUnit ) {
+        this.timeUnit = timeUnit;
+    }
+
+    public void setStandardDeviation( StandardDeviation standardDeviation ) {
+        this.standardDeviation = standardDeviation;
+    }
+
+    public void setDistributionType( DistributionType distributionType ) {
+        this.distributionType = distributionType;
+    }
 }

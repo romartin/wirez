@@ -19,6 +19,7 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
@@ -45,12 +46,12 @@ public class EndTerminateEvent implements BPMNDefinition {
     @Description
     public static final String description = "Triggering the immediate termination of a process instance. " +
             "All steps still in execution in parallel branches are terminated";
-    
+
     public static final String COLOR = "#000000";
     public static final String BORDER_COLOR = "#000000";
     public static final String RING_COLOR = "#FF0000";
     public static final Double RADIUS = 14d;
-    
+
     @PropertySet
     private BPMNGeneral general;
 
@@ -62,8 +63,9 @@ public class EndTerminateEvent implements BPMNDefinition {
 
     @PropertySet
     private FontSet fontSet;
-    
+
     @Property
+    @FieldDef(label = "Radius", property = "value")
     private Radius radius;
 
     @Labels
@@ -78,9 +80,9 @@ public class EndTerminateEvent implements BPMNDefinition {
     }};
 
     public EndTerminateEvent() {
-        
+
     }
-    
+
     public EndTerminateEvent(@MapsTo("general") BPMNGeneral general,
                              @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                              @MapsTo("fontSet") FontSet fontSet,
@@ -129,4 +131,23 @@ public class EndTerminateEvent implements BPMNDefinition {
         return throwEventAttributes;
     }
 
+    public void setGeneral( BPMNGeneral general ) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet( BackgroundSet backgroundSet ) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setThrowEventAttributes( ThrowEventAttributes throwEventAttributes ) {
+        this.throwEventAttributes = throwEventAttributes;
+    }
+
+    public void setFontSet( FontSet fontSet ) {
+        this.fontSet = fontSet;
+    }
+
+    public void setRadius( Radius radius ) {
+        this.radius = radius;
+    }
 }

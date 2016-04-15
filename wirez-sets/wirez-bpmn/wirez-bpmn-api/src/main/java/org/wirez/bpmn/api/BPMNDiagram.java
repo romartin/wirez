@@ -41,13 +41,13 @@ public class BPMNDiagram implements BPMNDefinition {
 
     @Category
     public static final String category = "Diagram";
-    
+
     @Title
     public static final String title = "BPMN Diagram";
-    
+
     @Description
     public static final String description = "BPMN Diagam";
-    
+
     public static final String COLOR = "#FFFFFF";
     public static final String BORDER_COLOR = "#000000";
     public static final Double BORDER_SIZE = 1d;
@@ -56,7 +56,7 @@ public class BPMNDiagram implements BPMNDefinition {
 
     @PropertySet
     private BPMNGeneral general;
-    
+
     @PropertySet
     private DiagramSet diagramSet;
 
@@ -65,13 +65,13 @@ public class BPMNDiagram implements BPMNDefinition {
 
     @PropertySet
     private FontSet fontSet;
-    
+
     @Property
     private Width width;
 
     @Property
     private Height height;
-    
+
     @Labels
     private final Set<String> labels = new HashSet<String>() {{
         add( "canContainArtifacts" );
@@ -79,9 +79,9 @@ public class BPMNDiagram implements BPMNDefinition {
     }};
 
     public BPMNDiagram() {
-        
+
     }
-    
+
     public BPMNDiagram(@MapsTo("general") BPMNGeneral general,
                 @MapsTo("diagramSet") DiagramSet diagramSet,
                 @MapsTo("backgroundSet") BackgroundSet backgroundSet,
@@ -111,7 +111,7 @@ public class BPMNDiagram implements BPMNDefinition {
     public Set<String> getLabels() {
         return labels;
     }
-    
+
     public DiagramSet getDiagramSet() {
         return diagramSet;
     }
@@ -136,4 +136,27 @@ public class BPMNDiagram implements BPMNDefinition {
         return fontSet;
     }
 
+    public void setGeneral( BPMNGeneral general ) {
+        this.general = general;
+    }
+
+    public void setDiagramSet( DiagramSet diagramSet ) {
+        this.diagramSet = diagramSet;
+    }
+
+    public void setBackgroundSet( BackgroundSet backgroundSet ) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setFontSet( FontSet fontSet ) {
+        this.fontSet = fontSet;
+    }
+
+    public void setWidth( Width width ) {
+        this.width = width;
+    }
+
+    public void setHeight( Height height ) {
+        this.height = height;
+    }
 }

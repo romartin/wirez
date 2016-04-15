@@ -3,6 +3,7 @@ package org.wirez.bpmn.api.property.general;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.api.BPMNPropertySet;
 import org.wirez.core.api.definition.annotation.propertyset.Property;
 import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
@@ -19,12 +20,13 @@ public class BPMNGeneral implements BPMNPropertySet {
     private Name name;
 
     @Property
+    @FieldDef( label = "Documentation", property = "value")
     private Documentation documentation;
 
     public BPMNGeneral() {
-        
+
     }
-    
+
     public BPMNGeneral(@MapsTo("name") Name name,
                        @MapsTo("documentation") Documentation documentation) {
         this.name = name;
@@ -43,4 +45,11 @@ public class BPMNGeneral implements BPMNPropertySet {
         return documentation;
     }
 
+    public void setName( Name name ) {
+        this.name = name;
+    }
+
+    public void setDocumentation( Documentation documentation ) {
+        this.documentation = documentation;
+    }
 }

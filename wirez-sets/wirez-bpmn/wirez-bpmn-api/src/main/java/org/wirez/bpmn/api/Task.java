@@ -46,12 +46,12 @@ public class Task implements BPMNDefinition {
 
     @Description
     public static final String description = "A task is a unit of work - the job to be performed";
-    
+
     public static final String COLOR = "#dfeff8";
     public static final Double WIDTH = 136d;
     public static final Double HEIGHT = 48d;
     public static final Double BORDER_SIZE = 0.5d;
-    
+
     @PropertySet
     private BPMNGeneral general;
 
@@ -83,21 +83,27 @@ public class Task implements BPMNDefinition {
     private TimeUnit timeUnit;
 
     @Property
+    @FieldDef(label = "Standard Deviation", property = "value")
     private StandardDeviation standardDeviation;
 
     @Property
+    @FieldDef(label = "Distribution Type", property = "value")
     private DistributionType distributionType;
 
     @Property
+    @FieldDef(label = "Quantity", property = "value")
     private Quantity quantity;
 
     @Property
+    @FieldDef(label = "WorkingHours", property = "value")
     private WorkingHours workingHours;
 
     @Property
+    @FieldDef(label = "UnitCost", property = "value")
     private UnitCost unitCost;
 
     @Property
+    @FieldDef(label = "Currency", property = "value")
     private Currency currency;
 
     @Labels
@@ -115,9 +121,9 @@ public class Task implements BPMNDefinition {
     }};
 
     public Task() {
-        
+
     }
-    
+
     public Task(@MapsTo("general") BPMNGeneral general,
                 @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                 @MapsTo("fontSet") FontSet fontSet,
@@ -148,7 +154,7 @@ public class Task implements BPMNDefinition {
         this.workingHours = workingHours;
         this.unitCost = unitCost;
         this.currency = currency;
-        
+
     }
 
     public String getCategory() {
@@ -166,7 +172,7 @@ public class Task implements BPMNDefinition {
     public Set<String> getLabels() {
         return labels;
     }
-    
+
     public BPMNGeneral getGeneral() {
         return general;
     }
@@ -227,4 +233,63 @@ public class Task implements BPMNDefinition {
         return currency;
     }
 
+    public void setGeneral( BPMNGeneral general ) {
+        this.general = general;
+    }
+
+    public void setBackgroundSet( BackgroundSet backgroundSet ) {
+        this.backgroundSet = backgroundSet;
+    }
+
+    public void setFontSet( FontSet fontSet ) {
+        this.fontSet = fontSet;
+    }
+
+    public void setWidth( Width width ) {
+        this.width = width;
+    }
+
+    public void setHeight( Height height ) {
+        this.height = height;
+    }
+
+    public void setMin( Min min ) {
+        this.min = min;
+    }
+
+    public void setMax( Max max ) {
+        this.max = max;
+    }
+
+    public void setMean( Mean mean ) {
+        this.mean = mean;
+    }
+
+    public void setTimeUnit( TimeUnit timeUnit ) {
+        this.timeUnit = timeUnit;
+    }
+
+    public void setStandardDeviation( StandardDeviation standardDeviation ) {
+        this.standardDeviation = standardDeviation;
+    }
+
+    public void setDistributionType( DistributionType distributionType ) {
+        this.distributionType = distributionType;
+    }
+
+    public void setQuantity( Quantity quantity ) {
+        this.quantity = quantity;
+    }
+
+    public void setWorkingHours( WorkingHours workingHours ) {
+        this.workingHours = workingHours;
+    }
+
+    public void setUnitCost( UnitCost unitCost ) {
+        this.unitCost = unitCost;
+    }
+
+    public void setCurrency( Currency currency ) {
+        this.currency = currency;
+    }
 }

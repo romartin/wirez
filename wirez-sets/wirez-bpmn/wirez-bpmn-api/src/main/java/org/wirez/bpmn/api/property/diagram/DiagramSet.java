@@ -23,9 +23,9 @@ public class DiagramSet implements BPMNPropertySet {
     private Executable executable;
 
     public DiagramSet() {
-        
+
     }
-    
+
     public DiagramSet(@MapsTo("packageProperty") Package packageProperty,
                       @MapsTo("executable") Executable executable) {
         this.packageProperty = packageProperty;
@@ -44,4 +44,11 @@ public class DiagramSet implements BPMNPropertySet {
         return executable;
     }
 
+    public void setPackageProperty( Package packageProperty ) {
+        this.packageProperty = packageProperty;
+    }
+
+    public void setExecutable( Executable executable ) {
+        this.executable = executable;
+    }
 }

@@ -17,20 +17,20 @@ public class FontSet implements BPMNPropertySet {
 
     @Property
     private FontFamily fontFamily;
-    
+
     @Property
     private FontColor fontColor;
 
     @Property
     private FontSize fontSize;
-    
+
     @Property
     private FontBorderSize fontBorderSize;
 
     public FontSet() {
-        
+
     }
-    
+
     public FontSet(@MapsTo("fontFamily") FontFamily fontFamily,
             @MapsTo("fontColor") FontColor fontColor,
             @MapsTo("fontSize") FontSize fontSize,
@@ -61,4 +61,19 @@ public class FontSet implements BPMNPropertySet {
         return fontBorderSize;
     }
 
+    public void setFontFamily( FontFamily fontFamily ) {
+        this.fontFamily = fontFamily;
+    }
+
+    public void setFontColor( FontColor fontColor ) {
+        this.fontColor = fontColor;
+    }
+
+    public void setFontSize( FontSize fontSize ) {
+        this.fontSize = fontSize;
+    }
+
+    public void setFontBorderSize( FontBorderSize fontBorderSize ) {
+        this.fontBorderSize = fontBorderSize;
+    }
 }

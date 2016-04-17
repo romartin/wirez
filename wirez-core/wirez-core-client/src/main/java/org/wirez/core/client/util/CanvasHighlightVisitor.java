@@ -27,13 +27,13 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.FullContentTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
-import org.wirez.core.client.HasDecorators;
-import org.wirez.core.client.Shape;
+import org.wirez.core.client.shape.HasDecorators;
+import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeHighlightAnimation;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.view.HasCanvasState;
+import org.wirez.core.client.shape.view.HasCanvasState;
 
 import java.util.LinkedList;
 import java.util.List;

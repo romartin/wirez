@@ -29,16 +29,15 @@ import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
 import org.wirez.client.widgets.palette.tooltip.PaletteTooltip;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.client.Shape;
+import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.canvas.control.HasShapeGlyphDragHandler;
-import org.wirez.core.client.canvas.control.ShapeGlyphDragHandler;
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.components.glyph.ShapeGlyphDragHandler;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.client.view.ShapeGlyph;
+import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -73,6 +72,7 @@ public class Palette implements IsWidget {
     Event<AddShapeToCanvasEvent> addShapeToCanvasEvent;
     SyncBeanManager beanManager;
     PaletteTooltip paletteTooltip;
+    ShapeGlyphDragHandler shapeGlyphDragHandler;
     ErrorPopupPresenter errorPopupPresenter;
     View view;
     
@@ -84,7 +84,8 @@ public class Palette implements IsWidget {
                    final ClientFactoryServices clientFactoryServices,
                    final SyncBeanManager beanManager,
                    final Event<AddShapeToCanvasEvent> addShapeToCanvasEvent,
-                   final PaletteTooltip paletteTooltip) {
+                   final PaletteTooltip paletteTooltip,
+                   final ShapeGlyphDragHandler shapeGlyphDragHandler) {
         this.view = view;
         this.errorPopupPresenter = errorPopupPresenter;
         this.shapeManager = shapeManager;
@@ -93,6 +94,7 @@ public class Palette implements IsWidget {
         this.beanManager = beanManager;
         this.addShapeToCanvasEvent = addShapeToCanvasEvent;
         this.paletteTooltip = paletteTooltip;
+        this.shapeGlyphDragHandler = shapeGlyphDragHandler;
     }
 
     @PostConstruct
@@ -153,11 +155,11 @@ public class Palette implements IsWidget {
         view.clearGroups();
 
         final Collection<String> definitions = definitionManager.getDefinitionSetAdapter( definitionSet.getClass() ).getDefinitions( definitionSet );
-        final Collection<ShapeFactory<? , ? extends Shape>> factories = wirezShapeSet.getFactories();
+        final Collection<ShapeFactory<?, ?, ? extends Shape>> factories = wirezShapeSet.getFactories();
 
         // Load entries.
         final Map<String, List<PaletteGroupItem>> paletteGroupItems = new HashMap<>();
-        for (final ShapeFactory<? , ? extends Shape> factory : factories) {
+        for (final ShapeFactory<?, ?, ? extends Shape> factory : factories) {
             final Object definition = getDefinition(definitions, factory);
 
             if ( null != definition ) {
@@ -209,24 +211,18 @@ public class Palette implements IsWidget {
                             @Override
                             public void onDragStart(final LienzoPanel parentPanel, final double x, final double y) {
 
-                                if (factory instanceof HasShapeGlyphDragHandler) {
-                                    final HasShapeGlyphDragHandler hasShapeGlyphDragHandler = (HasShapeGlyphDragHandler) factory;
-                                    final ShapeGlyphDragHandler shapeGlyphDragHandler = hasShapeGlyphDragHandler.getShapeGlyphDragHandler();
+                                shapeGlyphDragHandler.show(parentPanel, glyph, x, y, new ShapeGlyphDragHandler.Callback() {
+                                    @Override
+                                    public void onMove(final LienzoPanel floatingPanel, final double x, final double y) {
 
-                                    shapeGlyphDragHandler.show(parentPanel, glyph, x, y, new ShapeGlyphDragHandler.Callback() {
-                                        @Override
-                                        public void onMove(final LienzoPanel floatingPanel, final double x, final double y) {
+                                    }
 
-                                        }
-
-                                        @Override
-                                        public void onComplete(final LienzoPanel floatingPanel, final double x, final double y) {
-                                            log(Level.FINE, "Palette: Adding " + description + " at " + x + "," + y);
-                                            addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory, x, y));
-                                        }
-                                    });
-                                    
-                                }
+                                    @Override
+                                    public void onComplete(final LienzoPanel floatingPanel, final double x, final double y) {
+                                        log(Level.FINE, "Palette: Adding " + description + " at " + x + "," + y);
+                                        addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory, x, y));
+                                    }
+                                });
 
                             }
                         });
@@ -257,10 +253,8 @@ public class Palette implements IsWidget {
     
     private Object getDefinition(final Collection<String> definitions, final ShapeFactory factory) {
         for (final String definitionId : definitions) {
-            // TODO: Do not build the instance just to check if factory#accepts. Use callback method.
-            Object definition = clientFactoryServices.newDomainObject( definitionId );
-            if (factory.accepts(definition)) {
-                return definition;
+            if (factory.accepts( definitionId )) {
+                return clientFactoryServices.newDomainObject( definitionId );
             }
         }
         return null;

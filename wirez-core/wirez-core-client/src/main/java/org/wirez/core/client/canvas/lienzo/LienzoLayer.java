@@ -8,8 +8,8 @@ import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.core.client.canvas.Layer;
-import org.wirez.core.client.view.ShapeView;
-import org.wirez.core.client.view.event.*;
+import org.wirez.core.client.shape.view.ShapeView;
+import org.wirez.core.client.shape.view.event.*;
 
 import javax.enterprise.context.Dependent;
 import java.util.HashMap;

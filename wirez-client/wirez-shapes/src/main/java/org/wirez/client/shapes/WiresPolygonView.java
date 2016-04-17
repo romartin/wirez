@@ -7,11 +7,11 @@ import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.event.shared.HandlerRegistration;
-import org.wirez.core.client.view.HasRadius;
-import org.wirez.core.client.view.event.DragHandler;
-import org.wirez.core.client.view.event.ViewEvent;
-import org.wirez.core.client.view.event.ViewEventType;
-import org.wirez.core.client.view.event.ViewHandler;
+import org.wirez.core.client.shape.view.HasRadius;
+import org.wirez.core.client.shape.view.event.DragHandler;
+import org.wirez.core.client.shape.view.event.ViewEvent;
+import org.wirez.core.client.shape.view.event.ViewEventType;
+import org.wirez.core.client.shape.view.event.ViewHandler;
 
 public class WiresPolygonView<T extends WiresPolygonView> extends AbstractWiresShapeView<T> 
         implements HasRadius<T> {

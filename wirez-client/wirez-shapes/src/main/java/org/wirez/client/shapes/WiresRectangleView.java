@@ -6,11 +6,11 @@ import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import org.wirez.core.client.view.HasSize;
-import org.wirez.core.client.view.event.DragHandler;
-import org.wirez.core.client.view.event.ViewEvent;
-import org.wirez.core.client.view.event.ViewEventType;
-import org.wirez.core.client.view.event.ViewHandler;
+import org.wirez.core.client.shape.view.HasSize;
+import org.wirez.core.client.shape.view.event.DragHandler;
+import org.wirez.core.client.shape.view.event.ViewEvent;
+import org.wirez.core.client.shape.view.event.ViewEventType;
+import org.wirez.core.client.shape.view.event.ViewHandler;
 
 public class WiresRectangleView<T extends WiresRectangleView> extends AbstractWiresShapeView<T> 
         implements HasSize<T> {

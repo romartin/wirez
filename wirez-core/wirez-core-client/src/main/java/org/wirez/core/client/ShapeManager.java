@@ -16,7 +16,7 @@
 
 package org.wirez.core.client;
 
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 
 import java.util.Collection;
 

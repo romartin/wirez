@@ -9,11 +9,11 @@ import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.view.*;
-import org.wirez.core.client.view.event.MouseClickEvent;
-import org.wirez.core.client.view.event.ViewEvent;
-import org.wirez.core.client.view.event.ViewEventType;
-import org.wirez.core.client.view.event.ViewHandler;
+import org.wirez.core.client.shape.view.*;
+import org.wirez.core.client.shape.view.event.MouseClickEvent;
+import org.wirez.core.client.shape.view.event.ViewEvent;
+import org.wirez.core.client.shape.view.event.ViewEventType;
+import org.wirez.core.client.shape.view.event.ViewHandler;
 
 import java.util.HashMap;
 import java.util.Map;

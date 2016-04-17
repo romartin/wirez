@@ -18,7 +18,9 @@ package org.wirez.core.client;
 
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.client.shape.Shape;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -31,14 +33,17 @@ import java.util.List;
 public class ShapeManagerImpl implements ShapeManager {
 
     protected SyncBeanManager beanManager;
+    protected DefinitionManager definitionManager;
     private final List<ShapeSet> shapeSets = new ArrayList<ShapeSet>();
 
     protected ShapeManagerImpl() {
     }
 
     @Inject
-    public ShapeManagerImpl(final SyncBeanManager beanManager) {
+    public ShapeManagerImpl(final SyncBeanManager beanManager,
+                            final DefinitionManager definitionManager) {
         this.beanManager = beanManager;
+        this.definitionManager = definitionManager;
     }
 
     @PostConstruct
@@ -62,11 +67,12 @@ public class ShapeManagerImpl implements ShapeManager {
 
     @Override
     public ShapeFactory getFactory(final Object definition) {
+        final String defId  = definitionManager.getDefinitionAdapter( definition.getClass() ).getId( definition );
         final Collection<ShapeSet> shapeSets = getShapeSets();
         for (final ShapeSet wirezShapeSet : shapeSets) {
-            final Collection<ShapeFactory<?, ? extends Shape>> factories = wirezShapeSet.getFactories();
-            for (final ShapeFactory<?, ? extends Shape> factory : factories) {
-                if (factory.accepts(definition)) {
+            final Collection<ShapeFactory> factories = wirezShapeSet.getFactories();
+            for (final ShapeFactory factory : factories) {
+                if ( factory.accepts(defId) ) {
                     return factory;
                 }
             }

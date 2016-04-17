@@ -17,7 +17,7 @@
 package org.wirez.core.client.animation;
 
 import com.ait.lienzo.client.core.animation.AnimationProperties;
-import org.wirez.core.client.Shape;
+import org.wirez.core.client.shape.Shape;
 
 import java.util.Collection;
 

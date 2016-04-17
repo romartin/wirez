@@ -18,11 +18,12 @@ package org.wirez.bpmn.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
-import org.wirez.bpmn.client.factory.*;
 import org.wirez.bpmn.client.resources.BPMNImageResources;
-import org.wirez.core.client.Shape;
+import org.wirez.bpmn.client.shape.factory.*;
+import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.shape.factory.AbstractShapeFactory;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -32,7 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @ApplicationScoped
-public class BPMNShapeSet implements ShapeSet {
+public class BPMNShapeSet implements ShapeSet<AbstractShapeFactory<?, ? extends Shape>> {
 
     public static final String ID = "BPMNShapeSet";
 
@@ -45,7 +46,7 @@ public class BPMNShapeSet implements ShapeSet {
     ParallelGatewayShapeFactory parallelGatewayShapeFactory;
     LaneShapeFactory laneShapeFactory;
     
-    private List<ShapeFactory<?, ? extends Shape>> factories;
+    private List<AbstractShapeFactory<?, ? extends Shape>> factories;
 
     public BPMNShapeSet() {
     }
@@ -71,7 +72,7 @@ public class BPMNShapeSet implements ShapeSet {
 
     @PostConstruct
     public void init() {
-        factories = new LinkedList<ShapeFactory<?, ? extends Shape>>() {{
+        factories = new LinkedList<AbstractShapeFactory<?, ? extends Shape>>() {{
             add( bpmnDiagramShapeFactory );
             add( startNoneEventShapeFactory );
             add( endNoneEventShapeFactory );
@@ -109,7 +110,7 @@ public class BPMNShapeSet implements ShapeSet {
     }
 
     @Override
-    public Collection<ShapeFactory<?, ? extends Shape>> getFactories() {
+    public Collection<AbstractShapeFactory<?, ? extends Shape>> getFactories() {
         return factories;
     }
 }

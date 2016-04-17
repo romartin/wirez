@@ -18,11 +18,11 @@ package org.wirez.core.client.animation;
 
 import com.ait.lienzo.client.core.animation.IAnimation;
 import com.ait.lienzo.client.core.animation.IAnimationHandle;
-import org.wirez.core.client.HasDecorators;
-import org.wirez.core.client.Shape;
+import org.wirez.core.client.shape.HasDecorators;
+import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.impl.BaseConnector;
-import org.wirez.core.client.impl.BaseShape;
+import org.wirez.core.client.shape.impl.AbstractConnector;
+import org.wirez.core.client.shape.impl.AbstractShape;
 
 import java.util.Collection;
 
@@ -68,20 +68,20 @@ public abstract class BaseShapeAnimation implements ShapeAnimation {
 
     protected void onStart() {
 
-        if (shape instanceof BaseShape) {
-            ((BaseShape) shape).beforeMutations(canvas);
-        } else if (shape instanceof BaseConnector) {
-            ((BaseConnector) shape).beforeMutations(canvas);
+        if (shape instanceof AbstractShape) {
+            ((AbstractShape) shape).beforeDraw();
+        } else if (shape instanceof AbstractConnector) {
+            ((AbstractConnector) shape).afterDraw();
         }
 
     }
     
     protected void onClose() {
 
-        if (shape instanceof BaseShape) {
-            ((BaseShape) shape).afterMutations(canvas);
-        }else if (shape instanceof BaseConnector) {
-            ((BaseConnector) shape).afterMutations(canvas);
+        if (shape instanceof AbstractShape) {
+            ((AbstractShape) shape).beforeDraw();
+        }else if (shape instanceof AbstractConnector) {
+            ((AbstractConnector) shape).afterDraw();
         }
         
     }

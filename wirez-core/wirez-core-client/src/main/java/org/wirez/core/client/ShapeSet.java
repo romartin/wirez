@@ -17,11 +17,12 @@
 package org.wirez.core.client;
 
 import com.google.gwt.safehtml.shared.SafeUri;
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.client.shape.Shape;
 
 import java.util.Collection;
 
-public interface ShapeSet {
+public interface ShapeSet<F extends ShapeFactory> {
 
     /**
      * Get the identifier for the set.
@@ -52,5 +53,5 @@ public interface ShapeSet {
      * The shape factories available in this set.
      * @return The available shapes' factories.
      */
-    Collection<ShapeFactory<?, ? extends Shape>> getFactories();
+    Collection<F> getFactories();
 }

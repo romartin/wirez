@@ -1,7 +1,7 @@
 package org.wirez.client.shapes.glyph;
 
 import com.ait.lienzo.client.core.shape.Group;
-import org.wirez.core.client.view.ShapeGlyph;
+import org.wirez.core.client.shape.view.ShapeGlyph;
 
 public class AbstractGlyph implements ShapeGlyph {
     

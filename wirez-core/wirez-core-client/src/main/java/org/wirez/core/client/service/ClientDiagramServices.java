@@ -20,8 +20,8 @@ import javax.inject.Inject;
 
 /**
  * Provides the client side and remote caller for the diagram manager and services.
- * If the requested manager is present on client side, it will use the manager's service 
- * in order to perform the operation. 
+ * If the requested diagram is not present on client side, it will use the manager's service 
+ * in order to perform the operation for it. 
  */
 @ApplicationScoped
 public class ClientDiagramServices extends AbstractDiagramManager<Diagram> {
@@ -59,7 +59,7 @@ public class ClientDiagramServices extends AbstractDiagramManager<Diagram> {
             
             registry.update( diagram );
             
-            diagramServiceCaller.call(v -> callback.onSuccess (diagram ), (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; }).update( diagram );
+            diagramServiceCaller.call(v -> callback.onSuccess (diagram ), (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; }).saveOrUpdate( diagram );
             
         } else {
             
@@ -75,7 +75,7 @@ public class ClientDiagramServices extends AbstractDiagramManager<Diagram> {
 
             registry.add( diagram );
 
-            diagramServiceCaller.call(v -> callback.onSuccess (diagram ), (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; } ).update( diagram );
+            diagramServiceCaller.call(v -> callback.onSuccess (diagram ), (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; } ).saveOrUpdate( diagram );
             
         }
 

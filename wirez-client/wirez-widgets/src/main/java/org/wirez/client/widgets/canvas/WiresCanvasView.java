@@ -18,7 +18,7 @@ package org.wirez.client.widgets.canvas;
 import com.ait.lienzo.client.core.shape.wires.*;
 import org.wirez.client.shapes.AbstractWiresConnectorView;
 import org.wirez.client.shapes.AbstractWiresShapeView;
-import org.wirez.core.client.view.ShapeView;
+import org.wirez.core.client.shape.view.ShapeView;
 
 /**
  * This is the root Canvas view provided by Lienzo and wires

@@ -8,8 +8,8 @@ import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.factory.ShapeFactory;
-import org.wirez.core.client.view.ShapeGlyph;
+import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;

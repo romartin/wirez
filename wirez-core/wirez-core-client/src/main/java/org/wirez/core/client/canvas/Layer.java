@@ -1,6 +1,6 @@
 package org.wirez.core.client.canvas;
 
-import org.wirez.core.client.view.HasEventHandlers;
+import org.wirez.core.client.shape.view.HasEventHandlers;
 
 public interface Layer<T, S> extends HasEventHandlers<T> {
     

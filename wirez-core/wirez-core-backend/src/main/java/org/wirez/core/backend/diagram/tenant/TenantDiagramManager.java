@@ -46,5 +46,29 @@ public class TenantDiagramManager extends AbstractDiagramManager<Diagram> implem
         }
 
     }
+
+    @Override
+    public void update(Diagram diagram) {
+        super.update( diagram );
+        
+        // Synchronize global diagram registries.
+        appDiagramManager.update( diagram );
+    }
+
+    @Override
+    public void add(Diagram diagram) {
+        super.add( diagram );
+        
+        // Synchronize global diagram registries.
+        appDiagramManager.add( diagram );
+    }
+
+    @Override
+    public void remove(Diagram diagram) {
+        super.remove( diagram );
+
+        // Synchronize global diagram registries.
+        appDiagramManager.remove( diagram );
+    }
     
 }

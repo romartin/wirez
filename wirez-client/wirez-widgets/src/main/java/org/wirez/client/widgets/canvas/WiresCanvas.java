@@ -19,8 +19,11 @@ package org.wirez.client.widgets.canvas;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.wirez.core.client.canvas.Layer;
+import org.wirez.core.client.canvas.event.CanvasClearEvent;
+import org.wirez.core.client.canvas.event.CanvasShapeAddedEvent;
+import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
 import org.wirez.core.client.canvas.lienzo.Lienzo;
-import org.wirez.core.client.event.ShapeStateModifiedEvent;
+import org.wirez.core.client.shape.Shape;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -33,10 +36,12 @@ public class WiresCanvas extends org.wirez.core.client.canvas.wires.WiresCanvas 
     private static final int PADDING = 15;
 
     @Inject
-    public WiresCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent,
+    public WiresCanvas(final Event<CanvasClearEvent> canvasClearEvent,
+                       final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
+                       final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
                        final @Lienzo Layer layer,
                        final org.wirez.core.client.canvas.wires.WiresCanvas.View view) {
-        super(canvasShapeStateModifiedEvent, layer, view);
+        super( canvasClearEvent, canvasShapeAddedEvent, canvasShapeRemovedEvent, layer, view );
     }
 
     @PostConstruct
@@ -56,15 +61,13 @@ public class WiresCanvas extends org.wirez.core.client.canvas.wires.WiresCanvas 
     }
 
     @Override
-    public WiresCanvas addControl(final IsWidget control) {
+    public void addControl(final IsWidget control) {
         view.add(control);
-        return this;
     }
 
     @Override
-    public org.wirez.core.client.canvas.Canvas deleteControl(final IsWidget control) {
+    public void deleteControl(final IsWidget control) {
         view.remove(control);
-        return this;
     }
 
     public WiresCanvas clear() {

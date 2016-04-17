@@ -33,15 +33,14 @@ import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.event.*;
+import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.command.CanvasCommand;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.listener.AbstractCanvasElementListener;
-import org.wirez.core.client.canvas.listener.CanvasElementListener;
-import org.wirez.core.client.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.util.WirezClientLogger;
 
@@ -61,7 +60,7 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 @Dependent
 public class PropertiesEditor implements IsWidget {
     
-    private static Logger LOGGER = Logger.getLogger("org.wirez.client.widgets.property.PropertiesEditor");
+    private static Logger LOGGER = Logger.getLogger(PropertiesEditor.class.getName());
     
     public interface View extends UberView<PropertiesEditor> {
         
@@ -83,7 +82,6 @@ public class PropertiesEditor implements IsWidget {
     View view;
     
     private AbstractCanvasHandler canvasHandler;
-    private CanvasElementListener canvasListener;
     private EditorCallback editorCallback;
     private String elementUUID;
 
@@ -111,11 +109,7 @@ public class PropertiesEditor implements IsWidget {
     }
 
     public void show(final AbstractCanvasHandler canvasHandler) {
-        if ( this.canvasHandler != null ) {
-            removeCanvasListener();
-        }
         this.canvasHandler = canvasHandler;
-        addCanvasListener();
     }
 
     public void setEditorCallback(final EditorCallback editorCallback) {
@@ -385,7 +379,7 @@ public class PropertiesEditor implements IsWidget {
     }
     
     public void clear() {
-        removeCanvasListener();
+        this.canvasHandler = null;
         doClear();   
     }
     
@@ -400,7 +394,7 @@ public class PropertiesEditor implements IsWidget {
         final Shape shape = event.getShape();
         if ( shape != null ) {
             // If shape exist, show the properties for the underlying model element.
-            final String shapeUUID = shape.getId();
+            final String shapeUUID = shape.getUUID();
             final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element = this.canvasHandler.getGraphIndex().get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
                 show(element);
@@ -413,49 +407,40 @@ public class PropertiesEditor implements IsWidget {
         }
         
     }
-    
-    private void addCanvasListener() {
-        removeCanvasListener();
 
-        canvasListener = new AbstractCanvasElementListener(canvasHandler) {
-            @Override
-            public void onElementAdded(final Element element) {
-
-            }
-
-            @Override
-            public void onElementModified(final Element _element) {
-                super.onElementModified(_element);
-                final String _elementUUID = _element.getUUID();
-                if (PropertiesEditor.this.elementUUID != null 
-                        && PropertiesEditor.this.elementUUID.equals(_elementUUID)) {
-                    show(_element);
-                }
-            }
-
-            @Override
-            public void onElementDeleted(final Element _element) {
-                final String _elementUUID = _element.getUUID();
-                if (PropertiesEditor.this.elementUUID != null
-                        && PropertiesEditor.this.elementUUID.equals(_elementUUID)) {
-                    doClear();
-                }
-            }
-
-            @Override
-            public void onClear() {
-                doClear();
-            }
-        };
-        canvasHandler.addListener(canvasListener);
-    }
-
-    private void removeCanvasListener() {
-        if (canvasListener != null) {
-            canvasListener.detach();
+    void onCanvasClearEvent(@Observes CanvasClearEvent canvasClearEvent) {
+        if ( canvasHandler != null && canvasHandler.getCanvas().equals(canvasClearEvent.getCanvas()) ) {
+            doClear();
         }
     }
 
+    void onCanvasElementRemovedEvent(@Observes CanvasElementRemovedEvent elementRemovedEvent) {
+        if ( checkEventContext(elementRemovedEvent) ) {
+            final Element element = elementRemovedEvent.getElement();
+            final String _elementUUID = element.getUUID();
+            if (PropertiesEditor.this.elementUUID != null
+                    && PropertiesEditor.this.elementUUID.equals(_elementUUID)) {
+                doClear();
+            }
+        }
+    }
+
+    void onCanvasElementUpdatedEvent(@Observes CanvasElementUpdatedEvent canvasElementUpdatedEvent) {
+        if ( checkEventContext(canvasElementUpdatedEvent) ) {
+            final Element element = canvasElementUpdatedEvent.getElement();
+            final String _elementUUID = element.getUUID();
+            if (PropertiesEditor.this.elementUUID != null
+                    && PropertiesEditor.this.elementUUID.equals(_elementUUID)) {
+                show(element);
+            }
+        }
+    }
+
+    protected boolean checkEventContext(final AbstractCanvasHandlerEvent canvasHandlerEvent) {
+        final CanvasHandler _canvasHandler = canvasHandlerEvent.getCanvasHandler();
+        return canvasHandler != null && canvasHandler.equals(_canvasHandler);
+    }
+    
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

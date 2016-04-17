@@ -18,16 +18,16 @@ import com.ait.lienzo.client.core.types.LinearGradient;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import org.wirez.core.client.HasDecorators;
+import org.wirez.core.client.shape.HasDecorators;
 import org.wirez.core.client.util.ShapeUtils;
-import org.wirez.core.client.view.HasEventHandlers;
-import org.wirez.core.client.view.HasFillGradient;
-import org.wirez.core.client.view.HasTitle;
-import org.wirez.core.client.view.ShapeView;
-import org.wirez.core.client.view.event.MouseClickEvent;
-import org.wirez.core.client.view.event.ViewEvent;
-import org.wirez.core.client.view.event.ViewEventType;
-import org.wirez.core.client.view.event.ViewHandler;
+import org.wirez.core.client.shape.view.HasEventHandlers;
+import org.wirez.core.client.shape.view.HasFillGradient;
+import org.wirez.core.client.shape.view.HasTitle;
+import org.wirez.core.client.shape.view.ShapeView;
+import org.wirez.core.client.shape.view.event.MouseClickEvent;
+import org.wirez.core.client.shape.view.event.ViewEvent;
+import org.wirez.core.client.shape.view.event.ViewEventType;
+import org.wirez.core.client.shape.view.event.ViewHandler;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -186,7 +186,7 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     }
 
     protected HandlerRegistration registerDragHandler(final Node node,
-                                                       final ViewHandler<org.wirez.core.client.view.event.DragEvent> eventHandler) {
+                                                       final ViewHandler<org.wirez.core.client.shape.view.event.DragEvent> eventHandler) {
     
         return setDraggable(true).addWiresHandler(AbstractWiresEvent.DRAG, new DragHandler() {
             @Override
@@ -204,12 +204,12 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
                 getDragHandler().end(buildEvent(dragEvent.getX(), dragEvent.getY()));
             }
             
-            private org.wirez.core.client.view.event.DragHandler getDragHandler() {
-                return (org.wirez.core.client.view.event.DragHandler) eventHandler;
+            private org.wirez.core.client.shape.view.event.DragHandler getDragHandler() {
+                return (org.wirez.core.client.shape.view.event.DragHandler) eventHandler;
             }
             
-            private org.wirez.core.client.view.event.DragEvent buildEvent(final double x, final double y) {
-                return new org.wirez.core.client.view.event.DragEvent(x, y);
+            private org.wirez.core.client.shape.view.event.DragEvent buildEvent(final double x, final double y) {
+                return new org.wirez.core.client.shape.view.event.DragEvent(x, y);
             }
         });
     }

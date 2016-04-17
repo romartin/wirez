@@ -44,6 +44,28 @@ public class ApplicationDiagramManager extends AbstractDiagramManager<Diagram> {
         }
         
     }
-    
-    
+
+    @Override
+    public void update(Diagram diagram) {
+        super.update(diagram);
+        
+        // Update the VFS storage.
+        vfsDiagramManager.update( diagram );
+    }
+
+    @Override
+    public void add(Diagram diagram) {
+        super.add(diagram);
+
+        // Update the VFS storage.
+        vfsDiagramManager.add( diagram );
+    }
+
+    @Override
+    public void remove(Diagram diagram) {
+        super.remove(diagram);
+
+        // Update the VFS storage.
+        vfsDiagramManager.remove( diagram );
+    }
 }

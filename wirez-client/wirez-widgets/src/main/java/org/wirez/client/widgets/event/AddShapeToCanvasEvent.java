@@ -17,8 +17,8 @@
 package org.wirez.client.widgets.event;
 
 import org.uberfire.workbench.events.UberFireEvent;
-import org.wirez.core.client.Shape;
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 
 /**
  * <p>CDI event when a shape in the palette is selected and must be added into the active canvas diagram.</p>
@@ -27,12 +27,12 @@ import org.wirez.core.client.factory.ShapeFactory;
 public class AddShapeToCanvasEvent implements UberFireEvent {
 
     private Object definition;
-    private ShapeFactory<?, ? extends Shape> shapeFactory;
+    private ShapeFactory<?, ?, ? extends Shape> shapeFactory;
     private double x;
     private double y;
 
     public AddShapeToCanvasEvent(final Object definition,
-                                 final ShapeFactory<? , ? extends Shape> shapeFactory) {
+                                 final ShapeFactory<?, ?, ? extends Shape> shapeFactory) {
         this.definition = definition;
         this.shapeFactory = shapeFactory;
         this.x = -1;
@@ -40,7 +40,7 @@ public class AddShapeToCanvasEvent implements UberFireEvent {
     }
 
     public AddShapeToCanvasEvent(final Object definition,
-                                 final ShapeFactory<? , ? extends Shape> shapeFactory,
+                                 final ShapeFactory<?, ?, ? extends Shape> shapeFactory,
                                  final double x,
                                  final double y) {
         this.definition = definition;
@@ -53,7 +53,7 @@ public class AddShapeToCanvasEvent implements UberFireEvent {
         return definition;
     }
 
-    public ShapeFactory<? , ? extends Shape> getShapeFactory() {
+    public ShapeFactory<?, ?, ? extends Shape> getShapeFactory() {
         return shapeFactory;
     }
 

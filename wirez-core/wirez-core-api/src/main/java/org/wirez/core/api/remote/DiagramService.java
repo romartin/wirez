@@ -6,5 +6,7 @@ import org.wirez.core.api.diagram.Diagram;
 
 @Remote
 public interface DiagramService extends DiagramManager<Diagram> {
+
+    void saveOrUpdate( Diagram diagram );
     
 }

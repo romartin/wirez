@@ -88,7 +88,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
                         try {
                             return _getValue( field, annotation, property );
                         } catch (Exception e) {
-                            LOG.error("Error obtaining annotated value for T with id " + getId( property ));
+                            LOG.error("Error obtaining annotated value for Property with id " + getId( property ), e);
                         }
                     }
                 }

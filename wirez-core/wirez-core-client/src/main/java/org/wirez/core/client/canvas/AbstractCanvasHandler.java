@@ -16,10 +16,12 @@
 
 package org.wirez.core.client.canvas;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.batch.BatchCommandResult;
+import org.wirez.core.api.definition.adapter.DefinitionSetRuleAdapter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
@@ -35,33 +37,35 @@ import org.wirez.core.api.graph.processing.index.IndexBuilder;
 import org.wirez.core.api.graph.processing.traverse.tree.AbstractTreeTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ClientDefinitionManager;
-import org.wirez.core.client.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.control.SelectionManager;
-import org.wirez.core.client.canvas.listener.CanvasListener;
-import org.wirez.core.client.factory.ShapeFactory;
-import org.wirez.core.client.impl.BaseConnector;
-import org.wirez.core.client.mutation.*;
+import org.wirez.core.client.canvas.event.CanvasElementAddedEvent;
+import org.wirez.core.client.canvas.event.CanvasElementRemovedEvent;
+import org.wirez.core.client.canvas.event.CanvasElementUpdatedEvent;
+import org.wirez.core.client.canvas.event.CanvasInitializationCompletedEvent;
 import org.wirez.core.client.service.ClientFactoryServices;
-import org.wirez.core.client.view.HasEventHandlers;
-import org.wirez.core.client.view.ShapeView;
-import org.wirez.core.client.view.event.MouseClickEvent;
-import org.wirez.core.client.view.event.MouseClickHandler;
-import org.wirez.core.client.view.event.ViewEventType;
+import org.wirez.core.client.service.ClientRuntimeError;
+import org.wirez.core.client.service.ServiceCallback;
+import org.wirez.core.client.shape.Lifecycle;
+import org.wirez.core.client.shape.MutableShape;
+import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.client.shape.impl.AbstractConnector;
 
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class AbstractCanvasHandler<D extends Diagram, C extends AbstractCanvas, L extends CanvasListener> 
-        implements CanvasHandler<D, C, L> {
+public abstract class AbstractCanvasHandler<D extends Diagram, C extends AbstractCanvas> 
+        implements CanvasHandler<D, C> {
 
     private static Logger LOGGER = Logger.getLogger(AbstractCanvasHandler.class.getName());
 
@@ -76,11 +80,15 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     protected TreeWalkTraverseProcessor treeWalkTraverseProcessor;
     protected ShapeManager shapeManager;
     protected CanvasCommandManager<AbstractCanvasHandler> commandManager;
+    protected Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent;
+    protected Event<CanvasElementAddedEvent> canvasElementAddedEvent;
+    protected Event<CanvasElementRemovedEvent> canvasElementRemovedEvent;
+    protected Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent;
     
     protected C canvas;
     protected D diagram;
     protected Index<?, ?> graphIndex;
-    protected Collection<L> listeners = new LinkedList<L>();
+    private final String uuid;
 
     @Inject
     public AbstractCanvasHandler(final ClientDefinitionManager clientDefinitionManager,
@@ -91,9 +99,13 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                                  final GraphUtils graphUtils,
                                  final IncrementalIndexBuilder indexBuilder,
                                  final CanvasCommandFactory commandFactory,
-                                 final TreeWalkTraverseProcessor treeWalkTraverseProcessor, 
+                                 final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
                                  final ShapeManager shapeManager,
-                                 final CanvasCommandManager<AbstractCanvasHandler> commandManager) {
+                                 final CanvasCommandManager<AbstractCanvasHandler> commandManager,
+                                 final Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent,
+                                 final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
+                                 final Event<CanvasElementRemovedEvent> canvasElementRemovedEvent,
+                                 final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
         this.ruleManager = ruleManager;
@@ -105,33 +117,74 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
         this.shapeManager = shapeManager;
         this.commandManager = commandManager;
+        this.canvasInitializationCompletedEvent = canvasInitializationCompletedEvent;
+        this.canvasElementAddedEvent = canvasElementAddedEvent;
+        this.canvasElementRemovedEvent = canvasElementRemovedEvent;
+        this.canvasElementUpdatedEvent = canvasElementUpdatedEvent;
+        this.uuid = UUID.uuid();
     }
 
     @Override
-    public AbstractCanvasHandler<D, C, L> draw(D diagram, C canvas) {
+    public CanvasHandler<D, C> initialize(final C canvas) {
         this.canvas = canvas;
+        return this;
+    }
+
+    @Override
+    public AbstractCanvasHandler<D, C> draw(final D diagram) {
         this.diagram = diagram;
 
         // Initialize the graph handler that provides processing and querying operations over the graph.
         
         this.graphIndex = indexBuilder.build( diagram.getGraph() );
         
-        doInitialize();
+        doLoadRules();
 
         return this;
     }
     
-    protected void doInitialize() {
-        doAfterInitialize();
+    protected void doLoadRules() {
+
+        // Load the rules that apply for the diagram.
+        final String defSetId = getDiagram().getSettings().getDefinitionSetId();
+
+        clientFactoryServices.newDomainObject( defSetId, new ServiceCallback<Object>() {
+            @Override
+            public void onSuccess(Object definitionSet) {
+
+                DefinitionSetRuleAdapter adapter = clientDefinitionManager.getDefinitionSetRuleAdapter( definitionSet.getClass() );
+
+                final Collection<Rule> rules = adapter.getRules( definitionSet );
+                if (rules != null) {
+                    for (final Rule rule : rules) {
+                        ruleManager.addRule(rule);
+                    }
+                }
+
+                doDraw();
+
+
+            }
+
+            @Override
+            public void onError(ClientRuntimeError error) {
+                GWT.log("Error");
+            }
+        });
+        
     }
     
-    protected void doAfterInitialize() {
+    protected void doDraw() {
+        
         // Build the shapes that represents the graph on canvas.
         draw();
+        
         // Draw it.
         canvas.draw();
+        
         // Fire initialization completed event.
-        fireCanvasInitialized();
+        canvasInitializationCompletedEvent.fire(new CanvasInitializationCompletedEvent( this ) );
+        
     }
 
     @Override
@@ -185,7 +238,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                     register(factory, edge);
                     applyElementMutation(edge);
                     final String uuid = edge.getUUID();
-                    BaseConnector connector = (BaseConnector) getCanvas().getShape(uuid);
+                    AbstractConnector connector = (AbstractConnector) getCanvas().getShape(uuid);
                     connector.applyConnections(edge, AbstractCanvasHandler.this);
                     
                     return true;
@@ -216,80 +269,22 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         
     }
 
-     /*
-        ***************************************************************************************
-        * Listeners handling
-        ***************************************************************************************
-     */
-
-    @Override
-    public AbstractCanvasHandler<D, C, L> addListener(final L listener) {
-        assert listener != null;
-        listeners.add( listener );
-        return this;
-    }
-
-    public void fireCanvasInitialized() {
-        for (final L listener : listeners) {
-            listener.onInitializationComplete();
-        }
-    }
-
-    public void fireCanvasClear() {
-        for (final L listener : listeners) {
-            listener.onClear();
-        }
-    }
-
-    public void removeListener(final L listener) {
-        listeners.remove(listener);
-    }
-    
     /*
         ***************************************************************************************
         * Shape/element handling
         ***************************************************************************************
      */
 
-    public void register(final ShapeFactory factory, final Element candidate) {
+    @SuppressWarnings("unchecked")
+    public void register(final ShapeFactory<Object, AbstractCanvasHandler, Shape> factory, final Element<View<?>> candidate) {
         assert factory != null && candidate != null;
         
-        final Object content = candidate.getContent();
-        assert content instanceof View;
-        
-        final Object wirez = ( (View) candidate.getContent()).getDefinition();
-        final Shape shape = factory.build(wirez, this);
+        final Shape shape = factory.build( candidate.getContent().getDefinition(), AbstractCanvasHandler.this );
 
         // Set the same identifier as the graph element's one.
-        shape.setId(candidate.getUUID());
-
-        // Selection handling.
-        final ShapeView shapeView = shape.getShapeView();
-        if ( canvas instanceof SelectionManager && shapeView instanceof HasEventHandlers ) {
-            
-            final HasEventHandlers hasEventHandlers = (HasEventHandlers) shapeView;
-            
-            hasEventHandlers.addHandler(ViewEventType.MOUSE_CLICK, new MouseClickHandler() {
-                @Override
-                public void handle(final MouseClickEvent event) {
-                    final boolean isSelected = canvas.isSelected(shape);
-                    
-                    if (!event.isShiftKeyDown()) {
-                        canvas.clearSelection();
-                    }
-
-                    if (isSelected) {
-                        log(Level.FINE, "Deselect [shape=" + shape.getId() + "]");
-                        canvas.deselect(shape);
-                    } else {
-                        log(Level.FINE, "Select [shape=" + shape.getId() + "]");
-                        canvas.select(shape);
-                    }
-                }
-            });
-            
+        if ( null == shape.getUUID() ) {
+            shape.setUUID(candidate.getUUID());
         }
-
         
         // Add the shapes on canvas and fire events.
         canvas.addShape(shape);
@@ -299,7 +294,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         doRegister(shape, candidate, factory);
         
         // Fire updates.
-        afterElementAdded(candidate);
+        afterElementAdded(candidate, shape);
     }
     
     protected void doRegister(final Shape shape, final Element element, final ShapeFactory factory) {
@@ -312,7 +307,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         doDeregister(shape, element);
         canvas.deleteShape(shape);
         canvas.draw();
-        afterElementDeleted(element);
+        afterElementDeleted(element, shape);
 
     }
 
@@ -320,27 +315,42 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         
     }
 
-    public void applyElementMutation(final Element candidate) {
-        final Shape shape = canvas.getShape(candidate.getUUID());
-        if (shape instanceof HasMutation) {
+    public void applyElementMutation( final Element element ) {
+        applyElementMutation( element, true , true );
+    }
 
-            final HasMutation hasMutation = (HasMutation) shape;
+    public void updateElementPosition(final Element element) {
+        applyElementMutation( element, true , false );
+    }
 
-            if (hasMutation.accepts(MutationType.STATIC)) {
+    public void updateElementProperties(final Element element) {
+        applyElementMutation( element, false , true);
+    }
 
-                // The mutation context.
-                final GraphContext context = buildGraphContext();
+    public void applyElementMutation(final Element candidate, 
+                                     final boolean applyPosition, 
+                                     final boolean applyProperties) {
+        
+        final Shape shape = canvas.getShape( candidate.getUUID() );
+        
+        if ( shape instanceof MutableShape) {
 
-                if (shape instanceof HasGraphElementMutation) {
-                    final HasGraphElementMutation hasGraphElement = (HasGraphElementMutation) shape;
-                    hasGraphElement.applyElementPosition(candidate, this, context);
-                    hasGraphElement.applyElementProperties(candidate, this, context);
-                    afterElementUpdated(candidate, hasGraphElement);
-                }
+            final MutableShape graphShape = (MutableShape) shape;
 
+            if ( applyPosition ) {
+                graphShape.applyPosition( candidate );
             }
-
+            
+            if ( applyProperties ) {
+                graphShape.applyProperties( candidate );
+            }
+            
+            canvas.draw();
+            
+            afterElementUpdated(candidate, graphShape);
+            
         }
+        
     }
     
     public CommandResult<CanvasViolation> allow(final Command<AbstractCanvasHandler, CanvasViolation> command) {
@@ -351,7 +361,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         return commandManager.execute( this, command );
     }
 
-    public AbstractCanvasHandler<D, C, L> batch(final Command<AbstractCanvasHandler, CanvasViolation> command) {
+    public AbstractCanvasHandler<D, C> batch(final Command<AbstractCanvasHandler, CanvasViolation> command) {
         commandManager.batch( command );
         return this;
     }
@@ -362,17 +372,6 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
     public CommandResult<CanvasViolation> undo() {
         return commandManager.undo( this );
-    }
-    
-    private GraphContext buildGraphContext() {
-        
-        // The mutation context.
-        final Context context = new StaticMutationContext();
-
-        // The graph mutation context.
-        final GraphContext graphContext = new GraphContextImpl( context, graphUtils );
-        
-        return graphContext;
     }
     
     public void addChild(final Element parent, final Element child) {
@@ -389,57 +388,39 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
         final Shape parentShape = canvas.getShape(parent.getUUID());
         final Shape childShape = canvas.getShape(child.getUUID());
-        canvas.removeChildShape(parentShape, childShape);
+        canvas.deleteChildShape(parentShape, childShape);
 
-    }
-    
-
-    public void updateElementPosition(final Element element) {
-        final Shape shape = canvas.getShape(element.getUUID());
-        final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
-        
-        // The mutation context.
-        final GraphContext context = buildGraphContext();
-        shapeMutation.applyElementPosition(element, this, context);
-        
-        canvas.draw();
-        
-        afterElementUpdated(element, shapeMutation);
-    }
-
-    public void updateElementProperties(final Element element) {
-        final Shape shape = canvas.getShape(element.getUUID());
-        final HasGraphElementMutation shapeMutation = (HasGraphElementMutation) shape;
-
-        // The mutation context.
-        final GraphContext context = buildGraphContext();
-        shapeMutation.applyElementProperties(element, this, context);
-
-        canvas.draw();
-
-        afterElementUpdated(element, shapeMutation);
     }
 
     public void clear() {
         canvas.clear();
         canvas.draw();
-        
-        afterClear();
     }
     
   
-    protected void afterElementAdded(final Element element) {
+    protected void afterElementAdded(final Element element, final Shape shape) {
+        
+        // Fire a canvas element added event. 
+        canvasElementAddedEvent.fire( new CanvasElementAddedEvent( this, element ) );
+        
     }
 
-    protected void afterElementDeleted(final Element element) {
+    protected void afterElementDeleted(final Element element, final Shape shape) {
+
+        // Fire a canvas element added event. 
+        canvasElementRemovedEvent.fire( new CanvasElementRemovedEvent( this, element ) );
+        
     }
 
-    protected void afterElementUpdated(final Element element, final HasGraphElementMutation elementMutation) {
-        elementMutation.afterMutations(canvas);
-    }
+    protected void afterElementUpdated(final Element element, final Shape shape) {
+        if ( shape instanceof Lifecycle) {
+            final Lifecycle lifecycle = (Lifecycle) shape;
+            lifecycle.afterDraw();
+        }
 
-    protected void afterClear() {
-        fireCanvasClear();
+        // Fire a canvas element added event. 
+        canvasElementUpdatedEvent.fire( new CanvasElementUpdatedEvent( this, element ) );
+        
     }
 
     public ClientDefinitionManager getClientDefinitionManager() {
@@ -486,6 +467,21 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         return shapeManager;
     }
 
+    @Override
+    public boolean equals( final Object o ) {
+        if ( this == o ) {
+            return true;
+        }
+        if ( !( o instanceof AbstractCanvasHandler) ) {
+            return false;
+        }
+
+        AbstractCanvasHandler that = (AbstractCanvasHandler) o;
+
+        return uuid.equals(that.uuid);
+
+    }
+    
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

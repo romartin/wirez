@@ -16,32 +16,26 @@
 
 package org.wirez.core.client.canvas;
 
-import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.wirez.core.client.HasDecorators;
-import org.wirez.core.client.Shape;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
-import org.wirez.core.client.animation.ShapeSelectionAnimation;
-import org.wirez.core.client.canvas.control.SelectionManager;
-import org.wirez.core.client.event.ShapeStateModifiedEvent;
-import org.wirez.core.client.impl.BaseConnector;
-import org.wirez.core.client.view.HasCanvasState;
-import org.wirez.core.client.view.ShapeView;
-import org.wirez.core.client.view.event.MouseClickEvent;
-import org.wirez.core.client.view.event.MouseClickHandler;
-import org.wirez.core.client.view.event.ViewEventType;
+import org.wirez.core.client.canvas.event.CanvasClearEvent;
+import org.wirez.core.client.canvas.event.CanvasShapeAddedEvent;
+import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
+import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * For Lienzo's based Canvas.
  */
-public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements Canvas, SelectionManager<Shape> {
+public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements Canvas<Shape> {
 
     private static Logger LOGGER = Logger.getLogger(AbstractCanvas.class.getName());
 
@@ -73,43 +67,47 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
 
     }
     
-    public static final long ANIMATION_SELECTION_DURATION = 250;
 
-    protected Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent;
     protected Layer layer;
     protected V view;
+    protected Event<CanvasClearEvent> canvasClearEvent;
+    protected Event<CanvasShapeAddedEvent> canvasShapeAddedEvent;
+    protected Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent;
+    
     protected List<Shape> shapes = new ArrayList<Shape>();
-    protected List<Shape> selectedShapes = new ArrayList<Shape>();
-
+    private final String uuid;
+    
     @Inject
-    public AbstractCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent,
+    public AbstractCanvas(final Event<CanvasClearEvent> canvasClearEvent,
+                          final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
+                          final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
                           final Layer layer,
                           final V view) {
-        this.canvasShapeStateModifiedEvent = canvasShapeStateModifiedEvent;
+        this.canvasClearEvent = canvasClearEvent;
+        this.canvasShapeAddedEvent = canvasShapeAddedEvent;
+        this.canvasShapeRemovedEvent = canvasShapeRemovedEvent;
         this.layer = layer;
         this.view = view;
+        this.uuid = org.wirez.core.api.util.UUID.uuid();
     }
 
     public void init() {
         view.init(layer);
-        layer.addHandler(ViewEventType.MOUSE_CLICK, new MouseClickHandler() {
-            @Override
-            public void handle(final MouseClickEvent event) {
-                clearSelection();
-                fireCanvasSelected();
-            }
-        });
     }
 
+    public abstract void addControl( IsWidget controlView );
+
+    public abstract void deleteControl( IsWidget controlView );
+    
     @Override
     public List<Shape> getShapes() {
         return shapes;
     }
 
-    public Shape getShape(final String id) {
+    public Shape getShape(final String uuid) {
         if ( null != shapes) {
             for (final Shape shape : shapes) {
-                if (shape.getId().equals(id)) return shape;
+                if (shape.getUUID().equals(uuid)) return shape;
             }
         }
         return null;
@@ -117,29 +115,31 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
 
     public Canvas addChildShape(final Shape parent, final Shape child) {
         getView().addChildShape(parent.getShapeView(), child.getShapeView());
-        log(Level.FINE, "Adding child [" + child.getId() + "] into parent [" + parent.getId()  + "]");
+        log(Level.FINE, "Adding child [" + child.getUUID() + "] into parent [" + parent.getUUID()  + "]");
         return this;
     }
 
-    public Canvas removeChildShape(final Shape parent, final Shape child) {
+    public Canvas deleteChildShape(final Shape parent, final Shape child) {
         getView().removeChildShape(parent.getShapeView(), child.getShapeView());
-        log(Level.FINE, "Removing child [" + child.getId() + "] from parent [" + parent.getId()  + "]");
+        log(Level.FINE, "Deleting child [" + child.getUUID() + "] from parent [" + parent.getUUID()  + "]");
         return this;
     }
     
     @Override
     public Canvas addShape(final Shape shape) {
 
-        if (shape.getId() == null) {
-            shape.setId(org.wirez.core.api.util.UUID.uuid());
+        if (shape.getUUID() == null) {
+            shape.setUUID(org.wirez.core.api.util.UUID.uuid());
         }
 
-        log(Level.FINE, "BaseCanvas#register - " + shape.toString() + " [id=" + shape.getId() + "]");
+        log(Level.FINE, "BaseCanvas#register - " + shape.toString() + " [id=" + shape.getUUID() + "]");
 
-        shape.getShapeView().setUUID(shape.getId());
+        shape.getShapeView().setUUID(shape.getUUID());
         view.addShape( shape.getShapeView() );
 
         shapes.add( shape );
+        
+        canvasShapeAddedEvent.fire( new CanvasShapeAddedEvent( this, shape ) );
 
         return this;
     }
@@ -160,11 +160,13 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
     @Override
     public Canvas deleteShape(final Shape shape) {
         
-        log(Level.FINE, "BaseCanvas#deregister - " + shape.toString() + " [id=" + shape.getId() + "]");
+        log(Level.FINE, "BaseCanvas#deregister - " + shape.toString() + " [id=" + shape.getUUID() + "]");
         
         view.removeShape( shape.getShapeView() );
 
         shapes.remove(shape);
+        
+        canvasShapeRemovedEvent.fire(new CanvasShapeRemovedEvent( this, shape) );
         
         return this;
     }
@@ -188,104 +190,31 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
             shapes.clear();
             
         }
-
-        if ( !selectedShapes.isEmpty() ) {
-            selectedShapes.clear();
-        }
+        
+        canvasClearEvent.fire( new CanvasClearEvent( this ) );
         
         return this;
     }
     
-    /*
-        ******************************************
-        *       Selection management
-        ******************************************
-     */
-
-    @Override
-    public SelectionManager<Shape> select(final Shape shape) {
-        selectedShapes.add(shape);
-        updateViewShapesState().draw();
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, shape, ShapeState.SELECTED));
-        return this;
-    }
-
-    @Override
-    public SelectionManager<Shape> deselect(final Shape shape) {
-        selectedShapes.remove(shape);
-        updateViewShapesState().draw();
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, shape, ShapeState.DESELECTED));
-        return this;
-    }
-
-    @Override
-    public boolean isSelected(final Shape shape) {
-        return shape != null && selectedShapes.contains(shape);
-    }
-
-    @Override
-    public Collection<Shape> getSelectedItems() {
-        return Collections.unmodifiableCollection(selectedShapes);
-    }
-
-    @Override
-    public SelectionManager<Shape> clearSelection() {
-        for (final Shape shape : selectedShapes) {
-            deselectShape(shape);
-        }
-        selectedShapes.clear();
-        draw();
-        return this;
-    }
-
-    protected void selectShape(final Shape shape) {
-        
-        if (shape.getShapeView() instanceof HasCanvasState) {
-            final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
-            canvasStateMutation.applyState(ShapeState.SELECTED);
-        } else if (shape.getShapeView() instanceof HasDecorators) {
-            new ShapeSelectionAnimation(shape)
-                    .setCanvas(AbstractCanvas.this)
-                    .setDuration(ANIMATION_SELECTION_DURATION)
-                    .run();
-        }
-    }
-
-    protected void deselectShape(final Shape shape) {
-        final boolean isConnector = shape instanceof BaseConnector;
-
-        if (shape.getShapeView() instanceof HasCanvasState) {
-            final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
-            canvasStateMutation.applyState(ShapeState.DESELECTED);
-        } else if (shape.getShapeView() instanceof HasDecorators) {
-            new ShapeDeSelectionAnimation(shape, isConnector ? 1 : 0, isConnector ? 1 : 0, ColorName.BLACK)
-                    .setCanvas(AbstractCanvas.this)
-                    .setDuration(ANIMATION_SELECTION_DURATION)
-                    .run();
-        }
-    }
-
-    protected AbstractCanvas updateViewShapesState() {
-        final List<Shape> shapes = getShapes();
-        for (final Shape shape : shapes) {
-            final boolean isSelected = !selectedShapes.isEmpty() && selectedShapes.contains(shape);
-            if (isSelected) {
-                selectShape(shape);
-            } else {
-                deselectShape(shape);
-            }
-        }
-        return this;
-    }
-    
-    protected void fireCanvasSelected() {
-        canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(this, null, ShapeState.SELECTED));
-    }
-
     public V getView() {
         return view;
     }
-    
+
+    @Override
+    public boolean equals( final Object o ) {
+        if ( this == o ) {
+            return true;
+        }
+        if ( !( o instanceof AbstractCanvas) ) {
+            return false;
+        }
+
+        AbstractCanvas that = (AbstractCanvas) o;
+
+        return uuid.equals(that.uuid);
+
+    }
+
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

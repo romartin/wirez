@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.canvas.AbstractCanvas;
-import org.wirez.core.client.view.ShapeView;
+import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.annotation.PostConstruct;
 

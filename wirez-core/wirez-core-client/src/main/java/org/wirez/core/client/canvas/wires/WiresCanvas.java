@@ -22,8 +22,10 @@ import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.Layer;
+import org.wirez.core.client.canvas.event.CanvasClearEvent;
+import org.wirez.core.client.canvas.event.CanvasShapeAddedEvent;
+import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
 import org.wirez.core.client.canvas.lienzo.Lienzo;
-import org.wirez.core.client.event.ShapeStateModifiedEvent;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -48,10 +50,12 @@ public abstract class WiresCanvas extends AbstractCanvas<WiresCanvas.View> {
     }
     
     @Inject
-    public WiresCanvas(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent,
+    public WiresCanvas(final Event<CanvasClearEvent> canvasClearEvent,
+                       final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
+                       final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
                        final @Lienzo Layer layer,
                        final View view) {
-        super( canvasShapeStateModifiedEvent, layer, view );
+        super( canvasClearEvent, canvasShapeAddedEvent, canvasShapeRemovedEvent, layer, view );
     }
 
     public WiresManager getWiresManager() {

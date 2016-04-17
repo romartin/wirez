@@ -19,6 +19,21 @@ public class TenantDiagramService implements org.wirez.core.api.remote.DiagramSe
     }
 
     @Override
+    public void saveOrUpdate(Diagram diagram) {
+
+        if ( contains( diagram ) ) {
+            
+            update( diagram);
+            
+        } else {
+
+            add( diagram );
+            
+        }
+        
+    }
+    
+    @Override
     public void update(Diagram diagram) {
         tenantDiagramManager.update( diagram );
     }
@@ -52,4 +67,6 @@ public class TenantDiagramService implements org.wirez.core.api.remote.DiagramSe
     public void clear() {
         tenantDiagramManager.clear();
     }
+
+    
 }

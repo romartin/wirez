@@ -5,21 +5,18 @@ import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessor;
-import org.wirez.core.client.Shape;
+import org.wirez.core.client.canvas.event.*;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.control.SelectionManager;
-import org.wirez.core.client.canvas.listener.AbstractCanvasElementListener;
-import org.wirez.core.client.canvas.listener.CanvasElementListener;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import java.util.LinkedList;
@@ -30,7 +27,7 @@ import java.util.logging.Logger;
 @Dependent
 public class TreeExplorer implements IsWidget {
     
-    private static Logger LOGGER = Logger.getLogger("org.wirez.client.widgets.explorer.tree.TreeExplorer");
+    private static Logger LOGGER = Logger.getLogger(TreeExplorer.class.getName());
 
     public interface View extends UberView<TreeExplorer> {
 
@@ -51,7 +48,6 @@ public class TreeExplorer implements IsWidget {
     View view;
 
     private CanvasHandler canvasHandler;
-    private CanvasElementListener canvasListener;
 
     @Inject
     public TreeExplorer(final DefinitionManager definitionManager,
@@ -72,7 +68,6 @@ public class TreeExplorer implements IsWidget {
     public void show(final CanvasHandler canvasHandler) {
         this.canvasHandler = canvasHandler;
         assert canvasHandler != null;
-        addCanvasListener(canvasHandler);
         doShow(canvasHandler.getDiagram().getGraph());
     }
 
@@ -192,58 +187,49 @@ public class TreeExplorer implements IsWidget {
     }
 
     private void selectShape(final Canvas canvas, final String uuid) {
-        SelectionManager<Shape> selectionManager = canvas instanceof SelectionManager ?
+        // TODO: Throw a selection event and capture it from the selection control?
+        /*SelectionManager<Shape> selectionManager = canvas instanceof SelectionManager ?
                 (SelectionManager<Shape>) (canvas) : null;
 
         if ( null != selectionManager ) {
             selectionManager.clearSelection();
             final Shape shape = canvas.getShape(uuid);
             selectionManager.select(shape);
+        }*/
+    }
+
+    void onCanvasClearEvent(@Observes CanvasClearEvent canvasClearEvent) {
+        if ( canvasHandler != null && canvasHandler.getCanvas().equals(canvasClearEvent.getCanvas()) ) {
+            clear();
         }
     }
 
-    // TODO: Fix - Several calls here for a single command...
-    private void addCanvasListener(final CanvasHandler canvasHandler) {
-        removeCanvasListener();
-
-        canvasListener = new AbstractCanvasElementListener(canvasHandler) {
-            @Override
-            public void onElementAdded(final Element element) {
-                super.onElementAdded(element);
-                doShow(getGraph());
-            }
-
-            @Override
-            public void onElementModified(final Element _element) {
-                super.onElementModified(_element);
-                doShow(getGraph());
-            }
-
-            @Override
-            public void onElementDeleted(final Element _element) {
-                final String _elementUUID = _element.getUUID();
-                doShow(getGraph());
-            }
-
-            @Override
-            public void onClear() {
-                clear();
-            }
-            
-            private Graph getGraph() {
-                return canvasHandler.getDiagram().getGraph();
-            }
-        };
-        
-        canvasHandler.addListener(canvasListener);
-    }
-
-    private void removeCanvasListener() {
-        if (canvasListener != null) {
-            canvasListener.detach();
-            canvasListener = null;
+    void onCanvasElementAddedEvent(@Observes CanvasElementAddedEvent canvasElementAddedEvent) {
+        if ( checkEventContext(canvasElementAddedEvent) ) {
+            showEventGraph( canvasElementAddedEvent );
         }
     }
+
+    void onCanvasElementRemovedEvent(@Observes CanvasElementRemovedEvent elementRemovedEvent) {
+        if ( checkEventContext(elementRemovedEvent) ) {
+            showEventGraph( elementRemovedEvent );
+        }
+    }
+
+    void onCanvasElementUpdatedEvent(@Observes CanvasElementUpdatedEvent canvasElementUpdatedEvent) {
+        if ( checkEventContext(canvasElementUpdatedEvent) ) {
+            showEventGraph( canvasElementUpdatedEvent );
+        }
+    }
+
+    private boolean checkEventContext(final AbstractCanvasHandlerEvent canvasHandlerEvent) {
+        final CanvasHandler _canvasHandler = canvasHandlerEvent.getCanvasHandler();
+        return canvasHandler != null && canvasHandler.equals(_canvasHandler);
+    }
+    
+    private void showEventGraph(final AbstractCanvasHandlerEvent canvasHandlerEvent) {
+        doShow( canvasHandlerEvent.getCanvasHandler().getDiagram().getGraph() );
+    } 
 
     @Override
     public Widget asWidget() {

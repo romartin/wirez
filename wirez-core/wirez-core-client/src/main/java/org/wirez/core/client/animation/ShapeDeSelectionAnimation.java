@@ -19,7 +19,7 @@ package org.wirez.core.client.animation;
 import com.ait.lienzo.client.core.animation.AnimationProperties;
 import com.ait.lienzo.client.core.animation.AnimationTweener;
 import com.ait.lienzo.shared.core.types.IColor;
-import org.wirez.core.client.Shape;
+import org.wirez.core.client.shape.Shape;
 
 import java.util.Collection;
 

@@ -12,7 +12,7 @@ import org.wirez.core.api.graph.processing.index.IndexBuilder;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 
 public final class AddCanvasNodeCommand extends AddCanvasElementCommand<Node> {
 

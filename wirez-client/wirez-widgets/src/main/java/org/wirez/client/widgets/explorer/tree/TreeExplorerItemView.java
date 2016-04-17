@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.Heading;
-import org.wirez.core.client.view.ShapeGlyph;
+import org.wirez.core.client.shape.view.ShapeGlyph;
 
 public class TreeExplorerItemView extends Composite implements TreeExplorerItem.View {
 

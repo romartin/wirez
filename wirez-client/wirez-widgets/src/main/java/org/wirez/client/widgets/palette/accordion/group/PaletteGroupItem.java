@@ -17,7 +17,7 @@
 package org.wirez.client.widgets.palette.accordion.group;
 
 import com.ait.lienzo.client.widget.LienzoPanel;
-import org.wirez.core.client.view.ShapeGlyph;
+import org.wirez.core.client.shape.view.ShapeGlyph;
 
 public interface PaletteGroupItem {
     

@@ -5,7 +5,7 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.canvas.command.impl.*;
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 

@@ -5,7 +5,7 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
 import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.factory.ShapeFactory;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 
 public abstract class AddCanvasElementCommand<E extends Element> extends AbstractCanvasGraphCommand {
     

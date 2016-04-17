@@ -17,26 +17,16 @@
 package org.wirez.core.client.canvas;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import org.wirez.core.client.Shape;
+import org.wirez.core.client.shape.Shape;
 
 import java.util.List;
 
-public interface Canvas {
+public interface Canvas<S extends Shape> {
 
     /**
      * Initializes a canvas with the given size.
      */
     Canvas initialize(int width, int height);
-    
-    /**
-     * Adds the shape control widget into the view for this canvas.
-     */
-    Canvas addControl(IsWidget control);
-
-    /**
-     * Delete the shape control widget from the view for this canvas.
-     */
-    Canvas deleteControl(IsWidget control);
 
     /**
      * Draws or batches the updates on the canvas. 
@@ -47,24 +37,24 @@ public interface Canvas {
      * Get a list of all Shapes on the Canvas
      * @return
      */
-    List<Shape> getShapes();
+    List<S> getShapes();
 
     /**
      * Returns the shape with the given identifier.
      */
-    Shape getShape(String id);
+    S getShape(String id);
 
     /**
      * Add a Shape to the Canvas
      * @param shape
      */
-    Canvas addShape(Shape shape);
+    Canvas addShape(S shape);
 
     /**
      * Delete a Shape from the Canvas. Implementations may prompt the User for confirmation.
      * @param shape
      */
-    Canvas deleteShape(Shape shape);
+    Canvas deleteShape(S shape);
 
     /**
      * Clears the canvas. 

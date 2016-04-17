@@ -13,8 +13,8 @@ import org.wirez.core.api.graph.processing.index.IndexBuilder;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.factory.ShapeFactory;
-import org.wirez.core.client.impl.BaseConnector;
+import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.client.shape.impl.AbstractConnector;
 
 public final class AddCanvasEdgeCommand extends AddCanvasElementCommand<Edge>  {
     
@@ -38,7 +38,7 @@ public final class AddCanvasEdgeCommand extends AddCanvasElementCommand<Edge>  {
     public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
         CommandResult<CanvasViolation> result = super.execute(context);
         final String uuid = candidate.getUUID();
-        BaseConnector connector = (BaseConnector) context.getCanvas().getShape(uuid);
+        AbstractConnector connector = (AbstractConnector) context.getCanvas().getShape(uuid);
         connector.applyConnections((Edge<View, Node>) candidate, context);
         return result;
     }

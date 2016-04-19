@@ -73,8 +73,12 @@ public class VFSDiagramManagerImpl implements DiagramManager<Diagram> {
         for (DefinitionSetServices definitionSetService : definitionSetServiceInstances) {
             definitionSetServices.add(definitionSetService);
         }
-        
+
+        // Initialize the application's VFS.
         initFileSystem();
+        
+        // Register packaged diagrams into VFS.
+        registerAppDefinitions();
         
     }
 
@@ -285,7 +289,7 @@ public class VFSDiagramManagerImpl implements DiagramManager<Diagram> {
     }
 
     private void deployAppDiagrams(String path) {
-        ServletContext servletContext = RpcContext.getHttpSession().getServletContext();
+        ServletContext servletContext = RpcContext.getServletRequest().getServletContext();
 
         if ( null != servletContext ) {
 

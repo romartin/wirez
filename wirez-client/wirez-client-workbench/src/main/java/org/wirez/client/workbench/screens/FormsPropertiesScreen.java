@@ -27,19 +27,13 @@ import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.widgets.property.PropertiesEditor;
 import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.util.ElementUtils;
 import org.wirez.core.client.ClientDefinitionManager;
-import org.wirez.core.client.Shape;
-import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.ShapeState;
+import org.wirez.core.client.canvas.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.canvas.wires.WiresCanvasHandler;
-import org.wirez.core.client.event.ShapeStateModifiedEvent;
+import org.wirez.core.client.shape.Shape;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -135,7 +129,7 @@ public class FormsPropertiesScreen {
         final Shape shape = event.getShape();
         if ( shape != null ) {
             // If shape exist, show the properties for the underlying model element.
-            final String shapeUUID = shape.getId();
+            final String shapeUUID = shape.getUUID();
             final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element = this.canvasHandler.getGraphIndex().get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
                 formRenderer.renderDefaultForm( element.getContent().getDefinition() );

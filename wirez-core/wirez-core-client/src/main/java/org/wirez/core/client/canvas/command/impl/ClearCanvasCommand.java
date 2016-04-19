@@ -3,6 +3,7 @@ package org.wirez.core.client.canvas.command.impl;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.impl.ClearGraphCommand;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
@@ -24,7 +25,7 @@ public final class ClearCanvasCommand extends AbstractCanvasGraphCommand {
 
     @Override
     protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(AbstractCanvasHandler context) {
-        return context.getGraphCommandFactory().CLEAR_GRAPH( context.getDiagram().getGraph() );
+        return new ClearGraphCommand( context.getDiagram().getGraph() );
     }
 
 }

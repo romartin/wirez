@@ -6,6 +6,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.impl.AddEdgeCommand;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.index.Index;
@@ -45,13 +46,14 @@ public final class AddCanvasEdgeCommand extends AddCanvasElementCommand<Edge>  {
 
     @Override
     public CommandResult<CanvasViolation> undo(final AbstractCanvasHandler context) {
-        return context.getCommandFactory().DELETE_EDGE( candidate ).execute( context );
+        final DeleteCanvasEdgeCommand command = new DeleteCanvasEdgeCommand( candidate );
+        return command.execute( context );
     }
 
 
     @Override
     protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(final AbstractCanvasHandler context) {
-        return context.getGraphCommandFactory().ADD_EDGE(parent, candidate);
+        return new AddEdgeCommand( parent, candidate );
     }
     
 }

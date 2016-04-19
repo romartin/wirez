@@ -25,7 +25,8 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.explorer.tree.TreeExplorer;
-import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
+import org.wirez.core.client.session.event.SessionDisposedEvent;
+import org.wirez.core.client.session.event.SessionOpenedEvent;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -93,16 +94,14 @@ public class TreeExplorerScreen {
         return "TreeExplorerScreenContext";
     }
 
-    void onCanvasScreenStateChanged(@Observes CanvasScreenStateChangedEvent canvasScreenStateChangedEvent) {
-        checkNotNull("canvasScreenStateChangedEvent", canvasScreenStateChangedEvent);
-        final CanvasScreen.CanvasScreenState state = canvasScreenStateChangedEvent.getState();
+    void onCanvasSessionOpened(@Observes SessionOpenedEvent sessionOpenedEvent) {
+        checkNotNull("sessionOpenedEvent", sessionOpenedEvent);
+        treeExplorer.show( sessionOpenedEvent.getSession().getCanvasHandler() );
+    }
 
-        if (CanvasScreen.CanvasScreenState.ACTIVE.equals(state)) {
-            treeExplorer.show(canvasScreenStateChangedEvent.getCanvasHandler());
-        } else {
-           treeExplorer.clear();
-        }
-
+    void onCanvasSessionDisposed(@Observes SessionDisposedEvent sessionDisposedEvent) {
+        checkNotNull("sessionDisposedEvent", sessionDisposedEvent);
+        treeExplorer.clear();
     }
     
 }

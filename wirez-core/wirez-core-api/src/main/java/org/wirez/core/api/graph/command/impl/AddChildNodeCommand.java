@@ -39,8 +39,8 @@ public final class AddChildNodeCommand extends AbstractGraphCompositeCommand {
     
     protected void initialize( final GraphCommandExecutionContext context ) {
 
-        this.addCommand( context.getCommandFactory().ADD_NODE(target, candidate) )
-            .addCommand( context.getCommandFactory().ADD_CHILD_EDGE(parent, candidate) );
+        this.addCommand( new AddNodeCommand(target, candidate) )
+            .addCommand( new AddChildEdgeCommand(parent, candidate) );
     }
 
     @Override

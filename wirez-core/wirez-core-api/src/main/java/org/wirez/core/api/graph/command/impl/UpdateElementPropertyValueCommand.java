@@ -50,7 +50,7 @@ public final class UpdateElementPropertyValueCommand extends AbstractGraphComman
     
     @Override
     public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
-        return GraphCommandResultBuilder.OK_COMMAND;
+        return GraphCommandResultBuilder.RESULT_OK;
     }
 
     @Override
@@ -60,12 +60,12 @@ public final class UpdateElementPropertyValueCommand extends AbstractGraphComman
         PropertyAdapter<Object> adapter = context.getDefinitionManager().getPropertyAdapter( p.getClass() ); 
         oldValue = adapter.getValue(p);
         adapter.setValue(p, value);
-        return GraphCommandResultBuilder.OK_COMMAND;
+        return GraphCommandResultBuilder.RESULT_OK;
     }
     
     @Override
     public CommandResult<RuleViolation> undo(final GraphCommandExecutionContext context) {
-        final UpdateElementPropertyValueCommand undoCommand = context.getCommandFactory().UPDATE_PROPERTY_VALUE( element, propertyId, oldValue );
+        final UpdateElementPropertyValueCommand undoCommand = new UpdateElementPropertyValueCommand( element, propertyId, oldValue );
         return undoCommand.execute( context );
     }
 

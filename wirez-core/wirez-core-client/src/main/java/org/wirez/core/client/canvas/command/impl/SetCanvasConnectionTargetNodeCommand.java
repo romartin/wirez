@@ -5,6 +5,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.impl.SetConnectionTargetNodeCommand;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -28,7 +29,7 @@ public final class SetCanvasConnectionTargetNodeCommand extends AbstractCanvasGr
 
     @Override
     protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(final AbstractCanvasHandler context) {
-        return context.getGraphCommandFactory().SET_TARGET_NODE( node, edge, magnetIndex );
+        return new SetConnectionTargetNodeCommand( node, edge, magnetIndex );
     }
 
     @Override

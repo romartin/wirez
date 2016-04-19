@@ -2,7 +2,6 @@ package org.wirez.core.api.graph.command;
 
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.RuleManager;
 
@@ -19,6 +18,4 @@ public interface GraphCommandExecutionContext {
     
     RuleManager getRuleManager();
 
-    GraphCommandFactory getCommandFactory();
-    
 }

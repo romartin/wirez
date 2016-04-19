@@ -235,8 +235,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
         @SuppressWarnings("unchecked")
         public CommandResult<RuleViolation> execute (Command<GraphCommandExecutionContext, RuleViolation> command) {
             GraphCommandExecutionContext executionContext = 
-                    new GraphCommandExecutionContextImpl( definitionManager, factoryManager, ruleManager,
-                            commandFactory, graphUtils);
+                    new GraphCommandExecutionContextImpl( definitionManager, factoryManager, ruleManager, graphUtils);
             return commandManager.execute( executionContext, command );
         }
         

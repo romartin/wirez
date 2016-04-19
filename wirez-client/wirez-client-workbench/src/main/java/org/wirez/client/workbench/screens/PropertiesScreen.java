@@ -27,7 +27,6 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.property.PropertiesEditor;
-import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
@@ -35,6 +34,8 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.session.event.SessionDisposedEvent;
+import org.wirez.core.client.session.event.SessionOpenedEvent;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -133,15 +134,17 @@ public class PropertiesScreen {
         return "wirezPropertiesScreenContext";
     }
 
-    void onWirezCanvasOpened(@Observes CanvasScreenStateChangedEvent stateChangedEvent) {
-        checkNotNull("stateChangedEvent", stateChangedEvent);
-        
-        if (CanvasScreen.CanvasScreenState.ACTIVE.equals(stateChangedEvent.getState())) {
-            propertiesEditor.show((AbstractCanvasHandler) stateChangedEvent.getCanvasHandler());
-        } else {
-            propertiesEditor.clear();
-            changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));
-        }
+    void onCanvasSessionOpened(@Observes SessionOpenedEvent sessionOpenedEvent) {
+        checkNotNull("sessionOpenedEvent", sessionOpenedEvent);
+        final AbstractCanvasHandler canvasHandler = (AbstractCanvasHandler) sessionOpenedEvent.getSession().getCanvasHandler();
+        propertiesEditor.show( canvasHandler );
     }
+
+    void onCanvasSessionDisposed(@Observes SessionDisposedEvent sessionDisposedEvent) {
+        checkNotNull("sessionDisposedEvent", sessionDisposedEvent);
+        propertiesEditor.clear();
+        changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));
+    }
+    
     
 }

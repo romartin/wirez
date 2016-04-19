@@ -59,7 +59,7 @@ public final class UpdateElementPositionCommand extends AbstractGraphCommand {
     
     @Override
     public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
-        return GraphCommandResultBuilder.OK_COMMAND;
+        return GraphCommandResultBuilder.RESULT_OK;
     }
 
     @Override
@@ -80,12 +80,12 @@ public final class UpdateElementPositionCommand extends AbstractGraphCommand {
 
         LOGGER.log(Level.FINE, "Moving element bounds to [" + x + "," + y + "] [" + ( x + w ) + "," + ( y + h ) + "]");
 
-        return GraphCommandResultBuilder.OK_COMMAND;
+        return GraphCommandResultBuilder.RESULT_OK;
     }
     
     @Override
     public CommandResult<RuleViolation> undo(final GraphCommandExecutionContext context) {
-        final UpdateElementPositionCommand undoCommand = context.getCommandFactory().UPDATE_POSITION( element, oldX, oldY);
+        final UpdateElementPositionCommand undoCommand = new UpdateElementPositionCommand( element, oldX, oldY);
         return undoCommand.execute( context );
     }
 

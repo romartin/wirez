@@ -21,9 +21,12 @@ import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.command.impl.UpdateCanvasElementPropertyCommand;
 import org.wirez.core.client.components.popup.AbstractPopupBox;
+import org.wirez.core.client.session.command.Session;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -42,14 +45,17 @@ public class NamePopupBox extends AbstractPopupBox {
 
     View view;
     CanvasCommandFactory canvasCommandFactory;
+    CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
     GraphUtils graphUtils;
     private Element element;
 
     @Inject
     public NamePopupBox(final CanvasCommandFactory canvasCommandFactory,
+                        final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
                         final GraphUtils graphUtils,
                         final View view) {
         this.canvasCommandFactory = canvasCommandFactory;
+        this.canvasCommandManager = canvasCommandManager;
         this.graphUtils = graphUtils;
         this.view = view;
     }
@@ -80,7 +86,7 @@ public class NamePopupBox extends AbstractPopupBox {
     // TODO: Check command result.
     void onChangeName(final String name) {
         UpdateCanvasElementPropertyCommand command = canvasCommandFactory.UPDATE_PROPERTY(element, Name.ID, name);
-        canvasHandler.execute( command );
+        canvasCommandManager.execute( canvasHandler, command );
         view.hide();
     }
     

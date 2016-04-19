@@ -3,7 +3,6 @@ package org.wirez.core.api.graph.command;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.rule.RuleManager;
@@ -37,8 +36,4 @@ public class EmptyRulesCommandExecutionContext implements GraphCommandExecutionC
         return EmptyRuleManager.INSTANCE;
     }
 
-    @Override
-    public GraphCommandFactory getCommandFactory() {
-        return wrapped.getCommandFactory();
-    }
 }

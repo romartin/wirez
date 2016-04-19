@@ -18,17 +18,12 @@ package org.wirez.core.client.canvas;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.batch.BatchCommandResult;
 import org.wirez.core.api.definition.adapter.DefinitionSetRuleAdapter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.GraphCommandManager;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
@@ -42,9 +37,6 @@ import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
-import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.event.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.CanvasElementUpdatedEvent;
@@ -72,14 +64,10 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     protected ClientDefinitionManager clientDefinitionManager;
     protected ClientFactoryServices clientFactoryServices;
     protected RuleManager ruleManager;
-    protected GraphCommandManager graphCommandManager;
-    protected GraphCommandFactory graphCommandFactory;
     protected GraphUtils graphUtils;
     protected IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> indexBuilder;
-    protected CanvasCommandFactory commandFactory;
     protected TreeWalkTraverseProcessor treeWalkTraverseProcessor;
     protected ShapeManager shapeManager;
-    protected CanvasCommandManager<AbstractCanvasHandler> commandManager;
     protected Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent;
     protected Event<CanvasElementAddedEvent> canvasElementAddedEvent;
     protected Event<CanvasElementRemovedEvent> canvasElementRemovedEvent;
@@ -94,14 +82,10 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     public AbstractCanvasHandler(final ClientDefinitionManager clientDefinitionManager,
                                  final ClientFactoryServices clientFactoryServices,
                                  final RuleManager ruleManager,
-                                 final GraphCommandManager graphCommandManager,
-                                 final GraphCommandFactory graphCommandFactory,
                                  final GraphUtils graphUtils,
                                  final IncrementalIndexBuilder indexBuilder,
-                                 final CanvasCommandFactory commandFactory,
                                  final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
                                  final ShapeManager shapeManager,
-                                 final CanvasCommandManager<AbstractCanvasHandler> commandManager,
                                  final Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent,
                                  final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
                                  final Event<CanvasElementRemovedEvent> canvasElementRemovedEvent,
@@ -109,14 +93,10 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
         this.ruleManager = ruleManager;
-        this.graphCommandManager = graphCommandManager;
-        this.graphCommandFactory = graphCommandFactory;
         this.graphUtils = graphUtils;
         this.indexBuilder = (IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>>) indexBuilder;
-        this.commandFactory = commandFactory;
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
         this.shapeManager = shapeManager;
-        this.commandManager = commandManager;
         this.canvasInitializationCompletedEvent = canvasInitializationCompletedEvent;
         this.canvasElementAddedEvent = canvasElementAddedEvent;
         this.canvasElementRemovedEvent = canvasElementRemovedEvent;
@@ -353,27 +333,6 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         
     }
     
-    public CommandResult<CanvasViolation> allow(final Command<AbstractCanvasHandler, CanvasViolation> command) {
-        return commandManager.allow( this, command );
-    }
-
-    public CommandResult<CanvasViolation> execute(final Command<AbstractCanvasHandler, CanvasViolation> command) {
-        return commandManager.execute( this, command );
-    }
-
-    public AbstractCanvasHandler<D, C> batch(final Command<AbstractCanvasHandler, CanvasViolation> command) {
-        commandManager.batch( command );
-        return this;
-    }
-
-    public BatchCommandResult<CanvasViolation> executeBatch() {
-        return commandManager.executeBatch( this );
-    }
-
-    public CommandResult<CanvasViolation> undo() {
-        return commandManager.undo( this );
-    }
-    
     public void addChild(final Element parent, final Element child) {
         assert parent != null && child != null;
 
@@ -435,24 +394,12 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         return ruleManager;
     }
 
-    public GraphCommandManager getGraphCommandManager() {
-        return graphCommandManager;
-    }
-
-    public GraphCommandFactory getGraphCommandFactory() {
-        return graphCommandFactory;
-    }
-
     public GraphUtils getGraphUtils() {
         return graphUtils;
     }
 
     public TreeWalkTraverseProcessor getTreeWalkTraverseProcessor() {
         return treeWalkTraverseProcessor;
-    }
-
-    public CanvasCommandFactory getCommandFactory() {
-        return commandFactory;
     }
 
     public Index<?, ?> getGraphIndex() {

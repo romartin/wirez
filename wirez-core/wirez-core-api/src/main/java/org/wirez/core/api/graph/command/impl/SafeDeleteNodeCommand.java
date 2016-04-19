@@ -10,7 +10,6 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.api.graph.command.GraphCommandResultBuilder;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.rule.RuleManager;
@@ -41,13 +40,12 @@ public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
     @SuppressWarnings("unchecked")
     protected void initialize(final GraphCommandExecutionContext context) {
         
-        final GraphCommandFactory commandFactory = context.getCommandFactory();
         final List<Command<GraphCommandExecutionContext, RuleViolation>> commands = new LinkedList<>();
         
         // Check node's children, if any.
         final List<Node> children = getChildNodes( candidate );
         for ( Node child : children ) {
-            commands.add( commandFactory.SAFE_DELETE_NODE( target, child) );
+            commands.add( new SafeDeleteNodeCommand( target, child) );
         }
         
         // Check if is a child node, so if exists an ingoing child edge ( from parent node ).
@@ -56,9 +54,9 @@ public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
             for (final Edge inEdge : inEdges) {
                 if ( inEdge.getContent() instanceof Child) {
                     final Node parent = inEdge.getSourceNode();
-                    commands.add( commandFactory.DELETE_CHILD_EDGE( parent, candidate) );
+                    commands.add( new DeleteChildEdgeCommand( parent, candidate) );
                 } else if ( inEdge.getContent() instanceof View ) {
-                    commands.add( commandFactory.SET_TARGET_NODE( null, inEdge, 0) );
+                    commands.add( new SetConnectionTargetNodeCommand( null, inEdge, 0) );
                 }
             }
         }
@@ -67,7 +65,7 @@ public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
         if ( null != outEdges && !outEdges.isEmpty() ) {
             for (final Edge outEdge : outEdges) {
                 if ( outEdge.getContent() instanceof View ) {
-                    commands.add( commandFactory.SET_SOURCE_NODE( null, outEdge, 0) );
+                    commands.add( new SetConnectionSourceNodeCommand( null, outEdge, 0) );
                 }
             }
         }
@@ -78,7 +76,7 @@ public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
         }
         
         // After above commands, just delete the node.
-        this.addCommand( commandFactory.DELETE_NODE( target, candidate ) );
+        this.addCommand( new DeleteNodeCommand( target, candidate ) );
         
     }
 

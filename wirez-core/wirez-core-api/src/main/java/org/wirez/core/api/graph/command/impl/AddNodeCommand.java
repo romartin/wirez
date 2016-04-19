@@ -75,7 +75,7 @@ public final class AddNodeCommand extends AbstractGraphCommand {
 
     @Override
     public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
-        final DeleteNodeCommand undoCommand = context.getCommandFactory().DELETE_NODE( target, candidate );
+        final DeleteNodeCommand undoCommand = new DeleteNodeCommand( target, candidate );
         return undoCommand.execute( context );
     }
 

@@ -54,7 +54,7 @@ public final class ClearGraphCommand extends AbstractGraphCommand {
     }
     
     private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
-        return GraphCommandResultBuilder.OK_COMMAND;        
+        return GraphCommandResultBuilder.RESULT_OK;        
     }
 
     @Override

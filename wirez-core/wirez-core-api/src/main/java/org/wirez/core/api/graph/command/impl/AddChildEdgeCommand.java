@@ -89,7 +89,7 @@ public final class AddChildEdgeCommand extends AbstractGraphCommand {
 
     @Override
     public CommandResult<RuleViolation> undo( final GraphCommandExecutionContext context ) {
-        DeleteChildEdgeCommand undoCommand = context.getCommandFactory().DELETE_CHILD_EDGE( parent, candidate );
+        DeleteChildEdgeCommand undoCommand = new DeleteChildEdgeCommand( parent, candidate );
         return undoCommand.execute( context );
     }
 

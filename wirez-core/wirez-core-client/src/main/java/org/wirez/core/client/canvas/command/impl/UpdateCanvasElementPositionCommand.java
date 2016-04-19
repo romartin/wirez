@@ -4,6 +4,7 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.impl.UpdateElementPositionCommand;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
@@ -37,7 +38,7 @@ public final class UpdateCanvasElementPositionCommand extends AbstractCanvasGrap
 
     @Override
     protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(final AbstractCanvasHandler context) {
-        return context.getGraphCommandFactory().UPDATE_POSITION( element, x, y );
+        return new UpdateElementPositionCommand( element, x, y );
     }
 
 }

@@ -83,7 +83,6 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
                 definitionManager, 
                 factoryManager,
                 emptyRuleManager,
-                graphCommandFactory,
                 graphUtils );
     }
 

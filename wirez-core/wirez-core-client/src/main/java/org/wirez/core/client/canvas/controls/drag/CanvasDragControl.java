@@ -4,8 +4,11 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandUtils;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerRegistrationControl;
+import org.wirez.core.client.session.command.Session;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.impl.AbstractShape;
 import org.wirez.core.client.shape.view.HasEventHandlers;
@@ -13,6 +16,7 @@ import org.wirez.core.client.shape.view.event.DragHandler;
 import org.wirez.core.client.shape.view.event.ViewEventType;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +24,18 @@ import java.util.Map;
 public class CanvasDragControl extends AbstractCanvasHandlerRegistrationControl 
         implements DragControl<AbstractCanvasHandler, Element> {
 
-    private final Map<String, DragHandler> handlers = new HashMap<>();
+    CanvasCommandFactory canvasCommandFactory;
+    CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
     
+    private final Map<String, DragHandler> handlers = new HashMap<>();
+
+    @Inject
+    public CanvasDragControl(final CanvasCommandFactory canvasCommandFactory, 
+                             final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
+        this.canvasCommandFactory = canvasCommandFactory;
+        this.canvasCommandManager = canvasCommandManager;
+    }
+
     @Override
     public void register(final Element element) {
 
@@ -45,7 +59,7 @@ public class CanvasDragControl extends AbstractCanvasHandlerRegistrationControl
                 @Override
                 public void end(final org.wirez.core.client.shape.view.event.DragEvent event) {
                     final double[] xy = getContainerXY(shape);
-                    CommandResult<CanvasViolation> result = canvasHandler.execute( canvasHandler.getCommandFactory().UPDATE_POSITION(element, xy[0], xy[1]) );
+                    CommandResult<CanvasViolation> result = canvasCommandManager.execute( canvasHandler, canvasCommandFactory.UPDATE_POSITION(element, xy[0], xy[1]) );
                     if (CommandUtils.isError( result) ) {
                         // TODO: DragContext#reset
                     }

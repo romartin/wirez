@@ -58,8 +58,7 @@ public class CanvasCommandManagerImpl extends AbstractCanvasCommandManager<Abstr
         if ( null == instance ) {
             
             instance = new GraphCommandExecutionContextImpl( context.getClientDefinitionManager(),
-                    context.getClientFactoryServices(), context.getRuleManager(), context.getGraphCommandFactory(),
-                    context.getGraphUtils());
+                    context.getClientFactoryServices(), context.getRuleManager(), context.getGraphUtils());
             
         }
         

@@ -29,11 +29,13 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.widgets.canvas.WiresCanvasHandlerPresenter;
-import org.wirez.client.workbench.event.CanvasScreenStateChangedEvent;
+import org.wirez.client.widgets.session.impl.AbstractFullSessionPresenter;
+import org.wirez.client.widgets.session.impl.DefaultFullSessionPresenter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.canvas.lienzo.LienzoLayer;
+import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
+import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -50,13 +52,11 @@ public class CanvasScreen {
     
     public static final String SCREEN_ID = "CanvasScreen";
 
-    public enum CanvasScreenState {
-        ACTIVE, NOT_ACTIVE;
-    }
-    
     @Inject
-    WiresCanvasHandlerPresenter canvasHandlerPresenter;
+    DefaultCanvasSessionManager canvasSessionManager;
 
+    @Inject
+    DefaultFullSessionPresenter canvasSessionPresenter;
 
     @Inject
     PlaceManager placeManager;
@@ -64,21 +64,22 @@ public class CanvasScreen {
     @Inject
     Event<ChangeTitleWidgetEvent> changeTitleNotificationEvent;
 
-    @Inject
-    Event<CanvasScreenStateChangedEvent> canvasScreenStateChangedEvent;
-
     private Menus menu = null;
     private PlaceRequest placeRequest;
     private String title = "Canvas Screen";
-
+    private DefaultCanvasFullSession session;
+    
+    // WHile dev & testing.
     private HandlerRegistration mousePointerCoordsHandlerReg;
-    private boolean isStateSaved = false;
     
     @PostConstruct
     public void init() {
 
-        // Initialize the presenter.
-        canvasHandlerPresenter.initialize( 1000, 1000 );
+        // Create a new full control session.
+        session = canvasSessionManager.newFullSession();
+        
+        // Initialize the session presenter.
+        canvasSessionPresenter.initialize( session, 1000, 1000 );
         
     }
 
@@ -94,15 +95,13 @@ public class CanvasScreen {
         
         final Command callback = () -> {
             
-            final Diagram diagram = canvasHandlerPresenter.getDiagram();
+            final Diagram diagram = canvasSessionPresenter.getCanvasHandler().getDiagram();
             
             if ( null != diagram ) {
                 
                 // Update screen title.
                 updateTitle( diagram.getSettings().getTitle() );
 
-                // Active the screen.
-                setStateActive();
             }
             
         };
@@ -114,12 +113,12 @@ public class CanvasScreen {
             final String title = placeRequest.getParameter( "title", "" );
             
             // Create a new diagram.
-            canvasHandlerPresenter.newDiagram( UUID.uuid(), title, defSetId, shapeSetd, callback );
+            canvasSessionPresenter.newDiagram( UUID.uuid(), title, defSetId, shapeSetd, callback );
 
         } else {
 
             // Load an existing diagram.
-            canvasHandlerPresenter.load( _uuid, callback );
+            canvasSessionPresenter.load( _uuid, callback );
             
         }
 
@@ -135,22 +134,22 @@ public class CanvasScreen {
 
     @OnOpen
     public void onOpen() {
-
+        resume();
     }
 
     @OnFocus
     public void onFocus() {
-
+        resume();
     }
 
     @OnClose
     public void onClose() {
-        setStateNotActive();
+        disposeSession();
     }
 
     @OnLostFocus
     public void OnLostFocus() {
-        setStateNotActive();
+        pauseSession();
     }
 
     @WorkbenchMenu
@@ -158,12 +157,16 @@ public class CanvasScreen {
         return menu;
     }
 
-    private void setStateActive() {
-        canvasScreenStateChangedEvent.fire(new CanvasScreenStateChangedEvent(canvasHandlerPresenter.getCanvasHandler(), CanvasScreenState.ACTIVE));
+    private void resume() {
+        canvasSessionManager.resume( session );
     }
 
-    private void setStateNotActive() {
-        canvasScreenStateChangedEvent.fire(new CanvasScreenStateChangedEvent(canvasHandlerPresenter.getCanvasHandler(), CanvasScreenState.NOT_ACTIVE));
+    private void pauseSession() {
+        canvasSessionManager.pause();
+    }
+
+    private void disposeSession() {
+        canvasSessionManager.dispose();
     }
 
     private Menus makeMenuBar() {
@@ -204,37 +207,38 @@ public class CanvasScreen {
     private Command getSaveCommand() {
         
         return () -> {
-            canvasHandlerPresenter.save( () -> {});
+            canvasSessionPresenter.save( () -> {});
         };
         
     }
 
     private Command getClearGridCommand() {
-        return () -> canvasHandlerPresenter.clear();
+        return () -> canvasSessionPresenter.clear();
     }
 
     private Command getClearSelectionCommand() {
-        return () -> canvasHandlerPresenter.clearSelection();
+        return () -> canvasSessionPresenter.clearSelection();
     }
     
     private Command getDeleteSelectionCommand() {
-        return () -> canvasHandlerPresenter.deleteSelected();
+        return () -> canvasSessionPresenter.deleteSelected();
     }
     
     private Command getUndoCommand() {
-        return () -> canvasHandlerPresenter.undo();
+        return () -> canvasSessionPresenter.undo();
     }
 
+    // While dev & testing.
     private Command getLogGraphCommand() {
-        return () -> canvasHandlerPresenter.logGraph();
+        return () -> ( (AbstractFullSessionPresenter) canvasSessionPresenter).logGraph();
     }
 
     private Command getResumeGraphCommand() {
-        return () -> canvasHandlerPresenter.resumeGraph();
+        return () -> ( (AbstractFullSessionPresenter) canvasSessionPresenter).resumeGraph();
     }
     
     private Command getVisitGraphCommand() {
-        return () -> canvasHandlerPresenter.visitGraph();
+        return () -> ( (AbstractFullSessionPresenter) canvasSessionPresenter).visitGraph();
     }
 
     // For testing...
@@ -243,7 +247,7 @@ public class CanvasScreen {
             public void execute() {
 
                 if ( null == mousePointerCoordsHandlerReg ) {
-                    final LienzoLayer wiresLayer = (LienzoLayer) canvasHandlerPresenter.getCanvasHandler().getCanvas().getLayer();
+                    final LienzoLayer wiresLayer = (LienzoLayer) canvasSessionPresenter.getCanvasHandler().getCanvas().getLayer();
                     mousePointerCoordsHandlerReg = wiresLayer.getLienzoLayer().addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
                         @Override
                         public void onNodeMouseMove(NodeMouseMoveEvent nodeMouseMoveEvent) {
@@ -282,7 +286,7 @@ public class CanvasScreen {
 
     @WorkbenchPartView
     public IsWidget getWidget() {
-        return canvasHandlerPresenter.asWidget();
+        return canvasSessionPresenter.asWidget();
     }
 
     @WorkbenchContextId

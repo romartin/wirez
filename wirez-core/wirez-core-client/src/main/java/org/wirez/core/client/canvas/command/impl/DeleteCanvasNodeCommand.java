@@ -6,6 +6,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.impl.SafeDeleteNodeCommand;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.index.Index;
@@ -48,14 +49,14 @@ public final class DeleteCanvasNodeCommand extends DeleteCanvasElementCommand<No
 
     @Override
     protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(final AbstractCanvasHandler context) {
-        return context.getGraphCommandFactory().SAFE_DELETE_NODE(context.getDiagram().getGraph(), candidate);
+        return new SafeDeleteNodeCommand(context.getDiagram().getGraph(), candidate);
     }
 
     @Override
     public CommandResult<CanvasViolation> undo(AbstractCanvasHandler context) {
         final Command<AbstractCanvasHandler, CanvasViolation> command = parent != null ?
-                context.getCommandFactory().ADD_CHILD_NODE( parent, candidate, factory) :
-                context.getCommandFactory().ADD_NODE( candidate, factory);
+                new AddCanvasChildNodeCommand( parent, candidate, factory) :
+                new AddCanvasNodeCommand( candidate, factory);
         return command.execute( context );
     }
 }

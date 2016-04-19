@@ -18,8 +18,6 @@ package org.wirez.core.client.canvas.wires;
 
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.graph.command.GraphCommandManager;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.api.graph.util.GraphUtils;
@@ -28,8 +26,6 @@ import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.event.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.CanvasElementUpdatedEvent;
@@ -51,22 +47,17 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
     public WiresCanvasHandler(final ClientDefinitionManager clientDefinitionManager,
                               final ClientFactoryServices clientFactoryServices,
                               final @Default  RuleManager ruleManager,
-                              final GraphCommandManager graphCommandManager,
-                              final GraphCommandFactory graphCommandFactory,
                               final GraphUtils graphUtils,
                               final IncrementalIndexBuilder indexBuilder,
-                              final CanvasCommandFactory commandFactory,
                               final TreeWalkTraverseProcessor treeWalkTraverseProcessor, 
                               final ShapeManager shapeManager,
-                              final CanvasCommandManager<AbstractCanvasHandler> commandManager,
                               final Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent,
                               final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
                               final Event<CanvasElementRemovedEvent> canvasElementRemovedEvent,
                               final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent) {
 
-        super( clientDefinitionManager, clientFactoryServices, ruleManager, graphCommandManager,
-                graphCommandFactory, graphUtils, indexBuilder, commandFactory, treeWalkTraverseProcessor, 
-                shapeManager, commandManager, canvasInitializationCompletedEvent,
+        super( clientDefinitionManager, clientFactoryServices, ruleManager, graphUtils, 
+                indexBuilder, treeWalkTraverseProcessor, shapeManager, canvasInitializationCompletedEvent,
                 canvasElementAddedEvent, canvasElementRemovedEvent, canvasElementUpdatedEvent );
         
     }

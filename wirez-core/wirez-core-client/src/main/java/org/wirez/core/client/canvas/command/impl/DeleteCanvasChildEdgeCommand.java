@@ -4,6 +4,7 @@ import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.api.graph.command.impl.DeleteChildEdgeCommand;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasCommand;
@@ -29,13 +30,13 @@ public final class DeleteCanvasChildEdgeCommand extends AbstractCanvasGraphComma
 
     @Override
     public CommandResult<CanvasViolation> undo(final AbstractCanvasHandler context) {
-        AbstractCanvasCommand command = context.getCommandFactory().ADD_CHILD_EDGE( parent, child );
+        AbstractCanvasCommand command = new AddCanvasChildEdgeCommand( parent, child );
         return command.execute( context );
     }
 
     @Override
     protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(final AbstractCanvasHandler context) {
-        return context.getGraphCommandFactory().DELETE_CHILD_EDGE( parent, child );
+        return new DeleteChildEdgeCommand( parent, child );
     }
 
 }

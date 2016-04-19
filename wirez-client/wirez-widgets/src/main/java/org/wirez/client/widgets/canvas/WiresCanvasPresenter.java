@@ -23,7 +23,6 @@ import org.wirez.core.client.canvas.event.CanvasClearEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeAddedEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
 import org.wirez.core.client.canvas.lienzo.Lienzo;
-import org.wirez.core.client.shape.Shape;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -31,16 +30,16 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 @Dependent
-public class WiresCanvas extends org.wirez.core.client.canvas.wires.WiresCanvas implements IsWidget {
+public class WiresCanvasPresenter extends org.wirez.core.client.canvas.wires.WiresCanvas implements IsWidget {
 
     private static final int PADDING = 15;
 
     @Inject
-    public WiresCanvas(final Event<CanvasClearEvent> canvasClearEvent,
-                       final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
-                       final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
-                       final @Lienzo Layer layer,
-                       final org.wirez.core.client.canvas.wires.WiresCanvas.View view) {
+    public WiresCanvasPresenter(final Event<CanvasClearEvent> canvasClearEvent,
+                                final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
+                                final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
+                                final @Lienzo Layer layer,
+                                final org.wirez.core.client.canvas.wires.WiresCanvas.View view) {
         super( canvasClearEvent, canvasShapeAddedEvent, canvasShapeRemovedEvent, layer, view );
     }
 
@@ -70,7 +69,7 @@ public class WiresCanvas extends org.wirez.core.client.canvas.wires.WiresCanvas 
         view.remove(control);
     }
 
-    public WiresCanvas clear() {
+    public WiresCanvasPresenter clear() {
         super.clear();
         view.clear();
         return this;

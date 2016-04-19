@@ -24,8 +24,7 @@
                 - ClearGraph
                 - SetConnectionSourceNodeCommand
                 - SetConnectionTargetNodeCommand
-                
-        
+
 - Lienzo
 ********
 
@@ -49,16 +48,6 @@
     - Others
         - Text orientation
 
-- Dynamic forms
-***************
-
-    - Issues with property change event handlers
-    - Create a doc with requirements ( field types, etc )
-    - custom property types
-    - composite props - depends on the other properties' values
-    - avoid custom forks!?!?
-    - bean validations
-    
 - Client
 *********
 

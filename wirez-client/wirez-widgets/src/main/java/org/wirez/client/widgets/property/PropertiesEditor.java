@@ -33,15 +33,17 @@ import org.wirez.core.api.definition.property.type.*;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.event.*;
-import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.command.CanvasCommand;
+import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.canvas.event.*;
 import org.wirez.core.client.service.ClientRuntimeError;
+import org.wirez.core.client.session.command.Session;
+import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.util.WirezClientLogger;
 
 import javax.annotation.PostConstruct;
@@ -79,6 +81,7 @@ public class PropertiesEditor implements IsWidget {
     GraphUtils graphUtils;
     ShapeManager wirezClientManager;
     CanvasCommandFactory canvasCommandFactory;
+    CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
     View view;
     
     private AbstractCanvasHandler canvasHandler;
@@ -90,12 +93,14 @@ public class PropertiesEditor implements IsWidget {
                             final GraphUtils graphUtils,
                             final View view,
                             final ShapeManager wirezClientManager,
-                            final CanvasCommandFactory canvasCommandFactory) {
+                            final CanvasCommandFactory canvasCommandFactory,
+                            final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
         this.definitionManager = definitionManager;
         this.graphUtils = graphUtils;
         this.view = view;
         this.wirezClientManager = wirezClientManager;
         this.canvasCommandFactory = canvasCommandFactory;
+        this.canvasCommandManager = canvasCommandManager;
     }
 
     @PostConstruct
@@ -363,7 +368,7 @@ public class PropertiesEditor implements IsWidget {
     }
     
     private void execute(final CanvasCommand<AbstractCanvasHandler> command) {
-        canvasHandler.execute( command );
+        canvasCommandManager.execute( canvasHandler, command );
     }
 
     private double getWidth(final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element) {

@@ -58,12 +58,12 @@ public final class AddEdgeCommand extends AbstractGraphCommand {
     }
     
     private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
-        return GraphCommandResultBuilder.OK_COMMAND;        
+        return GraphCommandResultBuilder.RESULT_OK;        
     }
 
     @Override
     public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
-        final DeleteEdgeCommand undoCommand = context.getCommandFactory().DELETE_EDGE( edge );
+        final DeleteEdgeCommand undoCommand = new DeleteEdgeCommand( edge );
         return undoCommand.execute( context );
     }
 

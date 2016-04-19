@@ -12,7 +12,7 @@ import java.util.LinkedList;
 @NonPortable
 public class GraphCommandResultBuilder extends CommandResultBuilder<RuleViolation> {
 
-    public static final CommandResult<RuleViolation> OK_COMMAND = new CommandResultImpl<>(
+    public static final CommandResult<RuleViolation> RESULT_OK = new CommandResultImpl<>(
             CommandResult.Type.INFO,
             RESULT_SUCCESS,
             new LinkedList<>()

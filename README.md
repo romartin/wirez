@@ -27,13 +27,14 @@ Most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, follow
   - *GWT Modules to load*: org.wirez.FastCompiledWirezShowcase             
   - *VM options*: 
         
-        Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-webapp/target/wildfly-8.1.0.Final
+        -Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-webapp/target/wildfly-8.1.0.Final
                       
   - *Dev mode parameters*: 
         
-        server org.jboss.errai.cdi.server.gwt.EmbeddedWildFlyLauncher
+        -server org.jboss.errai.cdi.server.gwt.EmbeddedWildFlyLauncher
                       
   - *Start page*: wirez.html                  
+  
   - On before launch section - Add a new "Run Maven Goal" BEFORE the existing "Make" item as:                
     - *Working directory*: 
         

@@ -33,7 +33,7 @@ public class ApplicationDiagramManager extends AbstractDiagramManager<Diagram> {
     }
     
     @PostConstruct
-    public void init() {
+    public void initializeCache() {
         
         // Load vfs diagrams and put into the registry.
         final Collection<Diagram> diagrams = vfsDiagramManager.getItems();
@@ -68,4 +68,5 @@ public class ApplicationDiagramManager extends AbstractDiagramManager<Diagram> {
         // Update the VFS storage.
         vfsDiagramManager.remove( diagram );
     }
+    
 }

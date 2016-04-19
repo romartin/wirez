@@ -4,6 +4,7 @@ import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.registry.DiagramRegistry;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public abstract class AbstractDiagramManager<D extends Diagram> implements DiagramManager<D> {
     
@@ -44,7 +45,7 @@ public abstract class AbstractDiagramManager<D extends Diagram> implements Diagr
 
     @Override
     public Collection<D> getItems() {
-        return registry.getItems();
+        return Collections.unmodifiableCollection( registry.getItems() );
     }
 
     @Override

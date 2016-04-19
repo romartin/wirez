@@ -127,6 +127,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
     @SuppressWarnings("unchecked")
     private <V> V _getValue( Field field, Object annotation, T property) throws IllegalAccessException {
         if ( null != annotation) {
+            field.setAccessible(true);
             V result = (V) field.get(property);
             return result;
         }

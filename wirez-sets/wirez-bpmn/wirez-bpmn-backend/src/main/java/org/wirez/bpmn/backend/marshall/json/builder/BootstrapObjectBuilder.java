@@ -23,7 +23,7 @@ public class BootstrapObjectBuilder<W, T extends Element<View<W>>> extends Abstr
     public AbstractObjectBuilder<W, T> stencil(String oryxStencilId) {
         assert nodeId != null;
         
-        String stencilId = oryxIdMappings.getId( oryxStencilId );
+        String stencilId = oryxIdMappings.getDefinitionId( oryxStencilId );
         AbstractObjectBuilder<W, T> builder = (AbstractObjectBuilder<W, T>) buildersFactory.builderFor(stencilId);
         
         builder.nodeId(this.nodeId);

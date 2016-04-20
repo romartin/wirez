@@ -58,7 +58,7 @@ public class HasValuePropertyAdapter implements PropertyAdapter<PropertyImpl> {
     public boolean accepts(final Class<?> pojo) {
         // TODO: Deal with client side class reflect.
         // return pojo.isAssignableFrom(HasValue.class);
-        return "Name".equals(pojo.getSimpleName())
+        return "name".equals(pojo.getSimpleName().toLowerCase())
                 || PropertyImpl.class.getName().equals(pojo.getName());
     }
 

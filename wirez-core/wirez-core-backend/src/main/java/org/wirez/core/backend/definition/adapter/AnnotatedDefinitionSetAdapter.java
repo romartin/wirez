@@ -3,6 +3,7 @@ package org.wirez.core.backend.definition.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.definition.adapter.DefinitionSetAdapter;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.definition.annotation.definitionset.DefinitionSet;
 import org.wirez.core.api.graph.Graph;
 
@@ -26,7 +27,7 @@ public class AnnotatedDefinitionSetAdapter<T> extends AbstractAnnotatedAdapter<T
 
     @Override
     public String getId(T definitionSet) {
-        String defSetId = definitionSet.getClass().getSimpleName();
+        String defSetId = BindableAdapterUtils.getDefinitionSetId(definitionSet.getClass());
 
         // Avoid weld proxy class names issues.
         if ( defSetId.contains("$") ) {
@@ -93,7 +94,7 @@ public class AnnotatedDefinitionSetAdapter<T> extends AbstractAnnotatedAdapter<T
                 if ( null != definitions ) {
                     result = new HashSet<String>( definitions.length );
                     for ( Class<?> defClass : definitions ) {
-                        result.add(defClass.getSimpleName());
+                        result.add( BindableAdapterUtils.getDefinitionSetId(defClass) );
                     }
                 }
             }

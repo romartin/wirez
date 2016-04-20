@@ -10,10 +10,6 @@ import java.util.Set;
 
 public abstract class AbstractBindableAdapter<T> implements Adapter<T> {
 
-    protected String getPojoId(T pojo) {
-        return pojo.getClass().getSimpleName();
-    }
-    
     protected <R> R getProxiedValue(final T pojo, final String fieldName) {
         R result = null;
         if ( null != pojo ) {

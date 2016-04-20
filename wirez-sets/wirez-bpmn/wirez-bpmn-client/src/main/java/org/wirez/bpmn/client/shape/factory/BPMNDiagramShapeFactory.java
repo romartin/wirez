@@ -28,9 +28,15 @@ import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @ApplicationScoped
 public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, BPMNDiagramShape> implements ShapeGlyphFactory {
+
+    private static final Set<Class<?>> SUPPORTED_CLASSES = new LinkedHashSet<Class<?>>() {{
+        add(BPMNDiagram.class);
+    }};
 
     public BPMNDiagramShapeFactory() {
     }
@@ -39,10 +45,10 @@ public class BPMNDiagramShapeFactory extends BaseBPMNShapeFactory<BPMNDiagram, B
     public BPMNDiagramShapeFactory(final ShapeViewFactory shapeViewFactory) {
         super(shapeViewFactory);
     }
-    
+
     @Override
-    public boolean accepts(final String definitionId) {
-        return BPMNDiagram.class.getSimpleName().equals( definitionId );
+    protected Set<Class<?>> getSupportedModelClasses() {
+        return SUPPORTED_CLASSES;
     }
 
     @Override

@@ -1,11 +1,14 @@
+
 package org.wirez.bpmn.client.controls.command;
 
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.batch.BatchCommandResult;
+import org.wirez.core.api.definition.adapter.binding.AbstractBindableAdapter;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
@@ -37,6 +40,7 @@ public class SequenceFlowCommandCallback implements AddConnectionCommand.Callbac
 
     private static Logger LOGGER = Logger.getLogger(SequenceFlowCommandCallback.class.getName());
 
+    DefinitionManager definitionManager;
     CanvasCommandFactory commandFactory;
     GraphCommandFactoryImpl graphCommandFactoryImpl;
     ClientFactoryServices clientFactoryServices;
@@ -47,11 +51,13 @@ public class SequenceFlowCommandCallback implements AddConnectionCommand.Callbac
     private Edge<ViewConnector<SequenceFlow>, Node> edge;
     
     @Inject
-    public SequenceFlowCommandCallback(final CanvasCommandFactory commandFactory,
-                                                 final GraphCommandFactoryImpl graphCommandFactoryImpl,
-                                                 final ClientFactoryServices clientFactoryServices,
-                                                 final ShapeManager shapeManager,
-                                                 final BPMNDefinitionFactory bpmnDefinitionFactory) {
+    public SequenceFlowCommandCallback(final DefinitionManager definitionManager,
+                                       final CanvasCommandFactory commandFactory,
+                                       final GraphCommandFactoryImpl graphCommandFactoryImpl,
+                                       final ClientFactoryServices clientFactoryServices,
+                                       final ShapeManager shapeManager,
+                                       final BPMNDefinitionFactory bpmnDefinitionFactory) {
+        this.definitionManager = definitionManager;
         this.commandFactory = commandFactory;
         this.graphCommandFactoryImpl = graphCommandFactoryImpl;
         this.clientFactoryServices = clientFactoryServices;
@@ -62,7 +68,8 @@ public class SequenceFlowCommandCallback implements AddConnectionCommand.Callbac
     @Override
     public void init(final Element element) {
         final SequenceFlow sequenceFlow = bpmnDefinitionFactory.buildSequenceFlow();
-        clientFactoryServices.newElement(UUID.uuid(), sequenceFlow.getClass().getSimpleName(), new ServiceCallback<Element>() {
+        final String seqFlowId = definitionManager.getDefinitionAdapter( sequenceFlow.getClass() ).getId( sequenceFlow );
+        clientFactoryServices.newElement(UUID.uuid(), seqFlowId, new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element item) {
                 SequenceFlowCommandCallback.this.source = element;

@@ -3,6 +3,7 @@ package org.wirez.core.backend.definition.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.definition.adapter.PropertySetAdapter;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
 
 import javax.enterprise.context.Dependent;
@@ -17,7 +18,7 @@ public class AnnotatedPropertySetAdapter<T> extends AbstractAnnotatedAdapter<T> 
 
     @Override
     public String getId(T propertySet) {
-        return propertySet.getClass().getSimpleName();
+        return BindableAdapterUtils.getPropertySetId(propertySet.getClass());
     }
 
     @Override

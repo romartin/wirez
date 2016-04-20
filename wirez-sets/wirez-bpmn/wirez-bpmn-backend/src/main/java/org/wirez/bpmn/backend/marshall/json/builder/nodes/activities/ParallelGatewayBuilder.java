@@ -20,7 +20,7 @@ public class ParallelGatewayBuilder extends AbstractNodeBuilder<ParallelGateway,
 
     @Override
     public String getDefinitionId() {
-        return oryxIdMappings.getOryxId(ParallelGateway.class);
+        return oryxIdMappings.getOryxDefinitionId(ParallelGateway.class);
     }
     
     @Override

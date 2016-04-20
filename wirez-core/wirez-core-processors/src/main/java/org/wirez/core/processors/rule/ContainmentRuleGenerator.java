@@ -46,13 +46,11 @@ public class ContainmentRuleGenerator extends AbstractGenerator  {
         final Messager messager = processingEnvironment.getMessager();
         messager.printMessage( Diagnostic.Kind.NOTE, "Starting code generation for [" + className + "]" );
 
-        final Elements elementUtils = processingEnvironment.getElementUtils();
-
         //Extract required information
         final TypeElement classElement = (TypeElement) element;
         final String annotationName = MainProcessor.ANNOTATION_RULE_CAN_CONTAIN;
         final String ruleId = MainProcessor.toValidId(className);
-        final String ruleDefinitionId = className.substring(0, ( className.length() - MainProcessor.RULE_CONTAINMENT_SUFFIX_CLASSNAME.length()) );
+        final String ruleDefinitionId = ((TypeElement) element).getQualifiedName().toString();
         
         List<String> roles = null;
 

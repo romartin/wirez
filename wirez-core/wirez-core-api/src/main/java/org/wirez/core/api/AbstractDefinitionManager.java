@@ -17,6 +17,7 @@
 package org.wirez.core.api;
 
 import org.wirez.core.api.definition.adapter.*;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -46,7 +47,7 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
             for ( final Object definitionSet : definitionSets ) {
                 final DefinitionSetAdapter adapter = getDefinitionSetAdapter( definitionSet.getClass() );
                 final String defSetId = adapter.getId( definitionSet );
-                if ( defSetId.equals(id) ) {
+                if ( defSetId.equals( id ) ) {
                     return (T) definitionSet;
                 }
             }
@@ -56,9 +57,10 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(Class<?> pojoClass) {
+    public <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(final Class<?> pojoClass) {
+        final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (DefinitionSetAdapter adapter : definitionSetAdapters) {
-            if ( adapter.accepts(pojoClass) ) {
+            if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
@@ -67,9 +69,10 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(Class<?> pojoClass) {
+    public <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(final Class<?> pojoClass) {
+        final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (DefinitionSetRuleAdapter adapter : definitionSetRuleAdapters) {
-            if ( adapter.accepts(pojoClass) ) {
+            if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
@@ -78,9 +81,10 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public <T> DefinitionAdapter<T> getDefinitionAdapter(Class<?> pojoClass) {
+    public <T> DefinitionAdapter<T> getDefinitionAdapter(final Class<?> pojoClass) {
+        final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (DefinitionAdapter adapter : definitionAdapters) {
-            if ( adapter.accepts(pojoClass) ) {
+            if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
@@ -89,9 +93,10 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public<T> PropertySetAdapter<T> getPropertySetAdapter(Class<?> pojoClass) {
+    public<T> PropertySetAdapter<T> getPropertySetAdapter(final Class<?> pojoClass) {
+        final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (PropertySetAdapter adapter : propertySetAdapters) {
-            if ( adapter.accepts(pojoClass) ) {
+            if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
@@ -100,14 +105,19 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public<T> PropertyAdapter<T> getPropertyAdapter(Class<?> pojoClass) {
+    public<T> PropertyAdapter<T> getPropertyAdapter(final Class<?> pojoClass) {
+        final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (PropertyAdapter adapter : propertyAdapters) {
-            if ( adapter.accepts(pojoClass) ) {
+            if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
 
         return nullHandling("Property", pojoClass);
+    }
+
+    private Class<?> handleBindableProxyClass(final Class<?> pojoClass) {
+        return BindableAdapterUtils.handleBindableProxyClass( pojoClass );
     }
 
     public static <T extends Adapter> void sortAdapters(List<T> adapters) {

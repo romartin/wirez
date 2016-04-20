@@ -20,7 +20,7 @@ public class StartNoneEventBuilder extends AbstractNodeBuilder<StartNoneEvent, N
 
     @Override
     public String getDefinitionId() {
-        return oryxIdMappings.getOryxId(StartNoneEvent.class);
+        return oryxIdMappings.getOryxDefinitionId(StartNoneEvent.class);
     }
 
     @Override

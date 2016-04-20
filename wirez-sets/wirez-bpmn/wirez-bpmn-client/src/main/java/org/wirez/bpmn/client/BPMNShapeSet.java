@@ -20,10 +20,9 @@ import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.client.resources.BPMNImageResources;
 import org.wirez.bpmn.client.shape.factory.*;
+import org.wirez.core.client.AbstractBindableShapeSet;
 import org.wirez.core.client.shape.Shape;
-import org.wirez.core.client.ShapeSet;
-import org.wirez.core.client.shape.factory.AbstractShapeFactory;
-import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.client.shape.factory.AbstractBindableShapeFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -33,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @ApplicationScoped
-public class BPMNShapeSet implements ShapeSet<AbstractShapeFactory<?, ? extends Shape>> {
+public class BPMNShapeSet extends AbstractBindableShapeSet {
 
     public static final String ID = "BPMNShapeSet";
 
@@ -46,7 +45,7 @@ public class BPMNShapeSet implements ShapeSet<AbstractShapeFactory<?, ? extends 
     ParallelGatewayShapeFactory parallelGatewayShapeFactory;
     LaneShapeFactory laneShapeFactory;
     
-    private List<AbstractShapeFactory<?, ? extends Shape>> factories;
+    private List<AbstractBindableShapeFactory<?, ? extends Shape>> factories;
 
     public BPMNShapeSet() {
     }
@@ -72,7 +71,7 @@ public class BPMNShapeSet implements ShapeSet<AbstractShapeFactory<?, ? extends 
 
     @PostConstruct
     public void init() {
-        factories = new LinkedList<AbstractShapeFactory<?, ? extends Shape>>() {{
+        factories = new LinkedList<AbstractBindableShapeFactory<?, ? extends Shape>>() {{
             add( bpmnDiagramShapeFactory );
             add( startNoneEventShapeFactory );
             add( endNoneEventShapeFactory );
@@ -105,12 +104,12 @@ public class BPMNShapeSet implements ShapeSet<AbstractShapeFactory<?, ? extends 
     }
 
     @Override
-    public String getDefinitionSetId() {
-        return BPMNDefinitionSet.class.getSimpleName();
+    protected Class<?> getDefinitionSetClass() {
+        return BPMNDefinitionSet.class;
     }
 
     @Override
-    public Collection<AbstractShapeFactory<?, ? extends Shape>> getFactories() {
+    public Collection<AbstractBindableShapeFactory<?, ? extends Shape>> getFactories() {
         return factories;
     }
 }

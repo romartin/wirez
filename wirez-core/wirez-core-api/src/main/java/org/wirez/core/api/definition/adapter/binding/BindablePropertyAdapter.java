@@ -38,53 +38,62 @@ public abstract class BindablePropertyAdapter<T> extends AbstractBindableAdapter
     protected abstract Map<Class, String> getPropertyDefaultValueFieldNames();
 
     @Override
-    public String getId(T pojo) {
-        return getPojoId(pojo);
+    public String getId(final T pojo) {
+        return BindableAdapterUtils.getPropertyId( pojo.getClass() );
     }
 
     @Override
-    public PropertyType getType(T pojo) {
-        return getProxiedValue( pojo, getPropertyTypeFieldNames().get(pojo.getClass()) );
+    public PropertyType getType(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyTypeFieldNames().get( clazz ) );
     }
     
     @Override
-    public String getCaption(T pojo) {
-        return getProxiedValue( pojo, getPropertyCaptionFieldNames().get(pojo.getClass()) );
+    public String getCaption(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyCaptionFieldNames().get( clazz ) );
     }
 
     @Override
-    public String getDescription(T pojo) {
-        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get(pojo.getClass()) );
+    public String getDescription(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get( clazz ) );
     }
 
     @Override
-    public boolean isReadOnly(T pojo) {
-        return getProxiedValue( pojo, getPropertyReadOnlyFieldNames().get(pojo.getClass()) );
+    public boolean isReadOnly(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyReadOnlyFieldNames().get( clazz ) );
     }
 
     @Override
-    public boolean isOptional(T pojo) {
-        return getProxiedValue( pojo, getPropertyOptionalFieldNames().get(pojo.getClass()) );
+    public boolean isOptional(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyOptionalFieldNames().get( clazz ) );
     }
 
     @Override
     public Object getValue(final T pojo) {
-        return getProxiedValue( pojo, getPropertyValueFieldNames().get(pojo.getClass()) );
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyValueFieldNames().get( clazz ) );
     }
 
     @Override
     public Object getDefaultValue(final T pojo) {
-        return getProxiedValue( pojo, getPropertyDefaultValueFieldNames().get(pojo.getClass()) );
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyDefaultValueFieldNames().get( clazz ) );
     }
 
     @Override
     public void setValue(final T pojo, final Object value) {
-        setProxiedValue( pojo, getPropertyValueFieldNames().get(pojo.getClass()), value );
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        setProxiedValue( pojo, getPropertyValueFieldNames().get( clazz ), value );
     }
 
     @Override
-    public boolean accepts(final Class<?> pojo) {
-        return getPropertyValueFieldNames().containsKey(pojo);
+    public boolean accepts(final Class<?> pojoClass ) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojoClass );
+        return getPropertyValueFieldNames().containsKey(clazz);
 
     }
 

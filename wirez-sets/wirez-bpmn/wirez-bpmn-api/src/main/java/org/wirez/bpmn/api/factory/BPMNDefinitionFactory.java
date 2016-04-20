@@ -1,7 +1,7 @@
 package org.wirez.bpmn.api.factory;
 
 import org.wirez.bpmn.api.*;
-import org.wirez.core.api.definition.factory.ModelFactory;
+import org.wirez.core.api.definition.factory.BindableModelFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @ApplicationScoped
-public class BPMNDefinitionFactory implements ModelFactory<BPMNDefinition> {
+public class BPMNDefinitionFactory extends BindableModelFactory<BPMNDefinition> {
 
     BPMNPropertyFactory bpmnPropertyBuilder;
     BPMNPropertySetFactory bpmnPropertySetBuilder;
@@ -23,48 +23,50 @@ public class BPMNDefinitionFactory implements ModelFactory<BPMNDefinition> {
         this.bpmnPropertySetBuilder = bpmnPropertySetBuilder;
     }
 
-    private static final Set<String>  SUPPORTED_DEF_IDS = new LinkedHashSet<String>() {{
-        add(BPMNDiagram.class.getSimpleName());
-        add(Task.class.getSimpleName());
-        add(StartNoneEvent.class.getSimpleName());
-        add(EndNoneEvent.class.getSimpleName());
-        add(EndTerminateEvent.class.getSimpleName());
-        add(SequenceFlow.class.getSimpleName());
-        add(ParallelGateway.class.getSimpleName());
-        add(Lane.class.getSimpleName());
+    private static final Set<Class<?>>  SUPPORTED_DEF_CLASSES = new LinkedHashSet<Class<?>>() {{
+        add(BPMNDiagram.class);
+        add(Task.class);
+        add(StartNoneEvent.class);
+        add(EndNoneEvent.class);
+        add(EndTerminateEvent.class);
+        add(SequenceFlow.class);
+        add(ParallelGateway.class);
+        add(Lane.class);
     }};
+
     @Override
-    public boolean accepts(final String id) {
-        return SUPPORTED_DEF_IDS.contains(id);
+    public Set<Class<?>> getAcceptedClasses() {
+        return SUPPORTED_DEF_CLASSES;
     }
 
     @Override
-    public BPMNDefinition build(final String id) {
+    public BPMNDefinition build(final Class<?> clazz) {
 
-        if (BPMNDiagram.class.getSimpleName().equals(id)) {
+        if (BPMNDiagram.class.equals(clazz)) {
             return buildBPMNDiagram();
         }
-        if (Task.class.getSimpleName().equals(id)) {
+        if (Task.class.equals(clazz)) {
             return buildTask();
         }
-        if (StartNoneEvent.class.getSimpleName().equals(id)) {
+        if (StartNoneEvent.class.equals(clazz)) {
             return buildStartNoneEvent();
         }
-        if (EndNoneEvent.class.getSimpleName().equals(id)) {
+        if (EndNoneEvent.class.equals(clazz)) {
             return buildEndNoneEvent();
         }
-        if (EndTerminateEvent.class.getSimpleName().equals(id)) {
+        if (EndTerminateEvent.class.equals(clazz)) {
             return buildEndTerminateEvent();
         }
-        if (SequenceFlow.class.getSimpleName().equals(id)) {
+        if (SequenceFlow.class.equals(clazz)) {
             return buildSequenceFlow();
         }
-        if (ParallelGateway.class.getSimpleName().equals(id)) {
+        if (ParallelGateway.class.equals(clazz)) {
             return buildParallelGateway();
         }
-        if (Lane.class.getSimpleName().equals(id)) {
+        if (Lane.class.getSimpleName().equals(clazz)) {
             return buildLane();
         }
+
         return null;
     }
 

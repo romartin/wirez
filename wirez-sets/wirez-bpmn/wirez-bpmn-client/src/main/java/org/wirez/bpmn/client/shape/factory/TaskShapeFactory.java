@@ -29,12 +29,18 @@ import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @ApplicationScoped
 public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> implements ShapeGlyphFactory {
 
     BPMNViewFactory bpmnViewFactory;
-    
+
+    private static final Set<Class<?>> SUPPORTED_CLASSES = new LinkedHashSet<Class<?>>() {{
+        add(Task.class);
+    }};
+
     public TaskShapeFactory() {
     }
     
@@ -46,8 +52,8 @@ public class TaskShapeFactory extends BaseBPMNShapeFactory<Task, TaskShape> impl
     }
 
     @Override
-    public boolean accepts(final String definitionId) {
-        return Task.class.getSimpleName().equals( definitionId );
+    protected Set<Class<?>> getSupportedModelClasses() {
+        return SUPPORTED_CLASSES;
     }
 
     @Override

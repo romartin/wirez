@@ -17,6 +17,7 @@
 package org.wirez.core.api.util;
 
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
@@ -37,10 +38,10 @@ import java.util.logging.Logger;
  */
 public class WirezLogger {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.util.WirezLogger");
+    private static Logger LOGGER = Logger.getLogger(WirezLogger.class.getName());
 
-    private static String getDefinitionId( Object o ) {
-        return o.getClass().getSimpleName();
+    private static String getDefinitionId( final Object o ) {
+        return BindableAdapterUtils.getDefinitionId( o.getClass() );
     }
     
     public static void logCommandResults(final Iterable<CommandResult> results) {

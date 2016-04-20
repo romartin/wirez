@@ -229,7 +229,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             Set<String> defIds = new LinkedHashSet<>();
             for ( TypeMirror mirror : mirrors ) {
                 String fqcn = mirror.toString();
-                defIds.add( fqcn.substring( fqcn.lastIndexOf(".") + 1, fqcn.length() ) );
+                defIds.add( fqcn );
             }
             processingContext.getDefSetAnnotations().getDefinitionIds().addAll(defIds);
 

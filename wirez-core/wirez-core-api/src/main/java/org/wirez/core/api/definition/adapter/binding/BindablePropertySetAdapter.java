@@ -11,22 +11,25 @@ public abstract class BindablePropertySetAdapter<T> extends AbstractBindableAdap
     protected abstract Map<Class, Set<String>> getPropertiesFieldNames();
     
     @Override
-    public String getId(T pojo) {
-        return getPojoId(pojo);
+    public String getId(final T pojo) {
+        return BindableAdapterUtils.getPropertySetId( pojo.getClass() );
     }
 
     @Override
-    public String getName(T pojo) {
-        return getProxiedValue( pojo, getPropertyNameFieldNames().get(pojo.getClass()) );
+    public String getName(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyNameFieldNames().get( clazz ) );
     }
 
     @Override
-    public Set<?> getProperties(T pojo) {
-        return getProxiedSet( pojo, getPropertiesFieldNames().get(pojo.getClass()) );
+    public Set<?> getProperties(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedSet( pojo, getPropertiesFieldNames().get( clazz ) );
     }
 
     @Override
-    public boolean accepts(Class<?> pojo) {
-        return getPropertyNameFieldNames().containsKey(pojo);
+    public boolean accepts(final Class<?> pojoClass) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojoClass  );
+        return getPropertyNameFieldNames().containsKey( clazz );
     }
 }

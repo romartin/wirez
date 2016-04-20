@@ -120,7 +120,7 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             final String oryxId = entry.getKey();
             final String pValue = entry.getValue();
-            final String pId = idMappings.getId( oryxId );
+            final String pId = idMappings.getPropertyId( oryxId );
             final Object property = getProperty(context, defProperties, pId);
             if ( null != property ) {
                 try {

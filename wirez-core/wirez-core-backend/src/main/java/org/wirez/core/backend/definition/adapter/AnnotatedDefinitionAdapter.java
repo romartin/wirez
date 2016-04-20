@@ -3,6 +3,7 @@ package org.wirez.core.backend.definition.adapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.definition.annotation.definition.Definition;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.util.GraphUtils;
@@ -35,7 +36,7 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
         String result = null;
 
         if ( null != definition ) {
-            result = definition.getClass().getSimpleName();
+            result = BindableAdapterUtils.getDefinitionId(definition.getClass());
         }
 
         return result;

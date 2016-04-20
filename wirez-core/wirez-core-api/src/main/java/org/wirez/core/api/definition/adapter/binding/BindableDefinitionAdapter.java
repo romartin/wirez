@@ -26,37 +26,42 @@ public abstract class BindableDefinitionAdapter<T> extends AbstractBindableAdapt
     protected abstract Map<Class, String> getPropertyDescriptionFieldNames();
     
     @Override
-    public String getId(T pojo) {
-        return getPojoId(pojo);
+    public String getId(final T pojo) {
+        return BindableAdapterUtils.getDefinitionId( pojo.getClass() );
     }
 
     @Override
-    public String getCategory(T pojo) {
-        return getProxiedValue( pojo, getPropertyCategoryFieldNames().get(pojo.getClass()) );
+    public String getCategory(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyCategoryFieldNames().get( clazz ) );
     }
 
     @Override
-    public String getTitle(T pojo) {
-        return getProxiedValue( pojo, getPropertyTitleFieldNames().get(pojo.getClass()) );
+    public String getTitle(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyTitleFieldNames().get( clazz ) );
     }
 
     @Override
-    public String getDescription(T pojo) {
-        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get(pojo.getClass()) );
+    public String getDescription(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get( clazz ) );
     }
 
     @Override
-    public Set<String> getLabels(T pojo) {
-        return getProxiedValue( pojo, getPropertyLabelsFieldNames().get(pojo.getClass()) );
+    public Set<String> getLabels(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyLabelsFieldNames().get( clazz ) );
     }
 
     @Override
-    public Set<?> getPropertySets(T pojo) {
-        return getProxiedSet( pojo, getPropertySetsFieldNames().get(pojo.getClass()) );
+    public Set<?> getPropertySets(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedSet( pojo, getPropertySetsFieldNames().get( clazz ) );
     }
 
     @Override
-    public Set<?> getProperties(T pojo) {
+    public Set<?> getProperties(final T pojo) {
         final Set<Object> result = new HashSet<>();
         
         // Obtain all properties from property sets.
@@ -66,27 +71,30 @@ public abstract class BindableDefinitionAdapter<T> extends AbstractBindableAdapt
         }
 
         // Find annotated runtime properties on the pojo.
-        
-        Set<?> proxiedProps = getProxiedSet( pojo, getPropertiesFieldNames().get(pojo.getClass()) );
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        Set<?> proxiedProps = getProxiedSet( pojo, getPropertiesFieldNames().get( clazz) );
         if ( null != proxiedProps ) {
-            result.addAll( propertySetProperties );
+            result.addAll( proxiedProps );
         }
         
         return result;
     }
 
     @Override
-    public Class<? extends Element> getGraphElement(T pojo) {
-        return getPropertyGraphElementFieldNames().get(pojo.getClass());
+    public Class<? extends Element> getGraphElement(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getPropertyGraphElementFieldNames().get( clazz );
     }
 
     @Override
-    public String getElementFactory(T pojo) {
-        return getPropertyElementFactoryFieldNames().get(pojo.getClass());
+    public String getElementFactory(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getPropertyElementFactoryFieldNames().get( clazz );
     }
 
     @Override
-    public boolean accepts(Class<?> pojo) {
-        return getPropertyCategoryFieldNames().containsKey(pojo);
+    public boolean accepts(final Class<?> pojoClass ) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojoClass );
+        return getPropertyCategoryFieldNames().containsKey( clazz );
     }
 }

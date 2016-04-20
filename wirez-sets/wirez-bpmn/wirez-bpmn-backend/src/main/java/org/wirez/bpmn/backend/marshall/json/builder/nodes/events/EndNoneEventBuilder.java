@@ -21,7 +21,7 @@ public class EndNoneEventBuilder extends AbstractNodeBuilder<EndNoneEvent, Node<
 
     @Override
     public String getDefinitionId() {
-        return oryxIdMappings.getOryxId(EndNoneEvent.class);
+        return oryxIdMappings.getOryxDefinitionId(EndNoneEvent.class);
     }
 
     @Override

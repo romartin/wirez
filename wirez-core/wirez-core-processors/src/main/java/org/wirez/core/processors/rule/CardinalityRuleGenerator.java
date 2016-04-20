@@ -119,13 +119,13 @@ public class CardinalityRuleGenerator extends AbstractGenerator  {
                             throw new RuntimeException("No edge class specifyed for the @EdgeOccurrence.");
                         }
                         String fqcn = mirror.toString();
-                        String edgeDefId = fqcn.substring( fqcn.lastIndexOf(".") + 1, fqcn.length() );
+                        String shortId = fqcn.substring( fqcn.lastIndexOf(".") + 1, fqcn.length() );
                         long edgeMin = edgeOccurrence.min();
                         long edgeMax = edgeOccurrence.max();
                         if ( EdgeType.INCOMING.equals(type)) {
-                            incomingEdgeRules.add( new CardinalityRuleEntry( edgeMin, edgeMax, edgeDefId, "incoming" + edgeDefId + MainProcessor.RULE_CARDINALITY_SUFFIX_CLASSNAME ) );
+                            incomingEdgeRules.add( new CardinalityRuleEntry( edgeMin, edgeMax, fqcn, "incoming" + shortId + MainProcessor.RULE_CARDINALITY_SUFFIX_CLASSNAME ) );
                         } else {
-                            outgoingEdgeRules.add( new CardinalityRuleEntry( edgeMin, edgeMax, edgeDefId, "outgoing" + edgeDefId + MainProcessor.RULE_CARDINALITY_SUFFIX_CLASSNAME ) );
+                            outgoingEdgeRules.add( new CardinalityRuleEntry( edgeMin, edgeMax, fqcn, "outgoing" + shortId + MainProcessor.RULE_CARDINALITY_SUFFIX_CLASSNAME ) );
                         }
 
                     }

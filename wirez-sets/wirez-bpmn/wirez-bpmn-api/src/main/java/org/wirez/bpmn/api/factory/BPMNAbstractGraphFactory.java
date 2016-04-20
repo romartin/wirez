@@ -3,6 +3,7 @@ package org.wirez.bpmn.api.factory;
 import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
+import org.wirez.core.api.definition.adapter.binding.AbstractBindableAdapter;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
@@ -15,12 +16,10 @@ import org.wirez.core.api.graph.factory.BaseGraphFactory;
 import org.wirez.core.api.graph.impl.GraphImpl;
 import org.wirez.core.api.graph.store.GraphNodeStoreImpl;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.util.UUID;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.Set;
 
 public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<DefinitionSet, Graph<DefinitionSet, Node>> {
@@ -38,12 +37,13 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
     protected BPMNAbstractGraphFactory() {
     }
 
-    @Inject
-    public BPMNAbstractGraphFactory(final FactoryManager factoryManager,
+    public BPMNAbstractGraphFactory(final DefinitionManager definitionManager,
+                                    final FactoryManager factoryManager,
                                     final BPMNDefinitionFactory bpmnDefinitionBuilder,
                                     final GraphCommandManager graphCommandManager,
                                     final GraphCommandFactory graphCommandFactory,
                                     final RuleManager emptyRuleManager) {
+        this.definitionManager = definitionManager;
         this.factoryManager = factoryManager;
         this.bpmnDefinitionBuilder = bpmnDefinitionBuilder;
         this.graphCommandManager = graphCommandManager;
@@ -65,8 +65,9 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
                         new GraphNodeStoreImpl());
 
         // Add a BPMN diagram by default.
-        BPMNDiagram diagram = bpmnDefinitionBuilder.buildBPMNDiagram();
-        Node diagramNode = buildGraphElement( diagram.getClass().getSimpleName() );
+        final BPMNDiagram diagram = bpmnDefinitionBuilder.buildBPMNDiagram();
+        final String diagramId = definitionManager.getDefinitionAdapter(diagram.getClass()).getId( diagram );
+        Node diagramNode = buildGraphElement( diagramId );
         
         graphCommandManager
                 .batch( graphCommandFactory.ADD_NODE( graph, diagramNode ) )

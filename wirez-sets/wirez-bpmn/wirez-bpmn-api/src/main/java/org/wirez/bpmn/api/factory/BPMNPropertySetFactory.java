@@ -7,7 +7,7 @@ import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.bpmn.api.property.simulation.CatchEventAttributes;
 import org.wirez.bpmn.api.property.simulation.ThrowEventAttributes;
-import org.wirez.core.api.definition.factory.ModelFactory;
+import org.wirez.core.api.definition.factory.BindableModelFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,7 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @ApplicationScoped
-public class BPMNPropertySetFactory implements ModelFactory<BPMNPropertySet> {
+public class BPMNPropertySetFactory extends BindableModelFactory<BPMNPropertySet> {
 
     BPMNPropertyFactory bpmnPropertyBuilder;
 
@@ -27,43 +27,44 @@ public class BPMNPropertySetFactory implements ModelFactory<BPMNPropertySet> {
         this.bpmnPropertyBuilder = bpmnPropertyBuilder;
     }
 
-    private static final Set<String> SUPPORTED_PROP_SET_IDS = new LinkedHashSet<String>() {{
-        add(BPMNGeneral.class.getSimpleName());
-        add(DiagramSet.class.getSimpleName());
-        add(BackgroundSet.class.getSimpleName());
-        add(FontSet.class.getSimpleName());
-        add(CatchEventAttributes.class.getSimpleName());
-        add(ThrowEventAttributes.class.getSimpleName());
+    private static final Set<Class<?>> SUPPORTED_PROP_CLASSES = new LinkedHashSet<Class<?>>() {{
+        add(BPMNGeneral.class);
+        add(DiagramSet.class);
+        add(BackgroundSet.class);
+        add(FontSet.class);
+        add(CatchEventAttributes.class);
+        add(ThrowEventAttributes.class);
     }};
-    
+
     @Override
-    public boolean accepts(String id) {
-        return SUPPORTED_PROP_SET_IDS.contains(id);
+    public Set<Class<?>> getAcceptedClasses() {
+        return SUPPORTED_PROP_CLASSES;
     }
 
     @Override
-    public BPMNPropertySet build(String id) {
-        if (BPMNGeneral.class.getSimpleName().equals(id)) {
+    public BPMNPropertySet build(final Class<?> clazz) {
+        if (BPMNGeneral.class.equals(clazz)) {
             return buildGeneralSet();
         }
-        if (DiagramSet.class.getSimpleName().equals(id)) {
+        if (DiagramSet.class.equals(clazz)) {
             return buildDiagramSet();
         }
-        if (BackgroundSet.class.getSimpleName().equals(id)) {
+        if (BackgroundSet.class.equals(clazz)) {
             return buildBackgroundSet();
         }
-        if (FontSet.class.getSimpleName().equals(id)) {
+        if (FontSet.class.equals(clazz)) {
             return buildFontSet();
         }
-        if (CatchEventAttributes.class.getSimpleName().equals(id)) {
+        if (CatchEventAttributes.class.equals(clazz)) {
             return buildCatchEventAttributes();
         }
-        if (ThrowEventAttributes.class.getSimpleName().equals(id)) {
+        if (ThrowEventAttributes.class.equals(clazz)) {
             return buildThrowEventAttributes();
         }
-        
+
         throw new RuntimeException("Instance expected to be build here.");
     }
+
 
     public CatchEventAttributes buildCatchEventAttributes() {
         return new CatchEventAttributes(bpmnPropertyBuilder.buildMin(),

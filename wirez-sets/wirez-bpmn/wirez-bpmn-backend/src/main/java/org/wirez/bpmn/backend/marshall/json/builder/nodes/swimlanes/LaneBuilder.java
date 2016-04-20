@@ -20,7 +20,7 @@ public class LaneBuilder extends AbstractNodeBuilder<Lane, Node<View<Lane>, Edge
 
     @Override
     public String getDefinitionId() {
-        return oryxIdMappings.getOryxId(Lane.class);
+        return oryxIdMappings.getOryxDefinitionId(Lane.class);
     }
 
     @Override

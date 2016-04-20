@@ -1,13 +1,15 @@
 package org.wirez.bpmn.api.factory;
 
 import org.wirez.bpmn.api.BPMNDefinitionSet;
-import org.wirez.core.api.definition.factory.ModelFactory;
+import org.wirez.core.api.definition.factory.BindableModelFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @ApplicationScoped
-public class BPMNDefinitionSetFactory implements ModelFactory<BPMNDefinitionSet> {
+public class BPMNDefinitionSetFactory extends BindableModelFactory<BPMNDefinitionSet> {
 
     BPMNDefinitionFactory bpmnDefinitionBuilder;
 
@@ -19,14 +21,18 @@ public class BPMNDefinitionSetFactory implements ModelFactory<BPMNDefinitionSet>
         this.bpmnDefinitionBuilder = bpmnDefinitionBuilder;
     }
 
+    private static final Set<Class<?>>  SUPPORTED_CLASSES = new LinkedHashSet<Class<?>>() {{
+        add(BPMNDefinitionSet.class);
+    }};
     @Override
-    public boolean accepts(final String id) {
-        return id.equals(BPMNDefinitionSet.class.getSimpleName());
+    public Set<Class<?>> getAcceptedClasses() {
+        return SUPPORTED_CLASSES;
     }
 
     @Override
-    public BPMNDefinitionSet build(final String id) {
+    public BPMNDefinitionSet build(final Class<?> clazz) {
         return new BPMNDefinitionSet();
     }
-    
+
+
 }

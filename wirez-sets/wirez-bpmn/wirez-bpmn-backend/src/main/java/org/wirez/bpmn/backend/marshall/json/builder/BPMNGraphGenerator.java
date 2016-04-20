@@ -11,6 +11,8 @@ import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.definition.adapter.binding.AbstractBindableAdapter;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
@@ -142,7 +144,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
     public void close() throws IOException {
         logBuilders();
 
-        this.graph = (Graph<DefinitionSet, Node>) factoryManager.newGraph(UUID.uuid(), BPMNDefinitionSet.class.getSimpleName());
+        String bpmnDefSetId = BindableAdapterUtils.getDefinitionSetId( BPMNDefinitionSet.class );
+        this.graph = (Graph<DefinitionSet, Node>) factoryManager.newGraph(UUID.uuid(), bpmnDefSetId);
         
         // TODO: Improve this - Remove the default diagram built by the bpmn graph factory.
         Iterator<Node> nodes = this.graph.nodes().iterator();

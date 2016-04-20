@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 @Dependent
 public class Palette implements IsWidget {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.client.widgets.palette.accordion.Palette");
+    private static Logger LOGGER = Logger.getLogger(Palette.class.getName());
     
     public interface View extends UberView<Palette> {
         

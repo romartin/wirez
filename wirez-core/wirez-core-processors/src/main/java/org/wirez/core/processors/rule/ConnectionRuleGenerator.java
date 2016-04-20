@@ -74,7 +74,7 @@ public class ConnectionRuleGenerator extends AbstractGenerator  {
         final TypeElement classElement = (TypeElement) element;
         final boolean isInterface = classElement.getKind().isInterface();
         final String ruleId = MainProcessor.toValidId(className);
-        final String ruleDefinitionId = className.substring(0, ( className.length() - MainProcessor.RULE_CONNECTION_SUFFIX_CLASSNAME.length()) );
+        final String ruleDefinitionId = classElement.getQualifiedName().toString();
         
         PermittedConnection[] pcs = classElement.getAnnotationsByType(PermittedConnection.class);
         List<ConnectionRuleEntry> ruleEntries = new ArrayList<>();

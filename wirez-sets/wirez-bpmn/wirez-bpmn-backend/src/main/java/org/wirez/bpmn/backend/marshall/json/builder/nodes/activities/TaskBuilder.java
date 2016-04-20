@@ -20,7 +20,7 @@ public class TaskBuilder extends AbstractNodeBuilder<Task, Node<View<Task>, Edge
 
     @Override
     public String getDefinitionId() {
-        return oryxIdMappings.getOryxId(Task.class);
+        return oryxIdMappings.getOryxDefinitionId(Task.class);
     }
 
     @Override

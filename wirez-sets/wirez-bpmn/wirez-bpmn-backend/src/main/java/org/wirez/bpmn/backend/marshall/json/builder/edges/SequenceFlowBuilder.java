@@ -21,7 +21,7 @@ public class SequenceFlowBuilder extends AbstractEdgeBuilder<SequenceFlow, Edge<
 
     @Override
     public String getDefinitionId() {
-        return oryxIdMappings.getOryxId(SequenceFlow.class);
+        return oryxIdMappings.getOryxDefinitionId(SequenceFlow.class);
     }
     
     @Override

@@ -41,9 +41,8 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
         if ( null != properties && !properties.isEmpty() ) {
             for ( Object property : properties ) {
                 PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter(property.getClass()); 
-                String pId = propertyAdapter.getId( property );
                 PropertyType propertyType = propertyAdapter.getType( property );
-                String oryxPropId = context.getOryxIdMappings().getOryxPropertyId( pId );
+                String oryxPropId = context.getOryxIdMappings().getOryxPropertyId( property.getClass() );
                 Object value = propertyAdapter.getValue(property);
                 String valueStr = value != null ?
                         context.getOryxPropertyManager().serialize( propertyType, value ) : "";
@@ -52,7 +51,7 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
         }
 
         // Stencil id field.
-        String defId = context.getOryxIdMappings().getOryxId( definition.getClass() );
+        String defId = context.getOryxIdMappings().getOryxDefinitionId(definition.getClass());
         super.addParser( new ObjectParser( "stencil" ).addParser( new StringFieldParser( "id", defId ) ) );
 
         // Bounds.

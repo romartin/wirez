@@ -21,7 +21,7 @@ public class EndTerminateEventBuilder extends AbstractNodeBuilder<EndTerminateEv
 
     @Override
     public String getDefinitionId() {
-        return oryxIdMappings.getOryxId(EndTerminateEvent.class);
+        return oryxIdMappings.getOryxDefinitionId(EndTerminateEvent.class);
     }
 
     @Override

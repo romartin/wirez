@@ -8,127 +8,125 @@ import org.wirez.bpmn.api.property.diagram.Executable;
 import org.wirez.bpmn.api.property.diagram.Package;
 import org.wirez.bpmn.api.property.general.*;
 import org.wirez.bpmn.api.property.simulation.*;
-import org.wirez.core.api.definition.factory.ModelFactory;
-import org.wirez.core.api.definition.property.defaults.Name;
+import org.wirez.core.api.definition.factory.BindableModelFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @ApplicationScoped
-public class BPMNPropertyFactory implements ModelFactory<BPMNProperty> {
+public class BPMNPropertyFactory extends BindableModelFactory<BPMNProperty> {
 
-    private static final Set<String> SUPPORTED_PROP_IDS = new LinkedHashSet<String>() {{
-        add(Name.ID);
-        add(Executable.class.getSimpleName());
-        add(Package.class.getSimpleName());
-        add(BgColor.class.getSimpleName());
-        add(BorderColor.class.getSimpleName());
-        add(BorderSize.class.getSimpleName());
-        add(Documentation.class.getSimpleName());
-        add(FontBorderSize.class.getSimpleName());
-        add(FontColor.class.getSimpleName());
-        add(FontFamily.class.getSimpleName());
-        add(FontSize.class.getSimpleName());
-        add(Height.class.getSimpleName());
-        add(Width.class.getSimpleName());
-        add(Radius.class.getSimpleName());
-        add(Min.class.getSimpleName());
-        add(Max.class.getSimpleName());
-        add(Mean.class.getSimpleName());
-        add(DistributionType.class.getSimpleName());
-        add(Currency.class.getSimpleName());
-        add(Quantity.class.getSimpleName());
-        add(StandardDeviation.class.getSimpleName());
-        add(TimeUnit.class.getSimpleName());
-        add(UnitCost.class.getSimpleName());
-        add(WorkingHours.class.getSimpleName());
+    private static final Set<Class<?>> SUPPORTED_PROP_CLASSES = new LinkedHashSet<Class<?>>() {{
+        add(Name.class);
+        add(Executable.class);
+        add(Package.class);
+        add(BgColor.class);
+        add(BorderColor.class);
+        add(BorderSize.class);
+        add(Documentation.class);
+        add(FontBorderSize.class);
+        add(FontColor.class);
+        add(FontFamily.class);
+        add(FontSize.class);
+        add(Height.class);
+        add(Width.class);
+        add(Radius.class);
+        add(Min.class);
+        add(Max.class);
+        add(Mean.class);
+        add(DistributionType.class);
+        add(Currency.class);
+        add(Quantity.class);
+        add(StandardDeviation.class);
+        add(TimeUnit.class);
+        add(UnitCost.class);
+        add(WorkingHours.class);
     }};
 
     public BPMNPropertyFactory() {
     }
 
     @Override
-    public boolean accepts(final String id) {
-        return SUPPORTED_PROP_IDS.contains(id);
+    public Set<Class<?>> getAcceptedClasses() {
+        return SUPPORTED_PROP_CLASSES;
     }
 
     @Override
-    public BPMNProperty build(final String id) {
-        
-        if (Name.class.getSimpleName().equals(id)) {
+    public BPMNProperty build(final Class<?> clazz) {
+        if (Name.class.equals(clazz)) {
             return buildName();
         }
-        if (Executable.class.getSimpleName().equals(id)) {
+        if (Executable.class.equals(clazz)) {
             return buildExecutable();
         }
-        if (Package.class.getSimpleName().equals(id)) {
+        if (Package.class.equals(clazz)) {
             return buildPackage();
         }
-        if (BgColor.class.getSimpleName().equals(id)) {
+        if (BgColor.class.equals(clazz)) {
             return buildBgColor();
         }
-        if (BorderColor.class.getSimpleName().equals(id)) {
+        if (BorderColor.class.equals(clazz)) {
             return buildBorderColor();
         }
-        if (BorderSize.class.getSimpleName().equals(id)) {
+        if (BorderSize.class.equals(clazz)) {
             return buildBorderSize();
         }
-        if (Documentation.class.getSimpleName().equals(id)) {
+        if (Documentation.class.equals(clazz)) {
             return buildDocumentation();
         }
-        if (FontBorderSize.class.getSimpleName().equals(id)) {
+        if (FontBorderSize.class.equals(clazz)) {
             return buildFontBorderSize();
         }
-        if (FontColor.class.getSimpleName().equals(id)) {
+        if (FontColor.class.equals(clazz)) {
             return buildFontColor();
         }
-        if (FontFamily.class.getSimpleName().equals(id)) {
+        if (FontFamily.class.equals(clazz)) {
             return buildFontFamily();
         }
-        if (FontSize.class.getSimpleName().equals(id)) {
+        if (FontSize.class.equals(clazz)) {
             return buildFontSize();
         }
-        if (Height.class.getSimpleName().equals(id)) {
+        if (Height.class.equals(clazz)) {
             return buildHeight();
         }
-        if (Width.class.getSimpleName().equals(id)) {
+        if (Width.class.equals(clazz)) {
             return buildWidth();
         }
-        if (Radius.class.getSimpleName().equals(id)) {
+        if (Radius.class.equals(clazz)) {
             return buildRadius();
         }
-        if (Min.class.getSimpleName().equals(id)) {
+        if (Min.class.equals(clazz)) {
             return buildMin();
         }
-        if (Max.class.getSimpleName().equals(id)) {
+        if (Max.class.equals(clazz)) {
             return buildMax();
         }
-        if (Mean.class.getSimpleName().equals(id)) {
+        if (Mean.class.equals(clazz)) {
             return buildMean();
         }
-        if (DistributionType.class.getSimpleName().equals(id)) {
+        if (DistributionType.class.equals(clazz)) {
             return buildDistributionType();
         }
-        if (Currency.class.getSimpleName().equals(id)) {
+        if (Currency.class.equals(clazz)) {
             return buildCurrency();
         }
-        if (Quantity.class.getSimpleName().equals(id)) {
+        if (Quantity.class.equals(clazz)) {
             return buildQuantity();
         }
-        if (StandardDeviation.class.getSimpleName().equals(id)) {
+        if (StandardDeviation.class.equals(clazz)) {
             return buildStandardDeviation();
         }
-        if (TimeUnit.class.getSimpleName().equals(id)) {
+        if (TimeUnit.class.equals(clazz)) {
             return buildTimeUnit();
         }
-        if (UnitCost.class.getSimpleName().equals(id)) {
+        if (UnitCost.class.equals(clazz)) {
             return buildUnitCost();
         }
-        if (WorkingHours.class.getSimpleName().equals(id)) {
+        if (WorkingHours.class.equals(clazz)) {
             return buildWorkingHours();
         }
-        
+
         throw new RuntimeException("Instance expected to be build here.");
     }
 

@@ -14,8 +14,8 @@ public abstract class BindableDefinitionSetAdapter<T> extends AbstractBindableAd
     protected abstract Set<String> getDefinitionIds();
 
     @Override
-    public String getId(T pojo) {
-        String _id = getPojoId( pojo );
+    public String getId(final T pojo) {
+        String _id = BindableAdapterUtils.getDefinitionSetId( pojo.getClass() );
 
         // Avoid weld proxy class names issues.
         if ( _id.contains("$") ) {
@@ -26,34 +26,39 @@ public abstract class BindableDefinitionSetAdapter<T> extends AbstractBindableAd
     }
 
     @Override
-    public String getDomain(T pojo) {
-        String n = pojo.getClass().getName();
+    public String getDomain(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        String n = clazz.getName();
         return n.substring( n.lastIndexOf(".") + 1, n.length() );
     }
 
     @Override
-    public String getDescription(T pojo) {
-        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get(pojo.getClass()) );
+    public String getDescription(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get( clazz ) );
     }
 
     @Override
-    public Set<String> getDefinitions(T pojo) {
+    public Set<String> getDefinitions(final T pojo) {
         return getDefinitionIds();
     }
 
     @Override
-    public String getGraphFactory(T pojo) {
-        return getGraphFactory().get(pojo.getClass());
+    public String getGraphFactory(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getGraphFactory().get( clazz );
     }
 
     @Override
-    public Class<? extends Graph> getGraph(T pojo) {
-        return getGraphTypes().get(pojo.getClass());
+    public Class<? extends Graph> getGraph(final T pojo) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getGraphTypes().get( clazz );
     }
 
     @Override
-    public boolean accepts(Class<?> pojo) {
-        return getPropertyDescriptionFieldNames().containsKey(pojo);
+    public boolean accepts(final Class<?> pojoClass) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojoClass );
+        return getPropertyDescriptionFieldNames().containsKey( clazz );
     }
 
 }

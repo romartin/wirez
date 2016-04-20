@@ -42,10 +42,6 @@ public class GraphUtils {
         return null;
     }
 
-    public Object getProperty(final Set<?> properties, final Class<?> propertyClass) {
-        return getProperty(properties, propertyClass.getSimpleName());
-    }
-
     public Object getProperty(final Set<?> properties, final String id) {
         if ( null != id && null != properties ) {
             for (final Object property : properties) {

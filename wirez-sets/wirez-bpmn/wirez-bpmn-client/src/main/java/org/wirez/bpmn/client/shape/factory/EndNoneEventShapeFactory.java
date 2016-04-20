@@ -28,10 +28,16 @@ import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @ApplicationScoped
 public class EndNoneEventShapeFactory extends BaseBPMNShapeFactory<EndNoneEvent, EndNoneEventShape> implements ShapeGlyphFactory {
-    
+
+    private static final Set<Class<?>> SUPPORTED_CLASSES = new LinkedHashSet<Class<?>>() {{
+        add(EndNoneEvent.class);
+    }};
+
     public EndNoneEventShapeFactory() {
     }
 
@@ -41,8 +47,8 @@ public class EndNoneEventShapeFactory extends BaseBPMNShapeFactory<EndNoneEvent,
     }
 
     @Override
-    public boolean accepts(final String definitionId) {
-        return EndNoneEvent.class.getSimpleName().equals( definitionId );
+    protected Set<Class<?>> getSupportedModelClasses() {
+        return SUPPORTED_CLASSES;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
 
     @Override
     public String getDefinitionId() {
-        return oryxIdMappings.getOryxId(BPMNDiagram.class);
+        return oryxIdMappings.getOryxDefinitionId(BPMNDiagram.class);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
                                  final String id) {
         if ( "processn".equals(id) ) {
             return super.getProperty(context, defProperties, Name.ID);
-        } else if ( oryxIdMappings.getOryxPropertyId(Name.ID).equals(id)) {
+        } else if ( oryxIdMappings.getOryxPropertyId(Name.class).equals(id)) {
             return null;
         }
         return super.getProperty(context, defProperties, id);

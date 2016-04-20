@@ -23,6 +23,8 @@ import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
+import org.wirez.core.api.definition.adapter.binding.AbstractBindableAdapter;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
@@ -145,10 +147,11 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
             
             parser.setProfile(new DefaultProfileImpl());
             final Graph graph = parser.unmarshall(definitions, null);
-            final String title = getFirstDiagramTitle( graph );
-            
+            final String title = getFirstDiagramTitle(graph);
+
+            final String defSetId = BindableAdapterUtils.getDefinitionSetId( BPMNDefinitionSet.class );
             final Diagram<Graph, Settings> diagram = new DiagramImpl( UUID.uuid(), graph, 
-                    new SettingsImpl(title, BPMNDefinitionSet.class.getSimpleName(), "BPMNShapeSet"));
+                    new SettingsImpl(title, defSetId, "BPMNShapeSet"));
 
             LOG.info("BPMN diagram loading finished successfully.");
 

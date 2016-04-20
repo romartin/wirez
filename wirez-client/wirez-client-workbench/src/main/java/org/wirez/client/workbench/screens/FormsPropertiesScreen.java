@@ -16,7 +16,6 @@
 
 package org.wirez.client.workbench.screens;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.livespark.formmodeler.renderer.client.DynamicFormRenderer;
 import org.uberfire.client.annotations.*;

@@ -137,30 +137,10 @@ public class FormsPropertiesScreen {
                 formRenderer.renderDefaultForm( element.getContent().getDefinition(), new Command() {
                     @Override
                     public void execute() {
-                        formRenderer.addFieldChangeHandler( ( fieldName, newValue, model ) ->
-                                FormsPropertiesScreen.this.executeUpdateProperty( element, fieldName, model ));
+                        formRenderer.addFieldChangeHandler( ( fieldName, newValue ) ->
+                                FormsPropertiesScreen.this.executeUpdateProperty( element, fieldName, newValue ));
                     }
                 } );
-
-                /*
-                    TODO: Tip for Pere :)
-
-                    Imagine that at this point, for example, we can do this:
-
-                        formRenderer.addCallback( new FormRendererCallback() {
-
-                            @Override
-                            public void onPropertyUpdated( final String propertyId, final Object value ) {
-
-                                // This will update the pojo property on the graph and the canvas will be re-drawn with the updates.
-                                // All updates have to be done through commands in order to perform further undos
-                                FormsPropertiesScreen.this.executeUpdateProperty( element, propertyId, value );
-
-                            }
-
-                        } )
-
-                 */
 
             } else if (ShapeState.DESELECTED.equals(state)) {
                 doClear();

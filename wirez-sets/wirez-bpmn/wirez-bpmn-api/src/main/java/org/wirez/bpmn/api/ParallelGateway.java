@@ -19,7 +19,6 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
@@ -58,7 +57,6 @@ public class ParallelGateway implements BPMNDefinition {
     private FontSet fontSet;
 
     @Property
-    @FieldDef(label = "Radius", property = "value")
     private Radius radius;
 
     @Labels

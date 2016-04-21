@@ -55,7 +55,7 @@ public class WirezPerspective {
         propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         propertiesPanel.setMinWidth( PaletteScreen.WIDTH );
         propertiesPanel.setWidth( PaletteScreen.WIDTH );
-        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(FormsPropertiesScreen.SCREEN_ID ) ) );
+        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
 
         treeExplorerPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         treeExplorerPanel.setMinWidth( PaletteScreen.WIDTH );

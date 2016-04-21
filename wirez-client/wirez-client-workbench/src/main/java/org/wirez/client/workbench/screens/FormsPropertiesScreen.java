@@ -17,6 +17,8 @@
 package org.wirez.client.workbench.screens;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import org.jboss.errai.databinding.client.HasProperties;
+import org.jboss.errai.databinding.client.api.DataBinder;
 import org.livespark.formmodeler.renderer.client.DynamicFormRenderer;
 import org.uberfire.client.annotations.*;
 import org.uberfire.client.mvp.PlaceManager;
@@ -133,11 +135,23 @@ public class FormsPropertiesScreen {
             final String shapeUUID = shape.getUUID();
             final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element = this.canvasHandler.getGraphIndex().get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
-                formRenderer.renderDefaultForm( element.getContent().getDefinition(), new Command() {
+                final Object definition = element.getContent().getDefinition();
+                formRenderer.renderDefaultForm( definition, new Command() {
                     @Override
                     public void execute() {
-                        formRenderer.addFieldChangeHandler( ( fieldName, newValue ) ->
-                                FormsPropertiesScreen.this.executeUpdateProperty( element, fieldName, newValue ));
+                        formRenderer.addFieldChangeHandler((fieldName, newValue) -> {
+
+                            // TODO - Pere: We have to review this. Meanwhile, note that this is working only for properties
+                            // that are direct members of the definitions ( ex: Task#width or StartEvent#radius ).
+                            // But it's not working for the properties that are inside property sets, for example an error
+                            // occurs when updating "documentation", as thisl callback "fieldName" = "documentation", but
+                            // in order to obtain the property it should be "general.documentation".
+
+                            final HasProperties hasProperties = (HasProperties) DataBinder.forModel( definition ).getModel();
+                            final Object property = hasProperties.get(fieldName);
+                            final String pId = clientDefinitionManager.getPropertyAdapter( property.getClass() ).getId( property );
+                            FormsPropertiesScreen.this.executeUpdateProperty(element, pId, newValue);
+                        });
                     }
                 } );
 

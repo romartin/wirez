@@ -1,9 +1,19 @@
-- End2end
-*************
+- GOAL pending
+**************
 
     - BPMN Marshalling 
-        -> saved bound x/y coordinates and size (is negative) on bpmn file are not the right ones
-        -> simplify to avoid creating classes for each new definition...
+        - saved bound x/y coordinates and size (is negative) on bpmn file are not the right ones
+        - simplify & clean to avoid creating classes for each new definition...
+        - unit testing
+    
+    - Commands
+            - UNDO's
+                - undoing just after adding element fails
+                - ClearGraph
+                - SetConnectionSourceNodeCommand
+                - SetConnectionTargetNodeCommand
+
+    - Lienzo stuff
     
     - Usability
         - dragging constrained just for diagram bounds?
@@ -13,18 +23,10 @@
         - Notifcations
             - Design
             - Pagination
-
-    - Use FQCN as identifier for all domain model classes ( refactor adpaters#getId )
-    
-    - Split API/client module - extract impls?
-    
-    - Commands
-            - UNDO's
-                - undoing just after adding element fails
-                - ClearGraph
-                - SetConnectionSourceNodeCommand
-                - SetConnectionTargetNodeCommand
-
+    - Sessions
+        - different canvas sessinos
+        - diagrams sync / commands sync
+        
 - Lienzo
 ********
 
@@ -71,6 +73,8 @@
       
 - API
 *****
+
+    - Split API/client module - extract impls?
 
     - model
         - Definition Impls -> finish implementation & generate from ifaces and the adapter as well

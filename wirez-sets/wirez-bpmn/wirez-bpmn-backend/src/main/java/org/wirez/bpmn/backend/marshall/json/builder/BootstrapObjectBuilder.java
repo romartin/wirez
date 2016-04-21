@@ -65,4 +65,9 @@ public class BootstrapObjectBuilder<W, T extends Element<View<W>>> extends Abstr
     public String getDefinitionId() {
         return null;
     }
+
+    @Override
+    public String getOryxDefinitionId() {
+        return null;
+    }
 }

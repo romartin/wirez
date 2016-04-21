@@ -30,7 +30,7 @@ public class BPMNGraphObjectBuilderFactory {
         if ( id == null) throw new NullPointerException();
         
         for ( GraphObjectBuilder<? ,?> builder : graphObjectBuilders) {
-            if ( id.equals(builder.getDefinitionId()) ) {
+            if ( id.equals(builder.getOryxDefinitionId()) ) {
                 return builder;
             }
         }

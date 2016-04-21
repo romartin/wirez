@@ -4,6 +4,7 @@ import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.bpmn.api.property.general.Name;
 import org.wirez.bpmn.backend.marshall.json.builder.AbstractNodeBuilder;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
@@ -22,7 +23,12 @@ public class BPMNDiagramBuilder extends AbstractNodeBuilder<BPMNDiagram, Node<Vi
 
     @Override
     public String getDefinitionId() {
-        return oryxIdMappings.getOryxDefinitionId(BPMNDiagram.class);
+        return BindableAdapterUtils.getDefinitionId( BPMNDiagram.class );
+    }
+
+    @Override
+    public String getOryxDefinitionId() {
+        return oryxIdMappings.getOryxDefinitionId( BPMNDiagram.class );
     }
 
     @Override

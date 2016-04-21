@@ -63,7 +63,7 @@ public class BPMNDefinitionFactory extends BindableModelFactory<BPMNDefinition> 
         if (ParallelGateway.class.equals(clazz)) {
             return buildParallelGateway();
         }
-        if (Lane.class.getSimpleName().equals(clazz)) {
+        if (Lane.class.equals(clazz)) {
             return buildLane();
         }
 

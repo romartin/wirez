@@ -22,6 +22,8 @@ import java.util.Collection;
 public interface GraphObjectBuilder<W, T extends Element<View<W>>> {
     
     String getDefinitionId();
+
+    String getOryxDefinitionId();
     
     GraphObjectBuilder<W, T> nodeId(String nodeId);
 

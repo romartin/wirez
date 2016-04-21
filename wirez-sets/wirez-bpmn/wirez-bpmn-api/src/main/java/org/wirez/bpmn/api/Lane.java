@@ -19,6 +19,7 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
@@ -64,9 +65,11 @@ public class Lane implements BPMNDefinition {
     private FontSet fontSet;
 
     @Property
+    @FieldDef(label = "Width", property = "value")
     private Width width;
 
     @Property
+    @FieldDef(label = "Height", property = "value")
     private Height height;
 
     @Labels

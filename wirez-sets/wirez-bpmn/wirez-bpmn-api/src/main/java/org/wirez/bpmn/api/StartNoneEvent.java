@@ -19,6 +19,7 @@ package org.wirez.bpmn.api;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
@@ -50,9 +51,11 @@ public class StartNoneEvent implements BPMNDefinition {
     public static final Double RADIUS = 15d;
 
     @PropertySet
+    @FieldDef( label = "BPMN General Settings")
     private BPMNGeneral general;
 
     @PropertySet
+    @FieldDef( label = "Background Settings")
     private BackgroundSet backgroundSet;
 
     @PropertySet
@@ -62,6 +65,7 @@ public class StartNoneEvent implements BPMNDefinition {
     private CatchEventAttributes catchEventAttributes;
 
     @Property
+    @FieldDef(label = "Radius", property = "value")
     private Radius radius;
 
     @Labels

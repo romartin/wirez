@@ -25,8 +25,11 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.explorer.tree.TreeExplorer;
+import org.wirez.core.client.session.CanvasSession;
 import org.wirez.core.client.session.event.SessionDisposedEvent;
 import org.wirez.core.client.session.event.SessionOpenedEvent;
+import org.wirez.core.client.session.event.SessionPausedEvent;
+import org.wirez.core.client.session.event.SessionResumedEvent;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -96,11 +99,29 @@ public class TreeExplorerScreen {
 
     void onCanvasSessionOpened(@Observes SessionOpenedEvent sessionOpenedEvent) {
         checkNotNull("sessionOpenedEvent", sessionOpenedEvent);
-        treeExplorer.show( sessionOpenedEvent.getSession().getCanvasHandler() );
+        doOpenSession( sessionOpenedEvent.getSession() );
+    }
+
+    void onCanvasSessionOpened(@Observes SessionResumedEvent sessionResumedEvent) {
+        checkNotNull("sessionResumedEvent", sessionResumedEvent);
+        doOpenSession( sessionResumedEvent.getSession() );
     }
 
     void onCanvasSessionDisposed(@Observes SessionDisposedEvent sessionDisposedEvent) {
         checkNotNull("sessionDisposedEvent", sessionDisposedEvent);
+        doCloseSession();
+    }
+
+    void onCanvasSessionDisposed(@Observes SessionPausedEvent sessionPausedEvent) {
+        checkNotNull("sessionPausedEvent", sessionPausedEvent);
+        doCloseSession();
+    }
+
+    private void doOpenSession(final CanvasSession session) {
+        treeExplorer.show( session.getCanvasHandler() );
+    }
+
+    private void doCloseSession() {
         treeExplorer.clear();
     }
     

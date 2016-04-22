@@ -158,7 +158,7 @@ public class CanvasScreen {
     }
 
     private void resume() {
-        canvasSessionManager.resume( session );
+        // TODO: canvasSessionManager.resume( session );
     }
 
     private void pauseSession() {

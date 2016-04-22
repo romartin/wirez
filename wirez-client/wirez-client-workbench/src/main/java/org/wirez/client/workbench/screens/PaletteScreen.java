@@ -30,8 +30,11 @@ import org.wirez.client.widgets.palette.accordion.Palette;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.session.CanvasSession;
 import org.wirez.core.client.session.event.SessionDisposedEvent;
 import org.wirez.core.client.session.event.SessionOpenedEvent;
+import org.wirez.core.client.session.event.SessionPausedEvent;
+import org.wirez.core.client.session.event.SessionResumedEvent;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -119,9 +122,31 @@ public class PaletteScreen {
         return "wirezPaletteScreenContext";
     }
 
+    
+    
     void onCanvasSessionOpened(@Observes SessionOpenedEvent sessionOpenedEvent) {
         checkNotNull("sessionOpenedEvent", sessionOpenedEvent);
-        final CanvasHandler canvasHandler = (CanvasHandler) sessionOpenedEvent.getSession().getCanvasHandler();
+        doOpenSession( sessionOpenedEvent.getSession() );
+        
+    }
+
+    void onCanvasSessionResumed(@Observes SessionResumedEvent sessionResumedEvent) {
+        checkNotNull("sessionResumedEvent", sessionResumedEvent);
+        doOpenSession( sessionResumedEvent.getSession() );
+    }
+    
+    void onCanvasSessionDisposed(@Observes SessionDisposedEvent sessionDisposedEvent) {
+        checkNotNull("sessionDisposedEvent", sessionDisposedEvent);
+        doDisposeSession();
+    }
+
+    void onCanvasSessionDisposed(@Observes SessionPausedEvent sessionPausedEvent) {
+        checkNotNull("sessionPausedEvent", sessionPausedEvent);
+        doDisposeSession();
+    }
+
+    private void doOpenSession(final CanvasSession canvasSession) {
+        final CanvasHandler canvasHandler = canvasSession.getCanvasHandler();
 
         final String _shapeSetId = canvasHandler.getDiagram().getSettings().getShapeSetId();
         final ShapeSet shapeSet = getShapeSet(_shapeSetId);
@@ -129,17 +154,16 @@ public class PaletteScreen {
         changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, shapeSet.getName() + " Palette"));
         this.shapeSetId = shapeSet.getId();
         open();
-        
+
     }
 
-    void onCanvasSessionDisposed(@Observes SessionDisposedEvent sessionDisposedEvent) {
-        checkNotNull("sessionDisposedEvent", sessionDisposedEvent);
+    private void doDisposeSession() {
         // Close the current palette.
         changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Palette"));
         this.shapeSetId = null;
         open();
     }
-
+    
     private ShapeSet getShapeSet(final String id) {
         for (final ShapeSet set : shapeManager.getShapeSets()) {
             if (set.getId().equals(id)) {

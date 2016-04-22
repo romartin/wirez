@@ -2,6 +2,7 @@
 **************
 
     - BPMN Marshalling 
+        - Loading diagram titles fix
         - saved bound x/y coordinates and size (is negative) on bpmn file are not the right ones
         - simplify & clean to avoid creating classes for each new definition...
         - unit testing
@@ -109,6 +110,7 @@
           - Clone definitions and properties when creating graph elements -> errai low level serialization?- Cloning models
 Backend
 *******
+
     - Adapters -> deal with #accept(Class<?>) in client side code
     - create snapshot copies of d diagram
     - Missing diagram services ( such as delete )

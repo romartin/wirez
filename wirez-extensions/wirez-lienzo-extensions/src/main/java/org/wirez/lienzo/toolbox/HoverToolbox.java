@@ -66,10 +66,10 @@ public class HoverToolbox {
     }
     
     public void remove() {
+        handlerRegistrationManager.removeHandler();
         for (final HoverToolboxButton button : buttons) {
             button.getShape().removeFromParent();
         }
-        handlerRegistrationManager.removeHandler();
     }
 
     private Point2D anchorFor(Direction direction) {

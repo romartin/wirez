@@ -16,7 +16,6 @@
 
 package org.wirez.core.client.canvas;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.definition.adapter.DefinitionSetRuleAdapter;
 import org.wirez.core.api.diagram.Diagram;
@@ -37,10 +36,7 @@ import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.canvas.event.CanvasElementAddedEvent;
-import org.wirez.core.client.canvas.event.CanvasElementRemovedEvent;
-import org.wirez.core.client.canvas.event.CanvasElementUpdatedEvent;
-import org.wirez.core.client.canvas.event.CanvasInitializationCompletedEvent;
+import org.wirez.core.client.canvas.event.*;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
@@ -72,6 +68,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     protected Event<CanvasElementAddedEvent> canvasElementAddedEvent;
     protected Event<CanvasElementRemovedEvent> canvasElementRemovedEvent;
     protected Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent;
+    protected Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
+    protected Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
     
     protected C canvas;
     protected D diagram;
@@ -89,7 +87,9 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                                  final Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent,
                                  final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
                                  final Event<CanvasElementRemovedEvent> canvasElementRemovedEvent,
-                                 final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent) {
+                                 final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent,
+                                 final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent, 
+                                 final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
         this.ruleManager = ruleManager;
@@ -101,6 +101,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         this.canvasElementAddedEvent = canvasElementAddedEvent;
         this.canvasElementRemovedEvent = canvasElementRemovedEvent;
         this.canvasElementUpdatedEvent = canvasElementUpdatedEvent;
+        this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
+        this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
         this.uuid = UUID.uuid();
     }
 
@@ -148,7 +150,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
             @Override
             public void onError(ClientRuntimeError error) {
-                GWT.log("Error");
+                showError( error );
             }
         });
         
@@ -179,12 +181,15 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
     protected void draw() {
 
+        // Start processing.
+        fireProcessingStarted();
+        
         treeWalkTraverseProcessor
                 .usePolicy(TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_AFTER_TARGET_NODE)
                 .traverse(diagram.getGraph(), new AbstractTreeTraverseCallback<Graph, Node, Edge>() {
             @Override
             public void startGraphTraversal(final Graph graph) {
-                
+
             }
 
             @Override
@@ -244,6 +249,9 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
             @Override
             public void endGraphTraversal() {
 
+                // Processing completed.
+                fireProcessingCompleted();
+                
             }
         });
         
@@ -283,6 +291,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
     public void deregister(final Element element) {
         final Shape shape = canvas.getShape(element.getUUID());
+        beforeElementDeleted(element, shape);
         // TODO: Delete connector connections to the node being deleted?
         doDeregister(shape, element);
         canvas.deleteShape(shape);
@@ -352,6 +361,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     }
 
     public void clear() {
+        fireProcessingCompleted();
         canvas.clear();
         canvas.draw();
     }
@@ -364,10 +374,14 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         
     }
 
-    protected void afterElementDeleted(final Element element, final Shape shape) {
+    protected void beforeElementDeleted(final Element element, final Shape shape) {
 
-        // Fire a canvas element added event. 
+        // Fire a canvas element deleted event. 
         canvasElementRemovedEvent.fire( new CanvasElementRemovedEvent( this, element ) );
+
+    }
+
+    protected void afterElementDeleted(final Element element, final Shape shape) {
         
     }
 
@@ -380,6 +394,21 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         // Fire a canvas element added event. 
         canvasElementUpdatedEvent.fire( new CanvasElementUpdatedEvent( this, element ) );
         
+    }
+    
+    protected void fireProcessingStarted() {
+        canvasProcessingStartedEvent.fire( new CanvasProcessingStartedEvent(this) );
+    }
+
+    protected void fireProcessingCompleted() {
+        canvasProcessingCompletedEvent.fire( new CanvasProcessingCompletedEvent(this) );
+    }
+    
+    protected void showError( final ClientRuntimeError error ) {
+        fireProcessingCompleted();
+        final String message = error.getThrowable() != null ? 
+                error.getThrowable().getMessage() : error.getMessage();
+        log( Level.SEVERE, message);
     }
 
     public ClientDefinitionManager getClientDefinitionManager() {

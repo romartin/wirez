@@ -31,7 +31,8 @@
     <version.com.googlecode.jtype>0.1.1</version.com.googlecode.jtype>
     <version.de.benediktmeurer.gwt-slf4j>0.0.2</version.de.benediktmeurer.gwt-slf4j>
     <version.org.jbpm.jbpm-bpmn2-emfextmodel>6.3.0.Final</version.org.jbpm.jbpm-bpmn2-emfextmodel>
-
+    <version.javax.el.api>2.2</version.javax.el.api>
+    
   </properties>
 
   <dependencyManagement>
@@ -176,7 +177,12 @@
         <artifactId>mockito-core</artifactId>
         <version>${version.org.mockito}</version>
       </dependency>
-      
+
+      <dependency>
+        <groupId>javax.el</groupId>
+        <artifactId>el-api</artifactId>
+        <version>${version.javax.el.api}</version>
+      </dependency>
       
     </dependencies>
 

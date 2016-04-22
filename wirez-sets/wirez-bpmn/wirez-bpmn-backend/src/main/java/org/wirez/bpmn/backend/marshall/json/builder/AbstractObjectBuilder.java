@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.bpmn.api.BPMNDefinition;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
+import org.wirez.bpmn.backend.marshall.json.oryx.property.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.batch.BatchCommandResult;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
@@ -28,10 +28,10 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
     protected T result;
             
     public AbstractObjectBuilder() {
-        properties = new HashMap<String, String>();
-        outgoingResourceIds = new LinkedHashSet<String>();
-        boundUL = null;
-        boundLR = null;
+        this.properties = new HashMap<String, String>();
+        this.outgoingResourceIds = new LinkedHashSet<String>();
+        this.boundUL = null;
+        this.boundLR = null;
     }
 
     @Override
@@ -112,33 +112,41 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
     
     protected void setProperties(BuilderContext context, BPMNDefinition definition) {
         assert definition != null;
-        Bpmn2OryxPropertyManager propertyManager = context.getOryxPropertyManager();
-        Bpmn2OryxIdMappings idMappings = context.getOryxIdMappings();
+        Bpmn2OryxPropertyManager propertyManager = context.getOryxManager().getPropertyManager();
+        Bpmn2OryxIdMappings idMappings = context.getOryxManager().getMappingsManager();
 
         DefinitionAdapter<BPMNDefinition> adapter = context.getDefinitionManager().getDefinitionAdapter( definition.getClass() );
         Set<?> defProperties = adapter.getProperties( definition );
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             final String oryxId = entry.getKey();
-            final String pValue = entry.getValue();
-            final String pId = idMappings.getPropertyId( oryxId );
-            final Object property = getProperty(context, defProperties, pId);
-            if ( null != property ) {
-                try {
-                    PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter( property.getClass() );
-                    PropertyType propertyType = propertyAdapter.getType( property );
-                    Object value = propertyManager.parse( propertyType, pValue );
-                    context.getDefinitionManager().getPropertyAdapter(property.getClass()).setValue(property, value);
-                } catch (Exception e) {
-                   LOG.error("Cannot parse value [" + pValue + "] for property [" + pId + "]");
+            
+            if ( !idMappings.isSkipProperty(definition.getClass(), oryxId) ) {
+
+                final String pValue = entry.getValue();
+                final String pId = idMappings.getPropertyId( definition.getClass(), oryxId );
+                boolean found = false;
+                if ( null != pId ) {
+                    final Object property = context.getGraphUtils().getProperty( defProperties, pId );
+                    if ( null != property ) {
+                        try {
+                            PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter( property.getClass() );
+                            PropertyType propertyType = propertyAdapter.getType( property );
+                            Object value = propertyManager.parse( propertyType, pValue );
+                            context.getDefinitionManager().getPropertyAdapter(property.getClass()).setValue(property, value);
+                            found = true;
+                        } catch (Exception e) {
+                            LOG.error("Cannot parse value [" + pValue + "] for property [" + pId + "]");
+                        }
+                    }
                 }
-            } else {
-                LOG.warn("Property [" + pId + "] not found for definition [" + pId + "]");
+
+                if ( !found ) {
+                    LOG.warn("Property [" + pId + "] not found for definition [" + pId + "]");
+                }
+                
             }
+            
         }
-    }
-    
-    protected Object getProperty(final BuilderContext context, final Set<?> defProperties, final String id) {
-        return context.getGraphUtils().getProperty(defProperties, id);
     }
     
     @Override

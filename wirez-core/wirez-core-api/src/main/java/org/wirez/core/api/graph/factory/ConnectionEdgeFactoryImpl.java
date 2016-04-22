@@ -33,7 +33,7 @@ public class ConnectionEdgeFactoryImpl
 
     public static final String FACTORY_NAME = "connectorEdgeFactoryImpl";
     
-    protected ConnectionEdgeFactoryImpl() {
+    public ConnectionEdgeFactoryImpl() {
     }
 
     @Override

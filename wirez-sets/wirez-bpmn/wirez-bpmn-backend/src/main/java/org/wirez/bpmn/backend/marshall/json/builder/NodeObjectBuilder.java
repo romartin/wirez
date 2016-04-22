@@ -7,6 +7,8 @@ import org.wirez.core.api.graph.content.view.View;
 public interface NodeObjectBuilder<W, T extends Node<View<W>, Edge>> 
         extends GraphObjectBuilder<W, T> {
 
+    Class<?> getDefinitionClass();
+
     NodeObjectBuilder<W, T> child(String nodeId);
 
 }

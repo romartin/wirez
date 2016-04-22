@@ -50,15 +50,27 @@ public class CanvasHighlightVisitor {
 
     private CanvasHandler canvasHandler;
     private final List<Shape> shapes = new LinkedList<Shape>();
+    private Command callback;
 
     public CanvasHighlightVisitor(final CanvasHandler canvasHandler) {
         this.canvasHandler = canvasHandler;
     }
 
     public void run() {
+        this.run( null );
+    }
+    
+    public void run(final Command callback) {
+        this.callback = callback;
+        
         assert canvasHandler != null;
       
-        prepareSimulation(() -> animate(0, () -> log(Level.FINE, "CanvasHighlightVisitor - FINISHED")));
+        prepareSimulation(() -> animate(0, () -> {
+            CanvasHighlightVisitor.this.log(Level.FINE, "CanvasHighlightVisitor - FINISHED");
+            if ( null != callback ) {
+                callback.execute();
+            }
+        }));
     }
     
     private void animate(final int index, final Command callback) {

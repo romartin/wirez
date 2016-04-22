@@ -16,6 +16,7 @@ import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import java.util.List;
 
 @Application
 public class ApplicationFactoryManager extends AbstractFactoryManager {

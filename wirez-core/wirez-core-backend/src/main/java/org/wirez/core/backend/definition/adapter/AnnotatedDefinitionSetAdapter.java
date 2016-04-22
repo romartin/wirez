@@ -17,8 +17,12 @@ public class AnnotatedDefinitionSetAdapter<T> extends AbstractAnnotatedAdapter<T
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedDefinitionSetAdapter.class);
 
-    @Inject
     AnnotatedDefinitionAdapter annotatedDefinitionAdapter;
+
+    @Inject
+    public AnnotatedDefinitionSetAdapter(AnnotatedDefinitionAdapter annotatedDefinitionAdapter) {
+        this.annotatedDefinitionAdapter = annotatedDefinitionAdapter;
+    }
 
     @Override
     public boolean accepts(Class<?> pojo) {

@@ -16,8 +16,7 @@ import org.jboss.drools.util.DroolsResourceFactoryImpl;
 import org.wirez.bpmn.backend.legacy.Bpmn2JsonMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphGenerator;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.CommandManager;
@@ -27,6 +26,7 @@ import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.util.UUID;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -55,8 +55,7 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
                              final DefinitionManager definitionManager,
                              final FactoryManager factoryManager,
                              final GraphUtils graphUtils,
-                             final Bpmn2OryxIdMappings oryxIdMappings,
-                             final Bpmn2OryxPropertyManager oryxPropertyManager,
+                             final Bpmn2OryxManager oryxManager,
                              final CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager,
                              final RuleManager ruleManager,
                              final GraphCommandFactory commandFactory) {
@@ -65,15 +64,14 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
                                                             definitionManager,
                                                             factoryManager,
                                                             graphUtils,
-                                                            oryxIdMappings,
-                                                            oryxPropertyManager,
+                                                            oryxManager,
                                                             commandManager, 
                                                             ruleManager, 
                                                             commandFactory);
     }
 
     public Graph unmarshall(String content) throws IOException {
-        XMLResource outResource = (XMLResource) resourceSet.createResource( URI.createURI( "inputStream://dummyUriWithValidSuffix.xml" ) );
+        XMLResource outResource = (XMLResource) resourceSet.createResource( URI.createURI( "inputStream://"+ UUID.uuid() + ".xml" ) );
         outResource.getDefaultLoadOptions().put( XMLResource.OPTION_ENCODING, "UTF-8" );
         outResource.setEncoding( "UTF-8" );
         Map<String, Object> options = new HashMap<String, Object>();

@@ -32,7 +32,7 @@ public class ViewNodeFactoryImpl extends BaseViewElementFactory<Object, View<Obj
 
     public static final String FACTORY_NAME = "viewNodeFactoryImpl";
     
-    protected ViewNodeFactoryImpl() {
+    public ViewNodeFactoryImpl() {
     }
 
     @Override

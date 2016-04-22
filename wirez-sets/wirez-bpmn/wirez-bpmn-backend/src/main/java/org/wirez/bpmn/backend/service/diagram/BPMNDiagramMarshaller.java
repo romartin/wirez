@@ -20,10 +20,10 @@ import org.wirez.bpmn.backend.marshall.json.Bpmn2Marshaller;
 import org.wirez.bpmn.backend.marshall.json.Bpmn2UnMarshaller;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
+import org.wirez.bpmn.backend.marshall.json.oryx.property.Bpmn2OryxPropertyManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.definition.adapter.binding.AbstractBindableAdapter;
 import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.DiagramImpl;
@@ -35,17 +35,14 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.definition.Definition;
-import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.Empty;
-import org.wirez.core.api.rule.EmptyRuleManager;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.backend.Application;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -61,8 +58,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
     BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory;
     DefinitionManager definitionManager;
     GraphUtils graphUtils;
-    Bpmn2OryxIdMappings oryxIdMappings;
-    Bpmn2OryxPropertyManager oryxPropertyManager;
+    Bpmn2OryxManager oryxManager;
     FactoryManager factoryManager;
     GraphCommandManager graphCommandManager;
     RuleManager ruleManager;
@@ -74,8 +70,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
     public BPMNDiagramMarshaller(BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory, 
                                  DefinitionManager definitionManager,
                                  GraphUtils graphUtils,
-                                 Bpmn2OryxIdMappings oryxIdMappings,
-                                 Bpmn2OryxPropertyManager oryxPropertyManager,
+                                 Bpmn2OryxManager oryxManager,
                                  @Application FactoryManager factoryManager, 
                                  GraphCommandManager graphCommandManager,
                                  @Empty RuleManager ruleManager, 
@@ -83,8 +78,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
         this.graphUtils = graphUtils;
-        this.oryxIdMappings = oryxIdMappings;
-        this.oryxPropertyManager = oryxPropertyManager;
+        this.oryxManager = oryxManager;
         this.factoryManager = factoryManager;
         this.graphCommandManager = graphCommandManager;
         this.ruleManager = ruleManager;
@@ -112,7 +106,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
 
         LOG.info("Starting BPMN diagram marshalling...");
 
-        Bpmn2Marshaller marshaller = new Bpmn2Marshaller( definitionManager, graphUtils, oryxIdMappings, oryxPropertyManager );
+        Bpmn2Marshaller marshaller = new Bpmn2Marshaller( definitionManager, graphUtils, oryxManager );
 
         String result = null;
         try {
@@ -139,8 +133,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
                     definitionManager,
                     factoryManager,
                     graphUtils,
-                    oryxIdMappings,
-                    oryxPropertyManager,
+                    oryxManager,
                     graphCommandManager, 
                     ruleManager,
                     commandFactory);

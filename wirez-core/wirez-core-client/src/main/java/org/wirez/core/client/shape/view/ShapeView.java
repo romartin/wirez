@@ -2,6 +2,8 @@ package org.wirez.core.client.shape.view;
 
 public interface ShapeView<T> {
 
+    String UUID_PREFFIX = "wirez:";
+
     T setUUID(String uuid);
     
     String getUUID();

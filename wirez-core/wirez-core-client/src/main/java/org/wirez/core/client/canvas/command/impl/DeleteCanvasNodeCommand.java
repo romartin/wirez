@@ -25,6 +25,9 @@ public final class DeleteCanvasNodeCommand extends DeleteCanvasElementCommand<No
 
     @Override
     protected void doDeregister(AbstractCanvasHandler context) {
+        if ( null != parent ) {
+            context.removeChild( parent, candidate );
+        }
         super.doDeregister(context);
         final IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> indexBuilder = context.getIndexBuilder();
         if ( indexBuilder instanceof IncrementalIndexBuilder) {

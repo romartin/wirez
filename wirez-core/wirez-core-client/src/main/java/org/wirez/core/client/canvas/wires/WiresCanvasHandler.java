@@ -26,10 +26,7 @@ import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.event.CanvasElementAddedEvent;
-import org.wirez.core.client.canvas.event.CanvasElementRemovedEvent;
-import org.wirez.core.client.canvas.event.CanvasElementUpdatedEvent;
-import org.wirez.core.client.canvas.event.CanvasInitializationCompletedEvent;
+import org.wirez.core.client.canvas.event.*;
 import org.wirez.core.client.service.ClientFactoryServices;
 
 import javax.enterprise.context.Dependent;
@@ -54,11 +51,14 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
                               final Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent,
                               final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
                               final Event<CanvasElementRemovedEvent> canvasElementRemovedEvent,
-                              final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent) {
+                              final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent,
+                              final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
+                              final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
 
         super( clientDefinitionManager, clientFactoryServices, ruleManager, graphUtils, 
                 indexBuilder, treeWalkTraverseProcessor, shapeManager, canvasInitializationCompletedEvent,
-                canvasElementAddedEvent, canvasElementRemovedEvent, canvasElementUpdatedEvent );
+                canvasElementAddedEvent, canvasElementRemovedEvent, canvasElementUpdatedEvent,
+                canvasProcessingStartedEvent, canvasProcessingCompletedEvent );
         
     }
 

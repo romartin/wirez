@@ -50,6 +50,7 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     @Override
     public T setUUID(final String uuid) {
         this.uuid = uuid;
+        this.getDecoratableLine().setUserData( UUID_PREFFIX + uuid );
         return (T) this;
     }
 

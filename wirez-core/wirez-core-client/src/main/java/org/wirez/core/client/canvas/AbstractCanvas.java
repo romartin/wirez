@@ -19,6 +19,7 @@ package org.wirez.core.client.canvas;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
+import org.wirez.core.client.canvas.event.CanvasDrawnEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeAddedEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
 import org.wirez.core.client.shape.Shape;
@@ -73,6 +74,7 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
     protected Event<CanvasClearEvent> canvasClearEvent;
     protected Event<CanvasShapeAddedEvent> canvasShapeAddedEvent;
     protected Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent;
+    protected Event<CanvasDrawnEvent> canvasDrawnEvent;
     
     protected List<Shape> shapes = new ArrayList<Shape>();
     private final String uuid;
@@ -81,11 +83,13 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
     public AbstractCanvas(final Event<CanvasClearEvent> canvasClearEvent,
                           final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
                           final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
+                          final Event<CanvasDrawnEvent> canvasDrawnEvent,
                           final Layer layer,
                           final V view) {
         this.canvasClearEvent = canvasClearEvent;
         this.canvasShapeAddedEvent = canvasShapeAddedEvent;
         this.canvasShapeRemovedEvent = canvasShapeRemovedEvent;
+        this.canvasDrawnEvent = canvasDrawnEvent;
         this.layer = layer;
         this.view = view;
         this.uuid = org.wirez.core.api.util.UUID.uuid();
@@ -93,6 +97,8 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
 
     public void init() {
         view.init(layer);
+        layer.onBeforeDraw(() -> AbstractCanvas.this.beforeDrawCanvas());
+        layer.onAfterDraw(() -> AbstractCanvas.this.afterDrawCanvas());
     }
 
     public abstract void addControl( IsWidget controlView );
@@ -175,6 +181,15 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
     public AbstractCanvas draw() {
         view.getLayer().draw();
         return this;
+    }
+
+    protected void beforeDrawCanvas() {
+        
+    }
+
+    protected void afterDrawCanvas() {
+
+        canvasDrawnEvent.fire( new CanvasDrawnEvent( this ) );
     }
 
     public AbstractCanvas clear() {

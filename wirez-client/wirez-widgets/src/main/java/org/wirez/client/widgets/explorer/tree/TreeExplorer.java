@@ -10,12 +10,16 @@ import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessor;
+import org.wirez.core.client.canvas.AbstractCanvas;
+import org.wirez.core.client.canvas.controls.event.SelectSingleShapeEvent;
 import org.wirez.core.client.canvas.event.*;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.shape.Shape;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -45,6 +49,7 @@ public class TreeExplorer implements IsWidget {
     DefinitionManager definitionManager;
     ChildrenTraverseProcessor childrenTraverseProcessor;
     Instance<TreeExplorerItem> treeExplorerItemInstances;
+    Event<SelectSingleShapeEvent> selectShapeEvent;
     View view;
 
     private CanvasHandler canvasHandler;
@@ -53,10 +58,12 @@ public class TreeExplorer implements IsWidget {
     public TreeExplorer(final DefinitionManager definitionManager,
                         final ChildrenTraverseProcessor childrenTraverseProcessor,
                         final Instance<TreeExplorerItem> treeExplorerItemInstances,
+                        final Event<SelectSingleShapeEvent> selectShapeEvent,
                         final View view) {
         this.definitionManager = definitionManager;
         this.childrenTraverseProcessor = childrenTraverseProcessor;
         this.treeExplorerItemInstances = treeExplorerItemInstances;
+        this.selectShapeEvent = selectShapeEvent;
         this.view = view;
     }
 
@@ -123,13 +130,10 @@ public class TreeExplorer implements IsWidget {
             @Override
             public void startNodeTraversal(final Node<org.wirez.core.api.graph.content.view.View, Edge> node) {
                 super.startNodeTraversal(node);
-                // LOGGER.log(Level.FINE, " Start of Traverse View Node " + node.getUUID());
 
                 inc(levelIdx, level);
                 
                 if ( null == parent ) {
-
-                    // LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with no parent");
 
                     final TreeExplorerItem item = treeExplorerItemInstances.get();
                     view.addItem(node.getUUID(), item.asWidget(), expand);
@@ -137,19 +141,13 @@ public class TreeExplorer implements IsWidget {
 
                 } else {
                     
-                    final String parentUUID = parent.getUUID();
                     int[] parentsIdx = getParentsIdx(levelIdx, level);
-
-                    //  LOGGER.log(Level.FINE, " Traverse for View Node " + node.getUUID() + " with parent " + parentUUID 
-                    //         + " and parentsIdx=" + parentsIdx + " / level=" + level);
-
                     final TreeExplorerItem item = treeExplorerItemInstances.get();
                     view.addItem(node.getUUID(), item.asWidget(), expand, parentsIdx);
                     item.show(node);
                     
                 }
 
-                // LOGGER.log(Level.FINE, " End of Traverse View Node " + node.getUUID());
             }
           
         });
@@ -187,15 +185,8 @@ public class TreeExplorer implements IsWidget {
     }
 
     private void selectShape(final Canvas canvas, final String uuid) {
-        // TODO: Throw a selection event and capture it from the selection control?
-        /*SelectionManager<Shape> selectionManager = canvas instanceof SelectionManager ?
-                (SelectionManager<Shape>) (canvas) : null;
-
-        if ( null != selectionManager ) {
-            selectionManager.clearSelection();
-            final Shape shape = canvas.getShape(uuid);
-            selectionManager.select(shape);
-        }*/
+        final Shape shape = canvas.getShape(uuid);
+        selectShapeEvent.fire( new SelectSingleShapeEvent((AbstractCanvas) canvas, shape) );
     }
 
     void onCanvasClearEvent(@Observes CanvasClearEvent canvasClearEvent) {

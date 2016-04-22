@@ -33,7 +33,10 @@ public class GraphCommandManagerImpl extends AbstractBatchCommandManager<GraphCo
     protected CommandResult<RuleViolation> doAllow(final GraphCommandExecutionContext context, 
                                                    final Command<GraphCommandExecutionContext, RuleViolation> command) {
         final CommandResult<RuleViolation> result = super.doAllow(context, command);
-        isCommandAllowedEvent.fire( new IsCommandAllowedEvent( command, result ));
+
+        if ( null != isCommandAllowedEvent ) {
+            isCommandAllowedEvent.fire( new IsCommandAllowedEvent( command, result ));
+        }
         return result;
     }
 
@@ -41,7 +44,11 @@ public class GraphCommandManagerImpl extends AbstractBatchCommandManager<GraphCo
     protected CommandResult<RuleViolation> doExecute(final GraphCommandExecutionContext context,
                                                      final Command<GraphCommandExecutionContext, RuleViolation> command) {
         final CommandResult<RuleViolation> result = super.doExecute(context, command);
-        commandExecutedEvent.fire( new CommandExecutedEvent( command, result) );
+        
+        if ( null != commandExecutedEvent ) {
+            commandExecutedEvent.fire( new CommandExecutedEvent( command, result) );
+        }
+        
         return result;
     }
 
@@ -49,7 +56,11 @@ public class GraphCommandManagerImpl extends AbstractBatchCommandManager<GraphCo
     protected CommandResult<RuleViolation> doUndo(final GraphCommandExecutionContext context,
                                                   final Command<GraphCommandExecutionContext, RuleViolation> command) {
         final CommandResult<RuleViolation> result = super.doUndo(context, command);
-        commandExecutedEvent.fire( new CommandExecutedEvent( command, result) );
+        
+        if ( null != commandExecutedEvent ) {
+            commandExecutedEvent.fire( new CommandExecutedEvent( command, result) );
+        }
+        
         return result;
     }
 

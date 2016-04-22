@@ -1,6 +1,5 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.view.View;
 
@@ -9,13 +8,10 @@ import java.util.Map;
 public class BootstrapObjectBuilder<W, T extends Element<View<W>>> extends AbstractObjectBuilder<W, T> {
 
     BPMNGraphObjectBuilderFactory buildersFactory;
-    Bpmn2OryxIdMappings oryxIdMappings;
             
-    public BootstrapObjectBuilder(BPMNGraphObjectBuilderFactory buildersFactory,
-                                  Bpmn2OryxIdMappings oryxIdMappings) {
+    public BootstrapObjectBuilder(BPMNGraphObjectBuilderFactory buildersFactory) {
         super();
         this.buildersFactory = buildersFactory;
-        this.oryxIdMappings = oryxIdMappings;
     }
 
     @Override
@@ -23,8 +19,7 @@ public class BootstrapObjectBuilder<W, T extends Element<View<W>>> extends Abstr
     public AbstractObjectBuilder<W, T> stencil(String oryxStencilId) {
         assert nodeId != null;
         
-        String stencilId = oryxIdMappings.getDefinitionId( oryxStencilId );
-        AbstractObjectBuilder<W, T> builder = (AbstractObjectBuilder<W, T>) buildersFactory.builderFor(stencilId);
+        AbstractObjectBuilder<W, T> builder = (AbstractObjectBuilder<W, T>) buildersFactory.builderFor( oryxStencilId );
         
         builder.nodeId(this.nodeId);
         
@@ -61,13 +56,4 @@ public class BootstrapObjectBuilder<W, T extends Element<View<W>>> extends Abstr
         return null;
     }
 
-    @Override
-    public String getDefinitionId() {
-        return null;
-    }
-
-    @Override
-    public String getOryxDefinitionId() {
-        return null;
-    }
 }

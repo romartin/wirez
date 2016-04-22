@@ -85,6 +85,10 @@ public abstract class StackCommandManager<C, V> extends AbstractBatchCommandMana
         }
     }
     
+    public int getHistorySize() {
+        return history.size();
+    }
+    
     protected void stackSizeExceeded() {
         throw new RuntimeException("Commands stack is full.");
     }

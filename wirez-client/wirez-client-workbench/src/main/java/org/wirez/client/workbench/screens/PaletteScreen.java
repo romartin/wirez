@@ -29,12 +29,16 @@ import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.palette.accordion.Palette;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.controls.event.BuildCanvasShapeEvent;
 import org.wirez.core.client.session.CanvasSession;
 import org.wirez.core.client.session.event.SessionDisposedEvent;
 import org.wirez.core.client.session.event.SessionOpenedEvent;
 import org.wirez.core.client.session.event.SessionPausedEvent;
 import org.wirez.core.client.session.event.SessionResumedEvent;
+import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -49,7 +53,7 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 public class PaletteScreen {
 
     public static final String SCREEN_ID = "PaletteScreen";
-    public static final int WIDTH = 400;
+    public static final int WIDTH = 250;
 
     @Inject
     Palette palette;
@@ -66,8 +70,12 @@ public class PaletteScreen {
     @Inject
     Event<ChangeTitleWidgetEvent> changeTitleNotification;
     
+    @Inject
+    Event<BuildCanvasShapeEvent> buildCanvasShapeEvent;
+    
     private PlaceRequest placeRequest;
     private String shapeSetId;
+    private CanvasHandler canvasHandler;
     
     @PostConstruct
     public void init() {
@@ -91,11 +99,16 @@ public class PaletteScreen {
     }
 
     private void open() {
-        if (shapeSetId.trim().length() > 0) {
-            palette.show(WIDTH, shapeSetId);
-        } else {
-            palette.showNoCanvasState();
-        }
+        if (null != shapeSetId && shapeSetId.trim().length() > 0) {
+            palette.show(WIDTH, shapeSetId,
+                    (definition, factory, x, y) -> 
+                            buildCanvasShapeEvent.fire( new BuildCanvasShapeEvent((AbstractCanvasHandler) canvasHandler,
+                                definition, factory, x, y ) ));
+        } 
+    }
+    
+    private void close() {
+        palette.showNoCanvasState();
     }
 
     @WorkbenchMenu
@@ -140,13 +153,13 @@ public class PaletteScreen {
         doDisposeSession();
     }
 
-    void onCanvasSessionDisposed(@Observes SessionPausedEvent sessionPausedEvent) {
+    void onCanvasSessionPaused(@Observes SessionPausedEvent sessionPausedEvent) {
         checkNotNull("sessionPausedEvent", sessionPausedEvent);
         doDisposeSession();
     }
 
     private void doOpenSession(final CanvasSession canvasSession) {
-        final CanvasHandler canvasHandler = canvasSession.getCanvasHandler();
+        this.canvasHandler = canvasSession.getCanvasHandler();
 
         final String _shapeSetId = canvasHandler.getDiagram().getSettings().getShapeSetId();
         final ShapeSet shapeSet = getShapeSet(_shapeSetId);
@@ -161,7 +174,7 @@ public class PaletteScreen {
         // Close the current palette.
         changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Palette"));
         this.shapeSetId = null;
-        open();
+        close();
     }
     
     private ShapeSet getShapeSet(final String id) {

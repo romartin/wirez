@@ -6,5 +6,7 @@ import org.wirez.core.api.graph.content.view.View;
 
 public interface EdgeObjectBuilder<W,  T extends Edge<View<W>, Node>> 
         extends GraphObjectBuilder<W, T> {
+
+    Class<?> getDefinitionClass();
     
 }

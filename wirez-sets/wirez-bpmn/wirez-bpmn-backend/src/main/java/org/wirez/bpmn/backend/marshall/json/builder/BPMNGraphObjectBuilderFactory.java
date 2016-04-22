@@ -1,41 +1,52 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Node;
+import org.wirez.core.backend.definition.adapter.AnnotatedDefinitionAdapter;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 @ApplicationScoped
 public class BPMNGraphObjectBuilderFactory {
 
-    Instance<GraphObjectBuilder<? ,?>> graphObjectBuilders;
-    Bpmn2OryxIdMappings oryxIdMappings;
+    DefinitionManager definitionManager;
+    Bpmn2OryxManager oryxManager;
     
     @Inject
-    public BPMNGraphObjectBuilderFactory(Instance<GraphObjectBuilder<?, ?>> graphObjectBuilders,
-                                         Bpmn2OryxIdMappings oryxIdMappings) {
-        this.graphObjectBuilders = graphObjectBuilders;
-        this.oryxIdMappings = oryxIdMappings;
+    public BPMNGraphObjectBuilderFactory(DefinitionManager definitionManager,
+                                         Bpmn2OryxManager oryxManager) {
+        this.definitionManager = definitionManager;
+        this.oryxManager = oryxManager;
     }
 
     public BPMNGraphObjectBuilderFactory() {
     }
 
     public GraphObjectBuilder<?, ?> bootstrapBuilder() {
-        return new BootstrapObjectBuilder( this, oryxIdMappings );
+        return new BootstrapObjectBuilder( this );
     }
     
-    public GraphObjectBuilder<?, ?> builderFor(String id) {
-        if ( id == null) throw new NullPointerException();
+    public GraphObjectBuilder<?, ?> builderFor(String oryxId) {
+        if ( oryxId == null) throw new NullPointerException();
         
-        for ( GraphObjectBuilder<? ,?> builder : graphObjectBuilders) {
-            if ( id.equals(builder.getOryxDefinitionId()) ) {
-                return builder;
-            }
+        Class<?> defClass = oryxManager.getMappingsManager().getDefinition( oryxId );
+        if ( null == defClass ) {
+            throw new RuntimeException("No definition found for oryx stencil with id [" + oryxId + "]");
         }
 
-        throw new RuntimeException("No builder for definition [" + id + "]");
+        Class<? extends Element> element = AnnotatedDefinitionAdapter.getGraphElement( defClass );
+        if ( element.isAssignableFrom(Node.class) ) {
+            return new NodeBuilderImpl( defClass );
+        } else if ( element.isAssignableFrom(Edge.class) ) {
+            return new EdgeBuilderImpl( defClass );
+        }
+
+        throw new RuntimeException("No graph element found for definition with class [" + defClass.getName() + "]");
     }
 
 }

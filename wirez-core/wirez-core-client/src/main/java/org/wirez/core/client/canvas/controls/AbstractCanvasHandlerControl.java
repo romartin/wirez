@@ -16,4 +16,8 @@ public abstract class AbstractCanvasHandlerControl implements CanvasControl<Abst
         this.canvasHandler = null;
     }
     
+    protected boolean isEnabled() {
+        return canvasHandler != null;
+    }
+    
 }

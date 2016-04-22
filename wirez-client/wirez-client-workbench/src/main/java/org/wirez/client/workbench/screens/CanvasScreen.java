@@ -29,8 +29,8 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.widgets.session.impl.AbstractFullSessionPresenter;
-import org.wirez.client.widgets.session.impl.DefaultFullSessionPresenter;
+import org.wirez.client.widgets.session.presenter.impl.AbstractFullSessionPresenter;
+import org.wirez.client.widgets.session.presenter.impl.DefaultFullSessionPresenter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.canvas.lienzo.LienzoLayer;
@@ -170,16 +170,14 @@ public class CanvasScreen {
     }
 
     private Menus makeMenuBar() {
-        return MenuFactory
-                
-                /*.newTopLevelMenu("Switch log level")
+        // All commands moved to the canvas toolbar.
+        /*return MenuFactory
+                .newTopLevelMenu("Switch log level")
                 .respondsWith(getSwitchLogLevelCommand())
-                .endMenu()*/
-                
-               /* .newTopLevelMenu("Mouse pointer coords")
+                .endMenu()
+                .newTopLevelMenu("Mouse pointer coords")
                 .respondsWith(getMousePointerCoordsCommand())
-                .endMenu()*/
-
+                .endMenu()
                 .newTopLevelMenu("Clear selection")
                 .respondsWith(getClearSelectionCommand())
                 .endMenu()
@@ -201,7 +199,8 @@ public class CanvasScreen {
                 .newTopLevelMenu("Save")
                 .respondsWith(getSaveCommand())
                 .endMenu()
-                .build();
+                .build();*/
+        return null;
     }
 
     private Command getSaveCommand() {

@@ -1,0 +1,1 @@
+This package should contain widget that are composite of other widgets from this module.

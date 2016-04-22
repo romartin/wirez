@@ -5,8 +5,11 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
 import com.ait.lienzo.client.core.shape.IPrimitive;
+import com.ait.lienzo.shared.core.types.DataURLType;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
+import org.uberfire.mvp.Command;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.shape.view.ShapeView;
 import org.wirez.core.client.shape.view.event.*;
@@ -35,12 +38,14 @@ public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>> {
 
     @Override
     public LienzoLayer addShape(final ShapeView<?> shape) {
+        GWT.log("Adding shape " + shape.toString());
         layer.add((IPrimitive<?>) shape);
         return this;
     }
 
     @Override
     public LienzoLayer removeShape(final ShapeView<?> shape) {
+        GWT.log("Removing shape " + shape.toString());
         layer.remove((IPrimitive<?>) shape);
         return this;
     }
@@ -48,7 +53,31 @@ public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>> {
     @Override
     public LienzoLayer draw() {
         layer.batch();
+        
         return this;
+    }
+
+    @Override
+    public void clear() {
+        layer.clear();
+    }
+
+    @Override
+    public String toDataURL() {
+        return layer.toDataURL(DataURLType.PNG);
+    }
+
+    @Override
+    public void onBeforeDraw(final Command callback) {
+        layer.setOnLayerBeforeDraw(layer1 -> {
+            callback.execute();
+            return true;
+        });
+    }
+
+    @Override
+    public void onAfterDraw(final Command callback) {
+        layer.setOnLayerAfterDraw(layer1 -> callback.execute());
     }
 
     @Override

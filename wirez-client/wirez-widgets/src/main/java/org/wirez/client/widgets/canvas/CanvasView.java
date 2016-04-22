@@ -93,13 +93,13 @@ public class CanvasView extends Composite implements org.wirez.core.client.canva
 
     @Override
     public org.wirez.core.client.canvas.AbstractCanvas.View addShape(final ShapeView<?> shapeView) {
-        canvasLayer.add((IPrimitive<?>) shapeView);
+        layer.addShape( shapeView );
         return this;
     }
 
     @Override
     public org.wirez.core.client.canvas.AbstractCanvas.View removeShape(final ShapeView<?> shapeView) {
-        canvasLayer.getLayer().getLayer().remove((IPrimitive<?>) shapeView);
+        layer.removeShape( shapeView );
         return this;
     }
 
@@ -136,7 +136,7 @@ public class CanvasView extends Composite implements org.wirez.core.client.canva
 
     @Override
     public AbstractCanvas.View clear() {
-        canvasLayer.clear();
+        layer.clear();
         return this;
     }
 }

@@ -157,15 +157,24 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
     @Override
     public Class<? extends Element> getGraphElement(T definition) {
 
+        if ( null != definition ) {
+            return getGraphElement( definition.getClass() );
+        }
+        
+        return null;
+    }
+
+    public static Class<? extends Element> getGraphElement( Class<?> definitionClass ) {
+
         Class<? extends Element> result = null;
 
-        if ( null != definition ) {
-            org.wirez.core.api.definition.annotation.definition.Definition annotation = definition.getClass().getAnnotation(org.wirez.core.api.definition.annotation.definition.Definition.class);
+        if ( null != definitionClass ) {
+            org.wirez.core.api.definition.annotation.definition.Definition annotation = definitionClass.getAnnotation(org.wirez.core.api.definition.annotation.definition.Definition.class);
             if ( null != annotation ) {
                 result = annotation.type();
             }
         }
-        
+
         return result;
     }
 

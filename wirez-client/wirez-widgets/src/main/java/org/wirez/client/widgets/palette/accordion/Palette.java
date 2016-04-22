@@ -23,12 +23,14 @@ import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.uberfire.client.mvp.UberView;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
-import org.wirez.client.widgets.event.AddShapeToCanvasEvent;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroup;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
 import org.wirez.client.widgets.palette.tooltip.PaletteTooltip;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.controls.event.BuildCanvasShapeEvent;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
@@ -66,15 +68,21 @@ public class Palette implements IsWidget {
 
     }
 
+    public interface Callback {
+
+        void onAddShape( Object definition, ShapeFactory<?, ?, ? extends Shape> factory, double x, double y );
+    }
+
     ShapeManager shapeManager;
     DefinitionManager definitionManager;
     ClientFactoryServices clientFactoryServices;
-    Event<AddShapeToCanvasEvent> addShapeToCanvasEvent;
     SyncBeanManager beanManager;
     PaletteTooltip paletteTooltip;
     ShapeGlyphDragHandler shapeGlyphDragHandler;
     ErrorPopupPresenter errorPopupPresenter;
     View view;
+    
+    private Callback callback;
     
     @Inject
     public Palette(final View view,
@@ -83,7 +91,6 @@ public class Palette implements IsWidget {
                    final DefinitionManager definitionManager,
                    final ClientFactoryServices clientFactoryServices,
                    final SyncBeanManager beanManager,
-                   final Event<AddShapeToCanvasEvent> addShapeToCanvasEvent,
                    final PaletteTooltip paletteTooltip,
                    final ShapeGlyphDragHandler shapeGlyphDragHandler) {
         this.view = view;
@@ -92,7 +99,6 @@ public class Palette implements IsWidget {
         this.definitionManager = definitionManager;
         this.clientFactoryServices = clientFactoryServices;
         this.beanManager = beanManager;
-        this.addShapeToCanvasEvent = addShapeToCanvasEvent;
         this.paletteTooltip = paletteTooltip;
         this.shapeGlyphDragHandler = shapeGlyphDragHandler;
     }
@@ -114,7 +120,8 @@ public class Palette implements IsWidget {
         view.setNoCanvasViewVisible(true);
     }
     
-    public void show(final int width, final String shapeSetId) {
+    public void show(final int width, final String shapeSetId, final Callback callback) {
+        this.callback = callback;
         clear();
         final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
         final String definitionSetId = wirezShapeSet.getDefinitionSetId();
@@ -200,8 +207,9 @@ public class Palette implements IsWidget {
                              */
                             @Override
                             public void onClick() {
-                                log(Level.FINE, "Palette: Adding " + description);
-                                addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory));
+                                // TODO: Disabled adding shape on just click. It should be added inside the BPMNDiagram by default.
+                                // log(Level.FINE, "Palette: Adding " + description);
+                                // addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory));
                             }
 
                             /**
@@ -219,8 +227,10 @@ public class Palette implements IsWidget {
 
                                     @Override
                                     public void onComplete(final LienzoPanel floatingPanel, final double x, final double y) {
-                                        log(Level.FINE, "Palette: Adding " + description + " at " + x + "," + y);
-                                        addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory, x, y));
+                                        if ( null != callback ) {
+                                            log(Level.FINE, "Palette: Adding " + description + " at " + x + "," + y);
+                                            callback.onAddShape( definition, factory, x, y );
+                                        }
                                     }
                                 });
 

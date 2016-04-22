@@ -2,7 +2,6 @@ package org.wirez.core.client.canvas.controls.toolbox;
 
 import org.wirez.core.client.canvas.controls.toolbox.command.*;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;

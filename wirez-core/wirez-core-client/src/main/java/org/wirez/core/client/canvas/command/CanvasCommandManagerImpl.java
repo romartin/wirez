@@ -45,14 +45,6 @@ public class CanvasCommandManagerImpl extends AbstractCanvasCommandManager<Abstr
     }
 
     @Override
-    protected CommandResult<RuleViolation> doGraphCommandUndo(final GraphCommandExecutionContext graphContext,
-                                                              final Command<GraphCommandExecutionContext, RuleViolation> graphCommand) {
-        final CommandResult<RuleViolation> result = super.doGraphCommandUndo( graphContext, graphCommand );
-        commandExecutedEvent.fire( new CommandExecutedEvent( graphCommand, result) );
-        return result;
-    }
-
-    @Override
     protected GraphCommandExecutionContext getGraphCommandExecutionContext(final AbstractCanvasHandler context) {
         
         if ( null == instance ) {

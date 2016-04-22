@@ -125,7 +125,7 @@ public abstract class AbstractBatchCommandManager<T, V> extends AbstractCommandM
     protected void checkUndoResult(final CommandResult<V> undoResult ) {
         
         // Check whether if undo has failed as well.
-        if ( CommandResult.Type.ERROR.equals( undoResult.getType() ) ) {
+        if ( null != undoResult && CommandResult.Type.ERROR.equals( undoResult.getType() ) ) {
             throw new RuntimeException("Undo operation failed . " +
                     "The model could be inconsistent and should be sync again from previous snapshot.");
         }

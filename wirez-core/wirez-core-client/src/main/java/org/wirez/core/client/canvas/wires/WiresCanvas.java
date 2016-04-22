@@ -23,6 +23,7 @@ import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
+import org.wirez.core.client.canvas.event.CanvasDrawnEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeAddedEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
 import org.wirez.core.client.canvas.lienzo.Lienzo;
@@ -53,9 +54,11 @@ public abstract class WiresCanvas extends AbstractCanvas<WiresCanvas.View> {
     public WiresCanvas(final Event<CanvasClearEvent> canvasClearEvent,
                        final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
                        final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
+                       final Event<CanvasDrawnEvent> canvasDrawnEvent,
                        final @Lienzo Layer layer,
                        final View view) {
-        super( canvasClearEvent, canvasShapeAddedEvent, canvasShapeRemovedEvent, layer, view );
+        super( canvasClearEvent, canvasShapeAddedEvent, canvasShapeRemovedEvent, 
+                canvasDrawnEvent, layer, view );
     }
 
     public WiresManager getWiresManager() {

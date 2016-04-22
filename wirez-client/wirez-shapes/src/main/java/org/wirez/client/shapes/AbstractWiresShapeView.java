@@ -19,7 +19,6 @@ import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.core.client.shape.HasDecorators;
-import org.wirez.core.client.util.ShapeUtils;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.HasFillGradient;
 import org.wirez.core.client.shape.view.HasTitle;
@@ -28,6 +27,7 @@ import org.wirez.core.client.shape.view.event.MouseClickEvent;
 import org.wirez.core.client.shape.view.event.ViewEvent;
 import org.wirez.core.client.shape.view.event.ViewEventType;
 import org.wirez.core.client.shape.view.event.ViewHandler;
+import org.wirez.core.client.util.ShapeUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -74,6 +74,7 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     @Override
     public T setUUID(final String uuid) {
         this.uuid = uuid;
+        this.getGroup().setUserData( UUID_PREFFIX + uuid );
         return (T) this;
     }
 

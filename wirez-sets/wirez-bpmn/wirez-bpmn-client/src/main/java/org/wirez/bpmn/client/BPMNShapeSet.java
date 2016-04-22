@@ -90,12 +90,12 @@ public class BPMNShapeSet extends AbstractBindableShapeSet {
 
     @Override
     public String getName() {
-        return "BPMN Shapes";
+        return "BPMN";
     }
 
     @Override
     public String getDescription() {
-        return "The BPMN shapes set";
+        return "The BPMN elements";
     }
 
     @Override

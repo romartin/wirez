@@ -58,7 +58,12 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
     }
 
     protected CommandResult<V> doUndo( final C context, final Command<C, V> command ) {
-        return command.undo( context );
+        
+        if ( null != command ) {
+            return command.undo( context );
+        }
+        
+        return null;
     }
 
 }

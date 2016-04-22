@@ -6,8 +6,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.jboss.drools.impl.DroolsFactoryImpl;
 import org.wirez.bpmn.backend.legacy.Bpmn2JsonUnmarshaller;
 import org.wirez.bpmn.backend.legacy.resource.JBPMBpmn2ResourceImpl;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.bpmn.backend.marshall.json.parser.BPMN2JsonParser;
 import org.wirez.bpmn.backend.marshall.json.parser.ParsingContext;
 import org.wirez.core.api.DefinitionManager;
@@ -24,17 +23,14 @@ public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
 
     DefinitionManager definitionManager;
     GraphUtils graphUtils;
-    Bpmn2OryxIdMappings oryxIdMappings;
-    Bpmn2OryxPropertyManager oryxPropertyManager;
+    Bpmn2OryxManager oryxManager;
 
     public Bpmn2Marshaller(DefinitionManager definitionManager,
                            GraphUtils graphUtils,
-                           Bpmn2OryxIdMappings oryxIdMappings,
-                           Bpmn2OryxPropertyManager oryxPropertyManager) {
+                           Bpmn2OryxManager oryxManager) {
         this.definitionManager = definitionManager;
         this.graphUtils = graphUtils;
-        this.oryxIdMappings = oryxIdMappings;
-        this.oryxPropertyManager = oryxPropertyManager;
+        this.oryxManager = oryxManager;
     }
     
     public String marshall(Diagram<Graph, Settings> diagram) throws IOException {
@@ -48,6 +44,6 @@ public class Bpmn2Marshaller extends Bpmn2JsonUnmarshaller {
     }
 
     private BPMN2JsonParser createParser(Diagram<Graph, Settings> diagram) {
-        return new BPMN2JsonParser( diagram, new ParsingContext( definitionManager, graphUtils, oryxIdMappings, oryxPropertyManager) );
+        return new BPMN2JsonParser( diagram, new ParsingContext( definitionManager, graphUtils, oryxManager) );
     }
 }

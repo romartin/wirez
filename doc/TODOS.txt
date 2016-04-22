@@ -1,12 +1,13 @@
-- GOAL pending
-**************
+- Demo goal
+***********
 
-    - BPMN Marshalling 
-        - Loading diagram titles fix
-        - saved bound x/y coordinates and size (is negative) on bpmn file are not the right ones
-        - simplify & clean to avoid creating classes for each new definition...
-        - unit testing
-    
+    - Mini-pallette integration ( qmx )
+        - ClientIndexServices
+            - API & index ifaces - Use of @Remote
+            - Create ClientIndexServices
+            - DefinitionSetIndex ( index of labels, etc for a single DefSet )
+            - RuleIndex ( index of allowed connection roles, etc for a single DefSet )
+            
     - Commands
             - UNDO's
                 - undoing just after adding element fails
@@ -17,16 +18,18 @@
     - Lienzo stuff
     
     - Usability
-        - dragging constrained just for diagram bounds?
-        - Load diagram screen
-            - Design
-            - Pagination
-        - Notifcations
-            - Design
-            - Pagination
+            
+    - Remove GraphBoundsIndexBuilder and use Layer#findShapeAt
+    
+    - Rules
+        - Refactor annotations
+            @CanContain( roles.... )
+            @CanConnect( from , to )
+            @....
+            
     - Sessions
         - different canvas sessinos
-        - diagrams sync / commands sync
+        - diagrams sync / commands sync between client & tenant managers on server side
         
 - Lienzo
 ********
@@ -54,24 +57,28 @@
 - Client
 *********
 
-    - Widgets
-    
+    - General
+        - Help widgets & tooltips/popovers
+        
+    - Usability
+        - dragging constrained just for diagram bounds?
+
+    - Controls
         - Toolbox
             - Fixings
             - Icon titles/tooltips
-            
-        - Notifications
-            - custom level for "loading..." popups
-            - exceptions on client code - use notif cdi events & gwt logging
-            
-        - Raw view of the graph
-          - Draw all kind of content for nodes/edges as
-            - node /vertex - circle
-            - edge / relation - line
-          - use a Canvas impl not using wires - LienzoCanvas
-          - add info popup on over a vertex/edge
-          - show as a pop on canvas screen
-      
+        - SelectionControl
+            - Select multiple
+            - Fire canvas selected method
+
+    - Load diagram screen
+        - Pagination
+
+    - Notifcations widget
+        - Design
+        - Pagination
+        - Row colors ( different notification types )
+        
 - API
 *****
 
@@ -94,51 +101,44 @@
         - ensure only single parent/edge connections between nodes
          - CommManager
             - executions async - use callbacks as expensive ops can be executed on backend asynchronously
-            - Provide different implementations:
-                - basic
-                - stacked (with history & undo )
-                - stacked + batch
-                      - for canvas handler internal executions on batch ( startBatch, execute xN, endBatch)
-                      - on each batch you can spcify block screen ( modal loading ) or not
-                      - canvas listeners fired once per element
-        - Undo's
         - Restore the graph to a previous state
-   
-   - Model
-          - compile time generation adapters for Def, DefSet, PropSet
-          - use of graph factories in client side 
-          - Clone definitions and properties when creating graph elements -> errai low level serialization?- Cloning models
+        - REDO's
+
 Backend
 *******
 
-    - Adapters -> deal with #accept(Class<?>) in client side code
-    - create snapshot copies of d diagram
     - Missing diagram services ( such as delete )
-    - improve server-client tx errai marshalling for definitions, graphs, diagrams
-    - Consider performance on marshalling/unmarshalling  & builders/parsers 
-        - current impl does not consider big files, as it just creates all the objects in memory once when initialized.
-        -> incremental approach
-    - BPMN marshalling
-        -> mock / stub for existing unit tests
-        - The resulting bpmn file contains negative size for bpmn elements
-        - Resulting positions in bpmn file are not correct
 
 Import tool
 ************
 
+  - refactor to current API
   - typesafe velocity templates? 
   - TemplateResult 
     - add skipped results ( pojos + message )
   - generated files indentation
-  
-- House keeping & others
-************************
 
-    - Factories/CDI Producers
-        - use a producer for the different traverse, index, managers etc?
-        - ModelFactory has producer methods, so the model can be injected ( if no producer, use the modelfactory iface methods )
-        - DefManager.getDefSet - call producer method to obtain a singleton instance
-        - use producers for commands, so beans can be injected
+Performance
+***********
+
+    - Global
+        - Heap, cpu & timeline performance checks
+        
+    - Controls 
+        - Check disable() 
+        - Check de-registrations ( handlers, etc )
+    
+    - Session widgets
+        - Checks session events are handled as expected
+        
+    - TreeExplorer 
+        - redraw only updated element & children, if any.
+
+    - Load diagram
+        - Slow - Heap & cpu performance check
+
+House keeping & others
+**********************
 
     - BPMN marshalling / unmarshalling
         - Remove code from "legacy" package and use the jbpm-designer-backend artifact as a required dependency.
@@ -148,7 +148,4 @@ Import tool
      - Connections
         - Do not call head/tailConnectionAccepted until drag eng!
     - Generics cleaning
-    - UX
-        - Loading popups
-        - Initially only show wizard screen - when creating/loading a diagram, show all other screens ( palette, props, etc )
-   - I18n
+    - i18n

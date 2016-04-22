@@ -1,5 +1,6 @@
 package org.wirez.core.client.canvas;
 
+import org.uberfire.mvp.Command;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 
 public interface Layer<T, S> extends HasEventHandlers<T> {
@@ -12,4 +13,11 @@ public interface Layer<T, S> extends HasEventHandlers<T> {
     
     T draw();
     
+    void clear();
+    
+    String toDataURL();
+    
+    void onBeforeDraw( Command callback );
+
+    void onAfterDraw( Command callback );
 }

@@ -4,11 +4,15 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
+import org.wirez.core.client.canvas.controls.builder.BuilderControl;
 import org.wirez.core.client.canvas.controls.connection.ConnectionAcceptorControl;
 import org.wirez.core.client.canvas.controls.containment.ContainmentAcceptorControl;
 import org.wirez.core.client.canvas.controls.drag.DragControl;
+import org.wirez.core.client.canvas.controls.pan.PanControl;
 import org.wirez.core.client.canvas.controls.select.SelectionControl;
 import org.wirez.core.client.canvas.controls.toolbox.ToolboxControl;
+import org.wirez.core.client.canvas.controls.zoom.Wheel;
+import org.wirez.core.client.canvas.controls.zoom.ZoomControl;
 import org.wirez.core.client.shape.Shape;
 
 import javax.enterprise.context.Dependent;
@@ -23,6 +27,8 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
     ContainmentAcceptorControl<AbstractCanvasHandler> containmentAcceptorControl;
     DragControl<AbstractCanvasHandler, Element> dragControl;
     ToolboxControl<AbstractCanvasHandler, Element> toolboxControl;
+    BuilderControl<AbstractCanvasHandler> builderControl;
+    
     
     @Inject
     public CanvasFullSessionImpl(final AbstractCanvas canvas,
@@ -32,13 +38,17 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
                                  final ContainmentAcceptorControl<AbstractCanvasHandler> containmentAcceptorControl,
                                  final SelectionControl<AbstractCanvas, Shape> selectionControl,
                                  final DragControl<AbstractCanvasHandler, Element> dragControl,
-                                 final ToolboxControl<AbstractCanvasHandler, Element> toolboxControl) {
-        super(canvas, canvasHandler, selectionControl);
+                                 final ToolboxControl<AbstractCanvasHandler, Element> toolboxControl,
+                                 final BuilderControl<AbstractCanvasHandler> builderControl,
+                                 final @Wheel ZoomControl<AbstractCanvas> zoomControl,
+                                 final PanControl<AbstractCanvas> panControl) {
+        super(canvas, canvasHandler, selectionControl, zoomControl, panControl);
         this.canvasCommandManager = canvasCommandManager;
         this.connectionAcceptorControl = connectionAcceptorControl;
         this.containmentAcceptorControl = containmentAcceptorControl;
         this.dragControl = dragControl;
         this.toolboxControl = toolboxControl;
+        this.builderControl = builderControl;
 
     }
 
@@ -67,5 +77,20 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
     public ToolboxControl<AbstractCanvasHandler, Element> getToolboxControl() {
         return toolboxControl;
     }
-    
+
+    @Override
+    public BuilderControl<AbstractCanvasHandler> getBuilderControl() {
+        return builderControl;
+    }
+
+    @Override
+    public ZoomControl<AbstractCanvas> getZoomControl() {
+        return zoomControl;
+    }
+
+    @Override
+    public PanControl<AbstractCanvas> getPanControl() {
+        return panControl;
+    }
+
 }

@@ -2,7 +2,6 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 
 import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.graph.Edge;
@@ -16,20 +15,25 @@ import org.wirez.core.api.rule.RuleViolation;
 public abstract class AbstractEdgeBuilder<W, T extends Edge<View<W>, Node>> 
         extends AbstractObjectBuilder<W, T> implements EdgeObjectBuilder<W, T> {
 
-    protected Bpmn2OryxIdMappings oryxIdMappings;
-    
-    public AbstractEdgeBuilder(Bpmn2OryxIdMappings oryxIdMappings) {
-        super();
-        this.oryxIdMappings = oryxIdMappings;
+    protected final Class<?> definitionClass;
+            
+    public AbstractEdgeBuilder(Class<?> definitionClass) {
+        this.definitionClass = definitionClass;
     }
-    
+
+    @Override
+    public Class<?> getDefinitionClass() {
+        return definitionClass;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     protected T doBuild(BuilderContext context) {
 
         FactoryManager factoryManager = context.getFactoryManager();
 
-        T result = (T) factoryManager.newElement(this.nodeId, getDefinitionId());
+        String definitionId = context.getOryxManager().getMappingsManager().getDefinitionId( definitionClass );
+        T result = (T) factoryManager.newElement(this.nodeId, definitionId);
 
         setProperties(context, (BPMNDefinition) result.getContent().getDefinition());
 
@@ -74,6 +78,6 @@ public abstract class AbstractEdgeBuilder<W, T extends Edge<View<W>, Node>>
 
     @Override
     public String toString() {
-        return "[NodeBuilder=BpmnEdgeImplNodeBuilder]" + super.toString();
+        return new StringBuilder(super.toString()).append(" [defClass=").append(definitionClass.getName()).append("] ").toString();
     }
 }

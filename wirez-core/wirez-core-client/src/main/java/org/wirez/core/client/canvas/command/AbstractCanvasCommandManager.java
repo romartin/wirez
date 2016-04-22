@@ -83,7 +83,9 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
     @Override
     protected CommandResult<CanvasViolation> doUndo(H context, Command<H, CanvasViolation> command) {
 
-        if ( command instanceof HasGraphCommand ) {
+        final CommandResult<CanvasViolation> result = super.doUndo( context, command );
+        
+        if ( null != command && ( command instanceof HasGraphCommand ) ) {
 
             final Command<GraphCommandExecutionContext, RuleViolation> graphCommand =
                     ((HasGraphCommand<H>) command).getGraphCommand( context );
@@ -93,12 +95,17 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
 
             // If there is an error, do not execute operations on the canvas.
             if ( CommandUtils.isError(graphCommandResult) ) {
+                
+                // Re execute the canvas undo's command execution.
+                command.execute( context );
+                
+                // Return the errors.
                 return new CanvasCommandResultBuilder( graphCommandResult ).build();
             }
 
         }
         
-        return super.doUndo(context, command);
+        return result;
     }
 
     protected CommandResult<RuleViolation> doGraphCommandUndo( final GraphCommandExecutionContext graphContext,

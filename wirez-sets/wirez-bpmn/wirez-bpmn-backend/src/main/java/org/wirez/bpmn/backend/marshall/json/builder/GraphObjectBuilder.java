@@ -1,8 +1,7 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.Command;
@@ -21,10 +20,6 @@ import java.util.Collection;
 
 public interface GraphObjectBuilder<W, T extends Element<View<W>>> {
     
-    String getDefinitionId();
-
-    String getOryxDefinitionId();
-    
     GraphObjectBuilder<W, T> nodeId(String nodeId);
 
     GraphObjectBuilder<W, T> stencil(String stencilId);
@@ -36,8 +31,6 @@ public interface GraphObjectBuilder<W, T extends Element<View<W>>> {
     GraphObjectBuilder<W, T> boundUL(Double x, Double y);
 
     GraphObjectBuilder<W, T> boundLR(Double x, Double y);
-    
-    // TODO: Dockers.
     
     T build(BuilderContext context);
     
@@ -54,11 +47,9 @@ public interface GraphObjectBuilder<W, T extends Element<View<W>>> {
         FactoryManager getFactoryManager();
         
         GraphUtils getGraphUtils();
-
-        Bpmn2OryxPropertyManager getOryxPropertyManager();
-
-        Bpmn2OryxIdMappings getOryxIdMappings();
         
+        Bpmn2OryxManager getOryxManager();
+
         GraphCommandFactory getCommandFactory();
         
         CommandResult<RuleViolation> execute (Command<GraphCommandExecutionContext, RuleViolation> command);

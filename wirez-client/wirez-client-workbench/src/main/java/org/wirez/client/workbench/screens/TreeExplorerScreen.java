@@ -102,7 +102,7 @@ public class TreeExplorerScreen {
         doOpenSession( sessionOpenedEvent.getSession() );
     }
 
-    void onCanvasSessionOpened(@Observes SessionResumedEvent sessionResumedEvent) {
+    void onCanvasSessionResumed(@Observes SessionResumedEvent sessionResumedEvent) {
         checkNotNull("sessionResumedEvent", sessionResumedEvent);
         doOpenSession( sessionResumedEvent.getSession() );
     }
@@ -112,7 +112,7 @@ public class TreeExplorerScreen {
         doCloseSession();
     }
 
-    void onCanvasSessionDisposed(@Observes SessionPausedEvent sessionPausedEvent) {
+    void onCanvasSessionPaused(@Observes SessionPausedEvent sessionPausedEvent) {
         checkNotNull("sessionPausedEvent", sessionPausedEvent);
         doCloseSession();
     }

@@ -3,15 +3,12 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 import org.codehaus.jackson.*;
 import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.bpmn.backend.marshall.json.builder.nodes.BPMNDiagramBuilder;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
-import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxPropertyManager;
+import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandManager;
 import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.definition.adapter.binding.AbstractBindableAdapter;
 import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
@@ -43,51 +40,21 @@ public class BPMNGraphGenerator extends JsonGenerator {
     DefinitionManager definitionManager;
     FactoryManager factoryManager;
     GraphUtils graphUtils;
-    Bpmn2OryxIdMappings oryxIdMappings;
-    Bpmn2OryxPropertyManager oryxPropertyManager;
+    Bpmn2OryxManager oryxManager;
     CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager;
     RuleManager ruleManager;
     GraphCommandFactory commandFactory;
-    Stack<GraphObjectBuilder> nodeBuilders = new LoggableStack<GraphObjectBuilder>("nodeBuilders");
-    Stack<GraphObjectParser> parsers = new LoggableStack<GraphObjectParser>("parsers");
+    Stack<GraphObjectBuilder> nodeBuilders = new Stack<>();
+    Stack<GraphObjectParser> parsers = new Stack<GraphObjectParser>();
     Collection<GraphObjectBuilder<?, ?>> builders = new LinkedList<GraphObjectBuilder<?, ?>>();
     Graph<DefinitionSet, Node> graph;
     boolean isClosed;
-    
-    // Just for development & testing
-    private class LoggableStack<T> extends Stack<T> {
-        
-        final boolean isLogEnabled = false;
-        String name;
-
-        public LoggableStack(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public T push(T item) {
-            if (isLogEnabled) {
-                log(name + "#push - " + item.toString());
-            }
-            return super.push(item);
-        }
-
-        @Override
-        public synchronized T pop() {
-            T item = super.pop();
-            if (isLogEnabled) {
-                log(name + "#pop - " + item.toString());
-            }
-            return item;
-        }
-    }
     
     public BPMNGraphGenerator(final BPMNGraphObjectBuilderFactory bpmnGraphBuilderFactory,
                               final DefinitionManager definitionManager,
                               final FactoryManager factoryManager,
                               final GraphUtils graphUtils,
-                              final Bpmn2OryxIdMappings oryxIdMappings,
-                              final Bpmn2OryxPropertyManager oryxPropertyManager,
+                              final Bpmn2OryxManager oryxManager,
                               final CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager,
                               final RuleManager ruleManager,
                               final GraphCommandFactory commandFactory) {
@@ -95,8 +62,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
         this.definitionManager = definitionManager;
         this.factoryManager = factoryManager;
         this.graphUtils = graphUtils;
-        this.oryxIdMappings = oryxIdMappings;
-        this.oryxPropertyManager = oryxPropertyManager;
+        this.oryxManager = oryxManager;
         this.commandManager = commandManager;
         this.ruleManager = ruleManager;
         this.commandFactory = commandFactory;
@@ -156,27 +122,30 @@ public class BPMNGraphGenerator extends JsonGenerator {
         // Initialize the builder context.
         builderContext.init(graph);
         
-        BPMNDiagramBuilder diagramBuilder = getDiagramBuilder(builderContext);
+        NodeObjectBuilder diagramBuilder = getDiagramBuilder(builderContext);
         if (diagramBuilder == null) {
             throw new RuntimeException("No diagrams found!");
         }
 
-        Node<View<BPMNDiagram>, Edge> diagramNode = diagramBuilder.build(builderContext);
+        Node<View<BPMNDiagram>, Edge> diagramNode = (Node<View<BPMNDiagram>, Edge>) diagramBuilder.build(builderContext);
         graph.addNode(diagramNode);
         
         this.isClosed = true;
     }
 
-    // TODO: Can be multiple
+    // TODO: Can be multiple.
     @SuppressWarnings("unchecked")
-    protected BPMNDiagramBuilder getDiagramBuilder(final GraphObjectBuilder.BuilderContext context) {
+    protected NodeObjectBuilder getDiagramBuilder(final GraphObjectBuilder.BuilderContext context) {
         Collection<GraphObjectBuilder<?, ?>> builders = context.getBuilders();
         if (builders != null && !builders.isEmpty()) {
             for (GraphObjectBuilder<?, ?> builder : builders) {
                 try {
-                    return (BPMNDiagramBuilder) builder;
+                    NodeObjectBuilder nodeBuilder = (NodeObjectBuilder) builder;
+                    if ( BPMNDiagram.class.equals( nodeBuilder.getDefinitionClass() ) ) {
+                        return nodeBuilder;
+                    }
                 } catch (ClassCastException e) {
-                    // Not a start event. Continue with the search...
+                    // Not a node. Continue with the search...
                 }
             }
         }
@@ -223,13 +192,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
         }
 
         @Override
-        public Bpmn2OryxPropertyManager getOryxPropertyManager() {
-            return oryxPropertyManager;
-        }
-
-        @Override
-        public Bpmn2OryxIdMappings getOryxIdMappings() {
-            return oryxIdMappings;
+        public Bpmn2OryxManager getOryxManager() {
+            return oryxManager;
         }
 
         @SuppressWarnings("unchecked")

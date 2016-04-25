@@ -21,8 +21,8 @@ import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.Default;
-import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RulesManager;
+import org.wirez.core.api.rule.impl.graph.Graph;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -43,7 +43,7 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
     @Inject
     public WiresCanvasHandler(final ClientDefinitionManager clientDefinitionManager,
                               final ClientFactoryServices clientFactoryServices,
-                              final @Default  RuleManager ruleManager,
+                              final @Graph RulesManager<?, ?, ?, ?> rulesManager,
                               final GraphUtils graphUtils,
                               final IncrementalIndexBuilder indexBuilder,
                               final TreeWalkTraverseProcessor treeWalkTraverseProcessor, 
@@ -55,7 +55,7 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
                               final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
                               final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
 
-        super( clientDefinitionManager, clientFactoryServices, ruleManager, graphUtils, 
+        super( clientDefinitionManager, clientFactoryServices, rulesManager, graphUtils, 
                 indexBuilder, treeWalkTraverseProcessor, shapeManager, canvasInitializationCompletedEvent,
                 canvasElementAddedEvent, canvasElementRemovedEvent, canvasElementUpdatedEvent,
                 canvasProcessingStartedEvent, canvasProcessingCompletedEvent );

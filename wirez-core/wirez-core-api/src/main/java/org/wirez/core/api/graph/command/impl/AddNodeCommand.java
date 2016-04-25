@@ -64,9 +64,9 @@ public final class AddNodeCommand extends AbstractGraphCommand {
     @SuppressWarnings("unchecked")
     private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
         final Collection<RuleViolation> containmentRuleViolations = 
-                (Collection<RuleViolation>) context.getRuleManager().checkContainment( target, candidate).violations();
+                (Collection<RuleViolation>) context.getRulesManager().containment().evaluate( target, candidate).violations();
         final Collection<RuleViolation> cardinalityRuleViolations = 
-                (Collection<RuleViolation>) context.getRuleManager().checkCardinality( target, candidate, RuleManager.Operation.ADD).violations();
+                (Collection<RuleViolation>) context.getRulesManager().cardinality().evaluate( target, candidate, RuleManager.Operation.ADD).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(containmentRuleViolations);
         violations.addAll(cardinalityRuleViolations);

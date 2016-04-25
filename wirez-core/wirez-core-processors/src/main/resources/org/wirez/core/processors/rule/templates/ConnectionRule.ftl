@@ -1,8 +1,8 @@
 
-DefaultConnectionRule ${ruleId} = new DefaultConnectionRule("${ruleId}", "${ruleDefinitionId}",
+ConnectionRuleImpl ${ruleId} = new ConnectionRuleImpl("${ruleId}", "${ruleDefinitionId}",
     new HashSet<ConnectionRule.PermittedConnection>(${connectionsSize}) {{
     <#list connections as connection>
-        add(new DefaultPermittedConnection( "${connection.from}", "${connection.to}" ));
+        add(new PermittedConnectionImpl( "${connection.from}", "${connection.to}" ));
     </#list>
     }}
 );

@@ -56,18 +56,18 @@ public class BindableDefinitionSetRuleAdapterGenerator extends AbstractBindableA
                 rules);
         root.put("rulesSize",
                 rules.size());
-        root.put("ruleIds",
-                getRuleIds(rules));
+        root.put("ruleNames",
+                getRuleNames(rules));
         
         // Generate code
         return writeTemplate(packageName, className, root, messager);
 
     }
     
-    private List<String> getRuleIds(List<ProcessingRule> rules) {
+    private List<String> getRuleNames(List<ProcessingRule> rules) {
         List<String> result = new ArrayList<>();
         for (ProcessingRule entity : rules ) {
-            result.add(entity.getId());
+            result.add(entity.getName());
         }
         return result;
     }

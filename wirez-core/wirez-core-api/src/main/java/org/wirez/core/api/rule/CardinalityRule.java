@@ -16,8 +16,6 @@
 
 package org.wirez.core.api.rule;
 
-import java.util.Set;
-
 /**
  * Rule to restrict the cardinality of Elements in a diagram.
  */
@@ -27,43 +25,13 @@ public interface CardinalityRule extends RuleByRole {
      * The minimum number of occurrences that an Element can have in a diagram.
      * @return
      */
-    Long getMinOccurrences();
+    int getMinOccurrences();
 
     /**
      * The maximum number of occurrences that an Element can have in a diagram.
      * @return
      */
-    Long getMaxOccurrences();
+    int getMaxOccurrences();
 
-    /**
-     * Restrictions on the incoming connections to an Element
-     * @return
-     */
-    Set<ConnectorRule> getIncomingConnectionRules();
-
-    /**
-     * Restrictions on the outgoing connections from an Element
-     * @return
-     */
-    Set<ConnectorRule> getOutgoingConnectionRules();
-
-    /**
-     * Rule to restrict the cardinality of Connections. The direction of the Connection is defined in CardinalityRule.
-     */
-    interface ConnectorRule extends RuleById {
-
-        /**
-         * The minimum number of connections an Element can have.
-         * @return
-         */
-        long getMinOccurrences();
-
-        /**
-         * The maximum number of connections an Element can have.
-         * @return
-         */
-        long getMaxOccurrences();
-
-    }
 
 }

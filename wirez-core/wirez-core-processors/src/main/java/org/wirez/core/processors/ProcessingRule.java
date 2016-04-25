@@ -19,15 +19,15 @@ package org.wirez.core.processors;
 public class ProcessingRule {
 
     public enum TYPE {
-        CONTAINMENT, CONNECTION, CARDINALITY;
+        CONTAINMENT, CONNECTION, CARDINALITY, EDGE_CARDINALITY;
     }
     
-    private final String id;
+    private final String name;
     private final TYPE type;
     private final StringBuffer content;
 
-    public ProcessingRule(String id, TYPE type, StringBuffer content) {
-        this.id = id;
+    public ProcessingRule(String name, TYPE type, StringBuffer content) {
+        this.name = name;
         this.type = type;
         this.content = content;
     }
@@ -40,8 +40,8 @@ public class ProcessingRule {
         return type;
     }
 
-    public String getId() {
-        return id;
+    public String getName() {
+        return name;
     }
     
 }

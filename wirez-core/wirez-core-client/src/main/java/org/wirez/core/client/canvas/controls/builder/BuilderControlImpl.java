@@ -110,9 +110,9 @@ public class BuilderControlImpl extends AbstractCanvasHandlerControl
                     final GraphBoundsIndexer boundsIndexer = new GraphBoundsIndexer(canvasHandler.getDiagram().getGraph());
                     parent = boundsIndexer.getNodeAt(_x, _y);
 
-                    final LienzoLayer lienzoLayer = (LienzoLayer) canvasHandler.getCanvas().getLayer();
+                    /*final LienzoLayer lienzoLayer = (LienzoLayer) canvasHandler.getCanvas().getLayer();
                     final String viewUUID = LienzoLayerUtils.getUUID_At( lienzoLayer, _x, _y );
-                    GWT.log(" Parent is " + viewUUID);
+                    GWT.log(" Parent is " + viewUUID);*/
                     
                     if ( null != parent) {
                         final Double[] parentCoords = GraphUtils.getPosition(parent.getContent());

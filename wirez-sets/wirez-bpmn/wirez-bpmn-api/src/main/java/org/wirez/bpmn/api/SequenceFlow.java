@@ -23,10 +23,8 @@ import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.core.api.definition.annotation.Description;
 import org.wirez.core.api.definition.annotation.definition.*;
-import org.wirez.core.api.definition.annotation.rule.EdgeOccurrences;
-import org.wirez.core.api.definition.annotation.rule.EdgeType;
-import org.wirez.core.api.definition.annotation.rule.Occurrences;
-import org.wirez.core.api.definition.annotation.rule.PermittedConnection;
+import org.wirez.core.api.rule.annotation.EdgeOccurrences;
+import org.wirez.core.api.rule.annotation.CanConnect;
 import org.wirez.core.api.graph.Edge;
 
 import java.util.HashSet;
@@ -35,24 +33,17 @@ import java.util.Set;
 @Portable
 @Bindable
 @Definition( type = Edge.class )
-@PermittedConnection( startRole = "sequence_start", endRole = "sequence_end" )
-@PermittedConnection( startRole = "choreography_sequence_start", endRole = "choreography_sequence_end" )
-@PermittedConnection( startRole = "Exclusive_Eventbased_Gateway", endRole = "FromEventbasedGateway" )
-@PermittedConnection( startRole = "EventbasedGateway", endRole = "FromEventbasedGateway" )
-@Occurrences(
-        role = "Startevents_all",
-        min = 0,
-        value = {
-                @EdgeOccurrences(type = EdgeType.INCOMING, edge = SequenceFlow.class, max = 0)
-        }
-)
-@Occurrences(
-        role = "Endevents_all",
-        min = 0,
-        value = {
-                @EdgeOccurrences(type = EdgeType.OUTGOING, edge = SequenceFlow.class, max = 0)
-        }
-)
+
+// Connection rules.
+@CanConnect( startRole = "sequence_start", endRole = "sequence_end" )
+@CanConnect( startRole = "choreography_sequence_start", endRole = "choreography_sequence_end" )
+@CanConnect( startRole = "Exclusive_Eventbased_Gateway", endRole = "FromEventbasedGateway" )
+@CanConnect( startRole = "EventbasedGateway", endRole = "FromEventbasedGateway" )
+
+// Edge cardinality rules.
+@EdgeOccurrences(role="Startevents_all", type = EdgeOccurrences.EdgeType.INCOMING, edge = SequenceFlow.class, max = 0)
+@EdgeOccurrences(role="Endevents_all", type = EdgeOccurrences.EdgeType.OUTGOING, edge = SequenceFlow.class, max = 0)
+
 public class SequenceFlow implements BPMNDefinition {
 
     @Category

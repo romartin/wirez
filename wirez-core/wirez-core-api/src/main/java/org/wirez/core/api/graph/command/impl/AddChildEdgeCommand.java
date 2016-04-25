@@ -81,7 +81,8 @@ public final class AddChildEdgeCommand extends AbstractGraphCommand {
 
     @SuppressWarnings("unchecked")
     private CommandResult<RuleViolation> check( final GraphCommandExecutionContext context ) {
-        final Collection<RuleViolation> containmentRuleViolations = (Collection<RuleViolation>) context.getRuleManager().checkContainment( parent, candidate).violations();
+        final Collection<RuleViolation> containmentRuleViolations = 
+                (Collection<RuleViolation>) context.getRulesManager().containment().evaluate( parent, candidate).violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(containmentRuleViolations);
         return new GraphCommandResultBuilder( violations ).build();

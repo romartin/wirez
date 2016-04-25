@@ -14,22 +14,11 @@
                 - ClearGraph
                 - SetConnectionSourceNodeCommand
                 - SetConnectionTargetNodeCommand
+            - Fix -> both SetConnectionSourceNodeCommand/Target commands are checking rules using same arguments...
 
     - Lienzo stuff
     
-    - Usability
-            
     - Remove GraphBoundsIndexBuilder and use Layer#findShapeAt
-    
-    - Rules
-        - Refactor annotations
-            @CanContain( roles.... )
-            @CanConnect( from , to )
-            @....
-            
-    - Sessions
-        - different canvas sessinos
-        - diagrams sync / commands sync between client & tenant managers on server side
         
 - Lienzo
 ********
@@ -104,10 +93,16 @@
         - Restore the graph to a previous state
         - REDO's
 
+Annotation processors
+*********************
+
+    - Check that each annotation is present on expected domain model class
+
 Backend
 *******
 
     - Missing diagram services ( such as delete )
+        - diagrams sync / commands sync between client & tenant managers on server side
 
 Import tool
 ************

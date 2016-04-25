@@ -20,7 +20,7 @@ import org.uberfire.annotations.processors.AbstractGenerator;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.uberfire.relocated.freemarker.template.Template;
 import org.uberfire.relocated.freemarker.template.TemplateException;
-import org.wirez.core.api.definition.annotation.rule.PermittedConnection;
+import org.wirez.core.api.rule.annotation.CanConnect;
 import org.wirez.core.processors.MainProcessor;
 import org.wirez.core.processors.ProcessingContext;
 import org.wirez.core.processors.ProcessingRule;
@@ -76,10 +76,10 @@ public class ConnectionRuleGenerator extends AbstractGenerator  {
         final String ruleId = MainProcessor.toValidId(className);
         final String ruleDefinitionId = classElement.getQualifiedName().toString();
         
-        PermittedConnection[] pcs = classElement.getAnnotationsByType(PermittedConnection.class);
+        CanConnect[] pcs = classElement.getAnnotationsByType(CanConnect.class);
         List<ConnectionRuleEntry> ruleEntries = new ArrayList<>();
         if ( null != pcs ) {
-            for ( final PermittedConnection pc : pcs ) {
+            for ( final CanConnect pc : pcs ) {
                 String startRole = pc.startRole();
                 String endRole = pc.endRole();
                 ruleEntries.add(new ConnectionRuleEntry(startRole, endRole));

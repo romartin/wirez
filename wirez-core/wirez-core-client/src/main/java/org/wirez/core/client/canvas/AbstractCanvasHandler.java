@@ -32,7 +32,7 @@ import org.wirez.core.api.graph.processing.traverse.tree.AbstractTreeTraverseCal
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.Rule;
-import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RulesManager;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
@@ -59,7 +59,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
     protected ClientDefinitionManager clientDefinitionManager;
     protected ClientFactoryServices clientFactoryServices;
-    protected RuleManager ruleManager;
+    protected RulesManager<?, ?, ?, ?> rulesManager;
     protected GraphUtils graphUtils;
     protected IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> indexBuilder;
     protected TreeWalkTraverseProcessor treeWalkTraverseProcessor;
@@ -79,7 +79,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     @Inject
     public AbstractCanvasHandler(final ClientDefinitionManager clientDefinitionManager,
                                  final ClientFactoryServices clientFactoryServices,
-                                 final RuleManager ruleManager,
+                                 final RulesManager<?, ?, ?, ?> rulesManager,
                                  final GraphUtils graphUtils,
                                  final IncrementalIndexBuilder indexBuilder,
                                  final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
@@ -92,7 +92,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                                  final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
-        this.ruleManager = ruleManager;
+        this.rulesManager = rulesManager;
         this.graphUtils = graphUtils;
         this.indexBuilder = (IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>>) indexBuilder;
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
@@ -139,7 +139,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                 final Collection<Rule> rules = adapter.getRules( definitionSet );
                 if (rules != null) {
                     for (final Rule rule : rules) {
-                        ruleManager.addRule(rule);
+                        rulesManager.addRule(rule);
                     }
                 }
 
@@ -419,8 +419,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         return clientFactoryServices;
     }
 
-    public RuleManager getRuleManager() {
-        return ruleManager;
+    public RulesManager getRuleManager() {
+        return rulesManager;
     }
 
     public GraphUtils getGraphUtils() {

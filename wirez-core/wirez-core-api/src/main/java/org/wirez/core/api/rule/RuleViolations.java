@@ -18,8 +18,6 @@ package org.wirez.core.api.rule;
 
 public interface RuleViolations {
 
-    // TODO: Implement in the default impl class -> RuleViolations addViolation(RuleViolation violation);
-    
     Iterable<RuleViolation> violations();
 
     Iterable<RuleViolation> violations(RuleViolation.Type violationType);

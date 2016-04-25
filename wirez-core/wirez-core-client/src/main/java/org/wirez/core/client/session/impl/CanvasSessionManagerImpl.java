@@ -31,6 +31,9 @@ public class CanvasSessionManagerImpl implements DefaultCanvasSessionManager {
     
     private CanvasSession<AbstractCanvas, AbstractCanvasHandler> current;
 
+    protected CanvasSessionManagerImpl() {
+    }
+    
     @Inject
     public CanvasSessionManagerImpl(final Instance<DefaultCanvasReadOnlySession> readOnlySessions, 
                                     final Instance<DefaultCanvasFullSession> defaultSessions,

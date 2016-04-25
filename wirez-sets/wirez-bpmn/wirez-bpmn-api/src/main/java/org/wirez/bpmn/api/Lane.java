@@ -26,7 +26,7 @@ import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.core.api.definition.annotation.Description;
 import org.wirez.core.api.definition.annotation.definition.*;
-import org.wirez.core.api.definition.annotation.rule.CanContain;
+import org.wirez.core.api.rule.annotation.CanContain;
 import org.wirez.core.api.graph.Node;
 
 import java.util.HashSet;

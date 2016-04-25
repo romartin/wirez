@@ -26,10 +26,7 @@ import org.wirez.core.processors.definitionset.BindableDefinitionSetAdapterGener
 import org.wirez.core.processors.definitionset.DefinitionSetProxyGenerator;
 import org.wirez.core.processors.property.BindablePropertyAdapterGenerator;
 import org.wirez.core.processors.propertyset.BindablePropertySetAdapterGenerator;
-import org.wirez.core.processors.rule.BindableDefinitionSetRuleAdapterGenerator;
-import org.wirez.core.processors.rule.CardinalityRuleGenerator;
-import org.wirez.core.processors.rule.ConnectionRuleGenerator;
-import org.wirez.core.processors.rule.ContainmentRuleGenerator;
+import org.wirez.core.processors.rule.*;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
@@ -51,9 +48,9 @@ import java.util.*;
         MainProcessor.ANNOTATION_PROPERTY_SET,
         MainProcessor.ANNOTATION_PROPERTY, 
         MainProcessor.ANNOTATION_RULE_CAN_CONTAIN, 
-        MainProcessor.ANNOTATION_RULE_CAN_CONNECT, 
-        MainProcessor.ANNOTATION_RULE_OCCURRENCES,
-        MainProcessor.ANNOTATION_RULE_EDGE_OCCURRENCES})
+        MainProcessor.ANNOTATION_RULE_ALLOWED_CONNECTION, 
+        MainProcessor.ANNOTATION_RULE_ALLOWED_EDGE_OCCURRS,
+        MainProcessor.ANNOTATION_RULE_ALLOWED_OCCS})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
@@ -81,16 +78,17 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     public static final String ANNOTATION_PROPERTY_OPTIONAL = "org.wirez.core.api.definition.annotation.property.Optional";
     
     
-    public static final String ANNOTATION_RULE_CAN_CONTAIN = "org.wirez.core.api.definition.annotation.rule.CanContain";
-    public static final String ANNOTATION_RULE_CAN_CONNECT = "org.wirez.core.api.definition.annotation.rule.CanConnect";
-    public static final String ANNOTATION_RULE_PERMITTED_CONNECTION = "org.wirez.core.api.definition.annotation.rule.PermittedConnection";
-    public static final String ANNOTATION_RULE_CARDINALITY = "org.wirez.core.api.definition.annotation.rule.Cardinality";
-    public static final String ANNOTATION_RULE_OCCURRENCES = "org.wirez.core.api.definition.annotation.rule.Occurrences";
-    public static final String ANNOTATION_RULE_EDGE_OCCURRENCES = "org.wirez.core.api.definition.annotation.rule.EdgeOccurrences";
+    public static final String ANNOTATION_RULE_CAN_CONTAIN = "org.wirez.core.api.rule.annotation.CanContain";
+    public static final String ANNOTATION_RULE_ALLOWED_CONNECTION = "org.wirez.core.api.rule.annotation.AllowedConnections";
+    public static final String ANNOTATION_RULE_CAN_CONNECTION = "org.wirez.core.api.rule.annotation.CanConnect";
+    public static final String ANNOTATION_RULE_ALLOWED_OCCS = "org.wirez.core.api.rule.annotation.AllowedOccurrences";
+    public static final String ANNOTATION_RULE_OCCURRS = "org.wirez.core.api.rule.annotation.Occurrences";
+    public static final String ANNOTATION_RULE_ALLOWED_EDGE_OCCURRS = "org.wirez.core.api.rule.annotation.AllowedEdgeOccurrences";
 
     public static final String RULE_CONTAINMENT_SUFFIX_CLASSNAME = "ContainmentRule";
     public static final String RULE_CONNECTION_SUFFIX_CLASSNAME = "ConnectionRule";
     public static final String RULE_CARDINALITY_SUFFIX_CLASSNAME = "CardinalityRule";
+    public static final String RULE_EDGE_CARDINALITY_SUFFIX_CLASSNAME = "EdgeCardinalityRule";
 
     public static final String DEFINITIONSET_ADAPTER_CLASSNAME = "BindableDefinitionSetAdapterImpl";
     public static final String DEFINITIONSET_PROXY_CLASSNAME = "DefinitionSetProxyImpl";
@@ -102,7 +100,8 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     private final ProcessingContext processingContext = ProcessingContext.getInstance();
     private final ContainmentRuleGenerator containmentRuleGenerator;
     private final ConnectionRuleGenerator connectionRuleGenerator;
-    private final CardinalityRuleGenerator cardinalityRuleGenerator; 
+    private final CardinalityRuleGenerator cardinalityRuleGenerator;
+    private final EdgeCardinalityRuleGenerator edgeCardinalityRuleGenerator;
     private BindableDefinitionSetAdapterGenerator definitionSetAdapterGenerator;
     private BindableDefinitionAdapterGenerator definitionAdapterGenerator;
     private BindablePropertySetAdapterGenerator propertySetAdapterGenerator;
@@ -114,6 +113,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         ContainmentRuleGenerator ruleGenerator = null;
         ConnectionRuleGenerator connectionRuleGenerator = null;
         CardinalityRuleGenerator cardinalityRuleGenerator = null;
+        EdgeCardinalityRuleGenerator edgeCardinalityRuleGenerator = null;
         BindableDefinitionSetAdapterGenerator definitionSetAdapterGenerator = null;
         BindableDefinitionAdapterGenerator definitionAdapterGenerator = null;
         BindablePropertySetAdapterGenerator propertySetAdapterGenerator = null;
@@ -127,6 +127,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             ruleAdapter = new BindableDefinitionSetRuleAdapterGenerator();
             connectionRuleGenerator = new ConnectionRuleGenerator();
             cardinalityRuleGenerator = new CardinalityRuleGenerator();
+            edgeCardinalityRuleGenerator = new EdgeCardinalityRuleGenerator();
             definitionAdapterGenerator = new BindableDefinitionAdapterGenerator();
             definitionSetAdapterGenerator = new BindableDefinitionSetAdapterGenerator();
             propertySetAdapterGenerator = new BindablePropertySetAdapterGenerator();
@@ -137,6 +138,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         this.containmentRuleGenerator = ruleGenerator;
         this.connectionRuleGenerator = connectionRuleGenerator;
         this.cardinalityRuleGenerator = cardinalityRuleGenerator;
+        this.edgeCardinalityRuleGenerator = edgeCardinalityRuleGenerator;
         this.definitionSetAdapterGenerator = definitionSetAdapterGenerator;
         this.definitionAdapterGenerator = definitionAdapterGenerator;
         this.propertySetAdapterGenerator = propertySetAdapterGenerator;
@@ -181,15 +183,15 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             processContainmentRules(set, e, roundEnv);
         }
 
-        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CARDINALITY) ) ) {
+        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_ALLOWED_OCCS) ) ) {
             processCardinalityRules(set, e, roundEnv);
         }
 
-        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_EDGE_OCCURRENCES) ) ) {
-            // TODO: processEdgeCardinalityRules(set, e, roundEnv);
+        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_ALLOWED_EDGE_OCCURRS) ) ) {
+            processEdgeCardinalityRules(set, e, roundEnv);
         }
 
-        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CAN_CONNECT) ) ) {
+        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_ALLOWED_CONNECTION) ) ) {
             processConnectionRules(set, e, roundEnv);
         }
         
@@ -438,6 +440,40 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         
     }
 
+    protected boolean processEdgeCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+        final Messager messager = processingEnv.getMessager();
+        final boolean isIface = e.getKind() == ElementKind.INTERFACE;
+        final boolean isClass = e.getKind() == ElementKind.CLASS;
+        if (isIface || isClass) {
+
+            TypeElement classElement = (TypeElement) e;
+            PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
+
+            messager.printMessage(Diagnostic.Kind.NOTE, "Discovered edge cardinality rule for class [" + classElement.getSimpleName() + "]");
+
+            final String packageName = packageElement.getQualifiedName().toString();
+            final String classNameActivity = classElement.getSimpleName() + RULE_EDGE_CARDINALITY_SUFFIX_CLASSNAME;
+
+            try {
+                //Try generating code for each required class
+                messager.printMessage( Diagnostic.Kind.NOTE, "Generating code for [" + classNameActivity + "]" );
+                edgeCardinalityRuleGenerator.generate( packageName,
+                        packageElement,
+                        classNameActivity,
+                        classElement,
+                        processingEnv );
+
+            } catch ( GenerationException ge ) {
+                final String msg = ge.getMessage();
+                processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg, classElement );
+            }
+
+        }
+
+        return true;
+
+    }
+    
     protected boolean processCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         final boolean isIface = e.getKind() == ElementKind.INTERFACE;

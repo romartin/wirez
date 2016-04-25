@@ -27,7 +27,6 @@ import org.wirez.core.processors.ProcessingRule;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
-import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.BufferedWriter;
 import java.io.IOException;

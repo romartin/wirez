@@ -34,7 +34,7 @@ import org.wirez.core.api.graph.factory.ConnectionEdgeFactoryImpl;
 import org.wirez.core.api.graph.factory.ViewNodeFactory;
 import org.wirez.core.api.graph.factory.ViewNodeFactoryImpl;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.EmptyRuleManager;
+import org.wirez.core.api.rule.impl.empty.EmptyRulesManagerImpl;
 import org.wirez.core.backend.ApplicationFactoryManager;
 import org.wirez.core.backend.definition.adapter.AnnotatedDefinitionAdapter;
 import org.wirez.core.backend.definition.adapter.AnnotatedDefinitionSetAdapter;
@@ -132,7 +132,7 @@ public class BPMNDiagramMarshallerTest {
         viewNodeFactory = new ViewNodeFactoryImpl();
         
         bpmnGraphFactory = new BPMNGraphFactory( definitionManager, applicationFactoryManager, bpmnDefinitionFactory, 
-                commandManager, commandFactory, EmptyRuleManager.INSTANCE);
+                commandManager, commandFactory, EmptyRulesManagerImpl.INSTANCE);
         
         doAnswer(invocationOnMock -> {
             String id = (String) invocationOnMock.getArguments()[0];
@@ -204,7 +204,7 @@ public class BPMNDiagramMarshallerTest {
         
         // The tested BPMN marshaller.
         tested = new BPMNDiagramMarshaller( objectBuilderFactory, definitionManager, graphUtils, 
-                oryxManager, applicationFactoryManager, commandManager, EmptyRuleManager.INSTANCE, commandFactory);
+                oryxManager, applicationFactoryManager, commandManager, EmptyRulesManagerImpl.INSTANCE, commandFactory);
     }
 
     // 4 nodes expected: BPMNDiagram, StartNode, Task and EndNode

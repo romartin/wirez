@@ -24,8 +24,8 @@ import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.rule.RulesManager;
 import org.wirez.core.api.util.UUID;
 
 import java.io.BufferedInputStream;
@@ -57,7 +57,7 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
                              final GraphUtils graphUtils,
                              final Bpmn2OryxManager oryxManager,
                              final CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager,
-                             final RuleManager ruleManager,
+                             final RulesManager<?, ?, ?, ?> rulesManager,
                              final GraphCommandFactory commandFactory) {
         
         this.bpmnGraphGenerator = new BPMNGraphGenerator(elementBuilderFactory, 
@@ -65,8 +65,8 @@ public class Bpmn2UnMarshaller extends Bpmn2JsonMarshaller {
                                                             factoryManager,
                                                             graphUtils,
                                                             oryxManager,
-                                                            commandManager, 
-                                                            ruleManager, 
+                                                            commandManager,
+                                                            rulesManager, 
                                                             commandFactory);
     }
 

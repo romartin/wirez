@@ -72,8 +72,15 @@ public final class DeleteEdgeCommand extends AbstractGraphCommand {
     @SuppressWarnings("unchecked")
     private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
         final Collection<RuleViolation> cardinalityRuleViolations = 
-                (Collection<RuleViolation>) context.getRuleManager().checkCardinality( edge.getTargetNode(), edge.getSourceNode(), 
-                        (Edge<? extends View<?>, ? extends Node>) edge, RuleManager.Operation.DELETE).violations();
+                (Collection<RuleViolation>) context.getRulesManager()
+                        .edgeCardinality()
+                        .evaluate( edge, 
+                                edge.getTargetNode(), 
+                                edge.getSourceNode(),
+                                edge.getTargetNode() != null ? edge.getTargetNode().getOutEdges() : null,
+                                edge.getSourceNode() != null ? edge.getSourceNode().getInEdges() : null, 
+                                RuleManager.Operation.DELETE )
+                        .violations();
         return new GraphCommandResultBuilder( cardinalityRuleViolations ).build();
     }
 

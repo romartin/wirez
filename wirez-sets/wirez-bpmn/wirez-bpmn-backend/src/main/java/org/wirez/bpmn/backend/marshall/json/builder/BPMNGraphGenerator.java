@@ -19,8 +19,8 @@ import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.api.rule.RulesManager;
 import org.wirez.core.api.util.UUID;
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
     GraphUtils graphUtils;
     Bpmn2OryxManager oryxManager;
     CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager;
-    RuleManager ruleManager;
+    RulesManager<?, ?, ?, ?> rulesManager;
     GraphCommandFactory commandFactory;
     Stack<GraphObjectBuilder> nodeBuilders = new Stack<>();
     Stack<GraphObjectParser> parsers = new Stack<GraphObjectParser>();
@@ -56,7 +56,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
                               final GraphUtils graphUtils,
                               final Bpmn2OryxManager oryxManager,
                               final CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager,
-                              final RuleManager ruleManager,
+                              final RulesManager<?, ?, ?, ?> rulesManager,
                               final GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
@@ -64,7 +64,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
         this.graphUtils = graphUtils;
         this.oryxManager = oryxManager;
         this.commandManager = commandManager;
-        this.ruleManager = ruleManager;
+        this.rulesManager = rulesManager;
         this.commandFactory = commandFactory;
         this.parsers.push(new RootObjectParser(null));
         this.isClosed = false;
@@ -199,7 +199,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
         @SuppressWarnings("unchecked")
         public CommandResult<RuleViolation> execute (Command<GraphCommandExecutionContext, RuleViolation> command) {
             GraphCommandExecutionContext executionContext = 
-                    new GraphCommandExecutionContextImpl( definitionManager, factoryManager, ruleManager, graphUtils);
+                    new GraphCommandExecutionContextImpl( definitionManager, factoryManager, rulesManager, graphUtils);
             return commandManager.execute( executionContext, command );
         }
         

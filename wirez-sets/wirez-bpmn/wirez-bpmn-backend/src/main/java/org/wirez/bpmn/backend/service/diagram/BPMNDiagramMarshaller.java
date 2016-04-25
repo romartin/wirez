@@ -36,8 +36,8 @@ import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.definition.Definition;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.Empty;
-import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RulesManager;
+import org.wirez.core.api.rule.impl.empty.Empty;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.backend.Application;
 
@@ -61,7 +61,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
     Bpmn2OryxManager oryxManager;
     FactoryManager factoryManager;
     GraphCommandManager graphCommandManager;
-    RuleManager ruleManager;
+    RulesManager<?, ?, ?, ?> rulesManager;
     GraphCommandFactory commandFactory;
     
     private ResourceSet resourceSet;
@@ -73,7 +73,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
                                  Bpmn2OryxManager oryxManager,
                                  @Application FactoryManager factoryManager, 
                                  GraphCommandManager graphCommandManager,
-                                 @Empty RuleManager ruleManager, 
+                                 @Empty RulesManager<?, ?, ?, ?> rulesManager, 
                                  GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
@@ -81,7 +81,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
         this.oryxManager = oryxManager;
         this.factoryManager = factoryManager;
         this.graphCommandManager = graphCommandManager;
-        this.ruleManager = ruleManager;
+        this.rulesManager = rulesManager;
         this.commandFactory = commandFactory;
     }
 
@@ -134,8 +134,8 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
                     factoryManager,
                     graphUtils,
                     oryxManager,
-                    graphCommandManager, 
-                    ruleManager,
+                    graphCommandManager,
+                    rulesManager,
                     commandFactory);
             
             parser.setProfile(new DefaultProfileImpl());

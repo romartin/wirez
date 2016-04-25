@@ -61,6 +61,7 @@ public final class DeleteNodeCommand extends AbstractGraphCommand {
         return results;
     }
     
+    @SuppressWarnings("unchecked")
     private CommandResult<RuleViolation> checkRules(final GraphCommandExecutionContext context) {
 
         boolean isNodeInGraph = false;
@@ -74,8 +75,12 @@ public final class DeleteNodeCommand extends AbstractGraphCommand {
         final GraphCommandResultBuilder builder = new GraphCommandResultBuilder();
         if ( isNodeInGraph ) {
             final Collection<RuleViolation> cardinalityRuleViolations = 
-                    (Collection<RuleViolation>) context.getRuleManager().checkCardinality( target, candidate, 
-                            RuleManager.Operation.DELETE).violations();
+                    (Collection<RuleViolation>) context.getRulesManager()
+                            .cardinality()
+                            .evaluate( target, 
+                                    candidate,
+                                    RuleManager.Operation.DELETE)
+                            .violations();
             builder.addViolations( cardinalityRuleViolations );
         } else {
             builder.setType(CommandResult.Type.ERROR);

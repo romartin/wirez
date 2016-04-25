@@ -85,6 +85,7 @@ public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
         return check( context );
     }
 
+    @SuppressWarnings("unchecked")
     private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
 
         // Check node exist on the store.
@@ -100,7 +101,8 @@ public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
         if ( isNodeInGraph ) {
             
             final Collection<RuleViolation> cardinalityRuleViolations = 
-                    (Collection<RuleViolation>) context.getRuleManager().checkCardinality( target, candidate, RuleManager.Operation.DELETE).violations();
+                    (Collection<RuleViolation>) context.getRulesManager()
+                            .cardinality().evaluate( target, candidate, RuleManager.Operation.DELETE).violations();
             builder.addViolations( cardinalityRuleViolations );
 
             for ( final RuleViolation violation : cardinalityRuleViolations ) {

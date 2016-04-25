@@ -20,9 +20,8 @@ import org.uberfire.annotations.processors.AbstractGenerator;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.uberfire.relocated.freemarker.template.Template;
 import org.uberfire.relocated.freemarker.template.TemplateException;
-import org.wirez.core.api.definition.annotation.rule.EdgeOccurrences;
-import org.wirez.core.api.definition.annotation.rule.EdgeType;
-import org.wirez.core.api.definition.annotation.rule.Occurrences;
+import org.wirez.core.api.rule.annotation.AllowedOccurrences;
+import org.wirez.core.api.rule.annotation.Occurrences;
 import org.wirez.core.processors.MainProcessor;
 import org.wirez.core.processors.ProcessingContext;
 import org.wirez.core.processors.ProcessingRule;
@@ -32,49 +31,15 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.MirroredTypeException;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CardinalityRuleGenerator extends AbstractGenerator  {
-
-    public class CardinalityRuleEntry {
-        private final long min;
-        private final long max;
-        private final String edgeDefinitionId;
-        private final String name;
-
-        public CardinalityRuleEntry(long min, long max, String edgeDefinitionId, String name) {
-            this.min = min;
-            this.max = max;
-            this.edgeDefinitionId = edgeDefinitionId;
-            this.name = name;
-        }
-
-        public long getMin() {
-            return min;
-        }
-
-        public long getMax() {
-            return max;
-        }
-
-        public String getEdgeDefinitionId() {
-            return edgeDefinitionId;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
 
     private final ProcessingContext processingContext = ProcessingContext.getInstance();
     
@@ -89,51 +54,19 @@ public class CardinalityRuleGenerator extends AbstractGenerator  {
         //Extract required information
         final TypeElement classElement = (TypeElement) element;
         final boolean isInterface = classElement.getKind().isInterface();
-        final String ruleId = MainProcessor.toValidId(className);
-        final String ruleDefinitionId = className.substring(0, ( className.length() - MainProcessor.RULE_CARDINALITY_SUFFIX_CLASSNAME.length()) );
 
-        Occurrences[] occs = classElement.getAnnotationsByType(Occurrences.class);
+        AllowedOccurrences occs = classElement.getAnnotation(AllowedOccurrences.class);
         if ( null != occs ) {
             
-            for (Occurrences occurrence : occs) {
+            for (Occurrences occurrence : occs.value()) {
                 String role = occurrence.role();
-                String id = occurrence.id();
-                if ( null == id || id.trim().length() == 0 ) {
-                    id = ruleId + "_" + role + "_" + MainProcessor.RULE_CARDINALITY_SUFFIX_CLASSNAME;
-                }
+                final String ruleNAme = MainProcessor.toValidId(className) + "_" + role + "_" + MainProcessor.RULE_CARDINALITY_SUFFIX_CLASSNAME;
                 long min = occurrence.min();
                 long max = occurrence.max();
-                List<CardinalityRuleEntry> incomingEdgeRules = new ArrayList<>();
-                List<CardinalityRuleEntry> outgoingEdgeRules = new ArrayList<>();
-                EdgeOccurrences[] edgeOccurrences = occurrence.value();
-                if ( null != edgeOccurrences ) {
-                    for (EdgeOccurrences edgeOccurrence : edgeOccurrences) {
-                        EdgeType type = edgeOccurrence.type();
-                        TypeMirror mirror = null;
-                        try {
-                            Class<?> edgeDefClass = edgeOccurrence.edge();
-                        } catch( MirroredTypeException mte ) {
-                            mirror =  mte.getTypeMirror();
-                        }
-                        if ( null == mirror ) {
-                            throw new RuntimeException("No edge class specifyed for the @EdgeOccurrence.");
-                        }
-                        String fqcn = mirror.toString();
-                        String shortId = fqcn.substring( fqcn.lastIndexOf(".") + 1, fqcn.length() );
-                        long edgeMin = edgeOccurrence.min();
-                        long edgeMax = edgeOccurrence.max();
-                        if ( EdgeType.INCOMING.equals(type)) {
-                            incomingEdgeRules.add( new CardinalityRuleEntry( edgeMin, edgeMax, fqcn, "incoming" + shortId + MainProcessor.RULE_CARDINALITY_SUFFIX_CLASSNAME ) );
-                        } else {
-                            outgoingEdgeRules.add( new CardinalityRuleEntry( edgeMin, edgeMax, fqcn, "outgoing" + shortId + MainProcessor.RULE_CARDINALITY_SUFFIX_CLASSNAME ) );
-                        }
 
-                    }
-                }
+                StringBuffer ruleSourceCode = generateRule( messager, ruleNAme, role, min, max );
 
-                StringBuffer ruleSourceCode = generateRule(messager, id, role, min, max, incomingEdgeRules, outgoingEdgeRules);
-
-                processingContext.addRule(id, ProcessingRule.TYPE.CARDINALITY, ruleSourceCode);
+                processingContext.addRule(ruleNAme, ProcessingRule.TYPE.CARDINALITY, ruleSourceCode);
                 
             }
             
@@ -144,30 +77,20 @@ public class CardinalityRuleGenerator extends AbstractGenerator  {
     }
     
     private StringBuffer generateRule(Messager messager, 
-                                       String ruleId, 
+                                       String ruleName, 
                                        String ruleRoleId,
                                        long min,
-                                       long max,
-                                       List<CardinalityRuleEntry> incomingEdgeRules,
-                                       List<CardinalityRuleEntry> outgoingEdgeRules) throws GenerationException {
+                                       long max) throws GenerationException {
         
         Map<String, Object> root = new HashMap<String, Object>();
-        root.put( "ruleId",
-                ruleId );
+        root.put( "ruleName",
+                ruleName );
         root.put( "ruleRoleId",
                 ruleRoleId );
         root.put( "min",
                 min );
         root.put( "max",
                 max );
-        root.put( "incomingRulesSize",
-                incomingEdgeRules.size() );
-        root.put( "incomingRules",
-                incomingEdgeRules );
-        root.put( "outgoingRulesSize",
-                outgoingEdgeRules.size() );
-        root.put( "outgoingRules",
-                outgoingEdgeRules );
 
         //Generate code
         final StringWriter sw = new StringWriter();
@@ -188,7 +111,7 @@ public class CardinalityRuleGenerator extends AbstractGenerator  {
                 throw new GenerationException( ioe );
             }
         }
-        messager.printMessage( Diagnostic.Kind.NOTE, "Successfully generated code for [" + ruleId + "]" );
+        messager.printMessage( Diagnostic.Kind.NOTE, "Successfully generated code for [" + ruleName + "]" );
 
         return sw.getBuffer();
     }

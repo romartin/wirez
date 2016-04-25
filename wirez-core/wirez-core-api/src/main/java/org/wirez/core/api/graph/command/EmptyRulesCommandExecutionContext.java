@@ -4,8 +4,8 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.EmptyRuleManager;
-import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RulesManager;
+import org.wirez.core.api.rule.impl.empty.EmptyRulesManagerImpl;
 
 @NonPortable
 public class EmptyRulesCommandExecutionContext implements GraphCommandExecutionContext {
@@ -32,8 +32,8 @@ public class EmptyRulesCommandExecutionContext implements GraphCommandExecutionC
     }
 
     @Override
-    public RuleManager getRuleManager() {
-        return EmptyRuleManager.INSTANCE;
+    public RulesManager getRulesManager() {
+        return EmptyRulesManagerImpl.INSTANCE;
     }
 
 }

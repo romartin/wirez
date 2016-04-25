@@ -78,12 +78,22 @@ public final class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
         }
         return results;
     }
-    
+
+    @SuppressWarnings("unchecked")
     private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
         final Collection<RuleViolation> connectionRuleViolations = 
-                (Collection<RuleViolation>) context.getRuleManager().checkConnectionRules(sourceNode, targetNode, edge).violations();
+                (Collection<RuleViolation>) context.getRulesManager()
+                        .connection().evaluate(edge, sourceNode, targetNode).violations();
         final Collection<RuleViolation> cardinalityRuleViolations = 
-                (Collection<RuleViolation>) context.getRuleManager().checkCardinality(sourceNode, targetNode, edge, RuleManager.Operation.ADD).violations();
+                (Collection<RuleViolation>) context.getRulesManager()
+                        .edgeCardinality()
+                        .evaluate(edge, 
+                                sourceNode, 
+                                targetNode,
+                                sourceNode != null ? sourceNode.getOutEdges() : null,
+                                targetNode != null ? targetNode.getInEdges() : null, 
+                                RuleManager.Operation.ADD)
+                        .violations();
         final Collection<RuleViolation> violations = new LinkedList<RuleViolation>();
         violations.addAll(connectionRuleViolations);
         violations.addAll(cardinalityRuleViolations);

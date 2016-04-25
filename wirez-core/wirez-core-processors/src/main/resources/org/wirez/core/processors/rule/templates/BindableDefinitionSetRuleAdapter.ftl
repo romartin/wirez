@@ -19,11 +19,13 @@ package ${packageName};
 import ${parentAdapterClassName};
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.rule.CardinalityRule;
+import org.wirez.core.api.rule.EdgeCardinalityRule;
 import org.wirez.core.api.rule.ConnectionRule;
-import org.wirez.core.api.rule.impl.DefaultConnectionRule;
-import org.wirez.core.api.rule.impl.DefaultContainmentRule;
-import org.wirez.core.api.rule.impl.DefaultPermittedConnection;
-import org.wirez.core.api.rule.impl.*;
+import org.wirez.core.api.rule.impl.rules.ConnectionRuleImpl;
+import org.wirez.core.api.rule.impl.rules.ContainmentRuleImpl;
+import org.wirez.core.api.rule.impl.rules.EdgeCardinalityRuleImpl;
+import org.wirez.core.api.rule.impl.rules.CardinalityRuleImpl;
+import org.wirez.core.api.rule.impl.rules.*;
 
 import javax.annotation.Generated;
 import javax.annotation.PostConstruct;
@@ -45,8 +47,8 @@ public class ${className} extends ${parentAdapterClassName}<${defSetClassName}> 
 
     @PostConstruct
     public void init() {
-        <#list ruleIds as ruleId>
-            rules.add(${ruleId});
+        <#list ruleNames as ruleName>
+            rules.add(${ruleName});
         </#list>
     }
 

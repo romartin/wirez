@@ -16,7 +16,7 @@ import org.wirez.core.api.graph.factory.BaseGraphFactory;
 import org.wirez.core.api.graph.impl.GraphImpl;
 import org.wirez.core.api.graph.store.GraphNodeStoreImpl;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RuleManager;
+import org.wirez.core.api.rule.RulesManager;
 import org.wirez.core.api.util.UUID;
 
 import javax.inject.Inject;
@@ -32,7 +32,7 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
     BPMNDefinitionFactory bpmnDefinitionBuilder;
     GraphCommandManager graphCommandManager;
     GraphCommandFactory graphCommandFactory;
-    RuleManager emptyRuleManager;
+    RulesManager<?, ?, ?, ?> emptyRulesManager;
 
     protected BPMNAbstractGraphFactory() {
     }
@@ -42,13 +42,13 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
                                     final BPMNDefinitionFactory bpmnDefinitionBuilder,
                                     final GraphCommandManager graphCommandManager,
                                     final GraphCommandFactory graphCommandFactory,
-                                    final RuleManager emptyRuleManager) {
+                                    final RulesManager<?, ?, ?, ?> emptyRulesManager) {
         this.definitionManager = definitionManager;
         this.factoryManager = factoryManager;
         this.bpmnDefinitionBuilder = bpmnDefinitionBuilder;
         this.graphCommandManager = graphCommandManager;
         this.graphCommandFactory = graphCommandFactory;
-        this.emptyRuleManager = emptyRuleManager;
+        this.emptyRulesManager = emptyRulesManager;
     }
 
     protected Node buildGraphElement(String id) {
@@ -82,7 +82,7 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
         return new GraphCommandExecutionContextImpl( 
                 definitionManager, 
                 factoryManager,
-                emptyRuleManager,
+                emptyRulesManager,
                 graphUtils );
     }
 

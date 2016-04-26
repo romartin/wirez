@@ -34,8 +34,6 @@ public @interface EdgeOccurrences {
     
     String role();
 
-    Class edge();
-
     int min() default 0;
 
     int max() default -1;

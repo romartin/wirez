@@ -6,6 +6,7 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.definition.Definition;
 import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.Rule;
 import org.wirez.core.api.rule.RuleManager;
 import org.wirez.core.api.rule.impl.AbstractWrappedRuleManager;
@@ -16,9 +17,12 @@ public abstract class AbstractGraphRuleManager<R extends Rule, M extends RuleMan
         extends AbstractWrappedRuleManager<R, M> {
     
     protected DefinitionManager definitionManager;
+    protected GraphUtils graphUtils;
 
-    public AbstractGraphRuleManager( final DefinitionManager definitionManager ) {
+    public AbstractGraphRuleManager( final DefinitionManager definitionManager,
+                                     final GraphUtils graphUtils ) {
         this.definitionManager = definitionManager;
+        this.graphUtils = graphUtils;
     }
 
     @SuppressWarnings("unchecked")
@@ -35,8 +39,7 @@ public abstract class AbstractGraphRuleManager<R extends Rule, M extends RuleMan
     
     @SuppressWarnings("unchecked")
     protected String getDefinitionId( final Object definition ) {
-        DefinitionAdapter adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-        return adapter.getId( definition );
+        return graphUtils.getDefinitionId( definition );
     }
     
     protected Set<String> getLabels( final Element<? extends Definition<?>> element ) {

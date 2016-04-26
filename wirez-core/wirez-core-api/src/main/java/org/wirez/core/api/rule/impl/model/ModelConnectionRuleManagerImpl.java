@@ -16,7 +16,7 @@ import java.util.Set;
 @Model
 public class ModelConnectionRuleManagerImpl extends AbstractConnectionRuleManager<String, Set<String>> implements ModelConnectionRuleManager {
 
-    public static final String NAME = "Domain Model Connection Rule Manager";
+    private static final String NAME = "Domain Model Connection Rule Manager";
     
     @Override
     public String getName() {

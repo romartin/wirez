@@ -14,7 +14,7 @@ public class EmptyCardinalityRuleManager extends AbstractCardinalityRuleManager<
 
     public static final transient EmptyCardinalityRuleManager INSTANCE = new EmptyCardinalityRuleManager();
 
-    public static final String NAME = "Empty Cardinality Rule Manager";
+    private static final String NAME = "Empty Cardinality Rule Manager";
     
     @Override
     public String getName() {

@@ -1,8 +1,13 @@
 package org.wirez.core.client.canvas.controls.toolbox.command;
 
+import com.google.gwt.core.client.GWT;
+import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.content.definition.Definition;
 import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
+import org.wirez.core.api.lookup.util.CommonLookups;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.shape.HasDecorators;
@@ -13,6 +18,7 @@ import org.wirez.core.client.util.SVGUtils;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import java.util.Set;
 
 @Dependent
 public class AddConnectionCommand implements ToolboxCommand {
@@ -43,10 +49,13 @@ public class AddConnectionCommand implements ToolboxCommand {
         
     }
 
+    CommonLookups commonLookups;
     View view;
 
     @Inject
-    public AddConnectionCommand(final View view) {
+    public AddConnectionCommand(final CommonLookups commonLookups,
+                                final View view) {
+        this.commonLookups = commonLookups;
         this.view = view;
         this.icon = SVGUtils.createSVGIcon(SVGUtils.getCreateConnection());
     }
@@ -83,7 +92,7 @@ public class AddConnectionCommand implements ToolboxCommand {
         this.element = element;
         this.context = context;
         this.boundsIndexer = new GraphBoundsIndexer(context.getCanvasHandler().getDiagram().getGraph());
-        callback.init(element);
+        onCallbackInit( context, element );
         view.show(context.getCanvasHandler().getCanvas(),
                 context.getX(), context.getY());
     }
@@ -157,6 +166,31 @@ public class AddConnectionCommand implements ToolboxCommand {
             }
         }
         clear();
+    }
+
+    // TODO: Use pagination results on mini-palette.
+    private void onCallbackInit( final Context context, final Element element ) {
+        callback.init(element);
+        
+        final String defSetId = context.getCanvasHandler().getDiagram().getSettings().getDefinitionSetId();
+        final Node<? extends Definition<Object>, ? extends Edge> sourceNode = 
+                (Node<? extends Definition<Object>, ? extends Edge>) element;
+
+        final Set<String> allowedConnectors =
+                commonLookups.getAllowedConnectors( defSetId,
+                        sourceNode, 
+                        0,
+                        10);
+        
+        GWT.log( "************* Allowed connectors = " + allowedConnectors.toString() );
+        
+        final Graph graph = context.getCanvasHandler().getDiagram().getGraph();
+
+        final Set<String> allowedDefinitions=
+                commonLookups.getAllowedDefinitions( defSetId, graph, sourceNode, "org.wirez.bpmn.api.SequenceFlow", 0 ,50);
+
+        GWT.log( "************* Allowed definitions for a SequenceFlow = " + allowedDefinitions.toString() );
+        
     }
     
 }

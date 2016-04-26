@@ -1,8 +1,10 @@
 package org.wirez.core.api.lookup.diagram;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.wirez.core.api.lookup.AbstractLookupRequest;
+import org.wirez.core.api.lookup.AbstractLookupRequestBuilder;
 
 @Portable
 public final class DiagramLookupRequestImpl extends AbstractLookupRequest implements DiagramLookupRequest {
@@ -13,4 +15,13 @@ public final class DiagramLookupRequestImpl extends AbstractLookupRequest implem
         super(criteria, page, pageSize);
     }
     
+    // TODO: Add more lookup criteria here.
+    @NonPortable
+    public static class Builder extends AbstractLookupRequestBuilder<Builder> {
+
+        public DiagramLookupRequest build( ) {
+            return new DiagramLookupRequestImpl( "", page, pageSize );
+        }
+
+    }
 }

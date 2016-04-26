@@ -5,6 +5,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.CardinalityRule;
 import org.wirez.core.api.rule.RuleViolations;
 import org.wirez.core.api.rule.graph.GraphCardinalityRuleManager;
@@ -19,14 +20,15 @@ import javax.inject.Inject;
 public class GraphCardinalityRuleManagerImpl extends AbstractGraphRuleManager<CardinalityRule, ModelCardinalityRuleManager> 
         implements GraphCardinalityRuleManager {
 
-    public static final String NAME = "Graph Cardinality Rule Manager";
+    private static final String NAME = "Graph Cardinality Rule Manager";
 
     ModelCardinalityRuleManager modelCardinalityRuleManager;
 
     @Inject
     public GraphCardinalityRuleManagerImpl(final DefinitionManager definitionManager,
+                                           final GraphUtils graphUtils,
                                            final @Model ModelCardinalityRuleManager modelCardinalityRuleManager) {
-        super( definitionManager );
+        super( definitionManager, graphUtils );
         this.modelCardinalityRuleManager = modelCardinalityRuleManager;
     }
 
@@ -45,14 +47,7 @@ public class GraphCardinalityRuleManagerImpl extends AbstractGraphRuleManager<Ca
                                    final Node<? extends View<?>, ? extends Edge> candidate, 
                                    final Operation operation) {
         
-        final String candidateId = getElementDefinitionId( candidate );
-        
-        int count = ( operation.equals(org.wirez.core.api.rule.RuleManager.Operation.ADD) ? 1 : -1 );
-        for ( Node<? extends View, ? extends Edge> node : target.nodes() ) {
-            if (getElementDefinitionId( node ).equals( candidateId ))  {
-                count++;
-            }
-        }
+        int count = graphUtils.countDefinitions( target, candidate.getContent().getDefinition() );
         
         return modelCardinalityRuleManager.evaluate( getLabels( candidate ), count, operation );
         

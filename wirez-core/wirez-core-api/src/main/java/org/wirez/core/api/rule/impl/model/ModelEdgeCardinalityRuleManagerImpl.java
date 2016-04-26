@@ -16,7 +16,7 @@ import java.util.Set;
 public class ModelEdgeCardinalityRuleManagerImpl extends AbstractEdgeCardinalityRuleManager<String, Set<String>, Integer> 
         implements ModelEdgeCardinalityRuleManager {
 
-    public static final String NAME = "Domain Model Edge Cardinality Rule Manager";
+    private static final String NAME = "Domain Model Edge Cardinality Rule Manager";
     
     @Override
     public String getName() {

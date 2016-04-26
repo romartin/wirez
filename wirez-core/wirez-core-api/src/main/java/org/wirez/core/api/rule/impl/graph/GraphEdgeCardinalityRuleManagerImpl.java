@@ -4,6 +4,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.EdgeCardinalityRule;
 import org.wirez.core.api.rule.RuleViolations;
 import org.wirez.core.api.rule.graph.GraphEdgeCardinalityRuleManager;
@@ -19,14 +20,15 @@ import java.util.List;
 public class GraphEdgeCardinalityRuleManagerImpl extends AbstractGraphRuleManager<EdgeCardinalityRule, ModelEdgeCardinalityRuleManager> 
         implements GraphEdgeCardinalityRuleManager{
 
-    public static final String NAME = "Graph Edge Cardinality Rule Manager";
+    private static final String NAME = "Graph Edge Cardinality Rule Manager";
 
     ModelEdgeCardinalityRuleManager modelEdgeCardinalityRuleManager;
 
     @Inject
     public GraphEdgeCardinalityRuleManagerImpl(final DefinitionManager definitionManager,
+                                               final GraphUtils graphUtils,
                                                final @Model ModelEdgeCardinalityRuleManager modelEdgeCardinalityRuleManager) {
-        super( definitionManager );
+        super( definitionManager,graphUtils );
         this.modelEdgeCardinalityRuleManager = modelEdgeCardinalityRuleManager;
     }
 
@@ -53,10 +55,10 @@ public class GraphEdgeCardinalityRuleManagerImpl extends AbstractGraphRuleManage
         final String edgeId = getElementDefinitionId( edge );
         
         // Outgoing count.
-        final int outCount = count( edgeId, outEdges, operation);
+        final int outCount = graphUtils.countEdges( edgeId, outEdges );
                 
         // Incoming count.
-        final int inCount = count( edgeId, inEdges, operation);
+        final int inCount = graphUtils.countEdges( edgeId, inEdges );
 
         return modelEdgeCardinalityRuleManager.evaluate( edgeId, getLabels( outNode), getLabels( inNode ), outCount, inCount, operation );
 

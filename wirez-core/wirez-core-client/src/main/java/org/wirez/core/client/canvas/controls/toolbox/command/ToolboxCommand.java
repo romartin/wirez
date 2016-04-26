@@ -5,10 +5,16 @@ import org.wirez.core.api.graph.Element;
 
 public interface ToolboxCommand {
 
+    enum Status {
+        ENABLED, DISABLED;
+    }
+    
     Shape<?> getIcon();
     
     String getTitle();
     
-    void execute(Context context, Element element);
+    // TODO: Status check( Element element );
+    
+    void execute(Context context, Element element ); 
     
 }

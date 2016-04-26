@@ -1,7 +1,7 @@
 package org.wirez.core.api;
 
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.registry.DiagramRegistry;
+import org.wirez.core.api.registry.diagram.DiagramRegistry;
 
 import java.util.Collection;
 import java.util.Collections;

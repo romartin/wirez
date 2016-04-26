@@ -15,7 +15,7 @@ import java.util.Set;
 @Model
 public class ModelContainmentRuleManagerImpl extends AbstractContainmentRuleManager<String, Set<String>> implements ModelContainmentRuleManager {
 
-    public static final String NAME = "Domain Model Containment Rule Manager";
+    private static final String NAME = "Domain Model Containment Rule Manager";
 
     @Override
     public String getName() {

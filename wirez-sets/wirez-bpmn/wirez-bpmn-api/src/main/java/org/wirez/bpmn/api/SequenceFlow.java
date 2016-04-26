@@ -41,8 +41,8 @@ import java.util.Set;
 @CanConnect( startRole = "EventbasedGateway", endRole = "FromEventbasedGateway" )
 
 // Edge cardinality rules.
-@EdgeOccurrences(role="Startevents_all", type = EdgeOccurrences.EdgeType.INCOMING, edge = SequenceFlow.class, max = 0)
-@EdgeOccurrences(role="Endevents_all", type = EdgeOccurrences.EdgeType.OUTGOING, edge = SequenceFlow.class, max = 0)
+@EdgeOccurrences(role="Startevents_all", type = EdgeOccurrences.EdgeType.INCOMING, max = 0)
+@EdgeOccurrences(role="Endevents_all", type = EdgeOccurrences.EdgeType.OUTGOING, max = 0)
 
 public class SequenceFlow implements BPMNDefinition {
 

@@ -5,12 +5,15 @@ import java.util.List;
 public interface LookupManager<T, R extends LookupManager.LookupRequest> {
 
     /**
-     * Looks-up for entities.
-     * @param request The lookup request constraints.
-     * @return List of resulting entities from the lookup result. 
+     * Looks-up for entities using some criteria.
+     * @param request The lookup request constraints. Depends on each implementation.
+     * @return List of resulting entities from the lookup result. Depends on each implementation.
      */
-    LookupResponse<T> lookup(R request);
+    LookupResponse<T> lookup( R request );
 
+    /**
+     * <p>The request criteria for a lookup operation.</p>
+     */
     interface LookupRequest {
 
         /**

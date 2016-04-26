@@ -14,7 +14,7 @@ public class EmptyContainmentRuleManager extends AbstractContainmentRuleManager<
 
     public static final transient EmptyContainmentRuleManager INSTANCE = new EmptyContainmentRuleManager();
     
-    public static final String NAME = "Empty Containment Rule Manager";
+    private static final String NAME = "Empty Containment Rule Manager";
     
     @Override
     public String getName() {

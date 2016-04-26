@@ -4,6 +4,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.ConnectionRule;
 import org.wirez.core.api.rule.DefaultRuleViolations;
 import org.wirez.core.api.rule.RuleViolations;
@@ -19,14 +20,15 @@ import javax.inject.Inject;
 public class GraphConnectionRuleManagerImpl extends AbstractGraphRuleManager<ConnectionRule, ModelConnectionRuleManager> 
         implements GraphConnectionRuleManager {
 
-    public static final String NAME = "Graph Connection Rule Manager";
+    private static final String NAME = "Graph Connection Rule Manager";
 
     ModelConnectionRuleManager modelConnectionRuleManager;
 
     @Inject
     public GraphConnectionRuleManagerImpl(final DefinitionManager definitionManager,
+                                          final GraphUtils graphUtils,
                                           final @Model ModelConnectionRuleManager modelConnectionRuleManager) {
-        super( definitionManager );
+        super( definitionManager,graphUtils );
         this.modelConnectionRuleManager = modelConnectionRuleManager;
     }
 

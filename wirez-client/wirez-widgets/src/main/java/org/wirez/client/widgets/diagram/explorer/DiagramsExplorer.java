@@ -93,7 +93,8 @@ public class DiagramsExplorer implements IsWidget {
         
         clear();
         
-        final DiagramLookupRequest request = new DiagramLookupRequestImpl( null, 0, 10 );
+        final DiagramLookupRequest request = new DiagramLookupRequestImpl.Builder().build();
+        
         clientDiagramServices.lookup( request, new ServiceCallback<LookupManager.LookupResponse<DiagramRepresentation>>() {
             @Override
             public void onSuccess(final LookupManager.LookupResponse<DiagramRepresentation> response) {

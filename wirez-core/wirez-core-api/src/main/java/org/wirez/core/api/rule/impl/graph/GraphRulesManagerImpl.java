@@ -11,7 +11,7 @@ import javax.inject.Inject;
 public class GraphRulesManagerImpl extends AbstractRulesManager<GraphContainmentRuleManager, GraphConnectionRuleManager,
         GraphCardinalityRuleManager, GraphEdgeCardinalityRuleManager> implements GraphRulesManager {
 
-    public static final String NAME = "Graph Rules Manager";
+    private static final String NAME = "Graph Rules Manager";
 
     @Inject
     public GraphRulesManagerImpl(final @Graph GraphContainmentRuleManager containmentRuleManager, 

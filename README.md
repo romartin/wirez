@@ -13,7 +13,13 @@ Running the application
 
 Currently there are still no specific container distributions, so you have to run the application using GWT SuperDevMode.                      
 
-Most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, follow these instructions to configure it:                   
+If you're planning more than just try the tool, the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if you just want to run it quicly you can use the command line as the following sections describe.                                  
+
+**Running from command line**                                          
+
+    mvn gwt:run
+
+**Running from IntelliJ IDEA**                                          
 
 1.- Build the project from command line ( see above *Building  - section )             
   

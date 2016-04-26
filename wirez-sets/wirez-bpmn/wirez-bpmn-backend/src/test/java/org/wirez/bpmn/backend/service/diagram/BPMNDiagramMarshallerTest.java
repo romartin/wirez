@@ -18,6 +18,7 @@ import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.adapter.shared.HasValuePropertyAdapter;
 import org.wirez.core.api.definition.factory.ModelFactory;
+import org.wirez.core.api.definition.util.DefinitionUtils;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.DiagramImpl;
 import org.wirez.core.api.diagram.Settings;
@@ -71,6 +72,7 @@ public class BPMNDiagramMarshallerTest {
     
     ConnectionEdgeFactory<Object> connectionEdgeFactory;
     ViewNodeFactory<Object> viewNodeFactory;
+    DefinitionUtils definitionUtils;
     GraphUtils graphUtils;
     
     GraphCommandManager commandManager;
@@ -94,7 +96,8 @@ public class BPMNDiagramMarshallerTest {
     public void setup() throws Exception {
         
         // Graph utils.
-        graphUtils = new GraphUtils( definitionManager );
+        definitionUtils = new DefinitionUtils( definitionManager );
+        graphUtils = new GraphUtils( definitionManager, definitionUtils );
         
         // Definition manager.        
         final AnnotatedDefinitionAdapter definitionAdapter = new AnnotatedDefinitionAdapter( graphUtils );

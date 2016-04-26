@@ -16,7 +16,7 @@ import java.util.Set;
 public class ModelCardinalityRuleManagerImpl extends AbstractCardinalityRuleManager<Set<String>, Integer> 
         implements ModelCardinalityRuleManager {
 
-    public static final String NAME = "Domain Model Cardinality Rule Manager";
+    private static final String NAME = "Domain Model Cardinality Rule Manager";
 
     @Override
     public String getName() {

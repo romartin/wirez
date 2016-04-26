@@ -3,6 +3,7 @@ package org.wirez.core.api.rule.impl.graph;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.definition.Definition;
+import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.ContainmentRule;
 import org.wirez.core.api.rule.RuleViolations;
 import org.wirez.core.api.rule.graph.GraphContainmentRuleManager;
@@ -17,14 +18,15 @@ import javax.inject.Inject;
 public class GraphContainmentRuleManagerImpl extends AbstractGraphRuleManager<ContainmentRule, ModelContainmentRuleManager> 
         implements GraphContainmentRuleManager {
 
-    public static final String NAME = "Graph Containment Rule Manager";
+    private static final String NAME = "Graph Containment Rule Manager";
 
     ModelContainmentRuleManager modelContainmentRuleManager;
 
     @Inject
     public GraphContainmentRuleManagerImpl(final DefinitionManager definitionManager,
+                                           final GraphUtils graphUtils,
                                            final @Model ModelContainmentRuleManager modelContainmentRuleManager) {
-        super( definitionManager );
+        super( definitionManager,graphUtils );
         this.modelContainmentRuleManager = modelContainmentRuleManager;
     }
 

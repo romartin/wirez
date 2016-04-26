@@ -1,9 +1,9 @@
-package org.wirez.core.api.registry;
+package org.wirez.core.api.registry.diagram;
 
 import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.registry.List;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 

@@ -1,6 +1,7 @@
-package org.wirez.core.api.registry;
+package org.wirez.core.api.registry.diagram;
 
 import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.api.registry.BaseListRegistry;
 
 import java.util.List;
 

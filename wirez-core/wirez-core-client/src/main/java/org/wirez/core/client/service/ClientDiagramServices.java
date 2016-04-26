@@ -9,7 +9,7 @@ import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.lookup.LookupManager;
 import org.wirez.core.api.lookup.diagram.DiagramLookupRequest;
 import org.wirez.core.api.lookup.diagram.DiagramRepresentation;
-import org.wirez.core.api.registry.DiagramRegistry;
+import org.wirez.core.api.registry.diagram.DiagramRegistry;
 import org.wirez.core.api.registry.List;
 import org.wirez.core.api.remote.DiagramLookupService;
 import org.wirez.core.api.remote.DiagramService;

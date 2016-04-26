@@ -1,13 +1,8 @@
 - Demo goal
 ***********
 
-    - Mini-pallette integration ( qmx )
-        - ClientIndexServices
-            - API & index ifaces - Use of @Remote
-            - Create ClientIndexServices
-            - DefinitionSetIndex ( index of labels, etc for a single DefSet )
-            - RuleIndex ( index of allowed connection roles, etc for a single DefSet )
-            
+    - Mini-pallette work
+
     - Commands
             - UNDO's
                 - undoing just after adding element fails
@@ -16,10 +11,16 @@
                 - SetConnectionTargetNodeCommand
             - Fix -> both SetConnectionSourceNodeCommand/Target commands are checking rules using same arguments...
 
-    - Lienzo stuff
-    
-    - Remove GraphBoundsIndexBuilder and use Layer#findShapeAt
+    - Check full authoring workflows
+
+    - Sequence flows stuff
+        - Let unconnected
+        - Drop from palette
+        - Un-connect & reconnect head/tail
+        - command undo's
         
+    - Lienzo stuff
+            
 - Lienzo
 ********
 
@@ -48,6 +49,7 @@
 
     - General
         - Help widgets & tooltips/popovers
+        - Error handling
         
     - Usability
         - dragging constrained just for diagram bounds?
@@ -68,6 +70,9 @@
         - Pagination
         - Row colors ( different notification types )
         
+    - Canvas Toolbar    
+        - Toolbar undo & clearSelection should be initially disabled
+
 - API
 *****
 
@@ -93,6 +98,10 @@
         - Restore the graph to a previous state
         - REDO's
 
+    - Look-ups
+        - Add cache
+        - Use Dashbuilder's DataSets?
+        
 Annotation processors
 *********************
 
@@ -132,9 +141,13 @@ Performance
     - Load diagram
         - Slow - Heap & cpu performance check
 
+    - Custom Map impl for storing DefSet stuff ( valid to use on bindable adapters, indexes, etc )
+    
 House keeping & others
 **********************
-
+    
+    - Unit testing
+    - Remove GraphBoundsIndexBuilder and use Layer#findShapeAt ( check Builder control & GraphBoundsIndexer & LienzoLayerUtils )
     - BPMN marshalling / unmarshalling
         - Remove code from "legacy" package and use the jbpm-designer-backend artifact as a required dependency.
             - Exclude drools datamodeller transitive artifact -> It produces an errai compilation error

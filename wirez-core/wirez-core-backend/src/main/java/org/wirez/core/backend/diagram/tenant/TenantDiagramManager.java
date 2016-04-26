@@ -2,7 +2,7 @@ package org.wirez.core.backend.diagram.tenant;
 
 import org.wirez.core.api.DiagramManager;
 import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.registry.DiagramRegistry;
+import org.wirez.core.api.registry.diagram.DiagramRegistry;
 import org.wirez.core.api.registry.List;
 import org.wirez.core.backend.Application;
 import org.wirez.core.backend.Tenant;

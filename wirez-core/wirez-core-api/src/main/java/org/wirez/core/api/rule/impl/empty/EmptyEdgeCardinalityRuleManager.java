@@ -14,7 +14,7 @@ public class EmptyEdgeCardinalityRuleManager extends AbstractEdgeCardinalityRule
 
     public static final transient EmptyEdgeCardinalityRuleManager INSTANCE = new EmptyEdgeCardinalityRuleManager();
 
-    public static final String NAME = "Empty Edge Cardinality Rule Manager";
+    private static final String NAME = "Empty Edge Cardinality Rule Manager";
     
     @Override
     public String getName() {

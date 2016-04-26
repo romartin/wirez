@@ -19,7 +19,7 @@ public class EmptyRulesManagerImpl extends AbstractRulesManager<ContainmentRuleM
             = new EmptyRulesManagerImpl( EmptyContainmentRuleManager.INSTANCE, EmptyConnectionRuleManager.INSTANCE,
             EmptyCardinalityRuleManager.INSTANCE, EmptyEdgeCardinalityRuleManager.INSTANCE);
 
-    public static final String NAME = "Empty Rules Manager";
+    private static final String NAME = "Empty Rules Manager";
 
     @Inject
     public EmptyRulesManagerImpl(final @Empty ContainmentRuleManager containmentRuleManager, 

@@ -14,7 +14,7 @@ public class EmptyConnectionRuleManager extends AbstractConnectionRuleManager<Ob
 
     public static final transient EmptyConnectionRuleManager INSTANCE = new EmptyConnectionRuleManager();
     
-    public static final String NAME = "Empty Connection Rule Manager";
+    private static final String NAME = "Empty Connection Rule Manager";
     
     @Override
     public String getName() {

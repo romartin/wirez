@@ -11,7 +11,7 @@ import javax.inject.Inject;
 public class ModelRulesManagerImpl extends AbstractRulesManager<ModelContainmentRuleManager, ModelConnectionRuleManager,
         ModelCardinalityRuleManager, ModelEdgeCardinalityRuleManager> implements ModelRulesManager {
 
-    public static final String NAME = "Domain Model Rules Manager";
+    private static final String NAME = "Domain Model Rules Manager";
 
     @Inject
     public ModelRulesManagerImpl( final @Model ModelContainmentRuleManager containmentRuleManager, 

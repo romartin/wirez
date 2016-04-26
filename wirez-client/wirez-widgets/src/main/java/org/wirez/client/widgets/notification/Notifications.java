@@ -269,16 +269,17 @@ public class Notifications implements IsWidget {
     }
 
     void onGraphCommandAllowed(@Observes IsCommandAllowedEvent isCommandAllowedEvent) {
-        Notification notification = translate( isCommandAllowedEvent );
+        Notification notification = translate( true, isCommandAllowedEvent );
         add( notification );
     }
 
     void onGraphCommandExecued(@Observes CommandExecutedEvent commandExecutedEvent) {
-        Notification notification = translate( commandExecutedEvent );
+        Notification notification = translate( false, commandExecutedEvent );
         add( notification );
     }
     
-    private Notification translate(final AbstractGraphCommandEvent commandExecutedEvent) {
+    // TODO: Differentiate between allow/execute on the generated notification.
+    private Notification translate(final boolean isAllow, final AbstractGraphCommandEvent commandExecutedEvent) {
 
         if ( null != commandExecutedEvent ) {
 

@@ -154,7 +154,7 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
 
     @Override
     public void clearSelection() {
-        clearSelectionCommand.execute( (DefaultCanvasReadOnlySession) session, new ToolbarCommandCallback<Void>() {
+        clearSelectionCommand.execute( new ToolbarCommandCallback<Void>() {
             @Override
             public void onSuccess(final Void result) {
                 

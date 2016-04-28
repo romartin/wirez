@@ -1,8 +1,6 @@
 package org.wirez.client.widgets.session.toolbar.command;
 
 import org.gwtbootstrap3.client.ui.constants.IconType;
-import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
-import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
@@ -44,10 +42,9 @@ public class ClearCommand extends AbstractToolbarCommand<DefaultCanvasFullSessio
     }
 
     @Override
-    public <T> void execute(final DefaultCanvasFullSession session, 
-                            final ToolbarCommandCallback<T> callback) {
+    public <T> void execute(final ToolbarCommandCallback<T> callback) {
 
-        final Command yesCommand = () -> {
+        executeWithConfirm( () -> {
 
             // Execute the clear canvas command.
             final CommandResult<CanvasViolation> result = session.getCanvasCommandManager().execute( session.getCanvasHandler(),
@@ -56,16 +53,8 @@ public class ClearCommand extends AbstractToolbarCommand<DefaultCanvasFullSessio
             if ( null != callback ) {
                 callback.onSuccess((T) result);
             }
-            
-        };
 
-        final Command noCommand = () -> {
-        };
-        
-        final YesNoCancelPopup popup = YesNoCancelPopup.newYesNoCancelPopup( "Are you sure?", 
-                null, yesCommand, noCommand, noCommand );
-        
-        popup.show();
+        } );
         
     }
     

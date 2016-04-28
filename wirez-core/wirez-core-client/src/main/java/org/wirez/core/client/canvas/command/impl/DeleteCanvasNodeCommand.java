@@ -23,10 +23,14 @@ public final class DeleteCanvasNodeCommand extends DeleteCanvasElementCommand<No
         super( candidate );
     }
 
+    public DeleteCanvasNodeCommand(final Node candidate, final Node parent) {
+        super( candidate, parent );
+    }
+
     @Override
     protected void doDeregister(AbstractCanvasHandler context) {
         if ( null != parent ) {
-            context.removeChild( parent, candidate );
+            context.removeChild( parent.getUUID(), candidate.getUUID()  );
         }
         super.doDeregister(context);
         final IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> indexBuilder = context.getIndexBuilder();

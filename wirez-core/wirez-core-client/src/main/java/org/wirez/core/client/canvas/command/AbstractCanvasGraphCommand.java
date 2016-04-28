@@ -22,5 +22,17 @@ public abstract class AbstractCanvasGraphCommand extends AbstractCanvasCommand i
         
         return graphCommand;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder( super.toString() );
+        if ( null != graphCommand) {
+            result.append( " [graphCommand=" )
+                    .append( graphCommand.toString() )
+                    .append( "]" );
+        }
+        
+        return result.toString();
+    }
     
 }

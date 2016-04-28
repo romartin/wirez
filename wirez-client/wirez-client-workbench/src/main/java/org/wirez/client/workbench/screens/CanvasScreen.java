@@ -16,9 +16,6 @@
 
 package org.wirez.client.workbench.screens;
 
-import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
-import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.uberfire.client.annotations.*;
@@ -27,13 +24,10 @@ import org.uberfire.client.workbench.events.ChangeTitleWidgetEvent;
 import org.uberfire.lifecycle.*;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.widgets.session.presenter.impl.AbstractFullSessionPresenter;
 import org.wirez.client.widgets.session.presenter.impl.DefaultFullSessionPresenter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.util.UUID;
-import org.wirez.core.client.canvas.lienzo.LienzoLayer;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
 
@@ -57,6 +51,9 @@ public class CanvasScreen {
 
     @Inject
     DefaultFullSessionPresenter canvasSessionPresenter;
+    
+    @Inject
+    CanvasScreenTestingMenus testingMenus;
 
     @Inject
     PlaceManager placeManager;
@@ -64,13 +61,9 @@ public class CanvasScreen {
     @Inject
     Event<ChangeTitleWidgetEvent> changeTitleNotificationEvent;
 
-    private Menus menu = null;
     private PlaceRequest placeRequest;
     private String title = "Canvas Screen";
     private DefaultCanvasFullSession session;
-    
-    // WHile dev & testing.
-    private HandlerRegistration mousePointerCoordsHandlerReg;
     
     @PostConstruct
     public void init() {
@@ -81,6 +74,9 @@ public class CanvasScreen {
         // Initialize the session presenter.
         canvasSessionPresenter.initialize( session, 1000, 1000 );
         
+        // Menus for testing things while coding...
+        testingMenus.init( session, canvasSessionPresenter );
+        
     }
 
     @OnStartup
@@ -89,8 +85,6 @@ public class CanvasScreen {
         this.placeRequest = placeRequest;
         final String _uuid = placeRequest.getParameter( "uuid", "" );
 
-        CanvasScreen.this.menu = makeMenuBar();
-        
         final boolean isCreate = _uuid == null || _uuid.trim().length() == 0;
         
         final Command callback = () -> {
@@ -154,7 +148,7 @@ public class CanvasScreen {
 
     @WorkbenchMenu
     public Menus getMenu() {
-        return menu;
+        return testingMenus.getMenu();
     }
 
     private void resume() {
@@ -169,114 +163,7 @@ public class CanvasScreen {
         canvasSessionManager.dispose();
     }
 
-    private Menus makeMenuBar() {
-        // All commands moved to the canvas toolbar.
-        /*return MenuFactory
-                .newTopLevelMenu("Switch log level")
-                .respondsWith(getSwitchLogLevelCommand())
-                .endMenu()
-                .newTopLevelMenu("Mouse pointer coords")
-                .respondsWith(getMousePointerCoordsCommand())
-                .endMenu()
-                .newTopLevelMenu("Clear selection")
-                .respondsWith(getClearSelectionCommand())
-                .endMenu()
-                .newTopLevelMenu("Delete selection")
-                .respondsWith(getDeleteSelectionCommand())
-                .endMenu()
-                .newTopLevelMenu("Clear diagram")
-                .respondsWith(getClearGridCommand())
-                .endMenu()
-                .newTopLevelMenu("Undo")
-                .respondsWith(getUndoCommand())
-                .endMenu()
-                .newTopLevelMenu("Resume")
-                .respondsWith(getResumeGraphCommand())
-                .endMenu()
-                .newTopLevelMenu("Visit graph")
-                .respondsWith(getVisitGraphCommand())
-                .endMenu()
-                .newTopLevelMenu("Save")
-                .respondsWith(getSaveCommand())
-                .endMenu()
-                .build();*/
-        return null;
-    }
-
-    private Command getSaveCommand() {
-        
-        return () -> {
-            canvasSessionPresenter.save( () -> {});
-        };
-        
-    }
-
-    private Command getClearGridCommand() {
-        return () -> canvasSessionPresenter.clear();
-    }
-
-    private Command getClearSelectionCommand() {
-        return () -> canvasSessionPresenter.clearSelection();
-    }
     
-    private Command getDeleteSelectionCommand() {
-        return () -> canvasSessionPresenter.deleteSelected();
-    }
-    
-    private Command getUndoCommand() {
-        return () -> canvasSessionPresenter.undo();
-    }
-
-    // While dev & testing.
-    private Command getLogGraphCommand() {
-        return () -> ( (AbstractFullSessionPresenter) canvasSessionPresenter).logGraph();
-    }
-
-    private Command getResumeGraphCommand() {
-        return () -> ( (AbstractFullSessionPresenter) canvasSessionPresenter).resumeGraph();
-    }
-    
-    private Command getVisitGraphCommand() {
-        return () -> ( (AbstractFullSessionPresenter) canvasSessionPresenter).visitGraph();
-    }
-
-    // For testing...
-    private Command getMousePointerCoordsCommand() {
-        return new Command() {
-            public void execute() {
-
-                if ( null == mousePointerCoordsHandlerReg ) {
-                    final LienzoLayer wiresLayer = (LienzoLayer) canvasSessionPresenter.getCanvasHandler().getCanvas().getLayer();
-                    mousePointerCoordsHandlerReg = wiresLayer.getLienzoLayer().addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
-                        @Override
-                        public void onNodeMouseMove(NodeMouseMoveEvent nodeMouseMoveEvent) {
-                            LOGGER.log(Level.INFO, "Mouse at [" + nodeMouseMoveEvent.getX() + ", " + nodeMouseMoveEvent.getY() + "]");
-                            /*final GraphBoundsIndexer indexer = new GraphBoundsIndexer(canvasHandler.getDiagram().getGraph());
-                            final Node node = indexer.getNodeAt(nodeMouseMoveEvent.getX(), nodeMouseMoveEvent.getY());
-                            LOGGER.log(Level.INFO, "Node [" + ( node != null ? node.getUUID() : null ) +
-                                    "at [" + nodeMouseMoveEvent.getX() + ", " + nodeMouseMoveEvent.getY() + "]");*/
-                        }
-                    });
-
-                } else {
-                    mousePointerCoordsHandlerReg.removeHandler();
-                    mousePointerCoordsHandlerReg = null;
-
-                }
-
-            }
-        };
-    }
-
-    // For testing...
-    private Command getSwitchLogLevelCommand() {
-        return () -> {
-            final Level level = Logger.getLogger("").getLevel();
-            final Level newLevel = Level.SEVERE.equals(level) ? Level.FINE : Level.SEVERE;
-            LOGGER.log(Level.SEVERE, "Switching to log level [" + newLevel.getName() + "]");
-            Logger.getLogger("").setLevel(newLevel);
-        };
-    }
 
     @WorkbenchPartTitle
     public String getTitle() {

@@ -20,6 +20,11 @@ public abstract class DeleteCanvasElementCommand<E extends Element> extends Abst
         this.parent = getParent();
     }
 
+    public DeleteCanvasElementCommand(final E candidate, final Node parent) {
+        this.candidate = candidate;
+        this.parent = parent;
+    }
+
     @Override
     public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
         this.factory = getShapeFactory(context);
@@ -31,7 +36,9 @@ public abstract class DeleteCanvasElementCommand<E extends Element> extends Abst
         context.deregister(candidate);
     }
     
-    protected abstract Node getParent();
+    protected Node getParent() {
+        return null;
+    };
     
     protected ShapeFactory getShapeFactory(AbstractCanvasHandler context) {
         return context.getShapeManager().getFactory( ( (Element<View<?>>) candidate ).getContent().getDefinition() );

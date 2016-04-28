@@ -8,7 +8,6 @@ import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.EdgeCardinalityRule;
 import org.wirez.core.api.rule.RuleViolations;
 import org.wirez.core.api.rule.graph.GraphEdgeCardinalityRuleManager;
-import org.wirez.core.api.rule.impl.model.Model;
 import org.wirez.core.api.rule.model.ModelEdgeCardinalityRuleManager;
 
 import javax.enterprise.context.Dependent;
@@ -16,7 +15,6 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Dependent
-@Graph
 public class GraphEdgeCardinalityRuleManagerImpl extends AbstractGraphRuleManager<EdgeCardinalityRule, ModelEdgeCardinalityRuleManager> 
         implements GraphEdgeCardinalityRuleManager{
 
@@ -27,7 +25,7 @@ public class GraphEdgeCardinalityRuleManagerImpl extends AbstractGraphRuleManage
     @Inject
     public GraphEdgeCardinalityRuleManagerImpl(final DefinitionManager definitionManager,
                                                final GraphUtils graphUtils,
-                                               final @Model ModelEdgeCardinalityRuleManager modelEdgeCardinalityRuleManager) {
+                                               final ModelEdgeCardinalityRuleManager modelEdgeCardinalityRuleManager) {
         super( definitionManager,graphUtils );
         this.modelEdgeCardinalityRuleManager = modelEdgeCardinalityRuleManager;
     }

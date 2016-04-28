@@ -21,8 +21,7 @@ import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RulesManager;
-import org.wirez.core.api.rule.impl.graph.Graph;
+import org.wirez.core.api.rule.graph.GraphRulesManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -43,7 +42,7 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
     @Inject
     public WiresCanvasHandler(final ClientDefinitionManager clientDefinitionManager,
                               final ClientFactoryServices clientFactoryServices,
-                              final @Graph RulesManager<?, ?, ?, ?> rulesManager,
+                              final GraphRulesManager rulesManager,
                               final GraphUtils graphUtils,
                               final IncrementalIndexBuilder indexBuilder,
                               final TreeWalkTraverseProcessor treeWalkTraverseProcessor, 

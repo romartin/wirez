@@ -33,6 +33,7 @@ import java.util.LinkedList;
 
 /**
  * A Command to set the outgoing connection for an edge.
+ * Note that if the connector's source is not set, the <code>sourceNode</code> can be null.
  * 
  * TODO: Undo.
  */
@@ -51,8 +52,7 @@ public final class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
                                           @MapsTo("magnetIndex") Integer magnetIndex) {
         this.edge = PortablePreconditions.checkNotNull( "edge",
                 edge );;
-        this.sourceNode = PortablePreconditions.checkNotNull( "sourceNode",
-                sourceNode);;
+        this.sourceNode = sourceNode;;
         this.magnetIndex = PortablePreconditions.checkNotNull( "magnetIndex",
                 magnetIndex);;
         this.lastSourceNode = edge.getSourceNode();
@@ -68,10 +68,12 @@ public final class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
     public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
         final CommandResult<RuleViolation> results = check( context );
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
-            if (lastSourceNode != null) {
+            if ( null != lastSourceNode ) {
                 lastSourceNode.getOutEdges().remove( edge );
             }
-            sourceNode.getOutEdges().add( edge );
+            if ( null != sourceNode ) {
+                sourceNode.getOutEdges().add( edge );
+            }
             edge.setSourceNode( sourceNode );
             ViewConnector connectionContent = (ViewConnector) edge.getContent();
             connectionContent.setSourceMagnetIndex(magnetIndex);
@@ -80,7 +82,7 @@ public final class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
     }
 
     @SuppressWarnings("unchecked")
-    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+    protected CommandResult<RuleViolation> doCheck(final GraphCommandExecutionContext context) {
         final Collection<RuleViolation> connectionRuleViolations = 
                 (Collection<RuleViolation>) context.getRulesManager()
                         .connection().evaluate(edge, sourceNode, targetNode).violations();

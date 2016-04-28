@@ -64,10 +64,10 @@ public abstract class AbstractToolbar<S extends CanvasSession> implements IsWidg
         
         for ( final ToolbarCommand<S> command : commands ) {
 
-            final Command clickHandler = () -> command.execute( session, callback );
+            final Command clickHandler = () -> command.execute( callback );
             final AbstractToolbarItem<S> toolbarItem = toolbarItems.get();
             toolbarItem.setUUID( ( (AbstractToolbarCommand) command).getUuid() );
-            toolbarItem.show( command, clickHandler );
+            toolbarItem.show( session, command, clickHandler );
             view.addItem( toolbarItem.asWidget() );
             items.add( toolbarItem );
             

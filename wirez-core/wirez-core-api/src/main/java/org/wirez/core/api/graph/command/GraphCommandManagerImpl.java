@@ -5,6 +5,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.CommandResultBuilder;
 import org.wirez.core.api.command.batch.AbstractBatchCommandManager;
 import org.wirez.core.api.event.local.CommandExecutedEvent;
+import org.wirez.core.api.event.local.CommandUndoExecutedEvent;
 import org.wirez.core.api.event.local.IsCommandAllowedEvent;
 import org.wirez.core.api.rule.RuleViolation;
 
@@ -18,15 +19,18 @@ public class GraphCommandManagerImpl extends AbstractBatchCommandManager<GraphCo
 
     Event<IsCommandAllowedEvent> isCommandAllowedEvent;
     Event<CommandExecutedEvent> commandExecutedEvent;
+    Event<CommandUndoExecutedEvent> commandUndoExecutedEvent;
 
     protected GraphCommandManagerImpl() {
     }
     
     @Inject
     public GraphCommandManagerImpl(final Event<IsCommandAllowedEvent> isCommandAllowedEvent, 
-                                   final Event<CommandExecutedEvent> commandExecutedEvent) {
+                                   final Event<CommandExecutedEvent> commandExecutedEvent,
+                                   final Event<CommandUndoExecutedEvent> commandUndoExecutedEvent) {
         this.isCommandAllowedEvent = isCommandAllowedEvent;
         this.commandExecutedEvent = commandExecutedEvent;
+        this.commandUndoExecutedEvent = commandUndoExecutedEvent;
     }
 
     @Override
@@ -57,8 +61,8 @@ public class GraphCommandManagerImpl extends AbstractBatchCommandManager<GraphCo
                                                   final Command<GraphCommandExecutionContext, RuleViolation> command) {
         final CommandResult<RuleViolation> result = super.doUndo(context, command);
         
-        if ( null != commandExecutedEvent ) {
-            commandExecutedEvent.fire( new CommandExecutedEvent( command, result) );
+        if ( null != commandUndoExecutedEvent ) {
+            commandUndoExecutedEvent.fire( new CommandUndoExecutedEvent( command, result) );
         }
         
         return result;

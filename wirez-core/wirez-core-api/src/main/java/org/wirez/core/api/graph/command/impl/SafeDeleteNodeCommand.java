@@ -86,7 +86,7 @@ public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
     }
 
     @SuppressWarnings("unchecked")
-    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+    protected CommandResult<RuleViolation> doCheck(final GraphCommandExecutionContext context) {
 
         // Check node exist on the store.
         boolean isNodeInGraph = false;

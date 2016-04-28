@@ -15,16 +15,18 @@ import java.util.List;
 
 public abstract class AbstractGraphCompositeCommand extends AbstractCompositeCommand<GraphCommandExecutionContext, RuleViolation> {
 
+    protected abstract CommandResult<RuleViolation> doCheck(final GraphCommandExecutionContext context);
+
     @Override
     protected CommandResult<RuleViolation> doUndo(final GraphCommandExecutionContext context, 
                                                   final Command<GraphCommandExecutionContext, RuleViolation> command) {
-        return command.undo( new EmptyRulesCommandExecutionContext( context ) );
+        return command.undo( buildEmptyExecutionContext( context ) );
     }
 
     @Override
     protected CommandResult<RuleViolation> doExecute(final GraphCommandExecutionContext context, 
                                                      final Command<GraphCommandExecutionContext, RuleViolation> command) {
-        return command.execute( new EmptyRulesCommandExecutionContext( context ) );
+        return command.execute( buildEmptyExecutionContext( context ) );
     }
 
     @Override
@@ -36,4 +38,18 @@ public abstract class AbstractGraphCompositeCommand extends AbstractCompositeCom
         return new GraphCommandResultBuilder( v ).build();
     }
 
+    protected CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+
+        // Check if rules are present.
+        if ( null == context.getRulesManager() ) {
+            return GraphCommandResultBuilder.RESULT_OK;
+        }
+
+        return doCheck( context );
+    }
+
+    private EmptyRulesCommandExecutionContext buildEmptyExecutionContext( final GraphCommandExecutionContext context ) {
+        return new EmptyRulesCommandExecutionContext( context.getDefinitionManager(), 
+                context.getFactoryManager(), context.getGraphUtils() );
+    }
 }

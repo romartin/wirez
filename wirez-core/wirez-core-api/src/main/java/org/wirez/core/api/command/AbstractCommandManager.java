@@ -54,7 +54,14 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
 
     @Override
     public CommandResult<V> undo(final C context ) {
-        return doUndo( context, command );
+        
+        if ( hasUndoCommand() ) {
+            final CommandResult<V> result = doUndo( context, command );
+            this.command = null;
+            return result;
+        }
+        
+        return null;
     }
 
     protected CommandResult<V> doUndo( final C context, final Command<C, V> command ) {
@@ -64,6 +71,10 @@ public abstract class AbstractCommandManager<C, V> implements CommandManager<C, 
         }
         
         return null;
+    }
+    
+    protected boolean hasUndoCommand() {
+        return null != command;
     }
 
 }

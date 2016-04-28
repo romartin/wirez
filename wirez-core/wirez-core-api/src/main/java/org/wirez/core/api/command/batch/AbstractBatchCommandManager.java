@@ -1,10 +1,7 @@
 package org.wirez.core.api.command.batch;
 
 import org.uberfire.commons.validation.PortablePreconditions;
-import org.wirez.core.api.command.AbstractCommandManager;
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.CommandResultBuilder;
+import org.wirez.core.api.command.*;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,7 +17,11 @@ public abstract class AbstractBatchCommandManager<T, V> extends AbstractCommandM
 
     @Override
     public CommandResult<V> execute(final T context, final Command<T, V> command) {
-        commands.clear();
+        
+        if ( !commands.isEmpty() ) {
+            throw new RuntimeException(" Cannot execute a command while there exist batch commands already queued.");
+        }
+        
         return super.execute(context, command);
     }
 
@@ -49,8 +50,8 @@ public abstract class AbstractBatchCommandManager<T, V> extends AbstractCommandM
                 if ( CommandResult.Type.ERROR.equals( result.getType() ) ) {
 
                     // Undo previous executed commands on inverse order, so using an stack.
-                    _undo( context, executedCommands );;
-                    commands.clear();
+                    _undoMultipleCommands( context, executedCommands );;
+                    clean();
 
                     return new BatchCommandResultBuilder<V>().add( result ).build();
                     
@@ -61,7 +62,7 @@ public abstract class AbstractBatchCommandManager<T, V> extends AbstractCommandM
                 }
             }
 
-            clearCommands();
+            cleanKeepHistory();
             
         }
 
@@ -69,7 +70,7 @@ public abstract class AbstractBatchCommandManager<T, V> extends AbstractCommandM
 
     }
     
-    protected void clearCommands() {
+    protected void cleanKeepHistory() {
         super.command = null;
         undoCommands.clear();
         final Iterator<Command<T, V>> it = commands.iterator();
@@ -80,46 +81,60 @@ public abstract class AbstractBatchCommandManager<T, V> extends AbstractCommandM
         commands.clear();
     }
 
+    protected void clean() {
+        super.command = null;
+        undoCommands.clear();
+        commands.clear();
+    }
+
     @Override
     public CommandResult<V> undo(T context) {
-        if ( !undoCommands.isEmpty() ) {
-            CommandResult<V> result = _undo( context, undoCommands );;
-            undoCommands.clear();
+        final CommandResult<V> parentUndoResult = super.undo( context );
+        
+        if ( !CommandUtils.isError(parentUndoResult) && !undoCommands.isEmpty() ) {
+            CommandResult<V> result = _undoMultipleCommands( context, undoCommands );;
+            clean();
             return result;
         }
         
-        return super.undo( context );
+        return parentUndoResult;
     }
 
-    protected CommandResult<V> _undo(final T context, final Stack<Command<T, V>> commandStack) {
+    // Undo the standalone command executed on the parent.
+    @Override
+    protected CommandResult<V> doUndo( final T context, 
+                                       final Command<T, V> command) {
+
+        // Undo the command.
+        final CommandResult<V> undoResult = super.doUndo(context, command);
+
+        // Check whether if undo has failed as well.
+        checkUndoResult( undoResult );
+
+        return undoResult;
+    }
+
+    // Undo the batched commands for last single execution.
+    protected CommandResult<V> _undoMultipleCommands(final T context, 
+                                                     final Stack<Command<T, V>> commandStack) {
 
         final BatchCommandResultBuilder<V> builder = new BatchCommandResultBuilder<V>();
 
-
-        if (!commandStack.isEmpty()) {
-
-            final int size = commandStack.size();
-            for ( int x = 0; x < size; x++) {
-                final Command<T, V> undoCommand  = commandStack.pop();
-                final CommandResult<V> undoResult = doUndo( context,  undoCommand );
+        while ( !commandStack.isEmpty() ) {
+            final Command<T, V> undoCommand  = commandStack.pop();
+            final CommandResult<V> undoResult = doUndo( context,  undoCommand );
+            if ( null != undoResult ) {
                 builder.add( undoResult );
             }
-
         }
+
         
         return builder.asResult( buildCommandResultBuilder() );
     }
 
     @Override
-    protected CommandResult<V> doUndo(T context, Command<T, V> command) {
-        
-        // Undo the command.
-        final CommandResult<V> undoResult = super.doUndo(context, command);
-        
-        // Check whether if undo has failed as well.
-        checkUndoResult( undoResult );
-        
-        return undoResult;
+    protected boolean hasUndoCommand() {
+        return super.hasUndoCommand() || !commands.isEmpty();
     }
 
     protected void checkUndoResult(final CommandResult<V> undoResult ) {

@@ -14,7 +14,6 @@ import javax.inject.Inject;
 @Dependent
 public class VisitGraphCommand extends AbstractToolbarCommand<DefaultCanvasReadOnlySession> {
 
-
     @Inject
     public VisitGraphCommand(final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent,
                              final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent) {
@@ -37,8 +36,7 @@ public class VisitGraphCommand extends AbstractToolbarCommand<DefaultCanvasReadO
     }
 
     @Override
-    public <T> void execute(final DefaultCanvasReadOnlySession session, 
-                            final ToolbarCommandCallback<T> callback) {
+    public <T> void execute(final ToolbarCommandCallback<T> callback) {
 
         new CanvasHighlightVisitor(session.getCanvasHandler()).run(() -> {
             if ( null != callback ) {

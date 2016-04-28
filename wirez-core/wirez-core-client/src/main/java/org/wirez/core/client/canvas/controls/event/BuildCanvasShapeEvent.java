@@ -21,6 +21,9 @@ import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 
+/**
+ * Event for requesting the canvas builder control to add a new shape. 
+ */
 @NonPortable
 public final class BuildCanvasShapeEvent extends AbstractCanvasHandlerEvent<AbstractCanvasHandler> {
 

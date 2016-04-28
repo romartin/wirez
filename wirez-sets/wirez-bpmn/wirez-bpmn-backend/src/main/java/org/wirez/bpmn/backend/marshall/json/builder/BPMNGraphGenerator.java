@@ -13,14 +13,13 @@ import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.EmptyRulesCommandExecutionContext;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
-import org.wirez.core.api.graph.command.GraphCommandExecutionContextImpl;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.definition.DefinitionSet;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.rule.RulesManager;
 import org.wirez.core.api.util.UUID;
 
 import java.io.IOException;
@@ -42,7 +41,6 @@ public class BPMNGraphGenerator extends JsonGenerator {
     GraphUtils graphUtils;
     Bpmn2OryxManager oryxManager;
     CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager;
-    RulesManager<?, ?, ?, ?> rulesManager;
     GraphCommandFactory commandFactory;
     Stack<GraphObjectBuilder> nodeBuilders = new Stack<>();
     Stack<GraphObjectParser> parsers = new Stack<GraphObjectParser>();
@@ -56,7 +54,6 @@ public class BPMNGraphGenerator extends JsonGenerator {
                               final GraphUtils graphUtils,
                               final Bpmn2OryxManager oryxManager,
                               final CommandManager<GraphCommandExecutionContext, RuleViolation> commandManager,
-                              final RulesManager<?, ?, ?, ?> rulesManager,
                               final GraphCommandFactory commandFactory) {
         this.bpmnGraphBuilderFactory = bpmnGraphBuilderFactory;
         this.definitionManager = definitionManager;
@@ -64,7 +61,6 @@ public class BPMNGraphGenerator extends JsonGenerator {
         this.graphUtils = graphUtils;
         this.oryxManager = oryxManager;
         this.commandManager = commandManager;
-        this.rulesManager = rulesManager;
         this.commandFactory = commandFactory;
         this.parsers.push(new RootObjectParser(null));
         this.isClosed = false;
@@ -199,7 +195,7 @@ public class BPMNGraphGenerator extends JsonGenerator {
         @SuppressWarnings("unchecked")
         public CommandResult<RuleViolation> execute (Command<GraphCommandExecutionContext, RuleViolation> command) {
             GraphCommandExecutionContext executionContext = 
-                    new GraphCommandExecutionContextImpl( definitionManager, factoryManager, rulesManager, graphUtils);
+                    new EmptyRulesCommandExecutionContext( definitionManager, factoryManager, graphUtils);
             return commandManager.execute( executionContext, command );
         }
         

@@ -1,5 +1,7 @@
 package org.wirez.client.widgets.session.toolbar.command;
 
+import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
+import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
@@ -14,6 +16,8 @@ public abstract class AbstractToolbarCommand<S extends CanvasSession> implements
     Event<DisableToolbarCommandEvent> disableToolbarCommandEvent;
     String uuid;
     
+    protected S session;
+    
     public AbstractToolbarCommand(final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent, 
                                   final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent) {
         this.enableToolbarCommandEvent = enableToolbarCommandEvent;
@@ -21,15 +25,36 @@ public abstract class AbstractToolbarCommand<S extends CanvasSession> implements
         this.uuid = UUID.uuid();
     }
     
+    @Override
+    public void initialize(final S session) {
+        this.session = session;
+    }
+
     public void afterDraw() {
-        
+
     }
 
     @Override
-    public void execute(final S session) {
-        this.execute( session, null );
+    public void execute() {
+        this.execute( null );
     }
 
+    protected void executeWithConfirm( final Command command ) {
+
+        final Command yesCommand = () -> {
+            command.execute();
+        };
+
+        final Command noCommand = () -> {
+        };
+
+        final YesNoCancelPopup popup = YesNoCancelPopup.newYesNoCancelPopup( "Are you sure?",
+                null, yesCommand, noCommand, noCommand );
+
+        popup.show();
+
+    }
+    
     @Override
     public boolean equals( final Object o ) {
         if ( this == o ) {

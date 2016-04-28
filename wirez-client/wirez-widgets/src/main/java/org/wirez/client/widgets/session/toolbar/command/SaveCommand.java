@@ -44,8 +44,7 @@ public class SaveCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
     }
 
     @Override
-    public <T> void execute(final DefaultCanvasFullSession session, 
-                            final ToolbarCommandCallback<T> callback) {
+    public <T> void execute(final ToolbarCommandCallback<T> callback) {
 
         clientDiagramServices.update(session.getCanvasHandler().getDiagram(), new ServiceCallback<Diagram>() {
             @Override

@@ -9,7 +9,7 @@ import java.util.List;
 public class CommandUtils {
 
     public static boolean isError( final CommandResult<?> result ) {
-        return CommandResult.Type.ERROR.equals( result.getType() );
+        return result != null && CommandResult.Type.ERROR.equals( result.getType() );
     }
 
     @SuppressWarnings("unchecked")

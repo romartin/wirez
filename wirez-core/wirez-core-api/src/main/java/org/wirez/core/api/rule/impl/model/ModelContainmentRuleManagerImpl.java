@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Dependent
-@Model
 public class ModelContainmentRuleManagerImpl extends AbstractContainmentRuleManager<String, Set<String>> implements ModelContainmentRuleManager {
 
     private static final String NAME = "Domain Model Containment Rule Manager";

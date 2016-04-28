@@ -44,7 +44,7 @@ public final class AddCanvasChildNodeCommand extends AddCanvasElementCommand<Nod
 
     @Override
     public CommandResult<CanvasViolation> undo(final AbstractCanvasHandler context) {
-        final DeleteCanvasNodeCommand command = new DeleteCanvasNodeCommand( candidate );
+        final DeleteCanvasNodeCommand command = new DeleteCanvasNodeCommand( candidate, parent );
         return command.execute( context );
     }
     

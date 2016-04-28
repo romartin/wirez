@@ -9,14 +9,12 @@ import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.CardinalityRule;
 import org.wirez.core.api.rule.RuleViolations;
 import org.wirez.core.api.rule.graph.GraphCardinalityRuleManager;
-import org.wirez.core.api.rule.impl.model.Model;
 import org.wirez.core.api.rule.model.ModelCardinalityRuleManager;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-@org.wirez.core.api.rule.impl.graph.Graph
 public class GraphCardinalityRuleManagerImpl extends AbstractGraphRuleManager<CardinalityRule, ModelCardinalityRuleManager> 
         implements GraphCardinalityRuleManager {
 
@@ -27,7 +25,7 @@ public class GraphCardinalityRuleManagerImpl extends AbstractGraphRuleManager<Ca
     @Inject
     public GraphCardinalityRuleManagerImpl(final DefinitionManager definitionManager,
                                            final GraphUtils graphUtils,
-                                           final @Model ModelCardinalityRuleManager modelCardinalityRuleManager) {
+                                           final ModelCardinalityRuleManager modelCardinalityRuleManager) {
         super( definitionManager, graphUtils );
         this.modelCardinalityRuleManager = modelCardinalityRuleManager;
     }
@@ -47,7 +45,7 @@ public class GraphCardinalityRuleManagerImpl extends AbstractGraphRuleManager<Ca
                                    final Node<? extends View<?>, ? extends Edge> candidate, 
                                    final Operation operation) {
         
-        int count = graphUtils.countDefinitions( target, candidate.getContent().getDefinition() );
+        final int count = graphUtils.countDefinitions( target, candidate.getContent().getDefinition() );
         
         return modelCardinalityRuleManager.evaluate( getLabels( candidate ), count, operation );
         

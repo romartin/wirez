@@ -13,7 +13,7 @@ public abstract class AbstractLookupManager<I, T, R extends LookupManager.Lookup
     protected abstract T buildResult( I item );
     
     @Override
-    public LookupResponse<T> lookup(final R request) {
+    public LookupResponse<T> lookup( final R request ) {
         
         final List<I> items = getItems( request );
         if ( null != items ) {
@@ -58,7 +58,7 @@ public abstract class AbstractLookupManager<I, T, R extends LookupManager.Lookup
         return buildEmptyResponse( request );
     }
     
-    protected LookupResponse<T> buildEmptyResponse(R request ) {
+    protected LookupResponse<T> buildEmptyResponse( final R request ) {
 
         return new LookupResponseImpl<T>( new ArrayList<T>(),
                 0, false, request.getCriteria(), request.getPage(), request.getPageSize());

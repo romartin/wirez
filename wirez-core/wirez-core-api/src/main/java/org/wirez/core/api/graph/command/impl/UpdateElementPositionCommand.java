@@ -59,6 +59,11 @@ public final class UpdateElementPositionCommand extends AbstractGraphCommand {
     
     @Override
     public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
+        return check( context );
+    }
+
+    @Override
+    protected CommandResult<RuleViolation> doCheck(GraphCommandExecutionContext context) {
         return GraphCommandResultBuilder.RESULT_OK;
     }
 

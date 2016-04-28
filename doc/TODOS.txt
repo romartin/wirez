@@ -3,14 +3,6 @@
 
     - Mini-pallette work
 
-    - Commands
-            - UNDO's
-                - undoing just after adding element fails
-                - ClearGraph
-                - SetConnectionSourceNodeCommand
-                - SetConnectionTargetNodeCommand
-            - Fix -> both SetConnectionSourceNodeCommand/Target commands are checking rules using same arguments...
-
     - Check full authoring workflows
 
     - Sequence flows stuff
@@ -50,6 +42,7 @@
     - General
         - Help widgets & tooltips/popovers
         - Error handling
+        - refactor use of CDI qualifiers ( managers & services ) -> CDI @Priority 
         
     - Usability
         - dragging constrained just for diagram bounds?
@@ -92,14 +85,20 @@
     - Graph Processors - declare as @Remote ifaces
 
     - Commands
+        - UNDO's
+            - ClearGraph
+            - SetConnectionSourceNodeCommand
+            - SetConnectionTargetNodeCommand
+        - Fix -> both SetConnectionSourceNodeCommand/Target commands are checking rules using same arguments...
         - ensure only single parent/edge connections between nodes
          - CommManager
-            - executions async - use callbacks as expensive ops can be executed on backend asynchronously
+            - executions async ( use of Caller's ) - use callbacks as expensive ops can be executed on backend asynchronously
         - Restore the graph to a previous state
         - REDO's
 
     - Look-ups
         - Add cache
+        - Use Caller's on client side
         - Use Dashbuilder's DataSets?
         
 Annotation processors
@@ -155,5 +154,5 @@ House keeping & others
             - Currently some CDI issues appears when adding it...
      - Connections
         - Do not call head/tailConnectionAccepted until drag eng!
-    - Generics cleaning
+    - Generics cleaning ( commands, etc )
     - i18n

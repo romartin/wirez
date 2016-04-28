@@ -20,6 +20,10 @@ public final class DeleteCanvasEdgeCommand extends DeleteCanvasElementCommand<Ed
         super( candidate );
     }
 
+    public DeleteCanvasEdgeCommand(final Edge candidate, final Node sourceNode) {
+        super( candidate, sourceNode );
+    }
+
     @Override
     protected Node getParent() {
         return candidate.getSourceNode();

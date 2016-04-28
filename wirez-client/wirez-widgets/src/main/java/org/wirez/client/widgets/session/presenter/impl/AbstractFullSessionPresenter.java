@@ -131,7 +131,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
     @Override
     public void save(final Command callback) {
 
-        saveCommand.execute((DefaultCanvasFullSession) session, new ToolbarCommandCallback<Diagram>() {
+        saveCommand.execute( new ToolbarCommandCallback<Diagram>() {
             
             @Override
             public void onSuccess(final Diagram result) {
@@ -152,21 +152,21 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
     @Override
     public void clear() {
 
-        clearCommand.execute( (DefaultCanvasFullSession)session );
+        clearCommand.execute();
         
     }
 
     @Override
     public void undo() {
 
-        undoCommand.execute( (DefaultCanvasFullSession)session );
+        undoCommand.execute();
         
     }
 
     @Override
     public void deleteSelected() {
 
-        deleteSelectionCommand.execute( (DefaultCanvasFullSession)session );
+        deleteSelectionCommand.execute();
 
     }
     
@@ -176,7 +176,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
 
     public void visitGraph() {
 
-        visitGraphCommand.execute( (DefaultCanvasReadOnlySession) session );
+        visitGraphCommand.execute();
         
     }
 

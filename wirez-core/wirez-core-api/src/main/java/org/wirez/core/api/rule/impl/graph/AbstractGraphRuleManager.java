@@ -1,7 +1,6 @@
 package org.wirez.core.api.rule.impl.graph;
 
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.content.definition.Definition;
 import org.wirez.core.api.graph.content.definition.DefinitionSet;

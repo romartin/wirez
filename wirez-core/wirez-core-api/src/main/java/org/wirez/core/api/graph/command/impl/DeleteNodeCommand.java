@@ -48,12 +48,12 @@ public final class DeleteNodeCommand extends AbstractGraphCommand {
     
     @Override
     public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
-        return checkRules( context );
+        return check( context );
     }
 
     @Override
     public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
-        CommandResult<RuleViolation> results = checkRules( context );
+        CommandResult<RuleViolation> results = check( context );
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
             target.removeNode( candidate.getUUID() );
         }
@@ -62,7 +62,7 @@ public final class DeleteNodeCommand extends AbstractGraphCommand {
     }
     
     @SuppressWarnings("unchecked")
-    private CommandResult<RuleViolation> checkRules(final GraphCommandExecutionContext context) {
+    protected CommandResult<RuleViolation> doCheck(final GraphCommandExecutionContext context) {
 
         boolean isNodeInGraph = false;
         for ( Object node : target.nodes() ) {

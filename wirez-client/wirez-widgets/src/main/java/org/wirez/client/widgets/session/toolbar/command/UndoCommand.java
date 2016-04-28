@@ -7,6 +7,7 @@ import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.stack.StackCommandManager;
 import org.wirez.core.api.event.local.CommandExecutedEvent;
+import org.wirez.core.api.event.local.CommandUndoExecutedEvent;
 import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 
@@ -20,8 +21,6 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 @Dependent
 public class UndoCommand extends AbstractToolbarCommand<DefaultCanvasFullSession> {
 
-    private DefaultCanvasFullSession session;
-    
     @Inject
     public UndoCommand(final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent,
                        final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent) {
@@ -44,17 +43,14 @@ public class UndoCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
     }
 
     @Override
-    public void afterDraw() {
-        super.afterDraw();
+    public void initialize(final DefaultCanvasFullSession session) {
+        super.initialize(session);
         checkState();
     }
 
     @Override
-    public <T> void execute(final DefaultCanvasFullSession session, 
-                            final ToolbarCommandCallback<T> callback) {
+    public <T> void execute(final ToolbarCommandCallback<T> callback) {
 
-        this.session = session;
-        
         final CommandResult<CanvasViolation> result = 
                 session.getCanvasCommandManager().undo( session.getCanvasHandler() );
 
@@ -68,6 +64,11 @@ public class UndoCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
     
     void onCommandExecuted(@Observes CommandExecutedEvent commandExecutedEvent) {
         checkNotNull("commandExecutedEvent", commandExecutedEvent);
+        checkState();
+    }
+
+    void onCommandUndoExecuted(@Observes CommandUndoExecutedEvent commandUndoExecutedEvent) {
+        checkNotNull("commandUndoExecutedEvent", commandUndoExecutedEvent);
         checkState();
     }
     

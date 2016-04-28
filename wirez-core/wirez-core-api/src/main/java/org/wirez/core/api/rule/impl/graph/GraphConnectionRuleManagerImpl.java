@@ -9,14 +9,12 @@ import org.wirez.core.api.rule.ConnectionRule;
 import org.wirez.core.api.rule.DefaultRuleViolations;
 import org.wirez.core.api.rule.RuleViolations;
 import org.wirez.core.api.rule.graph.GraphConnectionRuleManager;
-import org.wirez.core.api.rule.impl.model.Model;
 import org.wirez.core.api.rule.model.ModelConnectionRuleManager;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-@Graph
 public class GraphConnectionRuleManagerImpl extends AbstractGraphRuleManager<ConnectionRule, ModelConnectionRuleManager> 
         implements GraphConnectionRuleManager {
 
@@ -27,7 +25,7 @@ public class GraphConnectionRuleManagerImpl extends AbstractGraphRuleManager<Con
     @Inject
     public GraphConnectionRuleManagerImpl(final DefinitionManager definitionManager,
                                           final GraphUtils graphUtils,
-                                          final @Model ModelConnectionRuleManager modelConnectionRuleManager) {
+                                          final ModelConnectionRuleManager modelConnectionRuleManager) {
         super( definitionManager,graphUtils );
         this.modelConnectionRuleManager = modelConnectionRuleManager;
     }

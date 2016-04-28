@@ -53,7 +53,7 @@ public final class ClearGraphCommand extends AbstractGraphCommand {
         return results;
     }
     
-    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+    protected CommandResult<RuleViolation> doCheck(final GraphCommandExecutionContext context) {
         return GraphCommandResultBuilder.RESULT_OK;        
     }
 

@@ -49,7 +49,7 @@ public final class AddChildNodeCommand extends AbstractGraphCompositeCommand {
     }
 
     @SuppressWarnings("unchecked")
-    private CommandResult<RuleViolation> check(final GraphCommandExecutionContext context) {
+    protected CommandResult<RuleViolation> doCheck(final GraphCommandExecutionContext context) {
         final Collection<RuleViolation> containmentRuleViolations = 
                 (Collection<RuleViolation>) context.getRulesManager().containment().evaluate( parent, candidate).violations();
         final Collection<RuleViolation> cardinalityRuleViolations = 

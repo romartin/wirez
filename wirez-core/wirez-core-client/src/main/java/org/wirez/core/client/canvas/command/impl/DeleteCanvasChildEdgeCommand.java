@@ -24,7 +24,7 @@ public final class DeleteCanvasChildEdgeCommand extends AbstractCanvasGraphComma
 
     @Override
     public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
-        context.removeChild(parent, child);
+        context.removeChild( parent.getUUID(), child.getUUID() );
         return buildResult();
     }
 

@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Dependent
-@Model
 public class ModelConnectionRuleManagerImpl extends AbstractConnectionRuleManager<String, Set<String>> implements ModelConnectionRuleManager {
 
     private static final String NAME = "Domain Model Connection Rule Manager";

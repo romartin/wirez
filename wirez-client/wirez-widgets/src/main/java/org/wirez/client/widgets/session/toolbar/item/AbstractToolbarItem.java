@@ -57,7 +57,10 @@ public abstract class AbstractToolbarItem<S extends CanvasSession> implements Is
         return uuid;
     }
 
-    public void show(final ToolbarCommand<S> command, final Command clickHandler ) {
+    public void show(final S session, final ToolbarCommand<S> command, final Command clickHandler ) {
+
+        // Initialize the command with the current session.
+        command.initialize( session );
 
         final IconType icon = command.getIcon();
         final String caption = command.getCaption();

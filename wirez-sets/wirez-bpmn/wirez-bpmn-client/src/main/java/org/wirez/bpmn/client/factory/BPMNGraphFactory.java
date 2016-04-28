@@ -6,8 +6,6 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.rule.RulesManager;
-import org.wirez.core.api.rule.impl.empty.Empty;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -25,10 +23,9 @@ public class BPMNGraphFactory extends BPMNAbstractGraphFactory {
                             final FactoryManager factoryManager,
                             final BPMNDefinitionFactory bpmnDefinitionBuilder,
                             final GraphCommandManager graphCommandManager,
-                            final GraphCommandFactory graphCommandFactory,
-                            final @Empty RulesManager<?, ?, ?, ?> emptyRulesManager) {
+                            final GraphCommandFactory graphCommandFactory) {
         super(definitionManager, factoryManager, bpmnDefinitionBuilder,
-                graphCommandManager, graphCommandFactory, emptyRulesManager);
+                graphCommandManager, graphCommandFactory );
     }
 
 }

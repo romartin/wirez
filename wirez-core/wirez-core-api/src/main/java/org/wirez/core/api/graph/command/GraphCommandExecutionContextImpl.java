@@ -4,19 +4,19 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RulesManager;
+import org.wirez.core.api.rule.graph.GraphRulesManager;
 
 @NonPortable
 public class GraphCommandExecutionContextImpl implements GraphCommandExecutionContext {
 
     protected final transient DefinitionManager definitionManager;
     protected final transient FactoryManager factoryManager;
-    protected final transient RulesManager<?, ?, ?, ?> rulesManager;
+    protected final transient GraphRulesManager rulesManager;
     protected final transient GraphUtils graphUtils;
 
     public GraphCommandExecutionContextImpl(final DefinitionManager definitionManager, 
                                             final FactoryManager factoryManager, 
-                                            final RulesManager<?, ?, ?, ?> rulesManager, 
+                                            final GraphRulesManager rulesManager, 
                                             final GraphUtils graphUtils) {
         this.definitionManager = definitionManager;
         this.factoryManager = factoryManager;
@@ -40,7 +40,7 @@ public class GraphCommandExecutionContextImpl implements GraphCommandExecutionCo
     }
 
     @Override
-    public RulesManager getRulesManager() {
+    public GraphRulesManager getRulesManager() {
         return rulesManager;
     }
 

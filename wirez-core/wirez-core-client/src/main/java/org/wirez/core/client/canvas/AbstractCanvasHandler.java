@@ -32,7 +32,7 @@ import org.wirez.core.api.graph.processing.traverse.tree.AbstractTreeTraverseCal
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.rule.Rule;
-import org.wirez.core.api.rule.RulesManager;
+import org.wirez.core.api.rule.graph.GraphRulesManager;
 import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
@@ -59,7 +59,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
     protected ClientDefinitionManager clientDefinitionManager;
     protected ClientFactoryServices clientFactoryServices;
-    protected RulesManager<?, ?, ?, ?> rulesManager;
+    protected GraphRulesManager rulesManager;
     protected GraphUtils graphUtils;
     protected IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> indexBuilder;
     protected TreeWalkTraverseProcessor treeWalkTraverseProcessor;
@@ -79,7 +79,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     @Inject
     public AbstractCanvasHandler(final ClientDefinitionManager clientDefinitionManager,
                                  final ClientFactoryServices clientFactoryServices,
-                                 final RulesManager<?, ?, ?, ?> rulesManager,
+                                 final GraphRulesManager rulesManager,
                                  final GraphUtils graphUtils,
                                  final IncrementalIndexBuilder indexBuilder,
                                  final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
@@ -343,21 +343,15 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     }
     
     public void addChild(final Element parent, final Element child) {
-        assert parent != null && child != null;
-
         final Shape parentShape = canvas.getShape(parent.getUUID());
         final Shape childShape = canvas.getShape(child.getUUID());
         canvas.addChildShape(parentShape, childShape);
-        
     }
 
-    public void removeChild(final Element parent, final Element child) {
-        assert parent != null && child != null;
-
-        final Shape parentShape = canvas.getShape(parent.getUUID());
-        final Shape childShape = canvas.getShape(child.getUUID());
+    public void removeChild(final String parentUUID, final String childUUID) {
+        final Shape parentShape = canvas.getShape( parentUUID );
+        final Shape childShape = canvas.getShape( childUUID );
         canvas.deleteChildShape(parentShape, childShape);
-
     }
 
     public void clear() {
@@ -419,7 +413,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         return clientFactoryServices;
     }
 
-    public RulesManager getRuleManager() {
+    public GraphRulesManager getRuleManager() {
         return rulesManager;
     }
 

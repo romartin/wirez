@@ -18,11 +18,13 @@ public abstract class StackCommandManager<C, V> extends AbstractBatchCommandMana
     protected int maxStackSize = 50;
     
     @Override
-    public CommandResult<V> execute(C context, Command<C, V> command) {
+    public CommandResult<V> execute(final C context, 
+                                    final Command<C, V> command) {
+        
         CommandResult<V> result = super.execute(context, command);
 
-        final boolean isError = CommandUtils.isError( result );
-        if ( !isError ) {
+        if ( !CommandUtils.isError( result ) ) {
+            super.clean();
             addIntoStack( command );
         }
 
@@ -34,16 +36,21 @@ public abstract class StackCommandManager<C, V> extends AbstractBatchCommandMana
         final List<Command<C,V>> batchCommands = new LinkedList<>( super.commands );
         final BatchCommandResult<V> result = super.executeBatch(context);
 
-        final boolean isError = CommandUtils.isError( result );
-        if ( !isError ) {
+        if ( !CommandUtils.isError( result ) ) {
+            
+            // Keep the just executed batched commands on this instance stack.
             addIntoStack( batchCommands );
+
+            // Ensure parent batched command stacks are always empty after a successful execution.
+            super.clean();
+            
         }
         
         return result;
     }
 
     @Override
-    public CommandResult<V> undo(C context) {
+    public CommandResult<V> undo(final C context) {
 
         final BatchCommandResultBuilder<V> builder = new BatchCommandResultBuilder<V>();
 
@@ -51,7 +58,7 @@ public abstract class StackCommandManager<C, V> extends AbstractBatchCommandMana
 
             final Stack<Command<C, V>> commandStack = history.pop();
             if ( null != commandStack ) {
-                CommandResult<V> result = _undo( context, commandStack );
+                CommandResult<V> result = _undoMultipleCommands( context, commandStack );
                 builder.add( result );
             }
             
@@ -86,9 +93,19 @@ public abstract class StackCommandManager<C, V> extends AbstractBatchCommandMana
     }
     
     public int getHistorySize() {
-        return history.size();
+        return ( super.hasUndoCommand() ? 1 : 0 ) + history.size();
     }
-    
+
+    @Override
+    protected boolean hasUndoCommand() {
+        return super.hasUndoCommand() || !history.isEmpty();
+    }
+
+    // TODO: Remove public modifier or the method, just for testing while coding stage...
+    public Stack<Stack<Command<C, V>>> getHistory() {
+        return history;
+    }
+
     protected void stackSizeExceeded() {
         throw new RuntimeException("Commands stack is full.");
     }

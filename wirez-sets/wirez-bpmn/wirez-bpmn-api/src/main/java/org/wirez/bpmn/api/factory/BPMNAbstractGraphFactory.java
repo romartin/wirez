@@ -3,11 +3,10 @@ package org.wirez.bpmn.api.factory;
 import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.definition.adapter.binding.AbstractBindableAdapter;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.api.graph.command.EmptyRulesCommandExecutionContext;
 import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
-import org.wirez.core.api.graph.command.GraphCommandExecutionContextImpl;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.definition.DefinitionSet;
@@ -16,10 +15,8 @@ import org.wirez.core.api.graph.factory.BaseGraphFactory;
 import org.wirez.core.api.graph.impl.GraphImpl;
 import org.wirez.core.api.graph.store.GraphNodeStoreImpl;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RulesManager;
 import org.wirez.core.api.util.UUID;
 
-import javax.inject.Inject;
 import java.util.Set;
 
 public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<DefinitionSet, Graph<DefinitionSet, Node>> {
@@ -32,7 +29,6 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
     BPMNDefinitionFactory bpmnDefinitionBuilder;
     GraphCommandManager graphCommandManager;
     GraphCommandFactory graphCommandFactory;
-    RulesManager<?, ?, ?, ?> emptyRulesManager;
 
     protected BPMNAbstractGraphFactory() {
     }
@@ -41,14 +37,12 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
                                     final FactoryManager factoryManager,
                                     final BPMNDefinitionFactory bpmnDefinitionBuilder,
                                     final GraphCommandManager graphCommandManager,
-                                    final GraphCommandFactory graphCommandFactory,
-                                    final RulesManager<?, ?, ?, ?> emptyRulesManager) {
+                                    final GraphCommandFactory graphCommandFactory) {
         this.definitionManager = definitionManager;
         this.factoryManager = factoryManager;
         this.bpmnDefinitionBuilder = bpmnDefinitionBuilder;
         this.graphCommandManager = graphCommandManager;
         this.graphCommandFactory = graphCommandFactory;
-        this.emptyRulesManager = emptyRulesManager;
     }
 
     protected Node buildGraphElement(String id) {
@@ -79,10 +73,9 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
     }
     
     private GraphCommandExecutionContext createGraphContext() {
-        return new GraphCommandExecutionContextImpl( 
+        return new EmptyRulesCommandExecutionContext( 
                 definitionManager, 
                 factoryManager,
-                emptyRulesManager,
                 graphUtils );
     }
 

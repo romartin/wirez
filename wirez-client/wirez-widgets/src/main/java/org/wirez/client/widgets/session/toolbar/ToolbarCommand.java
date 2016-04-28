@@ -11,9 +11,10 @@ public interface ToolbarCommand<S extends CanvasSession> {
     
     String getTooltip();
 
-    void execute( S session );
-    
-    <T> void 
-    execute( S session, ToolbarCommandCallback<T> callback );
-    
+    void initialize( S session );
+
+    void execute( );
+
+    <T> void execute( ToolbarCommandCallback<T> callback );
+
 }

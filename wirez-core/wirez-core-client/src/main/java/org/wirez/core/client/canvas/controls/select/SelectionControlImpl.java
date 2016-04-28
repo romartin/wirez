@@ -11,6 +11,7 @@ import org.wirez.core.client.canvas.controls.event.ClearSelectionEvent;
 import org.wirez.core.client.canvas.controls.event.DeselectShapeEvent;
 import org.wirez.core.client.canvas.controls.event.SelectShapeEvent;
 import org.wirez.core.client.canvas.controls.event.SelectSingleShapeEvent;
+import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
 import org.wirez.core.client.canvas.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.shape.HasDecorators;
 import org.wirez.core.client.shape.Shape;
@@ -55,7 +56,14 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
         *               CANVAS CONTROL METHODS
         ***************************************************************
      */
-    
+
+    @Override
+    public void enable(AbstractCanvas canvas) {
+        super.enable(canvas);
+        
+        // TODO: fireNoShapeSelected on click on canvas.
+    }
+
     @Override
     public void register(final Shape shape) {
 
@@ -186,7 +194,24 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
         // Force batch re-draw.
         canvas.draw();
         
+        // Fire the event.
+        fireNoShapeSelected();
+        
         return this;
+    }
+    
+    void onShapeRemovedEvent(@Observes CanvasShapeRemovedEvent shapeRemovedEvent) {
+        checkNotNull("shapeRemovedEvent", shapeRemovedEvent);
+
+        if ( canvas.equals( shapeRemovedEvent.getCanvas() ) ) {
+            final Shape<?> shape = shapeRemovedEvent.getShape();
+            
+            if ( selectedShapes.contains( shape ) ) {
+                this.deselect( shape );
+            }
+            
+        }
+        
     }
     
     void onSingleShapeSelectedEvent(@Observes SelectSingleShapeEvent selectShapeEvent) {
@@ -226,10 +251,7 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
 
     }
 
-
-    // TODO
-    protected void fireCanvasSelected() {
-        this.clearSelection();
+    protected void fireNoShapeSelected() {
         canvasShapeStateModifiedEvent.fire(new ShapeStateModifiedEvent(canvas, null, ShapeState.SELECTED));
     }
     

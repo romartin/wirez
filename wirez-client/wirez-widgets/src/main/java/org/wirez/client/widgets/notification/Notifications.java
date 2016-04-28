@@ -33,6 +33,7 @@ import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.batch.BatchCommandResult;
 import org.wirez.core.api.event.command.AbstractGraphCommandEvent;
 import org.wirez.core.api.event.local.CommandExecutedEvent;
+import org.wirez.core.api.event.local.CommandUndoExecutedEvent;
 import org.wirez.core.api.event.local.IsCommandAllowedEvent;
 import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.api.util.UUID;
@@ -269,17 +270,25 @@ public class Notifications implements IsWidget {
     }
 
     void onGraphCommandAllowed(@Observes IsCommandAllowedEvent isCommandAllowedEvent) {
-        Notification notification = translate( true, isCommandAllowedEvent );
+        Notification notification = translate( isCommandAllowedEvent );
         add( notification );
     }
 
     void onGraphCommandExecued(@Observes CommandExecutedEvent commandExecutedEvent) {
-        Notification notification = translate( false, commandExecutedEvent );
+        Notification notification = translate( commandExecutedEvent );
         add( notification );
     }
+
+    /*
+    TODO: Until building different notifications for execut/undo commands, 
+    // do not show the undos as they can produce confusion.
+    void onGraphCommandUndoExecuted(@Observes CommandUndoExecutedEvent commandUndoExecutedEvent) {
+        Notification notification = translate( commandUndoExecutedEvent );
+        add( notification );
+    }*/
     
-    // TODO: Differentiate between allow/execute on the generated notification.
-    private Notification translate(final boolean isAllow, final AbstractGraphCommandEvent commandExecutedEvent) {
+    // TODO: Differentiate between allow/execute/undo on the generated notification.
+    private Notification translate(final AbstractGraphCommandEvent commandExecutedEvent) {
 
         if ( null != commandExecutedEvent ) {
 

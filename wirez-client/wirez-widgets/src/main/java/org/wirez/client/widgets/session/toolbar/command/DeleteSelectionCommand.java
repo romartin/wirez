@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Dependent
-public class DeleteSelectionCommand extends AbstractToolbarCommand<DefaultCanvasFullSession> {
+public class DeleteSelectionCommand extends AbstractSelectionToolbarCommand<DefaultCanvasFullSession> {
 
     private static Logger LOGGER = Logger.getLogger(DeleteSelectionCommand.class.getName());
 
@@ -54,40 +54,44 @@ public class DeleteSelectionCommand extends AbstractToolbarCommand<DefaultCanvas
     }
 
     @Override
-    public <T> void execute(final DefaultCanvasFullSession session, 
-                            final ToolbarCommandCallback<T> callback) {
+    public <T> void execute(final ToolbarCommandCallback<T> callback) {
 
-        final AbstractCanvasHandler canvasHandler = session.getCanvasHandler();
-        final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager = session.getCanvasCommandManager();
-        final SelectionControl<AbstractCanvas, Shape> selectionControl = session.getShapeSelectionControl();
+        executeWithConfirm(() -> {
+            
+            final AbstractCanvasHandler canvasHandler = session.getCanvasHandler();
+            final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager = session.getCanvasCommandManager();
+            final SelectionControl<AbstractCanvas, Shape> selectionControl = session.getShapeSelectionControl();
 
-        final Collection<Shape> selectedItems = selectionControl.getSelectedItems();
-        if (selectedItems != null && !selectedItems.isEmpty()) {
+            final Collection<Shape> selectedItems = selectionControl.getSelectedItems();
+            if (selectedItems != null && !selectedItems.isEmpty()) {
 
-            for (Shape shape : selectedItems) {
-                Element element = canvasHandler.getGraphIndex().getNode(shape.getUUID());
-                if (element == null) {
-                    element = canvasHandler.getGraphIndex().getEdge(shape.getUUID());
-                    if (element != null) {
-                        log(Level.FINE, "Deleting edge with id " + element.getUUID());
-                        canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_EDGE((Edge) element));
+                for (Shape shape : selectedItems) {
+                    Element element = canvasHandler.getGraphIndex().getNode(shape.getUUID());
+                    if (element == null) {
+                        element = canvasHandler.getGraphIndex().getEdge(shape.getUUID());
+                        if (element != null) {
+                            log(Level.FINE, "Deleting edge with id " + element.getUUID());
+                            canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_EDGE((Edge) element));
+                        }
+                    } else {
+                        log(Level.FINE, "Deleting node with id " + element.getUUID());
+                        canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_NODE((Node) element));
+
                     }
-                } else {
-                    log(Level.FINE, "Deleting node with id " + element.getUUID());
-                    canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_NODE((Node) element));
-
                 }
+
+            } else {
+
+                log(Level.FINE, "Cannot delete element, no element selected on canvas.");
+
             }
 
-        } else {
-
-            log(Level.FINE, "Cannot delete element, no element selected on canvas.");
-
-        }
-
-        if (null != callback) {
-            callback.onSuccess(null);
-        }
+            if (null != callback) {
+                callback.onSuccess(null);
+            }
+            
+        });
+        
         
     }
     

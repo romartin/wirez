@@ -12,7 +12,6 @@ import javax.enterprise.context.Dependent;
 import java.util.Set;
 
 @Dependent
-@Model
 public class ModelCardinalityRuleManagerImpl extends AbstractCardinalityRuleManager<Set<String>, Integer> 
         implements ModelCardinalityRuleManager {
 

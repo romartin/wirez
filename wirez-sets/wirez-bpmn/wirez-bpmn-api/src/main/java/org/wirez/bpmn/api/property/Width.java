@@ -16,6 +16,9 @@
 
 package org.wirez.bpmn.api.property;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
@@ -31,16 +34,16 @@ public class Width implements BPMNProperty {
 
     @Caption
     public static final transient String caption = "width";
-    
+
     @Description
     public static final transient String description = "The width";
 
     @Type
     public static final PropertyType type = new DoubleType();
-    
+
     @ReadOnly
     public static final Boolean readOnly = false;
-    
+
     @Optional
     public static final Boolean optional = false;
 
@@ -48,10 +51,12 @@ public class Width implements BPMNProperty {
     public static final Double defaultValue = 50d;
 
     @Value
+    @Max( 300 )
+    @Min( 100 )
     private Double value = defaultValue;
 
     public Width() {
-        
+
     }
 
     public String getCaption() {
@@ -73,11 +78,11 @@ public class Width implements BPMNProperty {
     public PropertyType getType() {
         return type;
     }
-    
+
     public Double getDefaultValue() {
         return defaultValue;
     }
-    
+
     public Double getValue() {
         return value;
     }
@@ -85,5 +90,5 @@ public class Width implements BPMNProperty {
     public void setValue(Double value) {
         this.value = value;
     }
-    
+
 }

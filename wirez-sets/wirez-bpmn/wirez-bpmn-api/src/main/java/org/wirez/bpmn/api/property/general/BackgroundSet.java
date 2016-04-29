@@ -1,5 +1,8 @@
 package org.wirez.bpmn.api.property.general;
 
+import javax.validation.Valid;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -18,14 +21,17 @@ public class BackgroundSet implements BPMNPropertySet {
 
     @Property
     @FieldDef(label = "Background Color", property = "value")
+    @Valid
     private BgColor bgColor;
 
     @Property
     @FieldDef(label = "Border Color", property = "value")
+    @Valid
     private BorderColor borderColor;
 
     @Property
     @FieldDef(label = "Border Size", property = "value")
+    @Valid
     private BorderSize borderSize;
 
     public BackgroundSet() {

@@ -32,6 +32,10 @@
   <inherits name="org.livespark.formmodeler.renderer.FormModelerDynamicRendererClient"/>
   <inherits name="org.hibernate.validator.HibernateValidator" />
   <inherits name="org.jboss.errai.validation.Validation" />
+  <generate-with class="org.jboss.errai.validation.rebind.ValidatorFactoryGenerator">
+    <when-type-assignable
+        class="javax.validation.ValidatorFactory"/>
+  </generate-with>
 
   <!-- We don't need to support IE10 or older -->
   <!-- There is no "ie11" permutation. IE11 uses the Firefox one (gecko1_8) -->
@@ -41,7 +45,7 @@
   <set-property name="gwt.logging.logLevel" value="SEVERE"/>
   <!-- To enable logging -->
   <set-property name="gwt.logging.enabled" value="TRUE"/>
-  
+
   <!-- Specify the paths for translatable code -->
   <source path='client'/>
 

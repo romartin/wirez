@@ -80,6 +80,12 @@
 
     <dependency>
       <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-engine</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
       <artifactId>livespark-form-modeler-dynamic-renderer-api</artifactId>
     </dependency>
 
@@ -299,7 +305,7 @@
       <groupId>org.wirez</groupId>
       <artifactId>wirez-core-api</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-core-processors</artifactId>
@@ -357,7 +363,7 @@
       <artifactId>wirez-bpmn-client</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- UberFire Plugins Extension -->
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -462,7 +468,7 @@
           <runTarget>wirez.html</runTarget>
           <hostedWebapp>src/main/webapp</hostedWebapp>
           <logLevel>INFO</logLevel>
-          
+
           <compileSourcesArtifacts>
             <!-- UberFire -->
             <compileSourcesArtifact>org.uberfire:uberfire-commons</compileSourcesArtifact>
@@ -495,6 +501,7 @@
             <!-- Form modeler. -->
             <compileSourcesArtifact>org.livespark:livespark-crud-component</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.livespark:livespark-form-modeler-engine</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-rendering-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-client</compileSourcesArtifact>

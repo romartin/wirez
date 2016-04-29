@@ -11,15 +11,18 @@ Building
 Running the application
 -----------------------
 
-Currently there are still no specific container distributions, so you have to run the application using GWT SuperDevMode.                      
+**Wildfly 8.x**                         
 
-If you're planning more than just try the tool, the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if you just want to run it quicly you can use the command line as the following sections describe.                                  
+There exist a concrete distribution for Wilfly 8.x you can use, instructions [here](./wirez-distros/src/main/wildfly8/README.md).         
 
-**Running from command line**                                          
+Another option is to run the application using GWT SuperDevMode. If you're planning more than just try the tool, 
+the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if you just want to run it quicly you can use the command line as the following sections describe.                                  
+
+**SuperDevMove - Running from command line**                                          
 
     mvn gwt:run
 
-**Running from IntelliJ IDEA**                                          
+**SuperDevMove - Running from IntelliJ IDEA**                                          
 
 1.- Build the project from command line ( see above *Building  - section )             
   

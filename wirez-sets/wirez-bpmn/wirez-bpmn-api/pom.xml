@@ -43,7 +43,7 @@
       <artifactId>wirez-core-processors</artifactId>
       <scope>provided</scope>
     </dependency>
-   
+
     <!-- GWT. -->
 
     <dependency>
@@ -95,6 +95,11 @@
     <dependency>
       <groupId>com.ahome-it</groupId>
       <artifactId>lienzo-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
     </dependency>
 
   </dependencies>

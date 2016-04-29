@@ -43,7 +43,7 @@
       <artifactId>uberfire-commons-editor-api</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons-editor-client</artifactId>
@@ -67,7 +67,7 @@
       <artifactId>uberfire-client-api</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-workbench-client-views-patternfly</artifactId>
@@ -90,7 +90,7 @@
       <artifactId>wirez-shapes</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-widgets</artifactId>
@@ -114,6 +114,11 @@
     <dependency>
       <groupId>org.livespark</groupId>
       <artifactId>livespark-form-modeler-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-engine</artifactId>
     </dependency>
 
     <dependency>

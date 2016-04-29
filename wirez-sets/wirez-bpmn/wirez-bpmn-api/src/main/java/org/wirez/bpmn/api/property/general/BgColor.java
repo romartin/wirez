@@ -16,6 +16,7 @@
 
 package org.wirez.bpmn.api.property.general;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
@@ -48,6 +49,7 @@ public class BgColor implements BPMNProperty {
     public static final transient String defaultValue = "#ffffff";
 
     @Value
+    @NotEmpty
     private String value = defaultValue;
 
     public BgColor() {
@@ -76,7 +78,7 @@ public class BgColor implements BPMNProperty {
     public String getDefaultValue() {
         return defaultValue;
     }
-    
+
     public String getValue() {
         return value;
     }
@@ -84,5 +86,5 @@ public class BgColor implements BPMNProperty {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
 }

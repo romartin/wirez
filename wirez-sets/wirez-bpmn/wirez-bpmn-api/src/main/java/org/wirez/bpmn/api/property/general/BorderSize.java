@@ -16,6 +16,10 @@
 
 package org.wirez.bpmn.api.property.general;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
@@ -43,15 +47,17 @@ public class BorderSize implements BPMNProperty {
 
     @Type
     public static final PropertyType type = new DoubleType();
-    
+
     @DefaultValue
     public static final Double defaultValue = 0.5d;
 
     @Value
+    @Min( 0 )
+    @Max( 5 )
     private Double value = defaultValue;
 
     public BorderSize() {
-        
+
     }
 
     public String getCaption() {
@@ -77,7 +83,7 @@ public class BorderSize implements BPMNProperty {
     public Double getDefaultValue() {
         return defaultValue;
     }
-    
+
     public Double getValue() {
         return value;
     }
@@ -85,5 +91,5 @@ public class BorderSize implements BPMNProperty {
     public void setValue(Double value) {
         this.value = value;
     }
-    
+
 }

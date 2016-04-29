@@ -31,6 +31,7 @@ import org.wirez.core.api.graph.Node;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.validation.Valid;
 
 @Portable
 @Bindable
@@ -45,8 +46,8 @@ public class StartNoneEvent implements BPMNDefinition {
 
     @Description
     public static final transient String description = "Untyped start event";
-    
-    
+
+
     public static final transient String COLOR = "#3eb870";
     public static final Double RADIUS = 15d;
 
@@ -56,6 +57,7 @@ public class StartNoneEvent implements BPMNDefinition {
 
     @PropertySet
     @FieldDef( label = "Background Settings")
+    @Valid
     private BackgroundSet backgroundSet;
 
     @PropertySet

@@ -27,7 +27,6 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.core.api.graph.Element;
@@ -139,23 +138,19 @@ public class FormsPropertiesScreen {
             final Element<? extends org.wirez.core.api.graph.content.view.View<?>> element = getCanvasHandler().getGraphIndex().get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
                 final Object definition = element.getContent().getDefinition();
-                formRenderer.renderDefaultForm( definition, new Command() {
-                    @Override
-                    public void execute() {
-                        formRenderer.addFieldChangeHandler((fieldName, newValue) -> {
+                formRenderer.renderDefaultForm( definition, () -> {
+                    formRenderer.addFieldChangeHandler((fieldName, newValue) -> {
 
-                            // TODO - Pere: We have to review this. Meanwhile, note that this is working only for properties
-                            // that are direct members of the definitions ( ex: Task#width or StartEvent#radius ).
-                            // But it's not working for the properties that are inside property sets, for example an error
-                            // occurs when updating "documentation", as thisl callback "fieldName" = "documentation", but
-                            // in order to obtain the property it should be "general.documentation".
-
-                            final HasProperties hasProperties = (HasProperties) DataBinder.forModel( definition ).getModel();
-                            final Object property = hasProperties.get(fieldName);
-                            final String pId = clientDefinitionManager.getPropertyAdapter( property.getClass() ).getId( property );
-                            FormsPropertiesScreen.this.executeUpdateProperty(element, pId, newValue);
-                        });
-                    }
+                        // TODO - Pere: We have to review this. Meanwhile, note that this is working only for properties
+                        // that are direct members of the definitions ( ex: Task#width or StartEvent#radius ).
+                        // But it's not working for the properties that are inside property sets, for example an error
+                        // occurs when updating "documentation", as thisl callback "fieldName" = "documentation", but
+                        // in order to obtain the property it should be "general.documentation".
+                        final HasProperties hasProperties = (HasProperties) DataBinder.forModel( definition ).getModel();
+                        final Object property = hasProperties.get(fieldName);
+                        final String pId = clientDefinitionManager.getPropertyAdapter( property.getClass() ).getId( property );
+                        FormsPropertiesScreen.this.executeUpdateProperty(element, pId, newValue);
+                    });
                 } );
 
             } else if (ShapeState.DESELECTED.equals(state)) {

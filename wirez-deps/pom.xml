@@ -14,7 +14,7 @@
   <name>Wirez Dependencies</name>
 
   <properties>
-    
+
     <version.org.jboss.integration-platform>6.0.0.Final</version.org.jboss.integration-platform>
     <version.org.uberfire>0.9.0-SNAPSHOT</version.org.uberfire>
     <version.org.jboss.errai>4.0.0-SNAPSHOT</version.org.jboss.errai>
@@ -69,6 +69,12 @@
       <dependency>
         <groupId>org.livespark</groupId>
         <artifactId>livespark-form-modeler-api</artifactId>
+        <version>${version.org.livespark}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-form-modeler-engine</artifactId>
         <version>${version.org.livespark}</version>
       </dependency>
 
@@ -216,7 +222,7 @@
         <artifactId>jbpm-bpmn2-emfextmodel</artifactId>
         <version>${version.org.jbpm.jbpm-bpmn2-emfextmodel}</version>
       </dependency>
-      
+
       <!-- Lienzo. -->
       <dependency>
         <groupId>com.ahome-it</groupId>
@@ -242,10 +248,10 @@
         <artifactId>mockito-core</artifactId>
         <version>${version.org.mockito}</version>
       </dependency>
-      
-      
+
+
     </dependencies>
 
   </dependencyManagement>
-  
+
 </project>

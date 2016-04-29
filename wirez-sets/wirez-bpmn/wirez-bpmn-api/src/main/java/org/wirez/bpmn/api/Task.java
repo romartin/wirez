@@ -16,6 +16,7 @@
 
 package org.wirez.bpmn.api;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -32,6 +33,8 @@ import org.wirez.core.api.graph.Node;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Portable
 @Bindable
@@ -46,7 +49,7 @@ public class Task implements BPMNDefinition {
 
     @Description
     public static final transient String description = "A task is a unit of work - the job to be performed";
-    
+
     public static final transient String COLOR = "#dfeff8";
     public static final Double WIDTH = 136d;
     public static final Double HEIGHT = 48d;
@@ -56,17 +59,21 @@ public class Task implements BPMNDefinition {
     private BPMNGeneral general;
 
     @PropertySet
+    @FieldDef( label = "Background Settings", position = 9)
+    @Valid
     private BackgroundSet backgroundSet;
 
     @PropertySet
     private FontSet fontSet;
 
     @Property
-    @FieldDef(label = "Width", property = "value")
+    @FieldDef(label = "Width", property = "value", position = 0)
+    @Valid
     private Width width;
 
     @Property
-    @FieldDef(label = "Height", property = "value")
+    @FieldDef(label = "Height", property = "value", position = 1)
+    @Valid
     private Height height;
 
     @Property
@@ -79,7 +86,7 @@ public class Task implements BPMNDefinition {
     private Mean mean;
 
     @Property
-    @FieldDef(label = "TimeUnit", property = "value")
+    @FieldDef(label = "TimeUnit", property = "value", position = 2)
     private TimeUnit timeUnit;
 
     @Property

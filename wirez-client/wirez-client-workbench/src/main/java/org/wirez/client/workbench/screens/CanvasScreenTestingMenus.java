@@ -4,6 +4,7 @@ import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Window;
 import org.uberfire.mvp.Command;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
@@ -12,6 +13,7 @@ import org.wirez.client.widgets.session.presenter.impl.DefaultFullSessionPresent
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManagerImpl;
 import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.canvas.controls.docking.DockingAcceptorControl;
 import org.wirez.core.client.canvas.lienzo.LienzoLayer;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 
@@ -29,6 +31,7 @@ public class CanvasScreenTestingMenus {
     private DefaultCanvasFullSession session;
     private HandlerRegistration mousePointerCoordsHandlerReg;
     private DefaultFullSessionPresenter canvasSessionPresenter;
+    private boolean isDockingControlEnabled = true;
     
     public void init( final DefaultCanvasFullSession session,
             final DefaultFullSessionPresenter canvasSessionPresenter) {
@@ -70,6 +73,9 @@ public class CanvasScreenTestingMenus {
                 .build();*/
 
         return MenuFactory
+                .newTopLevelMenu("Switch Docking Ctrol")
+                .respondsWith(getSwitchDockingControlCommand())
+                .endMenu()
                 .newTopLevelMenu("Log Command History")
                 .respondsWith(getLogCommandStackCommand())
                 .endMenu()
@@ -87,6 +93,24 @@ public class CanvasScreenTestingMenus {
             final CanvasCommandManagerImpl ccmi = (CanvasCommandManagerImpl) session.getCanvasCommandManager();
             final Stack<Stack<org.wirez.core.api.command.Command<AbstractCanvasHandler, CanvasViolation>>> history = ccmi.getHistory();
             logCommandHistory( history );
+        };
+
+    }
+
+    private Command getSwitchDockingControlCommand() {
+
+        return () -> {
+            final DockingAcceptorControl<AbstractCanvasHandler> dockingControl = session.getDockingAcceptorControl();
+            
+            if ( isDockingControlEnabled ) {
+                this.isDockingControlEnabled = false;
+                dockingControl.disable();
+                Window.alert("Docking control disabled");
+            } else {
+                this.isDockingControlEnabled = true;
+                dockingControl.enable( session.getCanvasHandler() );
+                Window.alert("Docking control enabled");
+            }
         };
 
     }

@@ -87,6 +87,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         final AbstractCanvasHandler canvasHandler = getCanvasHandler();
         session.getConnectionAcceptorControl().enable( canvasHandler );
         session.getContainmentAcceptorControl().enable( canvasHandler );
+        session.getDockingAcceptorControl().enable( canvasHandler );
         session.getDragControl().enable( canvasHandler );
         session.getToolboxControl().enable( canvasHandler );
         session.getBuilderControl().enable( canvasHandler );

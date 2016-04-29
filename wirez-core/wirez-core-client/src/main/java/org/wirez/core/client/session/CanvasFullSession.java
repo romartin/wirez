@@ -7,6 +7,7 @@ import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.controls.builder.BuilderControl;
 import org.wirez.core.client.canvas.controls.connection.ConnectionAcceptorControl;
 import org.wirez.core.client.canvas.controls.containment.ContainmentAcceptorControl;
+import org.wirez.core.client.canvas.controls.docking.DockingAcceptorControl;
 import org.wirez.core.client.canvas.controls.drag.DragControl;
 import org.wirez.core.client.canvas.controls.toolbox.ToolboxControl;
 
@@ -18,6 +19,8 @@ public interface CanvasFullSession<C extends Canvas, H extends CanvasHandler>
     ConnectionAcceptorControl<H> getConnectionAcceptorControl();
     
     ContainmentAcceptorControl<H> getContainmentAcceptorControl();
+    
+    DockingAcceptorControl<H> getDockingAcceptorControl();
 
     DragControl<H, Element> getDragControl();
     

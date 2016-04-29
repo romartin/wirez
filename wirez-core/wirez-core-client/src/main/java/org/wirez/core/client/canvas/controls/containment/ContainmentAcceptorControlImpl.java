@@ -6,6 +6,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.command.Command;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandUtils;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.relationship.Child;
@@ -14,8 +15,8 @@ import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.canvas.wires.WiresUtils;
 import org.wirez.core.client.session.command.Session;
-import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -105,26 +106,22 @@ public class ContainmentAcceptorControlImpl implements ContainmentAcceptorContro
 
     private final IContainmentAcceptor CONTAINMENT_ACCEPTOR = new IContainmentAcceptor() {
         @Override
-        public boolean containmentAllowed(final WiresContainer wiresContainer, final WiresShape wiresShape) {
+        public boolean containmentAllowed(final WiresContainer wiresContainer, 
+                                          final WiresShape wiresShape) {
 
-            final ShapeView parent = (ShapeView) wiresContainer;
-            final ShapeView child = (ShapeView) wiresShape;
-
-            final Node childNode = canvasHandler.getGraphIndex().getNode(child.getUUID());
-            final Node parentNode = canvasHandler.getGraphIndex().getNode(parent.getUUID());
-
+            final Node childNode = WiresUtils.getNode( canvasHandler, wiresShape );
+            final Node parentNode = WiresUtils.getNode( canvasHandler, wiresContainer );
+           
             return allow(parentNode, childNode);
         }
 
         @Override
-        public boolean acceptContainment(final WiresContainer wiresContainer, final WiresShape wiresShape) {
+        public boolean acceptContainment(final WiresContainer wiresContainer, 
+                                         final WiresShape wiresShape) {
 
-            final ShapeView parent = (ShapeView) wiresContainer;
-            final ShapeView child = (ShapeView) wiresShape;
-
-            final Node childNode = canvasHandler.getGraphIndex().getNode(child.getUUID());
-            final Node parentNode = canvasHandler.getGraphIndex().getNode(parent.getUUID());
-
+            final Node childNode = WiresUtils.getNode( canvasHandler, wiresShape );
+            final Node parentNode = WiresUtils.getNode( canvasHandler, wiresContainer );
+            
             return accept(parentNode, childNode);
         }
 
@@ -159,10 +156,8 @@ public class ContainmentAcceptorControlImpl implements ContainmentAcceptorContro
     }
 
     private boolean isAccept(final CommandResult<CanvasViolation> result) {
-        return !CommandResult.Type.ERROR.equals( result.getType() );
+        return !CommandUtils.isError( result );
     }
-
-   
 
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {

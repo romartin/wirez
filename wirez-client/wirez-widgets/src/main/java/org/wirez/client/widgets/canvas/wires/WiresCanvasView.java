@@ -19,6 +19,7 @@ import com.ait.lienzo.client.core.shape.wires.*;
 import org.wirez.client.shapes.AbstractWiresConnectorView;
 import org.wirez.client.shapes.AbstractWiresShapeView;
 import org.wirez.client.widgets.canvas.CanvasView;
+import org.wirez.core.client.canvas.wires.WiresCanvas;
 import org.wirez.core.client.shape.view.ShapeView;
 
 /**
@@ -71,6 +72,12 @@ public class WiresCanvasView extends CanvasView implements org.wirez.core.client
     @Override
     public org.wirez.core.client.canvas.wires.WiresCanvas.View setContainmentAcceptor(final IContainmentAcceptor containmentAcceptor) {
         wiresManager.setContainmentAcceptor(containmentAcceptor);
+        return this;
+    }
+
+    @Override
+    public WiresCanvas.View setDockingAcceptor(final IDockingAcceptor dockingAcceptor) {
+        wiresManager.setDockingAcceptor(dockingAcceptor);
         return this;
     }
 

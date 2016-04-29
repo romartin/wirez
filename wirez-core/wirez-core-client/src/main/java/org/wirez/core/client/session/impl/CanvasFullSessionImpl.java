@@ -7,6 +7,7 @@ import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.controls.builder.BuilderControl;
 import org.wirez.core.client.canvas.controls.connection.ConnectionAcceptorControl;
 import org.wirez.core.client.canvas.controls.containment.ContainmentAcceptorControl;
+import org.wirez.core.client.canvas.controls.docking.DockingAcceptorControl;
 import org.wirez.core.client.canvas.controls.drag.DragControl;
 import org.wirez.core.client.canvas.controls.pan.PanControl;
 import org.wirez.core.client.canvas.controls.select.SelectionControl;
@@ -25,6 +26,7 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
     CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
     ConnectionAcceptorControl<AbstractCanvasHandler> connectionAcceptorControl;
     ContainmentAcceptorControl<AbstractCanvasHandler> containmentAcceptorControl;
+    DockingAcceptorControl<AbstractCanvasHandler> dockingAcceptorControl;
     DragControl<AbstractCanvasHandler, Element> dragControl;
     ToolboxControl<AbstractCanvasHandler, Element> toolboxControl;
     BuilderControl<AbstractCanvasHandler> builderControl;
@@ -36,6 +38,7 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
                                  final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
                                  final ConnectionAcceptorControl<AbstractCanvasHandler> connectionAcceptorControl,
                                  final ContainmentAcceptorControl<AbstractCanvasHandler> containmentAcceptorControl,
+                                 final DockingAcceptorControl<AbstractCanvasHandler> dockingAcceptorControl,
                                  final SelectionControl<AbstractCanvas, Shape> selectionControl,
                                  final DragControl<AbstractCanvasHandler, Element> dragControl,
                                  final ToolboxControl<AbstractCanvasHandler, Element> toolboxControl,
@@ -46,6 +49,7 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
         this.canvasCommandManager = canvasCommandManager;
         this.connectionAcceptorControl = connectionAcceptorControl;
         this.containmentAcceptorControl = containmentAcceptorControl;
+        this.dockingAcceptorControl = dockingAcceptorControl;
         this.dragControl = dragControl;
         this.toolboxControl = toolboxControl;
         this.builderControl = builderControl;
@@ -66,6 +70,11 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
     @Override
     public ContainmentAcceptorControl<AbstractCanvasHandler> getContainmentAcceptorControl() {
         return containmentAcceptorControl;
+    }
+
+    @Override
+    public DockingAcceptorControl<AbstractCanvasHandler> getDockingAcceptorControl() {
+        return dockingAcceptorControl;
     }
 
     @Override

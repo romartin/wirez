@@ -3,6 +3,7 @@ package org.wirez.core.client.canvas.controls.connection;
 import com.ait.lienzo.client.core.shape.wires.*;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.command.CommandUtils;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
@@ -11,9 +12,8 @@ import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.canvas.wires.WiresUtils;
 import org.wirez.core.client.session.command.Session;
-import org.wirez.core.client.shape.Shape;
-import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -105,23 +105,18 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
         return false;
     }
 
-    private boolean isAccept(final CommandResult<CanvasViolation> result) {
-        return !CommandResult.Type.ERROR.equals( result.getType() );
-    }
-
     private final IConnectionAcceptor CONNECTION_ACCEPTOR = new IConnectionAcceptor() {
 
         // Set the source Node for the connector.
         @Override
-        public boolean acceptHead(WiresConnection head, WiresMagnet magnet) {
-            final ShapeView connector = (ShapeView) head.getConnector();
-            final Shape sourceShape = (Shape) magnet.getMagnets().getWiresShape();
-            final Node sourceNode = canvasHandler.getGraphIndex().getNode(sourceShape.getUUID());
-            final Edge edge = canvasHandler.getGraphIndex().getEdge(connector.getUUID());
-            final String sourceUUID = sourceNode != null ? sourceNode.getUUID() : null;
-
+        public boolean acceptHead(final WiresConnection head, 
+                                  final WiresMagnet magnet) {
+            
+            final Edge edge = WiresUtils.getEdge( canvasHandler, head.getConnector() );
+            final Node sourceNode = WiresUtils.getNode( canvasHandler, magnet );
             final int mIndex = getMagnetIndex(magnet);
-
+            
+            final String sourceUUID = sourceNode != null ? sourceNode.getUUID() : null;
             final String message = "Executed SetConnectionSourceNodeCommand [source=" + sourceUUID + ", magnet=" + mIndex +  "]";
             log(Level.FINE, message);
 
@@ -130,16 +125,15 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
 
         // Set the target Node for the connector.
         @Override
-        public boolean acceptTail(WiresConnection tail, WiresMagnet magnet) {
-            WiresConnection head = tail.getConnector().getHeadConnection();
-            final ShapeView connector = (ShapeView) head.getConnector();
-            final Shape targetShape = (Shape) magnet.getMagnets().getWiresShape();
-            final Node targetNode = canvasHandler.getGraphIndex().getNode(targetShape.getUUID());
-            final Edge edge = canvasHandler.getGraphIndex().getEdge(connector.getUUID());
-            final String targetUUID = targetNode != null ? targetNode.getUUID() : null;
+        public boolean acceptTail(final WiresConnection tail, 
+                                  final WiresMagnet magnet) {
+            final WiresConnection head = tail.getConnector().getHeadConnection();
 
+            final Edge edge = WiresUtils.getEdge( canvasHandler, head.getConnector() );
+            final Node targetNode = WiresUtils.getNode( canvasHandler, magnet );
             final int mIndex = getMagnetIndex(magnet);
-
+            
+            final String targetUUID = targetNode != null ? targetNode.getUUID() : null;
             final String message = "Executed SetConnectionTargetNodeCommand [target=" + targetUUID + ", magnet=" + mIndex +  "]";
             log(Level.FINE, message);
 
@@ -147,25 +141,20 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
         }
 
         @Override
-        public boolean headConnectionAllowed(WiresConnection head, WiresShape shape) {
-            WiresConnection tail = head.getConnector().getTailConnection();
-
-            final ShapeView connector = (ShapeView) head.getConnector();
-            final Shape outNode = (Shape) shape;
-
-            final Node sourceNode = canvasHandler.getGraphIndex().getNode(outNode.getUUID());
-            final Edge<View<?>, Node> edge = canvasHandler.getGraphIndex().getEdge(connector.getUUID());
-
+        public boolean headConnectionAllowed(final WiresConnection head, 
+                                             final WiresShape shape) {
+            
+            final Edge<View<?>, Node> edge = WiresUtils.getEdge( canvasHandler, head.getConnector() );
+            final Node sourceNode = WiresUtils.getNode( canvasHandler, shape );
+            
             return allowSource(sourceNode, edge, 0);
         }
 
         @Override
-        public boolean tailConnectionAllowed(WiresConnection tail, WiresShape shape) {
-            final ShapeView connector = (ShapeView) tail.getConnector();
-            final Shape inNode = (Shape) shape;
-
-            final Node targetNode = canvasHandler.getGraphIndex().getNode(inNode.getUUID());
-            final Edge<View<?>, Node> edge = canvasHandler.getGraphIndex().getEdge(connector.getUUID());
+        public boolean tailConnectionAllowed(final WiresConnection tail, 
+                                             final WiresShape shape) {
+            final Edge<View<?>, Node> edge = WiresUtils.getEdge( canvasHandler, tail.getConnector() );
+            final Node targetNode = WiresUtils.getNode( canvasHandler, shape );
 
             return allowTarget(targetNode, edge, 0);
         }
@@ -184,6 +173,10 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
         }
 
     };
+
+    private boolean isAccept(final CommandResult<CanvasViolation> result) {
+        return !CommandUtils.isError( result );
+    }
 
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {

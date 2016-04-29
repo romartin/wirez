@@ -18,6 +18,7 @@ package org.wirez.core.client.canvas.wires;
 
 import com.ait.lienzo.client.core.shape.wires.IConnectionAcceptor;
 import com.ait.lienzo.client.core.shape.wires.IContainmentAcceptor;
+import com.ait.lienzo.client.core.shape.wires.IDockingAcceptor;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.client.canvas.AbstractCanvas;
@@ -45,6 +46,8 @@ public abstract class WiresCanvas extends AbstractCanvas<WiresCanvas.View> {
         View setConnectionAcceptor(IConnectionAcceptor connectionAcceptor);
         
         View setContainmentAcceptor(IContainmentAcceptor containmentAcceptor);
+        
+        View setDockingAcceptor(IDockingAcceptor dockingAcceptor);
         
         WiresManager getWiresManager();
         

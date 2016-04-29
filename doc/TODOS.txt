@@ -146,6 +146,8 @@ House keeping & others
 **********************
     
     - Unit testing
+    - Distros
+        - remove beans.xml exclusion for org.wirez.client... should not be there. 
     - Remove GraphBoundsIndexBuilder and use Layer#findShapeAt ( check Builder control & GraphBoundsIndexer & LienzoLayerUtils )
     - BPMN marshalling / unmarshalling
         - Remove code from "legacy" package and use the jbpm-designer-backend artifact as a required dependency.

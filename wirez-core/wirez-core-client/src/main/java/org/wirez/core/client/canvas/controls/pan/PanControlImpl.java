@@ -11,7 +11,7 @@ import javax.enterprise.context.Dependent;
 @Dependent
 public class PanControlImpl extends AbstractMediatorControl<MousePanMediator> implements PanControl<AbstractCanvas> {
 
-    private final IEventFilter[] filters = new IEventFilter[] { EventFilter.SHIFT };
+    private final IEventFilter[] filters = new IEventFilter[] { EventFilter.ALT };
     
     @Override
     protected MousePanMediator buildMediator() {

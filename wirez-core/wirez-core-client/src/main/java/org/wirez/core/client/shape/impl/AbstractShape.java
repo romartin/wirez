@@ -115,7 +115,6 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         
     }
 
-    
     protected void _applyFillColor(final String color) {
         if (color != null && color.trim().length() > 0) {
             ( (HasFillGradient) view).setFillGradient(HasFillGradient.Type.LINEAR, color, "#FFFFFF");

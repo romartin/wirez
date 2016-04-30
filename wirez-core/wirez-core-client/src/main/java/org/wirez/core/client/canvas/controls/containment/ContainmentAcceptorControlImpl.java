@@ -57,6 +57,10 @@ public class ContainmentAcceptorControlImpl implements ContainmentAcceptorContro
     public boolean allow(final Node parent, 
                          final Node child) {
 
+        if ( parent == null && child == null ) {
+            return false;
+        }
+        
         boolean isAllow = false;
         final Edge childEdge = getChildEdge(child);
         final boolean isSameParent = isSameParent(parent, childEdge);
@@ -79,6 +83,10 @@ public class ContainmentAcceptorControlImpl implements ContainmentAcceptorContro
     public boolean accept(final Node parent, 
                           final Node child) {
 
+        if ( parent == null && child == null ) {
+            return false;
+        }
+        
         final Edge childEdge = getChildEdge(child);
         final boolean isSameParent = isSameParent(parent, childEdge);
 

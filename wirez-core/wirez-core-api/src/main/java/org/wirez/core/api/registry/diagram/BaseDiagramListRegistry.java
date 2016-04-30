@@ -18,12 +18,23 @@ public abstract class BaseDiagramListRegistry<D extends Diagram> extends BaseLis
 
     @Override
     public void update(final D diagram) {
+
         final int index = items.indexOf(diagram);
-        final boolean isRemoved = items.remove(diagram);
-        if (isRemoved) {
-            items.add(index, diagram);
+
+        if ( index != -1 ) {
+            
+            final boolean isRemoved = items.remove(diagram);
+            
+            if (isRemoved) {
+                items.add(index, diagram);
+            }
+            
+        } else {
+            
+            throw new RuntimeException("Diagram with uuid [" + diagram.getUUID() + "] cannot be updated as it does not exist.");
+            
         }
-        throw new RuntimeException("Diagram with uuid [" + diagram.getUUID() + "] cannot be updated as it does not exist.");
+        
     }
     
 }

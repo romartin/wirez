@@ -89,9 +89,13 @@ public class DragControlImpl extends AbstractCanvasHandlerRegistrationControl
 
     @Override
     public void deregister(final Element element) {
-        final AbstractShape shape = (AbstractShape) canvasHandler.getCanvas().getShape( element.getUUID() );
-        org.wirez.core.client.shape.view.event.DragHandler handler = handlers.get( element.getUUID() );
-        doDeregister(shape, handler);
+        
+        final Shape<?> shape = (Shape<?>) canvasHandler.getCanvas().getShape( element.getUUID() );
+        if ( null != shape && shape instanceof AbstractShape ) {
+            final AbstractShape abstractShape = (AbstractShape) shape;
+            org.wirez.core.client.shape.view.event.DragHandler handler = handlers.get( element.getUUID() );
+            doDeregister(abstractShape, handler);
+        }
 
     }
 

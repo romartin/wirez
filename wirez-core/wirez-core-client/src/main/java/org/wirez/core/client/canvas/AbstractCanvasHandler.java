@@ -17,6 +17,7 @@
 package org.wirez.core.client.canvas;
 
 import com.google.gwt.logging.client.LogConfiguration;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.adapter.DefinitionSetRuleAdapter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.Edge;
@@ -49,6 +50,9 @@ import org.wirez.core.client.shape.impl.AbstractConnector;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -197,7 +201,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                 
                 if ( node.getContent() instanceof View ) {
                     final View viewContent = (View) node.getContent();
-                    final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
+                    final ShapeFactory factory = 
+                            shapeManager.getFactory( getDefinitionId( viewContent.getDefinition() ) );
 
                     // Add the node shape into the canvas.
                     register(factory, node);
@@ -217,7 +222,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                 if ( content instanceof View ) {
 
                     final View viewContent = (View) edge.getContent();
-                    final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
+                    final ShapeFactory factory = 
+                            shapeManager.getFactory( getDefinitionId( viewContent.getDefinition() ) );
 
                     // Add the edge shape into the canvas.
                     register(factory, edge);
@@ -273,6 +279,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         if ( null == shape.getUUID() ) {
             shape.setUUID(candidate.getUUID());
         }
+        
+        shape.getShapeView().setZIndex( 0 );
         
         // Add the shapes on canvas and fire events.
         canvas.addShape(shape);
@@ -345,13 +353,60 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     public void addChild(final Element parent, final Element child) {
         final Shape parentShape = canvas.getShape(parent.getUUID());
         final Shape childShape = canvas.getShape(child.getUUID());
+        handleZIndex( childShape, parentShape.getShapeView().getZIndex() + 1 );
+        handleZIndex( child, parentShape.getShapeView().getZIndex() + 1 );
         canvas.addChildShape(parentShape, childShape);
     }
 
     public void removeChild(final String parentUUID, final String childUUID) {
         final Shape parentShape = canvas.getShape( parentUUID );
         final Shape childShape = canvas.getShape( childUUID );
+        handleZIndex( childShape, 0 );
+        final Element element = getGraphIndex().get( childShape.getUUID() );
+        if ( null != element ) {
+            handleZIndex( element, 0 );
+        }
         canvas.deleteChildShape(parentShape, childShape);
+    }
+    
+    protected void handleZIndex(final Element child,
+                                final int zindex) {
+        
+        // ZIndex for child shape's outgoing connectors.
+        if ( child instanceof Node ) {
+            final Node childNode = (Node) child;
+            final List<Edge> outEdges = childNode.getOutEdges();
+            if ( null != outEdges && !outEdges.isEmpty() ) {
+
+                final Set<String> suuids = new LinkedHashSet<>();
+
+                for ( final Edge edge : outEdges ) {
+                    if ( edge.getContent() instanceof View ) {
+                       suuids.add( edge.getUUID() );
+                    }
+                }
+                
+                handleZIndex( suuids, zindex );
+            }
+        }
+        
+    }
+
+    protected void handleZIndex(final Set<String> shapeUUIDs,
+                                final int zindex) {
+
+        for ( final String suuid : shapeUUIDs ) {
+            final Shape edgeShape = canvas.getShape( suuid );
+            handleZIndex( edgeShape, zindex );
+        }
+
+    }
+
+    protected void handleZIndex(final Shape shape,
+                                final int zindex) {
+        if ( null != shape ) {
+            shape.getShapeView().setZIndex( zindex );
+        }
     }
 
     public void clear() {
@@ -437,6 +492,11 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         return shapeManager;
     }
 
+    protected String getDefinitionId( final Object definition ) {
+        final DefinitionAdapter<Object> adapter = clientDefinitionManager.getDefinitionAdapter( definition.getClass() );
+        return adapter.getId( definition );
+    }
+    
     @Override
     public boolean equals( final Object o ) {
         if ( this == o ) {

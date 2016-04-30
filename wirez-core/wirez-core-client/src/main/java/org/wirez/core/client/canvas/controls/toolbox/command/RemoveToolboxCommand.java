@@ -14,7 +14,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class RemoveToolboxCommand implements ToolboxCommand {
+public class RemoveToolboxCommand extends AbstractToolboxCommand {
 
     CanvasCommandFactory commandFactory;
     CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
@@ -26,7 +26,7 @@ public class RemoveToolboxCommand implements ToolboxCommand {
                                 final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
         this.commandFactory = commandFactory;
         this.canvasCommandManager = canvasCommandManager;
-        this.icon = SVGUtils.createSVGIcon(SVGUtils.getRemove());;
+        this.icon = SVGUtils.createSVGIcon(SVGUtils.getRemoveIcon());;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RemoveToolboxCommand implements ToolboxCommand {
     }
 
     @Override
-    public void execute(final Context context, 
+    public void click(final Context context, 
                         final Element element) {
         
         // TODO: Remove use of hardcoded confirm box here.

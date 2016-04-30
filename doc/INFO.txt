@@ -1,14 +1,5 @@
 - Links
     
-    - Wirez -> https://github.com/romartin/uberfire-extensions/tree/wirez/ 
-    
-    - Lienzo KS -> https://www.lienzo-core.com/lienzo-ks/#WELCOME
-    
-    - GitHub
-        - Ahome-it -> https://github.com/ahome-it
-        - Lienzo core -> https://github.com/ahome-it/lienzo-core
-    
-    - Mark's TODOS on lienzo -> https://github.com/ahome-it/lienzo-core/wiki/Wires
     - Some Mark's videos
         - multipath resize -> https://www.lienzo-core.com/lienzo-ks/#MULTIPATH_RESIZE
         - orthogonal lines -> http://www.screencast.com/users/MarkPr/folders/Jing/media/9457bf7a-77d6-4088-ac15-bc9d61fe513d
@@ -32,6 +23,9 @@
     Graph theory
         - http://blog.athico.com/2015/08/ruleml2015-hybrid-reactive-relational.html
 
+- QE
+    - https://docs.google.com/document/d/1ACUnbDnMd-1x6i9IiqolkfP0tD-s83EWiRk5eLyT_xw/edit#
+    
 - Property editors
 	- http://www.eunomia-process.com/
 	- https://docs.oracle.com/cd/E18941_01/tutorials/jdtut_11r2_44/images/pi_taskflowcall.gif

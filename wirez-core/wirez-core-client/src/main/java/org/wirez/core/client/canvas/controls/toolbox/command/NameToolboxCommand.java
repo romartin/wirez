@@ -12,7 +12,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class NameToolboxCommand implements ToolboxCommand, IsWidget {
+public class NameToolboxCommand extends AbstractToolboxCommand implements IsWidget {
 
     PopupBox<AbstractCanvasHandler, Element> toolbox;
 
@@ -21,7 +21,7 @@ public class NameToolboxCommand implements ToolboxCommand, IsWidget {
     @Inject
     public NameToolboxCommand(PopupBox<AbstractCanvasHandler, Element> toolbox) {
         this.toolbox = toolbox;
-        this.icon = SVGUtils.createSVGIcon(SVGUtils.getTextEdit());
+        this.icon = SVGUtils.createSVGIcon(SVGUtils.getTextEditIcon());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class NameToolboxCommand implements ToolboxCommand, IsWidget {
     }
 
     @Override
-    public void execute(final Context context, 
+    public void click(final Context context, 
                         final Element element) {
         toolbox.initialize(context.getCanvasHandler());
         toolbox.show(element, context.getX(), context.getY());

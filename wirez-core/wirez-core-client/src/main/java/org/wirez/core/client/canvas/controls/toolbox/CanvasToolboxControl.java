@@ -16,8 +16,6 @@
 
 package org.wirez.core.client.canvas.controls.toolbox;
 
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.Direction;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -31,9 +29,10 @@ import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.controls.toolbox.command.ContextImpl;
 import org.wirez.core.client.canvas.controls.toolbox.command.ToolboxCommand;
 import org.wirez.core.client.shape.Shape;
-import org.wirez.lienzo.toolbox.ButtonsOrRegister;
 import org.wirez.lienzo.toolbox.HoverToolbox;
-import org.wirez.lienzo.toolbox.HoverToolboxButton;
+import org.wirez.lienzo.toolbox.Toolboxes;
+import org.wirez.lienzo.toolbox.builder.ButtonsOrRegister;
+import org.wirez.lienzo.toolbox.event.ToolboxButtonEvent;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -45,6 +44,9 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
         implements ToolboxControl<AbstractCanvasHandler, Element>, IsWidget {
 
 
+    private static final int TOOLBOX_PADDING = 2;
+    private static final int TOOLBOX_ICON_SIZE = 16;
+    
     public interface View extends IsWidget{
 
         View addWidget(IsWidget widget);
@@ -108,33 +110,46 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
             
             if ( null != commands && !commands.isEmpty() ) {
                 
-                WiresShape wiresShape = (WiresShape) shape.getShapeView();
+                final WiresShape wiresShape = (WiresShape) shape.getShapeView();
 
-                ButtonsOrRegister toolboxBuilder = HoverToolbox.toolboxFor(wiresShape).on(Direction.NORTH_EAST)
-                        .towards(Direction.SOUTH);
+                final ButtonsOrRegister register = Toolboxes.hoverToolBoxFor(wiresShape)
+                        .on(Direction.EAST)
+                        .towards(Direction.EAST)
+                        .grid(TOOLBOX_PADDING, TOOLBOX_ICON_SIZE, commands.size(), 1);
 
                 for (final ToolboxCommand command : commands) {
 
                     // TODO: Use command title (tooltip).
 
-                    toolboxBuilder.add(new HoverToolboxButton(command.getIcon().copy(), new NodeMouseClickHandler() {
-                        @Override
-                        public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
-                            Context _context = new ContextImpl(canvasHandler,
-                                    nodeMouseClickEvent.getX(),
-                                    nodeMouseClickEvent.getY());
-                            setCommandView(command).execute(_context, element);
-                        }
-                    }));
+                    register.add(command.getIcon())
+                            .setClickHandler(event -> fireCommandExecution( element, command, event, Context.Event.CLICK) )
+                            .setMouseEnterHandler(event -> fireCommandExecution( element, command, event, Context.Event.MOUSE_ENTER) )
+                            .setMouseExitHandler(event -> fireCommandExecution( element, command, event, Context.Event.MOUSE_EXIT) )
+                            .setDragEndHandler(event -> fireCommandExecution( element, command, event, Context.Event.DRAG) )
+                            .end();
 
                 }
 
-
-                final HoverToolbox hoverToolbox = toolboxBuilder.register();
+                final HoverToolbox hoverToolbox = register.register();
                 toolboxMap.put( element.getUUID(), hoverToolbox );
+                  
             }
             
         }
+        
+    }
+    
+    private void fireCommandExecution(final Element element,
+                                      final ToolboxCommand command,
+                                      final ToolboxButtonEvent event,
+                                      final Context.Event eventType ) {
+        
+        Context _context = new ContextImpl(canvasHandler,
+                eventType,
+                event.getX(),
+                event.getY());
+        
+        setCommandView(command).execute(_context, element);
         
     }
 

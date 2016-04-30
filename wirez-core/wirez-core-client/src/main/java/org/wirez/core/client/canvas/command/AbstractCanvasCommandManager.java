@@ -35,7 +35,7 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
             graphResult = doGraphCommandAllow(graphContext, graphCommand);
 
             if (null != graphCommand && null != graphResult) {
-                afterGraphCommandExecuted(graphCommand, graphResult);
+                afterGraphCommandAllow(graphCommand, graphResult);
             }
 
             return new CanvasCommandResultBuilder(graphResult).build();
@@ -45,7 +45,7 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
         final CommandResult<CanvasViolation> result = super.doAllow(context, command);
 
         if (null != graphCommand && null != graphResult) {
-            afterGraphCommandExecuted(graphCommand, graphResult);
+            afterGraphCommandAllow(graphCommand, graphResult);
         }
 
         return result;

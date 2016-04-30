@@ -16,6 +16,7 @@
 
 package org.wirez.core.client.shape.impl;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
@@ -27,6 +28,7 @@ import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.Lifecycle;
 import org.wirez.core.client.shape.view.IsConnector;
 import org.wirez.core.client.shape.view.ShapeView;
+import org.wirez.core.client.util.ShapeUtils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,44 +104,75 @@ public abstract class AbstractConnector<W, E extends Edge<ViewConnector<W>, Node
     }
 
     protected void _applyFillColor(final String color) {
+        
         if (color != null && color.trim().length() > 0) {
             getShapeView().setFillColor(color);
         }
+        
     }
 
     protected void  _applyBorders(final String color, 
                                   final Double width) {
+        
         if (color != null && color.trim().length() > 0) {
             getShapeView().setStrokeColor(color);
         }
+        
         if (width != null) {
             getShapeView().setStrokeWidth(width);
         }
+        
     }
 
     public void applyConnections(final E element, 
                                  final CanvasHandler canvasHandler) {
-        final WiresCanvas canvas = (WiresCanvas) canvasHandler.getCanvas();
+
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
+
+        applyConnections( element, sourceNode,  targetNode, canvasHandler );
+
+    }
+
+    public void applyConnections(final E element,
+                                 final Node sourceNode,
+                                 final Node targetNode,
+                                 final CanvasHandler canvasHandler) {
         
-        final ViewConnector connectionContent = (ViewConnector) element.getContent();
-        final int sourceMagnet = connectionContent.getSourceMagnetIndex();
-        final int targetMagnet = connectionContent.getTargetMagnetIndex();
-        
+        final WiresCanvas canvas = (WiresCanvas) canvasHandler.getCanvas();
+
         if (targetNode != null) {
             final Shape outNodeShape = canvas.getShape(targetNode.getUUID());
             if ( null != sourceNode && null != outNodeShape ) {
                 final Shape inNodeShape = canvas.getShape(sourceNode.getUUID());
-
-                ( (IsConnector) view).connect(inNodeShape.getShapeView(), sourceMagnet, outNodeShape.getShapeView(), targetMagnet, true, false);
+                applyConnections( element, inNodeShape.getShapeView(), outNodeShape.getShapeView() );
             }
         }
         
     }
 
+    public void applyConnections(final E element,
+                                 final ShapeView inNodeShapeView,
+                                 final ShapeView outNodeShapeView) {
+
+        final ViewConnector connectionContent = (ViewConnector) element.getContent();
+        final int sourceMagnet = connectionContent.getSourceMagnetIndex();
+        final int targetMagnet = connectionContent.getTargetMagnetIndex();
+
+        if ( null != inNodeShapeView ) {
+            final int z = inNodeShapeView.getZIndex();
+            view.setZIndex( z );
+        }
+        
+        if ( null != inNodeShapeView && null != outNodeShapeView ) {
+            ( (IsConnector) view).connect(inNodeShapeView, sourceMagnet, outNodeShapeView, targetMagnet, true, false);
+        }
+
+    }
+    
     @Override
     public boolean equals(final Object o) {
+        
         if ( this == o ) {
             return true;
         }

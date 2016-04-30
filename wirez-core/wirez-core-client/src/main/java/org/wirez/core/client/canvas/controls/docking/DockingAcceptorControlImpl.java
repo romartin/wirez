@@ -52,6 +52,10 @@ public class DockingAcceptorControlImpl implements DockingAcceptorControl<Abstra
     public boolean allow(final Node parent, 
                          final Node child) {
 
+        if ( parent == null && child == null ) {
+            return false;
+        }
+        
         // TODO
         
         return true;
@@ -63,6 +67,10 @@ public class DockingAcceptorControlImpl implements DockingAcceptorControl<Abstra
     public boolean accept(final Node parent, 
                           final Node child) {
 
+        if ( parent == null && child == null ) {
+            return false;
+        }
+        
         // TODO
         
         return true;

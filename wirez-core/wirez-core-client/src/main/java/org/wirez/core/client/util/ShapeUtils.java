@@ -4,8 +4,9 @@ import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.wires.MagnetManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.types.LinearGradient;
-import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.ShapeSet;
+import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.view.ShapeView;
 
 import java.util.Collection;
 
@@ -74,6 +75,20 @@ public class ShapeUtils {
         }
         
         return new int[] { sMagnet, tMagnet };
+    }
+
+    public static int[] getDefaultMagnetsIndex(final Shape sourceShape, final Shape targetShape) {
+        
+        final ShapeView<?> sourceView = sourceShape.getShapeView();
+        final ShapeView<?> targetView = targetShape.getShapeView();
+        
+        if ( sourceView instanceof WiresShape && targetView instanceof WiresShape ) {
+            
+            return getDefaultMagnetsIndex( (WiresShape) sourceView, (WiresShape) targetView );
+            
+        }
+        
+        return new int[] { 0, 0 };
     }
 
     /**

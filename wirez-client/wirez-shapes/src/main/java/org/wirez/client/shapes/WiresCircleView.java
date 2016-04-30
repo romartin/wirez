@@ -33,6 +33,8 @@ public class WiresCircleView<T extends WiresCircleView> extends AbstractWiresSha
         this.addChild(circle, WiresLayoutContainer.Layout.CENTER);
         decorator = new Circle(radius).setX(radius).setY(radius).setFillAlpha(0).setStrokeAlpha(0);
         this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
+        // Path must be on top so different handlers ( such as the one in hover toolbox ) are attaching event handlers to it.
+        getPath().moveToTop();
     }
 
     @Override

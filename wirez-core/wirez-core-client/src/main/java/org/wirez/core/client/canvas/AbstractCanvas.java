@@ -16,6 +16,7 @@
 
 package org.wirez.core.client.canvas;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
@@ -27,9 +28,7 @@ import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -121,7 +120,7 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
 
     public Canvas addChildShape(final Shape parent, final Shape child) {
         getView().addChildShape(parent.getShapeView(), child.getShapeView());
-        log(Level.FINE, "Adding child [" + child.getUUID() + "] into parent [" + parent.getUUID()  + "]");
+        log(Level.FINE, "Adding child [" + child.getUUID() + "] into parent [" + parent.getUUID() + "]");
         return this;
     }
 
@@ -134,19 +133,24 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
     @Override
     public Canvas addShape(final Shape shape) {
 
+        addTransientShape( shape );
+
+        shapes.add(shape);
+        
+        canvasShapeAddedEvent.fire(new CanvasShapeAddedEvent(this, shape));
+
+        return this;
+    }
+    
+    public Canvas addTransientShape( final Shape shape ) {
+        
         if (shape.getUUID() == null) {
             shape.setUUID(org.wirez.core.api.util.UUID.uuid());
         }
 
-        log(Level.FINE, "BaseCanvas#register - " + shape.toString() + " [id=" + shape.getUUID() + "]");
-
         shape.getShapeView().setUUID(shape.getUUID());
-        view.addShape( shape.getShapeView() );
-
-        shapes.add( shape );
+        view.addShape(shape.getShapeView());
         
-        canvasShapeAddedEvent.fire( new CanvasShapeAddedEvent( this, shape ) );
-
         return this;
     }
 
@@ -166,9 +170,7 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
     @Override
     public Canvas deleteShape(final Shape shape) {
         
-        log(Level.FINE, "BaseCanvas#deregister - " + shape.toString() + " [id=" + shape.getUUID() + "]");
-        
-        view.removeShape( shape.getShapeView() );
+        deleteTransientShape( shape );
 
         shapes.remove(shape);
         
@@ -176,11 +178,33 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
         
         return this;
     }
+
+    public Canvas deleteTransientShape(final Shape shape) {
+
+        view.removeShape( shape.getShapeView() );
+
+        return this;
+    }
     
     @Override
     public AbstractCanvas draw() {
+        applyShapesZIndex();
         view.getLayer().draw();
         return this;
+    }
+
+    protected void applyShapesZIndex() {
+        for ( final Shape shape : shapes ) {
+            applyShapeZIndex( shape );
+        }
+    }
+
+    protected void applyShapeZIndex( final Shape shape ) {
+        final int order = shape.getShapeView().getZIndex();
+        shape.getShapeView().moveToBottom();
+        for ( int x = 0; x < order; x++ ) {
+            shape.getShapeView().moveUp();
+        }
     }
 
     protected void beforeDrawCanvas() {

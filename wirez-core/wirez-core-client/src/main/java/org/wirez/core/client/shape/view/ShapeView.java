@@ -46,5 +46,9 @@ public interface ShapeView<T> {
 
     T moveDown();
     
+    T setZIndex(int zindez);
+    
+    int getZIndex();
+    
     void removeFromParent();
 }

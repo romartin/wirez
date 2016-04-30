@@ -7,7 +7,6 @@ import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.ShapeView;
 
 public final class WiresUtils {
@@ -15,26 +14,44 @@ public final class WiresUtils {
     public static Node getNode(final AbstractCanvasHandler canvasHandler,
                                final WiresContainer shape) {
         
-        final ShapeView view = (ShapeView) shape;
+        if ( shape instanceof ShapeView ) {
+
+            final ShapeView view = (ShapeView) shape;
+
+            return canvasHandler.getGraphIndex().getNode(view.getUUID());
+            
+        }
         
-        return canvasHandler.getGraphIndex().getNode(view.getUUID());
+        return null;
     }
     
     public static Node getNode(final AbstractCanvasHandler canvasHandler,
                                final WiresMagnet magnet) {
 
-        final Shape sourceShape = (Shape) magnet.getMagnets().getWiresShape();
+        final WiresShape shape = magnet.getMagnets().getWiresShape();
         
+        if ( shape instanceof ShapeView ) {
+            
+            final ShapeView view = (ShapeView) shape;
 
-        return canvasHandler.getGraphIndex().getNode(sourceShape.getUUID());
+            return canvasHandler.getGraphIndex().getNode(view.getUUID());
+        }
+        
+        return null;
     }
 
     public static Edge getEdge(final AbstractCanvasHandler canvasHandler,
                                final WiresConnector connector) {
 
-        final ShapeView view = (ShapeView) connector;
+        if ( connector instanceof ShapeView ) {
 
-        return canvasHandler.getGraphIndex().getEdge(view.getUUID());
+            final ShapeView view = (ShapeView) connector;
+
+            return canvasHandler.getGraphIndex().getEdge(view.getUUID());
+            
+        }
+        
+        return null;
     }
     
 }

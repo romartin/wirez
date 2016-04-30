@@ -1,31 +1,40 @@
 package org.wirez.lienzo.toolbox;
 
-import com.ait.lienzo.client.core.animation.AnimationCallback;
-import com.ait.lienzo.client.core.animation.AnimationProperties;
-import com.ait.lienzo.client.core.animation.AnimationProperty;
-import com.ait.lienzo.client.core.animation.AnimationTweener;
-import com.ait.lienzo.client.core.animation.IAnimation;
-import com.ait.lienzo.client.core.animation.IAnimationHandle;
+import com.ait.lienzo.client.core.Attribute;
+import com.ait.lienzo.client.core.animation.*;
+import com.ait.lienzo.client.core.event.AnimationFrameAttributesChangedBatcher;
+import com.ait.lienzo.client.core.event.AttributesChangedEvent;
+import com.ait.lienzo.client.core.event.AttributesChangedHandler;
+import com.ait.lienzo.client.core.event.IAttributesChangedBatcher;
+import com.ait.lienzo.client.core.shape.Group;
+import com.ait.lienzo.client.core.shape.Layer;
+import com.ait.lienzo.client.core.shape.Node;
+import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.types.Point2D;
-import com.ait.lienzo.client.core.types.Point2DArray;
-import com.ait.lienzo.client.core.util.Geometry;
 import com.ait.lienzo.shared.core.types.Direction;
+import com.ait.tooling.common.api.flow.Flows;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
-import org.wirez.lienzo.HoverTimer;
+import org.wirez.lienzo.grid.Grid;
+import org.wirez.lienzo.toolbox.builder.AbstractBuilder;
+import org.wirez.lienzo.toolbox.grid.GridToolbox;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class HoverToolbox {
+import static com.ait.lienzo.client.core.AttributeOp.any;
+
+public class HoverToolbox implements GridToolbox {
+
+    private static final Flows.BooleanOp XYWH_OP = any(Attribute.X, Attribute.Y, Attribute.WIDTH, Attribute.HEIGHT);
 
     private final WiresShape shape;
-    private final Direction corner;
+    private final Direction anchor;
     private final Direction towards;
-    private final List<HoverToolboxButton> buttons;
+    private final List<ToolboxButton> buttons;
     private final HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
+    private IAttributesChangedBatcher attributesChangedBatcher = new AnimationFrameAttributesChangedBatcher();
 
     private final HoverTimer hoverTimer = new HoverTimer(new HoverTimer.Actions() {
         @Override
@@ -43,173 +52,154 @@ public class HoverToolbox {
             return HoverToolbox.this.showing;
         }
     });
+    private final Grid grid;
     private boolean showing;
+    private Group group;
 
+    private void initialize() {
+
+        if (grid.size() < buttons.size()) {
+            throw new IllegalStateException("added more buttons than the grid can contain");
+        }
+
+        this.group = new Group().setDraggable( false );
+        
+        Iterator<Grid.Point> gridIterator = grid.iterator();
+        for (ToolboxButton button : buttons) {
+            Grid.Point point = gridIterator.next();
+            button.getShape().setX(point.getX()).setY(point.getY());
+            button.getShape().getGroup().setAlpha(0);
+            HandlerRegistration hr1 = button.getDecorator().addNodeMouseEnterHandler(hoverTimer);
+            HandlerRegistration hr2 = button.getDecorator().addNodeMouseExitHandler(hoverTimer);
+            handlerRegistrationManager.register(hr1);
+            handlerRegistrationManager.register(hr2);
+            group.add( button.getShape().getGroup() );
+        }
+        
+        this.shape.getWiresLayer().getLayer().add( group );
+
+        reposition();
+        initAttributesChangedHandler();
+        
+        this.shape.getWiresLayer().getLayer().batch();
+    }
+
+    private void initAttributesChangedHandler()
+    {
+        shape.getGroup().setAttributesChangedBatcher(attributesChangedBatcher);
+
+        final AttributesChangedHandler handler = new AttributesChangedHandler()
+        {
+            @Override
+            public void onAttributesChanged(AttributesChangedEvent event)
+            {
+                if (event.evaluate(XYWH_OP))
+                {
+                    reposition();
+                }
+            }
+        };
+
+        // Attribute change handlers.
+        shape.getGroup().addAttributesChangedHandler(Attribute.X, handler);
+        shape.getGroup().addAttributesChangedHandler(Attribute.Y, handler);
+        shape.getPath().addAttributesChangedHandler(Attribute.WIDTH, handler);
+        shape.getPath().addAttributesChangedHandler(Attribute.HEIGHT, handler);
+    }
+    
+    private void reposition() {
+        final double gx = shape.getGroup().getAbsoluteLocation().getX();
+        final double gy = shape.getGroup().getAbsoluteLocation().getY();
+        final Point2D anchorPoint = Positioning.anchorFor(this.shape.getPath().getBoundingPoints().getBoundingBox(), this.anchor);
+        final Grid.Point toolboxPosition = this.grid.findPosition(new Grid.Point((int) anchorPoint.getX(), (int) anchorPoint.getY()), this.towards);
+        group.setX(gx + toolboxPosition.getX());
+        group.setY(gy + toolboxPosition.getY());
+    }
+    
+    @Override
     public void show() {
+        
         if (!showing) {
-            for (int i = 0; i < buttons.size(); i++) {
-                HoverToolboxButton hoverToolboxButton = buttons.get(i);
-                Point2D position = findPosition(i);
-                hoverToolboxButton.getShape().setX(position.getX());
-                hoverToolboxButton.getShape().setY(position.getY());
-                hoverToolboxButton.getShape().animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 500, new AnimationCallback());
-                HandlerRegistration hr1 = hoverToolboxButton.getDecorator().addNodeMouseEnterHandler(hoverTimer);
-                HandlerRegistration hr2 = hoverToolboxButton.getDecorator().addNodeMouseExitHandler(hoverTimer);
-                handlerRegistrationManager.register(hr1);
-                handlerRegistrationManager.register(hr2);
-                this.shape.addChild(hoverToolboxButton.getShape());
-                this.shape.getWiresLayer().getLayer().batch();
+            for (ToolboxButton button : buttons) {
+                button.getShape().getGroup().animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 500, new AnimationCallback());
+                button.getShape().getGroup().addNodeMouseEnterHandler(hoverTimer);
+                button.getShape().getGroup().addNodeMouseExitHandler(hoverTimer);
             }
 
             showing = true;
         }
+        
     }
-    
+
+    @Override
     public void remove() {
+
+        attributesChangedBatcher.cancelAttributesChangedBatcher();
         handlerRegistrationManager.removeHandler();
-        for (final HoverToolboxButton button : buttons) {
-            button.getShape().removeFromParent();
+        
+        for (ToolboxButton button : buttons) {
+            button.remove();
         }
+      
     }
 
-    private Point2D anchorFor(Direction direction) {
-        Point2DArray cardinals = Geometry.getCardinals(this.shape.getPath().getBoundingPoints().getBoundingBox());
-        Point2D anchor = null;
-        switch (direction) {
-            case NORTH_EAST:
-                anchor = cardinals.get(2);
-                break;
-            case SOUTH_EAST:
-                anchor = cardinals.get(4);
-                break;
-            case SOUTH_WEST:
-                anchor = cardinals.get(6);
-                break;
-            case NORTH_WEST:
-                anchor = cardinals.get(8);
-                break;
-            default:
-                throw new RuntimeException("meh");
-        }
-        return anchor;
-    }
-
-    private Point2D findPosition(int i) {
-        Point2D anchor = anchorFor(this.corner);
-        double xFactor = 0, yFactor = 0, xOffset = 0, yOffset = 0;
-
-        switch (corner) {
-            case NORTH_WEST:
-                xOffset = -HoverToolboxButton.BUTTON_SIZE -2;
-                yOffset = -HoverToolboxButton.BUTTON_SIZE -2;
-                break;
-            case NORTH_EAST:
-                xOffset = 2;
-                yOffset = -HoverToolboxButton.BUTTON_SIZE -2;
-                break;
-            case SOUTH_WEST:
-                xOffset = -HoverToolboxButton.BUTTON_SIZE -2;
-                yOffset = 2;
-                break;
-            case SOUTH_EAST:
-                xOffset = 2;
-                yOffset = 2;
-                break;
-        }
-
-        switch (towards) {
-            case EAST:
-                xFactor = 1;
-                yFactor = 0;
-                break;
-            case NORTH:
-                xFactor = 0;
-                yFactor = -1;
-                break;
-            case SOUTH:
-                xFactor = 0;
-                yFactor = 1;
-                break;
-            case WEST:
-                xFactor = -1;
-                yFactor = 0;
-                break;
-            default:
-                throw new UnsupportedOperationException();
-
-        }
-
-        double x = xFactor * (i * HoverToolboxButton.BUTTON_SIZE) + (xFactor * 2) + xOffset;
-        double y = yFactor * (i * HoverToolboxButton.BUTTON_SIZE) + (yFactor * 2) + yOffset;
-        return new Point2D(anchor.getX() + x, anchor.getY() + y);
-    }
-
+    @Override
     public void hide() {
+        
         if (showing) {
-            for (final HoverToolboxButton button : buttons) {
-                button.getShape().animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(0)), 500, new AnimationCallback(){
+            for (final ToolboxButton button : buttons) {
+                button.getShape().getGroup().animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(0)), 500, new AnimationCallback() {
                     @Override
-                    public void onClose(IAnimation animation, IAnimationHandle handle) {
-                        button.getShape().removeFromParent();
-                        if ( null != HoverToolbox.this.shape)  {
-                            HoverToolbox.this.shape.getWiresLayer().getLayer().batch();
-                        }
+                    public void onClose(final IAnimation animation, 
+                                        final IAnimationHandle handle) {
                     }
                 });
             }
+            
             showing = false;
         }
+        
+    }
+    
+    Layer getLayer() {
+        return shape.getWiresLayer().getLayer();
     }
 
-    private HoverToolbox(WiresShape shape, Direction anchor, Direction towards, List<HoverToolboxButton> buttons) {
+    private HoverToolbox(final WiresShape shape,
+                         final Shape<?> attachTo,
+                         final Direction anchor,
+                         final Direction towards,
+                         final int rows,
+                         final int cols,
+                         final int padding,
+                         final int iconSize,
+                         final List<ToolboxButton> buttons) {
         this.shape = shape;
-        this.corner = anchor;
+        this.anchor = anchor;
         this.towards = towards;
         this.buttons = buttons;
-        registerHandlers();
+        this.grid = new Grid(padding, iconSize, rows, cols);
+        initialize();
+        registerHandlers( attachTo );
     }
 
-    private void registerHandlers() {
-        this.shape.getPath().addNodeMouseEnterHandler(this.hoverTimer);
-        this.shape.getPath().addNodeMouseExitHandler(this.hoverTimer);
+    private void registerHandlers( final Shape<?> attachTo ) {
+        Node<?> node = attachTo != null ? attachTo : shape.getPath();
+        HandlerRegistration hr1 = node.addNodeMouseEnterHandler(this.hoverTimer);
+        HandlerRegistration hr2 = node.addNodeMouseExitHandler(this.hoverTimer);
+        handlerRegistrationManager.register( hr1 );
+        handlerRegistrationManager.register( hr2 );
     }
 
-    private static class Builder implements On, Towards, ButtonsOrRegister {
-
-        private WiresShape shape;
-        private Direction anchor;
-        private Direction towards;
-        private List<HoverToolboxButton> buttons = new ArrayList<>();
-
-        public Builder(WiresShape shape) {
-            this.shape = shape;
-        }
-
-        @Override
-        public Towards on(Direction anchor) {
-            this.anchor = anchor;
-            return this;
-        }
-
-        @Override
-        public ButtonsOrRegister towards(Direction towards) {
-            this.towards = towards;
-            return this;
-        }
-
-        @Override
-        public ButtonsOrRegister add(HoverToolboxButton button) {
-            this.buttons.add(button);
-            return this;
+    public static class HoverToolboxBuilder extends AbstractBuilder {
+        public HoverToolboxBuilder(WiresShape shape) {
+            super(shape);
         }
 
         @Override
         public HoverToolbox register() {
-            return new HoverToolbox(this.shape, this.anchor, this.towards, this.buttons);
+            return new HoverToolbox(this.shape, this.attachTo, this.anchor, this.towards, this.rows, this.cols, 
+                    this.padding, this.iconSize, this.buttons);
         }
-    }
-
-    public static On toolboxFor(WiresShape shape) {
-        return new Builder(shape);
     }
 }

@@ -34,8 +34,6 @@ import java.util.LinkedList;
 /**
  * A Command to set the incoming connection for an edge.
  * Note that if the connector's target is not set, the <code>targetNode</code> can be null. 
- *
- * TODO: Undo.
  */
 @Portable
 public final class SetConnectionTargetNodeCommand extends AbstractGraphCommand {
@@ -45,6 +43,7 @@ public final class SetConnectionTargetNodeCommand extends AbstractGraphCommand {
     private Node<? extends View<?>, Edge> sourceNode;
     private Edge<? extends View<?>, Node> edge;
     private Integer magnetIndex;
+    private Integer lastMagnetIndex;
 
     @SuppressWarnings("unchecked")
     public SetConnectionTargetNodeCommand(@MapsTo("targetNode") Node<? extends View<?>, Edge> targetNode,
@@ -76,6 +75,7 @@ public final class SetConnectionTargetNodeCommand extends AbstractGraphCommand {
             }
             edge.setTargetNode( targetNode );
             ViewConnector connectionContent = (ViewConnector) edge.getContent();
+            lastMagnetIndex = connectionContent.getTargetMagnetIndex();
             connectionContent.setTargetMagnetIndex(magnetIndex);
         }
         return results;
@@ -104,8 +104,9 @@ public final class SetConnectionTargetNodeCommand extends AbstractGraphCommand {
     }
 
     @Override
-    public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
-        throw new UnsupportedOperationException("Undo for this command not supported yet.");
+    public CommandResult<RuleViolation> undo(final GraphCommandExecutionContext context) {
+        final SetConnectionTargetNodeCommand undoCommand = new SetConnectionTargetNodeCommand( lastTargetNode, edge, lastMagnetIndex );
+        return undoCommand.execute( context );
     }
 
     @Override

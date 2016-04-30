@@ -59,8 +59,7 @@ public final class ClearGraphCommand extends AbstractGraphCommand {
 
     @Override
     public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
-        // TODO: Return to previous snapshot?
-        return null;
+        throw new UnsupportedOperationException( "Clear graph command undo is still not supported. ");
     }
 
     @Override

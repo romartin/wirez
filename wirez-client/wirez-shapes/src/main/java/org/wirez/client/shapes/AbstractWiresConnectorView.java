@@ -33,6 +33,7 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     protected String uuid;
     private Double strokeWidth;
     private String color;
+    private int zindex;
 
     public AbstractWiresConnectorView(AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
         super(line, head, tail, manager);
@@ -57,6 +58,17 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     @Override
     public String getUUID() {
         return uuid;
+    }
+
+    @Override
+    public T setZIndex(final int zindez) {
+        this.zindex = zindez;
+        return (T) this;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zindex;
     }
     
     public T connect(final ShapeView headShapeView, 
@@ -97,8 +109,8 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
         double y1 = m1_1.getControl().getY();
 
         // TODO: Update the connector decorator in order to modify head & tail decorators (connector direction)
-        OrthogonalPolyLine line = createLine(x0, y0, (x0 + ((x1 - x0) / 2)), (y0 + ((y1 - y0) / 2)), x1, y1);
-        /*this.setDecorator(
+       /* OrthogonalPolyLine line = createLine(x0, y0, (x0 + ((x1 - x0) / 2)), (y0 + ((y1 - y0) / 2)), x1, y1);
+        this.setDecorator(
                 line, 
                 headArrow ? new SimpleArrow(20, 0.75) : null,
                 tailArrow ? new SimpleArrow(20, 0.75) : null);*/

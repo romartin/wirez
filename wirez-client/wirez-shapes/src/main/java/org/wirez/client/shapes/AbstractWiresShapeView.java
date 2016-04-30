@@ -48,6 +48,7 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     protected Text text;
     protected WiresLayoutContainer.Layout textPosition;
     protected String uuid;
+    private int zindex;
     
     public AbstractWiresShapeView(final MultiPath path, 
                                   final WiresManager manager) {
@@ -85,6 +86,17 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     @Override
     public String getUUID() {
         return uuid;
+    }
+
+    @Override
+    public T setZIndex(final int zindez) {
+        this.zindex = zindez;
+        return (T) this;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zindex;
     }
 
     @Override

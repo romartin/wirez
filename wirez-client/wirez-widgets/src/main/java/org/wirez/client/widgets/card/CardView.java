@@ -120,13 +120,32 @@ public class CardView extends Composite implements Card.View {
     }
 
     @Override
-    public Card.View show(final IsWidget front,
-                          final IsWidget back,
-                          final Command switchCallback) {
+    public Card.View setFlipCallback(final Command flipCallback) {
+        this.switchCallback = flipCallback;
+        return this;
+    }
 
-        this.frontPanel.add( front );
-        this.backPanel.add( back );
-        this.switchCallback = switchCallback;
+    @Override
+    public Card.View setFront(final IsWidget frontWidget) {
+        this.frontPanel.add( frontWidget );
+        return this;
+    }
+
+    @Override
+    public Card.View setBack(final IsWidget backWidget) {
+        this.backPanel.add( backWidget );
+        return this;
+    }
+
+    @Override
+    public Card.View clearFront() {
+        frontPanel.clear();
+        return this;
+    }
+
+    @Override
+    public Card.View clearBack() {
+        backPanel.clear();
         return this;
     }
 

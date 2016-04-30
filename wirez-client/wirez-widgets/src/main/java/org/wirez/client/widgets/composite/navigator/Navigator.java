@@ -4,14 +4,12 @@ import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
-import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.canvas.preview.CanvasPreview;
 import org.wirez.client.widgets.card.Card;
 import org.wirez.client.widgets.card.CardTriggerBuilder;
 import org.wirez.client.widgets.explorer.tree.TreeExplorer;
 import org.wirez.core.client.canvas.CanvasHandler;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.util.logging.Level;
@@ -52,7 +50,7 @@ public class Navigator implements IsWidget {
         treeExplorer.show( canvasHandler );
         
         // Show the view.
-        card.show(canvasPreview.asWidget(), treeExplorer.asWidget(), null);
+        card.show(canvasPreview.asWidget(), treeExplorer.asWidget() );
         
     }
     

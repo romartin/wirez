@@ -28,7 +28,7 @@ public class GraphBoundsIndexer {
 
         new ChildrenTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AbstractContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>() {
 
-            final Stack<Node> parents = new Stack<Node>();
+            final Stack<Node> parents = new Stack<>();
 
             @Override
             public void startGraphTraversal(Graph<View, Node<View, Edge>> graph) {
@@ -55,7 +55,7 @@ public class GraphBoundsIndexer {
                 double parentY = 0;
 
                 if ( !parents.isEmpty() ) {
-                    
+
                     for ( Node tParent : parents ) {
                         final Object content = tParent.getContent();
                         if (content instanceof View) {
@@ -82,9 +82,9 @@ public class GraphBoundsIndexer {
                              final double parentY,
                              final double mouseX, 
                              final double mouseY) {
-        
-        final Object c = node.getContent();
-        final Bounds bounds = ( (View) node.getContent()).getBounds();
+
+        final View content = (View) node.getContent();
+        final Bounds bounds = content.getBounds();
         final Bounds.Bound ulBound = bounds.getUpperLeft();
         final Bounds.Bound lrBound = bounds.getLowerRight();
         final double ulX = ulBound.getX() + parentX;
@@ -92,7 +92,7 @@ public class GraphBoundsIndexer {
         final double lrX = lrBound.getX() + parentX;
         final double lrY = lrBound.getY() + parentY;
 
-        
+
         if ( mouseX >= ulX && mouseX <= lrX && 
                 mouseY >= ulY && mouseY <= lrY ) {
             return true;

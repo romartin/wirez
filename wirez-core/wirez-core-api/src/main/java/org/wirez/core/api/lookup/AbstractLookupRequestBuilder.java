@@ -6,13 +6,13 @@ public abstract class AbstractLookupRequestBuilder<T> {
 
     protected int page = 0;
     protected int pageSize = 10;
-    
+
     public T page( final int page ) {
         this.page = page;
         return (T) this;
     }
 
-    public T pageSize( final int page ) {
+    public T pageSize( final int pageSize ) {
         this.pageSize = pageSize;
         return (T) this;
     }
@@ -37,5 +37,5 @@ public abstract class AbstractLookupRequestBuilder<T> {
 
         return null;
     }
-    
+
 }

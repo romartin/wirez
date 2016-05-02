@@ -25,7 +25,7 @@ import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.user.client.Timer;
 
 public class DefaultPaletteItemDecorator extends Group implements PaletteItemDecorator {
-    
+
     private static final int TIMER_DELAY = 200;
     private static final double ANIMATION_DURATION = 500;
     private double padding = 5;
@@ -36,7 +36,7 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
         this.callback = callback;
     }
 
-    private Timer timer = timer = new Timer() {
+    private Timer timer = new Timer() {
         @Override
         public void run() {
             hide();
@@ -77,7 +77,7 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
                 show(nodeMouseEnterEvent.getMouseEvent().getClientX(), nodeMouseEnterEvent.getMouseEvent().getClientY());
             }
         });
-        
+
         decorator.addNodeMouseExitHandler(new NodeMouseExitHandler() {
             @Override
             public void onNodeMouseExit(NodeMouseExitEvent nodeMouseExitEvent) {
@@ -85,14 +85,14 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
             }
         });
 
-        
+
         decorator.addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
             @Override
             public void onNodeMouseMove(NodeMouseMoveEvent nodeMouseMoveEvent) {
                 timer.cancel();
             }
         });
-        
+
         item.setDraggable(false);
         decorator.setDraggable(false).moveToTop();
 
@@ -118,28 +118,28 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
 
     public PaletteItemDecorator hide() {
         if (!timer.isRunning()) {
-         decorator.animate(AnimationTweener.LINEAR,
-                AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(0)),
-                ANIMATION_DURATION,
-                new AnimationCallback() {
-                    @Override
-                    public void onClose(IAnimation animation, IAnimationHandle handle) {
-                        super.onClose(animation, handle);
-                        fireHide();
-                    }
-                });
+            decorator.animate(AnimationTweener.LINEAR,
+                    AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(0)),
+                    ANIMATION_DURATION,
+                    new AnimationCallback() {
+                        @Override
+                        public void onClose(IAnimation animation, IAnimationHandle handle) {
+                            super.onClose(animation, handle);
+                            fireHide();
+                        }
+                    });
         }
         return this;
     }
 
     protected void fireShow(double x, double y) {
-        if ( null != callback ) {
+        if (null != callback) {
             callback.onShow(x, y);
         }
     }
 
     protected void fireHide() {
-        if ( null != callback ) {
+        if (null != callback) {
             callback.onHide();
         }
     }

@@ -5,8 +5,13 @@ A multi-purpose modelling tool based on [JBoss Uberfire](http://www.uberfirefram
 
 Building
 --------
-
+1.- Build the project from command line
+    
     mvn clean install -DskipTests
+
+2.- Go to wirez-webapp subproject and execute
+    
+    mvn clean process-resources
 
 Running the application
 -----------------------
@@ -20,7 +25,7 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
 
 **SuperDevMove - Running from command line**                                          
 
-    mvn gwt:run
+    mvn gwt:run -DrunTarget=wirez.html -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-webapp/target/wildfly-8.1.0.Final
 
 **SuperDevMove - Running from IntelliJ IDEA**                                          
 

@@ -37,7 +37,6 @@ public class GeneratorUtils extends org.uberfire.annotations.processors.Generato
     private static final String[] NO_PARAMS = new String[0];
     private static final String[] ANY_PARAMS = new String[0];
 
-    
     public static String getStringMethodName(final TypeElement classElement,
                                              final String annName,
                                              final ProcessingEnvironment processingEnvironment ) throws GenerationException {
@@ -63,7 +62,7 @@ public class GeneratorUtils extends org.uberfire.annotations.processors.Generato
         }
         return match.getSimpleName().toString();
     }
-    
+
     /*
     classElem=MyDiagram
     annotClassNamee=IsProperty
@@ -147,7 +146,9 @@ public class GeneratorUtils extends org.uberfire.annotations.processors.Generato
                         problems.add( "take no parameters" );
                     } else {
                         StringBuilder sb = new StringBuilder();
-                        sb.append( "take " ).append( requiredParameterTypes ).append( " parameters of type (" );
+                        sb.append( "take " )
+                                .append( requiredParameterTypes.length )
+                                .append( " parameters of type (" );
                         boolean first = true;
                         for ( String p : requiredParameterTypes ) {
                             if ( !first ) {
@@ -232,7 +233,7 @@ public class GeneratorUtils extends org.uberfire.annotations.processors.Generato
             return true;
         }
     }
-    
+
     public static String getTypeMirrorDeclaredName(TypeMirror typeMirror) {
         TypeKind returnKind = typeMirror.getKind();
         if (returnKind == TypeKind.DECLARED) {
@@ -264,11 +265,10 @@ public class GeneratorUtils extends org.uberfire.annotations.processors.Generato
                 msg.append("and ");
             }
 
-            msg.append((String)problems.get(i));
+            msg.append(problems.get(i));
         }
 
         return msg.toString();
     }
 
-    
 }

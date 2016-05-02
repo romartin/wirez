@@ -14,7 +14,7 @@ import org.wirez.core.api.graph.util.GraphUtils;
 import java.util.Stack;
 
 public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
-    
+
     private Graph<View, Node<View, Edge>> graph;
 
     @Override
@@ -22,10 +22,10 @@ public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
         this.graph = graph;
         return this;
     }
-    
+
     @Override
     public Node<View<?>, Edge> getAt(final double x,
-                      final double y) {
+                                     final double y) {
         return traverseChildren(x, y);
     }
 
@@ -35,7 +35,7 @@ public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
 
         new ChildrenTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AbstractContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>() {
 
-            final Stack<Node> parents = new Stack<Node>();
+            final Stack<Node> parents = new Stack<>();
 
             @Override
             public void startGraphTraversal(Graph<View, Node<View, Edge>> graph) {
@@ -90,8 +90,8 @@ public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
                              final double mouseX,
                              final double mouseY) {
 
-        final Object c = node.getContent();
-        final Bounds bounds = ( (View) node.getContent()).getBounds();
+        final View content = (View) node.getContent();
+        final Bounds bounds = content.getBounds();
         final Bounds.Bound ulBound = bounds.getUpperLeft();
         final Bounds.Bound lrBound = bounds.getLowerRight();
         final double ulX = ulBound.getX() + parentX;
@@ -107,5 +107,5 @@ public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
 
         return false;
     }
-    
+
 }

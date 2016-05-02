@@ -43,7 +43,7 @@ public class Decorator extends Group {
         this.callback = callback;
     }
 
-    private Timer timer = timer = new Timer() {
+    private Timer timer = new Timer() {
         @Override
         public void run() {
             hide();
@@ -76,12 +76,12 @@ public class Decorator extends Group {
         item.setY(padding / 2);
 
         decorator.addNodeMouseEnterHandler(nodeMouseEnterEvent -> show(nodeMouseEnterEvent.getMouseEvent().getClientX(), nodeMouseEnterEvent.getMouseEvent().getClientY()));
-        
+
         decorator.addNodeMouseExitHandler(nodeMouseExitEvent -> hide());
 
-        
+
         decorator.addNodeMouseMoveHandler(nodeMouseMoveEvent -> timer.cancel());
-        
+
         item.setDraggable(false);
         decorator.setDraggable(false).moveToTop();
 
@@ -107,28 +107,28 @@ public class Decorator extends Group {
 
     public Decorator hide() {
         if (!timer.isRunning()) {
-         decorator.animate(AnimationTweener.LINEAR,
-                AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(0)),
-                ANIMATION_DURATION,
-                new AnimationCallback() {
-                    @Override
-                    public void onClose(IAnimation animation, IAnimationHandle handle) {
-                        super.onClose(animation, handle);
-                        fireHide();
-                    }
-                });
+            decorator.animate(AnimationTweener.LINEAR,
+                    AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(0)),
+                    ANIMATION_DURATION,
+                    new AnimationCallback() {
+                        @Override
+                        public void onClose(IAnimation animation, IAnimationHandle handle) {
+                            super.onClose(animation, handle);
+                            fireHide();
+                        }
+                    });
         }
         return this;
     }
 
     protected void fireShow(double x, double y) {
-        if ( null != callback ) {
+        if (null != callback) {
             callback.onShow(x, y);
         }
     }
 
     protected void fireHide() {
-        if ( null != callback ) {
+        if (null != callback) {
             callback.onHide();
         }
     }

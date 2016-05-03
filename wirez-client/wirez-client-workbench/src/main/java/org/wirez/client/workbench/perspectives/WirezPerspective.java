@@ -69,7 +69,7 @@ public class WirezPerspective {
         propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         propertiesPanel.setMinWidth( EAST_PANEL_WIDTH );
         propertiesPanel.setWidth( EAST_PANEL_WIDTH );
-        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
+        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(FormsPropertiesScreen.SCREEN_ID ) ) );
 
         propertiesPanel.appendChild(CompassPosition.NORTH,
                 navigatorPanel);

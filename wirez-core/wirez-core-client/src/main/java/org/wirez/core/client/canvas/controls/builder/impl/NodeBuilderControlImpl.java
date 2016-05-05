@@ -23,6 +23,7 @@ import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequest;
 import org.wirez.core.client.canvas.event.CanvasProcessingCompletedEvent;
 import org.wirez.core.client.canvas.event.CanvasProcessingStartedEvent;
 import org.wirez.core.client.session.command.Session;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.impl.AbstractConnector;
@@ -172,7 +173,7 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
                 final int[] magnetIndexes = ShapeUtils.getDefaultMagnetsIndex( sShape, tShape );
                 connectorContent.setSourceMagnetIndex( magnetIndexes[0] );
                 connectorContent.setTargetMagnetIndex( magnetIndexes[1] );
-                edgeShape.applyConnections( inEdge, canvasHandler );
+                edgeShape.applyConnections( inEdge, canvasHandler, MutationContext.STATIC );
             }
 
         }

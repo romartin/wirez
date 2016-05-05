@@ -43,9 +43,13 @@ import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.shape.Lifecycle;
 import org.wirez.core.client.shape.MutableShape;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.impl.AbstractConnector;
+import org.wirez.core.client.shape.view.ShapeView;
+import org.wirez.core.client.shape.view.animation.AnimationTweener;
+import org.wirez.core.client.shape.view.animation.HasAnimations;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -206,7 +210,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
                     // Add the node shape into the canvas.
                     register(factory, node);
-                    applyElementMutation(node);
+                    applyElementMutation(node, MutationContext.STATIC);
                     
                     return true;
                 }
@@ -227,10 +231,10 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
                     // Add the edge shape into the canvas.
                     register(factory, edge);
-                    applyElementMutation(edge);
+                    applyElementMutation(edge, MutationContext.STATIC);
                     final String uuid = edge.getUUID();
                     AbstractConnector connector = (AbstractConnector) getCanvas().getShape(uuid);
-                    connector.applyConnections(edge, AbstractCanvasHandler.this);
+                    connector.applyConnections(edge, AbstractCanvasHandler.this, MutationContext.STATIC);
                     
                     return true;
 
@@ -242,7 +246,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                     final Object childContent = child.getContent();
                     if (childContent instanceof View) {
                         addChild(parent, child);
-                        applyElementMutation(child);
+                        applyElementMutation(child, MutationContext.STATIC);
                     }
                     
                     return true;
@@ -312,21 +316,22 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         
     }
 
-    public void applyElementMutation( final Element element ) {
-        applyElementMutation( element, true , true );
+    public void applyElementMutation(final Element element, final MutationContext mutationContext) {
+        applyElementMutation( element, true , true, mutationContext );
     }
 
-    public void updateElementPosition(final Element element) {
-        applyElementMutation( element, true , false );
+    public void updateElementPosition(final Element element, final MutationContext mutationContext) {
+        applyElementMutation( element, true , false, mutationContext );
     }
 
-    public void updateElementProperties(final Element element) {
-        applyElementMutation( element, false , true);
+    public void updateElementProperties(final Element element, final MutationContext mutationContext) {
+        applyElementMutation( element, false , true, mutationContext );
     }
 
     public void applyElementMutation(final Element candidate, 
                                      final boolean applyPosition, 
-                                     final boolean applyProperties) {
+                                     final boolean applyProperties,
+                                     final MutationContext mutationContext) {
         
         final Shape shape = canvas.getShape( candidate.getUUID() );
         
@@ -335,19 +340,34 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
             final MutableShape graphShape = (MutableShape) shape;
 
             if ( applyPosition ) {
-                graphShape.applyPosition( candidate );
+                graphShape.applyPosition( candidate, mutationContext );
             }
             
             if ( applyProperties ) {
-                graphShape.applyProperties( candidate );
+                graphShape.applyProperties( candidate, mutationContext );
             }
             
             canvas.draw();
             
             afterElementUpdated(candidate, graphShape);
+         
+            if ( mutationContext instanceof MutationContext.AnimationContext ) {
+                final MutationContext.AnimationContext animationContext = (MutationContext.AnimationContext) mutationContext;
+                animateShape( shape, animationContext.getTweener(), animationContext.getDuration() );
+            }
             
         }
         
+    }
+
+    protected void animateShape( final Shape shape, 
+                                 final AnimationTweener tweener,
+                                 final double duration ) {
+        final ShapeView<?> view = shape.getShapeView();
+        if ( view instanceof HasAnimations) {
+            final HasAnimations hasAnimation = (HasAnimations) view;
+            hasAnimation.animate( tweener, duration );
+        }
     }
     
     public void addChild(final Element parent, final Element child) {

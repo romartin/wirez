@@ -5,12 +5,23 @@ import com.ait.lienzo.client.core.shape.wires.MagnetManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import org.wirez.core.client.ShapeSet;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.ShapeView;
+import org.wirez.core.client.shape.view.animation.HasAnimations;
 
 import java.util.Collection;
 
 public class ShapeUtils {
+
+    public static boolean isStaticMutation( final MutationContext mutationContext ) {
+        return mutationContext == null || MutationContext.Type.STATIC.equals( mutationContext.getType() );
+    }
+
+    public static boolean isAnimationMutation( final Object view, final MutationContext mutationContext ) {
+        return mutationContext != null && MutationContext.Type.ANIMATION.equals( mutationContext.getType() )
+                && view instanceof HasAnimations;
+    }
     
     public static LinearGradient getLinearGradient(final String startColor,
                                                    final String endColor, 

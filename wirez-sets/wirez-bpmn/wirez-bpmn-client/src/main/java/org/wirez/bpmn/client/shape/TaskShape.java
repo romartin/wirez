@@ -27,6 +27,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.view.ShapeView;
 
 public class TaskShape extends BPMNBasicShape<Task, WiresRectangleView> {
@@ -46,11 +47,11 @@ public class TaskShape extends BPMNBasicShape<Task, WiresRectangleView> {
     }
 
     @Override
-    public void applyProperties(final Node<View<Task>, Edge> element) {
-        super.applyProperties(element);
+    public void applyProperties(final Node<View<Task>, Edge> element, final MutationContext mutationContext) {
+        super.applyProperties(element, mutationContext);
         
         // Size.
-        _applySize(element);
+        _applySize(element, mutationContext);
         
     }
 
@@ -59,18 +60,14 @@ public class TaskShape extends BPMNBasicShape<Task, WiresRectangleView> {
         return element.getContent().getDefinition().getGeneral().getName();
     }
 
-    protected TaskShape _applySize(final Node<View<Task>, Edge> element) {
+    protected TaskShape _applySize(final Node<View<Task>, Edge> element, final MutationContext mutationContext) {
         final Width widthProperty  = element.getContent().getDefinition().getWidth();
         final Height heightProperty  = element.getContent().getDefinition().getHeight();
         final Double width = widthProperty.getValue();
         final Double height = heightProperty.getValue();
-        applySize(width, height);
+        applySize(getShapeView(), width, height, mutationContext);
         GraphUtils.updateBounds(width, height, element.getContent());
         return this;
-    }
-
-    protected void applySize(final double width, final double height) {
-        getShapeView().setSize(width, height);
     }
 
     @Override

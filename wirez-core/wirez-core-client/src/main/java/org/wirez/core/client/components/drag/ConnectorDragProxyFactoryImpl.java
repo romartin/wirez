@@ -13,6 +13,7 @@ import org.wirez.core.api.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.lienzo.LienzoLayer;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.impl.AbstractConnector;
@@ -126,8 +127,8 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
                     targetShapeView = dummyShapeView;
                 }
 
-                connector.applyConnections( edge, sourceNodeShape.getShapeView(), targetShapeView );
-                connector.applyProperties( edge );
+                connector.applyConnections( edge, sourceNodeShape.getShapeView(), targetShapeView, MutationContext.STATIC );
+                connector.applyProperties( edge, MutationContext.STATIC );
                 
                 canvas.draw();
             }

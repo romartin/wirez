@@ -9,10 +9,10 @@ import org.wirez.core.client.shape.view.ShapeView;
  */
 public interface MutableShape<W, C extends View<W>, E extends Element<C>, V extends ShapeView> extends Shape<V> {
 
-    void applyPosition(E element);
+    void applyPosition( E element, MutationContext mutationContext );
 
-    void applyProperties(E element);
+    void applyProperties( E element, MutationContext mutationContext );
 
-    void applyProperty(E element, String propertyId, Object value);
+    void applyProperty( E element, String propertyId, Object value, MutationContext mutationContext );
     
 }

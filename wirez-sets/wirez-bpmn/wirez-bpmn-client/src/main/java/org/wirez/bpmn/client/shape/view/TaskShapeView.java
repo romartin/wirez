@@ -14,13 +14,20 @@ public class TaskShapeView extends WiresRectangleView<TaskShapeView> implements 
     
     public TaskShapeView(final double width, final double height, final WiresManager manager) {
         super(width, height, manager);
-        init();
     }
 
-    private void init() {
+    @Override
+    protected void initialize() {
+        super.initialize();
         taskTypeIcon = taskTypeUser();
-        taskTypeIcon.setDraggable(false);
-        this.addChild(taskTypeIcon, WiresLayoutContainer.Layout.TOP);
+        this.addChild(taskTypeIcon, WiresLayoutContainer.Layout.CENTER);
+    }
+
+    @Override
+    protected void doMoveChildren(final double width, 
+                                  final double height) {
+        super.doMoveChildren(width, height);
+        this.moveChild( taskTypeIcon, getChildCoordinate( width ), getChildCoordinate( height ) );
     }
 
     private Group taskTypeUser() {
@@ -31,8 +38,6 @@ public class TaskShapeView extends WiresRectangleView<TaskShapeView> implements 
         final String p2 = "M 6 20 L 6 24";
 
         final String p3 = "M 20 20 L 20 24";
-
-        // TODO: Circle
 
         final String p4 = "M8.043,7.083c0,0,2.814-2.426,5.376-1.807s4.624-0.693,4.624-0.693\n" +
                 "\t\t\tc0.25,1.688,0.042,3.75-1.458,5.584c0,0,1.083,0.75,1.083,1.5s0.125,1.875-1,3s-5.5,1.25-6.75,0S8.668,12.834,8.668,12\n" +
@@ -49,7 +54,7 @@ public class TaskShapeView extends WiresRectangleView<TaskShapeView> implements 
         final SVGPath svgP4 = createSVGPath(p4);
         userTypeGroup.add(svgP4);
 
-        return userTypeGroup;
+        return userTypeGroup.setDraggable( false );
     }
 
     private SVGPath createSVGPath(String path) {

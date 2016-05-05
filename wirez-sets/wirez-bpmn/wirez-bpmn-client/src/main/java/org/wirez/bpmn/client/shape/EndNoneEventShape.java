@@ -26,6 +26,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.view.HasTitle;
 
 public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent, WiresCircleView> {
@@ -36,11 +37,11 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent, WiresCircleV
     }
 
     @Override
-    public void applyProperties(final Node<View<EndNoneEvent>, Edge> element) {
-        super.applyProperties(element);
+    public void applyProperties(final Node<View<EndNoneEvent>, Edge> element, final MutationContext mutationContext) {
+        super.applyProperties(element, mutationContext);
 
         // Radius.
-        _applyRadius(element);
+        _applyRadius(element, mutationContext);
     }
 
     @Override
@@ -48,17 +49,11 @@ public class EndNoneEventShape extends BPMNBasicShape<EndNoneEvent, WiresCircleV
         return element.getContent().getDefinition().getGeneral().getName();
     }
 
-    protected void applyRadius(double radius) {
-        if (radius > 0) {
-            getShapeView().setRadius(radius);
-        }
-    }
-
-    protected EndNoneEventShape _applyRadius(final Node<View<EndNoneEvent>, Edge> element) {
+    protected EndNoneEventShape _applyRadius(final Node<View<EndNoneEvent>, Edge> element, final MutationContext mutationContext) {
         final Radius radiusProperty  = element.getContent().getDefinition().getRadius();
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
-            applyRadius(radius);
+            applyRadius(getShapeView(), radius, mutationContext);
             GraphUtils.updateBounds(radius, element.getContent());
         }
         return this;

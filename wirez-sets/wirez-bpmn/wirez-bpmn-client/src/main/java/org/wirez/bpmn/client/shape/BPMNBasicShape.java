@@ -21,7 +21,10 @@ import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.impl.AbstractShape;
+import org.wirez.core.client.shape.view.HasRadius;
+import org.wirez.core.client.shape.view.HasSize;
 import org.wirez.core.client.shape.view.HasTitle;
 import org.wirez.core.client.shape.view.ShapeView;
 
@@ -33,51 +36,48 @@ public abstract class BPMNBasicShape<W, V extends ShapeView>
     }
 
     @Override
-    public void applyProperties(Node<View<W>, Edge> element) {
-        super.applyProperties(element);
+    public void applyProperties(Node<View<W>, Edge> element, final MutationContext mutationContext) {
+        super.applyProperties(element, mutationContext);
 
         // Fill color.
-        _applyFillColor(element);
+        _applyFillColor(element, mutationContext);
 
         // Apply border styles.
-        _applyBorders(element);
+        _applyBorders(element, mutationContext);
 
         // Apply font styles.
-        _applyFont(element);
+        _applyFont(element, mutationContext);
     }
 
     protected abstract BackgroundSet getBackgroundSet(Node<View<W>, Edge> element);
 
     protected abstract FontSet getFontSet(Node<View<W>, Edge> element);
     
-    protected BPMNBasicShape<W, V> _applyFillColor(final Node<View<W>, Edge> element) {
+    protected BPMNBasicShape<W, V> _applyFillColor(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
         final String color = getBackgroundSet( element ).getBgColor().getValue();
-        super._applyFillColor(color);
-        
+        super._applyFillColor(color, mutationContext);
         return this;
     }
 
-    protected BPMNBasicShape<W, V> _applyBorders(final Node<View<W>, Edge> element) {
+    protected BPMNBasicShape<W, V> _applyBorders(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
         final String color = getBackgroundSet( element ).getBorderColor().getValue();
         final Double width = getBackgroundSet( element ).getBorderSize().getValue();
-        super._applyBorders(color, width);
+        super._applyBorders(color, width, mutationContext);
         
         return this;
     }
 
-    protected BPMNBasicShape<W, V> _applyFont(final Node<View<W>, Edge> element) {
+    protected BPMNBasicShape<W, V> _applyFont(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
         
         if ( view instanceof HasTitle ) {
             final String family = getFontSet( element ).getFontFamily().getValue();
             final String color = getFontSet( element ).getFontColor().getValue();
             final Double size = getFontSet( element ).getFontSize().getValue();
             final Double borderSize = getFontSet( element ).getFontBorderSize().getValue();
-            super._applyFont(family, color, size, borderSize);
+            super._applyFont(family, color, size, borderSize, mutationContext);
         }
 
         return this;
     }
-    
-    
-    
+
 }

@@ -11,6 +11,7 @@ import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
 import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.impl.AbstractConnector;
 
 public final class SetCanvasConnectionSourceNodeCommand extends AbstractCanvasGraphCommand {
@@ -37,7 +38,7 @@ public final class SetCanvasConnectionSourceNodeCommand extends AbstractCanvasGr
     public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
         final String uuid = edge.getUUID();
         AbstractConnector connector = (AbstractConnector) context.getCanvas().getShape(uuid);
-        connector.applyConnections( edge, context );
+        connector.applyConnections( edge, context, MutationContext.STATIC );
         return buildResult();
     }
 

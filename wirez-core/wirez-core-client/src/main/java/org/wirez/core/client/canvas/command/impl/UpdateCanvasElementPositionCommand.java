@@ -9,6 +9,7 @@ import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
 import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.shape.MutationContext;
 
 public final class UpdateCanvasElementPositionCommand extends AbstractCanvasGraphCommand {
 
@@ -27,7 +28,7 @@ public final class UpdateCanvasElementPositionCommand extends AbstractCanvasGrap
 
     @Override
     public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
-        context.updateElementPosition(element);
+        context.updateElementPosition(element, MutationContext.STATIC);
         return buildResult();
     }
 

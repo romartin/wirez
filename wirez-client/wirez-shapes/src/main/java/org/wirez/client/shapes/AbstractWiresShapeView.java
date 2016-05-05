@@ -54,13 +54,32 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
                                   final WiresManager manager) {
         super(path, new WiresLayoutContainer(), manager);
         this.textPosition = WiresLayoutContainer.Layout.CENTER;
-        
+        initialize();
+        path.setFillAlpha(0).setStrokeAlpha(0);
+        getDecorator().setStrokeWidth(0)
+                .setFillAlpha(0)
+                .setStrokeAlpha(0);
+        getPath().moveToTop();
     }
     
-    protected abstract HandlerRegistration doAddHandler(final ViewEventType type,
-                                                        final ViewHandler<? extends ViewEvent> eventHandler);
+    protected abstract void initialize();
 
     protected abstract Shape getDecorator();
+
+    protected abstract Shape getShape();
+    
+    @Override
+    public T setUUID(final String uuid) {
+        this.uuid = uuid;
+        this.getGroup().setUserData( UUID_PREFFIX + uuid );
+        return (T) this;
+    }
+
+    @Override
+    public String getUUID() {
+        return uuid;
+    }
+    
 
     @Override
     public Collection<Shape> getDecorators() {
@@ -72,22 +91,65 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
         return decorators;
     }
 
+    protected HandlerRegistration doAddHandler(final ViewEventType type,
+                                                final ViewHandler<? extends ViewEvent> eventHandler) {
+
+        if ( supports(type) ) {
+
+            if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
+                return registerClickHandler(getShape(), (ViewHandler<ViewEvent>) eventHandler);
+            }
+
+            if ( ViewEventType.DRAG.equals(type) ) {
+                return registerDragHandler(getPath(), (org.wirez.core.client.shape.view.event.DragHandler) eventHandler);
+            }
+
+            
+        }
+
+        return null;
+        
+    }
+
     @Override
-    public T setUUID(final String uuid) {
-        this.uuid = uuid;
-        this.getGroup().setUserData( UUID_PREFFIX + uuid );
+    public Shape<?> getAttachableShape() {
+        return getShape();
+    }
+
+    protected  T setRadius(final double radius) {
+        if (radius > 0) {
+            final double size = radius * 2;
+            updatePath( size, size );
+            getShape().getAttributes().setRadius( radius );
+            getDecorator().getAttributes().setRadius( radius );
+            doMoveChildren( size, size );
+        }
         return (T) this;
     }
 
-    protected Shape getShape() {
-        return getPath();
+    protected T setSize(final double width, final double height) {
+        updatePath( width, height );
+        getShape().getAttributes().setWidth( width );
+        getShape().getAttributes().setHeight( height );
+        getDecorator().getAttributes().setWidth( width );
+        getDecorator().getAttributes().setHeight( height );
+        doMoveChildren( width, height );
+        return (T) this;
     }
-
-    @Override
-    public String getUUID() {
-        return uuid;
+    
+    protected void doMoveChildren(final double width, final double height) {
+        
     }
+    
+    protected void updatePath( final double width, 
+                               final double height ) {
 
+        final double x = getPath().getX();
+        final double y = getPath().getY();
+        getPath().clear().rect(x, y, width, height);
+
+    }
+    
     @Override
     public T setZIndex(final int zindez) {
         this.zindex = zindez;
@@ -253,7 +315,7 @@ public abstract class AbstractWiresShapeView<T> extends WiresShape
     public T setFillGradient(final Type type, 
                              final String startColor, 
                              final String endColor) {
-        final BoundingBox bb = getShape().getBoundingBox();
+        final BoundingBox bb = getPath().getBoundingBox();
         final double width = bb.getWidth();
         final double height = bb.getHeight();
         final LinearGradient gradient = ShapeUtils.getLinearGradient(startColor, endColor, width, height);

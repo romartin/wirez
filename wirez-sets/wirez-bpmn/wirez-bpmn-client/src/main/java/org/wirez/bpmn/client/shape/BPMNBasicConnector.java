@@ -20,6 +20,7 @@ import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.ViewConnector;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.impl.AbstractConnector;
 import org.wirez.core.client.shape.view.ShapeView;
 
@@ -32,29 +33,29 @@ public abstract class BPMNBasicConnector<W, V extends ShapeView>
     }
 
     @Override
-    public void applyProperties(final Edge<ViewConnector<W>, Node> element) {
-        super.applyProperties(element);
+    public void applyProperties(final Edge<ViewConnector<W>, Node> element, final MutationContext mutationContext) {
+        super.applyProperties(element, mutationContext);
 
         // Fill color.
-        _applyFillColor(element);
+        _applyFillColor(element, mutationContext);
 
         // Apply border styles.
-        _applyBorders(element);
+        _applyBorders(element, mutationContext);
 
     }
     
     protected abstract BackgroundSet getBackgroundSet(Edge<ViewConnector<W>, Node> element);
     
-    protected BPMNBasicConnector<W, V> _applyFillColor(final Edge<ViewConnector<W>, Node> element) {
+    protected BPMNBasicConnector<W, V> _applyFillColor(final Edge<ViewConnector<W>, Node> element, final MutationContext mutationContext) {
         final String color = getBackgroundSet( element ).getBgColor().getValue();
-        super._applyFillColor(color);
+        super._applyFillColor(color, mutationContext);
         return this;
     }
 
-    protected BPMNBasicConnector<W, V> _applyBorders(final Edge<ViewConnector<W>, Node> element) {
+    protected BPMNBasicConnector<W, V> _applyBorders(final Edge<ViewConnector<W>, Node> element, final MutationContext mutationContext) {
         final String color = getBackgroundSet( element ).getBorderColor().getValue();
         final Double width = getBackgroundSet( element ).getBorderSize().getValue();
-        super._applyBorders(color, width);
+        super._applyBorders(color, width, mutationContext);
         return this;
     }
 

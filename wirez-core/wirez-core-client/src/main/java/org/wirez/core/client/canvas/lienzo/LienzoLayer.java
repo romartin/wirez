@@ -5,6 +5,7 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.event.NodeMouseMoveHandler;
 import com.ait.lienzo.client.core.shape.IPrimitive;
+import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.shared.core.types.DataURLType;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.core.client.GWT;
@@ -116,6 +117,11 @@ public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>> {
             registrationManager.deregister(registration);
         }
         return this;
+    }
+
+    @Override
+    public Shape<?> getAttachableShape() {
+        return null;
     }
 
     protected HandlerRegistration registerClickHandler(final ViewHandler<ViewEvent> eventHandler) {

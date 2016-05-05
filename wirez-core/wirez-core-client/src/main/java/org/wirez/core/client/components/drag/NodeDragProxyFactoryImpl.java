@@ -7,6 +7,7 @@ import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.impl.AbstractConnector;
@@ -57,11 +58,11 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
         final ShapeFactory<Object, AbstractCanvasHandler, ?> edgeShapeFactory = item.getInEdgeShapeFactory();
 
         final AbstractShape nodeShape = (AbstractShape) nodeShapeFactory.build( node.getContent().getDefinition(), canvasHandler );
-        nodeShape.applyProperties( node );
+        nodeShape.applyProperties( node, MutationContext.STATIC );
         ;
         final AbstractConnector edgeShape = (AbstractConnector) edgeShapeFactory.build( inEdge.getContent().getDefinition(), canvasHandler );
         canvas.addTransientShape( edgeShape );
-        edgeShape.applyProperties( inEdge );
+        edgeShape.applyProperties( inEdge, MutationContext.STATIC );
         
         final Shape<?> edgeSourceNodeShape = canvasHandler.getCanvas().getShape( inEdgeSourceNode.getUUID() );
 
@@ -109,7 +110,7 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
 
                 }
                 
-                edgeShape.applyConnections( inEdge, edgeSourceNodeShape.getShapeView(), nodeShape.getShapeView() );
+                edgeShape.applyConnections( inEdge, edgeSourceNodeShape.getShapeView(), nodeShape.getShapeView(), MutationContext.STATIC );
                 canvas.draw();
                 
             }

@@ -9,6 +9,7 @@ import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
 import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.shape.MutationContext;
 
 public final class UpdateCanvasElementPropertyCommand extends AbstractCanvasGraphCommand {
 
@@ -26,7 +27,7 @@ public final class UpdateCanvasElementPropertyCommand extends AbstractCanvasGrap
 
     @Override
     public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
-        context.updateElementProperties(element);
+        context.updateElementProperties(element, MutationContext.STATIC);
         return buildResult();
     }
 

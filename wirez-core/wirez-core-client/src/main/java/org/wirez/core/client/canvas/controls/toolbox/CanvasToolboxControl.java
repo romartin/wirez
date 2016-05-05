@@ -29,9 +29,12 @@ import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.controls.toolbox.command.ContextImpl;
 import org.wirez.core.client.canvas.controls.toolbox.command.ToolboxCommand;
 import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.view.HasEventHandlers;
+import org.wirez.core.client.shape.view.ShapeView;
 import org.wirez.lienzo.toolbox.HoverToolbox;
 import org.wirez.lienzo.toolbox.Toolboxes;
 import org.wirez.lienzo.toolbox.builder.ButtonsOrRegister;
+import org.wirez.lienzo.toolbox.builder.On;
 import org.wirez.lienzo.toolbox.event.ToolboxButtonEvent;
 
 import javax.enterprise.context.Dependent;
@@ -103,20 +106,34 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
     public void register(final Element element) {
 
         final Shape shape = canvasHandler.getCanvas().getShape( element.getUUID() );
+        final ShapeView<?> shapeView = shape.getShapeView();
         
-        if (shape.getShapeView() instanceof WiresShape) {
+        if (shapeView instanceof WiresShape) {
 
             final List<ToolboxCommand> commands = getCommands( element );
             
             if ( null != commands && !commands.isEmpty() ) {
                 
-                final WiresShape wiresShape = (WiresShape) shape.getShapeView();
+                final WiresShape wiresShape = (WiresShape) shapeView;
 
-                final ButtonsOrRegister register = Toolboxes.hoverToolBoxFor(wiresShape)
+                final On on = Toolboxes.hoverToolBoxFor(wiresShape);
+                
+                if ( shapeView instanceof HasEventHandlers ) {
+                    
+                    final HasEventHandlers hasEventHandlers = (HasEventHandlers) shapeView;
+                    if ( null != hasEventHandlers.getAttachableShape() ) {
+                        
+                        on.attachTo( hasEventHandlers.getAttachableShape() );
+                        
+                    }
+                    
+                }
+                
+                final ButtonsOrRegister register = on
                         .on(Direction.EAST)
                         .towards(Direction.EAST)
                         .grid(TOOLBOX_PADDING, TOOLBOX_ICON_SIZE, commands.size(), 1);
-
+                
                 for (final ToolboxCommand command : commands) {
 
                     // TODO: Use command title (tooltip).

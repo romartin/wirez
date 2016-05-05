@@ -16,7 +16,6 @@
 
 package org.wirez.core.client.canvas;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
@@ -24,6 +23,8 @@ import org.wirez.core.client.canvas.event.CanvasDrawnEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeAddedEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
 import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.view.animation.AnimationTweener;
+import org.wirez.core.client.shape.view.animation.HasAnimations;
 import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.enterprise.event.Event;
@@ -188,15 +189,20 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
     
     @Override
     public AbstractCanvas draw() {
-        applyShapesZIndex();
+        applyShapesDraw();
         view.getLayer().draw();
         return this;
     }
 
-    protected void applyShapesZIndex() {
+    protected void applyShapesDraw() {
+        
         for ( final Shape shape : shapes ) {
+            
+            // Zindex.
             applyShapeZIndex( shape );
+            
         }
+        
     }
 
     protected void applyShapeZIndex( final Shape shape ) {
@@ -206,7 +212,7 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
             shape.getShapeView().moveUp();
         }
     }
-
+    
     protected void beforeDrawCanvas() {
         
     }

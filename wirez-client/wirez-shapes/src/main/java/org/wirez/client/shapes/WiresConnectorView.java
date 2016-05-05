@@ -5,11 +5,12 @@ import com.ait.lienzo.client.core.shape.SimpleArrow;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.Point2DArray;
 import com.google.gwt.event.shared.HandlerRegistration;
+import org.wirez.client.shapes.animatiion.AnimatedWiresConnectorView;
 import org.wirez.core.client.shape.view.event.ViewEvent;
 import org.wirez.core.client.shape.view.event.ViewEventType;
 import org.wirez.core.client.shape.view.event.ViewHandler;
 
-public class WiresConnectorView<T extends WiresConnectorView> extends AbstractWiresConnectorView<T> {
+public class WiresConnectorView<T extends WiresConnectorView> extends AnimatedWiresConnectorView<T> {
 
     
     public WiresConnectorView(final WiresManager manager, 

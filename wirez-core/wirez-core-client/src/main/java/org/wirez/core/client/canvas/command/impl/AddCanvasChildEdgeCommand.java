@@ -9,6 +9,7 @@ import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
 import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.shape.MutationContext;
 
 /**
  * TODO: Register the new edge into the canvas handler's index for the graph. 
@@ -27,7 +28,7 @@ public final class AddCanvasChildEdgeCommand extends AbstractCanvasGraphCommand 
     @Override
     public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
         context.addChild(parent, candidate);
-        context.applyElementMutation(candidate);
+        context.applyElementMutation(candidate, MutationContext.STATIC);
         return buildResult();
     }
 

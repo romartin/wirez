@@ -26,6 +26,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.client.shape.MutationContext;
 
 public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway, WiresPolygonView> {
 
@@ -33,11 +34,11 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway, WiresP
         super(view);
     }
     
-    public void applyProperties(final Node<View<ParallelGateway>, Edge> element) {
-        super.applyProperties(element);
+    public void applyProperties(final Node<View<ParallelGateway>, Edge> element, final MutationContext mutationContext) {
+        super.applyProperties(element, mutationContext);
 
         // Radius.
-        _applyRadius(element);
+        _applyRadius(element, mutationContext);
         
     }
 
@@ -46,20 +47,14 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway, WiresP
         return element.getContent().getDefinition().getGeneral().getName();
     }
 
-    protected ParallelGatewayShape _applyRadius(final Node<View<ParallelGateway>, Edge> element) {
+    protected ParallelGatewayShape _applyRadius(final Node<View<ParallelGateway>, Edge> element, final MutationContext mutationContext) {
         final Radius radiusProperty  = element.getContent().getDefinition().getRadius();
         final Double radius = radiusProperty.getValue();
         if ( null != radius ) {
-            applyRadius(radius);
+            applyRadius(getShapeView(), radius, mutationContext);
             GraphUtils.updateBounds(radius, element.getContent());
         }
         return this;
-    }
-
-    protected void applyRadius(final double radius) {
-        if (radius > 0) {
-            getShapeView().setRadius(radius);
-        }
     }
 
     @Override

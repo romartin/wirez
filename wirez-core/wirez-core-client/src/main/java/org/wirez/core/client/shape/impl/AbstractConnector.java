@@ -16,18 +16,21 @@
 
 package org.wirez.core.client.shape.impl;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.wires.WiresCanvas;
-import org.wirez.core.client.shape.MutableShape;
-import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.Lifecycle;
+import org.wirez.core.client.shape.MutableShape;
+import org.wirez.core.client.shape.MutationContext;
+import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.IsConnector;
 import org.wirez.core.client.shape.view.ShapeView;
+import org.wirez.core.client.shape.view.animation.AnimationProperties;
+import org.wirez.core.client.shape.view.animation.AnimationProperty;
+import org.wirez.core.client.shape.view.animation.HasAnimations;
 import org.wirez.core.client.util.ShapeUtils;
 
 import java.util.logging.Level;
@@ -82,19 +85,20 @@ public abstract class AbstractConnector<W, E extends Edge<ViewConnector<W>, Node
     }
     
     @Override
-    public void applyPosition(final E element) {
+    public void applyPosition(final E element, final MutationContext mutationContext) {
         
     }
 
     @Override
-    public void applyProperties(final E element) {
+    public void applyProperties(final E element, final MutationContext mutationContext) {
 
     }
 
     @Override
     public void applyProperty(final E element, 
                               final String propertyId, 
-                              final Object value) {
+                              final Object value,
+                              final MutationContext mutationContext) {
 
     }
 
@@ -103,41 +107,76 @@ public abstract class AbstractConnector<W, E extends Edge<ViewConnector<W>, Node
         // TODO
     }
 
-    protected void _applyFillColor(final String color) {
+    protected void _applyFillColor(final String color, final MutationContext mutationContext) {
         
         if (color != null && color.trim().length() > 0) {
-            getShapeView().setFillColor(color);
+
+
+            if ( isAnimationMutation(mutationContext) ) {
+
+                addAnimationProperties( new AnimationProperties.FILL_COLOR( color ) );
+
+            } else {
+
+                getShapeView().setFillColor(color);
+
+            }
+            
         }
         
     }
 
     protected void  _applyBorders(final String color, 
-                                  final Double width) {
+                                  final Double width,
+                                  final MutationContext mutationContext) {
+        
+        final boolean isAnimation = isAnimationMutation(mutationContext);
         
         if (color != null && color.trim().length() > 0) {
-            getShapeView().setStrokeColor(color);
+            
+            if ( isAnimation ) {
+
+                addAnimationProperties( new AnimationProperties.STROKE_COLOR( color ) );
+                
+            } else {
+
+                getShapeView().setStrokeColor(color);
+
+            }
         }
         
         if (width != null) {
-            getShapeView().setStrokeWidth(width);
+
+            if ( isAnimation ) {
+
+                addAnimationProperties( new AnimationProperties.STROKE_WIDTH( width ) );
+                
+            } else {
+
+                getShapeView().setStrokeWidth(width);
+
+            }
+            
         }
         
     }
 
     public void applyConnections(final E element, 
-                                 final CanvasHandler canvasHandler) {
+                                 final CanvasHandler canvasHandler,
+                                 final MutationContext mutationContext) {
 
         final Node sourceNode = element.getSourceNode();
         final Node targetNode = element.getTargetNode();
 
-        applyConnections( element, sourceNode,  targetNode, canvasHandler );
+        applyConnections( element, sourceNode,  targetNode, canvasHandler, mutationContext);
 
     }
 
     public void applyConnections(final E element,
                                  final Node sourceNode,
                                  final Node targetNode,
-                                 final CanvasHandler canvasHandler) {
+                                 final CanvasHandler canvasHandler,
+                                 final MutationContext mutationContext) {
         
         final WiresCanvas canvas = (WiresCanvas) canvasHandler.getCanvas();
 
@@ -145,7 +184,7 @@ public abstract class AbstractConnector<W, E extends Edge<ViewConnector<W>, Node
             final Shape outNodeShape = canvas.getShape(targetNode.getUUID());
             if ( null != sourceNode && null != outNodeShape ) {
                 final Shape inNodeShape = canvas.getShape(sourceNode.getUUID());
-                applyConnections( element, inNodeShape.getShapeView(), outNodeShape.getShapeView() );
+                applyConnections( element, inNodeShape.getShapeView(), outNodeShape.getShapeView(), mutationContext );
             }
         }
         
@@ -153,7 +192,8 @@ public abstract class AbstractConnector<W, E extends Edge<ViewConnector<W>, Node
 
     public void applyConnections(final E element,
                                  final ShapeView inNodeShapeView,
-                                 final ShapeView outNodeShapeView) {
+                                 final ShapeView outNodeShapeView,
+                                 final MutationContext mutationContext) {
 
         final ViewConnector connectionContent = (ViewConnector) element.getContent();
         final int sourceMagnet = connectionContent.getSourceMagnetIndex();
@@ -168,6 +208,20 @@ public abstract class AbstractConnector<W, E extends Edge<ViewConnector<W>, Node
             ( (IsConnector) view).connect(inNodeShapeView, sourceMagnet, outNodeShapeView, targetMagnet, true, false);
         }
 
+    }
+
+
+    protected void addAnimationProperties(final AnimationProperty<?>... property) {
+        final HasAnimations<?> hasAnimations = (HasAnimations<?>) view;
+        hasAnimations.addAnimationProperties( property );
+    }
+    
+    protected boolean isStaticMutation( final MutationContext mutationContext ) {
+        return ShapeUtils.isStaticMutation( mutationContext );
+    }
+
+    protected boolean isAnimationMutation( final MutationContext mutationContext ) {
+        return ShapeUtils.isAnimationMutation( view, mutationContext);
     }
     
     @Override

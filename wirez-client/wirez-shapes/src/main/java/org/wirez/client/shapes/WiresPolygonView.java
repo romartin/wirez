@@ -5,17 +5,14 @@ import com.ait.lienzo.client.core.shape.RegularPolygon;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.shared.core.types.ColorName;
-import com.google.gwt.event.shared.HandlerRegistration;
+import org.wirez.client.shapes.animatiion.AnimatedWiresShapeView;
 import org.wirez.core.client.shape.view.HasRadius;
-import org.wirez.core.client.shape.view.event.DragHandler;
-import org.wirez.core.client.shape.view.event.ViewEvent;
 import org.wirez.core.client.shape.view.event.ViewEventType;
-import org.wirez.core.client.shape.view.event.ViewHandler;
 
-public class WiresPolygonView<T extends WiresPolygonView> extends AbstractWiresShapeView<T> 
+public class WiresPolygonView<T extends WiresPolygonView> extends AnimatedWiresShapeView<T> 
         implements HasRadius<T> {
 
+    protected RegularPolygon polygon;
     protected RegularPolygon decorator;
 
     public WiresPolygonView(final double radius,
@@ -26,20 +23,15 @@ public class WiresPolygonView<T extends WiresPolygonView> extends AbstractWiresS
                         .L(radius, 0)
                         .L(radius * 2, radius)
                         .L(radius, ( radius * 2) )
-                        .Z()
-                        .setStrokeColor(ColorName.BLACK)
-                        .setFillColor(fillColor),
+                        .Z(),
                 manager);
-
-        init(radius);
     }
 
-    protected void init(final double radius) {
-        decorator = new RegularPolygon(4, radius)
-                .setStrokeWidth(0)
-                .setStrokeAlpha(0)
-                .setFillAlpha(0)
-                .setStrokeAlpha(0);
+    @Override
+    protected void initialize() {
+        polygon = new RegularPolygon(4, 1);
+        this.addChild(polygon, WiresLayoutContainer.Layout.CENTER);
+        decorator = new RegularPolygon(4, 1);
         this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
     }
 
@@ -47,31 +39,20 @@ public class WiresPolygonView<T extends WiresPolygonView> extends AbstractWiresS
     protected Shape getDecorator() {
         return decorator;
     }
+
+    @Override
+    protected Shape getShape() {
+        return polygon;
+    }
+
     @Override
     public boolean supports(final ViewEventType type) {
         return ViewEventType.MOUSE_CLICK.equals( type ) || ViewEventType.DRAG.equals( type );
     }
 
     @Override
-    protected HandlerRegistration doAddHandler(final ViewEventType type, 
-                                               final ViewHandler<? extends ViewEvent> eventHandler) {
-        
-        if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
-            return registerClickHandler(getPath(), (ViewHandler<ViewEvent>) eventHandler);
-        }
-
-        if ( ViewEventType.DRAG.equals(type) ) {
-            return registerDragHandler(getPath(), (DragHandler) eventHandler);
-        }
-
-        return null;
-    }
-
-    @Override
     public T setRadius(final double radius) {
-        if (radius > 0) {
-            decorator.setRadius(radius);
-        }
-        return (T) this;
+        return super.setRadius( radius );
     }
+    
 }

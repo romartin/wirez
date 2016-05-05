@@ -37,17 +37,22 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
 
     public AbstractWiresConnectorView(AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
         super(line, head, tail, manager);
-        this.textPosition = WiresLayoutContainer.Layout.CENTER;
+        init();
     }
 
     public AbstractWiresConnectorView(WiresMagnet headMagnet, WiresMagnet tailMagnet, AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
         super(headMagnet, tailMagnet, line, head, tail, manager);
-        this.textPosition = WiresLayoutContainer.Layout.CENTER;
+        init();
     }
 
     protected abstract HandlerRegistration doAddHandler(final ViewEventType type,
                                                         final ViewHandler<ViewEvent> eventHandler);
 
+    protected void init() {
+        this.textPosition = WiresLayoutContainer.Layout.CENTER;
+        getDecoratableLine().setFillColor(ColorName.WHITE).setStrokeWidth(0);
+    }
+    
     @Override
     public T setUUID(final String uuid) {
         this.uuid = uuid;
@@ -187,6 +192,11 @@ public abstract class AbstractWiresConnectorView<T> extends WiresConnector
     public T setDragEnabled(final boolean isDraggable) {
         this.setDraggable();
         return (T) this;
+    }
+
+    @Override
+    public Shape<?> getAttachableShape() {
+        return getDecoratableLine();
     }
 
     @Override

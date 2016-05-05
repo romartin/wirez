@@ -15,25 +15,30 @@ public class ParallelGatewayShapeView extends WiresPolygonView<ParallelGatewaySh
                                     final String fillColor,
                                     final WiresManager manager) {
         super(radius, fillColor, manager);
-        init(radius);
     }
 
     @Override
-    protected void init(final double radius) {
-        super.init(radius);
+    protected void initialize() {
+        super.initialize();
         gatewayTypeIcon = new Group();
         gatewayTypeIcon.setDraggable(false);
-        final double[] gwTypeIconSize = updateGwTypeIcon(radius);
-
-        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
-        this.addChild(gatewayTypeIcon, WiresLayoutContainer.Layout.CENTER,
-                - ( gwTypeIconSize[0] / 2 ), - ( gwTypeIconSize[1] / 2 ) );
+        this.addChild(gatewayTypeIcon, WiresLayoutContainer.Layout.CENTER);
     }
 
     @Override
-    public ParallelGatewayShapeView setRadius(double radius) {
+    protected void doMoveChildren(final double width, 
+                                  final double height) {
+        super.doMoveChildren(width, height);
+        updateGwTypeIcon( width / 2 );
+        final BoundingBox bb = gatewayTypeIcon.getBoundingBox();
+        final double w = bb.getWidth() / 2;
+        final double h = bb.getHeight() / 2;
+        this.moveChild(gatewayTypeIcon, - w, - h );
+    }
+
+    @Override
+    public ParallelGatewayShapeView setRadius(final double radius) {
         super.setRadius(radius);
-        updateGwTypeIcon(radius);
         return this;
     }
 
@@ -54,6 +59,7 @@ public class ParallelGatewayShapeView extends WiresPolygonView<ParallelGatewaySh
             final BoundingBox bb = gatewayTypeIcon.getBoundingBox();
             return new double[] {bb.getWidth(), bb.getHeight()};
         }
+        
         return null;
     }
 

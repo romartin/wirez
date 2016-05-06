@@ -74,17 +74,24 @@ Backend
 
 The backend is prepared to support multi-tenant architectures so provide different implementations for managing the sessions, diagrams, etc.                   
 
+* [Application Diagram Manager](https://github.com/romartin/wirez/blob/master/wirez-core/wirez-core-backend/src/main/java/org/wirez/core/backend/diagram/ApplicationDiagramManager.java)                             
+* [Tenant Diagram Manager](https://github.com/romartin/wirez/blob/master/wirez-core/wirez-core-backend/src/main/java/org/wirez/core/backend/diagram/tenant/TenantDiagramManager.java)                     
+
+* [BPMN Marshalling](https://github.com/romartin/wirez/tree/master/wirez-sets/wirez-bpmn/wirez-bpmn-backend/src/main/java/org/wirez/bpmn/backend/marshall/json)                 
+
 
 Client
 ------
 
+* [Canvas controls](https://github.com/romartin/wirez/tree/master/wirez-core/wirez-core-client/src/main/java/org/wirez/core/client/canvas/controls)                     
+
+* [Read Only Sessions](https://github.com/romartin/wirez/blob/master/wirez-core/wirez-core-client/src/main/java/org/wirez/core/client/session/CanvasReadOnlySession.java)                       
+* [Full Sessions](https://github.com/romartin/wirez/blob/master/wirez-core/wirez-core-client/src/main/java/org/wirez/core/client/session/CanvasFullSession.java)                       
+
 View isolation
 --------------
 
-
-Client sessions and controls
------------------------------
-
-External Sets
---------------
+* [Shape](https://github.com/romartin/wirez/blob/master/wirez-core/wirez-core-client/src/main/java/org/wirez/core/client/shape/Shape.java)                       
+* [Mutable Shape](https://github.com/romartin/wirez/blob/master/wirez-core/wirez-core-client/src/main/java/org/wirez/core/client/shape/MutableShape.java)                        
+* [Shape View](https://github.com/romartin/wirez/blob/master/wirez-core/wirez-core-client/src/main/java/org/wirez/core/client/shape/view/ShapeView.java)                             
 

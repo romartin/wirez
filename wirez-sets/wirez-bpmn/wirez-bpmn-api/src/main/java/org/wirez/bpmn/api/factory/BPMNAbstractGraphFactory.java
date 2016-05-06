@@ -1,5 +1,7 @@
 package org.wirez.bpmn.api.factory;
 
+import java.util.Set;
+
 import org.wirez.bpmn.api.BPMNDiagram;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
@@ -16,8 +18,6 @@ import org.wirez.core.api.graph.impl.GraphImpl;
 import org.wirez.core.api.graph.store.GraphNodeStoreImpl;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.util.UUID;
-
-import java.util.Set;
 
 public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<DefinitionSet, Graph<DefinitionSet, Node>> {
 
@@ -62,19 +62,19 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
         final BPMNDiagram diagram = bpmnDefinitionBuilder.buildBPMNDiagram();
         final String diagramId = definitionManager.getDefinitionAdapter(diagram.getClass()).getId( diagram );
         Node diagramNode = buildGraphElement( diagramId );
-        
+
         graphCommandManager
                 .batch( graphCommandFactory.ADD_NODE( graph, diagramNode ) )
                 .batch( graphCommandFactory.UPDATE_POSITION( diagramNode, 30d, 30d) )
                 .executeBatch( createGraphContext() );
-        
+
         return graph;
-        
+
     }
-    
+
     private GraphCommandExecutionContext createGraphContext() {
-        return new EmptyRulesCommandExecutionContext( 
-                definitionManager, 
+        return new EmptyRulesCommandExecutionContext(
+                definitionManager,
                 factoryManager,
                 graphUtils );
     }

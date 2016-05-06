@@ -1,5 +1,10 @@
 package org.wirez.bpmn.api.factory;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.wirez.bpmn.api.BPMNPropertySet;
 import org.wirez.bpmn.api.property.diagram.DiagramSet;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
@@ -8,11 +13,6 @@ import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.bpmn.api.property.simulation.CatchEventAttributes;
 import org.wirez.bpmn.api.property.simulation.ThrowEventAttributes;
 import org.wirez.core.api.definition.factory.BindableModelFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @ApplicationScoped
 public class BPMNPropertySetFactory extends BindableModelFactory<BPMNPropertySet> {
@@ -85,26 +85,26 @@ public class BPMNPropertySetFactory extends BindableModelFactory<BPMNPropertySet
     }
 
     public BPMNGeneral buildGeneralSet() {
-        return new BPMNGeneral(bpmnPropertyBuilder.buildName(), 
+        return new BPMNGeneral(bpmnPropertyBuilder.buildName(),
                 bpmnPropertyBuilder.buildDocumentation());
     }
 
     public DiagramSet buildDiagramSet() {
-        return new DiagramSet(bpmnPropertyBuilder.buildPackage(), 
+        return new DiagramSet(bpmnPropertyBuilder.buildPackage(),
                 bpmnPropertyBuilder.buildExecutable());
     }
 
     public BackgroundSet buildBackgroundSet() {
-        return new BackgroundSet(bpmnPropertyBuilder.buildBgColor(), 
-                bpmnPropertyBuilder.buildBorderColor(), 
+        return new BackgroundSet(bpmnPropertyBuilder.buildBgColor(),
+                bpmnPropertyBuilder.buildBorderColor(),
                 bpmnPropertyBuilder.buildBorderSize());
     }
 
     public FontSet buildFontSet() {
-        return new FontSet(bpmnPropertyBuilder.buildFontFamily(), 
+        return new FontSet(bpmnPropertyBuilder.buildFontFamily(),
                 bpmnPropertyBuilder.buildFontColor(),
-                bpmnPropertyBuilder.buildFontSize(), 
+                bpmnPropertyBuilder.buildFontSize(),
                 bpmnPropertyBuilder.buildFontBorderSize());
     }
-    
+
 }

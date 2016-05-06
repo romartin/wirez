@@ -16,7 +16,10 @@
 
 package org.wirez.bpmn.api;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import java.util.HashSet;
+import java.util.Set;
+import javax.validation.Valid;
+
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -26,15 +29,24 @@ import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
-import org.wirez.bpmn.api.property.simulation.*;
+import org.wirez.bpmn.api.property.simulation.Currency;
+import org.wirez.bpmn.api.property.simulation.DistributionType;
+import org.wirez.bpmn.api.property.simulation.Max;
+import org.wirez.bpmn.api.property.simulation.Mean;
+import org.wirez.bpmn.api.property.simulation.Min;
+import org.wirez.bpmn.api.property.simulation.Quantity;
+import org.wirez.bpmn.api.property.simulation.StandardDeviation;
+import org.wirez.bpmn.api.property.simulation.TimeUnit;
+import org.wirez.bpmn.api.property.simulation.UnitCost;
+import org.wirez.bpmn.api.property.simulation.WorkingHours;
 import org.wirez.core.api.definition.annotation.Description;
-import org.wirez.core.api.definition.annotation.definition.*;
+import org.wirez.core.api.definition.annotation.definition.Category;
+import org.wirez.core.api.definition.annotation.definition.Definition;
+import org.wirez.core.api.definition.annotation.definition.Labels;
+import org.wirez.core.api.definition.annotation.definition.Property;
+import org.wirez.core.api.definition.annotation.definition.PropertySet;
+import org.wirez.core.api.definition.annotation.definition.Title;
 import org.wirez.core.api.graph.Node;
-
-import java.util.HashSet;
-import java.util.Set;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @Portable
 @Bindable
@@ -56,10 +68,11 @@ public class Task implements BPMNDefinition {
     public static final Double BORDER_SIZE = 0.5d;
 
     @PropertySet
+    @FieldDef( label = "General Settings", position = 0)
     private BPMNGeneral general;
 
     @PropertySet
-    @FieldDef( label = "Background Settings", position = 9)
+    @FieldDef( label = "Background Settings", position = 1)
     @Valid
     private BackgroundSet backgroundSet;
 
@@ -67,12 +80,12 @@ public class Task implements BPMNDefinition {
     private FontSet fontSet;
 
     @Property
-    @FieldDef(label = "Width", property = "value", position = 0)
+    @FieldDef(label = "Width", property = "value")
     @Valid
     private Width width;
 
     @Property
-    @FieldDef(label = "Height", property = "value", position = 1)
+    @FieldDef(label = "Height", property = "value")
     @Valid
     private Height height;
 
@@ -86,7 +99,8 @@ public class Task implements BPMNDefinition {
     private Mean mean;
 
     @Property
-    @FieldDef(label = "TimeUnit", property = "value", position = 2)
+    @FieldDef(label = "TimeUnit", property = "value")
+    @Valid
     private TimeUnit timeUnit;
 
     @Property

@@ -16,11 +16,18 @@
 
 package org.wirez.bpmn.api.property.simulation;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
 import org.wirez.core.api.definition.annotation.Description;
-import org.wirez.core.api.definition.annotation.property.*;
+import org.wirez.core.api.definition.annotation.property.Caption;
+import org.wirez.core.api.definition.annotation.property.DefaultValue;
+import org.wirez.core.api.definition.annotation.property.Optional;
+import org.wirez.core.api.definition.annotation.property.Property;
+import org.wirez.core.api.definition.annotation.property.ReadOnly;
+import org.wirez.core.api.definition.annotation.property.Type;
+import org.wirez.core.api.definition.annotation.property.Value;
 import org.wirez.core.api.definition.property.PropertyType;
 import org.wirez.core.api.definition.property.type.StringType;
 
@@ -49,6 +56,7 @@ public class TimeUnit implements BPMNProperty {
     public static final transient String defaultValue = "ms";
 
     @Value
+    @NotEmpty
     private String value = defaultValue;
 
     public TimeUnit() {
@@ -77,7 +85,7 @@ public class TimeUnit implements BPMNProperty {
     public String getDefaultValue() {
         return defaultValue;
     }
-    
+
     public String getValue() {
         return value;
     }
@@ -85,5 +93,5 @@ public class TimeUnit implements BPMNProperty {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
 }

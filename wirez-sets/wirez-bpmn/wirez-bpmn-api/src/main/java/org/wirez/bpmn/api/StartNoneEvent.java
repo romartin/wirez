@@ -16,6 +16,10 @@
 
 package org.wirez.bpmn.api;
 
+import java.util.HashSet;
+import java.util.Set;
+import javax.validation.Valid;
+
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -26,12 +30,13 @@ import org.wirez.bpmn.api.property.general.BackgroundSet;
 import org.wirez.bpmn.api.property.general.FontSet;
 import org.wirez.bpmn.api.property.simulation.CatchEventAttributes;
 import org.wirez.core.api.definition.annotation.Description;
-import org.wirez.core.api.definition.annotation.definition.*;
+import org.wirez.core.api.definition.annotation.definition.Category;
+import org.wirez.core.api.definition.annotation.definition.Definition;
+import org.wirez.core.api.definition.annotation.definition.Labels;
+import org.wirez.core.api.definition.annotation.definition.Property;
+import org.wirez.core.api.definition.annotation.definition.PropertySet;
+import org.wirez.core.api.definition.annotation.definition.Title;
 import org.wirez.core.api.graph.Node;
-
-import java.util.HashSet;
-import java.util.Set;
-import javax.validation.Valid;
 
 @Portable
 @Bindable

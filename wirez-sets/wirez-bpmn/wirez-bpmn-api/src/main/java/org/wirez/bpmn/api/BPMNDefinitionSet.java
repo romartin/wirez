@@ -1,15 +1,14 @@
 package org.wirez.bpmn.api;
 
+import javax.enterprise.context.ApplicationScoped;
+
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.factory.BPMNAbstractGraphFactory;
 import org.wirez.core.api.definition.annotation.Description;
 import org.wirez.core.api.definition.annotation.definitionset.DefinitionSet;
-import org.wirez.core.api.rule.annotation.CanContain;
 import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.rule.annotation.EdgeOccurrences;
+import org.wirez.core.api.rule.annotation.CanContain;
 import org.wirez.core.api.rule.annotation.Occurrences;
-
-import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 @Bindable
@@ -24,7 +23,7 @@ import javax.enterprise.context.ApplicationScoped;
             SequenceFlow.class,
             ParallelGateway.class,
             EndTerminateEvent.class,
-            Lane.class 
+            Lane.class
         }
 )
 @CanContain( roles = { "diagram" } )
@@ -42,9 +41,9 @@ public class BPMNDefinitionSet {
     public static final transient String description = "BPMN v2 Set";
 
     public BPMNDefinitionSet() {
-        
+
     }
-    
+
     public String getDescription() {
         return description;
     }

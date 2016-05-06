@@ -1,12 +1,20 @@
 package org.wirez.bpmn.api.factory;
 
-import org.wirez.bpmn.api.*;
-import org.wirez.core.api.definition.factory.BindableModelFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.wirez.bpmn.api.BPMNDefinition;
+import org.wirez.bpmn.api.BPMNDiagram;
+import org.wirez.bpmn.api.EndNoneEvent;
+import org.wirez.bpmn.api.EndTerminateEvent;
+import org.wirez.bpmn.api.Lane;
+import org.wirez.bpmn.api.ParallelGateway;
+import org.wirez.bpmn.api.SequenceFlow;
+import org.wirez.bpmn.api.StartNoneEvent;
+import org.wirez.bpmn.api.Task;
+import org.wirez.core.api.definition.factory.BindableModelFactory;
 
 @ApplicationScoped
 public class BPMNDefinitionFactory extends BindableModelFactory<BPMNDefinition> {
@@ -119,7 +127,7 @@ public class BPMNDefinitionFactory extends BindableModelFactory<BPMNDefinition> 
         event.getRadius().setValue(StartNoneEvent.RADIUS);
         return event;
     }
-    
+
 
     public EndNoneEvent buildEndNoneEvent() {
         EndNoneEvent event = new EndNoneEvent(bpmnPropertySetBuilder.buildGeneralSet(),
@@ -145,7 +153,7 @@ public class BPMNDefinitionFactory extends BindableModelFactory<BPMNDefinition> 
         endTerminateEvent.getRadius().setValue(EndTerminateEvent.RADIUS);
         return endTerminateEvent;
     }
-    
+
     public SequenceFlow buildSequenceFlow() {
         SequenceFlow flow = new SequenceFlow(bpmnPropertySetBuilder.buildGeneralSet(),
                     bpmnPropertySetBuilder.buildBackgroundSet());

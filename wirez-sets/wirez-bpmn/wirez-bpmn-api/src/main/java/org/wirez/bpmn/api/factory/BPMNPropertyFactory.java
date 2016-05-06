@@ -1,18 +1,35 @@
 package org.wirez.bpmn.api.factory;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+import javax.enterprise.context.ApplicationScoped;
+
 import org.wirez.bpmn.api.BPMNProperty;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.diagram.Executable;
 import org.wirez.bpmn.api.property.diagram.Package;
-import org.wirez.bpmn.api.property.general.*;
-import org.wirez.bpmn.api.property.simulation.*;
+import org.wirez.bpmn.api.property.general.BgColor;
+import org.wirez.bpmn.api.property.general.BorderColor;
+import org.wirez.bpmn.api.property.general.BorderSize;
+import org.wirez.bpmn.api.property.general.Documentation;
+import org.wirez.bpmn.api.property.general.FontBorderSize;
+import org.wirez.bpmn.api.property.general.FontColor;
+import org.wirez.bpmn.api.property.general.FontFamily;
+import org.wirez.bpmn.api.property.general.FontSize;
+import org.wirez.bpmn.api.property.general.Name;
+import org.wirez.bpmn.api.property.simulation.Currency;
+import org.wirez.bpmn.api.property.simulation.DistributionType;
+import org.wirez.bpmn.api.property.simulation.Max;
+import org.wirez.bpmn.api.property.simulation.Mean;
+import org.wirez.bpmn.api.property.simulation.Min;
+import org.wirez.bpmn.api.property.simulation.Quantity;
+import org.wirez.bpmn.api.property.simulation.StandardDeviation;
+import org.wirez.bpmn.api.property.simulation.TimeUnit;
+import org.wirez.bpmn.api.property.simulation.UnitCost;
+import org.wirez.bpmn.api.property.simulation.WorkingHours;
 import org.wirez.core.api.definition.factory.BindableModelFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @ApplicationScoped
 public class BPMNPropertyFactory extends BindableModelFactory<BPMNProperty> {
@@ -145,7 +162,7 @@ public class BPMNPropertyFactory extends BindableModelFactory<BPMNProperty> {
     public Mean buildMean() {
         return new Mean();
     }
-    
+
     public DistributionType buildDistributionType() {
         return new DistributionType();
     }
@@ -213,7 +230,7 @@ public class BPMNPropertyFactory extends BindableModelFactory<BPMNProperty> {
     public FontSize buildFontSize() {
         return new FontSize();
     }
-    
+
     public Height buildHeight() {
         return new Height();
     }

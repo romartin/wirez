@@ -1,12 +1,12 @@
 package org.wirez.bpmn.api.factory;
 
-import org.wirez.bpmn.api.BPMNDefinitionSet;
-import org.wirez.core.api.definition.factory.BindableModelFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.wirez.bpmn.api.BPMNDefinitionSet;
+import org.wirez.core.api.definition.factory.BindableModelFactory;
 
 @ApplicationScoped
 public class BPMNDefinitionSetFactory extends BindableModelFactory<BPMNDefinitionSet> {

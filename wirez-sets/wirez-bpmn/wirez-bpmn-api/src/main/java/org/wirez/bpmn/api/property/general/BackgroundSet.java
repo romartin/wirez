@@ -2,7 +2,6 @@ package org.wirez.bpmn.api.property.general;
 
 import javax.validation.Valid;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;

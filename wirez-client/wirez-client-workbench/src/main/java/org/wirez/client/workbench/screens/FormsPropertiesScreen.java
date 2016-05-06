@@ -16,6 +16,7 @@
 
 package org.wirez.client.workbench.screens;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.jboss.errai.databinding.client.HasProperties;
 import org.jboss.errai.databinding.client.api.DataBinder;
@@ -141,15 +142,21 @@ public class FormsPropertiesScreen {
                 formRenderer.renderDefaultForm( definition, () -> {
                     formRenderer.addFieldChangeHandler((fieldName, newValue) -> {
 
-                        // TODO - Pere: We have to review this. Meanwhile, note that this is working only for properties
-                        // that are direct members of the definitions ( ex: Task#width or StartEvent#radius ).
-                        // But it's not working for the properties that are inside property sets, for example an error
-                        // occurs when updating "documentation", as thisl callback "fieldName" = "documentation", but
-                        // in order to obtain the property it should be "general.documentation".
-                        final HasProperties hasProperties = (HasProperties) DataBinder.forModel( definition ).getModel();
-                        final Object property = hasProperties.get(fieldName);
-                        final String pId = clientDefinitionManager.getPropertyAdapter( property.getClass() ).getId( property );
-                        FormsPropertiesScreen.this.executeUpdateProperty(element, pId, newValue);
+                        try {
+                            // TODO - Pere: We have to review this. Meanwhile, note that this is working only for properties
+                            // that are direct members of the definitions ( ex: Task#width or StartEvent#radius ).
+                            // But it's not working for the properties that are inside property sets, for example an error
+                            // occurs when updating "documentation", as thisl callback "fieldName" = "documentation", but
+                            // in order to obtain the property it should be "general.documentation".
+                            final HasProperties hasProperties = (HasProperties) DataBinder.forModel( definition ).getModel();
+
+                            String pId = getModifiedPropertyId( hasProperties, fieldName );
+
+                            FormsPropertiesScreen.this.executeUpdateProperty( element, pId, newValue );
+
+                        } catch ( Exception ex ) {
+                            GWT.log( "Something wrong happened refreshing the canvas for field '" + fieldName + "': " + ex.getCause() );
+                        }
                     });
                 } );
 
@@ -162,6 +169,29 @@ public class FormsPropertiesScreen {
         }
 
     }
+
+    private String getModifiedPropertyId( HasProperties model, String fieldName ) {
+
+        int separatorIndex = fieldName.indexOf( "." );
+
+        // Check if it is a nested property, if it is we must obtain the nested property instead of the root one.
+        if ( separatorIndex != -1 ) {
+            String rootProperty = fieldName.substring( 0, separatorIndex );
+            fieldName = fieldName.substring( separatorIndex + 1);
+
+            Object property = model.get( rootProperty );
+
+            model = (HasProperties) DataBinder.forModel( property ).getModel();
+
+            return getModifiedPropertyId( model, fieldName );
+        }
+
+        Object property = model.get( fieldName );
+
+        return clientDefinitionManager.getPropertyAdapter( property.getClass() ).getId( property );
+    }
+
+
 
     void onCanvasSessionOpened(@Observes SessionOpenedEvent sessionOpenedEvent) {
         checkNotNull("sessionOpenedEvent", sessionOpenedEvent);

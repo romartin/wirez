@@ -1,5 +1,7 @@
 package org.wirez.bpmn.api.property.general;
 
+import javax.validation.Valid;
+
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -21,6 +23,7 @@ public class BPMNGeneral implements BPMNPropertySet {
 
     @Property
     @FieldDef( label = "Documentation", property = "value")
+    @Valid
     private Documentation documentation;
 
     public BPMNGeneral() {

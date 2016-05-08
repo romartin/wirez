@@ -1,7 +1,9 @@
 package org.wirez.bpmn.backend;
 
+import org.wirez.bpmn.api.BPMNDefinitionSet;
 import org.wirez.bpmn.backend.service.diagram.BPMNDiagramMarshaller;
 import org.wirez.core.api.definition.DefinitionSetServices;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.diagram.marshall.DiagramMarshaller;
 
@@ -13,12 +15,14 @@ import java.io.InputStream;
 public class BPMNBackendServices implements DefinitionSetServices {
 
     public static final String EXTENSION = "bpmn";
+    
     @Inject
     BPMNDiagramMarshaller bpmnDiagramMarshaller;
     
     @Override
-    public boolean accepts(final String path) {
-        return path != null && path.toLowerCase().endsWith(EXTENSION);
+    public boolean accepts(final String defSetId) {
+        final String id = BindableAdapterUtils.getDefinitionSetId( BPMNDefinitionSet.class );
+        return defSetId != null && defSetId.equals( id );
     }
 
     @Override

@@ -6,7 +6,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.graph.command.GraphCommandManager;
 import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.backend.Application;
+import org.wirez.core.backend.annotation.Application;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;

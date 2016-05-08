@@ -18,12 +18,13 @@ package org.wirez.client.widgets.canvas.wires;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import org.wirez.client.lienzo.canvas.lienzo.Lienzo;
+import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
 import org.wirez.core.client.canvas.event.CanvasDrawnEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeAddedEvent;
 import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
-import org.wirez.core.client.canvas.lienzo.Lienzo;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -31,7 +32,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 @Dependent
-public class WiresCanvasPresenter extends org.wirez.core.client.canvas.wires.WiresCanvas implements IsWidget {
+public class WiresCanvasPresenter extends WiresCanvas implements IsWidget {
 
     private static final int PADDING = 15;
 
@@ -41,7 +42,7 @@ public class WiresCanvasPresenter extends org.wirez.core.client.canvas.wires.Wir
                                 final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
                                 final Event<CanvasDrawnEvent> canvasDrawnEvent,
                                 final @Lienzo Layer layer,
-                                final org.wirez.core.client.canvas.wires.WiresCanvas.View view) {
+                                final WiresCanvas.View view) {
         super( canvasClearEvent, canvasShapeAddedEvent, canvasShapeRemovedEvent, 
                 canvasDrawnEvent, layer, view );
     }

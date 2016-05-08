@@ -21,6 +21,7 @@ public class Bpmn2OryxIdMappings {
     private final Map<Class<?>, String> globalMappings = new HashMap<Class<?>, String>() {{
         // Add here global class <-> oryxId mappings, if any.
         // No custom mappings, for now.
+        put( Name.class, "name" );
     }};
 
     private final Map<Class<?>, Set<String>> skippedProperties = new HashMap<Class<?>, Set<String>>() {{
@@ -119,11 +120,6 @@ public class Bpmn2OryxIdMappings {
     }
 
     public String getPropertyId( Class<?> clazz ) {
-        if ( Name.class.equals( clazz ) ) {
-            // TODO: hmm...
-            return Name.ID;
-        }
-        
         return BindableAdapterUtils.getPropertyId( clazz );
     }
 

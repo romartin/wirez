@@ -6,7 +6,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.client.shape.TaskShape;
-import org.wirez.client.shapes.WiresRectangleView;
+import org.wirez.client.shapes.view.WiresRectangleView;
 
 public class TaskShapeView extends WiresRectangleView<TaskShapeView> implements TaskShape.TaskView<TaskShapeView> {
 

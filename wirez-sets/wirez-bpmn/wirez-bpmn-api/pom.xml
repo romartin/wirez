@@ -40,10 +40,33 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-core-processors</artifactId>
+      <artifactId>wirez-client-api</artifactId>
       <scope>provided</scope>
     </dependency>
-   
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-core-common</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-client-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-shapes-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-processors</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
     <!-- GWT. -->
 
     <dependency>
@@ -82,13 +105,6 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons</artifactId>
-    </dependency>
-
-    <!-- Lienzo. -->
-
-    <dependency>
-      <groupId>com.ahome-it</groupId>
-      <artifactId>lienzo-core</artifactId>
     </dependency>
 
   </dependencies>

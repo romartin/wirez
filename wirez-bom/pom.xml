@@ -42,13 +42,52 @@
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-core-processors</artifactId>
+        <artifactId>wirez-backend-api</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-core-processors</artifactId>
+        <artifactId>wirez-client-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-client-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-core-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-core-common</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-backend-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-processors</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-processors</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -56,26 +95,39 @@
       
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-core-backend</artifactId>
+        <artifactId>wirez-backend</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-core-backend</artifactId>
+        <artifactId>wirez-backend</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-core-client</artifactId>
+        <artifactId>wirez-client-common</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-core-client</artifactId>
+        <artifactId>wirez-client-common</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-lienzo</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-lienzo</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -84,13 +136,26 @@
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-shapes</artifactId>
+        <artifactId>wirez-shapes-api</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-shapes</artifactId>
+        <artifactId>wirez-shapes-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-shapes-impl</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-shapes-impl</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -110,13 +175,13 @@
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-client-workbench</artifactId>
+        <artifactId>wirez-workbench</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-client-workbench</artifactId>
+        <artifactId>wirez-workbench</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
@@ -137,6 +202,19 @@
       
       <!-- Wirez Default Sets-->
 
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-basicset</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-basicset</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
       <dependency>
         <groupId>org.wirez</groupId>
         <artifactId>wirez-bpmn-api</artifactId>
@@ -180,7 +258,7 @@
       
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-webapp</artifactId>
+        <artifactId>wirez-showcase</artifactId>
         <version>${project.version}</version>
         <type>war</type>
       </dependency>

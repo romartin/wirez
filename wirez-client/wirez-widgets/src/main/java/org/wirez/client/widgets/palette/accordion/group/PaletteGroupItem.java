@@ -19,11 +19,11 @@ package org.wirez.client.widgets.palette.accordion.group;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
-public interface PaletteGroupItem {
+public interface PaletteGroupItem<G> {
     
     String getDescription();
     
-    ShapeGlyph getGlyph();
+    ShapeGlyph<G> getGlyph();
 
     Handler getClickHandler();
 

@@ -4,6 +4,8 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
+import org.wirez.core.client.animation.Highlight;
+import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.session.impl.DefaultCanvasReadOnlySession;
 import org.wirez.core.client.util.CanvasHighlightVisitor;
 
@@ -14,10 +16,14 @@ import javax.inject.Inject;
 @Dependent
 public class VisitGraphCommand extends AbstractToolbarCommand<DefaultCanvasReadOnlySession> {
 
+    ShapeAnimation highlightAnimation;
+    
     @Inject
     public VisitGraphCommand(final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent,
-                             final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent) {
+                             final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent,
+                             final @Highlight ShapeAnimation highlightAnimation) {
         super( enableToolbarCommandEvent, disableToolbarCommandEvent );
+        this.highlightAnimation = highlightAnimation;
     }
 
     @Override
@@ -38,11 +44,12 @@ public class VisitGraphCommand extends AbstractToolbarCommand<DefaultCanvasReadO
     @Override
     public <T> void execute(final ToolbarCommandCallback<T> callback) {
 
-        new CanvasHighlightVisitor(session.getCanvasHandler()).run(() -> {
-            if ( null != callback ) {
-                callback.onSuccess( null );
-            }
-        });
+        new CanvasHighlightVisitor(session.getCanvasHandler(), highlightAnimation)
+                .run(() -> {
+                    if (null != callback) {
+                        callback.onSuccess(null);
+                    }
+                });
     }
-    
+
 }

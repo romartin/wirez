@@ -9,6 +9,7 @@ import org.wirez.client.widgets.wizard.screens.BaseWizardScreen;
 import org.wirez.client.widgets.wizard.screens.CanvasWizardScreen;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
+import org.wirez.core.client.util.ShapeUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -86,6 +87,7 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
                 final String name = shapeSet.getName();
                 final String description = shapeSet.getDescription();
                 final SafeUri thumbnailUri = shapeSet.getThumbnailUri();
+                
                 view.addItem(name, description, thumbnailUri, true,
                         new Command() {
                             @Override
@@ -107,7 +109,7 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
         clear();
         doShow();
     }
-
+    
     @Override
     public Widget asWidget() {
         return view.asWidget();

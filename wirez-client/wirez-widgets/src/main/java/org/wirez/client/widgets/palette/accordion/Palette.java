@@ -16,6 +16,7 @@
 
 package org.wirez.client.widgets.palette.accordion;
 
+import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -153,134 +154,135 @@ public class Palette implements IsWidget {
         view.clear();
     }
     
+    // TODO: Use wirezShapeSet to obtaint the factory.
+    @SuppressWarnings("unchecked")
     private void doShow(final int width, final ShapeSet wirezShapeSet, final Object definitionSet) {
 
         // Clear current palette groups.
         view.clearGroups();
 
         final Collection<String> definitions = definitionManager.getDefinitionSetAdapter( definitionSet.getClass() ).getDefinitions( definitionSet );
-        final Collection<ShapeFactory<?, ?, ? extends Shape>> factories = wirezShapeSet.getFactories();
 
-        // Load entries.
-        final Map<String, List<PaletteGroupItem>> paletteGroupItems = new HashMap<>();
-        for (final ShapeFactory<?, ?, ? extends Shape> factory : factories) {
-            final Object definition = getDefinition(definitions, factory);
+        if ( null != definitions ) {
 
-            if ( null != definition ) {
+            final Map<String, List<PaletteGroupItem<Group>>> paletteGroupItems = new HashMap<>();
+
+            for( final String defId : definitions ) {
+
+                final ShapeFactory<?, ?, ? extends Shape> factory = shapeManager.getFactory( defId );
                 
-                final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+                if ( null != factory ) {
 
-                final String category = definitionAdapter.getCategory( definition );
-                final String description = factory.getDescription();
-                final ShapeGlyph glyph = factory.getGlyphFactory().build();
-                
-                // Shapes not considered to be on the palette.
-                if ( null == glyph ) {
-                    continue;
-                }
+                    // TODO: Avoid creating objects here.
+                    final Object definition = clientFactoryServices.newDomainObject( defId );
+                    
+                    final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+                    final String category = definitionAdapter.getCategory( definition );
+                    final String description = factory.getDescription( defId );
+                    final ShapeGlyph<Group> glyph = factory.getGlyphFactory( defId ).build( defId );
 
-                List<PaletteGroupItem> items = paletteGroupItems.get(category);
-                if ( null == items ) {
-                    items = new LinkedList<>();
-                    paletteGroupItems.put(category, items);
-                }
-                
-                PaletteGroupItem paletteGroupItem = PaletteGroup.buildItem(glyph, description,
-                        new PaletteGroupItem.Handler() {
+                    // Shapes not considered to be on the palette.
+                    if ( null == glyph ) {
+                        continue;
+                    }
+                    
+                    List<PaletteGroupItem<Group>> items = paletteGroupItems.get(category);
+                    if ( null == items ) {
+                        items = new LinkedList<>();
+                        paletteGroupItems.put(category, items);
+                    }
 
-                            @Override
-                            public void onFocus(double x, double y) {
-                                paletteTooltip.show(glyph,description,  width + 5, y - 50);
-                            }
+                    PaletteGroupItem paletteGroupItem = PaletteGroup.buildItem(glyph, description,
+                            new PaletteGroupItem.Handler() {
 
-                            @Override
-                            public void onLostFocus() {
-                                paletteTooltip.hide();
-                            }
+                                @Override
+                                public void onFocus(double x, double y) {
+                                    paletteTooltip.show(glyph,description,  width + 5, y - 50);
+                                }
 
-                            /**
-                             * Add the shape into the canvas diagram when mouse click at a fixed position.
-                             * Disabled for now.
-                             */
-                            @Override
-                            public void onClick() {
-                                // TODO: Disabled adding shape on just click. It should be added inside the BPMNDiagram by default.
-                                // log(Level.FINE, "Palette: Adding " + description);
-                                // addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory));
-                            }
+                                @Override
+                                public void onLostFocus() {
+                                    paletteTooltip.hide();
+                                }
 
-                            /**
-                             * Add the shape into the canvas diagram using drag features. 
-                             * Drag proxy and final position into the canvas is given by the glyph drag handler implementation.
-                             */
-                            @Override
-                            public void onDragStart(final LienzoPanel parentPanel, final double x, final double y) {
+                                /**
+                                 * Add the shape into the canvas diagram when mouse click at a fixed position.
+                                 * Disabled for now.
+                                 */
+                                @Override
+                                public void onClick() {
+                                    // TODO: Disabled adding shape on just click. It should be added inside the BPMNDiagram by default.
+                                    // log(Level.FINE, "Palette: Adding " + description);
+                                    // addShapeToCanvasEvent.fire(new AddShapeToCanvasEvent(definition, factory));
+                                }
 
-                                shapeGlyphDragHandler.show(parentPanel, glyph, x, y, new ShapeGlyphDragHandler.Callback() {
-                                    @Override
-                                    public void onMove(final LienzoPanel floatingPanel, final double x, final double y) {
+                                /**
+                                 * Add the shape into the canvas diagram using drag features. 
+                                 * Drag proxy and final position into the canvas is given by the glyph drag handler implementation.
+                                 */
+                                @Override
+                                public void onDragStart(final LienzoPanel parentPanel, final double x, final double y) {
 
-                                    }
+                                    shapeGlyphDragHandler.show(parentPanel, glyph, x, y, new ShapeGlyphDragHandler.Callback<LienzoPanel>() {
+                                        @Override
+                                        public void onMove(final LienzoPanel floatingPanel, final double x, final double y) {
 
-                                    @Override
-                                    public void onComplete(final LienzoPanel floatingPanel, final double x, final double y) {
-                                        if ( null != callback ) {
-                                            log(Level.FINE, "Palette: Adding " + description + " at " + x + "," + y);
-                                            callback.onAddShape( definition, factory, x, y );
                                         }
-                                    }
-                                });
 
-                            }
-                        });
+                                        @Override
+                                        public void onComplete(final LienzoPanel floatingPanel, final double x, final double y) {
+                                            if ( null != callback ) {
+                                                log(Level.FINE, "Palette: Adding " + description + " at " + x + "," + y);
+                                                callback.onAddShape( definition, factory, x, y );
+                                            }
+                                        }
+                                    });
 
-                items.add(paletteGroupItem);
+                                }
+                            });
+
+                    items.add(paletteGroupItem);
+
+                }
+                
+            }
+
+            // Show palette groups.
+            if (!paletteGroupItems.isEmpty()) {
+
+                int x = 0;
+                final Set<Map.Entry<String, List<PaletteGroupItem<Group>>>> entries = paletteGroupItems.entrySet();
+                for (final Map.Entry<String, List<PaletteGroupItem<Group>>> entry : entries) {
+                    final String category = entry.getKey();
+                    final List<PaletteGroupItem<Group>> items = entry.getValue();
+
+                    PaletteGroup paletteGroup = buildPaletteGroup();
+                    paletteGroup.show(category, x == 0, width, items);
+                    view.addGroup(paletteGroup);
+                    x++;
+                }
                 
             }
             
         }
         
-        // Show palette groups.
-        if (!paletteGroupItems.isEmpty()) {
-            
-            int x = 0;
-            final Set<Map.Entry<String, List<PaletteGroupItem>>> entries = paletteGroupItems.entrySet();
-            for (final Map.Entry<String, List<PaletteGroupItem>> entry : entries) {
-                final String category = entry.getKey();
-                final List<PaletteGroupItem> items = entry.getValue();
-
-                PaletteGroup paletteGroup = buildPaletteGroup();
-                paletteGroup.show(category, x == 0, width, items);
-                view.addGroup(paletteGroup);
-                x++;
-            }
-        }
-        
-    }
-    
-    private Object getDefinition(final Collection<String> definitions, final ShapeFactory factory) {
-        for (final String definitionId : definitions) {
-            if (factory.accepts( definitionId )) {
-                return clientFactoryServices.newDomainObject( definitionId );
-            }
-        }
-        return null;
     }
     
     private PaletteGroup buildPaletteGroup() {
         return beanManager.lookupBean( PaletteGroup.class ).newInstance();
     }
 
-    void showError(final ClientRuntimeError error) {
+    void showError( final ClientRuntimeError error ) {
         final String message = error.getCause() != null ? error.getCause() : error.getMessage();
         showError(message);
     }
 
-    void showError(final String message) {
+    void showError( final String message ) {
         errorPopupPresenter.showMessage(message);
     }
 
-    private void log(final Level level, final String message) {
+    private void log( final Level level, 
+                      final String message ) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);
         }

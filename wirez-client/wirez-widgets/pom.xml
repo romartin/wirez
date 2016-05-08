@@ -15,9 +15,39 @@
 
   <dependencies>
 
+    <!-- Wirez. -->
+
     <dependency>
-      <groupId>javax.inject</groupId>
-      <artifactId>javax.inject</artifactId>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-core-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-client-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-core-common</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-client-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-lienzo</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-lienzo-extensions</artifactId>
       <scope>provided</scope>
     </dependency>
     
@@ -86,6 +116,7 @@
     <dependency>
       <groupId>com.ahome-it</groupId>
       <artifactId>lienzo-core</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Property Editor - Uberfire Extensions -->
@@ -104,29 +135,9 @@
       <artifactId>uberfire-widgets-properties-editor-backend</artifactId>
     </dependency>
 
-    <!-- Wirez. -->
-
     <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-core-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-core-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-shapes</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-lienzo-extensions</artifactId>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
       <scope>provided</scope>
     </dependency>
 

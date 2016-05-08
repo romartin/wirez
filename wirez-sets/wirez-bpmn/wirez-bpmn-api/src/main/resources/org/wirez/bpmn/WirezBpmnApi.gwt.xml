@@ -20,8 +20,11 @@
 <module>
 
 	<inherits name='com.google.gwt.user.User' />
-	<inherits name="org.wirez.core.WirezCoreApi"/>
-
+	<inherits name="org.wirez.core.WirezCommon"/>
+	<inherits name="org.wirez.core.WirezClientCommon"/>
+	<inherits name="org.wirez.client.WirezShapesApi"/>
+	
 	<source path="api"/>
+	<source path="client"/>
 
 </module>

@@ -17,12 +17,72 @@
 package org.wirez.bpmn.api.property.general;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.BPMNProperty;
+import org.wirez.core.api.definition.annotation.Description;
+import org.wirez.core.api.definition.annotation.property.*;
+import org.wirez.core.api.definition.property.PropertyType;
+import org.wirez.core.api.definition.property.type.StringType;
 
-/**
- * Default name property for the concrete BPMN2 set.
- */
 @Portable
-public class Name extends org.wirez.core.api.definition.property.defaults.Name implements BPMNProperty {
+@Bindable
+@NameProperty
+public class Name implements BPMNProperty {
+
+    @Caption
+    public static final transient String caption = "Name";
+
+    @Description
+    public static final transient String description = "The element's name";
+
+    @ReadOnly
+    public static final Boolean readOnly = false;
+
+    @Optional
+    public static final Boolean optional = false;
+
+    @Type
+    public static final PropertyType type = new StringType();
+
+    @DefaultValue
+    public static final transient String defaultValue = "My name";
+
+    @Value
+    private String value = defaultValue;
+
+    public Name() {
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public boolean isOptional() {
+        return optional;
+    }
+
+    public PropertyType getType() {
+        return type;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 
 }

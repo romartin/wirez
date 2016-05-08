@@ -16,6 +16,7 @@
 
 package org.wirez.client.widgets.palette.accordion.group;
 
+import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -89,7 +90,7 @@ public class PaletteGroup implements IsWidget {
         return new PaletteGroupItemImpl(glyph, description, clickHandler);
     }
     
-    private static class PaletteGroupItemImpl implements PaletteGroupItem {
+    private static class PaletteGroupItemImpl implements PaletteGroupItem<Group> {
         private final ShapeGlyph glyph;
         private final String description;
         private final Handler clickHandler;
@@ -123,7 +124,7 @@ public class PaletteGroup implements IsWidget {
     public void show(final String header,
                      final boolean isExpanded,
                      final double width, 
-                     final Collection<PaletteGroupItem> items) {
+                     final Collection<PaletteGroupItem<Group>> items) {
         
         // Group header.
         view.setHeader(header).setExpanded(isExpanded);
@@ -139,7 +140,7 @@ public class PaletteGroup implements IsWidget {
         if (null != items && !items.isEmpty()) {
             for (final PaletteGroupItem item : items) {
                 final PaletteGroupItemImpl itemImpl = (PaletteGroupItemImpl) item;
-                final ShapeGlyph glyph = item.getGlyph();
+                final ShapeGlyph<Group> glyph = item.getGlyph();
                 final PaletteGroupItem.Handler callback = item.getClickHandler();
 
                 // Add the glyph view to the canvas..
@@ -173,7 +174,7 @@ public class PaletteGroup implements IsWidget {
         
     }
     
-    private double[] buildItemPositions(final double width, final Collection<PaletteGroupItem> items) {
+    private double[] buildItemPositions(final double width, final Collection<PaletteGroupItem<Group>> items) {
         
         // Layout settings.
         layoutBuilder.setSettings(new HorizLayoutSettings(width, 10));

@@ -21,8 +21,8 @@
 
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.gwtbootstrap3.extras.notify.Notify"/>
-	<inherits name="org.wirez.client.WirezShapes"/>
 	<inherits name="org.gwtbootstrap3.extras.card.Card"/>
+	<inherits name="org.wirez.client.WirezLienzo"/>
 
 	<source path="widgets"/>
 

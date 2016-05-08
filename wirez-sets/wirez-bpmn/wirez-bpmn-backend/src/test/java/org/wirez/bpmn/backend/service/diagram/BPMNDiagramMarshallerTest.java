@@ -9,14 +9,12 @@ import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
 import org.wirez.bpmn.api.factory.BPMNDefinitionSetFactory;
 import org.wirez.bpmn.api.factory.BPMNPropertyFactory;
 import org.wirez.bpmn.api.factory.BPMNPropertySetFactory;
-import org.wirez.bpmn.api.property.general.Name;
 import org.wirez.bpmn.backend.factory.BPMNGraphFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.adapter.shared.HasValuePropertyAdapter;
 import org.wirez.core.api.definition.factory.ModelFactory;
 import org.wirez.core.api.definition.util.DefinitionUtils;
 import org.wirez.core.api.diagram.Diagram;
@@ -35,11 +33,11 @@ import org.wirez.core.api.graph.factory.ConnectionEdgeFactoryImpl;
 import org.wirez.core.api.graph.factory.ViewNodeFactory;
 import org.wirez.core.api.graph.factory.ViewNodeFactoryImpl;
 import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.backend.ApplicationFactoryManager;
-import org.wirez.core.backend.definition.adapter.AnnotatedDefinitionAdapter;
-import org.wirez.core.backend.definition.adapter.AnnotatedDefinitionSetAdapter;
-import org.wirez.core.backend.definition.adapter.AnnotatedPropertyAdapter;
-import org.wirez.core.backend.definition.adapter.AnnotatedPropertySetAdapter;
+import org.wirez.backend.ApplicationFactoryManager;
+import org.wirez.backend.definition.adapter.AnnotatedDefinitionAdapter;
+import org.wirez.backend.definition.adapter.AnnotatedDefinitionSetAdapter;
+import org.wirez.backend.definition.adapter.AnnotatedPropertyAdapter;
+import org.wirez.backend.definition.adapter.AnnotatedPropertySetAdapter;
 
 import javax.enterprise.inject.spi.BeanManager;
 import java.io.InputStream;
@@ -99,23 +97,15 @@ public class BPMNDiagramMarshallerTest {
         graphUtils = new GraphUtils( definitionManager, definitionUtils );
         
         // Definition manager.        
-        final AnnotatedDefinitionAdapter definitionAdapter = new AnnotatedDefinitionAdapter( graphUtils );
+        final AnnotatedDefinitionAdapter definitionAdapter = new AnnotatedDefinitionAdapter( definitionUtils );
         final AnnotatedDefinitionSetAdapter definitionSetAdapter = new AnnotatedDefinitionSetAdapter( definitionAdapter );
         final AnnotatedPropertySetAdapter propertySetAdapter = new AnnotatedPropertySetAdapter();
         final AnnotatedPropertyAdapter propertyAdapter = new AnnotatedPropertyAdapter();
         when(definitionManager.getDefinitionSetAdapter( any(Class.class) )).thenReturn( definitionSetAdapter );
         when(definitionManager.getDefinitionAdapter( any(Class.class) )).thenReturn( definitionAdapter );
         when(definitionManager.getPropertySetAdapter( any(Class.class) )).thenReturn( propertySetAdapter );
-        
-        doAnswer(invocationOnMock -> {
-            Class<?> c = (Class<?>) invocationOnMock.getArguments()[0];
-            // Name is not a pojo annotated property.
-            if ( c.equals(Name.class) ) {
-                return new HasValuePropertyAdapter();
-            }
-            return propertyAdapter;
-        }).when(definitionManager).getPropertyAdapter( any(Class.class) );
-        
+        when(definitionManager.getPropertyAdapter( any(Class.class) )).thenReturn( propertyAdapter );
+
         // BPMN Factories.
         bpmnPropertyBuilder = new BPMNPropertyFactory();
         bpmnPropertySetBuilder = new BPMNPropertySetFactory( bpmnPropertyBuilder );
@@ -211,21 +201,21 @@ public class BPMNDiagramMarshallerTest {
 
     // 4 nodes expected: BPMNDiagram, StartNode, Task and EndNode
     @Test
-    public void testUnmarshallBasic() {
+    public void testUnmarshallBasic() throws Exception  {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_BASIC);
         assertDiagram( diagram, 4 );
         assertEquals( "Basic process", diagram.getSettings().getTitle() );
     }
     
     @Test
-    public void testUmarshallEvaluation() {
+    public void testUmarshallEvaluation() throws Exception  {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_EVALUATION);
         assertDiagram( diagram, 8 );
         assertEquals( "Evaluation", diagram.getSettings().getTitle() );
     }
 
     @Test
-    public void testUnmarshallSeveralDiagrams() {
+    public void testUnmarshallSeveralDiagrams() throws Exception  {
         Diagram<Graph, Settings> diagram1 = unmarshall(BPMN_EVALUATION);
         assertDiagram( diagram1, 8 );
         assertEquals( "Evaluation", diagram1.getSettings().getTitle() );
@@ -235,14 +225,14 @@ public class BPMNDiagramMarshallerTest {
     }
 
     @Test
-    public void testMarshallBasic() {
+    public void testMarshallBasic() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_BASIC);
         String result = tested.marshall(diagram);
         assertDiagram( result, 1, 3, 2);
     }
     
     @Test
-    public void testMarshallEvaluation() {
+    public void testMarshallEvaluation() throws Exception  {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_EVALUATION);
         String result = tested.marshall(diagram);
         assertDiagram( result, 1, 7, 7);
@@ -267,7 +257,7 @@ public class BPMNDiagramMarshallerTest {
         assertEquals(nodesSize, nodes.size());
     }
     
-    private Diagram<Graph, Settings> unmarshall(String fileName) {
+    private Diagram<Graph, Settings> unmarshall(String fileName) throws Exception  {
         InputStream is = loadStream(fileName);
         return tested.unmarhsall(is);
     }

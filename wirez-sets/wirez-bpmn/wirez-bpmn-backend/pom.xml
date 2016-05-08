@@ -22,7 +22,17 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-core-backend</artifactId>
+      <artifactId>wirez-backend-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-core-common</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-backend</artifactId>
     </dependency>
 
     <dependency>

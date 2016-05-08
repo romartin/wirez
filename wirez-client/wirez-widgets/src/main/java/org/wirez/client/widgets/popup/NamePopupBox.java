@@ -18,9 +18,11 @@ package org.wirez.client.widgets.popup;
 
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.wirez.core.api.definition.property.defaults.Name;
+import org.wirez.core.api.definition.util.DefinitionUtils;
 import org.wirez.core.api.graph.Element;
+import org.wirez.core.api.graph.content.definition.Definition;
 import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
@@ -44,16 +46,19 @@ public class NamePopupBox extends AbstractPopupBox<Element> {
     }
 
     View view;
+    DefinitionUtils definitionUtils;
     CanvasCommandFactory canvasCommandFactory;
     CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
     GraphUtils graphUtils;
-    private Element element;
+    private Element<? extends Definition> element;
 
     @Inject
-    public NamePopupBox(final CanvasCommandFactory canvasCommandFactory,
+    public NamePopupBox(final DefinitionUtils definitionUtils,
+                        final CanvasCommandFactory canvasCommandFactory,
                         final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
                         final GraphUtils graphUtils,
                         final View view) {
+        this.definitionUtils = definitionUtils;
         this.canvasCommandFactory = canvasCommandFactory;
         this.canvasCommandManager = canvasCommandManager;
         this.graphUtils = graphUtils;
@@ -68,8 +73,7 @@ public class NamePopupBox extends AbstractPopupBox<Element> {
     @Override
     public void show(final Element element, final double x, final double y) {
         this.element = element;
-        final Name nameProperty = (Name) graphUtils.getProperty(element, Name.ID);
-        final String name = nameProperty.getValue();
+        final String name = definitionUtils.getName( this.element.getContent().getDefinition() );
         view.show(name, x, y);
     }
 
@@ -85,8 +89,12 @@ public class NamePopupBox extends AbstractPopupBox<Element> {
     
     // TODO: Check command result.
     void onChangeName(final String name) {
-        UpdateCanvasElementPropertyCommand command = canvasCommandFactory.UPDATE_PROPERTY(element, Name.ID, name);
-        canvasCommandManager.execute( canvasHandler, command );
+        final Object def = element.getContent().getDefinition();
+        final String nameId = definitionUtils.getNameIdentifier( def );
+        if ( null != name && null != nameId ) {
+            UpdateCanvasElementPropertyCommand command = canvasCommandFactory.UPDATE_PROPERTY(element, nameId, name);
+            canvasCommandManager.execute( canvasHandler, command );
+        }
         view.hide();
     }
     

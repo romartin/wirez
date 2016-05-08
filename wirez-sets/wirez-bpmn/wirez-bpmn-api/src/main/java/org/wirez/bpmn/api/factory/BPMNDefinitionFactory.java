@@ -1,6 +1,7 @@
 package org.wirez.bpmn.api.factory;
 
 import org.wirez.bpmn.api.*;
+import org.wirez.bpmn.api.property.general.Name;
 import org.wirez.core.api.definition.factory.BindableModelFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -174,7 +175,8 @@ public class BPMNDefinitionFactory extends BindableModelFactory<BPMNDefinition> 
                 bpmnPropertySetBuilder.buildFontSet(),
                 bpmnPropertyBuilder.buildWidth(),
                 bpmnPropertyBuilder.buildHeight());
-        bpmnDiagram.getGeneral().getName().setValue("My BPMN diagram");
+        Name nameP = bpmnDiagram.getGeneral().getName();
+        nameP.setValue("My BPMN diagram");
         bpmnDiagram.getBackgroundSet().getBgColor().setValue(BPMNDiagram.COLOR);
         bpmnDiagram.getBackgroundSet().getBorderSize().setValue(BPMNDiagram.BORDER_SIZE);
         bpmnDiagram.getBackgroundSet().getBorderColor().setValue(BPMNDiagram.BORDER_COLOR);

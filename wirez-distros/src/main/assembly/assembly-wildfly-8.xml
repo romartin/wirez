@@ -13,7 +13,7 @@
   <dependencySets>
     <dependencySet>
       <includes>
-        <include>org.wirez:wirez-webapp:war</include>
+        <include>org.wirez:wirez-showcase:war</include>
       </includes>
       <outputDirectory>.</outputDirectory>
       <unpack>true</unpack>

@@ -5,7 +5,7 @@ import com.ait.lienzo.client.core.shape.Line;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.BoundingBox;
-import org.wirez.client.shapes.WiresPolygonView;
+import org.wirez.client.shapes.view.WiresPolygonView;
 
 public class ParallelGatewayShapeView extends WiresPolygonView<ParallelGatewayShapeView> {
 

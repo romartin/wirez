@@ -41,11 +41,11 @@
     <module>wirez-deps</module>
     <module>wirez-extensions</module>
     <module>wirez-core</module>
+    <module>wirez-backend</module>
     <module>wirez-client</module>
     <module>wirez-sets</module>
-    <module>wirez-webapp</module>
+    <module>wirez-showcase</module>
     <module>wirez-distros</module>
-    <!--<module>wirez-tools</module>-->
   </modules>
   
   <!-- Repositories -->

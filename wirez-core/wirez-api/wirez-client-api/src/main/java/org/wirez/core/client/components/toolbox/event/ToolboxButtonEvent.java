@@ -1,0 +1,9 @@
+package org.wirez.core.client.components.toolbox.event;
+
+public interface ToolboxButtonEvent {
+    
+    int getX();
+    
+    int getY();
+    
+}

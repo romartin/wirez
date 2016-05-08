@@ -21,7 +21,8 @@
 
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.wirez.bpmn.WirezBpmnApi"/>
-	<inherits name="org.wirez.client.WirezShapes"/>
+	<inherits name="org.wirez.client.WirezShapesImpl"/>
+	<inherits name="org.wirez.client.WirezLienzo"/>
 	
 	<source path="client"/>
 

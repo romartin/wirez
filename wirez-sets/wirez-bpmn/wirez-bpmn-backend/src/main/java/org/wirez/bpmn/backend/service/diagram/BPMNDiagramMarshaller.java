@@ -35,7 +35,7 @@ import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.api.graph.content.definition.Definition;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.api.util.UUID;
-import org.wirez.core.backend.Application;
+import org.wirez.core.backend.annotation.Application;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -95,7 +95,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
     }
 
     @Override
-    public String marshall(Diagram diagram) {
+    public String marshall( Diagram diagram ) throws IOException {
 
         LOG.info("Starting BPMN diagram marshalling...");
 
@@ -115,7 +115,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
     }
     
     @Override
-    public Diagram unmarhsall(InputStream inputStream) {
+    public Diagram unmarhsall( InputStream inputStream ) throws IOException {
 
         LOG.info("Starting BPMN diagram loading...");
         
@@ -137,7 +137,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
 
             final String defSetId = BindableAdapterUtils.getDefinitionSetId( BPMNDefinitionSet.class );
             final Diagram<Graph, Settings> diagram = new DiagramImpl( UUID.uuid(), graph, 
-                    new SettingsImpl(title, defSetId, "BPMNShapeSet"));
+                    new SettingsImpl(title, defSetId, BindableAdapterUtils.getShapeSetId( BPMNDefinitionSet.class ) ));
 
             LOG.info("BPMN diagram loading finished successfully.");
 

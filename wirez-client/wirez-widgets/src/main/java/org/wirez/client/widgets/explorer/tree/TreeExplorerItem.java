@@ -1,10 +1,10 @@
 package org.wirez.client.widgets.explorer.tree;
 
+import com.ait.lienzo.client.core.shape.Group;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.property.defaults.Name;
 import org.wirez.core.api.definition.util.DefinitionUtils;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.util.GraphUtils;
@@ -28,7 +28,7 @@ public class TreeExplorerItem implements IsWidget {
 
         View setName(String name);
 
-        View setGlyph(ShapeGlyph glyph);
+        View setGlyph(ShapeGlyph<Group> glyph);
         
     }
     
@@ -64,17 +64,17 @@ public class TreeExplorerItem implements IsWidget {
     public void show(final Element<org.wirez.core.api.graph.content.view.View> element) {
         
         final Object definition = element.getContent().getDefinition();
-        final ShapeFactory factory = shapeManager.getFactory( definitionUtils.getDefinitionId( definition ) );
+        final String defId = definitionUtils.getDefinitionId( definition );
+        final ShapeFactory factory = shapeManager.getFactory( defId );
         
         view.setUUID( element.getUUID() )
             .setName( getItemText(element) )
-            .setGlyph( factory.getGlyphFactory().build(25, 25) );
+            .setGlyph( factory.getGlyphFactory( defId ).build( defId, 25, 25 ) );
         
     }
 
-    private String getItemText(final Element item) {
-        final Object property = graphUtils.getProperty(item, Name.ID);
-        final String name= (String) definitionManager.getPropertyAdapter(property.getClass()).getValue(property);
+    private String getItemText(final Element<org.wirez.core.api.graph.content.view.View> item) {
+        final String name = definitionUtils.getName( item.getContent().getDefinition());
         return   ( name != null ? name : "- No name -" );
     }
     

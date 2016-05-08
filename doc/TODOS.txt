@@ -1,14 +1,9 @@
-- Demo goal
-***********
-
-    - Mini-pallette work
-
-    - Check full authoring workflows
+- Next
+*******
 
     - Sequence flows stuff
         - Let unconnected
         - Drop from palette
-        - Un-connect & reconnect head/tail
         - command undo's
         
     - Lienzo stuff
@@ -79,8 +74,6 @@
 - API
 *****
 
-    - Split API/client module - extract impls?
-
     - model
         - Definition Impls -> finish implementation & generate from ifaces and the adapter as well
         - Performance
@@ -113,6 +106,7 @@ Annotation processors
 *********************
 
     - Check that each annotation is present on expected domain model class
+    - @ShapeSet & thumbnail -> refactor
 
 Backend
 *******
@@ -169,5 +163,4 @@ House keeping & others
             - Currently some CDI issues appears when adding it...
      - Connections
         - Do not call head/tailConnectionAccepted until drag eng!
-    - Generics cleaning ( commands, etc )
     - i18n

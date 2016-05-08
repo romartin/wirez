@@ -16,68 +16,66 @@
 
 package org.wirez.bpmn.client.shape;
 
-import org.wirez.bpmn.api.property.general.BackgroundSet;
-import org.wirez.bpmn.api.property.general.FontSet;
+import org.wirez.bpmn.api.property.background.BackgroundSet;
+import org.wirez.bpmn.api.property.font.FontSet;
+import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.client.shape.MutationContext;
-import org.wirez.core.client.shape.impl.AbstractShape;
-import org.wirez.core.client.shape.view.HasRadius;
-import org.wirez.core.client.shape.view.HasSize;
-import org.wirez.core.client.shape.view.HasTitle;
+import org.wirez.client.shapes.AbstractBasicShape;
 import org.wirez.core.client.shape.view.ShapeView;
 
 public abstract class BPMNBasicShape<W, V extends ShapeView>
-    extends AbstractShape<W, Node<View<W>, Edge>, V> {
+    extends AbstractBasicShape<W, V> {
 
     public BPMNBasicShape(final V shapeView) {
         super(shapeView);
     }
 
-    @Override
-    public void applyProperties(Node<View<W>, Edge> element, final MutationContext mutationContext) {
-        super.applyProperties(element, mutationContext);
-
-        // Fill color.
-        _applyFillColor(element, mutationContext);
-
-        // Apply border styles.
-        _applyBorders(element, mutationContext);
-
-        // Apply font styles.
-        _applyFont(element, mutationContext);
-    }
+    protected abstract BPMNGeneral getBPMBpmnGeneralSet(Node<View<W>, Edge> element);
 
     protected abstract BackgroundSet getBackgroundSet(Node<View<W>, Edge> element);
 
     protected abstract FontSet getFontSet(Node<View<W>, Edge> element);
+
+    @Override
+    protected String getNamePropertyValue(final Node<View<W>, Edge> element) {
+        return getBPMBpmnGeneralSet( element ).getName().getValue();
+    }
+
+    @Override
+    protected String getBackgroundColor(final Node<View<W>, Edge> element) {
+        return getBackgroundSet( element ).getBgColor().getValue();
+    }
+
+    @Override
+    protected String getBorderColor(final Node<View<W>, Edge> element) {
+        return getBackgroundSet( element ).getBorderColor().getValue();
+    }
+
+    @Override
+    protected Double getBorderSize(final Node<View<W>, Edge> element) {
+        return getBackgroundSet( element ).getBorderSize().getValue();
+    }
+
+    @Override
+    protected String getFontFamily(final Node<View<W>, Edge> element) {
+        return getFontSet( element ).getFontFamily().getValue();
+    }
+
+    @Override
+    protected String getFontColor(final Node<View<W>, Edge> element) {
+        return getFontSet( element ).getFontColor().getValue();
+    }
+
+    @Override
+    protected Double getFontSize(final Node<View<W>, Edge> element) {
+        return getFontSet( element ).getFontSize().getValue();
+    }
+
+    @Override
+    protected Double getFontBorderSize(final Node<View<W>, Edge> element) {
+        return getFontSet( element ).getFontBorderSize().getValue();
+    }
     
-    protected BPMNBasicShape<W, V> _applyFillColor(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
-        final String color = getBackgroundSet( element ).getBgColor().getValue();
-        super._applyFillColor(color, mutationContext);
-        return this;
-    }
-
-    protected BPMNBasicShape<W, V> _applyBorders(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
-        final String color = getBackgroundSet( element ).getBorderColor().getValue();
-        final Double width = getBackgroundSet( element ).getBorderSize().getValue();
-        super._applyBorders(color, width, mutationContext);
-        
-        return this;
-    }
-
-    protected BPMNBasicShape<W, V> _applyFont(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
-        
-        if ( view instanceof HasTitle ) {
-            final String family = getFontSet( element ).getFontFamily().getValue();
-            final String color = getFontSet( element ).getFontColor().getValue();
-            final Double size = getFontSet( element ).getFontSize().getValue();
-            final Double borderSize = getFontSet( element ).getFontBorderSize().getValue();
-            super._applyFont(family, color, size, borderSize, mutationContext);
-        }
-
-        return this;
-    }
-
 }

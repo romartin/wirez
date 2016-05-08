@@ -17,19 +17,15 @@
 package org.wirez.bpmn.client.shape;
 
 import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.bpmn.api.property.Height;
-import org.wirez.bpmn.api.property.Width;
-import org.wirez.bpmn.api.property.general.BackgroundSet;
-import org.wirez.bpmn.api.property.general.FontSet;
-import org.wirez.client.shapes.WiresRectangleView;
-import org.wirez.core.api.definition.property.defaults.Name;
+import org.wirez.bpmn.api.property.background.BackgroundSet;
+import org.wirez.bpmn.api.property.font.FontSet;
+import org.wirez.bpmn.api.property.general.BPMNGeneral;
+import org.wirez.client.shapes.view.WiresRectangleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.view.HasTitle;
-import org.wirez.core.client.shape.view.animation.AnimationProperties;
 
 public class BPMNDiagramShape extends BPMNBasicShape<BPMNDiagram, WiresRectangleView> {
 
@@ -39,16 +35,13 @@ public class BPMNDiagramShape extends BPMNBasicShape<BPMNDiagram, WiresRectangle
     }
 
     @Override
-    protected Name getNameProperty(final Node<View<BPMNDiagram>, Edge> element) {
-        return element.getContent().getDefinition().getGeneral().getName();
-    }
-
-    @Override
     public void applyProperties(final Node<View<BPMNDiagram>, Edge> element, final MutationContext mutationContext) {
         super.applyProperties(element, mutationContext);
 
         // Size.
-        _applySize(element, mutationContext);
+        final Double w = element.getContent().getDefinition().getWidth().getValue();
+        final Double h = element.getContent().getDefinition().getHeight().getValue();
+        _applyWidthAndHeight(element, w, h, mutationContext);
 
     }
 
@@ -58,14 +51,9 @@ public class BPMNDiagramShape extends BPMNBasicShape<BPMNDiagram, WiresRectangle
         getShapeView().setFillAlpha(0.8);
     }
 
-    protected BPMNDiagramShape _applySize(final Node<View<BPMNDiagram>, Edge> element, final MutationContext mutationContext) {
-        final Width widthProperty  = element.getContent().getDefinition().getWidth();
-        final Height heightProperty  = element.getContent().getDefinition().getHeight();
-        final Double width = widthProperty.getValue();
-        final Double height = heightProperty.getValue();
-        applySize(getShapeView(), width, height, mutationContext);
-        GraphUtils.updateBounds(width, height, element.getContent());
-        return this;
+    @Override
+    protected BPMNGeneral getBPMBpmnGeneralSet(final Node<View<BPMNDiagram>, Edge> element) {
+        return element.getContent().getDefinition().getGeneral();
     }
 
 

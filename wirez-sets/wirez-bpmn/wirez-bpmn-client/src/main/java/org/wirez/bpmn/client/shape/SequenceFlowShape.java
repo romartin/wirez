@@ -17,8 +17,8 @@
 package org.wirez.bpmn.client.shape;
 
 import org.wirez.bpmn.api.SequenceFlow;
-import org.wirez.bpmn.api.property.general.BackgroundSet;
-import org.wirez.client.shapes.WiresConnectorView;
+import org.wirez.bpmn.api.property.background.BackgroundSet;
+import org.wirez.client.shapes.view.WiresConnectorView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.ViewConnector;

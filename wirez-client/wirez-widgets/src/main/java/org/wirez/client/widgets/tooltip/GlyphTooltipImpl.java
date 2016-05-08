@@ -16,6 +16,7 @@
 
 package org.wirez.client.widgets.tooltip;
 
+import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
@@ -28,7 +29,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class GlyphTooltipImpl implements GlyphTooltip {
+public class GlyphTooltipImpl implements GlyphTooltip<Group> {
     
     public interface View extends UberView<GlyphTooltipImpl> {
         
@@ -63,7 +64,7 @@ public class GlyphTooltipImpl implements GlyphTooltip {
     }
 
     @Override
-    public void show(final ShapeGlyph glyph, final String text, final double x, final double y) {
+    public void show(final ShapeGlyph<Group> glyph, final String text, final double x, final double y) {
         view.show(glyph.getGroup(), text, glyph.getWidth(), glyph.getHeight(), x, y);
     }
 

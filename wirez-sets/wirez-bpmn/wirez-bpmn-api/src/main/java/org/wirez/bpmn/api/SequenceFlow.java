@@ -20,7 +20,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
-import org.wirez.bpmn.api.property.general.BackgroundSet;
+import org.wirez.bpmn.api.property.background.BackgroundSet;
 import org.wirez.core.api.definition.annotation.Description;
 import org.wirez.core.api.definition.annotation.definition.*;
 import org.wirez.core.api.rule.annotation.EdgeOccurrences;

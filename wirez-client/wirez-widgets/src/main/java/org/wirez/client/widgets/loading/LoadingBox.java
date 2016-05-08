@@ -90,22 +90,22 @@ public class LoadingBox {
         
     }
     
-    void onCanvasProcessingStarted(@Observes CanvasProcessingStartedEvent canvasProcessingStartedEvent) {
+    public void onCanvasProcessingStarted(@Observes CanvasProcessingStartedEvent canvasProcessingStartedEvent) {
         checkNotNull("canvasProcessingStartedEvent", canvasProcessingStartedEvent);
         show();
     }
 
-    void onCanvasProcessingCompleted(@Observes CanvasProcessingCompletedEvent canvasProcessingCompletedEvent) {
+    public void onCanvasProcessingCompleted(@Observes CanvasProcessingCompletedEvent canvasProcessingCompletedEvent) {
         checkNotNull("canvasProcessingCompletedEvent", canvasProcessingCompletedEvent);
         hide();
     }
-    
-    void onWidgetProcessingStarted(@Observes WidgetProcessingStartedEvent widgetProcessingStartedEvent) {
+
+    public void onWidgetProcessingStarted(@Observes WidgetProcessingStartedEvent widgetProcessingStartedEvent) {
         checkNotNull("widgetProcessingStartedEvent", widgetProcessingStartedEvent);
         show();
     }
 
-    void onWidgetProcessingCompleted(@Observes WidgetProcessingCompletedEvent widgetProcessingCompletedEvent) {
+    public void onWidgetProcessingCompleted(@Observes WidgetProcessingCompletedEvent widgetProcessingCompletedEvent) {
         checkNotNull("widgetProcessingCompletedEvent", widgetProcessingCompletedEvent);
         hide();
     }

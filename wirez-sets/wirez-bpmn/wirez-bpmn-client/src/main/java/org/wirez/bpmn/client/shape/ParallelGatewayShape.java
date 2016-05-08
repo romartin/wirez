@@ -17,15 +17,13 @@
 package org.wirez.bpmn.client.shape;
 
 import org.wirez.bpmn.api.ParallelGateway;
-import org.wirez.bpmn.api.property.Radius;
-import org.wirez.bpmn.api.property.general.BackgroundSet;
-import org.wirez.bpmn.api.property.general.FontSet;
-import org.wirez.client.shapes.WiresPolygonView;
-import org.wirez.core.api.definition.property.defaults.Name;
+import org.wirez.bpmn.api.property.background.BackgroundSet;
+import org.wirez.bpmn.api.property.font.FontSet;
+import org.wirez.bpmn.api.property.general.BPMNGeneral;
+import org.wirez.client.shapes.view.WiresPolygonView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.shape.MutationContext;
 
 public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway, WiresPolygonView> {
@@ -33,28 +31,21 @@ public class ParallelGatewayShape extends BPMNBasicShape<ParallelGateway, WiresP
     public ParallelGatewayShape(final WiresPolygonView view) {
         super(view);
     }
-    
+
+   
+
     public void applyProperties(final Node<View<ParallelGateway>, Edge> element, final MutationContext mutationContext) {
         super.applyProperties(element, mutationContext);
 
         // Radius.
-        _applyRadius(element, mutationContext);
+        final Double radius = element.getContent().getDefinition().getRadius().getValue();
+        _applyRadius(element, radius, mutationContext);
         
     }
 
     @Override
-    protected Name getNameProperty(final Node<View<ParallelGateway>, Edge> element) {
-        return element.getContent().getDefinition().getGeneral().getName();
-    }
-
-    protected ParallelGatewayShape _applyRadius(final Node<View<ParallelGateway>, Edge> element, final MutationContext mutationContext) {
-        final Radius radiusProperty  = element.getContent().getDefinition().getRadius();
-        final Double radius = radiusProperty.getValue();
-        if ( null != radius ) {
-            applyRadius(getShapeView(), radius, mutationContext);
-            GraphUtils.updateBounds(radius, element.getContent());
-        }
-        return this;
+    protected BPMNGeneral getBPMBpmnGeneralSet(final Node<View<ParallelGateway>, Edge> element) {
+        return element.getContent().getDefinition().getGeneral();
     }
 
     @Override

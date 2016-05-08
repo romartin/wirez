@@ -16,8 +16,9 @@
   
   <modules>
     <module>wirez-shapes</module>
+    <module>wirez-lienzo</module>
     <module>wirez-widgets</module>
-    <module>wirez-client-workbench</module>
+    <module>wirez-workbench</module>
   </modules>
 
 

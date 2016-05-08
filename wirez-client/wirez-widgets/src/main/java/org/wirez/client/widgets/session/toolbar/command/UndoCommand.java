@@ -77,7 +77,7 @@ public class UndoCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
         if ( null != session ) {
             
             final StackCommandManager<?, ?> canvasCommManager = (StackCommandManager<?, ?>) session.getCanvasCommandManager();
-            final boolean isHistoryEmpty = canvasCommManager.getHistorySize() == 0;
+            final boolean isHistoryEmpty = canvasCommManager.getHistory().size() == 0;
 
             if ( isHistoryEmpty ) {
                 disable();

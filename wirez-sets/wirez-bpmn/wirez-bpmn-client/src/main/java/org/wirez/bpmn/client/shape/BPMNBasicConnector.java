@@ -16,12 +16,12 @@
 
 package org.wirez.bpmn.client.shape;
 
-import org.wirez.bpmn.api.property.general.BackgroundSet;
+import org.wirez.bpmn.api.property.background.BackgroundSet;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.ViewConnector;
 import org.wirez.core.client.shape.MutationContext;
-import org.wirez.core.client.shape.impl.AbstractConnector;
+import org.wirez.client.shapes.AbstractConnector;
 import org.wirez.core.client.shape.view.ShapeView;
 
 public abstract class BPMNBasicConnector<W, V extends ShapeView> 

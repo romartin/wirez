@@ -17,15 +17,13 @@
 package org.wirez.bpmn.client.shape;
 
 import org.wirez.bpmn.api.EndTerminateEvent;
-import org.wirez.bpmn.api.property.Radius;
-import org.wirez.bpmn.api.property.general.BackgroundSet;
-import org.wirez.bpmn.api.property.general.FontSet;
-import org.wirez.client.shapes.WiresCircleView;
-import org.wirez.core.api.definition.property.defaults.Name;
+import org.wirez.bpmn.api.property.background.BackgroundSet;
+import org.wirez.bpmn.api.property.font.FontSet;
+import org.wirez.bpmn.api.property.general.BPMNGeneral;
+import org.wirez.client.shapes.view.WiresCircleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.view.HasTitle;
 
@@ -35,27 +33,19 @@ public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent, Wi
         super(view);
         getShapeView().setPosition(HasTitle.Position.BOTTOM);
     }
-
-    @Override
-    protected Name getNameProperty(final Node<View<EndTerminateEvent>, Edge> element) {
-        return element.getContent().getDefinition().getGeneral().getName();
-    }
-    
+   
     @Override
     public void applyProperties(final Node<View<EndTerminateEvent>, Edge> element, final MutationContext mutationContext) {
         super.applyProperties(element, mutationContext);
 
         // Radius.
-        _applyRadius(element, mutationContext);
+        final Double radius = element.getContent().getDefinition().getRadius().getValue();
+        _applyRadius(element, radius, mutationContext);
     }
-    protected EndTerminateEventShape _applyRadius(final Node<View<EndTerminateEvent>, Edge> element, final MutationContext mutationContext) {
-        final Radius radiusProperty  = element.getContent().getDefinition().getRadius();
-        final Double radius = radiusProperty.getValue();
-        if ( null != radius ) {
-            applyRadius(getShapeView(), radius, mutationContext);
-            GraphUtils.updateBounds(radius, element.getContent());
-        }
-        return this;
+
+    @Override
+    protected BPMNGeneral getBPMBpmnGeneralSet(final Node<View<EndTerminateEvent>, Edge> element) {
+        return element.getContent().getDefinition().getGeneral();
     }
 
     public static Double[] getRingRadius(final double radius) {

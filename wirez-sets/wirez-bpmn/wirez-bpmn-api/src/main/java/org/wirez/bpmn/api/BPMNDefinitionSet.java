@@ -8,6 +8,7 @@ import org.wirez.core.api.rule.annotation.CanContain;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.rule.annotation.EdgeOccurrences;
 import org.wirez.core.api.rule.annotation.Occurrences;
+import org.wirez.core.client.annotation.ShapeSet;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -36,6 +37,7 @@ import javax.enterprise.context.ApplicationScoped;
         role = "Endevents_all",
         min = 0
 )
+@ShapeSet( thumb = "org.wirez.bpmn.client.resources.BPMNImageResources.INSTANCE.bpmnSetThumb()" )
 public class BPMNDefinitionSet {
 
     @Description

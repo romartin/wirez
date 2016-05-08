@@ -78,12 +78,7 @@ public class NewDiagramWizardScreenView extends Composite implements NewDiagramW
         final double alpha = isSelected ? 1 : 0.2;
         image.getElement().getStyle().setPadding(25, Style.Unit.PX);
         image.getElement().setAttribute("style", "filter: alpha(opacity=5);opacity: " + alpha);
-        image.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(final ClickEvent event) {
-                clickHandler.execute();
-            }
-        });
+        image.addClickHandler(event -> clickHandler.execute());
 
         final Popover popover = new Popover();
         popover.setTitle( name );
@@ -100,19 +95,13 @@ public class NewDiagramWizardScreenView extends Composite implements NewDiagramW
         labelPanel.add(label);
 
         // Mouse over / out handlers.
-        panel.addDomHandler(new MouseOverHandler() {
-            @Override
-            public void onMouseOver(MouseOverEvent event) {
-                panel.getElement().getStyle().setBackgroundColor("#f2f2f2");
-                label.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
-            }
+        panel.addDomHandler(event -> {
+            panel.getElement().getStyle().setBackgroundColor("#f2f2f2");
+            label.getElement().getStyle().setFontWeight(Style.FontWeight.BOLD);
         }, MouseOverEvent.getType());
-        panel.addDomHandler(new MouseOutHandler() {
-            @Override
-            public void onMouseOut(MouseOutEvent event) {
-                panel.getElement().getStyle().setBackgroundColor("#FFFFFF");
-                label.getElement().getStyle().setFontWeight(Style.FontWeight.NORMAL);
-            }
+        panel.addDomHandler(event -> {
+            panel.getElement().getStyle().setBackgroundColor("#FFFFFF");
+            label.getElement().getStyle().setFontWeight(Style.FontWeight.NORMAL);
         }, MouseOutEvent.getType());
         
         panel.add(popover);

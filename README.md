@@ -9,7 +9,7 @@ Building
     
     mvn clean install -DskipTests
 
-2.- Go to wirez-webapp subproject and execute
+2.- Go to wirez-showcase subproject and execute
     
     mvn clean process-resources
 
@@ -25,7 +25,7 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
 
 **SuperDevMove - Running from command line**                                          
 
-    mvn gwt:run -DrunTarget=wirez.html -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-webapp/target/wildfly-8.1.0.Final
+    mvn gwt:run -DrunTarget=wirez.html -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-8.1.0.Final
 
 **SuperDevMove - Running from IntelliJ IDEA**                                          
 
@@ -37,11 +37,11 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
   - *Type*: GWT configuration                  
   - *Name*: Wirez Showcase                     
   - *Use SDM*: true                  
-  - *Module*: wirez-webapp             
+  - *Module*: wirez-showcase             
   - *GWT Modules to load*: org.wirez.FastCompiledWirezShowcase             
   - *VM options*: 
         
-        -Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-webapp/target/wildfly-8.1.0.Final
+        -Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-8.1.0.Final
                       
   - *Dev mode parameters*: 
         
@@ -52,7 +52,7 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
   - On before launch section - Add a new "Run Maven Goal" BEFORE the existing "Make" item as:                
     - *Working directory*: 
         
-            $PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-webapp
+            $PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase
                           
     - *Goal*: 
         

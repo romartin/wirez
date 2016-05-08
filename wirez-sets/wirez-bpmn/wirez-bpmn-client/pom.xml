@@ -40,12 +40,36 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-core-client</artifactId>
+      <artifactId>wirez-client-api</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-shapes</artifactId>
+      <artifactId>wirez-core-common</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-client-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-lienzo</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-shapes-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-shapes-impl</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -103,6 +127,7 @@
     <dependency>
       <groupId>com.ahome-it</groupId>
       <artifactId>lienzo-core</artifactId>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>

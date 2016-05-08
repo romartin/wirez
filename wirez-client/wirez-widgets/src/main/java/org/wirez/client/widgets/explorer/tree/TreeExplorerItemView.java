@@ -1,5 +1,6 @@
 package org.wirez.client.widgets.explorer.tree;
 
+import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
@@ -57,7 +58,7 @@ public class TreeExplorerItemView extends Composite implements TreeExplorerItem.
     }
 
     @Override
-    public TreeExplorerItem.View setGlyph(final ShapeGlyph glyph) {
+    public TreeExplorerItem.View setGlyph(final ShapeGlyph<Group> glyph) {
         initLienzoPanel(glyph.getWidth(), glyph.getHeight());
         lienzoLayer.add( glyph.getGroup() );
         return this;

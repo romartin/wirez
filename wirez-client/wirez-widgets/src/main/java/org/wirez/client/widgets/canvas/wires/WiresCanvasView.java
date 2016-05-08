@@ -16,16 +16,15 @@
 package org.wirez.client.widgets.canvas.wires;
 
 import com.ait.lienzo.client.core.shape.wires.*;
-import org.wirez.client.shapes.AbstractWiresConnectorView;
-import org.wirez.client.shapes.AbstractWiresShapeView;
+import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
 import org.wirez.client.widgets.canvas.CanvasView;
-import org.wirez.core.client.canvas.wires.WiresCanvas;
+import org.wirez.core.client.shape.view.IsConnector;
 import org.wirez.core.client.shape.view.ShapeView;
 
 /**
  * This is the root Canvas view provided by Lienzo and wires
  */
-public class WiresCanvasView extends CanvasView implements org.wirez.core.client.canvas.wires.WiresCanvas.View {
+public class WiresCanvasView extends CanvasView implements WiresCanvas.View {
 
     protected WiresManager wiresManager;
 
@@ -35,26 +34,34 @@ public class WiresCanvasView extends CanvasView implements org.wirez.core.client
     }
 
     @Override
-    public org.wirez.core.client.canvas.wires.WiresCanvas.View addShape(final ShapeView<?> shapeView) {
-        if ( shapeView instanceof AbstractWiresShapeView) {
+    public WiresCanvas.View addShape(final ShapeView<?> shapeView) {
+
+        if (  isWiresShape( shapeView ) ) {
+
             WiresShape wiresShape = (WiresShape) shapeView;
             wiresManager.createMagnets(wiresShape);
             wiresManager.registerShape(wiresShape);
-        } else if (shapeView instanceof AbstractWiresConnectorView) {
+
+        } else if ( isConnector( shapeView ) ) {
+            
             WiresConnector wiresConnector = (WiresConnector) shapeView;
             wiresManager.registerConnector(wiresConnector);
-        } else {
+            
+        }  else {
+            
             super.addShape( shapeView );
+            
         }
+        
         return this;
     }
 
     @Override
-    public org.wirez.core.client.canvas.wires.WiresCanvas.View removeShape(final ShapeView<?> shapeView) {
-        if ( shapeView instanceof AbstractWiresShapeView ) {
+    public WiresCanvas.View removeShape(final ShapeView<?> shapeView) {
+        if (  isWiresShape( shapeView ) ) {
             WiresShape wiresShape = (WiresShape) shapeView;
             wiresManager.deregisterShape(wiresShape);
-        } else if (shapeView instanceof AbstractWiresConnectorView) {
+        } else if ( isConnector( shapeView ) ) {
             WiresConnector wiresConnector = (WiresConnector) shapeView;
             wiresManager.deregisterConnector(wiresConnector);
         } else {
@@ -64,13 +71,13 @@ public class WiresCanvasView extends CanvasView implements org.wirez.core.client
     }
 
     @Override
-    public org.wirez.core.client.canvas.wires.WiresCanvas.View setConnectionAcceptor(final IConnectionAcceptor connectionAcceptor) {
+    public WiresCanvas.View setConnectionAcceptor(final IConnectionAcceptor connectionAcceptor) {
         wiresManager.setConnectionAcceptor(connectionAcceptor);
         return this;
     }
 
     @Override
-    public org.wirez.core.client.canvas.wires.WiresCanvas.View setContainmentAcceptor(final IContainmentAcceptor containmentAcceptor) {
+    public WiresCanvas.View setContainmentAcceptor(final IContainmentAcceptor containmentAcceptor) {
         wiresManager.setContainmentAcceptor(containmentAcceptor);
         return this;
     }
@@ -86,4 +93,16 @@ public class WiresCanvasView extends CanvasView implements org.wirez.core.client
         return wiresManager;
     }
 
+    private boolean isConnector( final ShapeView<?> shapeView ) {
+        
+        return shapeView instanceof IsConnector;
+        
+    }
+
+    private boolean isWiresShape( final ShapeView<?> shapeView ) {
+
+        return shapeView instanceof WiresShape;
+        
+    }
+    
 }

@@ -33,7 +33,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class NamePopupBox extends AbstractPopupBox {
+public class NamePopupBox extends AbstractPopupBox<Element> {
     
     public interface View extends UberView<NamePopupBox> {
         

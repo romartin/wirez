@@ -29,6 +29,7 @@
   <inherits name="org.wirez.bpmn.WirezBpmnClient"/>
 
   <!-- Form modeler.-->
+  <inherits name="org.wirez.forms.WirezFormsClient"/>
   <inherits name="org.livespark.formmodeler.renderer.FormModelerDynamicRendererClient"/>
   <inherits name="org.hibernate.validator.HibernateValidator" />
   <inherits name="org.jboss.errai.validation.Validation" />

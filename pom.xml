@@ -43,11 +43,12 @@
     <module>wirez-core</module>
     <module>wirez-client</module>
     <module>wirez-sets</module>
+    <module>wirez-forms</module>
     <module>wirez-webapp</module>
     <module>wirez-distros</module>
     <!--<module>wirez-tools</module>-->
   </modules>
-  
+
   <!-- Repositories -->
   <repositories>
     <repository>
@@ -351,7 +352,7 @@
           </filesets>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
 

@@ -80,7 +80,7 @@
 
     <dependency>
       <groupId>org.livespark</groupId>
-      <artifactId>livespark-form-modeler-engine</artifactId>
+      <artifactId>livespark-form-modeler-processing-engine</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -126,6 +126,22 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
       <classifier>sources</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-forms-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-forms-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-forms-client</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!--Logs-->
@@ -445,6 +461,18 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.gwtbootstrap3</groupId>
+      <artifactId>gwtbootstrap3</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gwtbootstrap3</groupId>
+      <artifactId>gwtbootstrap3-extras</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -501,7 +529,7 @@
             <!-- Form modeler. -->
             <compileSourcesArtifact>org.livespark:livespark-crud-component</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.livespark:livespark-form-modeler-engine</compileSourcesArtifact>
+            <compileSourcesArtifact>org.livespark:livespark-form-modeler-processing-engine</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-rendering-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-client</compileSourcesArtifact>
@@ -516,6 +544,8 @@
             <compileSourcesArtifact>org.wirez:wirez-client-workbench</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-forms-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-forms-client</compileSourcesArtifact>
 
           </compileSourcesArtifacts>
         </configuration>

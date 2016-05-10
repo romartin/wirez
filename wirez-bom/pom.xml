@@ -52,8 +52,8 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      
-      
+
+
       <dependency>
         <groupId>org.wirez</groupId>
         <artifactId>wirez-core-backend</artifactId>
@@ -94,7 +94,7 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      
+
       <dependency>
         <groupId>org.wirez</groupId>
         <artifactId>wirez-widgets</artifactId>
@@ -134,7 +134,7 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      
+
       <!-- Wirez Default Sets-->
 
       <dependency>
@@ -175,9 +175,43 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
-      
+
+      <!-- Wirez Forms -->
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-forms-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-forms-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-forms-backend</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-forms-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-forms-client</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
       <!-- Wirez WebApp -->
-      
+
       <dependency>
         <groupId>org.wirez</groupId>
         <artifactId>wirez-webapp</artifactId>
@@ -193,7 +227,7 @@
         <version>${project.version}</version>
         <type>jar</type>
       </dependency>
-      
+
     </dependencies>
   </dependencyManagement>
 

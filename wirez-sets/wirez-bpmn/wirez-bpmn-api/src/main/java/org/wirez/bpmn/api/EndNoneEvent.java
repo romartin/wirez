@@ -23,6 +23,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.livespark.formmodeler.metaModel.FieldDef;
+import org.livespark.formmodeler.metaModel.Slider;
 import org.wirez.bpmn.api.property.Radius;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.general.BackgroundSet;
@@ -68,6 +69,7 @@ public class EndNoneEvent implements BPMNDefinition {
 
     @Property
     @FieldDef(label = "Radius", property = "value")
+    @Slider( min = 25, max = 50, step = 1, precission = 0 )
     private Radius radius;
 
     @Labels

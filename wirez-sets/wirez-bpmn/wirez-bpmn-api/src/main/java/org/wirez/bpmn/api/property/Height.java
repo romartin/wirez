@@ -58,7 +58,7 @@ public class Height implements BPMNProperty {
     public static final Double defaultValue = 50d;
 
     @Value
-    @Max( 70 )
+    @Max( 100 )
     @Min( 40 )
     @NotNull
     private Double value = defaultValue;

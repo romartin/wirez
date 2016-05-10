@@ -24,6 +24,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.livespark.formmodeler.metaModel.FieldDef;
+import org.livespark.formmodeler.metaModel.Slider;
 import org.wirez.bpmn.api.property.Height;
 import org.wirez.bpmn.api.property.Width;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
@@ -81,11 +82,13 @@ public class Task implements BPMNDefinition {
 
     @Property
     @FieldDef(label = "Width", property = "value")
+    @Slider( min = 100, max = 300, step = 10, precission = 0 )
     @Valid
     private Width width;
 
     @Property
     @FieldDef(label = "Height", property = "value")
+    @Slider( min = 40, max = 100, step = 5, precission = 0 )
     @Valid
     private Height height;
 

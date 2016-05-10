@@ -58,6 +58,11 @@
       <artifactId>livespark-form-modeler-api</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-forms-api</artifactId>
+    </dependency>
+
     <!-- Uberfire & Errai. -->
 
     <dependency>

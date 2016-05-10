@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Stack;
 
 public abstract class StackCommandManager<C, V> extends AbstractBatchCommandManager<C,V> {
-    
+
     protected final Stack<Stack<Command<C,V>>> history = new Stack<>();
-    protected int maxStackSize = 50;
-    
+    protected int maxStackSize = 1024;
+
     @Override
-    public CommandResult<V> execute(final C context, 
+    public CommandResult<V> execute(final C context,
                                     final Command<C, V> command) {
-        
+
         CommandResult<V> result = super.execute(context, command);
 
         if ( !CommandUtils.isError( result ) ) {
@@ -37,15 +37,15 @@ public abstract class StackCommandManager<C, V> extends AbstractBatchCommandMana
         final BatchCommandResult<V> result = super.executeBatch(context);
 
         if ( !CommandUtils.isError( result ) ) {
-            
+
             // Keep the just executed batched commands on this instance stack.
             addIntoStack( batchCommands );
 
             // Ensure parent batched command stacks are always empty after a successful execution.
             super.clean();
-            
+
         }
-        
+
         return result;
     }
 
@@ -61,13 +61,13 @@ public abstract class StackCommandManager<C, V> extends AbstractBatchCommandMana
                 CommandResult<V> result = _undoMultipleCommands( context, commandStack );
                 builder.add( result );
             }
-            
+
             return builder.asResult( buildCommandResultBuilder() );
         }
-        
+
         return super.undo( context );
     }
-    
+
     protected void addIntoStack( final Command<C,V> command ) {
         if ( null != command ) {
             if ( ( history.size() + 1 )  > maxStackSize ) {
@@ -91,7 +91,7 @@ public abstract class StackCommandManager<C, V> extends AbstractBatchCommandMana
             history.push( s );
         }
     }
-    
+
     public int getHistorySize() {
         return ( super.hasUndoCommand() ? 1 : 0 ) + history.size();
     }
@@ -109,5 +109,5 @@ public abstract class StackCommandManager<C, V> extends AbstractBatchCommandMana
     protected void stackSizeExceeded() {
         throw new RuntimeException("Commands stack is full.");
     }
-    
+
 }

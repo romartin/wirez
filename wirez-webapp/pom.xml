@@ -128,6 +128,22 @@
       <classifier>sources</classifier>
     </dependency>
 
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-forms-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-forms-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-forms-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!--Logs-->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -445,6 +461,18 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.gwtbootstrap3</groupId>
+      <artifactId>gwtbootstrap3</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gwtbootstrap3</groupId>
+      <artifactId>gwtbootstrap3-extras</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -516,6 +544,8 @@
             <compileSourcesArtifact>org.wirez:wirez-client-workbench</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-forms-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-forms-client</compileSourcesArtifact>
 
           </compileSourcesArtifacts>
         </configuration>

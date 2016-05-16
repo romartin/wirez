@@ -14,7 +14,7 @@
   <name>Wirez Dependencies</name>
 
   <properties>
-    
+
     <version.org.jboss.integration-platform>6.0.0.Final</version.org.jboss.integration-platform>
     <version.org.uberfire>0.9.0-SNAPSHOT</version.org.uberfire>
     <version.org.jboss.errai>4.0.0-SNAPSHOT</version.org.jboss.errai>
@@ -32,7 +32,8 @@
     <version.de.benediktmeurer.gwt-slf4j>0.0.2</version.de.benediktmeurer.gwt-slf4j>
     <version.org.jbpm.jbpm-bpmn2-emfextmodel>6.3.0.Final</version.org.jbpm.jbpm-bpmn2-emfextmodel>
     <version.javax.el.api>2.2</version.javax.el.api>
-    
+    <version.com.google.gwt.gwtmockito>1.1.6</version.com.google.gwt.gwtmockito>
+
   </properties>
 
   <dependencyManagement>
@@ -151,7 +152,7 @@
         <artifactId>jbpm-bpmn2-emfextmodel</artifactId>
         <version>${version.org.jbpm.jbpm-bpmn2-emfextmodel}</version>
       </dependency>
-      
+
       <!-- Lienzo. -->
       <dependency>
         <groupId>com.ahome-it</groupId>
@@ -189,9 +190,9 @@
         <artifactId>el-api</artifactId>
         <version>${version.javax.el.api}</version>
       </dependency>
-      
+
     </dependencies>
 
   </dependencyManagement>
-  
+
 </project>

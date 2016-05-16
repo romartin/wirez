@@ -8,6 +8,28 @@
         
     - Lienzo stuff
             
+    - build glyphs from its shapes? not force building two impls
+
+    - Known issues
+        
+        - Canvas loading related issues
+            - loading box -> does not appear when loading a diagram or adding a shape from palette ( it should appear )
+            - load & draw diagram - too much loading time ( but not so much in production mode... )
+    
+        - Navigator 
+            - clean when no session or session closed
+            - Reduce size for preview
+            - Context2D proxy ( Mark ) 
+        
+        - Toolbox
+            - Moving parent diagram -> toolboxes bad coordinates
+            - Remove toolbox icons when shape deleted from canvas
+            
+        - Palette
+            - add connection toolbox command -> click on diagram as target node -> exception thrown 
+            - bounds indexer - graph vs canvas & fixings ( builders & drag proxies )
+            - onclick -> add node in same parent, no need to drag...
+            
 - Lienzo
 ********
 
@@ -48,17 +70,19 @@
         - Error handling
         - refactor use of CDI qualifiers ( managers & services ) -> CDI @Priority 
         - Show/Hide grid toolbar button
-        
+    
+    - Shape Factories
+            - ShapeFactories from Shape Set ( annotated on @ShapeSet )
+            - ShapeManager#getFactory -> use shapeSetId as argument
+            
     - Usability
         - dragging constrained just for diagram bounds?
 
     - Controls
         - Toolbox
-            - Fixings
             - Icon titles/tooltips
         - SelectionControl
             - Select multiple
-            - Fire canvas selected method
 
     - Load diagram screen
         - Pagination
@@ -70,6 +94,11 @@
         
     - Canvas Toolbar    
         - Toolbar undo & clearSelection should be initially disabled
+
+    - Toolbox 
+        - bounding box for whole shape bounds as well
+        - Disable/enable commands
+        - Titles / tooltips
 
 - API
 *****
@@ -106,7 +135,6 @@ Annotation processors
 *********************
 
     - Check that each annotation is present on expected domain model class
-    - @ShapeSet & thumbnail -> refactor
 
 Backend
 *******

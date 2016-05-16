@@ -16,15 +16,15 @@
 
 package org.wirez.client.shapes.proxy;
 
-import org.wirez.client.shapes.view.WiresCircleView;
+import org.wirez.client.shapes.view.CircleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.shape.MutationContext;
 
-public class CircleShape<W> extends AbstractProxyShape<W, WiresCircleView, CircleProxy<W>> {
+public class CircleShape<W> extends AbstractProxyTitledShape<W, CircleView, CircleProxy<W>> {
     
-    public CircleShape(final WiresCircleView<?> view, 
+    public CircleShape(final CircleView<?> view, 
                        final CircleProxy<W> proxy) {
         super( view, proxy );
     }

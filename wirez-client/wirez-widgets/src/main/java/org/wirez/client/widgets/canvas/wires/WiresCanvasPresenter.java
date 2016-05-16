@@ -18,7 +18,7 @@ package org.wirez.client.widgets.canvas.wires;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import org.wirez.client.lienzo.canvas.lienzo.Lienzo;
+import org.wirez.client.lienzo.Lienzo;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;

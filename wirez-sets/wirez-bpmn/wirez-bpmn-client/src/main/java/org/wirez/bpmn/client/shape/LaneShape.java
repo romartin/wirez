@@ -20,18 +20,18 @@ import org.wirez.bpmn.api.Lane;
 import org.wirez.bpmn.api.property.background.BackgroundSet;
 import org.wirez.bpmn.api.property.font.FontSet;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
-import org.wirez.client.shapes.view.WiresRectangleView;
+import org.wirez.client.shapes.view.RectangleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.view.HasTitle;
 
-public class LaneShape extends BPMNBasicShape<Lane, WiresRectangleView> {
+public class LaneShape extends BPMNBasicShape<Lane, RectangleView> {
 
-    public LaneShape(final WiresRectangleView view) {
+    public LaneShape(final RectangleView view) {
         super(view);
-        getShapeView().setPosition(HasTitle.Position.TOP);
+        getShapeView().setTitlePosition(HasTitle.Position.TOP);
     }
 
     @Override

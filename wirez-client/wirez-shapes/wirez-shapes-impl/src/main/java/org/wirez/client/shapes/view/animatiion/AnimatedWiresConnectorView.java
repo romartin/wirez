@@ -6,7 +6,7 @@ import com.ait.lienzo.client.core.shape.Decorator;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.uberfire.mvp.Command;
-import org.wirez.client.shapes.view.AbstractWiresConnectorView;
+import org.wirez.client.shapes.view.AbstractConnectorView;
 import org.wirez.core.client.shape.view.animation.AnimationProperties;
 import org.wirez.core.client.shape.view.animation.AnimationTweener;
 import org.wirez.core.client.shape.view.animation.HasAnimations;
@@ -14,7 +14,7 @@ import org.wirez.core.client.shape.view.animation.HasAnimations;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AnimatedWiresConnectorView<T> extends AbstractWiresConnectorView<T> implements HasAnimations<T> {
+public abstract class AnimatedWiresConnectorView<T> extends AbstractConnectorView<T> implements HasAnimations<T> {
 
     protected final List<AnimationProperty> decoratableLineAnimationProperties = new LinkedList<>();
     protected final List<Command> animationCloseCallbacks = new LinkedList<>();

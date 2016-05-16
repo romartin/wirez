@@ -20,12 +20,15 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.property.Radius;
-import org.wirez.bpmn.api.property.general.BPMNGeneral;
 import org.wirez.bpmn.api.property.background.BackgroundSet;
 import org.wirez.bpmn.api.property.font.FontSet;
+import org.wirez.bpmn.api.property.general.BPMNGeneral;
+import org.wirez.bpmn.client.proxy.ParallelGatewayShapeProxy;
+import org.wirez.client.shapes.factory.BasicShapesFactory;
 import org.wirez.core.api.definition.annotation.Description;
 import org.wirez.core.api.definition.annotation.definition.*;
 import org.wirez.core.api.graph.Node;
+import org.wirez.core.client.annotation.Shape;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,6 +36,8 @@ import java.util.Set;
 @Portable
 @Bindable
 @Definition( type = Node.class )
+@Shape( factory = BasicShapesFactory.class,
+        proxy = ParallelGatewayShapeProxy.class )
 public class ParallelGateway implements BPMNDefinition {
 
     @Category

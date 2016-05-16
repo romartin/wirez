@@ -11,12 +11,4 @@ public interface BasicShapeProxy<W>
     
     double getBorderSize(W element);
     
-    String getFontFamily(W element);
-    
-    String getFontColor(W element);
-    
-    double getFontSize(W element);
-    
-    double getFontBorderSize(W element);
-    
 }

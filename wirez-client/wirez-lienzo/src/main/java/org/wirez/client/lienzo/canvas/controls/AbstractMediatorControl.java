@@ -2,7 +2,7 @@ package org.wirez.client.lienzo.canvas.controls;
 
 import com.ait.lienzo.client.core.mediator.IMediator;
 import com.ait.lienzo.client.core.mediator.Mediators;
-import org.wirez.client.lienzo.canvas.lienzo.LienzoLayer;
+import org.wirez.client.lienzo.LienzoLayer;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.controls.AbstractCanvasControl;
 

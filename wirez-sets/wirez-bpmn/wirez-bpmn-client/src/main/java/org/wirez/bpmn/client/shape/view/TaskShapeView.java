@@ -2,13 +2,14 @@ package org.wirez.bpmn.client.shape.view;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.SVGPath;
+import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.client.shape.TaskShape;
-import org.wirez.client.shapes.view.WiresRectangleView;
+import org.wirez.client.shapes.view.RectangleView;
 
-public class TaskShapeView extends WiresRectangleView<TaskShapeView> implements TaskShape.TaskView<TaskShapeView> {
+public class TaskShapeView extends RectangleView<TaskShapeView> implements TaskShape.TaskView<TaskShapeView> {
 
     private Group taskTypeIcon;
     
@@ -17,10 +18,11 @@ public class TaskShapeView extends WiresRectangleView<TaskShapeView> implements 
     }
 
     @Override
-    protected void initialize() {
-        super.initialize();
+    protected Shape<?> createChildren() {
+        final Shape<?> s = super.createChildren();
         taskTypeIcon = taskTypeUser();
         this.addChild(taskTypeIcon, WiresLayoutContainer.Layout.CENTER);
+        return s;
     }
 
     @Override

@@ -19,14 +19,16 @@ package org.wirez.bpmn.client.shape;
 import org.wirez.bpmn.api.property.background.BackgroundSet;
 import org.wirez.bpmn.api.property.font.FontSet;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
+import org.wirez.client.shapes.AbstractBasicTitledShape;
+import org.wirez.client.shapes.view.AbstractShapeView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.client.shapes.AbstractBasicShape;
 import org.wirez.core.client.shape.view.ShapeView;
 
-public abstract class BPMNBasicShape<W, V extends ShapeView>
-    extends AbstractBasicShape<W, V> {
+public abstract class BPMNBasicShape<W, V extends AbstractShapeView>
+    extends AbstractBasicTitledShape<W, V> {
 
     public BPMNBasicShape(final V shapeView) {
         super(shapeView);

@@ -20,10 +20,12 @@ import org.wirez.bpmn.api.*;
 import org.wirez.bpmn.client.shape.*;
 import org.wirez.bpmn.client.shape.glyph.EndTerminateEventGlyph;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
-import org.wirez.client.shapes.view.*;
-import org.wirez.client.shapes.view.glyph.WiresConnectorGlyph;
-import org.wirez.client.shapes.view.glyph.WiresPolygonGlyph;
-import org.wirez.client.shapes.view.glyph.WiresRectangleGlyph;
+import org.wirez.client.shapes.view.CircleView;
+import org.wirez.client.shapes.view.ConnectorView;
+import org.wirez.client.shapes.view.RectangleView;
+import org.wirez.client.shapes.view.ShapeViewFactory;
+import org.wirez.client.shapes.view.glyph.ConnectorGlyph;
+import org.wirez.client.shapes.view.glyph.RectangleGlyph;
 import org.wirez.core.api.definition.util.DefinitionUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.MutableShape;
@@ -43,7 +45,6 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
         add( BPMNDiagram.class );
         add( EndTerminateEvent.class );
         add( Lane.class );
-        add( ParallelGateway.class );
         add( SequenceFlow.class );
         add( Task.class );
     }};
@@ -89,10 +90,6 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
             return Lane.title;
 
-        } else if ( isParallelGatwway( clazz ) ) {
-
-            return ParallelGateway.title;
-
         } else if ( isSequenceFlow( clazz ) ) {
 
             return SequenceFlow.title;
@@ -125,7 +122,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
             final BPMNDiagram diagram = (BPMNDiagram) definition;
             
-            final WiresRectangleView view = shapeViewFactory.rectangle( diagram.getWidth().getValue(),
+            final RectangleView view = shapeViewFactory.rectangle( diagram.getWidth().getValue(),
                     diagram.getHeight().getValue(),
                     wiresCanvas.getWiresManager());
             
@@ -135,7 +132,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
             final EndTerminateEvent endTerminateEvent = (EndTerminateEvent) definition;
 
-            final WiresCircleView view = shapeViewFactory.circle( endTerminateEvent.getRadius().getValue(),
+            final CircleView view = shapeViewFactory.circle( endTerminateEvent.getRadius().getValue(),
                     wiresCanvas.getWiresManager());
             
             result = new EndTerminateEventShape(view);
@@ -144,27 +141,16 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
             final Lane lane = (Lane) definition;
 
-            final WiresRectangleView view = shapeViewFactory.rectangle(
+            final RectangleView view = shapeViewFactory.rectangle(
                     lane.getWidth().getValue(),
                     lane.getHeight().getValue(),
                     wiresCanvas.getWiresManager());
             
             result = new LaneShape(view);
 
-        } else if ( isParallelGatwway( definitionClass ) ) {
-
-            final ParallelGateway parallelGateway = (ParallelGateway) definition;
-
-            final WiresPolygonView view = bpmnViewFactory.parallelGateway(
-                    parallelGateway.getRadius().getValue(),
-                    parallelGateway.getBackgroundSet().getBgColor().getValue(),
-                    wiresCanvas.getWiresManager());
-            
-            result = new ParallelGatewayShape(view);
-
         } else if ( isSequenceFlow( definitionClass ) ) {
 
-            final WiresConnectorView view = shapeViewFactory.connector(wiresCanvas.getWiresManager(), 0,0,100,100);
+            final ConnectorView view = shapeViewFactory.connector(wiresCanvas.getWiresManager(), 0,0,100,100);
             
             result = new SequenceFlowShape(view);
 
@@ -172,7 +158,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
             final Task task = (Task) definition;
 
-            final WiresRectangleView view = bpmnViewFactory.task( 
+            final RectangleView view = bpmnViewFactory.task( 
                     task.getWidth().getValue(),
                     task.getHeight().getValue(), 
                     wiresCanvas.getWiresManager());
@@ -198,7 +184,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
         
         if ( isDiagram( clazz ) ) {
 
-            return new WiresRectangleGlyph(width, height, BPMNDiagram.COLOR);
+            return new RectangleGlyph(width, height, BPMNDiagram.COLOR);
             
         }  else if ( isEndTerminateEvent( clazz ) ) {
 
@@ -206,19 +192,15 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
             
         } else if ( isLane( clazz ) ) {
 
-            return new WiresRectangleGlyph(width, height, Lane.COLOR);
-
-        } else if ( isParallelGatwway( clazz ) ) {
-
-            return new WiresPolygonGlyph(width/2, ParallelGateway.COLOR);
+            return new RectangleGlyph(width, height, Lane.COLOR);
 
         } else if ( isSequenceFlow( clazz ) ) {
 
-            return new WiresConnectorGlyph(width, height, SequenceFlow.COLOR);
+            return new ConnectorGlyph(width, height, SequenceFlow.COLOR);
 
         } else if ( isTask( clazz ) ) {
 
-            return new WiresRectangleGlyph(width, height, Task.COLOR);
+            return new RectangleGlyph(width, height, Task.COLOR);
 
         }
 
@@ -235,10 +217,6 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
     private boolean isLane( final Class<?> clazz ) {
         return clazz.equals( Lane.class );
-    }
-
-    private boolean isParallelGatwway( final Class<?> clazz ) {
-        return clazz.equals( ParallelGateway.class );
     }
 
     private boolean isSequenceFlow( final Class<?> clazz ) {

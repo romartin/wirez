@@ -18,14 +18,14 @@ package org.wirez.bpmn.client.shape;
 
 import org.wirez.bpmn.api.SequenceFlow;
 import org.wirez.bpmn.api.property.background.BackgroundSet;
-import org.wirez.client.shapes.view.WiresConnectorView;
+import org.wirez.client.shapes.view.ConnectorView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.ViewConnector;
 
-public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow, WiresConnectorView> {
+public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow, ConnectorView> {
 
-    public SequenceFlowShape(final WiresConnectorView view) {
+    public SequenceFlowShape(final ConnectorView view) {
         super(view);
     }
     

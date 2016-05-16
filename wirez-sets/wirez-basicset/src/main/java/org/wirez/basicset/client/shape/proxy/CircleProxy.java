@@ -1,6 +1,6 @@
 package org.wirez.basicset.client.shape.proxy;
 
-import org.wirez.basicset.api.Circle;
+import org.wirez.basicset.api.basic.Circle;
 
 public final class CircleProxy implements org.wirez.client.shapes.proxy.CircleProxy<Circle> {
 

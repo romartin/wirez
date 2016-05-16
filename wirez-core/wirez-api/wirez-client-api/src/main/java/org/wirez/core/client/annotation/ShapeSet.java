@@ -15,6 +15,8 @@
  */
 package org.wirez.core.client.annotation;
 
+import org.wirez.core.client.util.SafeUriProvider;
+
 import java.lang.annotation.*;
 
 @Inherited
@@ -22,6 +24,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 public @interface ShapeSet {
     
-    String thumb();
+    Class<? extends SafeUriProvider> thumb();
     
 }

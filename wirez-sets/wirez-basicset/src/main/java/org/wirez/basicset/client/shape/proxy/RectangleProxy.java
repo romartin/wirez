@@ -1,6 +1,6 @@
 package org.wirez.basicset.client.shape.proxy;
 
-import org.wirez.basicset.api.Rectangle;
+import org.wirez.basicset.api.basic.Rectangle;
 
 public final class RectangleProxy implements org.wirez.client.shapes.proxy.RectangleProxy<Rectangle> {
 

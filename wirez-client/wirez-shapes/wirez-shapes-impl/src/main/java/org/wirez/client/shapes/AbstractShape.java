@@ -16,6 +16,7 @@
 
 package org.wirez.client.shapes;
 
+import org.wirez.client.shapes.view.AbstractShapeView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
@@ -23,24 +24,33 @@ import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.shape.Lifecycle;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.NodeShape;
-import org.wirez.core.client.shape.view.*;
+import org.wirez.core.client.shape.view.HasFillGradient;
+import org.wirez.core.client.shape.view.HasRadius;
+import org.wirez.core.client.shape.view.HasSize;
+import org.wirez.core.client.shape.view.HasTitle;
 import org.wirez.core.client.shape.view.animation.AnimationProperties;
 import org.wirez.core.client.shape.view.animation.AnimationProperty;
 import org.wirez.core.client.shape.view.animation.HasAnimations;
 import org.wirez.core.client.util.ShapeUtils;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
  * A base shape impl for handling contents of node graph elements.
  */
-public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends ShapeView> 
-        implements NodeShape<W, View<W>, E, V>, Lifecycle {
+public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends AbstractShapeView> 
+        implements 
+        NodeShape<W, View<W>, E, V>, 
+        Lifecycle,
+        HasChildren<AbstractShape<W, Node<View<W>, Edge>, ?>> {
 
     private static Logger LOGGER = Logger.getLogger(AbstractShape.class.getName());
 
     protected String uuid;
     protected V view;
+    protected List<AbstractShape<W, Node<View<W>, Edge>, ?>> children = new LinkedList<AbstractShape<W, Node<View<W>, Edge>, ?>>();
 
     public AbstractShape(final V view) {
         this.view = view;
@@ -78,7 +88,31 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
             ( ( HasTitle) view ).moveTitleToTop();
         }
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void addChild( final AbstractShape<W, Node<View<W>, Edge>, ?> child, 
+                          final Layout layout ) {
+        
+        final HasChildren<AbstractShapeView<?>> hasChildren = 
+                (HasChildren<AbstractShapeView<?>>) this.getShapeView();
+        
+        children.add( child );
+        hasChildren.addChild( (AbstractShapeView<?>) child.getShapeView(), layout );
+    }
     
+    @Override
+    @SuppressWarnings("unchecked")
+    public void removeChild( final AbstractShape<W, Node<View<W>, Edge>, ?> child ) {
+
+        final HasChildren<AbstractShapeView<?>> hasChildren =
+                (HasChildren<AbstractShapeView<?>>) this.getShapeView();
+
+        children.remove( child );
+        hasChildren.removeChild( (AbstractShapeView<?>) child.getShapeView() );
+        
+    }
+
     @Override
     public void applyPosition( final E element, final MutationContext mutationContext ) {
 
@@ -114,6 +148,11 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         // The graph element's name.
         _applyElementName( element, mutationContext );
         
+        // Apply properties to children shapes.
+        for ( final AbstractShape<W, Node<View<W>, Edge>, ?> child : children ) {
+            child.applyProperties( element, mutationContext );
+        }
+        
     }
 
     @Override
@@ -122,7 +161,12 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
                               final Object value,
                               final MutationContext mutationContext) {
 
-        
+        // TODO
+
+        // Apply property to children shapes.
+        for ( final AbstractShape<W, Node<View<W>, Edge>, ?> child : children ) {
+            child.applyProperty( element, propertyId, value, mutationContext );
+        }
         
     }
 
@@ -167,7 +211,7 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
             final HasTitle hasTitle = (HasTitle) view;
             
             if (family != null && family.trim().length() > 0) {
-                hasTitle.setFontFamily(family);
+                hasTitle.setTitleFontFamily(family);
             }
             if (color != null && color.trim().length() > 0) {
                 hasTitle.setTitleStrokeColor(color);

@@ -19,6 +19,8 @@ package org.wirez.core.processors.shape;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.wirez.core.client.AbstractBindableShapeSet;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
+import org.wirez.core.processors.MainProcessor;
+import org.wirez.core.processors.ProcessingEntity;
 
 import javax.annotation.processing.Messager;
 import java.util.HashMap;
@@ -34,7 +36,7 @@ public class BindableShapeSetGenerator extends AbstractBindableAdapterGenerator 
     public StringBuffer generate(String packageName, 
                                  String className,
                                  String defSetClassName,
-                                 String thunb,
+                                 String thumbProviderEntityClassName,
                                  Messager messager) throws GenerationException {
 
         Map<String, Object> root = new HashMap<String, Object>();
@@ -49,9 +51,9 @@ public class BindableShapeSetGenerator extends AbstractBindableAdapterGenerator 
                 AbstractBindableShapeSet.class.getName() );
         root.put("defSetClass",
                 defSetClassName );
-        root.put("thumb",
-                thunb );
-        
+        root.put("thumbProviderEntity",
+                new ProcessingEntity( thumbProviderEntityClassName,
+                        MainProcessor.toClassMemberId( thumbProviderEntityClassName ) ) );
 
         //Generate code
         return writeTemplate(packageName, className, root, messager);

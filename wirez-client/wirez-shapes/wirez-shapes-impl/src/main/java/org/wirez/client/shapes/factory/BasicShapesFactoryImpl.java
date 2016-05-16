@@ -17,14 +17,12 @@
 package org.wirez.client.shapes.factory;
 
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
+import org.wirez.client.shapes.AbstractShape;
+import org.wirez.client.shapes.HasChildren;
 import org.wirez.client.shapes.proxy.*;
-import org.wirez.client.shapes.view.ShapeViewFactory;
-import org.wirez.client.shapes.view.WiresCircleView;
-import org.wirez.client.shapes.view.WiresPolygonView;
-import org.wirez.client.shapes.view.WiresRectangleView;
-import org.wirez.client.shapes.view.glyph.WiresCircleGlyph;
-import org.wirez.client.shapes.view.glyph.WiresPolygonGlyph;
-import org.wirez.client.shapes.view.glyph.WiresRectangleGlyph;
+import org.wirez.client.shapes.proxy.icon.*;
+import org.wirez.client.shapes.view.*;
+import org.wirez.client.shapes.view.glyph.*;
 import org.wirez.core.api.definition.util.DefinitionUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.MutableShape;
@@ -35,6 +33,7 @@ import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import java.util.Map;
 
 @Dependent
 public class BasicShapesFactoryImpl<W> 
@@ -57,27 +56,38 @@ public class BasicShapesFactoryImpl<W>
         this.definitionUtils = definitionUtils;
         
     }
-    
+
     @Override
     @SuppressWarnings("unchecked")
     public MutableShape<W, ShapeView> build( final W definition, 
                      final AbstractCanvasHandler context) {
 
-        final WiresCanvas wiresCanvas = (WiresCanvas) context.getCanvas();
         final String id = definitionUtils.getDefinitionId( definition );
         final BasicShapeProxy<W> proxy = getProxy( id );
 
+        return build( definition, proxy, context );
+    }
+
+    @SuppressWarnings("unchecked")
+    protected MutableShape<W, ShapeView> build( final W definition,
+                                                final BasicShapeProxy<W> proxy,
+                                                final AbstractCanvasHandler context) {
+
+        final WiresCanvas wiresCanvas = (WiresCanvas) context.getCanvas();
+
+        MutableShape<W, ShapeView> shape = null;
+        
         if ( isCircle(proxy) ) {
 
             final CircleProxy<W> circleProxy = (CircleProxy<W>) proxy;
-            
+
             final double radius = circleProxy.getRadius( definition );
-            
-            final WiresCircleView view =
+
+            final CircleView view =
                     shapeViewFactory.circle( radius, wiresCanvas.getWiresManager() );
 
-            return new CircleShape( view, circleProxy );
-            
+            shape = new CircleShape( view, circleProxy );
+
         }
 
         if ( isRectangle(proxy) ) {
@@ -87,10 +97,10 @@ public class BasicShapesFactoryImpl<W>
             final double width = rectangleProxy.getWidth( definition );
             final double height = rectangleProxy.getHeight( definition );
 
-            final WiresRectangleView view =
+            final RectangleView view =
                     shapeViewFactory.rectangle( width, height, wiresCanvas.getWiresManager() );
 
-            return new RectangleShape( view, rectangleProxy );
+            shape = new RectangleShape( view, rectangleProxy );
 
         }
 
@@ -101,39 +111,118 @@ public class BasicShapesFactoryImpl<W>
             final double radius = polygonProxy.getRadius( definition );
             final String fillColor = polygonProxy.getBackgroundColor( definition );
 
-            final WiresPolygonView view =
-                    shapeViewFactory.polygon( radius, 
+            final PolygonView view =
+                    shapeViewFactory.polygon( radius,
                             fillColor,
                             wiresCanvas.getWiresManager() );
 
-            return new PolygonShape( view, polygonProxy );
+            shape = new PolygonShape( view, polygonProxy );
+
+        }
+
+        if ( isIcon(proxy) ) {
+
+            final IconProxy<W> iconProxy = (IconProxy<W>) proxy;
+
+            final ICONS icon = IconShape.getIcon( definition, iconProxy );
+            final double width = iconProxy.getWidth( definition );
+            final double height = iconProxy.getHeight( definition );
+
+            final IconShapeView view =
+                    shapeViewFactory.icon( icon, width, height, wiresCanvas.getWiresManager() );
+
+            shape = new IconShape( view, iconProxy );
 
         }
         
-        throw new RuntimeException( "This factory supports [" + id + "] but cannot built the shape for it." );
-    }
+        // Add children, if any.
+        if ( null != shape && proxy instanceof HasChildProxies ) {
 
+            final HasChildProxies<W> hasChildren = (HasChildProxies<W>) proxy;
+            final Map<BasicShapeProxy<W>, HasChildren.Layout> childProxies = hasChildren.getChildProxies();
+            if ( null != childProxies && !childProxies.isEmpty() ) {
+                for ( final Map.Entry<BasicShapeProxy<W>, HasChildren.Layout> entry : childProxies.entrySet() ) {
+
+                    final BasicShapeProxy<W> child = entry.getKey();
+                    final HasChildren.Layout layout = entry.getValue();
+
+                    final MutableShape<W, ShapeView> childShape = this.build( definition, child, context);
+
+                    if ( childShape instanceof AbstractShape ) {
+
+                        ( (AbstractShape) shape).addChild( (AbstractShape) childShape, layout );
+
+                    }
+                    
+                }
+            }
+
+        }
+
+        if ( null != shape ) {
+        
+            return shape;
+            
+        }
+        
+        final String id = definitionUtils.getDefinitionId( definition );
+        throw new RuntimeException( "This factory supports [" + id + "] but cannot built a shape for it." );
+
+    }
+    
     @Override
-    protected ShapeGlyph build(Class<?> clazz, double width, double height) {
+    protected ShapeGlyph build( Class<?> clazz, double width, double height) {
 
         final BasicShapeProxy<W> proxy = getProxy( clazz );
 
+        ShapeGlyph glyph = null;
+        
         if ( isCircle(proxy) ) {
 
-            return new WiresCircleGlyph( DEFAULT_SIZE / 2, proxy.getGlyphBackgroundColor() );
+            glyph = new CircleGlyph( DEFAULT_SIZE / 2, proxy.getGlyphBackgroundColor() );
+            
+            
 
         }
 
         if ( isRectangle(proxy) ) {
 
-            return new WiresRectangleGlyph( DEFAULT_SIZE, DEFAULT_SIZE, proxy.getGlyphBackgroundColor() );
+            glyph = new RectangleGlyph( DEFAULT_SIZE, DEFAULT_SIZE, proxy.getGlyphBackgroundColor() );
 
         }
 
         if ( isPolygon(proxy) ) {
 
-            return new WiresPolygonGlyph( DEFAULT_SIZE / 2, proxy.getGlyphBackgroundColor() );
+            glyph = new PolygonGlyph( DEFAULT_SIZE / 2, proxy.getGlyphBackgroundColor() );
+            
+        }
 
+        if ( isMinusIcon(proxy) ) {
+            
+            return new IconGlyph ( ICONS.MINUS, DEFAULT_SIZE, DEFAULT_SIZE, proxy.getGlyphBackgroundColor() );
+
+        }
+
+        if ( isPlusIcon(proxy) ) {
+
+            return new IconGlyph ( ICONS.PLUS, DEFAULT_SIZE, DEFAULT_SIZE, proxy.getGlyphBackgroundColor() );
+
+        }
+
+        if ( isXORIcon(proxy) ) {
+
+            return new IconGlyph ( ICONS.XOR, DEFAULT_SIZE, DEFAULT_SIZE, proxy.getGlyphBackgroundColor() );
+
+        }
+        
+        if ( null != glyph && hasIcon(proxy) ) {
+
+            return new ShapeWithIconGlyph( DEFAULT_SIZE, DEFAULT_SIZE, glyph, ICONS.PLUS );
+            
+        } else if ( null != glyph ) {
+            
+            return glyph;
+            
         }
 
         throw new RuntimeException( "This factory supports [" + clazz.getName() + "] but cannot built the shape glyph for it." );
@@ -168,5 +257,26 @@ public class BasicShapesFactoryImpl<W>
     private boolean isPolygon( final BasicShapeProxy<W> proxy ) {
         return proxy instanceof PolygonProxy;
     }
+    
+    private boolean hasIcon( final BasicShapeProxy<W> proxy ) {
+        return proxy instanceof HasChildProxies;
+    }
+
+    private boolean isIcon( final BasicShapeProxy<W> proxy ) {
+        return proxy instanceof IconProxy;
+    }
+
+    private boolean isMinusIcon( final BasicShapeProxy<W> proxy ) {
+        return proxy instanceof MinusIconProxy;
+    }
+
+    private boolean isPlusIcon( final BasicShapeProxy<W> proxy ) {
+        return proxy instanceof PlusIconProxy;
+    }
+
+    private boolean isXORIcon( final BasicShapeProxy<W> proxy ) {
+        return proxy instanceof XORIconProxy;
+    }
+    
 
 }

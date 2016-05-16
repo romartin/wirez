@@ -20,18 +20,18 @@ import org.wirez.bpmn.api.EndTerminateEvent;
 import org.wirez.bpmn.api.property.background.BackgroundSet;
 import org.wirez.bpmn.api.property.font.FontSet;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
-import org.wirez.client.shapes.view.WiresCircleView;
+import org.wirez.client.shapes.view.CircleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.view.HasTitle;
 
-public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent, WiresCircleView> {
+public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent, CircleView> {
 
-    public EndTerminateEventShape(final WiresCircleView view) {
+    public EndTerminateEventShape(final CircleView view) {
         super(view);
-        getShapeView().setPosition(HasTitle.Position.BOTTOM);
+        getShapeView().setTitlePosition(HasTitle.Position.BOTTOM);
     }
    
     @Override

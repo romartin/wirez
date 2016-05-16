@@ -1,6 +1,6 @@
 package org.wirez.basicset.client.shape.proxy;
 
-import org.wirez.basicset.api.Polygon;
+import org.wirez.basicset.api.basic.Polygon;
 
 public final class PolygonProxy implements org.wirez.client.shapes.proxy.PolygonProxy<Polygon> {
     

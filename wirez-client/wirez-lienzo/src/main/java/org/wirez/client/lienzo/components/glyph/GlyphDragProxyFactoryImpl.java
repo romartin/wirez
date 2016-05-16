@@ -1,6 +1,6 @@
 package org.wirez.client.lienzo.components.glyph;
 
-import org.wirez.client.lienzo.canvas.lienzo.LienzoLayer;
+import org.wirez.client.lienzo.LienzoLayer;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.components.drag.DragProxyCallback;
 import org.wirez.core.client.components.drag.DragProxyFactory;

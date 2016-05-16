@@ -16,16 +16,16 @@
 
 package org.wirez.client.shapes.proxy;
 
-import org.wirez.client.shapes.view.WiresRectangleView;
+import org.wirez.client.shapes.view.RectangleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.shape.MutationContext;
 
-public class RectangleShape<W> extends AbstractProxyShape<W, WiresRectangleView, RectangleProxy<W>> {
+public class RectangleShape<W> extends AbstractProxyTitledShape<W, RectangleView, RectangleProxy<W>> {
     
     
-    public RectangleShape( final WiresRectangleView view,
+    public RectangleShape( final RectangleView view,
                            final RectangleProxy<W> proxy ) {
         super( view, proxy );
     }

@@ -8,11 +8,11 @@ public interface HasTitle<T> {
     
     T setTitle(String title);
     
-    T setPosition(Position position);
+    T setTitlePosition(Position position);
 
     T setTitleStrokeColor(String color);
 
-    T setFontFamily(String fontFamily);
+    T setTitleFontFamily(String fontFamily);
     
     T setTitleFontSize(double fontSize);
 

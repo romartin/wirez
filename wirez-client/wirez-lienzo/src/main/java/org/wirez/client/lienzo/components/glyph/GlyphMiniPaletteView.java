@@ -2,7 +2,7 @@ package org.wirez.client.lienzo.components.glyph;
 
 import com.ait.lienzo.client.core.animation.*;
 import com.ait.lienzo.client.core.shape.IPrimitive;
-import org.wirez.client.lienzo.canvas.lienzo.LienzoLayer;
+import org.wirez.client.lienzo.LienzoLayer;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.lienzo.palette.AbstractMiniPalette;
 import org.wirez.lienzo.palette.HoverMiniPalette;

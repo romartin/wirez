@@ -21,7 +21,7 @@ import com.ait.lienzo.client.core.shape.wires.IContainmentAcceptor;
 import com.ait.lienzo.client.core.shape.wires.IDockingAcceptor;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.client.lienzo.canvas.lienzo.Lienzo;
+import org.wirez.client.lienzo.Lienzo;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;

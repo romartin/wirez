@@ -1,9 +1,6 @@
 package org.wirez.basicset.api.factory;
 
-import org.wirez.basicset.api.property.Height;
-import org.wirez.basicset.api.property.Name;
-import org.wirez.basicset.api.property.Radius;
-import org.wirez.basicset.api.property.Width;
+import org.wirez.basicset.api.property.*;
 import org.wirez.basicset.api.property.background.BgColor;
 import org.wirez.basicset.api.property.background.BorderColor;
 import org.wirez.basicset.api.property.background.BorderSize;
@@ -32,6 +29,7 @@ public class BasicPropertyFactory extends BindableModelFactory<Object> {
         add(Height.class);
         add(Width.class);
         add(Radius.class);
+        add(IconType.class);
     }};
 
     public BasicPropertyFactory() {
@@ -76,6 +74,9 @@ public class BasicPropertyFactory extends BindableModelFactory<Object> {
         }
         if (Radius.class.equals(clazz)) {
             return buildRadius();
+        }
+        if (IconType.class.equals(clazz)) {
+            return buildIconType();
         }
 
         throw new RuntimeException( "This factory should provide a property for [" + clazz + "]" );
@@ -124,5 +125,9 @@ public class BasicPropertyFactory extends BindableModelFactory<Object> {
     public Radius buildRadius() {
         return new Radius();
     }
+    public IconType buildIconType() {
+        return new IconType();
+    }
+    
 
 }

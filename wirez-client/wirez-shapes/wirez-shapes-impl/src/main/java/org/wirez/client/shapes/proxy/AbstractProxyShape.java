@@ -17,12 +17,13 @@
 package org.wirez.client.shapes.proxy;
 
 import org.wirez.client.shapes.AbstractBasicShape;
+import org.wirez.client.shapes.view.AbstractShapeView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.client.shape.view.ShapeView;
+import org.wirez.core.client.shape.MutationContext;
 
-public abstract class AbstractProxyShape<W, V extends ShapeView, P extends BasicShapeProxy<W>> extends AbstractBasicShape<W, V> {
+public abstract class AbstractProxyShape<W, V extends AbstractShapeView, P extends BasicShapeProxy<W>> extends AbstractBasicShape<W, V> {
     
     protected final P proxy;
     
@@ -30,6 +31,15 @@ public abstract class AbstractProxyShape<W, V extends ShapeView, P extends Basic
                               final P proxy ) {
         super(view);
         this.proxy = proxy;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void applyProperties( final Node<View<W>, Edge> element, 
+                                 final MutationContext mutationContext)  {
+
+        super.applyProperties(element, mutationContext);
+       
     }
 
     @Override
@@ -46,27 +56,6 @@ public abstract class AbstractProxyShape<W, V extends ShapeView, P extends Basic
     protected Double getBorderSize(final Node<View<W>, Edge> element) {
         return proxy.getBorderSize( getDefinition( element ) );
     }
-
-    @Override
-    protected String getFontFamily(final Node<View<W>, Edge> element) {
-        return proxy.getFontFamily( getDefinition( element ) );
-    }
-
-    @Override
-    protected String getFontColor(final Node<View<W>, Edge> element) {
-        return proxy.getFontColor( getDefinition( element ) );
-    }
-
-    @Override
-    protected Double getFontSize(final Node<View<W>, Edge> element) {
-        return proxy.getFontSize( getDefinition( element ) );
-    }
-
-    @Override
-    protected Double getFontBorderSize(final Node<View<W>, Edge> element) {
-        return proxy.getFontBorderSize( getDefinition( element ) );
-    }
-
 
     @Override
     protected String getNamePropertyValue(final Node<View<W>, Edge> element) {

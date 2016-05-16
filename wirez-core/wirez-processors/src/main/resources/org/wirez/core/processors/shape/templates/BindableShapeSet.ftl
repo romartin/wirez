@@ -18,6 +18,7 @@ package ${packageName};
 
 import ${parentClassName};
 import ${defSetClass};
+import ${thumbProviderEntity.className};
 import com.google.gwt.safehtml.shared.SafeUri;
 import javax.annotation.Generated;
 import javax.annotation.PostConstruct;
@@ -31,9 +32,13 @@ public class ${className} extends ${parentClassName} {
     
     public static final String ID = "${className}";
 
+    ${thumbProviderEntity.className} ${thumbProviderEntity.id};
+
     @Inject
-    public ${className}( final DefinitionManager definitionManager ) {
+    public ${className}( final DefinitionManager definitionManager,
+                         final ${thumbProviderEntity.className} ${thumbProviderEntity.id} ) {
         super( definitionManager );
+        this.${thumbProviderEntity.id} = ${thumbProviderEntity.id};
     }
 
     @PostConstruct
@@ -48,7 +53,7 @@ public class ${className} extends ${parentClassName} {
     
     @Override
     public SafeUri getThumbnailUri() {
-        return ${thumb}.getSafeUri();
+        return ${thumbProviderEntity.id}.getUri();
     }
     
     @Override

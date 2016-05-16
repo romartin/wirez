@@ -2,6 +2,7 @@ package org.wirez.bpmn.api;
 
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.api.factory.BPMNAbstractGraphFactory;
+import org.wirez.bpmn.client.BPMNShapeSetThumbnailProvider;
 import org.wirez.core.api.definition.annotation.Description;
 import org.wirez.core.api.definition.annotation.definitionset.DefinitionSet;
 import org.wirez.core.api.rule.annotation.CanContain;
@@ -37,7 +38,7 @@ import javax.enterprise.context.ApplicationScoped;
         role = "Endevents_all",
         min = 0
 )
-@ShapeSet( thumb = "org.wirez.bpmn.client.resources.BPMNImageResources.INSTANCE.bpmnSetThumb()" )
+@ShapeSet( thumb = BPMNShapeSetThumbnailProvider.class )
 public class BPMNDefinitionSet {
 
     @Description

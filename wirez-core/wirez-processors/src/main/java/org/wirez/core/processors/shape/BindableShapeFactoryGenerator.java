@@ -18,7 +18,9 @@ package org.wirez.core.processors.shape;
 
 import org.apache.commons.lang3.StringUtils;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
+import org.wirez.core.client.shape.factory.AbstractCompositeShapeFactory;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
+import org.wirez.core.processors.MainProcessor;
 import org.wirez.core.processors.ProcessingDefinitionAnnotations;
 import org.wirez.core.processors.ProcessingEntity;
 
@@ -44,10 +46,8 @@ public class BindableShapeFactoryGenerator extends AbstractBindableAdapterGenera
                 className);
         root.put("generatedByClassName",
                 BindableShapeFactoryGenerator.class.getName() );
-        
-        // TODO: Do not hardcode class name here.
         root.put("parentClassName",
-               "org.wirez.core.client.shape.factory.AbstractCompositeShapeFactory" );
+                AbstractCompositeShapeFactory.class.getName() );
 
         Map<String, String[]> shapeProxies = processingDefinitionAnnotations.getShapeProxies();
         Set<String> definitionClasses = shapeProxies.keySet();
@@ -57,7 +57,7 @@ public class BindableShapeFactoryGenerator extends AbstractBindableAdapterGenera
 
         Collection<ProcessingEntity> shapeProxyFactoryEntities = new LinkedList<>();
         for ( String s : factoryClasses ) {
-            shapeProxyFactoryEntities.add( new ProcessingEntity( s, getClassMemberId( s ) ) );
+            shapeProxyFactoryEntities.add( new ProcessingEntity( s, MainProcessor.toClassMemberId( s ) ) );
         }
         
         root.put("shapeProxyFactoryEntities",
@@ -74,7 +74,7 @@ public class BindableShapeFactoryGenerator extends AbstractBindableAdapterGenera
 
             String classname = entry.getKey();
             String factoryClass = entry.getValue()[0];
-            String factoryId = getClassMemberId( factoryClass );
+            String factoryId = MainProcessor.toClassMemberId( factoryClass );
             String proxyClass = entry.getValue()[1];
             
             addProxySentences.add( factoryId + ".addProxy( " + classname + ".class, new " + proxyClass + "() );" );
@@ -99,10 +99,5 @@ public class BindableShapeFactoryGenerator extends AbstractBindableAdapterGenera
         return result;
         
     }
-    
-    private String getClassMemberId(final String fqcn ) {
-        return StringUtils.uncapitalize( fqcn.substring( fqcn.lastIndexOf("." ) + 1, fqcn.length() ) );
-    }
-    
     
 }

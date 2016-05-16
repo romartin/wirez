@@ -25,6 +25,7 @@ import org.wirez.core.api.definition.annotation.definitionset.DefinitionSet;
 import org.wirez.core.api.definition.annotation.property.NameProperty;
 import org.wirez.core.client.annotation.Shape;
 import org.wirez.core.client.annotation.ShapeSet;
+import org.wirez.core.client.util.SafeUriProvider;
 import org.wirez.core.processors.definition.BindableDefinitionAdapterGenerator;
 import org.wirez.core.processors.definitionset.BindableDefinitionSetAdapterGenerator;
 import org.wirez.core.processors.definitionset.DefinitionSetProxyGenerator;
@@ -172,6 +173,16 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         
     }
 
+    public static String toValidId( String id ) {
+        return StringUtils.uncapitalize( id );
+    }
+
+    public static String toClassMemberId( String className ) {
+        int i = className.lastIndexOf(".");
+        String s = i > -1 ? className.substring( i + 1, className.length() ) : className;
+        return toValidId( s );
+    }
+
     @Override
     protected boolean processWithExceptions(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         
@@ -286,8 +297,17 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             ShapeSet shapeSetAnn = e.getAnnotation(ShapeSet.class);
             if ( null != shapeSetAnn ) {
          
-                String thumb = shapeSetAnn.thumb();
-                processingContext.getDefSetAnnotations().getShapeSetThunb().put( propertyClassName, thumb );
+                TypeMirror tMirror = null;
+                try {
+                    Class<? extends SafeUriProvider> thumbClass = shapeSetAnn.thumb();
+                } catch( MirroredTypeException mte ) {
+                    tMirror =  mte.getTypeMirror();
+                }
+                if ( null == tMirror ) {
+                    throw new RuntimeException("No thumbnail SafeUri Provider class class specifyed in this @DefinitionSet.");
+                }
+                String thumbFQCN = tMirror.toString();
+                processingContext.getDefSetAnnotations().getShapeSetThunb().put( propertyClassName, thumbFQCN );
                 
             }
             
@@ -888,8 +908,4 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         return processingContext.getDefinitionSet().getId();
     }
     
-    public static String toValidId(String id) {
-        return StringUtils.uncapitalize(id);
-    }
-
 }

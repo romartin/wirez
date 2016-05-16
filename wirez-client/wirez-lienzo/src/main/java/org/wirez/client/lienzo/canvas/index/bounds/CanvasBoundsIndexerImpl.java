@@ -1,7 +1,7 @@
 package org.wirez.client.lienzo.canvas.index.bounds;
 
-import org.wirez.client.lienzo.canvas.lienzo.LienzoLayer;
-import org.wirez.client.lienzo.canvas.lienzo.LienzoLayerUtils;
+import org.wirez.client.lienzo.LienzoLayer;
+import org.wirez.client.lienzo.util.LienzoLayerUtils;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;

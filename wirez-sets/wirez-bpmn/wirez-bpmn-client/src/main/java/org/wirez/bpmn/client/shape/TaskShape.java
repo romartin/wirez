@@ -20,14 +20,14 @@ import org.wirez.bpmn.api.Task;
 import org.wirez.bpmn.api.property.background.BackgroundSet;
 import org.wirez.bpmn.api.property.font.FontSet;
 import org.wirez.bpmn.api.property.general.BPMNGeneral;
-import org.wirez.client.shapes.view.WiresRectangleView;
+import org.wirez.client.shapes.view.RectangleView;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.view.ShapeView;
 
-public class TaskShape extends BPMNBasicShape<Task, WiresRectangleView> {
+public class TaskShape extends BPMNBasicShape<Task, RectangleView> {
 
     public interface TaskView<T extends TaskView> extends ShapeView<T> {
         
@@ -39,7 +39,7 @@ public class TaskShape extends BPMNBasicShape<Task, WiresRectangleView> {
         
     }
     
-    public TaskShape(final WiresRectangleView view) {
+    public TaskShape(final RectangleView view) {
         super(view);
     }
 

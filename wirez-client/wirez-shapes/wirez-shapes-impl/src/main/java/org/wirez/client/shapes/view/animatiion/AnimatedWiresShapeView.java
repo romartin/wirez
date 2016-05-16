@@ -4,7 +4,7 @@ import com.ait.lienzo.client.core.animation.AnimationProperty;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.uberfire.mvp.Command;
-import org.wirez.client.shapes.view.AbstractWiresShapeView;
+import org.wirez.client.shapes.view.AbstractPrimitiveShapeView;
 import org.wirez.core.client.shape.view.animation.HasAnimations;
 
 import java.util.LinkedList;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.wirez.core.client.shape.view.animation.AnimationProperties.*;
 
-public abstract class AnimatedWiresShapeView<T> extends AbstractWiresShapeView<T> implements HasAnimations<T> {
+public abstract class AnimatedWiresShapeView<T> extends AbstractPrimitiveShapeView<T> implements HasAnimations<T> {
 
     public AnimatedWiresShapeView(final MultiPath path, 
                                   final WiresManager manager) {
@@ -99,6 +99,8 @@ public abstract class AnimatedWiresShapeView<T> extends AbstractWiresShapeView<T
             decoratorAnimationProperties.add( AnimationProperty.Properties.WIDTH( w ) );
             shapeAnimationProperties.add( AnimationProperty.Properties.HEIGHT( h ) );
             decoratorAnimationProperties.add( AnimationProperty.Properties.HEIGHT( h ) );
+            
+            super.updateFillGradient( w, h );
         }
     }
 
@@ -109,6 +111,8 @@ public abstract class AnimatedWiresShapeView<T> extends AbstractWiresShapeView<T
             doMoveChildren( size, size );
             shapeAnimationProperties.add( AnimationProperty.Properties.RADIUS( value ) );
             decoratorAnimationProperties.add( AnimationProperty.Properties.RADIUS( value ) );
+
+            super.updateFillGradient( size, size );
         }
     }
 
@@ -131,8 +135,12 @@ public abstract class AnimatedWiresShapeView<T> extends AbstractWiresShapeView<T
         shapeAnimationProperties.clear();
 
         // Decorator property animations.
-        AnimatedWiresUtils.animate( getDecorator(), tweener, duration, decoratorAnimationProperties, animationCloseCallbacks );
-        decoratorAnimationProperties.clear();
+        if ( null != decorator ) {
+
+            AnimatedWiresUtils.animate( decorator, tweener, duration, decoratorAnimationProperties, animationCloseCallbacks );
+            decoratorAnimationProperties.clear();
+            
+        }
 
         // Clear current animation close callbacks.
         animationCloseCallbacks.clear();

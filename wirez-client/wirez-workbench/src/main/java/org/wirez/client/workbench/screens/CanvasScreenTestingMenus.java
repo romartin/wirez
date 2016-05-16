@@ -6,7 +6,6 @@ import com.google.gwt.user.client.Window;
 import org.uberfire.mvp.Command;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.lienzo.canvas.lienzo.LienzoLayer;
 import org.wirez.client.widgets.session.presenter.impl.AbstractFullSessionPresenter;
 import org.wirez.client.widgets.session.presenter.impl.DefaultFullSessionPresenter;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;

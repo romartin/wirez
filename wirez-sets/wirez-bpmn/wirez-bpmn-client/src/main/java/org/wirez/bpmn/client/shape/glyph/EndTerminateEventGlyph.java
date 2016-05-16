@@ -19,9 +19,9 @@ package org.wirez.bpmn.client.shape.glyph;
 import com.ait.lienzo.client.core.shape.Ring;
 import org.wirez.bpmn.api.EndTerminateEvent;
 import org.wirez.bpmn.client.shape.EndTerminateEventShape;
-import org.wirez.client.shapes.view.glyph.WiresCircleGlyph;
+import org.wirez.client.shapes.view.glyph.CircleGlyph;
 
-public class EndTerminateEventGlyph extends WiresCircleGlyph {
+public class EndTerminateEventGlyph extends CircleGlyph {
 
     public EndTerminateEventGlyph() {
         super();

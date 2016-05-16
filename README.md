@@ -62,14 +62,6 @@ Once done, you can run or debug the application using this recently created conf
   
 *TIP*: While coding it's a good practice to remove application's old artifacts the GWT idea plugin working's directory. It is usually present on your home directory as `$HOME/.IntelliJIdea15/system/gwt/`.                        
 
-
-Forms integration
------------------
-
-The branch `forms` contains the dynamic forms integration. To use it, please previously build Livespark locally from [here](https://github.com/droolsjbpm/livespark).                   
- 
-NOTE: You can compile it faster by using `mvn clean install -DskipTests -Dgwt.compiler.skip=true`.                     
- 
 Requirements
 ------------
 * Java8+          

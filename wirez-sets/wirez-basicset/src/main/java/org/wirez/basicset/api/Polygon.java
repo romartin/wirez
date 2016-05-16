@@ -24,7 +24,7 @@ import org.wirez.basicset.api.property.Radius;
 import org.wirez.basicset.api.property.background.BackgroundAndBorderSet;
 import org.wirez.basicset.api.property.font.FontSet;
 import org.wirez.basicset.client.shape.proxy.PolygonProxy;
-import org.wirez.client.shapes.factory.BasicShapesFactoryImpl;
+import org.wirez.client.shapes.factory.BasicShapesFactory;
 import org.wirez.core.api.definition.annotation.Description;
 import org.wirez.core.api.definition.annotation.definition.*;
 import org.wirez.core.api.graph.Node;
@@ -36,7 +36,7 @@ import java.util.Set;
 @Portable
 @Bindable
 @Definition( type = Node.class )
-@Shape( factory = BasicShapesFactoryImpl.class, 
+@Shape( factory = BasicShapesFactory.class, 
         proxy = PolygonProxy.class )
 public class Polygon {
 

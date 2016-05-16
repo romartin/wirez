@@ -20,7 +20,7 @@
 <module>
 
 	<inherits name='com.google.gwt.user.User' />
-	<inherits name="org.wirez.client.WirezShapesImpl"/>
+	<inherits name="org.wirez.client.WirezShapesApi"/>
 	
 	<source path="api"/>
 	<source path="client"/>

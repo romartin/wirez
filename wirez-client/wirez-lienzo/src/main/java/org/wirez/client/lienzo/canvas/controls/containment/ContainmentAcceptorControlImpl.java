@@ -51,7 +51,14 @@ public class ContainmentAcceptorControlImpl implements ContainmentAcceptorContro
 
     @Override
     public void disable() {
+        
+        if ( null != canvasHandler && null != canvasHandler.getCanvas() ) {
+            final WiresCanvas.View canvasView = (WiresCanvas.View) canvasHandler.getCanvas().getView();
+            canvasView.setContainmentAcceptor(CONTAINMENT_EMPTY_ACCEPTOR);
+        }
+
         this.canvasHandler = null;
+
     }
 
     @Override
@@ -113,6 +120,21 @@ public class ContainmentAcceptorControlImpl implements ContainmentAcceptorContro
         
     }
 
+    private final IContainmentAcceptor CONTAINMENT_EMPTY_ACCEPTOR = new IContainmentAcceptor() {
+
+        @Override
+        public boolean containmentAllowed( final WiresContainer wiresContainer, 
+                                           final WiresShape wiresShape ) {
+            return false;
+        }
+
+        @Override
+        public boolean acceptContainment( final WiresContainer wiresContainer, 
+                                          final WiresShape wiresShape ) {
+            return false;
+        }
+        
+    };
     private final IContainmentAcceptor CONTAINMENT_ACCEPTOR = new IContainmentAcceptor() {
         @Override
         public boolean containmentAllowed(final WiresContainer wiresContainer, 

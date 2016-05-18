@@ -46,4 +46,25 @@ public class CanvasReadOnlySessionImpl extends AbstractCanvasSession
         return panControl;
     }
 
+    @Override
+    public void onDispose() {
+        
+        if ( null != selectionControl ) {
+            selectionControl.disable();
+            selectionControl = null;
+        }
+        
+        if ( null != zoomControl ) {
+            zoomControl.disable();
+            zoomControl = null;
+        }
+
+        if ( null != panControl ) {
+            panControl.disable();
+            panControl = null;
+        }
+
+        super.onDispose();
+
+    }
 }

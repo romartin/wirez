@@ -68,6 +68,12 @@ public abstract class AbstractStackCommandManager<C, V> extends AbstractBatchCom
         
         return super.undo( context );
     }
+
+    @Override
+    public void clearHistory() {
+        super.command = null;
+        history.clear();
+    }
     
     protected void addIntoStack( final Command<C,V> command ) {
         if ( null != command ) {
@@ -92,7 +98,7 @@ public abstract class AbstractStackCommandManager<C, V> extends AbstractBatchCom
             history.push( s );
         }
     }
-    
+
     public int getHistorySize() {
         return ( super.hasUndoCommand() ? 1 : 0 ) + history.size();
     }

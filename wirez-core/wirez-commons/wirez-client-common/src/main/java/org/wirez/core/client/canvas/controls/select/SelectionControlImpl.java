@@ -111,7 +111,8 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
 
     @Override
     public void disable() {
-
+        this.clearSelection();
+        // TODO: Remove registered handlers.
     }
 
     protected void updateViewShapesState() {

@@ -426,10 +426,17 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         }
     }
 
-    public void clear() {
+    public void clearCanvas() {
         fireProcessingCompleted();
         canvas.clear();
         canvas.draw();
+    }
+    
+    public void clear() {
+        canvas.clear();
+        diagram = null;
+        graphIndex = null;
+        canvas = null;
     }
     
   

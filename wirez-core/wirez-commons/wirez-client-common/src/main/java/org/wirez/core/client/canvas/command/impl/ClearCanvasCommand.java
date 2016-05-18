@@ -13,7 +13,7 @@ public final class ClearCanvasCommand extends AbstractCanvasGraphCommand {
 
     @Override
     public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
-        context.clear();
+        context.clearCanvas();
         return buildResult();
     }
 

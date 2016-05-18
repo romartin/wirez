@@ -55,7 +55,7 @@ public class SessionCommandManagerImpl extends BatchDelegateCommandManager<Abstr
 
     @Override
     public Stack<Stack<Command<AbstractCanvasHandler, CanvasViolation>>> getHistory() {
-        StackCommandManager<AbstractCanvasHandler, CanvasViolation> scm = (StackCommandManager<AbstractCanvasHandler, CanvasViolation>) getBatchDelegate();
+        final StackCommandManager<AbstractCanvasHandler, CanvasViolation> scm = (StackCommandManager<AbstractCanvasHandler, CanvasViolation>) getBatchDelegate();
 
         if ( null != scm ) {
 
@@ -65,5 +65,16 @@ public class SessionCommandManagerImpl extends BatchDelegateCommandManager<Abstr
         
         return new Stack<>();
     }
-    
+
+    @Override
+    public void clearHistory() {
+        final StackCommandManager<AbstractCanvasHandler, CanvasViolation> scm = (StackCommandManager<AbstractCanvasHandler, CanvasViolation>) getBatchDelegate();
+
+        if ( null != scm ) {
+        
+            scm.clearHistory();
+        }
+        
+    }
+
 }

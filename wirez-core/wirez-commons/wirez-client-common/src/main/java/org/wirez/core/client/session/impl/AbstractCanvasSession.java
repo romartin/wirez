@@ -33,7 +33,7 @@ public abstract class AbstractCanvasSession implements DefaultCanvasSession {
     }
 
     public void onDispose() {
-        
+        canvasHandler.clear();
     }
 
     @Override

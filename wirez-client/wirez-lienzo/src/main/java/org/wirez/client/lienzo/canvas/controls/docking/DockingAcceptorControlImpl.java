@@ -46,6 +46,12 @@ public class DockingAcceptorControlImpl implements DockingAcceptorControl<Abstra
 
     @Override
     public void disable() {
+
+        if ( null != canvasHandler && null != canvasHandler.getCanvas() ) {
+            final WiresCanvas.View canvasView = (WiresCanvas.View) canvasHandler.getCanvas().getView();
+            canvasView.setDockingAcceptor(DOCKING_EMPTY_ACCEPTOR);
+        }
+
         this.canvasHandler = null;
     }
 
@@ -82,7 +88,23 @@ public class DockingAcceptorControlImpl implements DockingAcceptorControl<Abstra
     private boolean isEnabled() {
         return canvasHandler != null;
     }
-    
+
+    private final IDockingAcceptor DOCKING_EMPTY_ACCEPTOR = new IDockingAcceptor() {
+
+        @Override
+        public boolean dockingAllowed( final WiresContainer wiresContainer, 
+                                       final WiresShape wiresShape ) {
+            return false;
+        }
+
+        @Override
+        public boolean acceptDocking( final WiresContainer wiresContainer, 
+                                      final WiresShape wiresShape ) {
+            return false;
+        }
+        
+    };
+            
     private final IDockingAcceptor DOCKING_ACCEPTOR = new IDockingAcceptor() {
         @Override
         public boolean dockingAllowed(final WiresContainer wiresContainer, 

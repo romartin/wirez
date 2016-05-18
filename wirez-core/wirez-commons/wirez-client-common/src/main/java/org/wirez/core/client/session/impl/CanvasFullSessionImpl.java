@@ -1,5 +1,6 @@
 package org.wirez.core.client.session.impl;
 
+import org.wirez.core.api.command.stack.StackCommandManager;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -103,4 +104,46 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
         return panControl;
     }
 
+    @Override
+    public void onDispose() {
+        
+        if ( null != canvasCommandManager ) {
+            ((StackCommandManager) canvasCommandManager).clearHistory();
+            canvasCommandManager = null;                    
+        }
+
+        if ( null != connectionAcceptorControl ) {
+            connectionAcceptorControl.disable();
+            connectionAcceptorControl = null;
+        }
+
+        if ( null != containmentAcceptorControl )  {
+            containmentAcceptorControl.disable();
+            containmentAcceptorControl = null;
+        }
+        
+        if ( null != dockingAcceptorControl ) {
+            dockingAcceptorControl.disable();
+            dockingAcceptorControl = null;
+        }
+        
+        if ( null != dragControl ) {
+            dragControl.disable();
+            dragControl = null;
+        }
+        
+        if ( null != toolboxControl ) {
+            toolboxControl.disable();
+            toolboxControl = null;
+        }
+        
+        if ( null != builderControl ) {
+            builderControl.disable();
+            builderControl = null;
+        }
+
+        super.onDispose();
+
+    }
+    
 }

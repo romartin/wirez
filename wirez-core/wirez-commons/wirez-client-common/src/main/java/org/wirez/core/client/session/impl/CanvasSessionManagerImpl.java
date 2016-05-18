@@ -103,7 +103,7 @@ public class CanvasSessionManagerImpl implements DefaultCanvasSessionManager {
         if ( null != current ) {
             this.current.onDispose();
             this.sessionDisposedEvent.fire( new SessionDisposedEvent( current ) );
-            log( Level.FINE, "Session [" + current.toString() + "] diposed");
+            log( Level.FINE, "Session [" + current.toString() + "] disposed");
             this.current = null;
         }
     }

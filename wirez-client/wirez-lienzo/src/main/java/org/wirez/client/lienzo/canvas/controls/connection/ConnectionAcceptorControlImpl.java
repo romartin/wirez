@@ -47,6 +47,12 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
 
     @Override
     public void disable() {
+
+        if ( null != canvasHandler && null != canvasHandler.getCanvas() ) {
+            final WiresCanvas.View canvasView = (WiresCanvas.View) canvasHandler.getCanvas().getView();
+            canvasView.setConnectionAcceptor(CONNECTION_EMPTY_ACCEPTOR);
+        }
+
         this.canvasHandler = null;
     }
 
@@ -105,6 +111,34 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
         
         return false;
     }
+
+    private final IConnectionAcceptor CONNECTION_EMPTY_ACCEPTOR = new IConnectionAcceptor() {
+
+        @Override
+        public boolean acceptHead( final WiresConnection wiresConnection, 
+                                   final WiresMagnet wiresMagnet ) {
+            return false;
+        }
+
+        @Override
+        public boolean acceptTail( final WiresConnection wiresConnection, 
+                                   final WiresMagnet wiresMagnet ) {
+            return false;
+        }
+
+        @Override
+        public boolean headConnectionAllowed( final WiresConnection wiresConnection, 
+                                              final WiresShape wiresShape ) {
+            return false;
+        }
+
+        @Override
+        public boolean tailConnectionAllowed( final WiresConnection wiresConnection, 
+                                              final WiresShape wiresShape ) {
+            return false;
+        }
+        
+    };
 
     private final IConnectionAcceptor CONNECTION_ACCEPTOR = new IConnectionAcceptor() {
 

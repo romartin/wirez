@@ -9,4 +9,6 @@ public interface StackCommandManager<T, V> extends BatchCommandManager<T, V> {
 
     Stack<Stack<Command<T,V>>> getHistory();
     
+    void clearHistory();
+    
 }

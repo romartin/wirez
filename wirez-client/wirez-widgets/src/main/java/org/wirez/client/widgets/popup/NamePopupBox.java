@@ -18,11 +18,10 @@ package org.wirez.client.widgets.popup;
 
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.wirez.core.api.definition.util.DefinitionUtils;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.definition.Definition;
-import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.definition.util.DefinitionUtils;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.content.definition.Definition;
+import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;

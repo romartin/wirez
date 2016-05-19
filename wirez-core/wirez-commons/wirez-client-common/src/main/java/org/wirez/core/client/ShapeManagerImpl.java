@@ -16,6 +16,7 @@
 
 package org.wirez.core.client;
 
+import com.google.gwt.safehtml.shared.SafeUri;
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.DefinitionManager;
@@ -35,7 +36,8 @@ public class ShapeManagerImpl implements ShapeManager {
     protected DefinitionManager definitionManager;
     private final List<ShapeSet> shapeSets = new LinkedList<>();
     private final List<ShapeFactory> shapeFactories = new LinkedList<>();
-
+    private final List<ShapeSetThumbProvider> thumbProviders = new LinkedList<>();
+    
     protected ShapeManagerImpl() {
     }
 
@@ -50,6 +52,7 @@ public class ShapeManagerImpl implements ShapeManager {
     public void init() {
         initShapeSets();
         initShapeFactories();
+        initThumbProviders();
     }
 
     private void initShapeSets() {
@@ -74,6 +77,17 @@ public class ShapeManagerImpl implements ShapeManager {
 
     }
 
+    private void initThumbProviders() {
+        thumbProviders.clear();
+
+        Collection<SyncBeanDef<ShapeSetThumbProvider>> beanDefs = beanManager.lookupBeans(ShapeSetThumbProvider.class);
+        for (SyncBeanDef<ShapeSetThumbProvider> beanDef : beanDefs) {
+            ShapeSetThumbProvider shapeSet = beanDef.getInstance();
+            thumbProviders.add(shapeSet);
+        }
+
+    }
+
     @Override
     public Collection<ShapeSet> getShapeSets() {
         return shapeSets;
@@ -85,6 +99,17 @@ public class ShapeManagerImpl implements ShapeManager {
         for (final ShapeFactory factory : shapeFactories) {
             if ( factory.accepts( definitionId ) ) {
                 return factory;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public SafeUri getThumbnail(final String definitionSetId) {
+        for (final ShapeSetThumbProvider thumbProvider : thumbProviders) {
+            if ( thumbProvider.thumbFor( definitionSetId ) ) {
+                return thumbProvider.getThumbnailUri();
             }
         }
 

@@ -20,7 +20,7 @@ import org.uberfire.annotations.processors.AbstractGenerator;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.uberfire.relocated.freemarker.template.Template;
 import org.uberfire.relocated.freemarker.template.TemplateException;
-import org.wirez.core.api.rule.annotation.CanConnect;
+import org.wirez.core.rule.annotation.CanConnect;
 import org.wirez.core.processors.MainProcessor;
 import org.wirez.core.processors.ProcessingContext;
 import org.wirez.core.processors.ProcessingRule;

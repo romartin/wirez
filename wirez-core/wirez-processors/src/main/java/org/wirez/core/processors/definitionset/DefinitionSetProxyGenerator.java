@@ -17,7 +17,7 @@
 package org.wirez.core.processors.definitionset;
 
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.api.definition.DefinitionSetProxy;
+import org.wirez.core.definition.DefinitionSetProxy;
 import org.wirez.core.processors.AbstractAdapterGenerator;
 import org.wirez.core.processors.ProcessingEntity;
 

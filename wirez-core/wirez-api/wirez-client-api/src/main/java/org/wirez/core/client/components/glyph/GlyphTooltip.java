@@ -16,10 +16,9 @@
 
 package org.wirez.core.client.components.glyph;
 
-import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
-public interface GlyphTooltip<G> extends IsWidget {
+public interface GlyphTooltip<G>  {
     
     void show(ShapeGlyph<G> glyph, String text, double x, double y);
     

@@ -24,7 +24,6 @@
           <exclude>WEB-INF/classes/application-roles.properties</exclude>
           <exclude>WEB-INF/classes/application-users.properties</exclude>
           <exclude>WEB-INF/jboss-web.xml</exclude>
-          <exclude>WEB-INF/beans.xml</exclude>          
           
           <!-- GWT DevMode related. -->
           <exclude>**/*devmode.js</exclude>

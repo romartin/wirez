@@ -30,7 +30,7 @@ import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.PanelCollapse;
 import org.gwtbootstrap3.client.ui.PanelGroup;
 import org.gwtbootstrap3.client.ui.PanelHeader;
-import org.wirez.core.api.util.UUID;
+import org.wirez.core.util.UUID;
 import org.wirez.lienzo.Decorator;
 
 public class PaletteGroupView extends Composite implements PaletteGroup.View {

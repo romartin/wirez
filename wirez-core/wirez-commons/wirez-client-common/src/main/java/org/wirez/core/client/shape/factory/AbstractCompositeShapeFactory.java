@@ -16,7 +16,7 @@
 
 package org.wirez.core.client.shape.factory;
 
-import org.wirez.core.api.definition.util.DefinitionUtils;
+import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.ShapeGlyph;
@@ -59,22 +59,6 @@ public abstract class AbstractCompositeShapeFactory<W, S extends Shape>
     }
 
     @Override
-    public ShapeGlyphFactory getGlyphFactory(final String definitionId ) {
-
-        for ( final ShapeFactory<W, AbstractCanvasHandler, S> factory : factories ) {
-            
-            if ( factory.accepts( definitionId ) ) {
-                
-                return factory.getGlyphFactory( definitionId );
-                
-            }
-            
-        }
-
-        throw new RuntimeException( "This factory supports Definition [" + definitionId + "] but cannot built the shape glyph for it." );
-    }
-
-    @Override
     public String getDescription( final String definitionId ) {
         
         for ( final ShapeFactory<W, AbstractCanvasHandler, S> factory : factories ) {
@@ -111,20 +95,15 @@ public abstract class AbstractCompositeShapeFactory<W, S extends Shape>
     }
 
     @Override
-    public ShapeGlyph build( final String definitionId ) {
-        return build( definitionId, 50, 50 );
-    }
-
-    @Override
-    public ShapeGlyph build( final String definitionId, 
+    public ShapeGlyph glyph( final String definitionId, 
                              final double width, 
                              final double height) {
 
         for ( final ShapeFactory<W, AbstractCanvasHandler, S> factory : factories ) {
 
-            if ( factory instanceof ShapeGlyphFactory && factory.accepts( definitionId ) ) {
+            if ( factory.accepts( definitionId ) ) {
 
-                return ( ( ShapeGlyphFactory ) factory).build( definitionId, width, height );
+                return factory.glyph( definitionId, width, height );
 
             }
 

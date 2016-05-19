@@ -149,13 +149,13 @@
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-shapes-impl</artifactId>
+        <artifactId>wirez-shapes-client</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-shapes-impl</artifactId>
+        <artifactId>wirez-shapes-client</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>

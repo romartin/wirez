@@ -82,6 +82,22 @@ public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>, Shape<?>> {
     }
 
     @Override
+    public void destroy() {
+        
+        // Clear registered event handers.
+        registrationManager.removeHandler();
+        registrationMap.clear();
+        
+        // Remove the layer stuff.
+        if ( null != layer ) {
+            layer.removeAll();
+            layer.removeFromParent();
+            layer = null;
+        }
+        
+    }
+
+    @Override
     public boolean supports(final ViewEventType type) {
         return ViewEventType.MOUSE_CLICK.equals( type ) || ViewEventType.MOUSE_MOVE.equals( type );
     }

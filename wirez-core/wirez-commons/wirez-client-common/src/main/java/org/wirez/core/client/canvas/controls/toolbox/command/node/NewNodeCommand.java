@@ -1,15 +1,14 @@
 package org.wirez.core.client.canvas.controls.toolbox.command.node;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.definition.Definition;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.index.bounds.GraphBoundsIndexer;
-import org.wirez.core.api.lookup.util.CommonLookups;
-import org.wirez.core.api.util.UUID;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.Definition;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
+import org.wirez.core.lookup.util.CommonLookups;
+import org.wirez.core.util.UUID;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
@@ -124,8 +123,8 @@ public abstract class NewNodeCommand<I> extends AbstractToolboxCommand<I> {
         this.sourceNode = (Node<? extends Definition<Object>, ? extends Edge>) element;
         
         
-        final Set<String> allowedDefinitions = commonLookups.getAllowedDefinitions( "org.wirez.bpmn.api.BPMNDefinitionSet", 
-                canvasHandler.getDiagram().getGraph(), this.sourceNode,  "org.wirez.bpmn.api.SequenceFlow", 0, 10);
+        final Set<String> allowedDefinitions = commonLookups.getAllowedDefinitions( getDefinitionSetIdentifier(), 
+                canvasHandler.getDiagram().getGraph(), this.sourceNode,  getEdgeIdentifier(), 0, 10);
         
         log( Level.FINE, "Allowed Definitions -> " + allowedDefinitions );
         
@@ -140,7 +139,7 @@ public abstract class NewNodeCommand<I> extends AbstractToolboxCommand<I> {
             int counter = 0;
             for ( final String allowedDefId : allowedDefinitions ) {
                 final ShapeFactory<?, ? ,?> factory = shapeManager.getFactory( allowedDefId );
-                final ShapeGlyph glyph = factory.getGlyphFactory( allowedDefId ).build( allowedDefId, 50, 50);
+                final ShapeGlyph glyph = factory.glyph( allowedDefId, 50, 50);
 
                 this.definitionIds[counter] = allowedDefId;
                 this.factories[counter] = factory;
@@ -168,7 +167,7 @@ public abstract class NewNodeCommand<I> extends AbstractToolboxCommand<I> {
 
         final ShapeFactory<?, ?, ?> factory = factories[ index ];
         final String id = definitionIds[index];
-        final ShapeGlyph glyph = factory.getGlyphFactory( id ).build ( id, 100, 100 );
+        final ShapeGlyph glyph = factory.glyph ( id, 100, 100 );
         final double px = x + PADDING + ICON_SIZE;
         // TODO: Avoid y value hardcoding - use canvas widget absolute top as relative?
         final double py = y - 75;
@@ -188,15 +187,11 @@ public abstract class NewNodeCommand<I> extends AbstractToolboxCommand<I> {
 
         // TODO
         
-        GWT.log("Click - [index=" + index + ", x=" + x + ", y=" + y + "]");
-        
     }
     
     void onItemMouseDown(final int index,
                         final int x,
                         final int y) {
-
-        GWT.log("MouseDown - [index=" + index + ", x=" + x + ", y=" + y + "]");
 
         final String defId = definitionIds[ index ];
         final ShapeFactory<?, ?, ?> factory = factories[ index ];
@@ -321,6 +316,35 @@ public abstract class NewNodeCommand<I> extends AbstractToolboxCommand<I> {
             }
         });
 
+    }
+
+    @Override
+    public void destroy() {
+      
+        this.definitionIds = null;
+        this.factories = null;
+        this.canvasHandler = null;
+        this.canvasHighlight = null;
+        this.sourceNode = null;
+
+        this.glyphTooltip.remove();
+        this.glyphMiniPalette.clear();
+        this.nodeDragProxyFactory.destroy();
+        this.nodeBuilderControl.disable();
+        this.graphBoundsIndexer.destroy();
+        this.canvasHighlight.destroy();
+        
+        this.clientFactoryServices = null;
+        this.commonLookups = null;
+        this.shapeManager = null;
+        this.glyphTooltip = null;
+        this.glyphMiniPalette = null;
+        this.nodeDragProxyFactory = null;
+        this.nodeBuilderControl = null;
+        this.graphBoundsIndexer = null;
+        this.selectionAnimation = null;
+        this.deSelectionAnimation = null;
+        
     }
 
     private void log(final Level level, final String message) {

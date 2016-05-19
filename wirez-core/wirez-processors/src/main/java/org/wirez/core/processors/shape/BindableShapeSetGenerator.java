@@ -36,7 +36,6 @@ public class BindableShapeSetGenerator extends AbstractBindableAdapterGenerator 
     public StringBuffer generate(String packageName, 
                                  String className,
                                  String defSetClassName,
-                                 String thumbProviderEntityClassName,
                                  Messager messager) throws GenerationException {
 
         Map<String, Object> root = new HashMap<String, Object>();
@@ -51,9 +50,6 @@ public class BindableShapeSetGenerator extends AbstractBindableAdapterGenerator 
                 AbstractBindableShapeSet.class.getName() );
         root.put("defSetClass",
                 defSetClassName );
-        root.put("thumbProviderEntity",
-                new ProcessingEntity( thumbProviderEntityClassName,
-                        MainProcessor.toClassMemberId( thumbProviderEntityClassName ) ) );
 
         //Generate code
         return writeTemplate(packageName, className, root, messager);

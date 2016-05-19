@@ -3,8 +3,8 @@ package org.wirez.backend.diagram;
 import org.wirez.backend.registry.SyncRegistry;
 import org.wirez.core.api.AbstractDiagramManager;
 import org.wirez.core.api.DiagramManager;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.registry.diagram.DiagramRegistry;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.registry.diagram.DiagramRegistry;
 import org.wirez.core.backend.annotation.Application;
 import org.wirez.core.backend.annotation.VFS;
 

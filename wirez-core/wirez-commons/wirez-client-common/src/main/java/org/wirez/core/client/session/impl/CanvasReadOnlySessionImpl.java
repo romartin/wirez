@@ -47,7 +47,7 @@ public class CanvasReadOnlySessionImpl extends AbstractCanvasSession
     }
 
     @Override
-    public void onDispose() {
+    public void doDispose() {
         
         if ( null != selectionControl ) {
             selectionControl.disable();
@@ -64,7 +64,6 @@ public class CanvasReadOnlySessionImpl extends AbstractCanvasSession
             panControl = null;
         }
 
-        super.onDispose();
-
     }
+    
 }

@@ -86,9 +86,10 @@ public class NewDiagramWizardScreen extends BaseWizardScreen implements CanvasWi
                 final String uuid = shapeSet.getId();
                 final String name = shapeSet.getName();
                 final String description = shapeSet.getDescription();
-                final SafeUri thumbnailUri = shapeSet.getThumbnailUri();
+                final String defSetId = shapeSet.getDefinitionSetId();
+                final SafeUri thumbUri = shapeManager.getThumbnail( defSetId );
                 
-                view.addItem(name, description, thumbnailUri, true,
+                view.addItem(name, description, thumbUri, true,
                         new Command() {
                             @Override
                             public void execute() {

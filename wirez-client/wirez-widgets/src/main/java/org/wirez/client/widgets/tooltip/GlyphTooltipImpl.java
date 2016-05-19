@@ -18,6 +18,7 @@ package org.wirez.client.widgets.tooltip;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.client.components.glyph.GlyphTooltip;
@@ -29,7 +30,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class GlyphTooltipImpl implements GlyphTooltip<Group> {
+public class GlyphTooltipImpl implements GlyphTooltip<Group>, IsWidget {
     
     public interface View extends UberView<GlyphTooltipImpl> {
         

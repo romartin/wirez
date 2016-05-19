@@ -13,6 +13,8 @@ public interface CanvasSessionPresenter<C extends Canvas, H extends CanvasHandle
         View setToolbar(IsWidget widget );
         
         View setCanvas(IsWidget widget );
+        
+        void destroy();
 
     }
     

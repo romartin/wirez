@@ -16,8 +16,8 @@
 
 package org.wirez.core.api;
 
-import org.wirez.core.api.definition.adapter.*;
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.adapter.*;
 
 import java.util.*;
 import java.util.logging.Logger;

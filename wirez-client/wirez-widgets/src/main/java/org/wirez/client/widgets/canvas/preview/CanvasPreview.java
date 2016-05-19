@@ -8,6 +8,8 @@ import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
 import org.wirez.core.client.canvas.event.CanvasDrawnEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasShapeAddedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -18,6 +20,7 @@ import java.util.logging.Logger;
 
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
+// TODO: Unused for now -> improve performance by creating some context2D layer proxy instead of generating the image data as currently it does.
 @Dependent
 public class CanvasPreview implements IsWidget {
 
@@ -71,6 +74,14 @@ public class CanvasPreview implements IsWidget {
         start( canvasClearEvent.getCanvas() );
     }
 
+    void onCanvasShapeAdded(@Observes CanvasShapeAddedEvent canvasShapeAddedEvent) {
+        start( canvasShapeAddedEvent.getCanvas() );
+    }
+
+    void onCanvasShapeRemoved(@Observes CanvasShapeRemovedEvent canvasShapeRemovedEvent) {
+        start( canvasShapeRemovedEvent.getCanvas() );
+    }
+    
     void onCanvasDrawn(@Observes CanvasDrawnEvent canvasDrawnEvent) {
         checkNotNull("canvasDrawnEvent", canvasDrawnEvent);
         start( canvasDrawnEvent.getCanvas() );

@@ -9,16 +9,15 @@ import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.command.ClearSelectionCommand;
 import org.wirez.client.widgets.session.toolbar.command.VisitGraphCommand;
-import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.diagram.Diagram;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.event.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.session.CanvasReadOnlySession;
-import org.wirez.core.client.session.impl.DefaultCanvasReadOnlySession;
 import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
 
 import javax.enterprise.event.Event;
@@ -65,10 +64,10 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
         super.doInitialize(session, width, height);
 
         // Enable canvas controls.
-        session.getShapeSelectionControl().enable( session.getCanvas() );
-        session.getZoomControl().enable( session.getCanvas() );
-        session.getPanControl().enable( session.getCanvas() );
-
+        enableControl( session.getShapeSelectionControl(), session.getCanvas() );
+        enableControl( session.getZoomControl(), session.getCanvas() );
+        enableControl( session.getPanControl(), session.getCanvas() );
+       
         // Toolbar read-only commands.
         setToolbarCommands();
         
@@ -165,6 +164,29 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
                 showError( error );
             }
         });
+    }
+
+    @Override
+    protected void disposeSession() {
+        
+        if ( null != toolbar ) {
+            this.toolbar.destroy();
+        }
+        
+        if ( null != clearSelectionCommand ) {
+            this.clearSelectionCommand.destroy();
+        }
+        
+        if ( null != visitGraphCommand ) {
+            this.visitGraphCommand.destroy();
+        }
+        
+        this.canvasSessionManager = null;
+        this.clientDiagramServices = null;
+        this.toolbar = null;
+        this.clearSelectionCommand = null;
+        this.visitGraphCommand = null;
+        
     }
 
     protected void fireProcessingStarted() {

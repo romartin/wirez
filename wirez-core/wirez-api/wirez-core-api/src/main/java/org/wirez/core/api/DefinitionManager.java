@@ -16,7 +16,7 @@
 
 package org.wirez.core.api;
 
-import org.wirez.core.api.definition.adapter.*;
+import org.wirez.core.definition.adapter.*;
 
 import java.util.Collection;
 
@@ -35,27 +35,27 @@ public interface DefinitionManager {
     /**
      * Returns the Definition Set adapter instance for the given pojo's class.
      */
-    <T> DefinitionSetAdapter<T> getDefinitionSetAdapter( Class<?> pojoClass );
+    <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(Class<?> pojoClass );
 
     /**
      * Returns the Definition Set rules adapter instance for the given pojo's class.
      */
-    <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter( Class<?> pojoClass );
+    <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(Class<?> pojoClass );
 
     /**
      * Returns the Definition adapter instance for the given pojo's class.
      */
-    <T> DefinitionAdapter<T> getDefinitionAdapter( Class<?> pojoClass );
+    <T> DefinitionAdapter<T> getDefinitionAdapter(Class<?> pojoClass );
 
     /**
      * Returns the Property Set adapter instance for the given pojo property set's class.
      */
-    <T> PropertySetAdapter<T> getPropertySetAdapter( Class<?> pojoClass );
+    <T> PropertySetAdapter<T> getPropertySetAdapter(Class<?> pojoClass );
 
     /**
      * Returns the Property adapter instance for the given pojo property's class.
      */    
-    <T> PropertyAdapter<T> getPropertyAdapter( Class<?> pojoClass );
+    <T> PropertyAdapter<T> getPropertyAdapter(Class<?> pojoClass );
     
     
 }

@@ -1,13 +1,13 @@
 package org.wirez.core.client.canvas.command;
 
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.CommandResultBuilder;
-import org.wirez.core.api.command.CommandUtils;
-import org.wirez.core.api.command.stack.AbstractStackCommandManager;
-import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
-import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.command.Command;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.command.CommandResultBuilder;
+import org.wirez.core.command.CommandUtils;
+import org.wirez.core.command.stack.AbstractStackCommandManager;
+import org.wirez.core.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.rule.RuleViolation;
 
 import javax.inject.Inject;
 
@@ -25,28 +25,27 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
     protected CommandResult<CanvasViolation> doAllow(final H context,
                                                      final Command<H, CanvasViolation> command) {
 
-        Command<GraphCommandExecutionContext, RuleViolation> graphCommand = null;
-        CommandResult<RuleViolation> graphResult = null;
+        CommandResult<CanvasViolation> result = null;
+        
         if (command instanceof HasGraphCommand) {
 
-            graphCommand = ((HasGraphCommand<H>) command).getGraphCommand(context);
+            final Command<GraphCommandExecutionContext, RuleViolation> graphCommand = 
+                    ((HasGraphCommand<H>) command).getGraphCommand(context);
 
             final GraphCommandExecutionContext graphContext = getGraphCommandExecutionContext(context);
-            graphResult = doGraphCommandAllow(graphContext, graphCommand);
+            final CommandResult<RuleViolation> graphResult = doGraphCommandAllow(graphContext, graphCommand);
 
-            if (null != graphCommand && null != graphResult) {
-                afterGraphCommandAllow(graphCommand, graphResult);
-            }
-
-            return new CanvasCommandResultBuilder(graphResult).build();
+            result = new CanvasCommandResultBuilder(graphResult).build();
 
         }
 
-        final CommandResult<CanvasViolation> result = super.doAllow(context, command);
-
-        if (null != graphCommand && null != graphResult) {
-            afterGraphCommandAllow(graphCommand, graphResult);
+        if ( null == result ) {
+            
+            result = super.doAllow(context, command);
+            
         }
+
+        afterCommandAllow( context, command, result );
 
         return result;
 
@@ -57,8 +56,9 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
         return graphCommand.allow(graphContext);
     }
 
-    protected void afterGraphCommandAllow(final Command<GraphCommandExecutionContext, RuleViolation> graphCommand,
-                                          final CommandResult<RuleViolation> result) {
+    protected void afterCommandAllow(final H context,
+                                     final Command<H, CanvasViolation> command,
+                                     final CommandResult<CanvasViolation> result) {
     }
 
 
@@ -67,30 +67,32 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
     protected CommandResult<CanvasViolation> doExecute(final H context,
                                                        final Command<H, CanvasViolation> command) {
 
-        Command<GraphCommandExecutionContext, RuleViolation> graphCommand = null;
-        CommandResult<RuleViolation> graphResult = null;
+        CommandResult<CanvasViolation> result = null;
+        
         if (command instanceof HasGraphCommand) {
 
             // Obtain the command to execute for the graph.
-            graphCommand = ((HasGraphCommand<H>) command).getGraphCommand(context);
+            final Command<GraphCommandExecutionContext, RuleViolation> graphCommand = 
+                    ((HasGraphCommand<H>) command).getGraphCommand(context);
 
             GraphCommandExecutionContext graphContext = getGraphCommandExecutionContext(context);
-            graphResult = doGraphCommandExecute(graphContext, graphCommand);
+            final CommandResult<RuleViolation> graphResult = doGraphCommandExecute(graphContext, graphCommand);
 
             // If there is an error, do not execute operations on the canvas.
             if (CommandUtils.isError(graphResult)) {
-                afterGraphCommandExecuted(graphCommand, graphResult);
-                return new CanvasCommandResultBuilder(graphResult).build();
+                result = new CanvasCommandResultBuilder(graphResult).build();
             }
 
         }
 
-        final CommandResult<CanvasViolation> result = super.doExecute(context, command);
+        if ( null == result ) {
 
-        if (null != graphCommand && null != graphResult) {
-            afterGraphCommandExecuted(graphCommand, graphResult);
+            result = super.doExecute(context, command);
+            
         }
 
+        afterCommandExecuted( context, command, result );
+        
         return result;
     }
 
@@ -99,8 +101,9 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
         return graphCommand.execute(graphContext);
     }
 
-    protected void afterGraphCommandExecuted(final Command<GraphCommandExecutionContext, RuleViolation> graphCommand,
-                                             final CommandResult<RuleViolation> result) {
+    protected void afterCommandExecuted(final H context,
+                                        final Command<H, CanvasViolation> command,
+                                        final CommandResult<CanvasViolation> result) {
     }
 
     @Override
@@ -111,34 +114,34 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected CommandResult<CanvasViolation> doUndo(final H context, 
                                                     final Command<H, CanvasViolation> command) {
-
-        Command<GraphCommandExecutionContext, RuleViolation> graphCommand = null;
-        CommandResult<RuleViolation> graphCommandResult = null;
-
+        
+        CommandResult<CanvasViolation> result = null;
+        
         if (null != command && (command instanceof HasGraphCommand)) {
 
-            graphCommand = ((HasGraphCommand<H>) command).getGraphCommand(context);
+            final Command<GraphCommandExecutionContext, RuleViolation> graphCommand = 
+                    ((HasGraphCommand<H>) command).getGraphCommand(context);
 
             final GraphCommandExecutionContext graphContext = getGraphCommandExecutionContext(context);
-            graphCommandResult = doGraphCommandUndo(graphContext, graphCommand);
+            final CommandResult<RuleViolation> graphCommandResult = doGraphCommandUndo(graphContext, graphCommand);
 
             // If there is an error, do not execute operations on the canvas.
             if (CommandUtils.isError(graphCommandResult)) {
-                // Return the errors.
-                afterGraphUndoCommandExecuted(graphCommand, graphCommandResult);
-                return new CanvasCommandResultBuilder(graphCommandResult).build();
+                result = new CanvasCommandResultBuilder(graphCommandResult).build();
             }
 
         }
 
+        if ( null == result ) {
 
-        final CommandResult<CanvasViolation> result = super.doUndo(context, command);
+            result = super.doUndo(context, command);
 
-        if (null != graphCommand && null != graphCommandResult) {
-            afterGraphUndoCommandExecuted(graphCommand, graphCommandResult);
         }
+
+        afterUndoCommandExecuted( context, command, result );
 
         return result;
     }
@@ -148,8 +151,9 @@ public abstract class AbstractCanvasCommandManager<H extends CanvasHandler> exte
         return graphCommand.undo(graphContext);
     }
 
-    protected void afterGraphUndoCommandExecuted(final Command<GraphCommandExecutionContext, RuleViolation> graphCommand,
-                                                 final CommandResult<RuleViolation> result) {
+    protected void afterUndoCommandExecuted(final H context,
+                                            final Command<H, CanvasViolation> command,
+                                            final CommandResult<CanvasViolation> result) {
     }
 
     @Override

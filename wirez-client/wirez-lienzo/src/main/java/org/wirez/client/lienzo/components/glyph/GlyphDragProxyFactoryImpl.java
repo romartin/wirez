@@ -22,20 +22,32 @@ public class GlyphDragProxyFactoryImpl implements GlyphDragProxyFactory<Abstract
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DragProxyFactory<AbstractCanvas, ShapeGlyph, DragProxyCallback> proxyFor(final AbstractCanvas context) {
         final LienzoLayer layer = (LienzoLayer) context.getLayer();
         this.primitiveDragProxyFactory.proxyFor( layer.getLienzoLayer() );
+        
         return this;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DragProxyFactory<AbstractCanvas, ShapeGlyph, DragProxyCallback> newInstance(final ShapeGlyph item,
                                                                                final int x,
                                                                                final int y,
                                                                                final DragProxyCallback callback) {
         
         primitiveDragProxyFactory.newInstance( item.getGroup(), x, y, callback);
+        
         return this;
+    }
+
+    @Override
+    public void destroy() {
+        
+        this.primitiveDragProxyFactory.destroy();
+        this.primitiveDragProxyFactory = null;
+        
     }
 
 }

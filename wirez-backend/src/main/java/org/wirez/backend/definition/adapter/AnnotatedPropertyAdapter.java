@@ -2,11 +2,12 @@ package org.wirez.backend.definition.adapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wirez.core.api.definition.adapter.PropertyAdapter;
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
-import org.wirez.core.api.definition.annotation.property.NameProperty;
-import org.wirez.core.api.definition.annotation.property.Property;
-import org.wirez.core.api.definition.property.PropertyType;
+import org.wirez.core.definition.adapter.PropertyAdapter;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.annotation.Description;
+import org.wirez.core.definition.annotation.property.NameProperty;
+import org.wirez.core.definition.annotation.property.*;
+import org.wirez.core.definition.property.PropertyType;
 
 import javax.enterprise.context.Dependent;
 import java.lang.reflect.Field;
@@ -24,7 +25,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
     @Override
     public PropertyType getType(T property) {
         try {
-            return getAnnotatedFieldValue( property, org.wirez.core.api.definition.annotation.property.Type.class );
+            return getAnnotatedFieldValue( property, Type.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated category for Property with id " + getId( property ));
         }
@@ -35,7 +36,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
     @Override
     public String getCaption(T property) {
         try {
-            return getAnnotatedFieldValue( property, org.wirez.core.api.definition.annotation.property.Caption.class );
+            return getAnnotatedFieldValue( property, Caption.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated category for Property with id " + getId( property ));
         }
@@ -46,7 +47,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
     @Override
     public String getDescription(T property) {
         try {
-            return getAnnotatedFieldValue( property, org.wirez.core.api.definition.annotation.Description.class );
+            return getAnnotatedFieldValue( property, Description.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated category for Property with id " + getId( property ));
         }
@@ -57,7 +58,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
     @Override
     public boolean isReadOnly(T property) {
         try {
-            return getAnnotatedFieldValue( property, org.wirez.core.api.definition.annotation.property.ReadOnly.class );
+            return getAnnotatedFieldValue( property, ReadOnly.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated category for Property with id " + getId( property ));
         }
@@ -68,7 +69,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
     @Override
     public boolean isOptional(T property) {
         try {
-            return getAnnotatedFieldValue( property, org.wirez.core.api.definition.annotation.property.Optional.class );
+            return getAnnotatedFieldValue( property, Optional.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated category for Property with id " + getId( property ));
         }
@@ -85,7 +86,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
             Field[] fields = property.getClass().getDeclaredFields();
             if ( null != fields ) {
                 for (Field field : fields) {
-                    org.wirez.core.api.definition.annotation.property.Value annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.property.Value.class);
+                    Value annotation = field.getAnnotation(Value.class);
                     if ( null != annotation ) {
                         try {
                             return _getValue( field, annotation, property );
@@ -110,7 +111,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
             Field[] fields = property.getClass().getDeclaredFields();
             if ( null != fields ) {
                 for (Field field : fields) {
-                    org.wirez.core.api.definition.annotation.property.DefaultValue annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.property.DefaultValue.class);
+                    DefaultValue annotation = field.getAnnotation(DefaultValue.class);
                     if ( null != annotation ) {
                         try {
                             return _getValue( field, annotation, property );
@@ -143,7 +144,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
             Field[] fields = property.getClass().getDeclaredFields();
             if ( null != fields ) {
                 for (Field field : fields) {
-                    org.wirez.core.api.definition.annotation.property.Value annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.property.Value.class);
+                    Value annotation = field.getAnnotation(Value.class);
                     if ( null != annotation) {
                         try {
                             field.setAccessible(true);

@@ -26,8 +26,8 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.session.presenter.impl.DefaultFullSessionPresenter;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.util.UUID;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.util.UUID;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
 
@@ -161,9 +161,9 @@ public class CanvasScreen {
 
     private void disposeSession() {
         canvasSessionManager.dispose();
+        this.testingMenus.destroy();
+        this.session = null;
     }
-
-    
 
     @WorkbenchPartTitle
     public String getTitle() {

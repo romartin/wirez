@@ -11,7 +11,7 @@ public class ProcessingDefinitionSetAnnotations {
     private final Set<String> definitionIds = new HashSet<>();
     private final Map<String, String> graphTypes = new HashMap<>();
     private final Map<String, String> graphFactories = new HashMap<>();
-    private final Map<String, String> shapeSetThunb = new HashMap<>();
+    private boolean hasShapeSet = false;
 
     public Map<String, String> getDescriptionFieldNames() {
         return descriptionFieldNames;
@@ -29,7 +29,11 @@ public class ProcessingDefinitionSetAnnotations {
         return graphFactories;
     }
 
-    public Map<String, String> getShapeSetThunb() {
-        return shapeSetThunb;
+    public boolean hasShapeSet() {
+        return hasShapeSet;
+    }
+
+    public void setHasShapeSet(boolean hasShapeSet) {
+        this.hasShapeSet = hasShapeSet;
     }
 }

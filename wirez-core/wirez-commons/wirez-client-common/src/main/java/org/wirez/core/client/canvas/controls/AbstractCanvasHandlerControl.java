@@ -6,6 +6,8 @@ public abstract class AbstractCanvasHandlerControl implements CanvasControl<Abst
 
     protected AbstractCanvasHandler canvasHandler;
 
+    protected abstract void doDisable();
+    
     @Override
     public void enable(final AbstractCanvasHandler canvasHandler) {
         this.canvasHandler = canvasHandler;
@@ -13,6 +15,8 @@ public abstract class AbstractCanvasHandlerControl implements CanvasControl<Abst
 
     @Override
     public void disable() {
+        doDisable();
+        
         this.canvasHandler = null;
     }
     

@@ -1,9 +1,9 @@
 package org.wirez.core.client.canvas.command;
 
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.CommandResultBuilder;
-import org.wirez.core.api.command.CommandResultImpl;
-import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.command.CommandResultBuilder;
+import org.wirez.core.command.CommandResultImpl;
+import org.wirez.core.rule.RuleViolation;
 
 import java.util.Collection;
 import java.util.Iterator;

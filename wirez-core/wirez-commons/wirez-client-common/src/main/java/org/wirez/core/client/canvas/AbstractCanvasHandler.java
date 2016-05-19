@@ -17,27 +17,14 @@
 package org.wirez.core.client.canvas;
 
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.definition.adapter.DefinitionSetRuleAdapter;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.relationship.Child;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
-import org.wirez.core.api.graph.processing.index.Index;
-import org.wirez.core.api.graph.processing.index.IndexBuilder;
-import org.wirez.core.api.graph.processing.traverse.tree.AbstractTreeTraverseCallback;
-import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
-import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.Rule;
-import org.wirez.core.api.rule.graph.GraphRulesManager;
-import org.wirez.core.api.util.UUID;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.canvas.event.*;
+import org.wirez.core.client.canvas.event.processing.CanvasInitializationCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
@@ -50,6 +37,24 @@ import org.wirez.core.client.shape.view.ShapeView;
 import org.wirez.core.client.shape.view.animation.AnimationTweener;
 import org.wirez.core.client.shape.view.animation.HasAnimations;
 import org.wirez.core.client.util.ShapeUtils;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.definition.adapter.DefinitionSetRuleAdapter;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Graph;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.relationship.Child;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.processing.index.IncrementalIndexBuilder;
+import org.wirez.core.graph.processing.index.Index;
+import org.wirez.core.graph.processing.index.IndexBuilder;
+import org.wirez.core.graph.processing.traverse.tree.AbstractTreeTraverseCallback;
+import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
+import org.wirez.core.graph.util.GraphUtils;
+import org.wirez.core.rule.Rule;
+import org.wirez.core.rule.graph.GraphRulesManager;
+import org.wirez.core.util.UUID;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -432,14 +437,23 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         canvas.draw();
     }
     
-    public void clear() {
-        canvas.clear();
-        diagram = null;
-        graphIndex = null;
+    @Override
+    public void destroy() {
+        canvas.destroy();
+        graphIndex.clear();
+
         canvas = null;
+        graphIndex = null;
+        diagram = null;
+        clientDefinitionManager = null;
+        clientFactoryServices = null;
+        rulesManager = null;
+        graphUtils = null;
+        indexBuilder = null;
+        treeWalkTraverseProcessor = null;
+        shapeManager = null;
     }
-    
-  
+
     protected void afterElementAdded(final Element element, final Shape shape) {
         
         // Fire a canvas element added event. 
@@ -535,7 +549,12 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         return uuid.equals(that.uuid);
 
     }
-    
+
+    @Override
+    public String toString() {
+        return "CanvasHander [" + uuid + "]";
+    }
+
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

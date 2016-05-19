@@ -1,12 +1,12 @@
 package org.wirez.backend.diagram.lookup;
 
 import org.wirez.core.api.DiagramManager;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.lookup.AbstractLookupManager;
-import org.wirez.core.api.lookup.diagram.DiagramLookupManager;
-import org.wirez.core.api.lookup.diagram.DiagramLookupRequest;
-import org.wirez.core.api.lookup.diagram.DiagramRepresentation;
-import org.wirez.core.api.lookup.diagram.DiagramRepresentationImpl;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.lookup.AbstractLookupManager;
+import org.wirez.core.lookup.diagram.DiagramLookupManager;
+import org.wirez.core.lookup.diagram.DiagramLookupRequest;
+import org.wirez.core.lookup.diagram.DiagramRepresentation;
+import org.wirez.core.lookup.diagram.DiagramRepresentationImpl;
 import org.wirez.core.backend.annotation.Application;
 
 import javax.enterprise.context.ApplicationScoped;

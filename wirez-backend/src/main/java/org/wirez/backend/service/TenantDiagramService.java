@@ -2,14 +2,15 @@ package org.wirez.backend.service;
 
 import org.jboss.errai.bus.server.annotations.Service;
 import org.wirez.core.api.DiagramManager;
-import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.diagram.Diagram;
 import org.wirez.core.backend.annotation.Tenant;
+import org.wirez.core.remote.DiagramService;
 
 import javax.inject.Inject;
 import java.util.Collection;
 
 @Service
-public class TenantDiagramService implements org.wirez.core.api.remote.DiagramService {
+public class TenantDiagramService implements DiagramService {
     
     DiagramManager<Diagram> tenantDiagramManager;
 

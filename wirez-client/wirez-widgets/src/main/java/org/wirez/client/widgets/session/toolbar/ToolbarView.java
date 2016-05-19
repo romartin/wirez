@@ -70,4 +70,9 @@ public class ToolbarView extends Composite implements Toolbar.View {
         return this;
     }
 
+    @Override
+    public void destroy() {
+        this.removeFromParent();
+    }
+
 }

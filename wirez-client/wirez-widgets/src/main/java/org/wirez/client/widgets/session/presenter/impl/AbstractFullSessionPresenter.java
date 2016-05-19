@@ -9,25 +9,23 @@ import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.command.*;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.Settings;
-import org.wirez.core.api.diagram.SettingsImpl;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.util.UUID;
-import org.wirez.core.api.util.WirezLogger;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.Settings;
+import org.wirez.core.diagram.SettingsImpl;
+import org.wirez.core.graph.Graph;
+import org.wirez.core.util.UUID;
+import org.wirez.core.util.WirezLogger;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.event.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.session.CanvasFullSession;
-import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
-import org.wirez.core.client.session.impl.DefaultCanvasReadOnlySession;
 import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
 
 import javax.enterprise.event.Event;
@@ -85,15 +83,15 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
 
         // Enable canvas controls.
         final AbstractCanvasHandler canvasHandler = getCanvasHandler();
-        session.getConnectionAcceptorControl().enable( canvasHandler );
-        session.getContainmentAcceptorControl().enable( canvasHandler );
-        // TODO: session.getDockingAcceptorControl().enable( canvasHandler );
-        session.getDragControl().enable( canvasHandler );
-        session.getToolboxControl().enable( canvasHandler );
-        session.getBuilderControl().enable( canvasHandler );
+        enableControl( session.getConnectionAcceptorControl(), canvasHandler );
+        enableControl( session.getContainmentAcceptorControl(), canvasHandler );
+        // TODO: enableControl( session.getDockingAcceptorControl(), canvasHandler );
+        enableControl( session.getDragControl(), canvasHandler );
+        enableControl( session.getToolboxControl(), canvasHandler );
+        enableControl( session.getBuilderControl(), canvasHandler );
         
     }
-
+    
     @Override
     protected void setToolbarCommands() {
         super.setToolbarCommands();
@@ -170,7 +168,41 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         deleteSelectionCommand.execute();
 
     }
-    
+
+    @Override
+    protected void disposeSession() {
+        super.disposeSession();
+      
+        if ( null != clearCommand ) {
+            this.clearCommand.destroy();
+        }
+
+        if ( null != deleteSelectionCommand ) {
+            this.deleteSelectionCommand.destroy();
+        }
+
+        if ( null != saveCommand ) {
+            this.saveCommand.destroy();
+        }
+
+        if ( null != undoCommand ) {
+            this.undoCommand.destroy();
+        }
+        
+        this.clientDefinitionManager = null;
+        this.clientFactoryServices = null;
+        this.commandFactory = null;
+        this.clearCommand = null;
+        this.deleteSelectionCommand = null;
+        this.saveCommand = null;
+        this.undoCommand = null;
+        
+    }
+
+    @Override
+    protected void pauseSession() {
+    }
+
     /*
         PUBLIC UTILITY METHODS FOR CODING & TESTING
      */

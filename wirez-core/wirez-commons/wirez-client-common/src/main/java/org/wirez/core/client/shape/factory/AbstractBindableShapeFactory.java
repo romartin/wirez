@@ -1,6 +1,6 @@
 package org.wirez.core.client.shape.factory;
 
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
@@ -10,24 +10,15 @@ public abstract class AbstractBindableShapeFactory<W, S extends Shape> extends A
 
     public abstract Set<Class<?>> getSupportedModelClasses();
 
-    protected abstract ShapeGlyphFactory getGlyphFactory(Class<?> clazz );
-
     protected abstract String getDescription( Class<?> clazz );
 
-    protected abstract ShapeGlyph build(Class<?> clazz );
-
-    protected abstract ShapeGlyph build( Class<?> clazz, double width, double height );
+    protected abstract ShapeGlyph glyph( Class<?> clazz, double width, double height );
 
     @Override
-    public ShapeGlyph build( final String definitionId ) {
-        return build( getDefinitionClass( definitionId ) );
-    }
-
-    @Override
-    public ShapeGlyph build( final String definitionId,
+    public ShapeGlyph glyph( final String definitionId,
                              final double width,
                              final double height) {
-        return build( getDefinitionClass( definitionId ) , width, height );
+        return glyph( getDefinitionClass( definitionId ) , width, height );
     }
     
     @Override
@@ -42,12 +33,6 @@ public abstract class AbstractBindableShapeFactory<W, S extends Shape> extends A
             }
         }
         return false;
-    }
-
-    @Override
-    public ShapeGlyphFactory getGlyphFactory( final String definitionId ) {
-        final Class<?> clazz = getDefinitionClass( definitionId );
-        return getGlyphFactory( clazz );
     }
 
     @Override

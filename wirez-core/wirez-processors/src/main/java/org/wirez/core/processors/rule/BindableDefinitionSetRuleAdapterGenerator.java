@@ -17,7 +17,7 @@
 package org.wirez.core.processors.rule;
 
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.api.definition.adapter.binding.BindableDefinitionSetRuleAdapter;
+import org.wirez.core.definition.adapter.binding.BindableDefinitionSetRuleAdapter;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
 import org.wirez.core.processors.ProcessingRule;
 

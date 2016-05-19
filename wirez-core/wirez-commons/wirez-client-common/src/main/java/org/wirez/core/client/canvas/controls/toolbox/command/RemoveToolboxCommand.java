@@ -1,8 +1,8 @@
 package org.wirez.core.client.canvas.controls.toolbox.command;
 
 import com.google.gwt.user.client.Window;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
@@ -44,6 +44,12 @@ public abstract class RemoveToolboxCommand<I> extends AbstractToolboxCommand<I> 
             canvasCommandManager.execute( context.getCanvasHandler(), commandFactory.DELETE_NODE((Node) element) );
         }
         
+    }
+
+    @Override
+    public void destroy() {
+        this.commandFactory = null;
+        this.canvasCommandManager = null;
     }
     
 }

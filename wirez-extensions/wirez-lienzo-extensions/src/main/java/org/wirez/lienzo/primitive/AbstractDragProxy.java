@@ -67,6 +67,7 @@ public abstract class AbstractDragProxy<T> {
                         final int initialY, 
                         final int timeout, 
                         final Callback callback ) {
+        
         final HandlerRegistration[] handlerRegs = new HandlerRegistration[ 2 ];
 
         handlerRegs[ 0 ] = RootPanel.get().addDomHandler(new MouseMoveHandler() {
@@ -125,14 +126,28 @@ public abstract class AbstractDragProxy<T> {
                     removeFromLayer( layer, copy );
                     
                     callback.onComplete( x, y );
+
+                    AbstractDragProxy.this.destroy();
                     
                 }
-                
                 
             }
             
         }, MouseUpEvent.getType() );
+        
     }
-    
+
+    public void destroy() {
+
+        if ( null != this.timer && this.timer.isRunning()  ) {
+            this.timer.cancel();
+        }
+
+        this.timer = null;
+        this.attached = false;
+        this.xDiff = null;
+        this.yDiff = null;
+        
+    }
     
 }

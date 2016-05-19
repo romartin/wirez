@@ -6,4 +6,6 @@ public interface DragProxyFactory<C, I, K> {
 
     DragProxyFactory<C, I, K> newInstance(I item, int x, int y, K callback);
     
+    void destroy();
+    
 }

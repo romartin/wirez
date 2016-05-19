@@ -1,15 +1,15 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
-import org.wirez.core.api.graph.processing.index.bounds.GraphBoundsIndexer;
-import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.model.ModelCardinalityRuleManager;
-import org.wirez.core.api.rule.model.ModelContainmentRuleManager;
+import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
+import org.wirez.core.graph.util.GraphUtils;
+import org.wirez.core.rule.model.ModelCardinalityRuleManager;
+import org.wirez.core.rule.model.ModelContainmentRuleManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.event.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.service.ClientFactoryServices;
 
 import javax.enterprise.context.Dependent;

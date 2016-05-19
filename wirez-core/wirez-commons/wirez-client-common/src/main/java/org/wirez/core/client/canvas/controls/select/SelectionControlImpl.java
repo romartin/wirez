@@ -12,7 +12,7 @@ import org.wirez.core.client.canvas.controls.event.ClearSelectionEvent;
 import org.wirez.core.client.canvas.controls.event.DeselectShapeEvent;
 import org.wirez.core.client.canvas.controls.event.SelectShapeEvent;
 import org.wirez.core.client.canvas.controls.event.SelectSingleShapeEvent;
-import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
 import org.wirez.core.client.canvas.event.ShapeStateModifiedEvent;
 import org.wirez.core.client.shape.EdgeShape;
 import org.wirez.core.client.shape.Shape;
@@ -81,7 +81,9 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
 
             final HasEventHandlers hasEventHandlers = (HasEventHandlers) shapeView;
 
-            hasEventHandlers.addHandler(ViewEventType.MOUSE_CLICK, new MouseClickHandler() {
+            
+            final MouseClickHandler clickHandler = new MouseClickHandler() {
+                
                 @Override
                 public void handle(final MouseClickEvent event) {
                     final boolean isSelected = isSelected(shape);
@@ -98,36 +100,53 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
                         select(shape);
                     }
                 }
-            });
+                
+            };
+            
+            hasEventHandlers.addHandler( ViewEventType.MOUSE_CLICK, clickHandler );
 
+            registerHandler( shape.getUUID(), clickHandler );
         }
         
     }
 
     @Override
     public void deregister(final Shape shape) {
-        // TODO: Remove registered handlers.
+        super.deregister( shape );
+
+        if ( selectedShapes.contains( shape ) ) {
+            selectedShapes.remove( shape );
+        }
     }
 
     @Override
-    public void disable() {
-        this.clearSelection();
-        // TODO: Remove registered handlers.
+    protected void doDisable() {
+        
+        super.doDisable();
+        this.selectedShapes.clear();
+        
     }
 
+
     protected void updateViewShapesState() {
-        final List<Shape> shapes = canvas.getShapes();
-        for (final Shape shape : shapes) {
-            final boolean isSelected = !selectedShapes.isEmpty() && selectedShapes.contains(shape);
-            if (isSelected) {
-                selectShape(shape);
-            } else {
-                deselectShape(shape);
+        
+        if ( null != canvas ) {
+
+            final List<Shape> shapes = canvas.getShapes();
+            for (final Shape shape : shapes) {
+                final boolean isSelected = !selectedShapes.isEmpty() && selectedShapes.contains(shape);
+                if (isSelected) {
+                    selectShape(shape);
+                } else {
+                    deselectShape(shape);
+                }
             }
+
+            // Batch a draw operation.
+            canvas.draw();
+
         }
         
-        // Batch a draw operation.
-        canvas.draw();
     }
 
     protected void selectShape(final Shape shape) {
@@ -212,8 +231,12 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
         }
         selectedShapes.clear();
         
-        // Force batch re-draw.
-        canvas.draw();
+        if ( null != canvas ) {
+
+            // Force batch re-draw.
+            canvas.draw();
+            
+        }
         
         // Fire the event.
         fireNoShapeSelected();
@@ -224,7 +247,7 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
     void onShapeRemovedEvent(@Observes CanvasShapeRemovedEvent shapeRemovedEvent) {
         checkNotNull("shapeRemovedEvent", shapeRemovedEvent);
 
-        if ( canvas.equals( shapeRemovedEvent.getCanvas() ) ) {
+        if ( null != canvas && canvas.equals( shapeRemovedEvent.getCanvas() ) ) {
             final Shape<?> shape = shapeRemovedEvent.getShape();
             
             if ( selectedShapes.contains( shape ) ) {
@@ -238,7 +261,7 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
     void onSingleShapeSelectedEvent(@Observes SelectSingleShapeEvent selectShapeEvent) {
         checkNotNull("selectShapeEvent", selectShapeEvent);
         
-        if ( canvas.equals( selectShapeEvent.getCanvas() )) {
+        if ( null != canvas && canvas.equals( selectShapeEvent.getCanvas() )) {
             this.clearSelection();
             this.select( selectShapeEvent.getShape() );
         }
@@ -248,7 +271,7 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
     void onShapeSelectedEvent(@Observes SelectShapeEvent selectShapeEvent) {
         checkNotNull("selectShapeEvent", selectShapeEvent);
 
-        if ( canvas.equals( selectShapeEvent.getCanvas() )) {
+        if ( null != canvas && canvas.equals( selectShapeEvent.getCanvas() )) {
             this.select( selectShapeEvent.getShape() );
         }
 
@@ -257,7 +280,7 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
     void onShapeDeselectedEvent(@Observes DeselectShapeEvent deselectShapeEvent) {
         checkNotNull("deselectShapeEvent", deselectShapeEvent);
 
-        if ( canvas.equals( deselectShapeEvent.getCanvas() )) {
+        if ( null != canvas && canvas.equals( deselectShapeEvent.getCanvas() )) {
             this.deselect( deselectShapeEvent.getShape() );
         }
 
@@ -266,7 +289,7 @@ public final class SelectionControlImpl extends AbstractCanvasRegistrationContro
     void onClearSelectionEvent(@Observes ClearSelectionEvent clearSelectionEvent) {
         checkNotNull("clearSelectionEvent", clearSelectionEvent);
 
-        if ( canvas.equals( clearSelectionEvent.getCanvas() )) {
+        if ( null != canvas && canvas.equals( clearSelectionEvent.getCanvas() )) {
             this.clearSelection();
         }
 

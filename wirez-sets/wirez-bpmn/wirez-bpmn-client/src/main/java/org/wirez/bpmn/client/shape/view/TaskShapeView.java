@@ -7,7 +7,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.bpmn.client.shape.TaskShape;
-import org.wirez.client.shapes.view.RectangleView;
+import org.wirez.shapes.client.view.RectangleView;
 
 public class TaskShapeView extends RectangleView<TaskShapeView> implements TaskShape.TaskView<TaskShapeView> {
 
@@ -15,6 +15,14 @@ public class TaskShapeView extends RectangleView<TaskShapeView> implements TaskS
     
     public TaskShapeView(final double width, final double height, final WiresManager manager) {
         super(width, height, manager);
+    }
+
+    @Override
+    protected void doDestroy() {
+        super.doDestroy();
+        
+        taskTypeIcon.removeFromParent();
+        taskTypeIcon = null;
     }
 
     @Override

@@ -22,9 +22,10 @@
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.wirez.core.WirezCommon"/>
 	<inherits name="org.wirez.core.WirezClientCommon"/>
-	<inherits name="org.wirez.client.WirezShapesApi"/>
-	
-	<source path="api"/>
-	<source path="client"/>
+	<inherits name="org.wirez.shapes.WirezShapesApi"/>
 
+	<source path="definition"/>
+	<source path="shape/proxy"/>
+	<source path="" includes="BPMNDefinitionSet.java"/>
+	
 </module>

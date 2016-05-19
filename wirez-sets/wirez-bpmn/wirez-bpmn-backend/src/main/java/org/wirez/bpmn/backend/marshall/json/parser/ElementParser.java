@@ -3,12 +3,12 @@ package org.wirez.bpmn.backend.marshall.json.parser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.IntegerFieldParser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.ObjectParser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.StringFieldParser;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.definition.adapter.PropertyAdapter;
-import org.wirez.core.api.definition.property.PropertyType;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.view.Bounds;
-import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.definition.adapter.PropertyAdapter;
+import org.wirez.core.definition.property.PropertyType;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.content.view.Bounds;
+import org.wirez.core.graph.content.view.View;
 
 import java.util.Set;
 

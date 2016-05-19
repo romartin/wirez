@@ -19,13 +19,12 @@ package org.wirez.core.processors;
 import org.apache.commons.lang3.StringUtils;
 import org.uberfire.annotations.processors.AbstractErrorAbsorbingProcessor;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
-import org.wirez.core.api.definition.annotation.definition.Definition;
-import org.wirez.core.api.definition.annotation.definitionset.DefinitionSet;
-import org.wirez.core.api.definition.annotation.property.NameProperty;
-import org.wirez.core.client.annotation.Shape;
-import org.wirez.core.client.annotation.ShapeSet;
-import org.wirez.core.client.util.SafeUriProvider;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.annotation.definition.Definition;
+import org.wirez.core.definition.annotation.definitionset.DefinitionSet;
+import org.wirez.core.definition.annotation.property.NameProperty;
+import org.wirez.core.definition.annotation.Shape;
+import org.wirez.core.definition.annotation.ShapeSet;
 import org.wirez.core.processors.definition.BindableDefinitionAdapterGenerator;
 import org.wirez.core.processors.definitionset.BindableDefinitionSetAdapterGenerator;
 import org.wirez.core.processors.definitionset.DefinitionSetProxyGenerator;
@@ -62,37 +61,37 @@ import java.util.*;
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
-    public static final String ANNOTATION_DESCRIPTION = "org.wirez.core.api.definition.annotation.Description";
-    public static final String ANNOTATION_NAME = "org.wirez.core.api.definition.annotation.Name";
+    public static final String ANNOTATION_DESCRIPTION = "org.wirez.core.definition.annotation.Description";
+    public static final String ANNOTATION_NAME = "org.wirez.core.definition.annotation.Name";
 
-    public static final String ANNOTATION_DEFINITION_SET = "org.wirez.core.api.definition.annotation.definitionset.DefinitionSet";
+    public static final String ANNOTATION_DEFINITION_SET = "org.wirez.core.definition.annotation.definitionset.DefinitionSet";
 
-    public static final String ANNOTATION_DEFINITION = "org.wirez.core.api.definition.annotation.definition.Definition";
-    public static final String ANNOTATION_DEFINITION_CATEGORY = "org.wirez.core.api.definition.annotation.definition.Category";
-    public static final String ANNOTATION_DEFINITION_LABELS = "org.wirez.core.api.definition.annotation.definition.Labels";
-    public static final String ANNOTATION_DEFINITION_PROPERTY = "org.wirez.core.api.definition.annotation.definition.Property";
-    public static final String ANNOTATION_DEFINITION_PROPERTYSET = "org.wirez.core.api.definition.annotation.definition.PropertySet";
-    public static final String ANNOTATION_DEFINITION_TITLE = "org.wirez.core.api.definition.annotation.definition.Title";
+    public static final String ANNOTATION_DEFINITION = "org.wirez.core.definition.annotation.definition.Definition";
+    public static final String ANNOTATION_DEFINITION_CATEGORY = "org.wirez.core.definition.annotation.definition.Category";
+    public static final String ANNOTATION_DEFINITION_LABELS = "org.wirez.core.definition.annotation.definition.Labels";
+    public static final String ANNOTATION_DEFINITION_PROPERTY = "org.wirez.core.definition.annotation.definition.Property";
+    public static final String ANNOTATION_DEFINITION_PROPERTYSET = "org.wirez.core.definition.annotation.definition.PropertySet";
+    public static final String ANNOTATION_DEFINITION_TITLE = "org.wirez.core.definition.annotation.definition.Title";
     
-    public static final String ANNOTATION_PROPERTY_SET = "org.wirez.core.api.definition.annotation.propertyset.PropertySet";
-    public static final String ANNOTATION_PROPERTY_SET_PROPERTY = "org.wirez.core.api.definition.annotation.propertyset.Property";
+    public static final String ANNOTATION_PROPERTY_SET = "org.wirez.core.definition.annotation.propertyset.PropertySet";
+    public static final String ANNOTATION_PROPERTY_SET_PROPERTY = "org.wirez.core.definition.annotation.propertyset.Property";
 
-    public static final String ANNOTATION_PROPERTY = "org.wirez.core.api.definition.annotation.property.Property";
-    public static final String ANNOTATION_NAME_PROPERTY = "org.wirez.core.api.definition.annotation.property.NameProperty";
-    public static final String ANNOTATION_PROPERTY_DEFAULT_VALUE = "org.wirez.core.api.definition.annotation.property.DefaultValue";
-    public static final String ANNOTATION_PROPERTY_VALUE = "org.wirez.core.api.definition.annotation.property.Value";
-    public static final String ANNOTATION_PROPERTY_CAPTION = "org.wirez.core.api.definition.annotation.property.Caption";
-    public static final String ANNOTATION_PROPERTY_TYPE = "org.wirez.core.api.definition.annotation.property.Type";
-    public static final String ANNOTATION_PROPERTY_READONLY= "org.wirez.core.api.definition.annotation.property.ReadOnly";
-    public static final String ANNOTATION_PROPERTY_OPTIONAL = "org.wirez.core.api.definition.annotation.property.Optional";
+    public static final String ANNOTATION_PROPERTY = "org.wirez.core.definition.annotation.property.Property";
+    public static final String ANNOTATION_NAME_PROPERTY = "org.wirez.core.definition.annotation.property.NameProperty";
+    public static final String ANNOTATION_PROPERTY_DEFAULT_VALUE = "org.wirez.core.definition.annotation.property.DefaultValue";
+    public static final String ANNOTATION_PROPERTY_VALUE = "org.wirez.core.definition.annotation.property.Value";
+    public static final String ANNOTATION_PROPERTY_CAPTION = "org.wirez.core.definition.annotation.property.Caption";
+    public static final String ANNOTATION_PROPERTY_TYPE = "org.wirez.core.definition.annotation.property.Type";
+    public static final String ANNOTATION_PROPERTY_READONLY= "org.wirez.core.definition.annotation.property.ReadOnly";
+    public static final String ANNOTATION_PROPERTY_OPTIONAL = "org.wirez.core.definition.annotation.property.Optional";
     
     
-    public static final String ANNOTATION_RULE_CAN_CONTAIN = "org.wirez.core.api.rule.annotation.CanContain";
-    public static final String ANNOTATION_RULE_ALLOWED_CONNECTION = "org.wirez.core.api.rule.annotation.AllowedConnections";
-    public static final String ANNOTATION_RULE_CAN_CONNECTION = "org.wirez.core.api.rule.annotation.CanConnect";
-    public static final String ANNOTATION_RULE_ALLOWED_OCCS = "org.wirez.core.api.rule.annotation.AllowedOccurrences";
-    public static final String ANNOTATION_RULE_OCCURRS = "org.wirez.core.api.rule.annotation.Occurrences";
-    public static final String ANNOTATION_RULE_ALLOWED_EDGE_OCCURRS = "org.wirez.core.api.rule.annotation.AllowedEdgeOccurrences";
+    public static final String ANNOTATION_RULE_CAN_CONTAIN = "org.wirez.core.rule.annotation.CanContain";
+    public static final String ANNOTATION_RULE_ALLOWED_CONNECTION = "org.wirez.core.rule.annotation.AllowedConnections";
+    public static final String ANNOTATION_RULE_CAN_CONNECTION = "org.wirez.core.rule.annotation.CanConnect";
+    public static final String ANNOTATION_RULE_ALLOWED_OCCS = "org.wirez.core.rule.annotation.AllowedOccurrences";
+    public static final String ANNOTATION_RULE_OCCURRS = "org.wirez.core.rule.annotation.Occurrences";
+    public static final String ANNOTATION_RULE_ALLOWED_EDGE_OCCURRS = "org.wirez.core.rule.annotation.AllowedEdgeOccurrences";
 
     public static final String ANNOTATION_SHAPE_SET = "org.wirez.core.client.annotation.ShapeSet";
     public static final String ANNOTATION_SHAPE = "org.wirez.core.client.annotation.Shape";
@@ -293,22 +292,9 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             String factory = definitionSetAnn.factory();
             processingContext.getDefSetAnnotations().getGraphFactories().put( propertyClassName, factory );
 
-            // ShapeSet.
             ShapeSet shapeSetAnn = e.getAnnotation(ShapeSet.class);
             if ( null != shapeSetAnn ) {
-         
-                TypeMirror tMirror = null;
-                try {
-                    Class<? extends SafeUriProvider> thumbClass = shapeSetAnn.thumb();
-                } catch( MirroredTypeException mte ) {
-                    tMirror =  mte.getTypeMirror();
-                }
-                if ( null == tMirror ) {
-                    throw new RuntimeException("No thumbnail SafeUri Provider class class specifyed in this @DefinitionSet.");
-                }
-                String thumbFQCN = tMirror.toString();
-                processingContext.getDefSetAnnotations().getShapeSetThunb().put( propertyClassName, thumbFQCN );
-                
+                processingContext.getDefSetAnnotations().setHasShapeSet( true );
             }
             
         }
@@ -659,7 +645,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
             final String defSetId = processingContext.getDefinitionSet().getId();
             // Ensure visible on both backend and client sides.
-            final String packageName = getGeneratedPackageName() + ".api.adapter." + defSetId.toLowerCase() + ".rule";
+            final String packageName = getGeneratedPackageName() + ".definition.adapter.rule";
             final String className = getSetClassPrefix() + RULE_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting RuleAdapter generation for class named " + classFQName);
@@ -686,7 +672,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             final String defSetId = processingContext.getDefinitionSet().getId();
 
             // Ensure only visible on client side.
-            final String packageName = getGeneratedPackageName() + ".client.adapter." + defSetId.toLowerCase() + ".definitionset";
+            final String packageName = getGeneratedPackageName() + ".client.adapter.definitionset";
             final String className = getSetClassPrefix() + DEFINITIONSET_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -712,7 +698,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
             final String defSetId = processingContext.getDefinitionSet().getId();
             // Ensure visible on both backend and client sides.
-            final String packageName = getGeneratedPackageName() + ".api.adapter." + defSetId.toLowerCase() + ".definitionset";
+            final String packageName = getGeneratedPackageName() + ".definition.adapter.definitionset";
             final String className = getSetClassPrefix() + DEFINITIONSET_PROXY_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting DefinitionSetProxyAdapter generation for class named " + classFQName);
@@ -742,7 +728,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             final String defSetId = processingContext.getDefinitionSet().getId();
 
             // Ensure only visible on client side.
-            final String packageName = getGeneratedPackageName() + ".client.adapter." + defSetId.toLowerCase() + ".propertyset";
+            final String packageName = getGeneratedPackageName() + ".client.adapter.propertyset";
             final String className = getSetClassPrefix() + PROPERTYSET_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -769,7 +755,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             final String defSetId = processingContext.getDefinitionSet().getId();
 
             // Ensure only visible on client side.
-            final String packageName = getGeneratedPackageName() + ".client.adapter." + defSetId.toLowerCase() + ".definition";
+            final String packageName = getGeneratedPackageName() + ".client.adapter.definition";
             final String className = getSetClassPrefix() + DEFINITION_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -796,7 +782,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             final String defSetId = processingContext.getDefinitionSet().getId();
             
             // Ensure only visible on client side.
-            final String packageName = getGeneratedPackageName() + ".client.adapter." + defSetId.toLowerCase() + ".property";
+            final String packageName = getGeneratedPackageName() + ".client.adapter.property";
             final String className = getSetClassPrefix() + PROPERTY_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -821,12 +807,12 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         try {
 
             // Generate the Shape Set if annotation present.
-            if ( !processingContext.getDefSetAnnotations().getShapeSetThunb().isEmpty() ) {
+            if ( processingContext.getDefSetAnnotations().hasShapeSet() ) {
 
                 final String defSetId = processingContext.getDefinitionSet().getId();
 
                 // Ensure only visible on client side.
-                final String packageName = getGeneratedPackageName() + ".client." + defSetId.toLowerCase() + ".shape";
+                final String packageName = getGeneratedPackageName() + ".client.shape";
                 final String className = getSetClassPrefix() + BindableAdapterUtils.SHAPE_SET_SUFFIX;
                 final String classFQName = packageName + "." + className;
                 messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -837,7 +823,6 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
                         packageName, 
                         className,
                         defSetClassName,
-                        processingContext.getDefSetAnnotations().getShapeSetThunb().get( defSetClassName ),
                         messager);
 
                 writeCode( packageName,
@@ -864,7 +849,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
                 final String defSetId = processingContext.getDefinitionSet().getId();
 
                 // Ensure only visible on client side.
-                final String packageName = getGeneratedPackageName() + ".client." + defSetId.toLowerCase() + ".shape";
+                final String packageName = getGeneratedPackageName() + ".client.shape";
                 final String className = getSetClassPrefix() + SHAPE_FACTORY_CLASSNAME;
                 final String classFQName = packageName + "." + className;
                 messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -892,16 +877,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     
     private String getGeneratedPackageName() {
         final String s = processingContext.getDefinitionSet().getClassName();
-        final String s1 =  s.substring( 0, s.lastIndexOf(".") );
-        
-        // Handle api package given by nomenclature.
-        if ( s1.endsWith( ".api") ) {
-            
-            return s1.substring( 0, s1.length() - 4 );
-            
-        }
-        
-        return s1;
+        return s.substring( 0, s.lastIndexOf(".") );
     }
     
     private String getSetClassPrefix() {

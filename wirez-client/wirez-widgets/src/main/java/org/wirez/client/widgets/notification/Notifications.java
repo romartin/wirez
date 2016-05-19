@@ -28,20 +28,18 @@ import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 import org.uberfire.client.mvp.UberView;
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.batch.BatchCommandResult;
-import org.wirez.core.api.event.command.AbstractGraphCommandEvent;
-import org.wirez.core.api.event.local.CommandExecutedEvent;
-import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.UUID;
+import org.wirez.client.widgets.notification.canvas.CanvasCommandNotification;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.canvas.event.command.AbstractCanvasCommandEvent;
+import org.wirez.core.client.canvas.event.command.CanvasCommandExecutedEvent;
+import org.wirez.core.command.Command;
+import org.wirez.core.command.CommandResult;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 @Dependent
@@ -89,29 +87,42 @@ public class Notifications implements IsWidget {
     }
     
     public void add(final Notification notification) {
-        showNotificationPopup(notification);
+        
         if ( null != notification ) {
+
+            showNotificationPopup(notification);
+            
             addLogEntry(notification);
+            
             view.redraw();
+            
         }
+        
     }
     
     private void showNotificationPopup(final Notification notification) {
+        
         if ( notifyErrors && Notification.Type.ERROR.equals(notification.getType()) ) {
+            
             NotifySettings settings = NotifySettings.newSettings();
             settings.makeDefault();
             settings.setType(NotifyType.DANGER);
             settings.setDelay(5000);
             settings.setTimer(100);
             settings.setAllowDismiss(true);
-            final String text = getNotificationText(notification);
+            final String text = getNotificationSourceMessage( notification );
             Notify.notify(text, settings);
+            
         }
+        
     }
     
     public void clear() {
+        
         logsProvider.getList().clear();
+        
         view.clear();
+        
     }
     
     /*  ******************************************************************************************************
@@ -178,16 +189,11 @@ public class Notifications implements IsWidget {
                 typeCell) {
             @Override
             public String getValue(final Notification object) {
-                return object.getType() != null ? object.getType().name() : "-- No type --";
+                return getNotificationTypeMessage( object );
             }
         };
         typeColumn.setSortable(true);
-        sortHandler.setComparator(typeColumn, new Comparator<Notification>() {
-            @Override
-            public int compare(Notification o1, Notification o2) {
-                return o1.getType().compareTo(o2.getType());
-            }
-        });
+        sortHandler.setComparator(typeColumn, (o1, o2) -> o1.getType().compareTo(o2.getType()));
 
         return typeColumn;
     }
@@ -199,7 +205,7 @@ public class Notifications implements IsWidget {
                 contextCell) {
             @Override
             public String getValue(final Notification object) {
-                return object.getSource() != null ? object.getSource().toString() : "-- No Context --";
+                return getNotificationContextMessage( object );
             }
         };
         contextColumn.setSortable(false);
@@ -214,7 +220,7 @@ public class Notifications implements IsWidget {
                 messageCell) {
             @Override
             public String getValue(final Notification object) {
-                return getNotificationText(object);
+                return getNotificationSourceMessage( object );
             }
         };
         messageColumn.setSortable(false);
@@ -222,78 +228,52 @@ public class Notifications implements IsWidget {
         return messageColumn;
     }
     
-    private String getNotificationText(final Notification object) {
-        if ( null != object.getContext() && object.getContext() instanceof BatchCommandResult) {
-            return getMessage((BatchCommandResult<RuleViolation>) object.getContext());
-        } else  if ( null != object.getContext() && object.getContext() instanceof CommandResult) {
-            return getMessage((CommandResult<RuleViolation>) object.getContext());
-        }
-        return object.getContext() != null ? object.getContext().toString(): "-- No Message --";
-    }
-
-    private String getMessage(final CommandResult<RuleViolation> results) {
-        return results.getMessage();
-    }
-    
-    private String getMessage(final BatchCommandResult<RuleViolation> results) {
-        boolean hasError = false;
-        boolean hasWarn = false;
-        final Iterator<CommandResult<RuleViolation>> iterator = results.iterator();
-        int c = 0;
-        String message = null;
-        while (iterator.hasNext()) {
-            final CommandResult<RuleViolation> result = iterator.next();
-            if (CommandResult.Type.ERROR.equals(result.getType())) {
-                hasError = true;
-                message = result.getMessage();
-                c++;
-            } else if (CommandResult.Type.WARNING.equals(result.getType())) {
-                hasWarn = true;
-                if ( !hasError ) {
-                    message = result.getMessage();
-                }
-            } else {
-                if ( !hasError && !hasWarn ) {
-                    message = result.getMessage();
-                }
-            }
-        }
-
-        if ( c > 1 ) {
-            message = "Found " + c + " violations";
-        }
-        
-        return message;
-
-    }
-
-    void onGraphCommandExectued(@Observes CommandExecutedEvent commandExecutedEvent) {
+    void onGraphCommandExecuted(@Observes CanvasCommandExecutedEvent<? extends CanvasHandler> commandExecutedEvent) {
         Notification notification = translate( commandExecutedEvent );
         add( notification );
     }
 
-    /*
-    TODO: Until building different notifications for execut/undo commands, 
-    // do not show the undos as they can produce confusion.
-    void onGraphCommandUndoExecuted(@Observes CommandUndoExecutedEvent commandUndoExecutedEvent) {
-        Notification notification = translate( commandUndoExecutedEvent );
-        add( notification );
-    }*/
-    
-    // TODO: Differentiate between allow/execute/undo on the generated notification.
-    private Notification translate(final AbstractGraphCommandEvent commandExecutedEvent) {
+    @SuppressWarnings("unchecked")
+    private Notification translate(final AbstractCanvasCommandEvent<? extends CanvasHandler> commandExecutedEvent) {
 
         if ( null != commandExecutedEvent ) {
 
-            final Command<?, ?> command = commandExecutedEvent.getCommand();
-            final CommandResult<?> result = commandExecutedEvent.getResult();
-            Notification.Type type = CommandResult.Type.ERROR.equals( result.getType() )
-                    ? Notification.Type.ERROR : Notification.Type.INFO;
-            return new NotificationImpl<>( UUID.uuid(), type, command, result );
-
+            final CanvasHandler canvasHandler = commandExecutedEvent.getCanvasHandler();
+            final Command<CanvasHandler, CanvasViolation> command = 
+                    (Command<CanvasHandler, CanvasViolation>) commandExecutedEvent.getCommand();
+            final CommandResult<CanvasViolation> result = commandExecutedEvent.getResult();
+            
+            
+            return new CanvasCommandNotification.CanvasCommandNotificationBuilder<CanvasHandler>()
+                        .canvasHander( canvasHandler )
+                        .command( command )
+                        .result( result )
+                        .build();
+            
         }
 
         return  null;
+    }
+    
+    @SuppressWarnings("unchecked")
+    private String getNotificationSourceMessage( final Notification notification ) {
+        return notification.getSource() != null ?
+                notification.getSource().toString() :
+                "-- No source --";
+    }
+
+    @SuppressWarnings("unchecked")
+    private String getNotificationContextMessage( final Notification notification ) {
+        return notification.getContext() != null ?
+                notification.getContext().toString() :
+                "-- No context --";
+    }
+
+    @SuppressWarnings("unchecked")
+    private String getNotificationTypeMessage( final Notification notification ) {
+        return notification.getType() != null ?
+                notification.getType().name() :
+                "-- No type --";
     }
     
 }

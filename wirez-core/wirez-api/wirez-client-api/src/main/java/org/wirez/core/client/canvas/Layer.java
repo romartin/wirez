@@ -20,4 +20,7 @@ public interface Layer<T, S, A> extends HasEventHandlers<T, A> {
     void onBeforeDraw(Command callback);
 
     void onAfterDraw(Command callback);
+    
+    void destroy();
+    
 }

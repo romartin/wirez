@@ -1,7 +1,7 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.content.view.View;
 
 import java.util.Map;
 

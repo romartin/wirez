@@ -5,9 +5,9 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
@@ -56,42 +56,45 @@ public class DeleteSelectionCommand extends AbstractSelectionToolbarCommand<Defa
     @Override
     public <T> void execute(final ToolbarCommandCallback<T> callback) {
 
-        executeWithConfirm(() -> {
-            
-            final AbstractCanvasHandler canvasHandler = session.getCanvasHandler();
-            final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager = session.getCanvasCommandManager();
-            final SelectionControl<AbstractCanvas, Shape> selectionControl = session.getShapeSelectionControl();
+        if ( null != session.getShapeSelectionControl() ) {
 
-            final Collection<Shape> selectedItems = selectionControl.getSelectedItems();
-            if (selectedItems != null && !selectedItems.isEmpty()) {
+            executeWithConfirm(() -> {
 
-                for (Shape shape : selectedItems) {
-                    Element element = canvasHandler.getGraphIndex().getNode(shape.getUUID());
-                    if (element == null) {
-                        element = canvasHandler.getGraphIndex().getEdge(shape.getUUID());
-                        if (element != null) {
-                            log(Level.FINE, "Deleting edge with id " + element.getUUID());
-                            canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_EDGE((Edge) element));
+                final AbstractCanvasHandler canvasHandler = session.getCanvasHandler();
+                final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager = session.getCanvasCommandManager();
+                final SelectionControl<AbstractCanvas, Shape> selectionControl = session.getShapeSelectionControl();
+
+                final Collection<Shape> selectedItems = selectionControl.getSelectedItems();
+                if (selectedItems != null && !selectedItems.isEmpty()) {
+
+                    for (Shape shape : selectedItems) {
+                        Element element = canvasHandler.getGraphIndex().getNode(shape.getUUID());
+                        if (element == null) {
+                            element = canvasHandler.getGraphIndex().getEdge(shape.getUUID());
+                            if (element != null) {
+                                log(Level.FINE, "Deleting edge with id " + element.getUUID());
+                                canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_EDGE((Edge) element));
+                            }
+                        } else {
+                            log(Level.FINE, "Deleting node with id " + element.getUUID());
+                            canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_NODE((Node) element));
+
                         }
-                    } else {
-                        log(Level.FINE, "Deleting node with id " + element.getUUID());
-                        canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_NODE((Node) element));
-
                     }
+
+                } else {
+
+                    log(Level.FINE, "Cannot delete element, no element selected on canvas.");
+
                 }
 
-            } else {
+                if (null != callback) {
+                    callback.onSuccess(null);
+                }
 
-                log(Level.FINE, "Cannot delete element, no element selected on canvas.");
+            });
 
-            }
-
-            if (null != callback) {
-                callback.onSuccess(null);
-            }
-            
-        });
-        
+        }
         
     }
     

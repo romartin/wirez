@@ -16,5 +16,7 @@ public interface ToolbarCommand<S extends CanvasSession> {
     void execute( );
 
     <T> void execute( ToolbarCommandCallback<T> callback );
+    
+    void destroy();
 
 }

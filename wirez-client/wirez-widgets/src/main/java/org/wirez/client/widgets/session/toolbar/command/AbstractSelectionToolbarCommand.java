@@ -34,15 +34,16 @@ public abstract class AbstractSelectionToolbarCommand<S extends CanvasReadOnlySe
     
     protected void checkState() {
 
-        if ( null != session ) {
-
-            final boolean isEmptySelection = session.getShapeSelectionControl().getSelectedItems().isEmpty();
-
-            if ( isEmptySelection ) {
-                disable();
-            } else {
-                enable();
-            }
+        final boolean doDisable = null != session && null != session.getShapeSelectionControl() 
+                    && session.getShapeSelectionControl().getSelectedItems().isEmpty();
+        
+        if ( doDisable ) {
+            
+            disable();
+            
+        } else  {
+            
+            enable();
             
         }
         

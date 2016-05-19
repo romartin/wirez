@@ -2,7 +2,7 @@ package org.wirez.core.client.canvas.controls.toolbox.command;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.components.popup.PopupBox;
 
@@ -37,6 +37,13 @@ public abstract class NameToolboxCommand<I> extends AbstractToolboxCommand<I> im
 
     @Override
     public Widget asWidget() {
-        return toolbox.asWidget();
+        return ( (IsWidget )toolbox).asWidget();
     }
+
+    @Override
+    public void destroy() {
+        toolbox.hide();
+        toolbox = null;
+    }
+    
 }

@@ -16,21 +16,21 @@
 
 package org.wirez.bpmn.client.shape.factory;
 
-import org.wirez.bpmn.api.*;
+import com.ait.lienzo.client.core.shape.Group;
+import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.bpmn.client.shape.*;
-import org.wirez.bpmn.client.shape.glyph.EndTerminateEventGlyph;
+import org.wirez.bpmn.client.shape.view.glyph.SequenceFlowGlyph;
+import org.wirez.bpmn.definition.*;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
-import org.wirez.client.shapes.view.CircleView;
-import org.wirez.client.shapes.view.ConnectorView;
-import org.wirez.client.shapes.view.RectangleView;
-import org.wirez.client.shapes.view.ShapeViewFactory;
-import org.wirez.client.shapes.view.glyph.ConnectorGlyph;
-import org.wirez.client.shapes.view.glyph.RectangleGlyph;
-import org.wirez.core.api.definition.util.DefinitionUtils;
+import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.MutableShape;
-import org.wirez.core.client.shape.factory.ShapeGlyphFactory;
 import org.wirez.core.client.shape.view.ShapeGlyph;
+import org.wirez.core.client.shape.view.ShapeGlyphBuilder;
+import org.wirez.shapes.client.view.CircleView;
+import org.wirez.shapes.client.view.ConnectorView;
+import org.wirez.shapes.client.view.RectangleView;
+import org.wirez.shapes.client.view.ShapeViewFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -38,8 +38,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @ApplicationScoped
-public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, MutableShape<BPMNDefinition, ?>> 
-        implements ShapeGlyphFactory {
+public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, MutableShape<BPMNDefinition, ?>> {
 
     private static final Set<Class<?>> SUPPORTED_CLASSES = new LinkedHashSet<Class<?>>() {{
         add( BPMNDiagram.class );
@@ -51,6 +50,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
     DefinitionUtils definitionUtils;
     BPMNViewFactory bpmnViewFactory;
+    ShapeGlyphBuilder<Group> glyphBuilder;
     
     protected BPMNShapeFactory() {
     }
@@ -58,21 +58,18 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
     @Inject
     public BPMNShapeFactory( final ShapeViewFactory shapeViewFactory,
                              final DefinitionUtils definitionUtils,
-                             final BPMNViewFactory bpmnViewFactory ) {
+                             final BPMNViewFactory bpmnViewFactory,
+                             final ShapeGlyphBuilder<Group> glyphBuilder) {
         super(shapeViewFactory);
         this.definitionUtils = definitionUtils;
         this.bpmnViewFactory = bpmnViewFactory;
+        this.glyphBuilder = glyphBuilder;
     }
 
 
     @Override
     public Set<Class<?>> getSupportedModelClasses() {
         return SUPPORTED_CLASSES;
-    }
-
-    @Override
-    protected ShapeGlyphFactory getGlyphFactory( final Class<?> clazz ) {
-        return this;
     }
 
     @Override
@@ -104,16 +101,11 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
     }
 
     @Override
-    public ShapeGlyph build( final Class<?> clazz ) {
-        return build( clazz, 50, 50 );
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    public MutableShape<BPMNDefinition, ?> build( final BPMNDefinition definition, 
-                                                  final AbstractCanvasHandler context ) {
+    public MutableShape<BPMNDefinition, ?> build(final BPMNDefinition definition,
+                                                 final AbstractCanvasHandler context ) {
 
-        final WiresCanvas wiresCanvas = (WiresCanvas) context.getCanvas();
+        final WiresManager wiresManager = context != null ? ((WiresCanvas) context.getCanvas()).getWiresManager() : null;
         final Class<?> definitionClass = definition.getClass();
 
         MutableShape result = null;
@@ -123,8 +115,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
             final BPMNDiagram diagram = (BPMNDiagram) definition;
             
             final RectangleView view = shapeViewFactory.rectangle( diagram.getWidth().getValue(),
-                    diagram.getHeight().getValue(),
-                    wiresCanvas.getWiresManager());
+                    diagram.getHeight().getValue(), wiresManager );
             
             result = new BPMNDiagramShape(view);
             
@@ -132,8 +123,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
             final EndTerminateEvent endTerminateEvent = (EndTerminateEvent) definition;
 
-            final CircleView view = shapeViewFactory.circle( endTerminateEvent.getRadius().getValue(),
-                    wiresCanvas.getWiresManager());
+            final CircleView view = shapeViewFactory.circle( endTerminateEvent.getRadius().getValue(), wiresManager );
             
             result = new EndTerminateEventShape(view);
 
@@ -143,14 +133,13 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
             final RectangleView view = shapeViewFactory.rectangle(
                     lane.getWidth().getValue(),
-                    lane.getHeight().getValue(),
-                    wiresCanvas.getWiresManager());
+                    lane.getHeight().getValue(), wiresManager );
             
             result = new LaneShape(view);
 
         } else if ( isSequenceFlow( definitionClass ) ) {
 
-            final ConnectorView view = shapeViewFactory.connector(wiresCanvas.getWiresManager(), 0,0,100,100);
+            final ConnectorView view = shapeViewFactory.connector( wiresManager, 0, 0, 100, 100 );
             
             result = new SequenceFlowShape(view);
 
@@ -160,8 +149,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
             final RectangleView view = bpmnViewFactory.task( 
                     task.getWidth().getValue(),
-                    task.getHeight().getValue(), 
-                    wiresCanvas.getWiresManager());
+                    task.getHeight().getValue(), wiresManager );
             
             result = new TaskShape(view);
 
@@ -178,33 +166,26 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
     }
 
     @Override
-    public ShapeGlyph build(final Class<?> clazz, 
+    public ShapeGlyph glyph(final Class<?> clazz, 
                             final double width, 
                             final double height) {
-        
-        if ( isDiagram( clazz ) ) {
 
-            return new RectangleGlyph(width, height, BPMNDiagram.COLOR);
+        // Custom shape glyphs.
+        if ( isSequenceFlow( clazz) ) {
             
-        }  else if ( isEndTerminateEvent( clazz ) ) {
-
-            return new EndTerminateEventGlyph(width/2, EndTerminateEvent.COLOR);
+            return new SequenceFlowGlyph( width, height, SequenceFlow.COLOR );
             
-        } else if ( isLane( clazz ) ) {
-
-            return new RectangleGlyph(width, height, Lane.COLOR);
-
-        } else if ( isSequenceFlow( clazz ) ) {
-
-            return new ConnectorGlyph(width, height, SequenceFlow.COLOR);
-
-        } else if ( isTask( clazz ) ) {
-
-            return new RectangleGlyph(width, height, Task.COLOR);
-
         }
+        
+        final String id = getDefinitionId( clazz );
 
-        throw new RuntimeException( "This factory should provide a shape glyph for definition [" + clazz.getName() + "]" );
+        // Generic glyphs, build from shapes.
+        return glyphBuilder
+                .definition( id )
+                .factory( this )
+                .height( height )
+                .width( width )
+                .build();
     }
     
     private boolean isDiagram( final Class<?> clazz ) {

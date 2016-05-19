@@ -16,16 +16,16 @@
 
 package org.wirez.bpmn.client.shape;
 
-import org.wirez.bpmn.api.EndTerminateEvent;
-import org.wirez.bpmn.api.property.background.BackgroundSet;
-import org.wirez.bpmn.api.property.font.FontSet;
-import org.wirez.bpmn.api.property.general.BPMNGeneral;
-import org.wirez.client.shapes.view.CircleView;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
+import org.wirez.bpmn.definition.EndTerminateEvent;
+import org.wirez.bpmn.definition.property.background.BackgroundSet;
+import org.wirez.bpmn.definition.property.font.FontSet;
+import org.wirez.bpmn.definition.property.general.BPMNGeneral;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.view.HasTitle;
+import org.wirez.shapes.client.view.CircleView;
 
 public class EndTerminateEventShape extends BPMNBasicShape<EndTerminateEvent, CircleView> {
 

@@ -1,9 +1,9 @@
 package org.wirez.bpmn.client.shape.factory;
 
-import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.client.shapes.view.ShapeViewFactory;
+import org.wirez.bpmn.definition.BPMNDefinition;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.AbstractBindableShapeFactory;
+import org.wirez.shapes.client.view.ShapeViewFactory;
 
 import javax.inject.Inject;
 

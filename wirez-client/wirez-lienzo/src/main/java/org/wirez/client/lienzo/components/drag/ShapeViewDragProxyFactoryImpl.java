@@ -73,4 +73,9 @@ public class ShapeViewDragProxyFactoryImpl implements ShapeViewDragProxyFactory<
         return this;
     }
 
+    @Override
+    public void destroy() {
+        this.layer = null;
+    }
+
 }

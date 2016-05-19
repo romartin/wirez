@@ -40,5 +40,10 @@ public class CanvasSessionPresenterView extends Composite implements CanvasSessi
         canvasPanel.add( widget );
         return this;
     }
-    
+
+    @Override
+    public void destroy() {
+        this.removeFromParent();
+    }
+
 }

@@ -2,17 +2,17 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wirez.bpmn.api.BPMNDefinition;
+import org.wirez.bpmn.definition.BPMNDefinition;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.Bpmn2OryxPropertyManager;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.batch.BatchCommandResult;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.definition.adapter.PropertyAdapter;
-import org.wirez.core.api.definition.property.PropertyType;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.command.batch.BatchCommandResult;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.definition.adapter.PropertyAdapter;
+import org.wirez.core.definition.property.PropertyType;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.rule.RuleViolation;
 
 import java.util.*;
 

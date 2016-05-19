@@ -1,9 +1,10 @@
 package org.wirez.core.client.components.popup;
 
-import org.wirez.core.api.graph.Element;
+import com.google.gwt.user.client.ui.IsWidget;
+import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 
-public abstract class AbstractPopupBox<E extends Element> implements PopupBox<AbstractCanvasHandler, E> {
+public abstract class AbstractPopupBox<E extends Element> implements PopupBox<AbstractCanvasHandler, E>, IsWidget {
 
     protected AbstractCanvasHandler canvasHandler;
 

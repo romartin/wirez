@@ -3,11 +3,11 @@ package org.wirez.backend.definition.marshall;
 import org.jboss.errai.marshalling.server.ServerMarshalling;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.marshall.DiagramMarshaller;
-import org.wirez.core.api.graph.command.GraphCommandManager;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.marshall.DiagramMarshaller;
+import org.wirez.core.graph.command.GraphCommandManager;
+import org.wirez.core.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.graph.util.GraphUtils;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;

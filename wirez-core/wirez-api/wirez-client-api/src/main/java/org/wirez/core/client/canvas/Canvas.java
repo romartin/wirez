@@ -66,4 +66,9 @@ public interface Canvas<S extends Shape> {
      */
     Layer getLayer();
 
+    /**
+     * Destroy whatever canvas state present, it will be no longer used.
+     */
+    void destroy();
+    
 }

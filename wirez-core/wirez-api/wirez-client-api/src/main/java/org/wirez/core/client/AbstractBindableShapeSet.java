@@ -1,8 +1,8 @@
 package org.wirez.core.client;
 
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.adapter.DefinitionSetAdapter;
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.adapter.DefinitionSetAdapter;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 

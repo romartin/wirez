@@ -68,7 +68,7 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-shapes-impl</artifactId>
+      <artifactId>wirez-shapes-client</artifactId>
       <scope>provided</scope>
     </dependency>
 

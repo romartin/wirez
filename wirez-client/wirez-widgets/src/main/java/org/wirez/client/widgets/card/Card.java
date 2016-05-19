@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+// TODO: unused for now - improve performance by only processing and adding into the DOM tree the current card side.
 @Dependent
 public class Card implements IsWidget {
 

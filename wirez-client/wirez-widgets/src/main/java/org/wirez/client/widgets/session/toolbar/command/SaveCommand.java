@@ -5,7 +5,7 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
-import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.diagram.Diagram;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;

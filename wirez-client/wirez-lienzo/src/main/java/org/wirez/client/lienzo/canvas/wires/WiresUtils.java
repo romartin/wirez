@@ -4,8 +4,8 @@ import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.view.ShapeView;
 

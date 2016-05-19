@@ -14,9 +14,9 @@ import org.wirez.backend.definition.marshall.DefaultDiagramMarshaller;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.DiagramManager;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.definition.DefinitionSetServices;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.marshall.DiagramMarshaller;
+import org.wirez.core.definition.DefinitionSetServices;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.marshall.DiagramMarshaller;
 import org.wirez.core.backend.annotation.Application;
 import org.wirez.core.backend.annotation.VFS;
 

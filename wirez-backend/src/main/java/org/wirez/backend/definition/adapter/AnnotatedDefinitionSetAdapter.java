@@ -2,10 +2,11 @@ package org.wirez.backend.definition.adapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wirez.core.api.definition.adapter.DefinitionSetAdapter;
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
-import org.wirez.core.api.definition.annotation.definitionset.DefinitionSet;
-import org.wirez.core.api.graph.Graph;
+import org.wirez.core.definition.adapter.DefinitionSetAdapter;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.annotation.Description;
+import org.wirez.core.definition.annotation.definitionset.DefinitionSet;
+import org.wirez.core.graph.Graph;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -78,7 +79,7 @@ public class AnnotatedDefinitionSetAdapter<T> extends AbstractAnnotatedAdapter<T
     @Override
     public String getDescription(T definitionSet) {
         try {
-            return getAnnotatedFieldValue( definitionSet, org.wirez.core.api.definition.annotation.Description.class );
+            return getAnnotatedFieldValue( definitionSet, Description.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated category for DefinitionSet with id " + getId( definitionSet ));
         }

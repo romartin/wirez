@@ -1,7 +1,7 @@
 package org.wirez.bpmn.backend.marshall.json.oryx.property;
 
-import org.wirez.core.api.definition.property.PropertyType;
-import org.wirez.core.api.definition.property.type.DoubleType;
+import org.wirez.core.definition.property.PropertyType;
+import org.wirez.core.definition.property.type.DoubleType;
 
 import javax.enterprise.context.ApplicationScoped;
 

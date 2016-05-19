@@ -1,6 +1,6 @@
 package org.wirez.core.client.canvas.util;
 
-import org.wirez.core.api.graph.Node;
+import org.wirez.core.graph.Node;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvas;
@@ -84,6 +84,14 @@ public class CanvasHighlight {
 
         }
     }
+    
+    public void destroy() {
+      
+        this.shape = null;
+        this.selectionAnimation = null;
+        this.deSelectionAnimation = null;
+        
+    }
 
 
     private Shape getShape(final String uuid) {
@@ -93,4 +101,5 @@ public class CanvasHighlight {
     private AbstractCanvas getCanvas() {
         return canvasHandler.getCanvas();
     }
+    
 }

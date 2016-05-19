@@ -1,19 +1,19 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
-import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.bpmn.api.property.Height;
-import org.wirez.bpmn.api.property.Radius;
-import org.wirez.bpmn.api.property.Width;
+import org.wirez.bpmn.definition.BPMNDefinition;
+import org.wirez.bpmn.definition.property.Height;
+import org.wirez.bpmn.definition.property.Radius;
+import org.wirez.bpmn.definition.property.Width;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.impl.AddChildNodeCommand;
-import org.wirez.core.api.graph.command.impl.SetConnectionSourceNodeCommand;
-import org.wirez.core.api.graph.content.view.*;
-import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.command.impl.AddChildNodeCommand;
+import org.wirez.core.graph.command.impl.SetConnectionSourceNodeCommand;
+import org.wirez.core.graph.content.view.*;
+import org.wirez.core.graph.util.GraphUtils;
+import org.wirez.core.rule.RuleViolation;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

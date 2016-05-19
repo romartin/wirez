@@ -44,9 +44,10 @@
             - More events and provide the natives...
             - Drag event -> cannot get the DragContext
             - In general -> return the handler registration as well in order to remove handlers when no necessary.
-
-    - External configs
-        - Connectors / docking hotspot size
+        - Remove WiresMananger memeber from WiresShape/Connector classes
+        
+    - Performance issues on class Geometry
+    - External configs -> Connectors / docking hotspot size
     - When dragging parent shapes, the connectors on the children are not drag
     - containment & docking acceptor -> shapes fill issues
     - Align&Distribute broken ->  check browser console at https://www.lienzo-core.com/lienzo-ks/#ALIGN_DISTRIBUTE 
@@ -61,7 +62,11 @@
         
     - Others
         - Text orientation
-
+    
+    - Mobile
+        - Pan & zoom mediators for mobile touch events
+        - Other touch handlers required for desginer
+        
 - Client
 *********
 
@@ -70,7 +75,8 @@
         - Error handling
         - refactor use of CDI qualifiers ( managers & services ) -> CDI @Priority 
         - Show/Hide grid toolbar button
-    
+        - cpu perf on adding shapes / minipalette drags
+
     - Shape Factories
             - ShapeFactories from Shape Set ( annotated on @ShapeSet )
             - ShapeManager#getFactory -> use shapeSetId as argument
@@ -154,12 +160,18 @@ Import tool
 Performance
 ***********
 
-    - Global
-        - Heap, cpu & timeline performance checks
+
+    - Memory
+        - Events
+            -. Use uuid's instead of shapes/elements/etc? avoid using shared instances
+        - Commands & Violations
+            - Clonse shapes/elements/etc arguments? avoid using shared instances
+        - Managers & registries
+            - Definition
         
-    - Controls 
-        - Check disable() 
-        - Check de-registrations ( handlers, etc )
+    - Processing
+        - Graph indexer/incremental?
+        - Bounds indexer
     
     - Session widgets
         - Checks session events are handled as expected
@@ -167,6 +179,9 @@ Performance
     - TreeExplorer 
         - redraw only updated element & children, if any.
 
+    - Navigator & card
+        - improve performance by only processing and adding into the DOM tree the current card side.
+        
     - Load diagram
         - Slow - Heap & cpu performance check
 

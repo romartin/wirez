@@ -51,4 +51,10 @@ public class PrimitiveDragProxyFactoryImpl implements PrimitiveDragProxyFactory<
         
         return this;
     }
+
+    @Override
+    public void destroy() {
+        this.layer = null;
+    }
+    
 }

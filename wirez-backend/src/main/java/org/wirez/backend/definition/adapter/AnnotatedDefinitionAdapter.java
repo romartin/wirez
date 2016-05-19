@@ -2,12 +2,13 @@ package org.wirez.backend.definition.adapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
-import org.wirez.core.api.definition.annotation.definition.Definition;
-import org.wirez.core.api.definition.annotation.property.NameProperty;
-import org.wirez.core.api.definition.util.DefinitionUtils;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.annotation.Description;
+import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.annotation.property.NameProperty;
+import org.wirez.core.definition.util.DefinitionUtils;
+import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -61,7 +62,7 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
     @Override
     public String getCategory(T definition) {
         try {
-            return getAnnotatedFieldValue( definition, org.wirez.core.api.definition.annotation.definition.Category.class );
+            return getAnnotatedFieldValue( definition, Category.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated category for Definition with id " + getId( definition ));
         }
@@ -72,7 +73,7 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
     @Override
     public String getTitle(T definition) {
         try {
-            return getAnnotatedFieldValue( definition, org.wirez.core.api.definition.annotation.definition.Title.class );
+            return getAnnotatedFieldValue( definition, Title.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated title for Definition with id " + getId( definition ));
         }
@@ -84,7 +85,7 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
     @Override
     public String getDescription(T definition) {
         try {
-            return getAnnotatedFieldValue( definition, org.wirez.core.api.definition.annotation.Description.class );
+            return getAnnotatedFieldValue( definition, Description.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated description for Definition with id " + getId( definition ));
         }
@@ -96,7 +97,7 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
     @Override
     public Set<String> getLabels(T definition) {
         try {
-            return getAnnotatedFieldValue( definition, org.wirez.core.api.definition.annotation.definition.Labels.class );
+            return getAnnotatedFieldValue( definition, Labels.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated labels for Definition with id " + getId( definition ));
         }
@@ -113,7 +114,7 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
             if ( null != fields ) {
                 result = new HashSet<>();
                 for (Field field : fields) {
-                    org.wirez.core.api.definition.annotation.definition.PropertySet annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.definition.PropertySet.class);
+                    PropertySet annotation = field.getAnnotation(PropertySet.class);
                     if ( null != annotation ) {
                         try {
                             result.add( _getValue( field, annotation, definition) );
@@ -145,7 +146,7 @@ public class AnnotatedDefinitionAdapter<T> extends AbstractAnnotatedAdapter<T> i
 
                 // Find annotated runtime properties on the pojo.
                 for (Field field : fields) {
-                    org.wirez.core.api.definition.annotation.definition.Property annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.definition.Property.class);
+                    Property annotation = field.getAnnotation(Property.class);
                     if ( null != annotation ) {
                         try {
                             result.add( _getValue( field, annotation, definition) );

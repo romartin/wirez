@@ -4,10 +4,10 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.stack.StackCommandManager;
-import org.wirez.core.api.event.local.CommandExecutedEvent;
-import org.wirez.core.api.event.local.CommandUndoExecutedEvent;
+import org.wirez.core.client.canvas.event.command.CanvasCommandExecutedEvent;
+import org.wirez.core.client.canvas.event.command.CanvasUndoCommandExecutedEvent;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.command.stack.StackCommandManager;
 import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 
@@ -62,12 +62,12 @@ public class UndoCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
         
     }
     
-    void onCommandExecuted(@Observes CommandExecutedEvent commandExecutedEvent) {
+    void onCommandExecuted(@Observes CanvasCommandExecutedEvent commandExecutedEvent) {
         checkNotNull("commandExecutedEvent", commandExecutedEvent);
         checkState();
     }
 
-    void onCommandUndoExecuted(@Observes CommandUndoExecutedEvent commandUndoExecutedEvent) {
+    void onCommandUndoExecuted(@Observes CanvasUndoCommandExecutedEvent commandUndoExecutedEvent) {
         checkNotNull("commandUndoExecutedEvent", commandUndoExecutedEvent);
         checkState();
     }
@@ -80,9 +80,13 @@ public class UndoCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
             final boolean isHistoryEmpty = canvasCommManager.getHistory().size() == 0;
 
             if ( isHistoryEmpty ) {
+                
                 disable();
+                
             } else {
+                
                 enable();
+                
             }
             
         }

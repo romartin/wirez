@@ -1,10 +1,10 @@
 package org.wirez.core.client.canvas.command.impl;
 
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;

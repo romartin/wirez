@@ -30,8 +30,8 @@ import ${pc};
 import ${pc.className};
 </#list>
 
-import org.wirez.core.client.shape.proxy.ShapeProxy;
-import org.wirez.core.api.definition.util.DefinitionUtils;
+import org.wirez.core.definition.shape.ShapeProxy;
+import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.*;
 import org.wirez.core.client.shape.view.ShapeView;

@@ -1,11 +1,11 @@
 package org.wirez.bpmn.backend;
 
-import org.wirez.bpmn.api.BPMNDefinitionSet;
+import org.wirez.bpmn.BPMNDefinitionSet;
 import org.wirez.bpmn.backend.service.diagram.BPMNDiagramMarshaller;
-import org.wirez.core.api.definition.DefinitionSetServices;
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.marshall.DiagramMarshaller;
+import org.wirez.core.definition.DefinitionSetServices;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.marshall.DiagramMarshaller;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

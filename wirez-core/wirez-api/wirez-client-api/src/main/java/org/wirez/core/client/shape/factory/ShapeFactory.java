@@ -15,7 +15,9 @@
  */
 package org.wirez.core.client.shape.factory;
 
+import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.view.ShapeGlyph;
 
 /**
  * Factory for building shapes available for authoring.
@@ -25,22 +27,21 @@ public interface ShapeFactory<W, C, S extends Shape> {
     /**
      * Does the Factory builds the given definition identifier.
      */
-    boolean accepts(final String definitionId);
+    boolean accepts( String definitionId );
     
-    /**
-     * Get the glyph factory for this shape. Glyphs are used to represent the Shape in several 
-     * parts on the application, such as the Palette or the Explorer.
-     */
-    org.wirez.core.client.shape.factory.ShapeGlyphFactory getGlyphFactory(final String definitionId);
-
     /**
      * Get description of Shape.
      */
-    String getDescription(final String definitionId);
+    String getDescription( String definitionId );
 
     /**
-     * Build a new Shape instance for the given context.
+     * Builds a new Shape instance for the given context.
      */
-    S build(W definition, C context);
+    S build( W definition, C context );
 
+    /**
+     * Builds a new shape glyph instance with the given size. 
+     */
+    ShapeGlyph glyph( String definitionId, double width, double height );
+    
 }

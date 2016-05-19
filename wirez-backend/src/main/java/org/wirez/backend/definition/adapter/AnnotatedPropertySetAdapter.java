@@ -2,9 +2,11 @@ package org.wirez.backend.definition.adapter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wirez.core.api.definition.adapter.PropertySetAdapter;
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
-import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
+import org.wirez.core.definition.adapter.PropertySetAdapter;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.annotation.Name;
+import org.wirez.core.definition.annotation.propertyset.Property;
+import org.wirez.core.definition.annotation.propertyset.PropertySet;
 
 import javax.enterprise.context.Dependent;
 import java.lang.reflect.Field;
@@ -24,7 +26,7 @@ public class AnnotatedPropertySetAdapter<T> extends AbstractAnnotatedAdapter<T> 
     @Override
     public String getName(T propertySet) {
         try {
-            return getAnnotatedFieldValue( propertySet, org.wirez.core.api.definition.annotation.Name.class );
+            return getAnnotatedFieldValue( propertySet, Name.class );
         } catch (Exception e) {
             LOG.error("Error obtaining annotated category for PropertySet with id " + getId( propertySet ));
         }
@@ -41,7 +43,7 @@ public class AnnotatedPropertySetAdapter<T> extends AbstractAnnotatedAdapter<T> 
             if ( null != fields ) {
                 result = new HashSet<>();
                 for (Field field : fields) {
-                    org.wirez.core.api.definition.annotation.propertyset.Property annotation = field.getAnnotation(org.wirez.core.api.definition.annotation.propertyset.Property.class);
+                    Property annotation = field.getAnnotation(Property.class);
                     if ( null != annotation) {
                         try {
                             field.setAccessible(true);

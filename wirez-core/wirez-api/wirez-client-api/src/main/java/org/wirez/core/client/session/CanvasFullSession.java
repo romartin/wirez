@@ -1,6 +1,6 @@
 package org.wirez.core.client.session;
 
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;

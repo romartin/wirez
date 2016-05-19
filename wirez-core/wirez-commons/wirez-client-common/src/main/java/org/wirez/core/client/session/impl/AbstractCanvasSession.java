@@ -1,6 +1,6 @@
 package org.wirez.core.client.session.impl;
 
-import org.wirez.core.api.util.UUID;
+import org.wirez.core.util.UUID;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 
@@ -17,6 +17,8 @@ public abstract class AbstractCanvasSession implements DefaultCanvasSession {
         this.canvasHandler = canvasHandler;
     }
 
+    protected abstract void doDispose();
+    
     @Override
     public AbstractCanvas getCanvas() {
         return canvas;
@@ -33,22 +35,24 @@ public abstract class AbstractCanvasSession implements DefaultCanvasSession {
     }
 
     public void onDispose() {
-        canvasHandler.clear();
+        doDispose();
+        canvasHandler.destroy();
     }
 
     @Override
     public boolean equals( final Object o ) {
+        
         if ( this == o ) {
             return true;
         }
+        
         if ( !( o instanceof AbstractCanvasSession) ) {
             return false;
         }
 
         AbstractCanvasSession that = (AbstractCanvasSession) o;
 
-        return uuid.equals(that.uuid);
-
+        return uuid.equals( that.uuid );
     }
 
     @Override

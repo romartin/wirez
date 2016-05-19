@@ -1,7 +1,7 @@
 package org.wirez.backend.registry;
 
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.registry.diagram.BaseDiagramListRegistry;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.registry.diagram.BaseDiagramListRegistry;
 
 import javax.enterprise.context.Dependent;
 import java.util.ArrayList;

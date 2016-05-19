@@ -19,13 +19,13 @@ import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactor
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.command.CommandManager;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
-import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.util.UUID;
+import org.wirez.core.command.CommandManager;
+import org.wirez.core.graph.Graph;
+import org.wirez.core.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.graph.util.GraphUtils;
+import org.wirez.core.rule.RuleViolation;
+import org.wirez.core.util.UUID;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;

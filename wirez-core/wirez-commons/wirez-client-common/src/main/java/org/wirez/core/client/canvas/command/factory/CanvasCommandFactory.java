@@ -1,9 +1,9 @@
 package org.wirez.core.client.canvas.command.factory;
 
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
 import org.wirez.core.client.canvas.command.impl.*;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 

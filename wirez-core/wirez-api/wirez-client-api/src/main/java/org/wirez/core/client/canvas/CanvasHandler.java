@@ -16,7 +16,7 @@
 
 package org.wirez.core.client.canvas;
 
-import org.wirez.core.api.diagram.Diagram;
+import org.wirez.core.diagram.Diagram;
 
 public interface CanvasHandler<D extends Diagram, C extends Canvas> {
 
@@ -39,5 +39,10 @@ public interface CanvasHandler<D extends Diagram, C extends Canvas> {
      * The managed canvas instance.
      */
     C getCanvas();
+
+    /**
+     * Destroy whatever canvas handler state present, it will be no longer used.
+     */
+    void destroy();
     
 }

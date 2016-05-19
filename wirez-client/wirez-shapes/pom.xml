@@ -15,7 +15,7 @@
   
   <modules>
     <module>wirez-shapes-api</module>
-    <module>wirez-shapes-impl</module>
+    <module>wirez-shapes-client</module>
   </modules>
 
 </project>

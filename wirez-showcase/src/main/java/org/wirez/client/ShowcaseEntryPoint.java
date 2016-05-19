@@ -27,7 +27,6 @@ import org.uberfire.client.workbench.widgets.menu.WorkbenchMenuBarPresenter;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.bpmn.api.BPMNDefinitionSet;
 
 import javax.inject.Inject;
 

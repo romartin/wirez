@@ -74,4 +74,9 @@ public class ToolbarItemView extends Composite implements ToolbarItem.View {
         return this;
     }
 
+    @Override
+    public void destroy() {
+        this.removeFromParent();
+    }
+
 }

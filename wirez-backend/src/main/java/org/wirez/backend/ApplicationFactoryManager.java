@@ -2,13 +2,13 @@ package org.wirez.backend;
 
 import org.wirez.core.api.AbstractFactoryManager;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.factory.ModelFactory;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.DiagramImpl;
-import org.wirez.core.api.diagram.Settings;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.factory.ElementFactory;
-import org.wirez.core.api.graph.factory.GraphFactory;
+import org.wirez.core.definition.factory.ModelFactory;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.DiagramImpl;
+import org.wirez.core.diagram.Settings;
+import org.wirez.core.graph.Graph;
+import org.wirez.core.graph.factory.ElementFactory;
+import org.wirez.core.graph.factory.GraphFactory;
 import org.wirez.core.backend.annotation.Application;
 
 import javax.annotation.PostConstruct;

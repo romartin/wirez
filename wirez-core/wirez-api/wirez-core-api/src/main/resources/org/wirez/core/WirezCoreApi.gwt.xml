@@ -26,5 +26,14 @@
 	<inherits name="org.jboss.errai.databinding.DataBinding" />
 
 	<source path="api"/>
+	<source path="command"/>
+	<source path="definition"/>
+	<source path="diagram"/>
+	<source path="graph"/>
+	<source path="lookup"/>
+	<source path="registry"/>
+	<source path="remote"/>
+	<source path="rule"/>
+	<source path="util"/>
 
 </module>

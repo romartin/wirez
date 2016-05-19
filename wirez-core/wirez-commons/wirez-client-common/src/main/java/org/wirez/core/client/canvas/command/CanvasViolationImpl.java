@@ -1,7 +1,7 @@
 package org.wirez.core.client.canvas.command;
 
 
-import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.rule.RuleViolation;
 
 public final class CanvasViolationImpl implements CanvasViolation {
     

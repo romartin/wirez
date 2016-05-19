@@ -26,8 +26,8 @@ import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
 import org.wirez.core.client.canvas.event.CanvasDrawnEvent;
-import org.wirez.core.client.canvas.event.CanvasShapeAddedEvent;
-import org.wirez.core.client.canvas.event.CanvasShapeRemovedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasShapeAddedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;

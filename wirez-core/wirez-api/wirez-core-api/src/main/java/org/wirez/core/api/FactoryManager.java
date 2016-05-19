@@ -1,9 +1,9 @@
 package org.wirez.core.api;
 
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.Settings;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.Settings;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Graph;
 
 public interface FactoryManager {
 

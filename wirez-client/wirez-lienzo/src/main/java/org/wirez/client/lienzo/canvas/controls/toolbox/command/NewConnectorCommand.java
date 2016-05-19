@@ -2,7 +2,7 @@ package org.wirez.client.lienzo.canvas.controls.toolbox.command;
 
 import com.ait.lienzo.client.core.shape.Shape;
 import org.wirez.client.lienzo.util.SVGUtils;
-import org.wirez.core.api.graph.processing.index.bounds.GraphBoundsIndexer;
+import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.ShapeAnimation;

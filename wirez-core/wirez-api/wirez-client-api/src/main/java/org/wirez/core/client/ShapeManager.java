@@ -16,6 +16,7 @@
 
 package org.wirez.core.client;
 
+import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 
 import java.util.Collection;
@@ -24,6 +25,8 @@ public interface ShapeManager {
     
     Collection<ShapeSet> getShapeSets();
 
-    ShapeFactory getFactory(String definitionId);
+    ShapeFactory getFactory( String definitionId );
+    
+    SafeUri getThumbnail( String definitionSetId );
     
 }

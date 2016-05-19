@@ -4,9 +4,9 @@ import org.wirez.bpmn.backend.marshall.json.parser.common.ArrayParser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.IntegerFieldParser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.ObjectParser;
 import org.wirez.bpmn.backend.marshall.json.parser.common.StringFieldParser;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
 
 public class EdgeParser extends ElementParser<Edge<View, Node>> {
     

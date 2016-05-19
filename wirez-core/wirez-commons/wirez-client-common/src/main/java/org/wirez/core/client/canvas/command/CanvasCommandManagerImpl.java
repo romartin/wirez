@@ -1,14 +1,13 @@
 package org.wirez.core.client.canvas.command;
 
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.event.local.CommandExecutedEvent;
-import org.wirez.core.api.event.local.CommandUndoExecutedEvent;
-import org.wirez.core.api.event.local.IsCommandAllowedEvent;
-import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
-import org.wirez.core.api.graph.command.GraphCommandExecutionContextImpl;
-import org.wirez.core.api.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.event.command.CanvasCommandAllowedEvent;
+import org.wirez.core.client.canvas.event.command.CanvasCommandExecutedEvent;
+import org.wirez.core.client.canvas.event.command.CanvasUndoCommandExecutedEvent;
+import org.wirez.core.command.Command;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.graph.command.GraphCommandExecutionContextImpl;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -17,48 +16,53 @@ import javax.inject.Inject;
 @Dependent
 public class CanvasCommandManagerImpl extends AbstractCanvasCommandManager<AbstractCanvasHandler> {
 
-    Event<IsCommandAllowedEvent> isCommandAllowedEvent;
-    Event<CommandExecutedEvent> commandExecutedEvent;
-    Event<CommandUndoExecutedEvent> commandUndoExecutedEvent;
+    Event<CanvasCommandAllowedEvent> isCanvasCommandAllowedEvent;
+    Event<CanvasCommandExecutedEvent> canvasCommandExecutedEvent;
+    Event<CanvasUndoCommandExecutedEvent> canvasUndoCommandExecutedEvent;
     
     @Inject
-    public CanvasCommandManagerImpl(final Event<IsCommandAllowedEvent> isCommandAllowedEvent, 
-                                    final Event<CommandExecutedEvent> commandExecutedEvent,
-                                    final Event<CommandUndoExecutedEvent> commandUndoExecutedEvent) {
-        this.isCommandAllowedEvent = isCommandAllowedEvent;
-        this.commandExecutedEvent = commandExecutedEvent;
-        this.commandUndoExecutedEvent = commandUndoExecutedEvent;
+    public CanvasCommandManagerImpl(final Event<CanvasCommandAllowedEvent> isCanvasCommandAllowedEvent, 
+                                    final Event<CanvasCommandExecutedEvent> canvasCommandExecutedEvent,
+                                    final Event<CanvasUndoCommandExecutedEvent> canvasUndoCommandExecutedEvent) {
+        this.isCanvasCommandAllowedEvent = isCanvasCommandAllowedEvent;
+        this.canvasCommandExecutedEvent = canvasCommandExecutedEvent;
+        this.canvasUndoCommandExecutedEvent = canvasUndoCommandExecutedEvent;
     }
 
     @Override
-    protected void afterGraphCommandAllow(Command<GraphCommandExecutionContext, RuleViolation> graphCommand, CommandResult<RuleViolation> result) {
-        super.afterGraphCommandAllow(graphCommand, result);
+    @SuppressWarnings("unchecked")
+    protected void afterCommandAllow(final AbstractCanvasHandler context,
+                                        final Command<AbstractCanvasHandler, CanvasViolation> command,
+                                        final CommandResult<CanvasViolation> result) {
+        super.afterCommandAllow( context, command, result );
 
-        if ( null != isCommandAllowedEvent ) {
-            isCommandAllowedEvent.fire( new IsCommandAllowedEvent( graphCommand, result ));
+        if ( null != isCanvasCommandAllowedEvent ) {
+            isCanvasCommandAllowedEvent.fire( new CanvasCommandAllowedEvent( context, command, result ) );
         }
-        
     }
 
     @Override
-    protected void afterGraphCommandExecuted( final Command<GraphCommandExecutionContext, RuleViolation> graphCommand, 
-                                              final CommandResult<RuleViolation> result) {
-        super.afterGraphCommandExecuted(graphCommand, result);
-
-        if ( null != commandExecutedEvent ) {
-            commandExecutedEvent.fire( new CommandExecutedEvent( graphCommand, result) );
-        }
+    @SuppressWarnings("unchecked")
+    protected void afterCommandExecuted(final AbstractCanvasHandler context,
+                                        final Command<AbstractCanvasHandler, CanvasViolation> command, 
+                                        final CommandResult<CanvasViolation> result) {
+        super.afterCommandExecuted( context, command, result );
         
+        if ( null != canvasCommandExecutedEvent ) {
+            canvasCommandExecutedEvent.fire( new CanvasCommandExecutedEvent( context, command, result ) );
+        }
     }
 
     @Override
-    protected void afterGraphUndoCommandExecuted(Command<GraphCommandExecutionContext, RuleViolation> graphCommand, CommandResult<RuleViolation> result) {
-        super.afterGraphUndoCommandExecuted(graphCommand, result);
+    @SuppressWarnings("unchecked")
+    protected void afterUndoCommandExecuted(final AbstractCanvasHandler context,
+                                     final Command<AbstractCanvasHandler, CanvasViolation> command,
+                                     final CommandResult<CanvasViolation> result) {
+        super.afterCommandAllow( context, command, result );
 
-        if ( null != commandUndoExecutedEvent ) {
-            commandUndoExecutedEvent.fire( new CommandUndoExecutedEvent( graphCommand, result) );
+        if ( null != canvasUndoCommandExecutedEvent ) {
+            canvasUndoCommandExecutedEvent.fire( new CanvasUndoCommandExecutedEvent( context, command, result ) );
         }
-        
     }
 
     @Override

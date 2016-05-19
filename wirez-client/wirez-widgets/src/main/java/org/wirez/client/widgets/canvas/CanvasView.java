@@ -139,4 +139,22 @@ public class CanvasView extends Composite implements org.wirez.core.client.canva
         layer.clear();
         return this;
     }
+
+    @Override
+    public void destroy() {
+        
+        this.mainPanel.clear();
+        this.toolsPanel.clear();
+        this.layer.destroy();
+        this.canvasLayer.removeFromParent();
+        this.panel.removeFromParent();
+        
+        this.mainPanel = null;
+        this.toolsPanel = null;
+        this.panel = null;
+        this.layer = null;
+        this.canvasLayer = null;
+        
+    }
+    
 }

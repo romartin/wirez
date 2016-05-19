@@ -33,4 +33,10 @@ public class ShapeDragProxyFactoryImpl implements ShapeDragProxyFactory<Abstract
         
     }
 
+    @Override
+    public void destroy() {
+        this.shapeViewDragProxyFactory.destroy();
+        this.shapeViewDragProxyFactory = null;
+    }
+
 }

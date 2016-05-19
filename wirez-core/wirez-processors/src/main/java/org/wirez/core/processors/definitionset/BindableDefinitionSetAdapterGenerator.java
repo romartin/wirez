@@ -17,7 +17,7 @@
 package org.wirez.core.processors.definitionset;
 
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.api.definition.adapter.binding.BindableDefinitionSetAdapter;
+import org.wirez.core.definition.adapter.binding.BindableDefinitionSetAdapter;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
 import org.wirez.core.processors.ProcessingDefinitionSetAnnotations;
 

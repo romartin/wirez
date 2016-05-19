@@ -2,7 +2,7 @@ package org.wirez.client.lienzo.canvas.controls.toolbox.command;
 
 import com.ait.lienzo.client.core.shape.Shape;
 import org.wirez.client.lienzo.util.SVGUtils;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.components.popup.PopupBox;
 

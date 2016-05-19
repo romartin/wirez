@@ -20,9 +20,11 @@
 <module>
 
 	<inherits name='com.google.gwt.user.User' />
-	<inherits name="org.wirez.client.WirezShapesApi"/>
-	
-	<source path="api"/>
-	<source path="client"/>
+	<inherits name="org.wirez.shapes.WirezShapesClient"/>
 
+	<source path="definition"/>
+	<source path="shape/proxy"/>
+	<source path="client"/>
+	<source path="" includes="BasicSet.java"/>
+	
 </module>

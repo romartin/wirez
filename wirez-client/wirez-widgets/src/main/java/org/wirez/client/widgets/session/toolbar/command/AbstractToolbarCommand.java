@@ -5,7 +5,7 @@ import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
-import org.wirez.core.api.util.UUID;
+import org.wirez.core.util.UUID;
 import org.wirez.core.client.session.CanvasSession;
 
 import javax.enterprise.event.Event;
@@ -73,7 +73,17 @@ public abstract class AbstractToolbarCommand<S extends CanvasSession> implements
     public String getUuid() {
         return uuid;
     }
-    
+
+    @Override
+    public void destroy() {
+        doDestroy();
+        this.session = null;
+        this.uuid = null;
+    }
+
+    protected void doDestroy() {
+    }
+
     protected void enable() {
         enableToolbarCommandEvent.fire( new EnableToolbarCommandEvent( this ) );
     }

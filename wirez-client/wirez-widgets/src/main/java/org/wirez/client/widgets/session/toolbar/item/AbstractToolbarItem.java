@@ -29,6 +29,8 @@ public abstract class AbstractToolbarItem<S extends CanvasSession> implements Is
         
         View setEnabled(boolean enabled);
         
+        void destroy();
+        
     }
 
     View view;
@@ -92,6 +94,10 @@ public abstract class AbstractToolbarItem<S extends CanvasSession> implements Is
         
         view.setEnabled( false );
         
+    }
+    
+    public void destroy() {
+        view.destroy();
     }
 
     private void log(final Level level, final String message) {

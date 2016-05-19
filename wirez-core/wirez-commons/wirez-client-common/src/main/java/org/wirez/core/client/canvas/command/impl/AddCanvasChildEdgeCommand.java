@@ -1,11 +1,11 @@
 package org.wirez.core.client.canvas.command.impl;
 
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.GraphCommandExecutionContext;
-import org.wirez.core.api.graph.command.impl.AddChildEdgeCommand;
-import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.command.Command;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.graph.command.impl.AddChildEdgeCommand;
+import org.wirez.core.rule.RuleViolation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
 import org.wirez.core.client.canvas.command.CanvasViolation;

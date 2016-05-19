@@ -84,11 +84,17 @@ public class CanvasScreenTestingMenus {
         return menu;
     }
 
+    public void destroy() {
+        this.canvasSessionPresenter = null;
+        this.session = null;
+    }
+    
+    
     private Command getLogCommandStackCommand() {
 
         return () -> {
             final CanvasCommandManagerImpl ccmi = (CanvasCommandManagerImpl) session.getCanvasCommandManager();
-            final Stack<Stack<org.wirez.core.api.command.Command<AbstractCanvasHandler, CanvasViolation>>> history = ccmi.getHistory();
+            final Stack<Stack<org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation>>> history = ccmi.getHistory();
             logCommandHistory( history );
         };
 
@@ -112,7 +118,7 @@ public class CanvasScreenTestingMenus {
 
     }
 
-    private void logCommandHistory( final Stack<Stack<org.wirez.core.api.command.Command<AbstractCanvasHandler, CanvasViolation>>> history ) {
+    private void logCommandHistory( final Stack<Stack<org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation>>> history ) {
         log( "**** COMMAND HISTORY START *********");
 
         if ( null == history ) {
@@ -123,7 +129,7 @@ public class CanvasScreenTestingMenus {
 
             log( " ( FOUND " + history.size() + " ENTRIES )");
 
-            for ( final Stack<org.wirez.core.api.command.Command<AbstractCanvasHandler, CanvasViolation>> entry : history ) {
+            for ( final Stack<org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation>> entry : history ) {
 
                 log( "--------------- History Entry Start ---------------");
 
@@ -134,7 +140,7 @@ public class CanvasScreenTestingMenus {
                 } else {
 
                     int c = 0;
-                    for ( final org.wirez.core.api.command.Command<AbstractCanvasHandler, CanvasViolation> command : entry ) {
+                    for ( final org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation> command : entry ) {
 
                         logCommand( c, command );
 
@@ -155,7 +161,7 @@ public class CanvasScreenTestingMenus {
     }
 
     private void logCommand( final int count,
-                             final org.wirez.core.api.command.Command<AbstractCanvasHandler, CanvasViolation> command ) {
+                             final org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation> command ) {
 
         if ( null == command ) {
 

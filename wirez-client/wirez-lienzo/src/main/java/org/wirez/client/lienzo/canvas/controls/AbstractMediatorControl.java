@@ -24,9 +24,7 @@ public abstract class AbstractMediatorControl<M extends IMediator> extends Abstr
     }
 
     @Override
-    public void disable() {
-        super.disable();
-
+    protected void doDisable() {
         mediators.remove( getMediator() );
     }
 

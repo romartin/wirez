@@ -1,9 +1,9 @@
 package org.wirez.core.client.components.drag;
 
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.content.view.ViewConnector;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.content.view.ViewConnector;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.EdgeShape;
@@ -12,12 +12,9 @@ import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.util.EdgeMagnetsHelper;
-import org.wirez.core.client.util.ShapeUtils;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-
-// TODO: Move visualization logic to a view class.
 
 @Dependent
 public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCanvasHandler> {
@@ -135,5 +132,15 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
         
         return this;
     }
-    
+
+    @Override
+    public void destroy() {
+        
+        this.canvasHandler = null;
+        this.shapeDragProxyFactory.destroy();
+        this.shapeDragProxyFactory = null;
+        this.magnetsHelper = null;
+        
+    }
+
 }

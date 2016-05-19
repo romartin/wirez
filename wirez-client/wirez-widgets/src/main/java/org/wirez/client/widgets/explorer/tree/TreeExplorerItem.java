@@ -5,9 +5,9 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.util.DefinitionUtils;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.definition.util.DefinitionUtils;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.view.ShapeGlyph;
@@ -61,7 +61,7 @@ public class TreeExplorerItem implements IsWidget {
         return view.asWidget();
     }
     
-    public void show(final Element<org.wirez.core.api.graph.content.view.View> element) {
+    public void show(final Element<org.wirez.core.graph.content.view.View> element) {
         
         final Object definition = element.getContent().getDefinition();
         final String defId = definitionUtils.getDefinitionId( definition );
@@ -69,11 +69,11 @@ public class TreeExplorerItem implements IsWidget {
         
         view.setUUID( element.getUUID() )
             .setName( getItemText(element) )
-            .setGlyph( factory.getGlyphFactory( defId ).build( defId, 25, 25 ) );
+            .setGlyph( factory.glyph( defId, 25, 25 ) );
         
     }
 
-    private String getItemText(final Element<org.wirez.core.api.graph.content.view.View> item) {
+    private String getItemText(final Element<org.wirez.core.graph.content.view.View> item) {
         final String name = definitionUtils.getName( item.getContent().getDefinition());
         return   ( name != null ? name : "- No name -" );
     }

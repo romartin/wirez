@@ -16,7 +16,6 @@
 
 package org.wirez.core.client;
 
-import com.google.gwt.safehtml.shared.SafeUri;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 
 public interface ShapeSet<F extends ShapeFactory> {
@@ -35,11 +34,6 @@ public interface ShapeSet<F extends ShapeFactory> {
      * Get the description for the set.
      */
     String getDescription();
-
-    /**
-     * Get the uri for the thumbnail.
-     */
-    SafeUri getThumbnailUri();
 
     /**
      * The id of the definition set.

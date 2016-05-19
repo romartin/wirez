@@ -2,17 +2,17 @@ package org.wirez.bpmn.backend.marshall.json.parser;
 
 import org.codehaus.jackson.*;
 import org.codehaus.jackson.impl.JsonParserMinimalBase;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.Settings;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.relationship.Child;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.content.view.ViewConnector;
-import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
-import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
-import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.Settings;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Graph;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.relationship.Child;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.content.view.ViewConnector;
+import org.wirez.core.graph.processing.traverse.content.AbstractContentTraverseCallback;
+import org.wirez.core.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
+import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 
 import java.io.IOException;
 import java.math.BigDecimal;

@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.uberfire.mvp.Command;
-import org.wirez.core.api.lookup.diagram.DiagramRepresentation;
+import org.wirez.core.lookup.diagram.DiagramRepresentation;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.util.ShapeUtils;
@@ -59,9 +59,11 @@ public class DiagramExplorerItem implements IsWidget {
         
         this.uuid = diagramRepresentation.getUUID();
         final Collection<ShapeSet> shapeSets = shapeManager.getShapeSets();
-        final SafeUri thumbUri = ShapeUtils.getShapeSet(shapeSets, diagramRepresentation.getShapeSetId()).getThumbnailUri();
+        final ShapeSet shapeSet = ShapeUtils.getShapeSet(shapeSets, diagramRepresentation.getShapeSetId());
+        final String defSetId = shapeSet.getDefinitionSetId();
+        final SafeUri thumbUri = shapeManager.getThumbnail( defSetId );
         
-        view.show( diagramRepresentation.getUUID(), diagramRepresentation.getTitle(), diagramRepresentation.getVFSPath(), thumbUri );
+        view.show( diagramRepresentation.getUUID(), diagramRepresentation.getTitle(), diagramRepresentation.getVFSPath(), null );
     }
     
     public void setActive( final boolean isActive ) {

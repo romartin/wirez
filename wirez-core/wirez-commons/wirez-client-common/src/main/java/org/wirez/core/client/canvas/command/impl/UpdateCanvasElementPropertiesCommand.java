@@ -1,7 +1,7 @@
 package org.wirez.core.client.canvas.command.impl;
 
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasCommand;
 import org.wirez.core.client.canvas.command.CanvasViolation;

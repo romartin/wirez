@@ -21,7 +21,15 @@
 
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.wirez.core.WirezCoreApi"/>
-	
+
 	<source path="api"/>
+	<source path="command"/>
+	<source path="definition"/>
+	<source path="diagram"/>
+	<source path="graph"/>
+	<source path="lookup"/>
+	<source path="registry"/>
+	<source path="rule"/>
+	<source path="util"/>
 
 </module>

@@ -1,9 +1,9 @@
 package org.wirez.core.client.session.command;
 
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.batch.BatchCommandManager;
-import org.wirez.core.api.command.delegate.BatchDelegateCommandManager;
-import org.wirez.core.api.command.stack.StackCommandManager;
+import org.wirez.core.command.Command;
+import org.wirez.core.command.batch.BatchCommandManager;
+import org.wirez.core.command.delegate.BatchDelegateCommandManager;
+import org.wirez.core.command.stack.StackCommandManager;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;

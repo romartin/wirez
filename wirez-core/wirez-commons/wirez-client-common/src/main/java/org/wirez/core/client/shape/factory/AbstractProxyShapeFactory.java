@@ -16,10 +16,10 @@
 
 package org.wirez.core.client.shape.factory;
 
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.Shape;
-import org.wirez.core.client.shape.proxy.ShapeProxy;
+import org.wirez.core.definition.shape.ShapeProxy;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 import org.wirez.core.client.shape.view.ShapeView;
 
@@ -40,12 +40,6 @@ public abstract class AbstractProxyShapeFactory<W, V extends ShapeView, S extend
     public String getDescription( final String definitionId ) {
         final P proxy = getProxy( definitionId );
         return proxy.getDescription();
-    }
-
-    @Override
-    protected ShapeGlyphFactory getGlyphFactory(final Class<?> clazz ) {
-        final String id = getDefinitionId( clazz );
-        return getGlyphFactory( id );
     }
 
     @Override
@@ -82,11 +76,11 @@ public abstract class AbstractProxyShapeFactory<W, V extends ShapeView, S extend
     }
 
     @Override
-    public ShapeGlyph build( final String definitionId, 
+    public ShapeGlyph glyph( final String definitionId, 
                              final double width, 
                              final double height ) {
         final Class<?> clazz = getDefinitionClass( definitionId );
-        return build( clazz, width, height );
+        return glyph( clazz, width, height );
     }
     
 }

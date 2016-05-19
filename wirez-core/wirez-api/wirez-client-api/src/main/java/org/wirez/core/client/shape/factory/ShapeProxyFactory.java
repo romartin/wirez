@@ -16,12 +16,12 @@
 package org.wirez.core.client.shape.factory;
 
 import org.wirez.core.client.shape.Shape;
-import org.wirez.core.client.shape.proxy.ShapeProxy;
+import org.wirez.core.definition.shape.ShapeProxy;
 
 /**
  * Factory for building proxied shapes.
  */
-public interface ShapeProxyFactory<W, C, S extends Shape, P extends ShapeProxy<W>> extends ShapeFactory<W, C, S>, ShapeGlyphFactory {
+public interface ShapeProxyFactory<W, C, S extends Shape, P extends ShapeProxy<W>> extends ShapeFactory<W, C, S> {
 
     void addProxy(Class<?> clazz, P proxy);
 

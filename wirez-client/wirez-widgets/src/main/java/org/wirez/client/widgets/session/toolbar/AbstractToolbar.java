@@ -39,6 +39,8 @@ public abstract class AbstractToolbar<S extends CanvasSession> implements IsWidg
         
         View clear();
         
+        void destroy();
+        
     }
 
     Instance<AbstractToolbarItem<S>> toolbarItems;
@@ -97,10 +99,23 @@ public abstract class AbstractToolbar<S extends CanvasSession> implements IsWidg
         
     }
     
-    public void clear() {
+    public void destroy() {
+        
+        for ( final ToolbarCommand<S> c : commands ) {
+            c.destroy();
+        }
         commands.clear();
+        
+        
+        for ( final AbstractToolbarItem<S> item : items ) {
+            item.destroy();
+        }
         items.clear();
-        view.clear();
+        
+        view.destroy();
+        
+        this.view = null;
+        this.session = null;
     }
 
     @Override

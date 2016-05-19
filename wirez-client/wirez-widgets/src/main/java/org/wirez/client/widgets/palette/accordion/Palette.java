@@ -27,7 +27,7 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroup;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.components.glyph.GlyphTooltip;
@@ -179,7 +179,7 @@ public class Palette implements IsWidget {
                     final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
                     final String category = definitionAdapter.getCategory( definition );
                     final String description = factory.getDescription( defId );
-                    final ShapeGlyph<Group> glyph = factory.getGlyphFactory( defId ).build( defId );
+                    final ShapeGlyph<Group> glyph = factory.glyph( defId, 50, 50 );
 
                     // Shapes not considered to be on the palette.
                     if ( null == glyph ) {

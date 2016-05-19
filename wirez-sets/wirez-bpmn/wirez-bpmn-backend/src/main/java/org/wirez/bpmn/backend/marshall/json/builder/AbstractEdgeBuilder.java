@@ -1,15 +1,15 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 
-import org.wirez.bpmn.api.BPMNDefinition;
+import org.wirez.bpmn.definition.BPMNDefinition;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.command.impl.AddNodeCommand;
-import org.wirez.core.api.graph.command.impl.SetConnectionTargetNodeCommand;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.rule.RuleViolation;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.command.impl.AddNodeCommand;
+import org.wirez.core.graph.command.impl.SetConnectionTargetNodeCommand;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.rule.RuleViolation;
 
 // TODO: Improve error handling.
 public abstract class AbstractEdgeBuilder<W, T extends Edge<View<W>, Node>> 

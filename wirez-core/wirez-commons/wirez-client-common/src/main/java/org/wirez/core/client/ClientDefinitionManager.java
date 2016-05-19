@@ -4,8 +4,8 @@ import org.jboss.errai.ioc.client.container.IOC;
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.AbstractDefinitionManager;
-import org.wirez.core.api.definition.DefinitionSetProxy;
-import org.wirez.core.api.definition.adapter.*;
+import org.wirez.core.definition.DefinitionSetProxy;
+import org.wirez.core.definition.adapter.*;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

@@ -10,10 +10,10 @@ import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.bpmn.backend.marshall.json.parser.BPMN2JsonParser;
 import org.wirez.bpmn.backend.marshall.json.parser.ParsingContext;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.diagram.Settings;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.util.GraphUtils;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.Settings;
+import org.wirez.core.graph.Graph;
+import org.wirez.core.graph.util.GraphUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

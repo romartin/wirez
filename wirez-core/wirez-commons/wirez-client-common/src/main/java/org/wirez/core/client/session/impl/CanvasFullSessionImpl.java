@@ -1,7 +1,7 @@
 package org.wirez.core.client.session.impl;
 
-import org.wirez.core.api.command.stack.StackCommandManager;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.command.stack.StackCommandManager;
+import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
@@ -105,10 +105,16 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
     }
 
     @Override
-    public void onDispose() {
+    public void doDispose() {
         
         if ( null != canvasCommandManager ) {
-            ((StackCommandManager) canvasCommandManager).clearHistory();
+            
+            if ( canvasCommandManager instanceof  StackCommandManager ) {
+
+                ((StackCommandManager) canvasCommandManager).clearHistory();
+
+            }
+            
             canvasCommandManager = null;                    
         }
 
@@ -141,8 +147,6 @@ public class CanvasFullSessionImpl extends CanvasReadOnlySessionImpl
             builderControl.disable();
             builderControl = null;
         }
-
-        super.onDispose();
 
     }
     

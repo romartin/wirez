@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerRegistrationControl;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
@@ -36,7 +36,6 @@ import org.wirez.core.client.components.toolbox.builder.ToolboxButtonGridBuilder
 import org.wirez.core.client.components.toolbox.event.ToolboxButtonEvent;
 import org.wirez.core.client.shape.NodeShape;
 import org.wirez.core.client.shape.Shape;
-import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -75,9 +74,9 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
     @SuppressWarnings("unchecked")
     protected List<ToolboxCommand<?, Object>> getCommands(final Element element ) {
 
-        if ( element.getContent() instanceof  org.wirez.core.api.graph.content.view.View ) {
-            final org.wirez.core.api.graph.content.view.View viewContent = 
-                    (org.wirez.core.api.graph.content.view.View) element.getContent();
+        if ( element.getContent() instanceof org.wirez.core.graph.content.view.View) {
+            final org.wirez.core.graph.content.view.View viewContent = 
+                    (org.wirez.core.graph.content.view.View) element.getContent();
 
             final List<ToolboxCommand<?, Object>> result = new LinkedList<>();
 
@@ -194,11 +193,12 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
     }
 
     @Override
-    public void disable() {
-        
+    protected void doDisable() {
+        super.doDisable();
+
         // Delete the control view.
         canvasHandler.getCanvas().deleteControl( CanvasToolboxControl.this.asWidget() );
-        
+
         // De-register all toolbox components.
         for ( final Toolbox toolbox : toolboxMap.values() ) {
 
@@ -207,9 +207,8 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
                 toolbox.remove();
 
             }
-            
+
         }
-        
     }
 
     private ToolboxCommand setCommandView(final ToolboxCommand command) {

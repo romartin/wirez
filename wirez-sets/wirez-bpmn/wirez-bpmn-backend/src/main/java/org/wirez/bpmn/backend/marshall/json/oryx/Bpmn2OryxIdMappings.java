@@ -1,9 +1,9 @@
 package org.wirez.bpmn.backend.marshall.json.oryx;
 
 import org.apache.commons.lang3.StringUtils;
-import org.wirez.bpmn.api.BPMNDiagram;
-import org.wirez.bpmn.api.property.general.Name;
-import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
+import org.wirez.bpmn.definition.BPMNDiagram;
+import org.wirez.bpmn.definition.property.general.Name;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 
 import javax.enterprise.context.Dependent;
 import java.util.*;

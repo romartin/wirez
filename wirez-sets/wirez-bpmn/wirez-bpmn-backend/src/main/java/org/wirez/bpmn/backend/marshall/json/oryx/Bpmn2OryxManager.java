@@ -1,7 +1,7 @@
 package org.wirez.bpmn.backend.marshall.json.oryx;
 
-import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
-import org.wirez.bpmn.api.factory.BPMNPropertyFactory;
+import org.wirez.bpmn.definition.factory.BPMNDefinitionFactory;
+import org.wirez.bpmn.definition.factory.BPMNPropertyFactory;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.Bpmn2OryxPropertyManager;
 
 import javax.annotation.PostConstruct;

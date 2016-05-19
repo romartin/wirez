@@ -2,10 +2,10 @@ package org.wirez.client.lienzo.canvas.index.bounds;
 
 import org.wirez.client.lienzo.LienzoLayer;
 import org.wirez.client.lienzo.util.LienzoLayerUtils;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.index.bounds.BoundsIndexer;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.processing.index.bounds.BoundsIndexer;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.index.bounds.CanvasBoundsIndexer;
@@ -47,5 +47,10 @@ public class CanvasBoundsIndexerImpl implements CanvasBoundsIndexer<AbstractCanv
         
         return null;
     }
-    
+
+    @Override
+    public void destroy() {
+        this.canvasHandler = null;
+    }
+
 }

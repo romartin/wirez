@@ -6,10 +6,10 @@ import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import org.wirez.client.lienzo.LienzoLayer;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.index.bounds.GraphBoundsIndexer;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.components.drag.ConnectorDragProxyFactory;
@@ -139,6 +139,15 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
         return this;
     }
 
+    public void destroy() {
+
+        ConnectorDragProxyFactoryImpl.this.graphBoundsIndexer.destroy();
+        ConnectorDragProxyFactoryImpl.this.graphBoundsIndexer = null;
+        ConnectorDragProxyFactoryImpl.this.canvasHandler = null;
+        ConnectorDragProxyFactoryImpl.this.shapeViewDragProxyFactory.destroy();
+        ConnectorDragProxyFactoryImpl.this.shapeViewDragProxyFactory = null;
+        
+    }
     
     private class DummyShapeView extends WiresShape implements ShapeView<DummyShapeView> {
 
@@ -259,6 +268,11 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
         @Override
         public int getZIndex() {
             return 0;
+        }
+
+        @Override
+        public void destroy() {
+            
         }
     }
 }

@@ -37,10 +37,14 @@ public class ClearSelectionCommand extends AbstractSelectionToolbarCommand<Defau
     @Override
     public <T> void execute(final ToolbarCommandCallback<T> callback) {
 
-        session.getShapeSelectionControl().clearSelection();
+        if ( null != session.getShapeSelectionControl() ) {
 
-        if ( null != callback ) {
-            callback.onSuccess( null );
+            session.getShapeSelectionControl().clearSelection();
+
+            if ( null != callback ) {
+                callback.onSuccess( null );
+            }
+
         }
 
     }

@@ -1,11 +1,11 @@
 package org.wirez.core.client.canvas.controls.toolbox.command.connector;
 
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.index.bounds.GraphBoundsIndexer;
-import org.wirez.core.api.util.UUID;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
+import org.wirez.core.util.UUID;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.ShapeAnimation;
@@ -184,8 +184,28 @@ public abstract class NewConnectorCommand<I> extends AbstractToolboxCommand<I> {
             
         });
         
-        
-        
     }
 
+
+    @Override
+    public void destroy() {
+      
+        this.graphBoundsIndexer.destroy();
+        this.connectorDragProxyFactory.destroy();
+        this.edgeBuilderControl.disable();
+        this.graphBoundsIndexer.destroy();
+        this.canvasHighlight.destroy();
+        
+        this.clientDefinitionManager = null;
+        this.clientFactoryServices = null;
+        this.shapeManager = null;
+        this.graphBoundsIndexer = null;
+        this.connectorDragProxyFactory = null;
+        this.edgeBuilderControl = null;
+        this.selectionAnimation = null;
+        this.deSelectionAnimation = null;
+        this.canvasHighlight = null;
+        
+    }
+    
 }

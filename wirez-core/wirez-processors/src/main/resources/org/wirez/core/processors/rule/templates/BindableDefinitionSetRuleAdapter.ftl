@@ -17,15 +17,15 @@
 package ${packageName};
 
 import ${parentAdapterClassName};
-import org.wirez.core.api.rule.Rule;
-import org.wirez.core.api.rule.CardinalityRule;
-import org.wirez.core.api.rule.EdgeCardinalityRule;
-import org.wirez.core.api.rule.ConnectionRule;
-import org.wirez.core.api.rule.impl.rules.ConnectionRuleImpl;
-import org.wirez.core.api.rule.impl.rules.ContainmentRuleImpl;
-import org.wirez.core.api.rule.impl.rules.EdgeCardinalityRuleImpl;
-import org.wirez.core.api.rule.impl.rules.CardinalityRuleImpl;
-import org.wirez.core.api.rule.impl.rules.*;
+import org.wirez.core.rule.Rule;
+import org.wirez.core.rule.CardinalityRule;
+import org.wirez.core.rule.EdgeCardinalityRule;
+import org.wirez.core.rule.ConnectionRule;
+import org.wirez.core.rule.impl.rules.ConnectionRuleImpl;
+import org.wirez.core.rule.impl.rules.ContainmentRuleImpl;
+import org.wirez.core.rule.impl.rules.EdgeCardinalityRuleImpl;
+import org.wirez.core.rule.impl.rules.CardinalityRuleImpl;
+import org.wirez.core.rule.impl.rules.*;
 
 import javax.annotation.Generated;
 import javax.annotation.PostConstruct;

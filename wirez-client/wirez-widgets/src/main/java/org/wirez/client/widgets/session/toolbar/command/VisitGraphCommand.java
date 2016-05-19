@@ -44,12 +44,13 @@ public class VisitGraphCommand extends AbstractToolbarCommand<DefaultCanvasReadO
     @Override
     public <T> void execute(final ToolbarCommandCallback<T> callback) {
 
-        new CanvasHighlightVisitor(session.getCanvasHandler(), highlightAnimation)
-                .run(() -> {
+        new CanvasHighlightVisitor()
+                .run(session.getCanvasHandler(), highlightAnimation, () -> {
                     if (null != callback) {
                         callback.onSuccess(null);
                     }
                 });
+
     }
 
 }

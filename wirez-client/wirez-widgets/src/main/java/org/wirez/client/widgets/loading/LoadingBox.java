@@ -4,8 +4,8 @@ import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
 import org.wirez.client.widgets.event.WidgetProcessingCompletedEvent;
 import org.wirez.client.widgets.event.WidgetProcessingStartedEvent;
-import org.wirez.core.client.canvas.event.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;

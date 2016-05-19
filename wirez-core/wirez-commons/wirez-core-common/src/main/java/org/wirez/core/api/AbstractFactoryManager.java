@@ -1,13 +1,15 @@
 package org.wirez.core.api;
 
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.definition.adapter.DefinitionSetAdapter;
-import org.wirez.core.api.definition.factory.ModelFactory;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Element;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.factory.*;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.definition.adapter.DefinitionSetAdapter;
+import org.wirez.core.definition.factory.ModelFactory;
+import org.wirez.core.api.FactoryManager;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Graph;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.factory.*;
 
 import java.util.HashSet;
 import java.util.LinkedList;

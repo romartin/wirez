@@ -1,8 +1,8 @@
 package org.wirez.core.client.util;
 
 import com.google.gwt.core.client.GWT;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;

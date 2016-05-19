@@ -1,7 +1,7 @@
 package org.wirez.backend.definition.adapter;
 
 
-import org.wirez.core.api.definition.adapter.Adapter;
+import org.wirez.core.definition.adapter.Adapter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

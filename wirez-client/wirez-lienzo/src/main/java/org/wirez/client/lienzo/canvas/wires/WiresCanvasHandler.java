@@ -16,28 +16,28 @@
 
 package org.wirez.client.lienzo.canvas.wires;
 
-import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.api.diagram.Diagram;
-import org.wirez.core.api.graph.processing.index.IncrementalIndexBuilder;
-import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
-import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.graph.GraphRulesManager;
+import org.wirez.core.client.canvas.event.processing.CanvasInitializationCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.graph.processing.index.IncrementalIndexBuilder;
+import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
+import org.wirez.core.graph.util.GraphUtils;
+import org.wirez.core.rule.graph.GraphRulesManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.event.*;
 import org.wirez.core.client.service.ClientFactoryServices;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Dependent
 public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extends AbstractCanvasHandler<D, C> {
-
-    private static Logger LOGGER = Logger.getLogger(WiresCanvasHandler.class.getName());
 
     @Inject
     public WiresCanvasHandler(final ClientDefinitionManager clientDefinitionManager,
@@ -61,10 +61,4 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
         
     }
 
-    private void log(final Level level, final String message) {
-        if ( LogConfiguration.loggingIsEnabled() ) {
-            LOGGER.log(level, message);
-        }
-    }
-    
 }

@@ -1,13 +1,13 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.command.CommandUtils;
-import org.wirez.core.api.command.batch.BatchCommandResult;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.content.view.ViewConnector;
+import org.wirez.core.command.Command;
+import org.wirez.core.command.CommandUtils;
+import org.wirez.core.command.batch.BatchCommandResult;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.content.view.ViewConnector;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -20,23 +20,20 @@ import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequest;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequestImpl;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequest;
-import org.wirez.core.client.canvas.event.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.session.command.Session;
 import org.wirez.core.client.shape.EdgeShape;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.util.EdgeMagnetsHelper;
-import org.wirez.core.client.util.ShapeUtils;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
-
-// TODO: Move visualization stuff to a view class.
 
 @Dependent
 public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl implements NodeBuilderControl<AbstractCanvasHandler> {
@@ -76,8 +73,7 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
     }
 
     @Override
-    public void disable() {
-        super.disable();
+    protected void doDisable() {
         this.elementBuilderControl.disable();
     }
 

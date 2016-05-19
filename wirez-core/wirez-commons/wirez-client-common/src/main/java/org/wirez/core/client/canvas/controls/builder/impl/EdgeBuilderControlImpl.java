@@ -1,12 +1,12 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
-import org.wirez.core.api.command.CommandResult;
-import org.wirez.core.api.command.CommandUtils;
-import org.wirez.core.api.command.batch.BatchCommandResult;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.command.CommandUtils;
+import org.wirez.core.command.batch.BatchCommandResult;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -17,8 +17,8 @@ import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerControl;
 import org.wirez.core.client.canvas.controls.builder.EdgeBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.EdgeBuildRequest;
-import org.wirez.core.client.canvas.event.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.session.command.Session;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
@@ -145,6 +145,11 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
         }
 
         fireProcessingCompleted();
+        
+    }
+
+    @Override
+    protected void doDisable() {
         
     }
 

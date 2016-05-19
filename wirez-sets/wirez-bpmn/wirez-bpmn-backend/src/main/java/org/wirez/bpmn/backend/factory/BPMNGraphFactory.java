@@ -1,11 +1,11 @@
 package org.wirez.bpmn.backend.factory;
 
-import org.wirez.bpmn.api.factory.BPMNAbstractGraphFactory;
-import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
+import org.wirez.bpmn.definition.factory.BPMNAbstractGraphFactory;
+import org.wirez.bpmn.definition.factory.BPMNDefinitionFactory;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.api.graph.command.GraphCommandManager;
-import org.wirez.core.api.graph.command.factory.GraphCommandFactory;
+import org.wirez.core.graph.command.GraphCommandManager;
+import org.wirez.core.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.backend.annotation.Application;
 
 import javax.enterprise.context.Dependent;

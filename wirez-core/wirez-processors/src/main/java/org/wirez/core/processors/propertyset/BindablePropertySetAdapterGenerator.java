@@ -17,7 +17,7 @@
 package org.wirez.core.processors.propertyset;
 
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.api.definition.adapter.binding.BindablePropertySetAdapter;
+import org.wirez.core.definition.adapter.binding.BindablePropertySetAdapter;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
 import org.wirez.core.processors.ProcessingPropertySetAnnotations;
 

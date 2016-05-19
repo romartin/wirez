@@ -1,17 +1,17 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
-import org.wirez.core.api.command.Command;
-import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.index.bounds.GraphBoundsIndexer;
-import org.wirez.core.api.graph.util.GraphUtils;
-import org.wirez.core.api.rule.RuleManager;
-import org.wirez.core.api.rule.RuleViolation;
-import org.wirez.core.api.rule.RuleViolations;
-import org.wirez.core.api.rule.model.ModelCardinalityRuleManager;
-import org.wirez.core.api.rule.model.ModelContainmentRuleManager;
+import org.wirez.core.command.Command;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
+import org.wirez.core.graph.util.GraphUtils;
+import org.wirez.core.rule.RuleManager;
+import org.wirez.core.rule.RuleViolation;
+import org.wirez.core.rule.RuleViolations;
+import org.wirez.core.rule.model.ModelCardinalityRuleManager;
+import org.wirez.core.rule.model.ModelContainmentRuleManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
@@ -20,13 +20,15 @@ import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerControl;
 import org.wirez.core.client.canvas.controls.builder.ElementBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequest;
-import org.wirez.core.client.canvas.event.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
+import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.shape.factory.ShapeFactory;
-import org.wirez.core.api.graph.Element;
+import org.wirez.core.graph.Element;
+import org.wirez.core.util.UUID;
+
 import javax.enterprise.event.Event;
 import java.util.LinkedList;
 import java.util.List;
@@ -139,6 +141,21 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         
     }
 
+    @Override
+    protected void doDisable() {
+        graphBoundsIndexer.destroy();
+        graphBoundsIndexer = null;
+        clientDefinitionManager = null;
+        clientFactoryServices = null;
+        canvasCommandManager = null;
+        canvasCommandFactory = null;
+        graphUtils = null;
+        modelContainmentRuleManager.clearRules();
+        modelCardinalityRuleManager.clearRules();
+        modelContainmentRuleManager = null;
+        modelCardinalityRuleManager = null;
+    }
+
     public interface CommandsCallback {
 
         void onComplete(List<Command<AbstractCanvasHandler, CanvasViolation>> commands);
@@ -155,7 +172,7 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         final DefinitionAdapter definitionAdapter = clientDefinitionManager.getDefinitionAdapter( definition. getClass() );
         final String defId = definitionAdapter.getId( definition );
 
-        clientFactoryServices.newElement(org.wirez.core.api.util.UUID.uuid(), defId, new ServiceCallback<Element>() {
+        clientFactoryServices.newElement(UUID.uuid(), defId, new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element element) {
 

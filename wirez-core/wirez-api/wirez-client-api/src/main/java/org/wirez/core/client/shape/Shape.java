@@ -39,7 +39,7 @@ public interface Shape<V extends ShapeView> {
     V getShapeView();
     
     /**
-     * Destroy the shape and any related components and assets.
+     * Destroy the shape and any related components and assets and de-register it from the canvas.
      */
     void destroy();
 

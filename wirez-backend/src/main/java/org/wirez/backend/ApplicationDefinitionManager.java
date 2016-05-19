@@ -19,9 +19,9 @@ package org.wirez.backend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.api.AbstractDefinitionManager;
-import org.wirez.core.api.definition.DefinitionSetProxy;
-import org.wirez.core.api.definition.adapter.*;
-import org.wirez.core.api.definition.factory.ModelFactory;
+import org.wirez.core.definition.DefinitionSetProxy;
+import org.wirez.core.definition.adapter.*;
+import org.wirez.core.definition.factory.ModelFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

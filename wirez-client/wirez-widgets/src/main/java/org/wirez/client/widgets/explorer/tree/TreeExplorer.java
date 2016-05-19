@@ -4,12 +4,16 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.api.graph.Edge;
-import org.wirez.core.api.graph.Graph;
-import org.wirez.core.api.graph.Node;
-import org.wirez.core.api.graph.content.relationship.Child;
-import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
-import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessor;
+import org.wirez.core.client.canvas.event.AbstractCanvasHandlerEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Graph;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.relationship.Child;
+import org.wirez.core.graph.processing.traverse.content.AbstractContentTraverseCallback;
+import org.wirez.core.graph.processing.traverse.content.ChildrenTraverseProcessor;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.controls.event.SelectSingleShapeEvent;
 import org.wirez.core.client.canvas.event.*;
@@ -78,17 +82,17 @@ public class TreeExplorer implements IsWidget {
         doShow(canvasHandler.getDiagram().getGraph());
     }
 
-    private void doShow(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
+    private void doShow(final Graph<org.wirez.core.graph.content.view.View, Node<org.wirez.core.graph.content.view.View, Edge>> graph) {
         traverseChildrenEdges(graph, true);
     }
 
-    private void traverseChildrenEdges(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph,
+    private void traverseChildrenEdges(final Graph<org.wirez.core.graph.content.view.View, Node<org.wirez.core.graph.content.view.View, Edge>> graph,
                                        final boolean expand) {
         assert graph != null;
 
         clear();
 
-        childrenTraverseProcessor.traverse(graph, new AbstractContentTraverseCallback<Child, Node<org.wirez.core.api.graph.content.view.View, Edge>, Edge<Child, Node>>() {
+        childrenTraverseProcessor.traverse(graph, new AbstractContentTraverseCallback<Child, Node<org.wirez.core.graph.content.view.View, Edge>, Edge<Child, Node>>() {
 
             Node parent = null;
             int level = 0;
@@ -121,14 +125,14 @@ public class TreeExplorer implements IsWidget {
             }
 
             @Override
-            public void startGraphTraversal(final Graph<org.wirez.core.api.graph.content.view.View, Node<org.wirez.core.api.graph.content.view.View, Edge>> graph) {
+            public void startGraphTraversal(final Graph<org.wirez.core.graph.content.view.View, Node<org.wirez.core.graph.content.view.View, Edge>> graph) {
                 super.startGraphTraversal(graph);
                 levelIdx.clear();
                 levelIdx.add(-1);
             }
 
             @Override
-            public void startNodeTraversal(final Node<org.wirez.core.api.graph.content.view.View, Edge> node) {
+            public void startNodeTraversal(final Node<org.wirez.core.graph.content.view.View, Edge> node) {
                 super.startNodeTraversal(node);
 
                 inc(levelIdx, level);

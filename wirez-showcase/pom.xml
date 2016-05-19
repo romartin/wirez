@@ -28,7 +28,7 @@
 
   <artifactId>wirez-showcase</artifactId>
   <packaging>war</packaging>
-  <name>Wirez - Webapp</name>
+  <name>Wirez - Showcase webapp</name>
 
   <properties>
     <errai.version>${version.org.jboss.errai}</errai.version>

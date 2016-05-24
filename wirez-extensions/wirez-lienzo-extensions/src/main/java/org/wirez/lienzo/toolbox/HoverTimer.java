@@ -25,6 +25,10 @@ public class HoverTimer implements NodeMouseEnterHandler, NodeMouseExitHandler {
 
     private Timer m_timer;
 
+    protected Timer getTimer() {
+        return m_timer;
+    }
+
     @Override
     public void onNodeMouseEnter(NodeMouseEnterEvent event) {
         cancel();
@@ -47,14 +51,17 @@ public class HoverTimer implements NodeMouseEnterHandler, NodeMouseExitHandler {
 
     private void createHideTimer() {
         if (m_timer == null) {
-            m_timer = new Timer() {
-                @Override
-                public void run() {
-                    actions.onMouseExit();
-
-                }
-            };
+            m_timer = createTimer();
             m_timer.schedule(200);
         }
+    }
+
+    protected Timer createTimer() {
+        return new Timer() {
+            @Override
+            public void run() {
+                actions.onMouseExit();
+            }
+        };
     }
 }

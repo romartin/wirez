@@ -69,7 +69,7 @@ public class EndNoneEvent implements BPMNDefinition {
 
     @Property
     @FieldDef(label = "Radius", property = "value")
-    @Slider( min = 25, max = 50, step = 1, precission = 0 )
+    @Slider( min = 25.0, max = 50.0, step = 1, precision = 0.0 )
     private Radius radius;
 
     @Labels

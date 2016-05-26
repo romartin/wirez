@@ -82,13 +82,13 @@ public class Task implements BPMNDefinition {
 
     @Property
     @FieldDef(label = "Width", property = "value")
-    @Slider( min = 100, max = 300, step = 10, precission = 0 )
+    @Slider( min = 100.0, max = 300.0, step = 10.0, precision = 0.0 )
     @Valid
     private Width width;
 
     @Property
     @FieldDef(label = "Height", property = "value")
-    @Slider( min = 40, max = 100, step = 5, precission = 0 )
+    @Slider( min = 40.0, max = 100.0, step = 5.0, precision = 0.0 )
     @Valid
     private Height height;
 

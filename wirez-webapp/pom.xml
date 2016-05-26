@@ -80,7 +80,7 @@
 
     <dependency>
       <groupId>org.livespark</groupId>
-      <artifactId>livespark-form-modeler-engine</artifactId>
+      <artifactId>livespark-form-modeler-processing-engine</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -529,7 +529,7 @@
             <!-- Form modeler. -->
             <compileSourcesArtifact>org.livespark:livespark-crud-component</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.livespark:livespark-form-modeler-engine</compileSourcesArtifact>
+            <compileSourcesArtifact>org.livespark:livespark-form-modeler-processing-engine</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-rendering-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-client</compileSourcesArtifact>

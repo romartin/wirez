@@ -34,7 +34,7 @@ public class BackgroundSet implements BPMNPropertySet {
 
     @Property
     @FieldDef(label = "Border Size", property = "value")
-    @Slider( min = 0, max = 5, step = 0.5)
+    @Slider( min = 0.0, max = 5.0, step = 0.5)
     @Valid
     private BorderSize borderSize;
 

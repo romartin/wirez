@@ -75,7 +75,7 @@
 
       <dependency>
         <groupId>org.livespark</groupId>
-        <artifactId>livespark-form-modeler-engine</artifactId>
+        <artifactId>livespark-form-modeler-processing-engine</artifactId>
         <version>${version.org.livespark}</version>
       </dependency>
 
@@ -255,7 +255,7 @@
         <artifactId>el-api</artifactId>
         <version>${version.javax.el.api}</version>
       </dependency>
-      
+
     </dependencies>
 
   </dependencyManagement>

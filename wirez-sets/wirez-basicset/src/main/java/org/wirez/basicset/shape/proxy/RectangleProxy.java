@@ -61,7 +61,7 @@ public final class RectangleProxy implements org.wirez.shapes.proxy.RectanglePro
 
     @Override
     public String getGlyphBackgroundColor() {
-        return Rectangle.COLOR;
+        return Rectangle.RectangleBuilder.COLOR;
     }
     
 }

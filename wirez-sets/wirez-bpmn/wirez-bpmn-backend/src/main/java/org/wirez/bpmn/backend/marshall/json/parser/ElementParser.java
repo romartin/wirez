@@ -23,6 +23,7 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public void initialize(Context context) {
 
         this.context = context;
@@ -46,7 +47,7 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
                         context.getOryxManager().getMappingsManager().getOryxPropertyId( def.getClass(), property.getClass() );
                 Object value = propertyAdapter.getValue(property);
                 String valueStr = value != null ?
-                        context.getOryxManager().getPropertyManager().serialize( propertyType, value ) : "";
+                        context.getOryxManager().getPropertyManager().serialize( property, propertyType, value ) : "";
                 propertiesParser.addParser( new StringFieldParser( oryxPropId, valueStr ) );
             }
         }

@@ -17,23 +17,31 @@
 package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Width;
-import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
+import org.wirez.bpmn.definition.property.general.BPMNGeneral;
+import org.wirez.bpmn.definition.property.simulation.*;
+import org.wirez.bpmn.definition.property.task.TaskType;
+import org.wirez.bpmn.shape.proxy.TaskShapeProxy;
 import org.wirez.core.definition.annotation.Description;
+import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.factory.Builder;
 import org.wirez.core.graph.Node;
+import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class )
+@Definition( type = Node.class, builder = Task.TaskBuilder.class )
+@Shape( factory = BasicShapesFactory.class, proxy = TaskShapeProxy.class )
 public class Task implements BPMNDefinition {
 
     @Category
@@ -45,11 +53,6 @@ public class Task implements BPMNDefinition {
     @Description
     public static final transient String description = "A task is a unit of work - the job to be performed";
     
-    public static final transient String COLOR = "#dfeff8";
-    public static final Double WIDTH = 136d;
-    public static final Double HEIGHT = 48d;
-    public static final Double BORDER_SIZE = 0.5d;
-
     @PropertySet
     private BPMNGeneral general;
 
@@ -95,6 +98,9 @@ public class Task implements BPMNDefinition {
     @Property
     private org.wirez.bpmn.definition.property.simulation.Currency currency;
 
+    @Property
+    private TaskType taskType;
+    
     @Labels
     private final Set<String> labels = new HashSet<String>() {{
         add( "all" );
@@ -108,6 +114,37 @@ public class Task implements BPMNDefinition {
         add( "fromtoall" );
         add( "ActivitiesMorph" );
     }};
+
+    @NonPortable
+    public static class TaskBuilder implements Builder<Task> {
+
+        public static final String COLOR = "#f9fad2";
+        public static final Double WIDTH = 136d;
+        public static final Double HEIGHT = 48d;
+        public static final Double BORDER_SIZE = 1d;
+        public static final String BORDER_COLOR = "#000000";
+
+        @Override
+        public Task build() {
+            return new Task(  new BPMNGeneral( "Task" ),
+                    new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
+                    new FontSet(),
+                    new Width( WIDTH ),
+                    new Height( HEIGHT ),
+                    new Min(),
+                    new Max(),
+                    new Mean(),
+                    new TimeUnit(),
+                    new StandardDeviation(),
+                    new DistributionType(),
+                    new Quantity(),
+                    new WorkingHours(),
+                    new UnitCost(),
+                    new Currency(),
+                    new TaskType() );
+        }
+
+    }
 
     public Task() {
 
@@ -127,7 +164,8 @@ public class Task implements BPMNDefinition {
                 @MapsTo("quantity") org.wirez.bpmn.definition.property.simulation.Quantity quantity,
                 @MapsTo("workingHours") org.wirez.bpmn.definition.property.simulation.WorkingHours workingHours,
                 @MapsTo("unitCost") org.wirez.bpmn.definition.property.simulation.UnitCost unitCost,
-                @MapsTo("currency") org.wirez.bpmn.definition.property.simulation.Currency currency) {
+                @MapsTo("currency") org.wirez.bpmn.definition.property.simulation.Currency currency,
+                @MapsTo("taskType") TaskType taskType ) {
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
@@ -143,6 +181,7 @@ public class Task implements BPMNDefinition {
         this.workingHours = workingHours;
         this.unitCost = unitCost;
         this.currency = currency;
+        this.taskType = taskType;
 
     }
 
@@ -281,4 +320,13 @@ public class Task implements BPMNDefinition {
     public void setCurrency( org.wirez.bpmn.definition.property.simulation.Currency currency ) {
         this.currency = currency;
     }
+
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+    
 }

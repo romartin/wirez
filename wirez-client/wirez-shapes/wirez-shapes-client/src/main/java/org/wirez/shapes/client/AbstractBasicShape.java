@@ -16,14 +16,14 @@
 
 package org.wirez.shapes.client;
 
-import org.wirez.core.graph.Edge;
-import org.wirez.core.graph.Node;
-import org.wirez.core.graph.content.view.View;
-import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.client.shape.AbstractCompositeShape;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.view.HasRadius;
 import org.wirez.core.client.shape.view.HasSize;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.util.GraphUtils;
 
 public abstract class AbstractBasicShape<W, V extends org.wirez.shapes.client.view.BasicShapeView>
     extends AbstractCompositeShape<W, Node<View<W>, Edge>, V> {
@@ -32,62 +32,8 @@ public abstract class AbstractBasicShape<W, V extends org.wirez.shapes.client.vi
         super(shapeView);
     }
 
-    @Override
-    public void applyProperties(Node<View<W>, Edge> element, final MutationContext mutationContext) {
-        super.applyProperties(element, mutationContext);
-
-        // Fill color.
-        _applyFillColor(element, mutationContext);
-
-        // Apply border styles.
-        _applyBorders(element, mutationContext);
-
-    }
-    
-    protected abstract String getBackgroundColor( Node<View<W>, Edge> element );
-    protected abstract String getBorderColor( Node<View<W>, Edge> element );
-    protected abstract Double getBorderSize( Node<View<W>, Edge> element );
-
-    protected AbstractBasicShape<W, V> _applyFillColor(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
-        final String color = getBackgroundColor( element );
-        super._applyFillColor(color, mutationContext);
-        return this;
-    }
-
-    protected AbstractBasicShape<W, V> _applyBorders(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
-        final String color = getBorderColor( element );
-        final Double width = getBorderSize( element );
-        super._applyBorders(color, width, mutationContext);
-        
-        return this;
-    }
-
-    protected AbstractBasicShape<W, V> _applyWidthAndHeight(final Node<View<W>, Edge> element,
-                                                            final Double width,
-                                                            final Double height,
-                                                            final MutationContext mutationContext) {
-        applySize((HasSize) getShapeView(), width, height, mutationContext);
-        GraphUtils.updateBounds(width, height, element.getContent());
-        return this;
-    }
-
-    protected AbstractBasicShape<W, V> _applyRadius(final Node<View<W>, Edge> element,
-                                                    final Double radius,
-                                                    final MutationContext mutationContext) {
-        if ( null != radius ) {
-            applyRadius((HasRadius) getShapeView(), radius, mutationContext);
-            GraphUtils.updateBounds(radius, element.getContent());
-        }
-        return this;
-    }
-    
     protected W getDefinition( final Node<View<W>, Edge> element ) {
         return element.getContent().getDefinition();
     }
 
-    @Override
-    protected void doDestroy() {
-        
-    }
-    
 }

@@ -110,38 +110,61 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
         return null;
     }
     
+    @SuppressWarnings("unchecked")
     protected void setProperties(BuilderContext context, BPMNDefinition definition) {
         assert definition != null;
         Bpmn2OryxPropertyManager propertyManager = context.getOryxManager().getPropertyManager();
         Bpmn2OryxIdMappings idMappings = context.getOryxManager().getMappingsManager();
 
         DefinitionAdapter<BPMNDefinition> adapter = context.getDefinitionManager().getDefinitionAdapter( definition.getClass() );
+        
         Set<?> defProperties = adapter.getProperties( definition );
+        
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             final String oryxId = entry.getKey();
             
             if ( !idMappings.isSkipProperty(definition.getClass(), oryxId) ) {
 
                 final String pValue = entry.getValue();
-                final String pId = idMappings.getPropertyId( definition.getClass(), oryxId );
+                final String pId = idMappings.getPropertyId( definition, oryxId );
                 boolean found = false;
+                
                 if ( null != pId ) {
+                    
                     final Object property = context.getGraphUtils().getProperty( defProperties, pId );
+                    
                     if ( null != property ) {
+                        
                         try {
-                            PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter( property.getClass() );
+                            
+                            PropertyAdapter<Object, Object> propertyAdapter = 
+                                    (PropertyAdapter<Object, Object>) context.getDefinitionManager().getPropertyAdapter( property.getClass() );
+                            
                             PropertyType propertyType = propertyAdapter.getType( property );
-                            Object value = propertyManager.parse( propertyType, pValue );
-                            context.getDefinitionManager().getPropertyAdapter(property.getClass()).setValue(property, value);
+                            
+                            Object value = propertyManager.parse( property, propertyType, pValue );
+
+                            PropertyAdapter<Object, Object> propertyAdapter2 =
+                                    (PropertyAdapter<Object, Object>) context.getDefinitionManager().getPropertyAdapter(property.getClass());
+
+                            propertyAdapter2.setValue(property, value);
+                            
                             found = true;
+                            
                         } catch (Exception e) {
+                            
                             LOG.error("Cannot parse value [" + pValue + "] for property [" + pId + "]");
+                            
                         }
+                        
                     }
+                    
                 }
 
                 if ( !found ) {
+                    
                     LOG.warn("Property [" + pId + "] not found for definition [" + pId + "]");
+                    
                 }
                 
             }

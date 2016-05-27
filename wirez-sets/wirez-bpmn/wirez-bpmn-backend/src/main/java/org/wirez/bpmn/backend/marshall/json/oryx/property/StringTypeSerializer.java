@@ -14,12 +14,12 @@ public class StringTypeSerializer implements Bpmn2OryxPropertySerializer<String>
     }
 
     @Override
-    public String parse( String value ) {
+    public String parse( Object property, String value ) {
         return value;
     }
 
     @Override
-    public String serialize( String value ) {
+    public String serialize( Object property, String value ) {
         return value;
     }
 }

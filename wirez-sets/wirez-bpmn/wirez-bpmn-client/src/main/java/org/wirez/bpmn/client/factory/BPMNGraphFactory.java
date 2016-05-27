@@ -1,7 +1,6 @@
 package org.wirez.bpmn.client.factory;
 
 import org.wirez.bpmn.definition.factory.BPMNAbstractGraphFactory;
-import org.wirez.bpmn.definition.factory.BPMNDefinitionFactory;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.graph.command.GraphCommandManager;
@@ -21,11 +20,9 @@ public class BPMNGraphFactory extends BPMNAbstractGraphFactory {
     @Inject
     public BPMNGraphFactory(final DefinitionManager definitionManager,
                             final FactoryManager factoryManager,
-                            final BPMNDefinitionFactory bpmnDefinitionBuilder,
                             final GraphCommandManager graphCommandManager,
                             final GraphCommandFactory graphCommandFactory) {
-        super(definitionManager, factoryManager, bpmnDefinitionBuilder,
-                graphCommandManager, graphCommandFactory );
+        super(definitionManager, factoryManager, graphCommandManager, graphCommandFactory );
     }
 
 }

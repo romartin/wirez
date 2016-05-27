@@ -4,8 +4,8 @@ import org.wirez.basicset.definition.PolygonWithIcon;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.BasicShapeProxy;
 import org.wirez.shapes.proxy.HasChildProxies;
-import org.wirez.shapes.proxy.icon.DynamicIconProxy;
-import org.wirez.shapes.proxy.icon.ICONS;
+import org.wirez.shapes.proxy.icon.dynamics.DynamicIconProxy;
+import org.wirez.shapes.proxy.icon.dynamics.Icons;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -66,7 +66,7 @@ public final class PolygonWithIconProxy implements
 
     @Override
     public String getGlyphBackgroundColor() {
-        return PolygonWithIcon.COLOR;
+        return PolygonWithIcon.PolygonWithIconBuilder.COLOR;
     }
 
     @Override
@@ -81,9 +81,9 @@ public final class PolygonWithIconProxy implements
         private static final String COLOR = "#000000";
         
         @Override
-        public ICONS getIcon(final PolygonWithIcon definition ) {
+        public Icons getIcon(final PolygonWithIcon definition ) {
             final String icon = definition.getIconType().getValue();
-            return ICONS.parse( icon );
+            return Icons.parse( icon );
         }
 
         @Override
@@ -94,10 +94,6 @@ public final class PolygonWithIconProxy implements
         @Override
         public double getHeight( final PolygonWithIcon element ) {
             return element.getRadius().getValue() / 2;
-        }
-        @Override
-        public String getNamePropertyValue( final PolygonWithIcon element ) {
-            return null;
         }
 
         @Override

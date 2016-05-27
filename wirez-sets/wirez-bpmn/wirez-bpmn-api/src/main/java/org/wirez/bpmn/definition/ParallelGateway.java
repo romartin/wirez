@@ -17,6 +17,7 @@
 package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.property.Radius;
@@ -25,9 +26,10 @@ import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.shape.proxy.ParallelGatewayShapeProxy;
 import org.wirez.core.definition.annotation.Description;
-import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.graph.Node;
 import org.wirez.core.definition.annotation.Shape;
+import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.factory.Builder;
+import org.wirez.core.graph.Node;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
@@ -35,23 +37,19 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class )
-@Shape( factory = BasicShapesFactory.class,
-        proxy = ParallelGatewayShapeProxy.class )
+@Definition( type = Node.class, builder = ParallelGateway.ParallelGatewayBuilder.class )
+@Shape( factory = BasicShapesFactory.class, proxy = ParallelGatewayShapeProxy.class )
 public class ParallelGateway implements BPMNDefinition {
 
     @Category
     public static final transient String category = "Gateways";
 
     @Title
-    public static final transient String title = "BPMN Diagram";
+    public static final transient String title = "Parallel Gateway";
 
     @Description
     public static final transient String description = "Parallel Gateway";
     
-    public static final transient String COLOR = "#f0e68c";
-    public static final Double RADIUS = 20d;
-
     @PropertySet
     private BPMNGeneral general;
 
@@ -74,6 +72,25 @@ public class ParallelGateway implements BPMNDefinition {
         add( "fromtoall" );
         add( "GatewaysMorph" );
     }};
+
+    @NonPortable
+    public static class ParallelGatewayBuilder implements Builder<ParallelGateway> {
+
+        public static final transient String COLOR = "#f2ea9e";
+        public static final transient String ICON_COLOR = "#ae8104";
+        public static final transient String BORDER_COLOR = "#000000";
+        public static final Double BORDER_SIZE = 1d;
+        public static final Double RADIUS = 20d;
+
+        @Override
+        public ParallelGateway build() {
+            return new ParallelGateway(  new BPMNGeneral( "gw" ),
+                    new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
+                    new FontSet(),
+                    new Radius( RADIUS ) );
+        }
+
+    }
 
     public ParallelGateway() {
 

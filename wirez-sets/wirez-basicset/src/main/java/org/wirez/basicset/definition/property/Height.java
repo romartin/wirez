@@ -53,6 +53,10 @@ public class Height {
         
     }
 
+    public Height( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

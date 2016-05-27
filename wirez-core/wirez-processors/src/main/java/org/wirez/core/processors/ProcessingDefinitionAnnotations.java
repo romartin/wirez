@@ -14,6 +14,7 @@ public class ProcessingDefinitionAnnotations {
     private final Map<String, String> titleFieldNames = new HashMap<>();
     private final Map<String, String> categoryFieldNames = new HashMap<>();
     private final Map<String, String> descriptionFieldNames = new HashMap<>();
+    private final Map<String, String> builderFieldNames = new HashMap<>();
     private final Map<String, String[]> shapeProxies = new HashMap<>();
 
     public Map<String, Set<String>> getPropertySetFieldNames() {
@@ -46,6 +47,10 @@ public class ProcessingDefinitionAnnotations {
 
     public Map<String, String> getDescriptionFieldNames() {
         return descriptionFieldNames;
+    }
+
+    public Map<String, String> getBuilderFieldNames() {
+        return builderFieldNames;
     }
 
     public Map<String, String[]> getShapeProxies() {

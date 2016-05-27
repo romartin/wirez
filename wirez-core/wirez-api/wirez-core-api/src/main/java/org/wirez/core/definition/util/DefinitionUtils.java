@@ -8,6 +8,7 @@ import org.wirez.core.definition.adapter.PropertySetAdapter;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @ApplicationScoped
@@ -64,7 +65,7 @@ public class DefinitionUtils {
         
         if ( null != name ) {
             
-            final PropertyAdapter<Object> propertyAdapter = definitionManager.getPropertyAdapter( name.getClass() );
+            final PropertyAdapter<Object, ?> propertyAdapter = definitionManager.getPropertyAdapter( name.getClass() );
             return (String) propertyAdapter.getValue( name );
             
         }
@@ -80,8 +81,8 @@ public class DefinitionUtils {
 
         if ( null != name ) {
 
-            final PropertyAdapter<Object> propertyAdapter = definitionManager.getPropertyAdapter( name.getClass() );
-            return (String) propertyAdapter.getId( name );
+            final PropertyAdapter<Object, ?> propertyAdapter = definitionManager.getPropertyAdapter( name.getClass() );
+            return propertyAdapter.getId( name );
 
         }
 
@@ -114,4 +115,32 @@ public class DefinitionUtils {
 
         return properties;
     }
+
+    @SuppressWarnings("unchecked")
+    public Object getPropertyAllowedValue( final Object property,
+                                           final String value ) {
+
+        final PropertyAdapter propertyAdapter = definitionManager.getPropertyAdapter(property.getClass());
+
+        final Map<Object, String> allowedValues = propertyAdapter.getAllowedValues( property );
+
+        if ( null != value && null != allowedValues && !allowedValues.isEmpty() ) {
+
+            for ( final Map.Entry<Object, String> entry : allowedValues.entrySet() ) {
+
+                final String v = entry.getValue();
+
+                if ( value.equals( v ) ) {
+
+                    return entry.getKey();
+
+                }
+
+            }
+
+        }
+
+        return null;
+    }
+    
 }

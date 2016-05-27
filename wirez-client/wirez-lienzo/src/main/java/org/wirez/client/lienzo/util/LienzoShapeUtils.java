@@ -15,7 +15,7 @@ public class LienzoShapeUtils {
                                                    final Double width,
                                                    final Double height) {
 
-        final LinearGradient linearGradient = new LinearGradient(0, width, 0, - height );
+        final LinearGradient linearGradient = new LinearGradient(0, width, 0, - height / 2 );
         linearGradient.addColorStop(1, endColor );
         linearGradient.addColorStop(0, startColor );
 

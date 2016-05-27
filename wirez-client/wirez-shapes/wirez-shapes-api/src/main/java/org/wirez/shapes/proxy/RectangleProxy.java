@@ -1,6 +1,6 @@
 package org.wirez.shapes.proxy;
 
-public interface RectangleProxy<W> extends BasicTitledShapeProxy<W> {
+public interface RectangleProxy<W> extends BasicNamedShapeProxy<W> {
     
     double getWidth(W element);
 

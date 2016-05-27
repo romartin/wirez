@@ -53,6 +53,10 @@ public class WorkingHours implements BPMNProperty {
     public WorkingHours() {
     }
 
+    public WorkingHours( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

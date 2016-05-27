@@ -34,7 +34,10 @@ public class DefinitionSetProxyGenerator extends AbstractAdapterGenerator {
 
     public StringBuffer generate(String packageName, String className,
                                  ProcessingEntity definitionSetProcessedEntity,
+                                 Map<String, String> buildersMap,
                                  Messager messager) throws GenerationException {
+
+        String defSetClassName = definitionSetProcessedEntity.getClassName();
 
         Map<String, Object> root = new HashMap<String, Object>();
         
@@ -47,8 +50,24 @@ public class DefinitionSetProxyGenerator extends AbstractAdapterGenerator {
         root.put("parentFQCName",
                 DefinitionSetProxy.class.getName());
         root.put("defSetFQCName",
-                definitionSetProcessedEntity.getClassName());
+                defSetClassName );
 
+        String builder = "new " + defSetClassName + "()";
+        
+        if ( null != buildersMap && !buildersMap.isEmpty() ) {
+
+            String builderClass = buildersMap.get( defSetClassName );
+            
+            if ( null != builderClass && builderClass.trim().length() > 0 ) {
+                builder = "new " + builderClass + "().build()";
+            }
+            
+        }
+
+        // Builder.
+        root.put("builder",
+                builder );
+        
         //Generate code
         return writeTemplate(packageName, className, root, messager);
     }

@@ -27,8 +27,8 @@ public class HorizLayoutBuilder implements LayoutBuilder<HorizLayoutSettings> {
     public LayoutBuilder setSettings(final HorizLayoutSettings settings) {
         this.width = settings.getWidth();
         this.margin = settings.getMargin();
-        this.currentX = settings.getMargin();
-        this.currentY = settings.getMargin();
+        clear();
+
         return this;
     }
 
@@ -36,20 +36,23 @@ public class HorizLayoutBuilder implements LayoutBuilder<HorizLayoutSettings> {
     public double[] add(final double _gW, final double _gH) {
         final double gW = _gW + margin; 
         final double gH = _gH + margin;
-        final double maxX = currentX + gW;
+        final double maxX = currentX + gW + margin;
         
-        if (currentY == 0 || ( gH > currentY) ) {
+        if ( currentY == 0 || ( gH > currentY ) ) {
             currentY += gH;
         }
         
-        if (maxX > width) {
+        if ( maxX >= width ) {
             currentX = 0;
             currentY += gH;
-        } else {
-            currentX += gW;
-        }
+        } 
+        
+        currentX += gW;
 
-        return new double[] {currentX - ( gW / 2), currentY - gH };
+        final double x = currentX - ( gW / 2);
+        final double y = currentY - gH;
+        
+        return new double[] { x , y };
     }
 
     @Override
@@ -60,7 +63,7 @@ public class HorizLayoutBuilder implements LayoutBuilder<HorizLayoutSettings> {
     @Override
     public LayoutBuilder clear() {
         currentX = 0;
-        currentY = 0;
+        currentY = margin;
         return this;
     }
     

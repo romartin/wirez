@@ -62,7 +62,8 @@ public final class UpdateElementPropertyValueCommand extends AbstractGraphComman
     @SuppressWarnings("unchecked")
     public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
         final Object p = GraphUtils.getProperty( context.getDefinitionManager(), element, propertyId );
-        PropertyAdapter<Object> adapter = context.getDefinitionManager().getPropertyAdapter( p.getClass() ); 
+        final PropertyAdapter<Object, Object> adapter = 
+                (PropertyAdapter<Object, Object>) context.getDefinitionManager().getPropertyAdapter( p.getClass() ); 
         oldValue = adapter.getValue(p);
         adapter.setValue(p, value);
         return GraphCommandResultBuilder.RESULT_OK;

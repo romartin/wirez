@@ -29,7 +29,10 @@ public class FontSet implements BPMNPropertySet {
     private FontBorderSize fontBorderSize;
 
     public FontSet() {
-
+        this( new FontFamily(), 
+                new FontColor(),
+                new FontSize(), 
+                new FontBorderSize() );
     }
 
     public FontSet(@MapsTo("fontFamily") FontFamily fontFamily,
@@ -40,6 +43,16 @@ public class FontSet implements BPMNPropertySet {
         this.fontColor = fontColor;
         this.fontSize = fontSize;
         this.fontBorderSize = fontBorderSize;
+    }
+
+    public FontSet(String fontFamily,
+                   String fontColor,
+                   Double fontSize,
+                   Double fontBorderSize) {
+        this.fontFamily = new FontFamily( fontFamily );
+        this.fontColor = new FontColor( fontColor );
+        this.fontSize = new FontSize( fontSize );
+        this.fontBorderSize = new FontBorderSize( fontBorderSize );
     }
 
     public String getPropertySetName() {

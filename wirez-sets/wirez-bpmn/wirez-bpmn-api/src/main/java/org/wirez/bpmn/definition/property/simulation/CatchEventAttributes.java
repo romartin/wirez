@@ -35,7 +35,12 @@ public class CatchEventAttributes implements BPMNPropertySet {
     private DistributionType distributionType;
 
     public CatchEventAttributes() {
-
+        this( new Min(),
+                new Max(),
+                new Mean(),
+                new TimeUnit(),
+                new StandardDeviation(),
+                new DistributionType() );
     }
 
     public CatchEventAttributes(@MapsTo("min") Min min,
@@ -50,6 +55,20 @@ public class CatchEventAttributes implements BPMNPropertySet {
         this.timeUnit = timeUnit;
         this.standardDeviation = standardDeviation;
         this.distributionType = distributionType;
+    }
+
+    public CatchEventAttributes(Double min,
+                                Double max,
+                                Double mean,
+                                String timeUnit,
+                                Double standardDeviation,
+                                String distributionType) {
+        this.min = new Min( min );
+        this.max = new Max( max );
+        this.mean = new Mean( mean );
+        this.timeUnit = new TimeUnit( timeUnit );
+        this.standardDeviation = new StandardDeviation( standardDeviation );
+        this.distributionType = new DistributionType( distributionType );
     }
 
     public String getPropertySetName() {

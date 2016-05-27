@@ -17,24 +17,26 @@
 package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Width;
-import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
+import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.rule.annotation.CanContain;
+import org.wirez.core.definition.factory.Builder;
 import org.wirez.core.graph.Node;
+import org.wirez.core.rule.annotation.CanContain;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class )
+@Definition( type = Node.class, builder = Lane.LaneBuilder.class )
 @CanContain( roles = { "all" } )
 public class Lane implements BPMNDefinition {
 
@@ -48,11 +50,6 @@ public class Lane implements BPMNDefinition {
     public static final transient String description = "Pools and Lanes represent responsibilities for activities in a process. " +
             "A pool or a lane can be an organization, a role, or a system. " +
             "Lanes sub-divide pools or other lanes hierarchically.";
-    
-    public static final transient String COLOR = "#ffffff";
-    public static final Double WIDTH = 450d;
-    public static final Double HEIGHT = 250d;
-    public static final Double BORDER_SIZE = 1d;
 
     @PropertySet
     private BPMNGeneral general;
@@ -76,6 +73,26 @@ public class Lane implements BPMNDefinition {
         add( "fromtoall" );
         add( "canContainArtifacts" );
     }};
+
+    @NonPortable
+    public static class LaneBuilder implements Builder<Lane> {
+
+        public static final transient String COLOR = "#ffffff";
+        public static final Double WIDTH = 450d;
+        public static final Double HEIGHT = 250d;
+        public static final Double BORDER_SIZE = 1d;
+        public static final String BORDER_COLOR = "#000000";
+
+        @Override
+        public Lane build() {
+            return new Lane(  new BPMNGeneral( "Lane" ),
+                    new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
+                    new FontSet(),
+                    new Width( WIDTH ),
+                    new Height( HEIGHT ) );
+        }
+
+    }
 
     public Lane() {
 

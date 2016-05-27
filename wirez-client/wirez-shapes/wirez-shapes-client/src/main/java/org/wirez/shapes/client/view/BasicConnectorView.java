@@ -37,18 +37,19 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
     private String color;
 
     public BasicConnectorView( final AbstractDirectionalMultiPointShape<?> line, 
-                               final Decorator<?> head, 
-                               final Decorator<?> tail, 
+                               final MultiPathDecorator headDecorator, 
+                               final MultiPathDecorator tailDecorator, 
                                final WiresManager manager) {
-        super(line, head, tail, manager);
+        super(line, headDecorator, tailDecorator, manager);
     }
 
     public BasicConnectorView( final WiresMagnet headMagnet, 
                                final WiresMagnet tailMagnet, 
                                final AbstractDirectionalMultiPointShape<?> line, 
-                               final Decorator<?> head, Decorator<?> tail, 
+                               final MultiPathDecorator headDecorator, 
+                               final MultiPathDecorator tailDecorator, 
                                final WiresManager manager) {
-        super(headMagnet, tailMagnet, line, head, tail, manager);
+        super(headMagnet, tailMagnet, line, headDecorator, tailDecorator, manager);
     }
 
     protected abstract HandlerRegistration doAddHandler(final ViewEventType type,
@@ -93,27 +94,27 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
 
     protected T applyActiveState(final boolean isSelectedState) {
         if ( null == this.strokeWidth) {
-            this.strokeWidth = getDecoratableLine().getStrokeWidth();
+            this.strokeWidth = getLine().getStrokeWidth();
         }
         
         if ( null == this.color) {
-            this.color = getDecoratableLine().getStrokeColor();
+            this.color = getLine().getStrokeColor();
         }
 
-        getDecoratableLine().setStrokeWidth(5);
-        getDecoratableLine().setStrokeColor(isSelectedState ? ColorName.RED : ColorName.BLUE);
+        getLine().setStrokeWidth(5);
+        getLine().setStrokeColor(isSelectedState ? ColorName.RED : ColorName.BLUE);
         
         return (T) this;
     }
 
     protected T applyDeActiveState() {
         if ( null != this.strokeWidth ) {
-            getDecoratableLine().setStrokeWidth(5);
+            getLine().setStrokeWidth(5);
             this.strokeWidth = null;
         }
 
         if ( null != this.color ) {
-            getDecoratableLine().setStrokeColor(color);
+            getLine().setStrokeColor(color);
             this.color = null;
         }
         
@@ -122,7 +123,7 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
 
     @Override
     public Shape<?> getAttachableShape() {
-        return getDecoratableLine();
+        return getLine();
     }
 
     @Override

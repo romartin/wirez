@@ -12,6 +12,7 @@ public class ProcessingPropertyAnnotations {
     private final Map<String, String> descriptionFieldNames = new HashMap<>();
     private final Map<String, String> readOnlyFieldNames = new HashMap<>();
     private final Map<String, String> optionalFieldNames = new HashMap<>();
+    private final Map<String, String> allowedValuesFieldNames = new HashMap<>();
 
     public Map<String, String> getValueFieldNames() {
         return valueFieldNames;
@@ -41,4 +42,7 @@ public class ProcessingPropertyAnnotations {
         return optionalFieldNames;
     }
 
+    public Map<String, String> getAllowedValuesFieldNames() {
+        return allowedValuesFieldNames;
+    }
 }

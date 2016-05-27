@@ -100,7 +100,6 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
 
     public void init() {
         view.init(layer);
-        layer.onBeforeDraw(() -> AbstractCanvas.this.beforeDrawCanvas());
         layer.onAfterDraw(() -> AbstractCanvas.this.afterDrawCanvas());
     }
 
@@ -240,10 +239,6 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
         }
     }
     
-    protected void beforeDrawCanvas() {
-        
-    }
-
     protected void afterDrawCanvas() {
 
         canvasDrawnEvent.fire( new CanvasDrawnEvent( this ) );

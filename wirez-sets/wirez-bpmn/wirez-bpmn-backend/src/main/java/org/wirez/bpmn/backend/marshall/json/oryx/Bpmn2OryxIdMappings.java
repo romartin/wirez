@@ -3,9 +3,13 @@ package org.wirez.bpmn.backend.marshall.json.oryx;
 import org.apache.commons.lang3.StringUtils;
 import org.wirez.bpmn.definition.BPMNDiagram;
 import org.wirez.bpmn.definition.property.general.Name;
+import org.wirez.bpmn.definition.property.task.TaskType;
+import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import java.util.*;
 
 /**
@@ -16,12 +20,14 @@ import java.util.*;
 public class Bpmn2OryxIdMappings {
 
     private final Map<Class<?>, String> defMappings = new HashMap<Class<?>, String>();
-    private final Map<Class<?>, String> propMappings = new HashMap<Class<?>, String>();
+    
+    DefinitionManager definitionManager;
     
     private final Map<Class<?>, String> globalMappings = new HashMap<Class<?>, String>() {{
         // Add here global class <-> oryxId mappings, if any.
         // No custom mappings, for now.
         put( Name.class, "name" );
+        put( TaskType.class, "tasktype" );
     }};
 
     private final Map<Class<?>, Set<String>> skippedProperties = new HashMap<Class<?>, Set<String>>() {{
@@ -41,23 +47,18 @@ public class Bpmn2OryxIdMappings {
             }});
     }};
 
-    public Bpmn2OryxIdMappings() {
+    @Inject
+    public Bpmn2OryxIdMappings( DefinitionManager definitionManager ) {
+        this.definitionManager = definitionManager;
     }
 
-    void init( List<Class<?>> definitions, List<Class<?>> properties ) {
+    void init( List<Class<?>> definitions ) {
 
         // Load default & custom mappings for BPMN definitions.
         for ( final Class<?> defClass : definitions ) {
             String customMapping = globalMappings.get( defClass );
             String orxId = customMapping != null ? customMapping : getDefaultOryxDefinitionId( defClass );
             defMappings.put( defClass, orxId );
-        }
-
-        // Load default & custom mappings for BPMN properties.
-        for ( final Class<?> propClass : properties ) {
-            String customMapping = globalMappings.get( propClass );
-            String orxId = customMapping != null ? customMapping : getDefaultOryxPropertyId( propClass );
-            propMappings.put( propClass, orxId );
         }
 
     }
@@ -67,7 +68,8 @@ public class Bpmn2OryxIdMappings {
     }
 
     public String getOryxPropertyId( Class<?> clazz ) {
-        return propMappings.get( clazz );
+        String customMapping = globalMappings.get( clazz );
+        return customMapping != null ? customMapping : getDefaultOryxPropertyId( clazz );
     }
 
     public String getOryxPropertyId( Class<?> definitionClass,
@@ -88,22 +90,45 @@ public class Bpmn2OryxIdMappings {
         return toSkip != null && toSkip.contains( oryxPropertyId );
     }
 
-    public Class<?> getProperty( String oryxId ) {
-        return get(oryxId, propMappings);
+    @SuppressWarnings("unchecked")
+    public <T> Class<?> getProperty( T definition, String oryxId ) {
+
+
+        Class<?> clazz = getKey( oryxId, globalMappings );
+        if ( null != clazz ) {
+            return clazz;
+        }
+        
+        DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+        
+        Set<Object> properties = (Set<Object>) definitionAdapter.getProperties( definition );
+        
+        if ( null != properties && !properties.isEmpty() ) {
+            
+            for ( Object property : properties ) {
+                Class<?> pClass = property.getClass();
+                String pId = getDefaultOryxPropertyId( pClass );
+                if ( oryxId.equals( pId ) ) {
+                    return pClass;
+                }
+            }
+            
+        }
+        
+        return null;
     }
 
     public Class<?> getDefinition( String oryxId ) {
         return get(oryxId, defMappings);
     }
     
-    public String getPropertyId( String oryxId ) {
-        Class<?> c = getProperty( oryxId );
-        return null != c ? getPropertyId( c ) : null;
-    }
-    
-    public String getPropertyId( Class<?> definitionClass,
+    public <T> String getPropertyId( T definition,
                                String oryxId ) {
+        
+        Class<?> definitionClass = definition.getClass();
+        
         Map<Class<?>, String> mappings = definitionMappings.get( definitionClass );
+        
         if ( null != mappings ) {
             Class<?> p = get( oryxId, mappings );
             if ( null != p ) {
@@ -111,7 +136,8 @@ public class Bpmn2OryxIdMappings {
             }
         }
 
-        return getPropertyId( oryxId );
+        Class<?> c = getProperty( definition, oryxId );
+        return null != c ? getPropertyId( c ) : null;
     }
 
     public String getDefinitionId( String oryxId ) {
@@ -129,17 +155,26 @@ public class Bpmn2OryxIdMappings {
 
     private Class<?> get( String oryxId, Map<Class<?>, String> map ) {
 
-        Set<Map.Entry<Class<?>, String>> entrySet = map.entrySet();
-        for ( Map.Entry<Class<?>, String> entry : entrySet ) {
-            String oId = entry.getValue();
-
-            if ( oId.equals( oryxId ) ) {
-                return entry.getKey();
-            }
+        Class<?> r = getKey( oryxId, map );
+        if ( null != r ) {
+            return r;
         }
 
         return null;
 
+    }
+    
+    private Class<?> getKey( String value, Map<Class<?>, String> map ) {
+        Set<Map.Entry<Class<?>, String>> entrySet = map.entrySet();
+        for ( Map.Entry<Class<?>, String> entry : entrySet ) {
+            String oId = entry.getValue();
+
+            if ( oId.equals( value ) ) {
+                return entry.getKey();
+            }
+        }
+        
+        return null;
     }
 
     private String getDefaultOryxDefinitionId( Class<?> clazz ) {

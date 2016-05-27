@@ -26,7 +26,9 @@ public class BackgroundSet implements BPMNPropertySet {
     private BorderSize borderSize;
 
     public BackgroundSet() {
-
+        this( new BgColor(),
+                new BorderColor(),
+                new BorderSize() );
     }
 
     public BackgroundSet(@MapsTo("bgColor") BgColor bgColor,
@@ -35,6 +37,14 @@ public class BackgroundSet implements BPMNPropertySet {
         this.bgColor = bgColor;
         this.borderColor = borderColor;
         this.borderSize = borderSize;
+    }
+
+    public BackgroundSet( String bgColor,
+                          String borderColor,
+                          Double borderSize) {
+        this.bgColor = new BgColor( bgColor );
+        this.borderColor = new BorderColor( borderColor );
+        this.borderSize = new BorderSize( borderSize );
     }
 
     public String getPropertySetName() {

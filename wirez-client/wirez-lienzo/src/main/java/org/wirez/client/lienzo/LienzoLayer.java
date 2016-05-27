@@ -69,14 +69,6 @@ public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>, Shape<?>> {
     }
 
     @Override
-    public void onBeforeDraw(final Command callback) {
-        layer.setOnLayerBeforeDraw(layer1 -> {
-            callback.execute();
-            return true;
-        });
-    }
-
-    @Override
     public void onAfterDraw(final Command callback) {
         layer.setOnLayerAfterDraw(layer1 -> callback.execute());
     }

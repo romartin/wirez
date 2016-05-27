@@ -52,6 +52,10 @@ public class Name {
     public Name() {
     }
 
+    public Name( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

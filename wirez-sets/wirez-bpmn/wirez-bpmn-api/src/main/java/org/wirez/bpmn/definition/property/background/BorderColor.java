@@ -53,6 +53,10 @@ public class BorderColor implements BPMNProperty {
     public BorderColor() {
     }
 
+    public BorderColor( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

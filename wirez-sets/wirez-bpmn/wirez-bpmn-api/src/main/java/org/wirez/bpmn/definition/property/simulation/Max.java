@@ -54,6 +54,10 @@ public class Max implements BPMNProperty {
         
     }
 
+    public Max( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

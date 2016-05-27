@@ -56,10 +56,6 @@ public abstract class AbstractDecoratableShapeView<T> extends org.wirez.shapes.c
         
     }
     
-    protected Shape<?> getShape() {
-        return getPath();
-    }
-
     @Override
     public Collection<Shape> getDecorators() {
         return decorators;

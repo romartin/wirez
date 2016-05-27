@@ -64,7 +64,7 @@ public class GraphUtils {
                                      final String id ) {
         if ( null != id && null != properties ) {
             for (final Object property : properties) {
-                final PropertyAdapter<Object> adapter = definitionManager.getPropertyAdapter( property.getClass() );
+                final PropertyAdapter<Object, ?> adapter = definitionManager.getPropertyAdapter( property.getClass() );
                 final String pId = adapter.getId( property );
                 if (pId.equals(id)) {
                     return property;

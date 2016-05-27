@@ -56,7 +56,7 @@ public final class PolygonProxy implements org.wirez.shapes.proxy.PolygonProxy<P
 
     @Override
     public String getGlyphBackgroundColor() {
-        return Polygon.COLOR;
+        return Polygon.PolygonBuilder.COLOR;
     }
     
 }

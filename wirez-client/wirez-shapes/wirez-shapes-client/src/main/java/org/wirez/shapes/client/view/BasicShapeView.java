@@ -24,7 +24,9 @@ import org.wirez.core.client.shape.view.event.ViewEventType;
 import org.wirez.core.client.shape.view.event.ViewHandler;
 import org.wirez.shapes.client.util.BasicShapesUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class BasicShapeView<T> extends AbstractShapeView<T>
@@ -36,6 +38,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
     protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
     protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
+    protected final List<BasicShapeView<T>> children = new ArrayList<>();
     protected Text text;
     protected WiresLayoutContainer.Layout textPosition;
     protected Type fillGradientType = null;
@@ -45,18 +48,31 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     public BasicShapeView(final MultiPath path,
                           final WiresManager manager) {
         super(path, manager);
-        this.textPosition = WiresLayoutContainer.Layout.CENTER;
+        this.textPosition = WiresLayoutContainer.Layout.BOTTOM;
     }
 
     @Override
     public void addChild(final BasicShapeView<T> child, 
                          final Layout layout) {
+        
+        children.add( child );
+        
         super.addChild( (IPrimitive<?>) child.getContainer(), BasicShapesUtils.getWiresLayout( layout ) );
+        
     }
 
     @Override
     public void removeChild( final BasicShapeView<T> child ) {
+        
+        children.remove( child );
+        
         super.removeChild( (IPrimitive<?>) child.getContainer() );
+        
+    }
+
+    @Override
+    public Iterable<BasicShapeView<T>> getChildren() {
+        return children;
     }
 
     @Override
@@ -157,7 +173,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
             final BoundingBox bb = text.getBoundingBox();
             final double bbw = bb.getWidth();
             final double bbh = bb.getHeight();
-            this.moveChild(text, - ( bbw / 2 ), - ( bbh / 2 ) );
+            this.moveChild(text, - ( bbw / 2 ), 0 );
             text.moveToTop();
         }
 

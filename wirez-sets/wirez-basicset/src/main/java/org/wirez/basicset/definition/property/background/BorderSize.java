@@ -53,6 +53,10 @@ public class BorderSize {
         
     }
 
+    public BorderSize( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

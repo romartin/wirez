@@ -53,6 +53,10 @@ public class Executable implements BPMNProperty {
     public Executable() {
     }
 
+    public Executable( final Boolean value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

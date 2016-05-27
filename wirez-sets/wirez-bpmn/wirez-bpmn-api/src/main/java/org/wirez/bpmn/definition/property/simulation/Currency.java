@@ -53,6 +53,10 @@ public class Currency implements BPMNProperty {
     public Currency() {
     }
 
+    public Currency( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

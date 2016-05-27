@@ -17,6 +17,7 @@
 package org.wirez.basicset.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.basicset.definition.property.Height;
@@ -26,9 +27,10 @@ import org.wirez.basicset.definition.property.background.BackgroundAndBorderSet;
 import org.wirez.basicset.definition.property.font.FontSet;
 import org.wirez.basicset.shape.proxy.RectangleProxy;
 import org.wirez.core.definition.annotation.Description;
-import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.graph.Node;
 import org.wirez.core.definition.annotation.Shape;
+import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.factory.Builder;
+import org.wirez.core.graph.Node;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
@@ -36,9 +38,8 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class )
-@Shape( factory = BasicShapesFactory.class, 
-        proxy = RectangleProxy.class )
+@Definition( type = Node.class, builder = Rectangle.RectangleBuilder.class )
+@Shape( factory = BasicShapesFactory.class, proxy = RectangleProxy.class )
 public class Rectangle {
 
     @Category
@@ -50,12 +51,6 @@ public class Rectangle {
     @Description
     public static final transient String description = "A rectangle";
     
-    public static final transient String COLOR = "#dfeff8";
-    public static final Double WIDTH = 150d;
-    public static final Double HEIGHT = 100d;
-    public static final Double BORDER_SIZE = 1d;
-
-
     @Property
     private Name name;
 
@@ -76,8 +71,28 @@ public class Rectangle {
         add( "all" );
     }};
 
-    public Rectangle() {
+    @NonPortable
+    public static class RectangleBuilder implements Builder<Rectangle> {
 
+        public static final String COLOR = "#dfeff8";
+        public static final String BORDER_COLOR = "#000000";
+        public static final Double WIDTH = 150d;
+        public static final Double HEIGHT = 100d;
+        public static final Double BORDER_SIZE = 1d;
+        
+        @Override
+        public Rectangle build() {
+            return new Rectangle( new Name( "Rectangle" ),
+                    new BackgroundAndBorderSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
+                    new FontSet(),
+                    new Width( WIDTH ),
+                    new Height( HEIGHT ) );
+        }
+        
+    }
+
+    public Rectangle() {
+        
     }
 
     public Rectangle(@MapsTo("name") Name name,

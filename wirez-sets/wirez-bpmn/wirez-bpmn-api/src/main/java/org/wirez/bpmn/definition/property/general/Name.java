@@ -53,6 +53,10 @@ public class Name implements BPMNProperty {
     public Name() {
     }
 
+    public Name( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

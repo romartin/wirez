@@ -17,6 +17,7 @@
 package org.wirez.basicset.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.basicset.definition.property.Name;
@@ -25,9 +26,10 @@ import org.wirez.basicset.definition.property.background.BackgroundAndBorderSet;
 import org.wirez.basicset.definition.property.font.FontSet;
 import org.wirez.basicset.shape.proxy.CircleProxy;
 import org.wirez.core.definition.annotation.Description;
-import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.graph.Node;
 import org.wirez.core.definition.annotation.Shape;
+import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.factory.Builder;
+import org.wirez.core.graph.Node;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
@@ -35,7 +37,7 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class )
+@Definition( type = Node.class, builder = Circle.CircleBuilder.class )
 @Shape( factory = BasicShapesFactory.class, 
         proxy = CircleProxy.class )
 public class Circle {
@@ -48,10 +50,6 @@ public class Circle {
 
     @Description
     public static final transient String description = "A circle";
-    
-    public static final transient String COLOR = "#ffff66";
-    public static final Double RADIUS = 50d;
-    public static final Double BORDER_SIZE = 1d;
 
     @Property
     private Name name;
@@ -69,6 +67,24 @@ public class Circle {
     private final Set<String> labels = new HashSet<String>() {{
         add( "all" );
     }};
+
+    @NonPortable
+    public static class CircleBuilder implements Builder<Circle> {
+
+        public static final String COLOR = "#ffff66";
+        public static final String BORDER_COLOR = "#000000";
+        public static final Double RADIUS = 50d;
+        public static final Double BORDER_SIZE = 1d;
+
+        @Override
+        public Circle build() {
+            return new Circle( new Name( "Circle" ),
+                    new BackgroundAndBorderSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
+                    new FontSet(),
+                    new Radius( RADIUS ) );
+        }
+
+    }
 
     public Circle() {
 

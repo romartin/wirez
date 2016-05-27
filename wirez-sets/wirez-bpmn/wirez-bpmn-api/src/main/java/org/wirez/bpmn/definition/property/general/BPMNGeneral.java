@@ -22,13 +22,24 @@ public class BPMNGeneral implements BPMNPropertySet {
     private Documentation documentation;
 
     public BPMNGeneral() {
-
+        this( new Name(), new Documentation() );
     }
 
     public BPMNGeneral(@MapsTo("name") Name name,
                        @MapsTo("documentation") Documentation documentation) {
         this.name = name;
         this.documentation = documentation;
+    }
+
+    public BPMNGeneral(String name,
+                       String documentation) {
+        this.name = new Name( name );
+        this.documentation = new Documentation( documentation );
+    }
+
+    public BPMNGeneral(String name) {
+        this.name = new Name( name );
+        this.documentation = new Documentation();
     }
 
     public String getPropertySetName() {

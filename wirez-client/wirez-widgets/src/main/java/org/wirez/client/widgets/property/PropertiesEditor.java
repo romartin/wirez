@@ -33,6 +33,7 @@ import org.wirez.core.definition.adapter.PropertyAdapter;
 import org.wirez.core.definition.adapter.PropertySetAdapter;
 import org.wirez.core.definition.property.PropertyType;
 import org.wirez.core.definition.property.type.*;
+import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.content.view.Bounds;
 import org.wirez.core.graph.util.GraphUtils;
@@ -53,10 +54,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,7 +78,7 @@ public class PropertiesEditor implements IsWidget {
     }
 
     
-    DefinitionManager definitionManager;
+    DefinitionUtils definitionUtils;
     GraphUtils graphUtils;
     ShapeManager wirezClientManager;
     CanvasCommandFactory canvasCommandFactory;
@@ -92,13 +90,13 @@ public class PropertiesEditor implements IsWidget {
     private String elementUUID;
 
     @Inject
-    public PropertiesEditor(final DefinitionManager definitionManager,
+    public PropertiesEditor(final DefinitionUtils definitionUtils,
                             final GraphUtils graphUtils,
                             final View view,
                             final ShapeManager wirezClientManager,
                             final CanvasCommandFactory canvasCommandFactory,
                             final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
-        this.definitionManager = definitionManager;
+        this.definitionUtils = definitionUtils;
         this.graphUtils = graphUtils;
         this.view = view;
         this.wirezClientManager = wirezClientManager;
@@ -136,7 +134,7 @@ public class PropertiesEditor implements IsWidget {
         this.elementUUID = element.getUUID();
         
         final Object definition = element.getContent().getDefinition();
-        final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+        final DefinitionAdapter definitionAdapter = getDefinitionManager().getDefinitionAdapter( definition.getClass() );
         
         final List<PropertyEditorCategory> categories = new ArrayList<PropertyEditorCategory>();
         final Set<String> processedProperties = new HashSet<String>();
@@ -148,29 +146,35 @@ public class PropertiesEditor implements IsWidget {
         // Definition property packages.
         final Set<?> propertyPackageSet = definitionAdapter.getPropertySets( definition );
         for (final Object propertyPackage : propertyPackageSet) {
-            final PropertySetAdapter propertySetAdapter = definitionManager.getPropertySetAdapter( propertyPackage.getClass() );
+            final PropertySetAdapter propertySetAdapter = getDefinitionManager().getPropertySetAdapter( propertyPackage.getClass() );
             final Set<?> properties = propertySetAdapter.getProperties( propertyPackage );
 
             final PropertyEditorCategory category = new PropertyEditorCategory(propertySetAdapter.getName(propertyPackage));
+            
             if (properties != null) {
+                
                 for (final Object _property : properties) {
-                    final PropertyAdapter propertyAdapter = definitionManager.getPropertyAdapter(_property.getClass());
+                    
+                    final PropertyAdapter propertyAdapter = getDefinitionManager().getPropertyAdapter(_property.getClass());
                     final String propertyId = propertyAdapter.getId(_property);
                     final Object property = graphUtils.getProperty(element, propertyId);
                     final Object value = propertyAdapter.getValue(property);
-                    final PropertyEditorFieldInfo propFieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
-                        @Override
-                        public void onValueChanged(final Object value) {
-                            executeUpdateProperty(element, propertyId, value);
-                        }
-                    });
+                    
+                    final PropertyEditorFieldInfo propFieldInfo =
+                            buildGenericFieldInfo( element,
+                                    property,
+                                    value,
+                                    value1 -> executeUpdateProperty(element, propertyId, value1) );
 
                     if (propFieldInfo != null) {
+                        
                         processedProperties.add(propertyId);
                         category.withField(propFieldInfo);
+                        
                     }
 
                 }
+                
             }
 
             categories.add(category);
@@ -196,32 +200,42 @@ public class PropertiesEditor implements IsWidget {
         log(Level.SEVERE, WirezClientLogger.getErrorMessage(error));
     }
 
+    @SuppressWarnings("unchecked")
     private PropertyEditorCategory buildPropertiesCategory(final Element<? extends org.wirez.core.graph.content.view.View<?>> element,
                                                            final Set<String> processedPropertyIds,
                                                            final Set<?> properties ) {
+        
         final Object definition = element.getContent().getDefinition();
-        final DefinitionAdapter definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+        final DefinitionAdapter definitionAdapter = getDefinitionManager().getDefinitionAdapter( definition.getClass() );
         final String title = definitionAdapter.getTitle( definition );
-        final PropertyEditorCategory result = new PropertyEditorCategory(title, 1);
+        
+        final PropertyEditorCategory result = new PropertyEditorCategory( title, 1 );
 
         if (properties != null) {
             
             for ( final Object property : properties ) {
-                final PropertyAdapter propertyAdapter = definitionManager.getPropertyAdapter(property.getClass());
-                String pId = propertyAdapter.getId(property);
-                if (!processedPropertyIds.contains(pId)) {
+                
+                final PropertyAdapter propertyAdapter = getDefinitionManager().getPropertyAdapter(property.getClass());
+                
+                final String pId = propertyAdapter.getId(property);
+                
+                if ( !processedPropertyIds.contains( pId ) ) {
+                    
                     final Object value = propertyAdapter.getValue(property);
-                    final PropertyEditorFieldInfo fieldInfo = buildGenericFieldInfo(element, property, value, new PropertyValueChangedHandler() {
-                        @Override
-                        public void onValueChanged(final Object value) {
-                            executeUpdateProperty(element, pId, value);
-                        }
-                    });
 
-                    if (fieldInfo != null) {
+                    final PropertyEditorFieldInfo fieldInfo =
+                            buildGenericFieldInfo( element,
+                                    property,
+                                    value, value1 -> executeUpdateProperty(element, pId, value1) );
+
+                    if ( fieldInfo != null ) {
+                        
                         result.withField(fieldInfo);
+                        
                     }
+                    
                 }
+                
             }
             
         }
@@ -230,23 +244,49 @@ public class PropertiesEditor implements IsWidget {
         
     }
     
+    @SuppressWarnings("unchecked")
     private PropertyEditorFieldInfo buildGenericFieldInfo(final Element<? extends org.wirez.core.graph.content.view.View<?>> element,
                                                           final Object property,
                                                           final Object value,
                                                           final PropertyValueChangedHandler changedHandler) {
-        final PropertyAdapter propertyAdapter = definitionManager.getPropertyAdapter(property.getClass());
+        final PropertyAdapter propertyAdapter = getDefinitionManager().getPropertyAdapter(property.getClass());
         final PropertyType sourceType = propertyAdapter.getType( property );
         PropertyEditorType type = null;
-        if (sourceType instanceof StringType) {
+        
+        final Map<Object, String> allowedValues = new LinkedHashMap<>();
+        
+        if ( sourceType instanceof StringType ) {
+            
             type = PropertyEditorType.TEXT;
-        } else if (sourceType instanceof ColorType) {
+            
+        } else if ( sourceType instanceof ColorType ) {
+            
             type = PropertyEditorType.COLOR;
-        } else if (sourceType instanceof IntegerType) {
+            
+        } else if ( sourceType instanceof IntegerType ) {
+            
             type = PropertyEditorType.NATURAL_NUMBER;
-        } else if (sourceType instanceof DoubleType) {
+            
+        } else if ( sourceType instanceof DoubleType ) {
+            
             type = PropertyEditorType.NATURAL_NUMBER;
-        } else if (sourceType instanceof BooleanType) {
+            
+        } else if ( sourceType instanceof BooleanType ) {
+            
             type = PropertyEditorType.BOOLEAN;
+            
+        } else if ( sourceType instanceof EnumType ) {
+
+            type = PropertyEditorType.COMBO;
+            
+            final Map<Object, String> comboValues = propertyAdapter.getAllowedValues( property );
+            
+            if ( null != comboValues && !comboValues.isEmpty() ) {
+                
+                allowedValues.putAll( comboValues );
+                
+            }
+
         }
 
         if (type == null) {
@@ -254,58 +294,125 @@ public class PropertiesEditor implements IsWidget {
         }
 
         final PropertyEditorType theType = type;
-        return new PropertyEditorFieldInfo( propertyAdapter.getCaption(property) ,
-                toEditorValue(theType, value),
-                type) {
-
-            @Override
-            public void setCurrentStringValue( final String currentStringValue ) {
-                super.setCurrentStringValue( currentStringValue );
-                Object _v = fromEditorValue(sourceType, theType, currentStringValue);
-                changedHandler.onValueChanged(_v);
-            }
-        };
         
+        PropertyEditorFieldInfo result =
+                new PropertyEditorFieldInfo( propertyAdapter.getCaption(property), toEditorValue(theType, value), type) {
+
+                    @Override
+                    public void setCurrentStringValue(final String currentStringValue) {
+                        
+                        super.setCurrentStringValue(currentStringValue);
+                        
+                        Object _v = fromEditorValue( sourceType, theType, currentStringValue, allowedValues );
+                        
+                        changedHandler.onValueChanged(_v);
+                        
+                    }
+                    
+                };
+        
+        if ( !allowedValues.isEmpty() ) {
+
+            result.withComboValues( new ArrayList<String>( allowedValues.values() ) );
+            
+        }
+        
+        
+        return result;
     }
 
     private String toEditorValue(final PropertyEditorType type, final Object value) {
+        
         if ( null != value ) {
             
             switch (type) {
+                
                 case COLOR:
+                
                     final String color = value.toString();
+                
                     if (color.startsWith("#")) {
+                        
                         return color.substring(1, color.length());
+                        
                     } else {
+                        
                         return color;
+                        
                     }
+                    
                 default:
+                    
                     return value.toString();
+                
             }
             
         }
+        
         return "";
+        
     }
 
-    private Object fromEditorValue(final PropertyType propertyType, final PropertyEditorType type, final String value) {
+    private Object fromEditorValue( final PropertyType propertyType, 
+                                    final PropertyEditorType type, 
+                                    final String value,
+                                    final Map<Object, String> allowedValues ) {
         if ( null != value ) {
-
+            
             switch (type) {
+                
                 case COLOR:
+                
                     return "#" + value;
+                
                 case NATURAL_NUMBER:
+                
                     if ( DoubleType.name.equals(propertyType.getName()) ) {
                         return Double.parseDouble(value);
                     } 
+                
                     return Integer.parseInt(value);
+                
                 case BOOLEAN:
+                    
                     return Boolean.parseBoolean(value);
+
+                case COMBO:
+
+                    return getAllowedValue( allowedValues, value );
+                
                 default:
+                    
                     return value;
+                
             }
 
         }
-        return value;
+        
+        return null;
+        
+    }
+    
+    private Object getAllowedValue( final Map<Object, String> allowedValues,
+                                    final String value ) {
+        
+        if ( null != value && null != allowedValues && !allowedValues.isEmpty() ) {
+            
+            for ( final Map.Entry<Object, String> entry : allowedValues.entrySet() ) {
+                
+                final String v = entry.getValue();
+                
+                if ( value.equals( v ) ) {
+                    
+                    return entry.getKey();
+                    
+                }
+                
+            }
+            
+        }
+        
+        return null;
     }
     
     private PropertyEditorCategory buildElementCategory(final Element<? extends org.wirez.core.graph.content.view.View<?>> element) {
@@ -447,6 +554,10 @@ public class PropertiesEditor implements IsWidget {
     protected boolean checkEventContext(final AbstractCanvasHandlerEvent canvasHandlerEvent) {
         final CanvasHandler _canvasHandler = canvasHandlerEvent.getCanvasHandler();
         return canvasHandler != null && canvasHandler.equals(_canvasHandler);
+    }
+    
+    private DefinitionManager getDefinitionManager() {
+        return definitionUtils.getDefinitionManager();
     }
     
     private void log(final Level level, final String message) {

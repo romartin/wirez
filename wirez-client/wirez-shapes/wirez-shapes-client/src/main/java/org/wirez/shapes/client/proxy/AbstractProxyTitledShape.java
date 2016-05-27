@@ -19,9 +19,11 @@ package org.wirez.shapes.client.proxy;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
-import org.wirez.shapes.proxy.BasicTitledShapeProxy;
+import org.wirez.shapes.client.AbstractBasicNamedShape;
+import org.wirez.shapes.proxy.BasicNamedShapeProxy;
 
-public abstract class AbstractProxyTitledShape<W, V extends org.wirez.shapes.client.view.BasicShapeView, P extends BasicTitledShapeProxy<W>> extends org.wirez.shapes.client.AbstractBasicTitledShape<W, V> {
+public abstract class AbstractProxyTitledShape<W, V extends org.wirez.shapes.client.view.BasicShapeView, P extends BasicNamedShapeProxy<W>> 
+        extends AbstractBasicNamedShape<W, V> {
 
     protected final transient P proxy;
 

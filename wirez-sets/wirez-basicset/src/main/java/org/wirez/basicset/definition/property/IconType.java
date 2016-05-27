@@ -52,6 +52,10 @@ public class IconType {
     public IconType() {
     }
 
+    public IconType( final String radius ) {
+        this.value = radius;
+    }
+
     public String getCaption() {
         return caption;
     }

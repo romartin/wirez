@@ -25,7 +25,9 @@ public class BackgroundAndBorderSet {
     private BorderSize borderSize;
 
     public BackgroundAndBorderSet() {
-
+        this( new BgColor(),
+                new BorderColor(),
+                new BorderSize() );
     }
 
     public BackgroundAndBorderSet(@MapsTo("bgColor") BgColor bgColor,
@@ -34,6 +36,14 @@ public class BackgroundAndBorderSet {
         this.bgColor = bgColor;
         this.borderColor = borderColor;
         this.borderSize = borderSize;
+    }
+
+    public BackgroundAndBorderSet(final String bgColor,
+                                  final String borderColor,
+                                  final Double borderSize) {
+        this.bgColor = new BgColor( bgColor );
+        this.borderColor = new BorderColor( borderColor );
+        this.borderSize = new BorderSize( borderSize );
     }
 
     public String getPropertySetName() {

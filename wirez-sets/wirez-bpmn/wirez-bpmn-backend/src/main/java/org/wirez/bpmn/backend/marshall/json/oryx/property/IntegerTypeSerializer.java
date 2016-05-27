@@ -14,12 +14,12 @@ public class IntegerTypeSerializer implements Bpmn2OryxPropertySerializer<Intege
     }
 
     @Override
-    public Integer parse( String value ) {
+    public Integer parse( Object property, String value ) {
         return Integer.parseInt( value );
     }
 
     @Override
-    public String serialize( Integer value ) {
+    public String serialize( Object property, Integer value ) {
         return Integer.toString( value );
     }
 }

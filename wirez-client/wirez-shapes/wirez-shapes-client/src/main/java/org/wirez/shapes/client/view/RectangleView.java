@@ -13,10 +13,12 @@ public class RectangleView<T extends RectangleView> extends AnimatedWiresShapeVi
 
     private Rectangle rectangle;
     
-    public RectangleView(final double width,
-                         final double height,
-                         final WiresManager manager) {
+    public RectangleView( final double width,
+                          final double height,
+                          final WiresManager manager ) {
+        
         super(new MultiPath().rect(0, 0, width, height), manager);
+        
     }
 
     @Override
@@ -26,28 +28,24 @@ public class RectangleView<T extends RectangleView> extends AnimatedWiresShapeVi
 
     @Override
     protected Shape<?> createChildren() {
-        rectangle = new Rectangle(1, 1);
-        this.addChild(rectangle, WiresLayoutContainer.Layout.CENTER);
-        final Rectangle decorator = new Rectangle(1, 1);
-        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
+        
+        rectangle = new Rectangle( 1, 1 ).setCornerRadius( 5 );
+        this.addChild( rectangle, WiresLayoutContainer.Layout.CENTER );
+        
+        final Rectangle decorator = new Rectangle( 1, 1 ).setCornerRadius( 5 );
+        this.addChild( decorator, WiresLayoutContainer.Layout.CENTER );
+        
         return decorator;
     }
     
     @Override
-    public T setSize(final double width, final double height) {
-        super.setSize( width ,height );
-        return (T) this;
+    public T setSize( final double width, 
+                      final double height ) {
+        
+        return super.setSize( width ,height );
+        
     }
     
-    protected void doMoveChildren(final double width, final double height) {
-        this.moveChild(rectangle, getChildCoordinate(width), getChildCoordinate(height));
-        this.moveChild(decorator, getChildCoordinate(width), getChildCoordinate(height));
-    }
-
-    protected double getChildCoordinate(final double c) {
-        return - ( c / 2 );
-    }
-
     @Override
     protected void doDestroy() {
         super.doDestroy();

@@ -53,6 +53,10 @@ public class BgColor implements BPMNProperty {
     public BgColor() {
     }
 
+    public BgColor( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

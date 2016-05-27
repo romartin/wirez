@@ -19,21 +19,26 @@ package org.wirez.shapes.client.factory;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
-import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.shape.*;
+import org.wirez.core.client.shape.AbstractCompositeShape;
+import org.wirez.core.client.shape.AbstractShape;
+import org.wirez.core.client.shape.HasChildren;
+import org.wirez.core.client.shape.MutableShape;
 import org.wirez.core.client.shape.factory.AbstractProxyShapeFactory;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 import org.wirez.core.client.shape.view.ShapeGlyphBuilder;
 import org.wirez.core.client.shape.view.ShapeView;
-import org.wirez.shapes.factory.BasicShapesFactory;
-import org.wirez.shapes.proxy.*;
-import org.wirez.shapes.proxy.icon.ICONS;
-import org.wirez.shapes.proxy.icon.IconProxy;
+import org.wirez.core.definition.util.DefinitionUtils;
+import org.wirez.shapes.client.proxy.DynamicIconShape;
 import org.wirez.shapes.client.proxy.RectangleShape;
+import org.wirez.shapes.client.proxy.StaticIconShape;
 import org.wirez.shapes.client.view.PolygonView;
 import org.wirez.shapes.client.view.RectangleView;
 import org.wirez.shapes.client.view.ShapeViewFactory;
+import org.wirez.shapes.client.view.icon.dynamics.DynamicIconShapeView;
+import org.wirez.shapes.client.view.icon.statics.StaticIconShapeView;
+import org.wirez.shapes.factory.BasicShapesFactory;
+import org.wirez.shapes.proxy.*;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -85,7 +90,7 @@ public class BasicShapesFactoryImpl<W>
         
         MutableShape<W, ShapeView> shape = null;
         
-        if ( isCircle(proxy) ) {
+        if ( isCircle( proxy ) ) {
 
             final CircleProxy<W> circleProxy = (CircleProxy<W>) proxy;
 
@@ -98,7 +103,20 @@ public class BasicShapesFactoryImpl<W>
 
         }
 
-        if ( isRectangle(proxy) ) {
+        if ( isRing( proxy ) ) {
+
+            final RingProxy<W> ringProxy = (RingProxy<W>) proxy;
+
+            final double oRadius = ringProxy.getOuterRadius( definition );
+
+            final org.wirez.shapes.client.view.RingView view =
+                    shapeViewFactory.ring( oRadius, wiresManager );
+
+            shape = new org.wirez.shapes.client.proxy.RingShape( view, ringProxy );
+
+        }
+
+        if ( isRectangle( proxy ) ) {
 
             final RectangleProxy<W> rectangleProxy = (RectangleProxy<W>) proxy;
 
@@ -112,7 +130,7 @@ public class BasicShapesFactoryImpl<W>
 
         }
 
-        if ( isPolygon(proxy) ) {
+        if ( isPolygon( proxy ) ) {
 
             final PolygonProxy<W> polygonProxy = (PolygonProxy<W>) proxy;
 
@@ -128,18 +146,33 @@ public class BasicShapesFactoryImpl<W>
 
         }
 
-        if ( isIcon(proxy) ) {
+        if ( isStaticIcon( proxy ) ) {
 
-            final IconProxy<W> iconProxy = (IconProxy<W>) proxy;
+            final org.wirez.shapes.proxy.icon.statics.IconProxy<W> iconProxy = 
+                    (org.wirez.shapes.proxy.icon.statics.IconProxy<W>) proxy;
 
-            final ICONS icon = org.wirez.shapes.client.proxy.IconShape.getIcon( definition, iconProxy );
+            final org.wirez.shapes.proxy.icon.statics.Icons icon = iconProxy.getIcon( definition );
+
+            final StaticIconShapeView view =
+                    shapeViewFactory.staticIcon( icon, wiresManager );
+
+            shape = new StaticIconShape( view, iconProxy );
+
+        }
+
+        if ( isDynamicIcon( proxy ) ) {
+
+            final org.wirez.shapes.proxy.icon.dynamics.IconProxy<W> iconProxy =
+                    (org.wirez.shapes.proxy.icon.dynamics.IconProxy<W>) proxy;
+
+            final org.wirez.shapes.proxy.icon.dynamics.Icons icon = DynamicIconShape.getIcon( definition, iconProxy );
             final double width = iconProxy.getWidth( definition );
             final double height = iconProxy.getHeight( definition );
 
-            final org.wirez.shapes.client.view.IconShapeView view =
-                    shapeViewFactory.icon( icon, width, height, wiresManager );
+            final DynamicIconShapeView view =
+                    shapeViewFactory.dynamicIcon( icon, width, height, wiresManager );
 
-            shape = new org.wirez.shapes.client.proxy.IconShape( view, iconProxy );
+            shape = new DynamicIconShape( view, iconProxy );
 
         }
         
@@ -182,6 +215,10 @@ public class BasicShapesFactoryImpl<W>
         return proxy instanceof CircleProxy;
     }
 
+    private boolean isRing( final BasicShapeProxy<W> proxy ) {
+        return proxy instanceof RingProxy;
+    }
+
     private boolean isRectangle( final BasicShapeProxy<W> proxy ) {
         return proxy instanceof RectangleProxy;
     }
@@ -190,10 +227,14 @@ public class BasicShapesFactoryImpl<W>
         return proxy instanceof PolygonProxy;
     }
     
-    private boolean isIcon( final BasicShapeProxy<W> proxy ) {
-        return proxy instanceof IconProxy;
+    private boolean isDynamicIcon(final BasicShapeProxy<W> proxy ) {
+        return proxy instanceof org.wirez.shapes.proxy.icon.dynamics.IconProxy;
     }
 
+    private boolean isStaticIcon(final BasicShapeProxy<W> proxy ) {
+        return proxy instanceof org.wirez.shapes.proxy.icon.statics.IconProxy;
+    }
+    
     @Override
     @SuppressWarnings("unchecked")
     protected ShapeGlyph glyph( final Class<?> clazz, 

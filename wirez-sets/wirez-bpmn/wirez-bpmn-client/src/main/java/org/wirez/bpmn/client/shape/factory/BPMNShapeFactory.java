@@ -18,16 +18,20 @@ package org.wirez.bpmn.client.shape.factory;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import org.wirez.bpmn.client.shape.*;
+import org.wirez.bpmn.client.shape.BPMNDiagramShape;
+import org.wirez.bpmn.client.shape.LaneShape;
+import org.wirez.bpmn.client.shape.SequenceFlowShape;
 import org.wirez.bpmn.client.shape.view.glyph.SequenceFlowGlyph;
-import org.wirez.bpmn.definition.*;
+import org.wirez.bpmn.definition.BPMNDefinition;
+import org.wirez.bpmn.definition.BPMNDiagram;
+import org.wirez.bpmn.definition.Lane;
+import org.wirez.bpmn.definition.SequenceFlow;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
-import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.MutableShape;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 import org.wirez.core.client.shape.view.ShapeGlyphBuilder;
-import org.wirez.shapes.client.view.CircleView;
+import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.shapes.client.view.ConnectorView;
 import org.wirez.shapes.client.view.RectangleView;
 import org.wirez.shapes.client.view.ShapeViewFactory;
@@ -42,14 +46,11 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
     private static final Set<Class<?>> SUPPORTED_CLASSES = new LinkedHashSet<Class<?>>() {{
         add( BPMNDiagram.class );
-        add( EndTerminateEvent.class );
         add( Lane.class );
         add( SequenceFlow.class );
-        add( Task.class );
     }};
 
     DefinitionUtils definitionUtils;
-    BPMNViewFactory bpmnViewFactory;
     ShapeGlyphBuilder<Group> glyphBuilder;
     
     protected BPMNShapeFactory() {
@@ -58,11 +59,9 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
     @Inject
     public BPMNShapeFactory( final ShapeViewFactory shapeViewFactory,
                              final DefinitionUtils definitionUtils,
-                             final BPMNViewFactory bpmnViewFactory,
                              final ShapeGlyphBuilder<Group> glyphBuilder) {
         super(shapeViewFactory);
         this.definitionUtils = definitionUtils;
-        this.bpmnViewFactory = bpmnViewFactory;
         this.glyphBuilder = glyphBuilder;
     }
 
@@ -79,21 +78,13 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
 
             return BPMNDiagram.title;
 
-        }  else if ( isEndTerminateEvent( clazz ) ) {
-
-            return EndTerminateEvent.title;
-
-        } else if ( isLane( clazz ) ) {
+        }  else if ( isLane( clazz ) ) {
 
             return Lane.title;
 
         } else if ( isSequenceFlow( clazz ) ) {
 
             return SequenceFlow.title;
-
-        } else if ( isTask( clazz ) ) {
-
-            return Task.title;
 
         }
         
@@ -119,14 +110,6 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
             
             result = new BPMNDiagramShape(view);
             
-        } else if ( isEndTerminateEvent( definitionClass ) ) {
-
-            final EndTerminateEvent endTerminateEvent = (EndTerminateEvent) definition;
-
-            final CircleView view = shapeViewFactory.circle( endTerminateEvent.getRadius().getValue(), wiresManager );
-            
-            result = new EndTerminateEventShape(view);
-
         } else if ( isLane( definitionClass ) ) {
 
             final Lane lane = (Lane) definition;
@@ -143,17 +126,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
             
             result = new SequenceFlowShape(view);
 
-        } else if ( isTask( definitionClass ) ) {
-
-            final Task task = (Task) definition;
-
-            final RectangleView view = bpmnViewFactory.task( 
-                    task.getWidth().getValue(),
-                    task.getHeight().getValue(), wiresManager );
-            
-            result = new TaskShape(view);
-
-        }
+        } 
         
         if ( null != result ) {
             
@@ -173,7 +146,7 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
         // Custom shape glyphs.
         if ( isSequenceFlow( clazz) ) {
             
-            return new SequenceFlowGlyph( width, height, SequenceFlow.COLOR );
+            return new SequenceFlowGlyph( width, height, SequenceFlow.SequenceFlowBuilder.COLOR );
             
         }
         
@@ -192,20 +165,12 @@ public class BPMNShapeFactory extends BaseBPMNShapeFactory<BPMNDefinition, Mutab
         return clazz.equals( BPMNDiagram.class );
     }
 
-    private boolean isEndTerminateEvent( final Class<?> clazz ) {
-        return clazz.equals( EndTerminateEvent.class );
-    }
-
     private boolean isLane( final Class<?> clazz ) {
         return clazz.equals( Lane.class );
     }
 
     private boolean isSequenceFlow( final Class<?> clazz ) {
         return clazz.equals( SequenceFlow.class );
-    }
-
-    private boolean isTask( final Class<?> clazz ) {
-        return clazz.equals( Task.class );
     }
 
 }

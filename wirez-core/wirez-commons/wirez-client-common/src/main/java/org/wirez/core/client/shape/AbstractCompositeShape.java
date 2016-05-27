@@ -46,6 +46,11 @@ public abstract class AbstractCompositeShape<W, E extends Node<View<W>, Edge>, V
     }
 
     @Override
+    public Iterable<AbstractShape<W, Node<View<W>, Edge>, ?>> getChildren() {
+        return children;
+    }
+
+    @Override
     public void applyProperties(final E element, 
                                 final MutationContext mutationContext) {
         super.applyProperties(element, mutationContext);

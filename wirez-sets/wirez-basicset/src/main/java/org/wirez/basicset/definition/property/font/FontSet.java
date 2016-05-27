@@ -28,17 +28,30 @@ public class FontSet {
     private FontBorderSize fontBorderSize;
 
     public FontSet() {
-
+        this(new FontFamily(),
+                new FontColor(),
+                new FontSize(),
+                new FontBorderSize());
     }
 
     public FontSet(@MapsTo("fontFamily") FontFamily fontFamily,
-            @MapsTo("fontColor") FontColor fontColor,
-            @MapsTo("fontSize") FontSize fontSize,
-            @MapsTo("fontBorderSize") FontBorderSize fontBorderSize) {
+                   @MapsTo("fontColor") FontColor fontColor,
+                   @MapsTo("fontSize") FontSize fontSize,
+                   @MapsTo("fontBorderSize") FontBorderSize fontBorderSize) {
         this.fontFamily = fontFamily;
         this.fontColor = fontColor;
         this.fontSize = fontSize;
         this.fontBorderSize = fontBorderSize;
+    }
+
+    public FontSet(final String fontFamily,
+                   final String fontColor,
+                   final Double fontSize,
+                   final Double fontBorderSize) {
+        this.fontFamily = new FontFamily(fontFamily);
+        this.fontColor = new FontColor(fontColor);
+        this.fontSize = new FontSize(fontSize);
+        this.fontBorderSize = new FontBorderSize(fontBorderSize);
     }
 
     public String getPropertySetName() {

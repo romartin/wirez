@@ -14,7 +14,6 @@ import org.wirez.core.graph.content.definition.DefinitionSetImpl;
 import org.wirez.core.graph.factory.BaseGraphFactory;
 import org.wirez.core.graph.impl.GraphImpl;
 import org.wirez.core.graph.store.GraphNodeStoreImpl;
-import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.util.UUID;
 
 import java.util.Set;
@@ -25,8 +24,6 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
 
     DefinitionManager definitionManager;
     FactoryManager factoryManager;
-    GraphUtils graphUtils;
-    BPMNDefinitionFactory bpmnDefinitionBuilder;
     GraphCommandManager graphCommandManager;
     GraphCommandFactory graphCommandFactory;
 
@@ -35,12 +32,10 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
 
     public BPMNAbstractGraphFactory(final DefinitionManager definitionManager,
                                     final FactoryManager factoryManager,
-                                    final BPMNDefinitionFactory bpmnDefinitionBuilder,
                                     final GraphCommandManager graphCommandManager,
                                     final GraphCommandFactory graphCommandFactory) {
         this.definitionManager = definitionManager;
         this.factoryManager = factoryManager;
-        this.bpmnDefinitionBuilder = bpmnDefinitionBuilder;
         this.graphCommandManager = graphCommandManager;
         this.graphCommandFactory = graphCommandFactory;
     }
@@ -59,7 +54,7 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
                         new GraphNodeStoreImpl());
 
         // Add a BPMN diagram by default.
-        final BPMNDiagram diagram = bpmnDefinitionBuilder.buildBPMNDiagram();
+        final BPMNDiagram diagram = new BPMNDiagram.BPMNDiagramBuilder().build();
         final String diagramId = definitionManager.getDefinitionAdapter(diagram.getClass()).getId( diagram );
         Node diagramNode = buildGraphElement( diagramId );
         

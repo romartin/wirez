@@ -215,19 +215,22 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         
     }
 
-    protected abstract String getNamePropertyValue(E element);
+    protected String getNamePropertyValue( final E element ) {
+        return null;   
+    }
     
     protected void _applyElementName(final E element, final MutationContext mutationContext) {
-        final String name = getNamePropertyValue( element );
 
-        if (view instanceof HasTitle) {
+        if ( view instanceof HasTitle ) {
+            
             final HasTitle hasTitle = (HasTitle) view;
-            if (name != null) {
-                hasTitle.setTitle(name);
-                hasTitle.refreshTitle();
-            } else {
-                hasTitle.setTitle(null);
-            }
+
+            final String name = getNamePropertyValue( element );
+
+            hasTitle.setTitle( name );
+                
+            hasTitle.refreshTitle();
+           
         }
         
     }

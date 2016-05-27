@@ -53,6 +53,10 @@ public class StandardDeviation implements BPMNProperty {
     public StandardDeviation() {
     }
 
+    public StandardDeviation( final Double value ) {
+        this.value = value;
+    }
+    
     public String getCaption() {
         return caption;
     }

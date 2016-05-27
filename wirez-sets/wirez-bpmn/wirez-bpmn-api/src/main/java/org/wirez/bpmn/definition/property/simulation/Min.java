@@ -53,6 +53,10 @@ public class Min implements BPMNProperty {
     public Min() {
     }
 
+    public Min( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

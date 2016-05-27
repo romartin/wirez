@@ -11,9 +11,12 @@ import org.wirez.core.definition.property.PropertyType;
 
 import javax.enterprise.context.Dependent;
 import java.lang.reflect.Field;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Dependent
-public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> implements PropertyAdapter<T> {
+public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> implements PropertyAdapter<T, Object> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedPropertyAdapter.class);
 
@@ -103,7 +106,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
     }
 
     @Override
-    public Object getDefaultValue(T property) {
+    public Object getDefaultValue( T property ) {
 
         Object result = null;
 
@@ -116,7 +119,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
                         try {
                             return _getValue( field, annotation, property );
                         } catch (Exception e) {
-                            LOG.error("Error obtaining annotated default value for T with id " + getId( property ));
+                            LOG.error("Error obtaining annotated default value for Property with id " + getId( property ));
                         }
                     }
                 }
@@ -125,6 +128,62 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
 
         return result;
         
+    }
+
+    @Override
+    public Map<Object, String> getAllowedValues( T property ) {
+        Map<Object, String> result = new LinkedHashMap<>();
+
+        if ( null != property ) {
+            
+            Field[] fields = property.getClass().getDeclaredFields();
+            
+            if ( null != fields ) {
+                
+                for (Field field : fields) {
+
+                    AllowedValues annotation = field.getAnnotation(AllowedValues.class);
+                    
+                    if ( null != annotation ) {
+                        
+                        try {
+
+                            Iterable<?> value = _getValue( field, annotation, property );
+                            
+                            if ( null != value && value.iterator().hasNext() ) {
+
+                                Iterator<?> vIt = value.iterator();
+                                
+                                while ( vIt.hasNext() ) {
+                                    
+                                    Object v = vIt.next();
+
+                                    result.put( v, v.toString() );
+
+                                }
+                                
+                                
+                            }
+                            
+                        } catch (Exception e) {
+                            LOG.error("Error obtaining annotated allowed values for Property with id " + getId( property ));
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+        }
+
+        if ( !result.isEmpty() ) {
+
+            return result;
+
+        }
+        
+        return  null;
     }
 
     @SuppressWarnings("unchecked")
@@ -150,7 +209,7 @@ public class AnnotatedPropertyAdapter<T> extends AbstractAnnotatedAdapter<T> imp
                             field.setAccessible(true);
                             field.set(property, value);
                         } catch (Exception e) {
-                            LOG.error("Error setting value for T with id [" + getId( property ) + "] " +
+                            LOG.error("Error setting value for Property with id [" + getId( property ) + "] " +
                                     "and value [" + ( value != null ? value.toString() : "null" ) + "]");
                         }
                     }

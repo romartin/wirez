@@ -53,6 +53,10 @@ public class Mean implements BPMNProperty {
     public Mean() {
     }
 
+    public Mean( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

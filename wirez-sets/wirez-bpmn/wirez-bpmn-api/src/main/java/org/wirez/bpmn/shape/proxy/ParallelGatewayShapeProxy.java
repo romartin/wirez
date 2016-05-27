@@ -5,8 +5,8 @@ import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.BasicShapeProxy;
 import org.wirez.shapes.proxy.HasChildProxies;
 import org.wirez.shapes.proxy.PolygonProxy;
-import org.wirez.shapes.proxy.icon.DynamicIconProxy;
-import org.wirez.shapes.proxy.icon.ICONS;
+import org.wirez.shapes.proxy.icon.dynamics.DynamicIconProxy;
+import org.wirez.shapes.proxy.icon.dynamics.Icons;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -62,7 +62,7 @@ public final class ParallelGatewayShapeProxy implements
 
     @Override
     public String getGlyphBackgroundColor() {
-        return ParallelGateway.COLOR;
+        return ParallelGateway.ParallelGatewayBuilder.COLOR;
     }
 
     @Override
@@ -72,18 +72,20 @@ public final class ParallelGatewayShapeProxy implements
 
     @Override
     public Map<BasicShapeProxy<ParallelGateway>, HasChildren.Layout> getChildProxies() {
+        
         return new LinkedHashMap<BasicShapeProxy<ParallelGateway>, HasChildren.Layout>() {{
+            
             put( new IconProxy(), HasChildren.Layout.CENTER );
+            
         }};
+        
     }
 
     public final class IconProxy implements DynamicIconProxy<ParallelGateway> {
 
-        private static final String COLOR = "#000000";
-
         @Override
-        public ICONS getIcon(final ParallelGateway definition ) {
-            return ICONS.PLUS;
+        public Icons getIcon(final ParallelGateway definition ) {
+            return Icons.PLUS;
         }
 
         @Override
@@ -95,19 +97,15 @@ public final class ParallelGatewayShapeProxy implements
         public double getHeight( final ParallelGateway element ) {
             return element.getRadius().getValue() / 2;
         }
-        @Override
-        public String getNamePropertyValue( final ParallelGateway element ) {
-            return null;
-        }
 
         @Override
         public String getBackgroundColor( final ParallelGateway element ) {
-            return COLOR;
+            return ParallelGateway.ParallelGatewayBuilder.ICON_COLOR;
         }
 
         @Override
         public String getBorderColor( final ParallelGateway element ) {
-            return COLOR;
+            return ParallelGateway.ParallelGatewayBuilder.ICON_COLOR;
         }
 
         @Override

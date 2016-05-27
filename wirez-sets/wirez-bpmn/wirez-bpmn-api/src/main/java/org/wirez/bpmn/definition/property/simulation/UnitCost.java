@@ -55,6 +55,10 @@ public class UnitCost implements BPMNProperty {
         
     }
 
+    public UnitCost( final Double value ) {
+        this.value = value;
+    }
+    
     public String getCaption() {
         return caption;
     }

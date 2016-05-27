@@ -54,6 +54,10 @@ public class FontSize implements BPMNProperty {
         
     }
 
+    public FontSize( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

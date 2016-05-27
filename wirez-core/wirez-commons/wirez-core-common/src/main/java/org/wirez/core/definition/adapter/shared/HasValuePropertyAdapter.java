@@ -5,9 +5,10 @@ import org.wirez.core.definition.impl.PropertyImpl;
 import org.wirez.core.definition.property.PropertyType;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.Map;
 
 @ApplicationScoped
-public class HasValuePropertyAdapter implements PropertyAdapter<PropertyImpl> {
+public class HasValuePropertyAdapter implements PropertyAdapter<PropertyImpl, Object> {
 
     @Override
     public String getId(final PropertyImpl pojo) {
@@ -47,6 +48,12 @@ public class HasValuePropertyAdapter implements PropertyAdapter<PropertyImpl> {
     @Override
     public Object getDefaultValue(final PropertyImpl pojo) {
         return pojo.getDefaultValue();
+    }
+
+    @Override
+    public Map<Object, String> getAllowedValues(final PropertyImpl pojo) {
+        // TODO
+        return null;
     }
 
     @Override

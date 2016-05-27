@@ -16,15 +16,19 @@
 
 package org.wirez.shapes.client.proxy;
 
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
-import org.wirez.core.client.shape.MutationContext;
+import org.wirez.shapes.client.AbstractBasicShape;
+import org.wirez.shapes.client.AbstractDynamicShape;
+import org.wirez.shapes.proxy.BasicDynamicShapeProxy;
 import org.wirez.shapes.proxy.BasicShapeProxy;
 
-public abstract class AbstractProxyShape<W, V extends org.wirez.shapes.client.view.BasicShapeView, P extends BasicShapeProxy<W>> extends org.wirez.shapes.client.AbstractBasicShape<W, V> {
+public abstract class AbstractProxyShape<W, V extends org.wirez.shapes.client.view.BasicShapeView, P extends BasicShapeProxy<W>> 
+        extends AbstractBasicShape<W, V> {
     
-    protected final P proxy;
+    protected final transient P proxy;
     
     public AbstractProxyShape(final V view,
                               final P proxy ) {
@@ -39,26 +43,6 @@ public abstract class AbstractProxyShape<W, V extends org.wirez.shapes.client.vi
 
         super.applyProperties(element, mutationContext);
        
-    }
-
-    @Override
-    protected String getBackgroundColor(final Node<View<W>, Edge> element) {
-        return proxy.getBackgroundColor( getDefinition( element ) );
-    }
-
-    @Override
-    protected String getBorderColor(final Node<View<W>, Edge> element) {
-        return proxy.getBorderColor( getDefinition( element ) );
-    }
-
-    @Override
-    protected Double getBorderSize(final Node<View<W>, Edge> element) {
-        return proxy.getBorderSize( getDefinition( element ) );
-    }
-
-    @Override
-    protected String getNamePropertyValue(final Node<View<W>, Edge> element) {
-        return proxy.getNamePropertyValue( getDefinition( element ) );
     }
 
 }

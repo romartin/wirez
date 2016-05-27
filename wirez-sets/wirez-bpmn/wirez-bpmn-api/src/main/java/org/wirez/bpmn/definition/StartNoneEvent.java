@@ -17,18 +17,20 @@
 package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.property.Radius;
-import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
+import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.CatchEventAttributes;
 import org.wirez.bpmn.shape.proxy.StartNoneEventShapeProxy;
 import org.wirez.core.definition.annotation.Description;
-import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.graph.Node;
 import org.wirez.core.definition.annotation.Shape;
+import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.factory.Builder;
+import org.wirez.core.graph.Node;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
@@ -36,9 +38,8 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class )
-@Shape( factory = BasicShapesFactory.class,
-        proxy = StartNoneEventShapeProxy.class )
+@Definition( type = Node.class, builder = StartNoneEvent.StartNoneEventBuilder.class )
+@Shape( factory = BasicShapesFactory.class, proxy = StartNoneEventShapeProxy.class )
 public class StartNoneEvent implements BPMNDefinition {
 
     @Category
@@ -49,10 +50,6 @@ public class StartNoneEvent implements BPMNDefinition {
 
     @Description
     public static final transient String description = "Untyped start event";
-    
-    
-    public static final transient String COLOR = "#3eb870";
-    public static final Double RADIUS = 15d;
 
     @PropertySet
     private BPMNGeneral general;
@@ -80,6 +77,25 @@ public class StartNoneEvent implements BPMNDefinition {
         add( "fromtoall" );
         add( "StartEventsMorph" );
     }};
+
+    @NonPortable
+    public static class StartNoneEventBuilder implements Builder<StartNoneEvent> {
+
+        public static final transient String COLOR = "#cae294";
+        public static final Double BORDER_SIZE = 1d;
+        public static final String BORDER_COLOR = "#000000";
+        public static final Double RADIUS = 15d;
+
+        @Override
+        public StartNoneEvent build() {
+            return new StartNoneEvent(  new BPMNGeneral( "Start" ),
+                    new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
+                    new FontSet(),
+                    new CatchEventAttributes(),
+                    new Radius( RADIUS ) );
+        }
+
+    }
 
     public StartNoneEvent() {
 

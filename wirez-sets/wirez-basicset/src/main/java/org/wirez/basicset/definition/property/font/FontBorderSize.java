@@ -52,6 +52,10 @@ public class FontBorderSize {
     public FontBorderSize() {
     }
 
+    public FontBorderSize( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

@@ -17,22 +17,24 @@
 package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
+import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.rule.annotation.EdgeOccurrences;
-import org.wirez.core.rule.annotation.CanConnect;
+import org.wirez.core.definition.factory.Builder;
 import org.wirez.core.graph.Edge;
+import org.wirez.core.rule.annotation.CanConnect;
+import org.wirez.core.rule.annotation.EdgeOccurrences;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Edge.class )
+@Definition( type = Edge.class, builder = SequenceFlow.SequenceFlowBuilder.class )
 
 // Connection rules.
 @CanConnect( startRole = "sequence_start", endRole = "sequence_end" )
@@ -55,10 +57,6 @@ public class SequenceFlow implements BPMNDefinition {
     @Description
     public static final transient String description = "A Sequence Flow";
     
-    public static final transient String COLOR = "#000000";
-    public static final transient String BORDER_COLOR = "#000000";
-    public static final Double BORDER_SIZE = 3d;
-
     @PropertySet
     private BPMNGeneral general;
 
@@ -70,6 +68,21 @@ public class SequenceFlow implements BPMNDefinition {
         add( "all" );
         add( "ConnectingObjectsMorph" );
     }};
+
+    @NonPortable
+    public static class SequenceFlowBuilder implements Builder<SequenceFlow> {
+
+        public static final transient String COLOR = "#000000";
+        public static final transient String BORDER_COLOR = "#000000";
+        public static final Double BORDER_SIZE = 1d;
+
+        @Override
+        public SequenceFlow build() {
+            return new SequenceFlow(  new BPMNGeneral( "seq flow" ),
+                    new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ) );
+        }
+
+    }
 
     public SequenceFlow() {
 

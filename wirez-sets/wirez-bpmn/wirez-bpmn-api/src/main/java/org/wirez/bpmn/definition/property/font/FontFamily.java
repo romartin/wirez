@@ -53,6 +53,10 @@ public class FontFamily implements BPMNProperty {
     public FontFamily() {
     }
 
+    public FontFamily( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

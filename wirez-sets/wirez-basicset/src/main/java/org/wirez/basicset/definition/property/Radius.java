@@ -53,6 +53,10 @@ public class Radius {
         
     }
 
+    public Radius( final Double radius ) {
+        this.value = radius;
+    }
+
     public String getCaption() {
         return caption;
     }

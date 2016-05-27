@@ -17,8 +17,6 @@ public interface Layer<T, S, A> extends HasEventHandlers<T, A> {
     
     String toDataURL();
     
-    void onBeforeDraw(Command callback);
-
     void onAfterDraw(Command callback);
     
     void destroy();

@@ -22,11 +22,11 @@ import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
-import org.wirez.shapes.client.AbstractBasicTitledShape;
+import org.wirez.shapes.client.AbstractBasicNamedShape;
 import org.wirez.shapes.client.view.BasicShapeView;
 
 public abstract class BPMNBasicShape<W, V extends BasicShapeView>
-    extends AbstractBasicTitledShape<W, V> {
+    extends AbstractBasicNamedShape<W, V> {
 
     public BPMNBasicShape(final V shapeView) {
         super(shapeView);

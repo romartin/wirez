@@ -1,8 +1,10 @@
 package org.wirez.shapes.client.view;
 
+import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.types.BoundingBox;
 
 /**
  * This shape handles two primitives added as wires shape's children: 
@@ -45,7 +47,8 @@ public abstract class AbstractPrimitiveShapeView<T> extends org.wirez.shapes.cli
         return getPrimitive();
     }
 
-    protected  T setRadius(final double radius) {
+    protected  T setRadius( final double radius ) {
+        
         if (radius > 0) {
             
             final double size = radius * 2;
@@ -66,8 +69,11 @@ public abstract class AbstractPrimitiveShapeView<T> extends org.wirez.shapes.cli
         return (T) this;
     }
 
-    protected T setSize(final double width, final double height) {
+    protected T setSize( final double width, 
+                         final double height ) {
+        
         updatePath( width, height );
+        
         getShape().getAttributes().setWidth( width );
         getShape().getAttributes().setHeight( height );
         
@@ -85,10 +91,64 @@ public abstract class AbstractPrimitiveShapeView<T> extends org.wirez.shapes.cli
         return (T) this;
     }
     
-    protected void doMoveChildren(final double width, final double height) {
+    protected void doMoveChildren( final double width, 
+                                   final double height ) {
+
+        doMoveChild( getShape(), width, height );
+        
+        if ( null != decorator ) {
+
+            doMoveChild( decorator, width, height );
+
+        }
+
+        if ( !children.isEmpty() ) {
+            
+            for ( final BasicShapeView<T> child : children ) {
+
+                final IPrimitive<?> childPrimitive = (IPrimitive<?>) child.getContainer();
+                final BoundingBox bb = child.getPath().getBoundingBox();
+                
+                doMoveChild( childPrimitive, bb.getWidth(), bb.getHeight() );
+                
+            }
+            
+        }
         
     }
-    
+
+    protected void doMoveChild( final IPrimitive<?> child, 
+                                final double width, 
+                                final double height ) {
+
+        final double sx = getChildCenterCoordinate( child, width );
+
+        final double sy = getChildCenterCoordinate( child, height );
+
+        if ( sx != 0 || sy != 0 ) {
+
+            this.moveChild( child, sx, sy );
+
+        }
+
+    }
+
+    protected double getChildCenterCoordinate( final IPrimitive<?> child, 
+                                               final double delta ) {
+
+        if ( child.getAttributes().getRadius() == 0 ) {
+
+            return - ( delta / 2 );
+
+        } else {
+            
+            return  0;
+            
+        }
+        
+    }
+
+
     protected void updatePath( final double width, 
                                final double height ) {
 

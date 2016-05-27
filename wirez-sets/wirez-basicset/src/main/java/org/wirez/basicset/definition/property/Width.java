@@ -53,6 +53,10 @@ public class Width {
         
     }
 
+    public Width( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

@@ -54,6 +54,10 @@ public class Radius implements BPMNProperty {
         
     }
 
+    public Radius( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

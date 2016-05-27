@@ -8,10 +8,10 @@ import org.wirez.core.definition.property.PropertyType;
  */
 public interface Bpmn2OryxPropertySerializer<T> {
     
-    boolean accepts(PropertyType type );
+    boolean accepts( PropertyType type );
     
-    T parse( String value );
+    T parse( Object property, String value );
     
-    String serialize( T value );
+    String serialize( Object property, T value );
     
 }

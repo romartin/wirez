@@ -53,6 +53,10 @@ public class FontSize {
         
     }
 
+    public FontSize( final Double value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

@@ -37,11 +37,13 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> Collection<T> getDefinitionSets() {
         return Collections.unmodifiableCollection((Collection<? extends T>) definitionSets);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getDefinitionSet(final String id) {
         if ( null != id && id.trim().length() > 0 ) {
             for ( final Object definitionSet : definitionSets ) {
@@ -57,6 +59,7 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(final Class<?> pojoClass) {
         final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (DefinitionSetAdapter adapter : definitionSetAdapters) {
@@ -69,6 +72,7 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(final Class<?> pojoClass) {
         final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (DefinitionSetRuleAdapter adapter : definitionSetRuleAdapters) {
@@ -81,6 +85,7 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> DefinitionAdapter<T> getDefinitionAdapter(final Class<?> pojoClass) {
         final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (DefinitionAdapter adapter : definitionAdapters) {
@@ -93,6 +98,7 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public<T> PropertySetAdapter<T> getPropertySetAdapter(final Class<?> pojoClass) {
         final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (PropertySetAdapter adapter : propertySetAdapters) {
@@ -105,7 +111,8 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     }
 
     @Override
-    public<T> PropertyAdapter<T> getPropertyAdapter(final Class<?> pojoClass) {
+    @SuppressWarnings("unchecked")
+    public<T> PropertyAdapter<T, ?> getPropertyAdapter(final Class<?> pojoClass) {
         final Class<?> clazz = handleBindableProxyClass( pojoClass );
         for (PropertyAdapter adapter : propertyAdapters) {
             if ( adapter.accepts( clazz ) ) {

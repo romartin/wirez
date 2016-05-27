@@ -17,23 +17,29 @@
 package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.property.Radius;
-import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
+import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.ThrowEventAttributes;
+import org.wirez.bpmn.shape.proxy.EndTerminateEventShapeProxy;
 import org.wirez.core.definition.annotation.Description;
+import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.factory.Builder;
 import org.wirez.core.graph.Node;
+import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class )
+@Definition( type = Node.class, builder = EndTerminateEvent.EndTerminateEventBuilder.class )
+@Shape( factory = BasicShapesFactory.class, proxy = EndTerminateEventShapeProxy.class )
 public class EndTerminateEvent implements BPMNDefinition {
 
     @Category
@@ -45,11 +51,6 @@ public class EndTerminateEvent implements BPMNDefinition {
     @Description
     public static final transient String description = "Triggering the immediate termination of a process instance. " +
             "All steps still in execution in parallel branches are terminated";
-    
-    public static final transient String COLOR = "#000000";
-    public static final transient String BORDER_COLOR = "#000000";
-    public static final transient String RING_COLOR = "#FF0000";
-    public static final Double RADIUS = 14d;
 
     @PropertySet
     private BPMNGeneral general;
@@ -76,6 +77,26 @@ public class EndTerminateEvent implements BPMNDefinition {
         add( "choreography_sequence_end" );
         add( "EndEventsMorph" );
     }};
+
+    @NonPortable
+    public static class EndTerminateEventBuilder implements Builder<EndTerminateEvent> {
+
+        public static final transient String COLOR = "#000000";
+        public static final transient String RING_COLOR = "#f96654";
+        public static final Double BORDER_SIZE = 2d;
+        public static final String BORDER_COLOR = "#000000";
+        public static final Double RADIUS = 14d;
+
+        @Override
+        public EndTerminateEvent build() {
+            return new EndTerminateEvent(  new BPMNGeneral( "End" ),
+                    new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
+                    new FontSet(),
+                    new ThrowEventAttributes(),
+                    new Radius( RADIUS ) );
+        }
+
+    }
 
     public EndTerminateEvent() {
 

@@ -2,7 +2,7 @@ package org.wirez.shapes.client.view.animatiion;
 
 import com.ait.lienzo.client.core.animation.AnimationProperty;
 import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
-import com.ait.lienzo.client.core.shape.Decorator;
+import com.ait.lienzo.client.core.shape.MultiPathDecorator;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.uberfire.mvp.Command;
@@ -19,19 +19,20 @@ public abstract class AnimatedWiresConnectorView<T> extends BasicConnectorView<T
     protected final List<AnimationProperty> decoratableLineAnimationProperties = new LinkedList<>();
     protected final List<Command> animationCloseCallbacks = new LinkedList<>();
     
-    public AnimatedWiresConnectorView(final AbstractDirectionalMultiPointShape<?> line, 
-                                      final Decorator<?> head, Decorator<?> tail, 
+    public AnimatedWiresConnectorView(final AbstractDirectionalMultiPointShape<?> line,
+                                      final MultiPathDecorator headDecorator,
+                                      final MultiPathDecorator tailDecorator, 
                                       final WiresManager manager) {
-        super(line, head, tail, manager);
+        super(line, headDecorator, tailDecorator, manager);
     }
 
     public AnimatedWiresConnectorView(final WiresMagnet headMagnet, 
                                       final WiresMagnet tailMagnet, 
-                                      final AbstractDirectionalMultiPointShape<?> line, 
-                                      final Decorator<?> head, 
-                                      final Decorator<?> tail, 
+                                      final AbstractDirectionalMultiPointShape<?> line,
+                                      final MultiPathDecorator headDecorator,
+                                      final MultiPathDecorator tailDecorator, 
                                       final WiresManager manager) {
-        super(headMagnet, tailMagnet, line, head, tail, manager);
+        super(headMagnet, tailMagnet, line, headDecorator, tailDecorator, manager);
     }
 
     @Override
@@ -79,7 +80,7 @@ public abstract class AnimatedWiresConnectorView<T> extends BasicConnectorView<T
                      final double duration) {
 
         // Shape property animations.
-        AnimatedWiresUtils.animate( getDecoratableLine(), tweener, duration, decoratableLineAnimationProperties, animationCloseCallbacks );
+        AnimatedWiresUtils.animate( getGroup(), tweener, duration, decoratableLineAnimationProperties, animationCloseCallbacks );
         
         // Clear current animation properties and close callbacks.
         decoratableLineAnimationProperties.clear();

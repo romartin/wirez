@@ -253,6 +253,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-backend</artifactId>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
+    
+    <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-testing-utils</artifactId>
       <scope>test</scope>

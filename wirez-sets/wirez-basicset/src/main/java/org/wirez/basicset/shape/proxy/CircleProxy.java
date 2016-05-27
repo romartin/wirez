@@ -56,7 +56,7 @@ public final class CircleProxy implements org.wirez.shapes.proxy.CircleProxy<Cir
 
     @Override
     public String getGlyphBackgroundColor() {
-        return Circle.COLOR;
+        return Circle.CircleBuilder.COLOR;
     }
     
 }

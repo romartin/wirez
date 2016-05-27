@@ -52,6 +52,10 @@ public class FontFamily {
     public FontFamily() {
     }
 
+    public FontFamily( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

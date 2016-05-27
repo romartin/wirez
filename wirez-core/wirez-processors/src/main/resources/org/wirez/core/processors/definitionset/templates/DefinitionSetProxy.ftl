@@ -26,7 +26,7 @@ public class ${className} implements ${parentFQCName}<${defSetFQCName}> {
     ${defSetFQCName} instance;
 
     public ${className}() {
-        this.instance = new  ${defSetFQCName}();
+        this.instance = ${builder};
     }
 
     @Override

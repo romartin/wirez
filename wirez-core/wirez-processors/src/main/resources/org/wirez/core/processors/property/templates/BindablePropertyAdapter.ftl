@@ -40,6 +40,12 @@ public class ${className} extends ${parentAdapterClassName} {
         </#list>
     }};
 
+    private static final Map<Class, String> propAllowedValuesFieldNames = new HashMap<Class, String>(${allowedValuesPropNamesSize}) {{
+        <#list allowedValuesPropNames as allowedValuesPropName>
+            put( ${allowedValuesPropName.className}.class, "${allowedValuesPropName.methodName}" );
+        </#list>
+    }};
+
     private static final Map<Class, String> propTypeFieldNames = new HashMap<Class, String>(${propTypePropNamesSize}) {{
         <#list propTypePropNames as propTypePropName>
               put( ${propTypePropName.className}.class, "${propTypePropName.methodName}" );
@@ -78,6 +84,11 @@ public class ${className} extends ${parentAdapterClassName} {
     @Override
     protected Map<Class, String> getPropertyDefaultValueFieldNames() {
         return propDefaultValueFieldNames;
+    }
+    
+    @Override
+    protected Map<Class, String> getPropertyAllowedValuesFieldNames() {
+        return propAllowedValuesFieldNames;
     }
 
     @Override

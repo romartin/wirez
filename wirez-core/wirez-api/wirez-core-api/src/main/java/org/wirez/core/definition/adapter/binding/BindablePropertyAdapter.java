@@ -19,9 +19,11 @@ package org.wirez.core.definition.adapter.binding;
 import org.wirez.core.definition.adapter.PropertyAdapter;
 import org.wirez.core.definition.property.PropertyType;
 
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class BindablePropertyAdapter<T> extends AbstractBindableAdapter<T> implements PropertyAdapter<T> {
+public abstract class BindablePropertyAdapter<T> extends AbstractBindableAdapter<T> implements PropertyAdapter<T, Object> {
 
     protected abstract Map<Class, String> getPropertyTypeFieldNames();
 
@@ -36,6 +38,8 @@ public abstract class BindablePropertyAdapter<T> extends AbstractBindableAdapter
     protected abstract Map<Class, String> getPropertyValueFieldNames();
 
     protected abstract Map<Class, String> getPropertyDefaultValueFieldNames();
+
+    protected abstract Map<Class, String> getPropertyAllowedValuesFieldNames();
 
     @Override
     public String getId(final T pojo) {
@@ -88,6 +92,30 @@ public abstract class BindablePropertyAdapter<T> extends AbstractBindableAdapter
     public void setValue(final T pojo, final Object value) {
         final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
         setProxiedValue( pojo, getPropertyValueFieldNames().get( clazz ), value );
+    }
+
+    @Override
+    public Map<Object, String> getAllowedValues( final T pojo ) {
+        
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        
+        final Iterable<Object> result = getProxiedValue( pojo, getPropertyAllowedValuesFieldNames().get( clazz ) );
+        
+        if ( null != result ) {
+            
+            final Map<Object, String> allowedValues = new LinkedHashMap<>();
+            
+            for ( final Object o : result ) {
+                
+                allowedValues.put( o, o.toString() );
+                
+            }
+            
+            return allowedValues;
+            
+        }
+        
+        return null;
     }
 
     @Override

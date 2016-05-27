@@ -37,12 +37,14 @@ public class DefaultDiagramMarshaller implements DiagramMarshaller<Diagram, Inpu
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Diagram unmarhsall(InputStream input) throws IOException  {
         Diagram result = (Diagram) ServerMarshalling.fromJSON( input );
         return result;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public String marshall(Diagram diagram) throws IOException {
         String result = ServerMarshalling.toJSON( diagram );
         return result;

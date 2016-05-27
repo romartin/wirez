@@ -55,7 +55,7 @@ public interface DefinitionManager {
     /**
      * Returns the Property adapter instance for the given pojo property's class.
      */    
-    <T> PropertyAdapter<T> getPropertyAdapter(Class<?> pojoClass );
+    <T> PropertyAdapter<T, ?> getPropertyAdapter(Class<?> pojoClass );
     
     
 }

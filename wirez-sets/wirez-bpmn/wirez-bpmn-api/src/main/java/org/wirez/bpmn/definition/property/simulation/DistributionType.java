@@ -53,6 +53,10 @@ public class DistributionType implements BPMNProperty {
     public DistributionType() {
     }
 
+    public DistributionType( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

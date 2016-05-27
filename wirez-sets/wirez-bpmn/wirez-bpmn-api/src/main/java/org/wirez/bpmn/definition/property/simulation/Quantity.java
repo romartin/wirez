@@ -54,6 +54,10 @@ public class Quantity implements BPMNProperty {
         
     }
 
+    public Quantity( final Double value ) {
+        this.value = value;
+    }
+    
     public String getCaption() {
         return caption;
     }

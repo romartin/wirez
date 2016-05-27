@@ -72,7 +72,7 @@ public abstract class AbstractProxyShapeFactory<W, V extends ShapeView, S extend
             }
         }
 
-        throw new RuntimeException( "This factory should provide a proxy for definition [" + definitionId + "]" );
+        throw new RuntimeException( "This factory should provide a proxy for Definition [" + definitionId + "]" );
     }
 
     @Override

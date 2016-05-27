@@ -1,8 +1,8 @@
 package org.wirez.bpmn.backend.marshall.json.oryx;
 
-import org.wirez.bpmn.definition.factory.BPMNDefinitionFactory;
-import org.wirez.bpmn.definition.factory.BPMNPropertyFactory;
+import org.wirez.bpmn.BPMNDefinitionSet;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.Bpmn2OryxPropertyManager;
+import org.wirez.core.backend.definition.utils.BackendBindableDefinitionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -14,25 +14,18 @@ import java.util.Set;
 @ApplicationScoped
 public class Bpmn2OryxManager {
 
-    BPMNDefinitionFactory bpmnDefinitionFactory;
-    BPMNPropertyFactory bpmnPropertyFactory;
     Bpmn2OryxIdMappings oryxIdMappings;
     Bpmn2OryxPropertyManager oryxPropertyManager;
 
     private final List<Class<?>> definitions = new LinkedList<>();
-    private final List<Class<?>> properties = new LinkedList<>();
     
     protected Bpmn2OryxManager() {
 
     }
 
     @Inject
-    public Bpmn2OryxManager(final BPMNDefinitionFactory bpmnDefinitionFactory,
-                            final BPMNPropertyFactory bpmnPropertyFactory,
-                            final Bpmn2OryxIdMappings oryxIdMappings,
+    public Bpmn2OryxManager(final Bpmn2OryxIdMappings oryxIdMappings,
                             final Bpmn2OryxPropertyManager oryxPropertyManager) {
-        this.bpmnDefinitionFactory = bpmnDefinitionFactory;
-        this.bpmnPropertyFactory = bpmnPropertyFactory;
         this.oryxIdMappings = oryxIdMappings;
         this.oryxPropertyManager = oryxPropertyManager;
     }
@@ -40,16 +33,14 @@ public class Bpmn2OryxManager {
     @PostConstruct
     public void init() {
 
+        final BPMNDefinitionSet set = new BPMNDefinitionSet.BPMNDefinitionSetBuilder().build();
+        
         // Load default & custom mappings for BPMN definitions.
-        final Set<Class<?>> defClasses = bpmnDefinitionFactory.getAcceptedClasses();
+        final Set<Class<?>> defClasses = BackendBindableDefinitionUtils.getDefinitions( set );
         definitions.addAll( defClasses );
 
-        // Load default & custom mappings for BPMN properties.
-        final Set<Class<?>> propClasses = bpmnPropertyFactory.getAcceptedClasses();
-        properties.addAll( propClasses );
-        
         // Initialize the manager for the id mappings.
-        oryxIdMappings.init( definitions, properties );
+        oryxIdMappings.init( definitions  );
 
     }
 
@@ -65,10 +56,4 @@ public class Bpmn2OryxManager {
         return definitions;
     }
 
-    public List<Class<?>> getProperties() {
-        return properties;
-    }
-    
-    
-    
 }

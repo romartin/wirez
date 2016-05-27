@@ -17,25 +17,27 @@
 package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Width;
-import org.wirez.bpmn.definition.property.diagram.DiagramSet;
-import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
+import org.wirez.bpmn.definition.property.diagram.DiagramSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
+import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.rule.annotation.CanContain;
+import org.wirez.core.definition.factory.Builder;
 import org.wirez.core.graph.Node;
+import org.wirez.core.rule.annotation.CanContain;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class )
+@Definition( type = Node.class, builder = BPMNDiagram.BPMNDiagramBuilder.class )
 @CanContain( roles = { "all" } )
 public class BPMNDiagram implements BPMNDefinition {
 
@@ -48,12 +50,6 @@ public class BPMNDiagram implements BPMNDefinition {
     @Description
     public static final transient String description = "BPMN Diagam";
     
-    public static final transient String COLOR = "#FFFFFF";
-    public static final transient String BORDER_COLOR = "#000000";
-    public static final Double BORDER_SIZE = 1d;
-    public static final Double WIDTH = 950d;
-    public static final Double HEIGHT = 950d;
-
     @PropertySet
     private BPMNGeneral general;
 
@@ -77,6 +73,27 @@ public class BPMNDiagram implements BPMNDefinition {
         add( "canContainArtifacts" );
         add( "diagram" );
     }};
+
+    @NonPortable
+    public static class BPMNDiagramBuilder implements Builder<BPMNDiagram> {
+
+        public static final transient String COLOR = "#FFFFFF";
+        public static final transient String BORDER_COLOR = "#000000";
+        public static final Double BORDER_SIZE = 1d;
+        public static final Double WIDTH = 950d;
+        public static final Double HEIGHT = 950d;
+
+        @Override
+        public BPMNDiagram build() {
+            return new BPMNDiagram(  new BPMNGeneral( "Lane" ),
+                    new DiagramSet(),
+                    new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
+                    new FontSet(),
+                    new Width( WIDTH ),
+                    new Height( HEIGHT ) );
+        }
+
+    }
 
     public BPMNDiagram() {
 

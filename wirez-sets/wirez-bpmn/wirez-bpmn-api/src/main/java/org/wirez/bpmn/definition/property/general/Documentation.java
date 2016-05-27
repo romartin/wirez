@@ -53,6 +53,10 @@ public class Documentation implements BPMNProperty {
 
     public Documentation() {
     }
+    
+    public Documentation( final String value ) {
+        this.value = value;
+    }
 
     public String getCaption() {
         return caption;

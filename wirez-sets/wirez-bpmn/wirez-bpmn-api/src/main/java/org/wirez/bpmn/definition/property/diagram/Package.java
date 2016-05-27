@@ -54,6 +54,10 @@ public class Package implements BPMNProperty {
         
     }
 
+    public Package( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

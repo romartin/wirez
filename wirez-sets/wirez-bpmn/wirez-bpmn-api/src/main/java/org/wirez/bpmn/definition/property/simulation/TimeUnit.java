@@ -54,6 +54,10 @@ public class TimeUnit implements BPMNProperty {
     public TimeUnit() {
     }
 
+    public TimeUnit( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

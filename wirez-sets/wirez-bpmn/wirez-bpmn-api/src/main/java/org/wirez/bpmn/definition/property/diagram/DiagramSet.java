@@ -23,13 +23,20 @@ public class DiagramSet implements BPMNPropertySet {
     private Executable executable;
 
     public DiagramSet() {
-
+        this( new Package(),
+                new Executable() );
     }
 
     public DiagramSet(@MapsTo("packageProperty") Package packageProperty,
                       @MapsTo("executable") Executable executable) {
         this.packageProperty = packageProperty;
         this.executable = executable;
+    }
+
+    public DiagramSet(String packageProperty,
+                      Boolean executable) {
+        this.packageProperty = new Package( packageProperty );
+        this.executable = new Executable( executable );
     }
 
     public String getPropertySetName() {

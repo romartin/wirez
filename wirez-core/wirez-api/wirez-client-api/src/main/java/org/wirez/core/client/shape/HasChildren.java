@@ -15,4 +15,6 @@ public interface HasChildren<T> {
     
     void removeChild(T child);
     
+    Iterable<T> getChildren();
+    
 }

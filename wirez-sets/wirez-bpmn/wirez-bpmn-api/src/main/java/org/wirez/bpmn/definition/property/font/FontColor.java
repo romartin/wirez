@@ -53,6 +53,10 @@ public class FontColor implements BPMNProperty {
     public FontColor() {
     }
 
+    public FontColor( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

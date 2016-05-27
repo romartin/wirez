@@ -37,24 +37,39 @@ public class GeneratorUtils extends org.uberfire.annotations.processors.Generato
     private static final String[] NO_PARAMS = new String[0];
     private static final String[] ANY_PARAMS = new String[0];
 
+    public static String getTypedMethodName(final TypeElement classElement,
+                                             final String annName,
+                                            final String returnTypeName,
+                                             final ProcessingEnvironment processingEnvironment ) {
+        final Elements elementUtils = processingEnvironment.getElementUtils();
+        
+        return getMethodName( classElement,
+                processingEnvironment,
+                elementUtils.getTypeElement( returnTypeName ).asType(),
+                annName );
+    }
+    
     public static String getStringMethodName(final TypeElement classElement,
                                              final String annName,
-                                             final ProcessingEnvironment processingEnvironment ) throws GenerationException {
-        return getStringMethodName( classElement,
+                                             final ProcessingEnvironment processingEnvironment ) {
+        final Elements elementUtils = processingEnvironment.getElementUtils();
+
+        return getMethodName( classElement,
                 processingEnvironment,
+                elementUtils.getTypeElement( String.class.getName() ).asType(),
                 annName );
     }
 
-    private static String getStringMethodName( final TypeElement classElement,
+    private static String getMethodName( final TypeElement classElement,
                                                final ProcessingEnvironment processingEnvironment,
-                                               final String annotationName ) throws GenerationException {
+                                               final TypeMirror mirror,
+                                               final String annotationName ) {
 
-        final Elements elementUtils = processingEnvironment.getElementUtils();
 
         ExecutableElement match = getUniqueAnnotatedMethod( classElement,
                 processingEnvironment,
                 annotationName,
-                elementUtils.getTypeElement( String.class.getName() ).asType(),
+                mirror,
                 NO_PARAMS );
 
         if ( match == null ) {

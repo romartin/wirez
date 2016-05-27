@@ -16,12 +16,12 @@
 
 package org.wirez.shapes.client.proxy;
 
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
-import org.wirez.core.client.shape.MutationContext;
-import org.wirez.shapes.proxy.PolygonProxy;
 import org.wirez.shapes.client.view.PolygonView;
+import org.wirez.shapes.proxy.PolygonProxy;
 
 public class PolygonShape<W> extends AbstractProxyTitledShape<W, PolygonView, PolygonProxy<W>> {
     

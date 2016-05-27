@@ -9,6 +9,7 @@ public class ProcessingDefinitionSetAnnotations {
 
     private final Map<String, String> descriptionFieldNames = new HashMap<>();
     private final Set<String> definitionIds = new HashSet<>();
+    private final Map<String, String> builderFieldNames = new HashMap<>();
     private final Map<String, String> graphTypes = new HashMap<>();
     private final Map<String, String> graphFactories = new HashMap<>();
     private boolean hasShapeSet = false;
@@ -19,6 +20,10 @@ public class ProcessingDefinitionSetAnnotations {
 
     public Set<String> getDefinitionIds() {
         return definitionIds;
+    }
+
+    public Map<String, String> getBuilderFieldNames() {
+        return builderFieldNames;
     }
 
     public Map<String, String> getGraphTypes() {

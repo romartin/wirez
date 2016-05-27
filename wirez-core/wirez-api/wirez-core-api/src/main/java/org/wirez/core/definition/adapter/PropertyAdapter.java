@@ -2,10 +2,12 @@ package org.wirez.core.definition.adapter;
 
 import org.wirez.core.definition.property.PropertyType;
 
+import java.util.Map;
+
 /**
  * A Property pojo adapter.. 
  */
-public interface PropertyAdapter<T> extends Adapter<T> {
+public interface PropertyAdapter<T, V> extends Adapter<T> {
 
     /**
      * Returns the property's identifier for a given pojo.
@@ -40,16 +42,22 @@ public interface PropertyAdapter<T> extends Adapter<T> {
     /**
      * Returns the property's value for a given pojo.
      */
-    Object getValue(T pojo);
+    V getValue(T pojo);
 
     /**
      * Returns the property's default value for a given pojo.
      */
-    Object getDefaultValue(T pojo);
+    V getDefaultValue(T pojo);
+
+    /**
+     * Returns allowed values for this property, if multiple. 
+     * Otherwise returns null,.
+     */
+    Map<V, String> getAllowedValues(T pojo);
 
     /**
      * Update's the property value for a given pojo..
      */
-    void setValue(T pojo, Object value);
+    void setValue(T pojo, V value);
     
 }

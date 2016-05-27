@@ -14,12 +14,12 @@ public class DoubleTypeSerializer implements Bpmn2OryxPropertySerializer<Double>
     }
 
     @Override
-    public Double parse( String value ) {
+    public Double parse( Object property, String value ) {
         return Double.parseDouble( value );
     }
 
     @Override
-    public String serialize( Double value ) {
+    public String serialize( Object property, Double value ) {
         return Double.toString( value );
     }
 }

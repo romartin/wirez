@@ -52,7 +52,7 @@ public final class EndNoneEventShapeProxy implements CircleProxy<EndNoneEvent> {
 
     @Override
     public String getGlyphBackgroundColor() {
-        return EndNoneEvent.COLOR;
+        return EndNoneEvent.EndNoneEventBuilder.COLOR;
     }
 
     @Override

@@ -5,17 +5,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.wirez.bpmn.definition.factory.BPMNDefinitionFactory;
-import org.wirez.bpmn.definition.factory.BPMNDefinitionSetFactory;
-import org.wirez.bpmn.definition.factory.BPMNPropertyFactory;
-import org.wirez.bpmn.definition.factory.BPMNPropertySetFactory;
+import org.wirez.backend.definition.factory.TestScopeModelFactory;
+import org.wirez.bpmn.BPMNDefinitionSet;
 import org.wirez.bpmn.backend.factory.BPMNGraphFactory;
 import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactory;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.definition.factory.ModelFactory;
 import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.diagram.DiagramImpl;
@@ -51,6 +48,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 // TODO: Improve assertions.
+// TODO: Use archilian to avoid all that CDI mockings. 
 @RunWith(MockitoJUnitRunner.class)
 public class BPMNDiagramMarshallerTest {
 
@@ -58,6 +56,7 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_EVALUATION = "org/wirez/bpmn/backend/service/diagram/evaluation.bpmn";
     protected static final String BPMN_LANES = "org/wirez/bpmn/backend/service/diagram/lanes.bpmn";
 
+    
     @Mock
     DefinitionManager definitionManager;
 
@@ -76,15 +75,12 @@ public class BPMNDiagramMarshallerTest {
     GraphCommandFactory commandFactory;
 
     BPMNGraphFactory bpmnGraphFactory;
-    BPMNPropertyFactory bpmnPropertyBuilder;
-    BPMNPropertySetFactory bpmnPropertySetBuilder;
-    BPMNDefinitionSetFactory bpmnDefinitionSetFactory;
-    BPMNDefinitionFactory bpmnDefinitionFactory;
 
     Bpmn2OryxIdMappings oryxIdMappings;
     Bpmn2OryxPropertyManager oryxPropertyManager;
     Bpmn2OryxManager oryxManager;
 
+    TestScopeModelFactory testScopeModelFactory;
     BPMNGraphObjectBuilderFactory objectBuilderFactory;
     
     private BPMNDiagramMarshaller tested;
@@ -95,6 +91,8 @@ public class BPMNDiagramMarshallerTest {
         // Graph utils.
         definitionUtils = new DefinitionUtils( definitionManager );
         graphUtils = new GraphUtils( definitionManager, definitionUtils );
+
+        testScopeModelFactory = new TestScopeModelFactory( new BPMNDefinitionSet.BPMNDefinitionSetBuilder().build() );
         
         // Definition manager.        
         final AnnotatedDefinitionAdapter definitionAdapter = new AnnotatedDefinitionAdapter( definitionUtils );
@@ -106,47 +104,23 @@ public class BPMNDiagramMarshallerTest {
         when(definitionManager.getPropertySetAdapter( any(Class.class) )).thenReturn( propertySetAdapter );
         when(definitionManager.getPropertyAdapter( any(Class.class) )).thenReturn( propertyAdapter );
 
-        // BPMN Factories.
-        bpmnPropertyBuilder = new BPMNPropertyFactory();
-        bpmnPropertySetBuilder = new BPMNPropertySetFactory( bpmnPropertyBuilder );
-        bpmnDefinitionFactory = new BPMNDefinitionFactory( bpmnPropertyBuilder, bpmnPropertySetBuilder );
-        bpmnDefinitionSetFactory = new BPMNDefinitionSetFactory( bpmnDefinitionFactory );
-
-        List<ModelFactory<?>> modelFactories = new LinkedList<>();
-        modelFactories.add( bpmnPropertyBuilder );
-        modelFactories.add( bpmnPropertySetBuilder );
-        modelFactories.add( bpmnDefinitionFactory );
-        modelFactories.add( bpmnDefinitionSetFactory );
-
         commandManager = new GraphCommandManagerImpl( null, null, null );
         commandFactory = new GraphCommandFactoryImpl();
         connectionEdgeFactory = new ConnectionEdgeFactoryImpl();
         viewNodeFactory = new ViewNodeFactoryImpl();
         
-        bpmnGraphFactory = new BPMNGraphFactory( definitionManager, applicationFactoryManager, bpmnDefinitionFactory, 
+        bpmnGraphFactory = new BPMNGraphFactory( definitionManager, applicationFactoryManager,
                 commandManager, commandFactory );
         
         doAnswer(invocationOnMock -> {
             String id = (String) invocationOnMock.getArguments()[0];
-            for ( ModelFactory<?> modelFactory : modelFactories ) {
-                if ( modelFactory.accepts( id ) ) {
-                    return modelFactory.build( id );
-                }
-            }
-           
-            return null;
+            return testScopeModelFactory.build( id );
         }).when( applicationFactoryManager ).newDomainObject( anyString() );
 
         doAnswer(invocationOnMock -> {
             String uuid = (String) invocationOnMock.getArguments()[0];
             String id = (String) invocationOnMock.getArguments()[1];
-            Object model = null;
-            for ( ModelFactory<?> modelFactory : modelFactories ) {
-                if ( modelFactory.accepts( id ) ) {
-                    model = modelFactory.build( id );
-                    break;
-                }
-            }
+            Object model = testScopeModelFactory.accepts( id ) ? testScopeModelFactory.build( id ) : null;
             
             if ( null != model ) {
                 Class<? extends Element> element = AnnotatedDefinitionAdapter.getGraphElement( model.getClass() );
@@ -174,21 +148,22 @@ public class BPMNDiagramMarshallerTest {
         }).when( applicationFactoryManager ).newDiagram( anyString(), any(Graph.class), any(Settings.class) );
         
         // Bpmn 2 oryx stuff.
-        oryxIdMappings = new Bpmn2OryxIdMappings();
+        oryxIdMappings = new Bpmn2OryxIdMappings( definitionManager );
         StringTypeSerializer stringTypeSerializer = new StringTypeSerializer();
         BooleanTypeSerializer booleanTypeSerializer = new BooleanTypeSerializer();
         ColorTypeSerializer colorTypeSerializer = new ColorTypeSerializer();
         DoubleTypeSerializer doubleTypeSerializer = new DoubleTypeSerializer();
         IntegerTypeSerializer integerTypeSerializer = new IntegerTypeSerializer();
+        EnumTypeSerializer enumTypeSerializer = new EnumTypeSerializer( definitionUtils );
         List<Bpmn2OryxPropertySerializer<?>> propertySerializers = new LinkedList<>();
         propertySerializers.add( stringTypeSerializer );
         propertySerializers.add( booleanTypeSerializer );
         propertySerializers.add( colorTypeSerializer );
         propertySerializers.add( doubleTypeSerializer );
         propertySerializers.add( integerTypeSerializer );
+        propertySerializers.add( enumTypeSerializer );
         oryxPropertyManager = new Bpmn2OryxPropertyManager( propertySerializers );
-        oryxManager = new Bpmn2OryxManager( bpmnDefinitionFactory, bpmnPropertyBuilder, oryxIdMappings, 
-                oryxPropertyManager );
+        oryxManager = new Bpmn2OryxManager( oryxIdMappings, oryxPropertyManager );
         oryxManager.init();
         
         // Marshalling factories.

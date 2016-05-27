@@ -14,12 +14,12 @@ public class BooleanTypeSerializer implements Bpmn2OryxPropertySerializer<Boolea
     }
 
     @Override
-    public Boolean parse( String value ) {
+    public Boolean parse( Object property, String value ) {
         return Boolean.parseBoolean( value );
     }
 
     @Override
-    public String serialize( Boolean value ) {
+    public String serialize( Object property, Boolean value ) {
         return Boolean.toString( value );
     }
 }

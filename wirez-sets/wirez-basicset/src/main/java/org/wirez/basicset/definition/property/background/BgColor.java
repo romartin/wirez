@@ -52,6 +52,10 @@ public class BgColor {
     public BgColor() {
     }
 
+    public BgColor( final String value ) {
+        this.value = value;
+    }
+
     public String getCaption() {
         return caption;
     }

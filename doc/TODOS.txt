@@ -8,8 +8,6 @@
         
     - Lienzo stuff
             
-    - build glyphs from its shapes? not force building two impls
-
     - Known issues
         
         - Canvas loading related issues
@@ -24,38 +22,58 @@
         - Toolbox
             - Moving parent diagram -> toolboxes bad coordinates
             - Remove toolbox icons when shape deleted from canvas
+            - Icons are wires shapes and when dragging the main shape the docking fires
             
         - Palette
             - add connection toolbox command -> click on diagram as target node -> exception thrown 
             - bounds indexer - graph vs canvas & fixings ( builders & drag proxies )
             - onclick -> add node in same parent, no need to drag...
-            
+        
+        - CDI scopes
+            - Review cdi scopes for model & graph factories, adatpers, etc - reduce #instances on heap
+                - Controls & Event handlers -> Lorg_wirez_core_client_canvas_controls_toolbox_command_node_org_1wirez_1core_1client_1canvas_1controls_1toolbox_1command_1node_1NewNodeCommand$$_1_1$$org_1wirez_1core_1client_1components_1palette_1Palette$ItemMouseDownCallback$$_1_1$$instance$$org_1wirez_1core_1client_1canvas_1controls_1toolbox_1command_1node_1NewNodeCommand$$onItemMouseDown_1_1IIIV$Type_2_classLit_0_g$"
+                - Definition
+                    - Adapters
+                    - Factories
+                - etc
 - Lienzo
 ********
 
     - Fix wires issues
-        - WiresLayoutContainer - set positions when resizing
-        - WiresManager - addToIndex not working for unconnected connectors
-        - WiresShapeDragHandler -> fixes on highlight / un-highlight
-        - Examples
-            - Resize -> http://screencast.com/t/TjRkYpMvt
-            - Align -> http://screencast.com/t/62lCjZGYDq7i
-        - Events
-            - More events and provide the natives...
+        - WiresLayoutContainer - Refactor this stuff, resizing does not works good
+            - Examples
+                - Resize -> http://screencast.com/t/TjRkYpMvt
+                - Align -> http://screencast.com/t/62lCjZGYDq7i
+        - WiresManager 
+            - addToIndex not working for "unconnected" connectors
+            - do not add to index by default, let the developer choose
+        - Wires Events
+            - More events and provide the native events and contexts as well...
             - Drag event -> cannot get the DragContext
             - In general -> return the handler registration as well in order to remove handlers when no necessary.
-        - Remove WiresMananger memeber from WiresShape/Connector classes
-        
+        - Remove WiresMananger member from WiresShape/Connector classes
+        - Connectors broken -> all I know is if i set the scale or rotate manually on the viewport
+                               the connectors are not in the correct place
+                               panel.getViewport().setTransform( new Transform().scale(1.5, 1.5).translate(-75, -75));
+                               that breaks the connector
+                               which means it'll also break alignment
+                               yeah alignment is off too
+                               and so is drag, when you release. it jumps
+                               there must be a way to get a viewport x/y offset
+                               rather than calculate it every single time
+         - Externalize ControlHandles to be able to provide our own externally
+         - Externalize docking visualization to be able to provide our own externally
+         
+        - WiresConnector
+            - Decorators can be null
+            - animate rotations both clockwise ( svg only supports single wise )
+            - 
     - Performance issues on class Geometry
     - External configs -> Connectors / docking hotspot size
     - When dragging parent shapes, the connectors on the children are not drag
-    - containment & docking acceptor -> shapes fill issues
-    - Align&Distribute broken ->  check browser console at https://www.lienzo-core.com/lienzo-ks/#ALIGN_DISTRIBUTE 
-    - DockingAndContainmentHandler - priorFill/alpha issues
     - Shape order ( flows, parent/child nodes, etc )
     - review wires containment. 
         - Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
-        - dragging children shapes crashed with docking... ( toolbox )
         
     - Wires refactors
         - Exctract logics for containment & connection ( highlight parents, show magnets, etc) from drag event handlers
@@ -76,7 +94,14 @@
         - refactor use of CDI qualifiers ( managers & services ) -> CDI @Priority 
         - Show/Hide grid toolbar button
         - cpu perf on adding shapes / minipalette drags
-
+        - Drawing annotations on the diagram
+        - Refactor for GraphUtils.updateBounds
+        - Workflow Templates/patterns 
+            - https://surdilovic.wordpress.com/2012/11/15/workflow-patterns-support-in-jbpm-designer/
+            - http://resources.bizagi.com/docs/Workflow%20Patterns%20using%20BizAgi%20Process%20Modeler.pdf
+        - copy/cut/paste
+        - group
+        
     - Shape Factories
             - ShapeFactories from Shape Set ( annotated on @ShapeSet )
             - ShapeManager#getFactory -> use shapeSetId as argument
@@ -106,6 +131,13 @@
         - Disable/enable commands
         - Titles / tooltips
 
+    - Layouts
+        - auto layout of child shapes for a contiainer
+        - see https://github.com/droolsjbpm/jbpm-designer/tree/master/jbpm-designer-client/src/main/resources/org/jbpm/designer/public/js/Plugins/Layouter
+        - see https://github.com/droolsjbpm/jbpm-designer/blob/master/jbpm-designer-client/src/main/resources/org/jbpm/designer/public/js/Plugins/bpmn.js
+        - layout rules
+        - automatic built-in bpmn layout ( manstis )
+        
 - API
 *****
 
@@ -119,6 +151,11 @@
                 - mark as @NonPortable
                 - auto generate when using annotated models?
         - avoid @Portable and @Bindable and generate the Errai.properties for the annotated pojos.
+        
+    - Morphing rules
+        - https://snag.gy/IaH1nm.jpg
+        - https://snag.gy/OL1xsu.jpg
+        - http://imgur.com/DOTZmH6
         
     - Graph Processors - declare as @Remote ifaces
 

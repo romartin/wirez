@@ -1,7 +1,7 @@
 package org.wirez.client.lienzo.shape.view;
 
 import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
-import com.ait.lienzo.client.core.shape.Decorator;
+import com.ait.lienzo.client.core.shape.MultiPathDecorator;
 import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
 import com.ait.lienzo.client.core.shape.wires.*;
 import com.ait.lienzo.client.core.types.Point2DArray;
@@ -17,26 +17,26 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     protected String uuid;
     private int zindex;
 
-    public AbstractConnectorView(AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
-        super(line, head, tail, manager);
+    public AbstractConnectorView(AbstractDirectionalMultiPointShape<?> line, MultiPathDecorator headDecorator, MultiPathDecorator tailDecorator, WiresManager manager) {
+        super(line, headDecorator, tailDecorator, manager);
         init();
     }
 
-    public AbstractConnectorView(WiresMagnet headMagnet, WiresMagnet tailMagnet, AbstractDirectionalMultiPointShape<?> line, Decorator<?> head, Decorator<?> tail, WiresManager manager) {
-        super(headMagnet, tailMagnet, line, head, tail, manager);
+    public AbstractConnectorView(WiresMagnet headMagnet, WiresMagnet tailMagnet, AbstractDirectionalMultiPointShape<?> line, MultiPathDecorator headDecorator, MultiPathDecorator tailDecorator, WiresManager manager) {
+        super(headMagnet, tailMagnet, line, headDecorator, tailDecorator, manager);
         init();
     }
 
     protected abstract void doDestroy();
     
     protected void init() {
-        getDecoratableLine().setFillColor(ColorName.WHITE).setStrokeWidth(0);
+        getLine().setFillColor(ColorName.WHITE).setStrokeWidth(0);
     }
     
     @Override
     public T setUUID(final String uuid) {
         this.uuid = uuid;
-        this.getDecoratableLine().setUserData( UUID_PREFFIX + uuid );
+        this.getGroup().setUserData( UUID_PREFFIX + uuid );
         return (T) this;
     }
 
@@ -103,7 +103,7 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
         return (T) this;
     }
 
-    private final OrthogonalPolyLine createLine(final double... points)
+    private OrthogonalPolyLine createLine(final double... points)
     {
         return new OrthogonalPolyLine(Point2DArray.fromArrayOfDouble(points)).setCornerRadius(5).setDraggable(true);
     }
@@ -117,107 +117,107 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     @Override
     public void removeFromParent() {
         // Remove the main line.
-        getDecoratableLine().removeFromParent();
+        super.removeFromLayer();
     }
 
     @Override
     public double getShapeX() {
-        return getDecoratableLine().getX();
+        return getGroup().getX();
     }
 
     @Override
     public double getShapeY() {
-        return getDecoratableLine().getY();
+        return getGroup().getY();
     }
 
     @Override
     public T setShapeX(final double x) {
-        getDecoratableLine().setX(x);
+        getGroup().setX(x);
         return (T) this;
     }
 
     @Override
     public T setShapeY(final double y) {
-        getDecoratableLine().setY(y);
+        getGroup().setY(y);
         return (T) this;
     }
 
     @Override
     public String getFillColor() {
-        return getDecoratableLine().getFillColor();
+        return getLine().getFillColor();
     }
 
     @Override
     public T setFillColor(final String color) {
-        getDecoratableLine().setFillColor(color);
+        getLine().setFillColor(color);
         return (T) this;
     }
 
     @Override
     public double getFillAlpha() {
-        return getDecoratableLine().getFillAlpha();
+        return getLine().getFillAlpha();
     }
 
     @Override
     public T setFillAlpha(final double alpha) {
-        getDecoratableLine().setFillAlpha(alpha);
+        getLine().setFillAlpha(alpha);
         return (T) this;
     }
 
     @Override
     public String getStrokeColor() {
-        return getDecoratableLine().getStrokeColor();
+        return getLine().getStrokeColor();
     }
 
     @Override
     public T setStrokeColor(final String color) {
-        getDecoratableLine().setStrokeColor(color);
+        getLine().setStrokeColor(color);
         return (T) this;
     }
 
     @Override
     public double getStrokeAlpha() {
-        return getDecoratableLine().getStrokeAlpha();
+        return getLine().getStrokeAlpha();
     }
 
     @Override
     public T setStrokeAlpha(final double alpha) {
-        getDecoratableLine().setStrokeAlpha(alpha);
+        getLine().setStrokeAlpha(alpha);
         return (T) this;
     }
 
     @Override
     public double getStrokeWidth() {
-        return getDecoratableLine().getStrokeWidth();
+        return getLine().getStrokeWidth();
     }
 
     @Override
     public T setStrokeWidth(final double width) {
-        getDecoratableLine().setStrokeWidth(width);
+        getLine().setStrokeWidth(width);
         return (T) this;
     }
     
     @Override
     public T moveToTop() {
-        getDecoratableLine().moveToTop();
+        getGroup().moveToTop();
         return (T) this;
     }
 
     @Override
     public T moveToBottom() {
-        getDecoratableLine().moveToBottom();
+        getGroup().moveToBottom();
         return (T) this;
     }
 
     @Override
     public T moveUp() {
-        getDecoratableLine().moveUp();
+        getGroup().moveUp();
         return (T) this;
     }
 
     @Override
     public T moveDown() {
-        getDecoratableLine().moveDown();
+        getGroup().moveDown();
         return (T) this;
     }
 

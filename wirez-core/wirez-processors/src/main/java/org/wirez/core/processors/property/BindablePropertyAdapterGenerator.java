@@ -47,13 +47,14 @@ public class BindablePropertyAdapterGenerator extends AbstractBindableAdapterGen
         root.put("generatedByClassName",
                 BindablePropertyAdapterGenerator.class.getName());
         
-        addFields("valuePropNames", root, processingPropertyAnnotations.getValueFieldNames());
-        addFields("defaultValuePropNames", root, processingPropertyAnnotations.getDefaultValueFieldNames());
-        addFields("captionPropNames", root, processingPropertyAnnotations.getCaptionFieldNames());
-        addFields("descriptionPropNames", root, processingPropertyAnnotations.getDescriptionFieldNames());
-        addFields("propTypePropNames", root, processingPropertyAnnotations.getTypeFieldNames());
-        addFields("readOnlyPropNames", root, processingPropertyAnnotations.getReadOnlyFieldNames());
-        addFields("optionalPropNames", root, processingPropertyAnnotations.getOptionalFieldNames());
+        addFields( "valuePropNames", root, processingPropertyAnnotations.getValueFieldNames() );
+        addFields( "defaultValuePropNames", root, processingPropertyAnnotations.getDefaultValueFieldNames() );
+        addFields( "captionPropNames", root, processingPropertyAnnotations.getCaptionFieldNames() );
+        addFields( "descriptionPropNames", root, processingPropertyAnnotations.getDescriptionFieldNames() );
+        addFields( "propTypePropNames", root, processingPropertyAnnotations.getTypeFieldNames() );
+        addFields( "readOnlyPropNames", root, processingPropertyAnnotations.getReadOnlyFieldNames() );
+        addFields( "optionalPropNames", root, processingPropertyAnnotations.getOptionalFieldNames() );
+        addFields( "allowedValuesPropNames", root, processingPropertyAnnotations.getAllowedValuesFieldNames() );
 
         //Generate code
         return writeTemplate(packageName, className, root, messager);

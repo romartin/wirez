@@ -41,7 +41,7 @@ import java.util.Set;
 public class Lane implements BPMNDefinition {
 
     @Category
-    public static final transient String category = "Swimlanes";
+    public static final transient String category = Categories.SWIMLANES;
 
     @Title
     public static final transient String title = "Lane";

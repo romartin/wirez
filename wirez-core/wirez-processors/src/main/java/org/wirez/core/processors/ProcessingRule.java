@@ -19,7 +19,7 @@ package org.wirez.core.processors;
 public class ProcessingRule {
 
     public enum TYPE {
-        CONTAINMENT, CONNECTION, CARDINALITY, EDGE_CARDINALITY;
+        CONTAINMENT, CONNECTION, CARDINALITY, EDGE_CARDINALITY, DOCKING;
     }
     
     private final String name;

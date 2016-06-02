@@ -45,6 +45,7 @@ import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.relationship.Child;
+import org.wirez.core.graph.content.relationship.Dock;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.graph.processing.index.Index;
@@ -206,6 +207,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
             }
 
             @Override
+            @SuppressWarnings("unchecked")
             public boolean startNodeTraversal(final Node node) {
                 
                 if ( node.getContent() instanceof View ) {
@@ -214,7 +216,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                             shapeManager.getFactory( getDefinitionId( viewContent.getDefinition() ) );
 
                     // Add the node shape into the canvas.
-                    register(factory, node);
+                    register( factory, node );
                     applyElementMutation(node, MutationContext.STATIC);
                     
                     return true;
@@ -224,6 +226,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
             }
 
             @Override
+            @SuppressWarnings("unchecked")
+
             public boolean startEdgeTraversal(final Edge edge) {
                 
                 final Object content = edge.getContent();
@@ -235,7 +239,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                             shapeManager.getFactory( getDefinitionId( viewContent.getDefinition() ) );
 
                     // Add the edge shape into the canvas.
-                    register(factory, edge);
+                    register( factory, edge );
                     applyElementMutation(edge, MutationContext.STATIC);
                     ShapeUtils.applyConnections( edge, AbstractCanvasHandler.this, MutationContext.STATIC);
                     return true;
@@ -245,14 +249,34 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                     final Node child = edge.getTargetNode();
                     final Node parent = edge.getSourceNode();
 
-                    final Object childContent = child.getContent();
-                    if (childContent instanceof View) {
-                        addChild(parent, child);
-                        applyElementMutation(child, MutationContext.STATIC);
+                    // If the child is docked, do not consider adding it as a child shape of the given parent here, 
+                    // as docking lienzo wires implies that child shape is added as a child for the docked shape.
+                    // TODO: This logic is specific for lienzo wires, should not be here.
+                    if ( !isDocked( child ) ) {
+
+                        final Object childContent = child.getContent();
+                        if (childContent instanceof View) {
+                            addChild(parent, child);
+                            applyElementMutation(child, MutationContext.STATIC);
+                        }
+                        
                     }
-                    
+
                     return true;
-                } 
+                    
+                } else if ( content instanceof Dock) {
+
+                    final Node docked = edge.getTargetNode();
+                    final Node parent = edge.getSourceNode();
+
+                    final Object dockedContent = docked.getContent();
+                    if (dockedContent instanceof View) {
+                        dock(parent, docked);
+                        applyElementMutation(docked, MutationContext.STATIC);
+                    }
+
+                    return true;
+                }
 
                 return false;
                 
@@ -267,6 +291,31 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
             }
         });
         
+    }
+    
+    @SuppressWarnings("unchecked")
+    private boolean isDocked( final Node child ) {
+        if ( null != child ) {
+            
+            List<Edge> edges = child.getInEdges();
+            if ( null != edges && !edges.isEmpty() ) {
+                
+                for ( final Edge edge : edges ) {
+                    
+                    if ( isDockEdged( edge ) ) {
+                        return true;
+                    }
+                }
+                
+            }
+            
+        }
+        
+        return false;
+    }
+
+    private boolean isDockEdged( final Edge edge ) {
+        return edge.getContent() instanceof Dock;
     }
 
     /*
@@ -330,6 +379,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         applyElementMutation( element, false , true, mutationContext );
     }
 
+    @SuppressWarnings("unchecked")
     public void applyElementMutation(final Element candidate, 
                                      final boolean applyPosition, 
                                      final boolean applyProperties,
@@ -375,22 +425,55 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     public void addChild(final Element parent, final Element child) {
         final Shape parentShape = canvas.getShape(parent.getUUID());
         final Shape childShape = canvas.getShape(child.getUUID());
-        handleZIndex( childShape, parentShape.getShapeView().getZIndex() + 1 );
-        handleZIndex( child, parentShape.getShapeView().getZIndex() + 1 );
+        handleParentChildZIndex( parent, child, parentShape, childShape, true );
         canvas.addChildShape(parentShape, childShape);
     }
 
     public void removeChild(final String parentUUID, final String childUUID) {
         final Shape parentShape = canvas.getShape( parentUUID );
         final Shape childShape = canvas.getShape( childUUID );
-        handleZIndex( childShape, 0 );
-        final Element element = getGraphIndex().get( childShape.getUUID() );
-        if ( null != element ) {
-            handleZIndex( element, 0 );
-        }
+        handleParentChildZIndex( null, null, parentShape, childShape, false );
         canvas.deleteChildShape(parentShape, childShape);
     }
+
+    public void dock(final Element parent, final Element child) {
+        final Shape parentShape = canvas.getShape(parent.getUUID());
+        final Shape childShape = canvas.getShape(child.getUUID());
+        handleParentChildZIndex( parent, child, parentShape, childShape, true );
+        canvas.dock(parentShape, childShape);
+    }
+
+    public void undock(final String parentUUID, final String childUUID) {
+        final Shape parentShape = canvas.getShape( parentUUID );
+        final Shape childShape = canvas.getShape( childUUID );
+        handleParentChildZIndex( null, null, parentShape, childShape, false );
+        canvas.undock(parentShape, childShape);
+    }
     
+    protected void handleParentChildZIndex( final Element parent,
+                                            final Element child,
+                                            final Shape parentShape,
+                                            final Shape childShape,
+                                            final boolean add ) {
+        
+        if ( add ) {
+
+            handleZIndex( childShape, parentShape.getShapeView().getZIndex() + 1 );
+            handleZIndex( child, parentShape.getShapeView().getZIndex() + 1 );
+            
+        } else {
+
+            handleZIndex( childShape, 0 );
+            final Element element = getGraphIndex().get( childShape.getUUID() );
+            if ( null != element ) {
+                handleZIndex( element, 0 );
+            }
+            
+        }
+        
+    }
+    
+    @SuppressWarnings("unchecked")
     protected void handleZIndex(final Element child,
                                 final int zindex) {
         
@@ -552,7 +635,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
     @Override
     public String toString() {
-        return "CanvasHander [" + uuid + "]";
+        return "AbstractCanvasHandler [" + uuid + "]";
     }
 
     private void log(final Level level, final String message) {

@@ -58,21 +58,27 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
 
         // Bounds.
         Bounds.Bound ul = element.getContent().getBounds().getUpperLeft();
+        Bounds.Bound lr = element.getContent().getBounds().getLowerRight();
+        parseBounds( ul, lr );
+        
+    }
+    
+    protected void parseBounds( Bounds.Bound ul, Bounds.Bound lr ) {
+        
+        // Bounds.
         ObjectParser ulBoundParser = new ObjectParser( "upperLeft" )
                 .addParser( new IntegerFieldParser( "x", ul.getX().intValue() ))
                 .addParser( new IntegerFieldParser( "y", ul.getY().intValue() ));
 
-        Bounds.Bound lr = element.getContent().getBounds().getLowerRight();
         ObjectParser lrBoundParser = new ObjectParser( "lowerRight" )
                 .addParser( new IntegerFieldParser( "x", lr.getX().intValue() ))
                 .addParser( new IntegerFieldParser( "y", lr.getY().intValue() ));
 
-
         ObjectParser boundsParser = new ObjectParser( "bounds" )
                 .addParser( ulBoundParser )
                 .addParser( lrBoundParser );
+        
         super.addParser( boundsParser );
-
     }
 
     @Override

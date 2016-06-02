@@ -28,6 +28,7 @@ import javax.enterprise.context.ApplicationScoped;
                 StartNoneEvent.class,
                 EndNoneEvent.class,
                 EndTerminateEvent.class,
+                IntermediateTimerEvent.class,
                 ParallelGateway.class,
                 ExclusiveDatabasedGateway.class,
                 SequenceFlow.class

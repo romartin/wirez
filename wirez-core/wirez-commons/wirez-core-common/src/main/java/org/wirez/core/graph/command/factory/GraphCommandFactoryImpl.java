@@ -4,8 +4,8 @@ import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
-import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.command.impl.*;
+import org.wirez.core.graph.content.view.View;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -20,6 +20,13 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
                                               final Node parent,
                                               final Node candidate) {
         return new AddChildNodeCommand(target, parent, candidate);
+    }
+
+    @Override
+    public AddDockedNodeCommand ADD_DOCKED_NODE(final Graph target, 
+                                                final Node parent, 
+                                                final Node candidate) {
+        return new AddDockedNodeCommand( target, parent, candidate );
     }
 
     @Override
@@ -62,6 +69,16 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     @Override
     public DeleteParentEdgeCommand DELETE_PARENT_EDGE(final Node parent, final Node candidate) {
         return new DeleteParentEdgeCommand(parent, candidate);
+    }
+
+    @Override
+    public AddDockEdgeCommand ADD_DOCK_EDGE(final Node parent, final Node candidate) {
+        return new AddDockEdgeCommand( parent, candidate );
+    }
+
+    @Override
+    public DeleteDockEdgeCommand DELETE_DOCK_EDGE(final Node parent, final Node candidate) {
+        return new DeleteDockEdgeCommand( parent, candidate );
     }
 
     @Override

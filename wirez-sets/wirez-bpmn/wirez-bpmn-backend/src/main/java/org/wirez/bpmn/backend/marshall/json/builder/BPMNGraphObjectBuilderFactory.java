@@ -31,18 +31,29 @@ public class BPMNGraphObjectBuilderFactory {
     }
     
     public GraphObjectBuilder<?, ?> builderFor(String oryxId) {
-        if ( oryxId == null) throw new NullPointerException();
+        
+        if ( oryxId == null ) {
+            throw new NullPointerException();
+        }
         
         Class<?> defClass = oryxManager.getMappingsManager().getDefinition( oryxId );
+        
         if ( null == defClass ) {
+            
             throw new RuntimeException("No definition found for oryx stencil with id [" + oryxId + "]");
+            
         }
 
         Class<? extends Element> element = AnnotatedDefinitionAdapter.getGraphElement( defClass );
-        if ( element.isAssignableFrom(Node.class) ) {
+        
+        if ( element.isAssignableFrom( Node.class ) ) {
+            
             return new NodeBuilderImpl( defClass );
-        } else if ( element.isAssignableFrom(Edge.class) ) {
+            
+        } else if ( element.isAssignableFrom( Edge.class ) ) {
+            
             return new EdgeBuilderImpl( defClass );
+            
         }
 
         throw new RuntimeException("No graph element found for definition with class [" + defClass.getName() + "]");

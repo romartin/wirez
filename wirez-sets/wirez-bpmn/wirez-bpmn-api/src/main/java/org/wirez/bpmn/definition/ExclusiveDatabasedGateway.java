@@ -42,7 +42,7 @@ import java.util.Set;
 public class ExclusiveDatabasedGateway implements BPMNDefinition {
 
     @Category
-    public static final transient String category = "Gateways";
+    public static final transient String category = Categories.GATEWAYS;
 
     @Title
     public static final transient String title = "Exclusive Data-based Gateway";

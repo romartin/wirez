@@ -145,41 +145,46 @@ public class PropertiesEditor implements IsWidget {
 
         // Definition property packages.
         final Set<?> propertyPackageSet = definitionAdapter.getPropertySets( definition );
-        for (final Object propertyPackage : propertyPackageSet) {
-            final PropertySetAdapter propertySetAdapter = getDefinitionManager().getPropertySetAdapter( propertyPackage.getClass() );
-            final Set<?> properties = propertySetAdapter.getProperties( propertyPackage );
+        if ( null != propertyPackageSet && !propertyPackageSet.isEmpty() ) {
 
-            final PropertyEditorCategory category = new PropertyEditorCategory(propertySetAdapter.getName(propertyPackage));
-            
-            if (properties != null) {
-                
-                for (final Object _property : properties) {
-                    
-                    final PropertyAdapter propertyAdapter = getDefinitionManager().getPropertyAdapter(_property.getClass());
-                    final String propertyId = propertyAdapter.getId(_property);
-                    final Object property = graphUtils.getProperty(element, propertyId);
-                    final Object value = propertyAdapter.getValue(property);
-                    
-                    final PropertyEditorFieldInfo propFieldInfo =
-                            buildGenericFieldInfo( element,
-                                    property,
-                                    value,
-                                    value1 -> executeUpdateProperty(element, propertyId, value1) );
+            for (final Object propertyPackage : propertyPackageSet) {
+                final PropertySetAdapter propertySetAdapter = getDefinitionManager().getPropertySetAdapter( propertyPackage.getClass() );
+                final Set<?> properties = propertySetAdapter.getProperties( propertyPackage );
 
-                    if (propFieldInfo != null) {
-                        
-                        processedProperties.add(propertyId);
-                        category.withField(propFieldInfo);
-                        
+                final PropertyEditorCategory category = new PropertyEditorCategory(propertySetAdapter.getName(propertyPackage));
+
+                if (properties != null) {
+
+                    for (final Object _property : properties) {
+
+                        final PropertyAdapter propertyAdapter = getDefinitionManager().getPropertyAdapter(_property.getClass());
+                        final String propertyId = propertyAdapter.getId(_property);
+                        final Object property = graphUtils.getProperty(element, propertyId);
+                        final Object value = propertyAdapter.getValue(property);
+
+                        final PropertyEditorFieldInfo propFieldInfo =
+                                buildGenericFieldInfo( element,
+                                        property,
+                                        value,
+                                        value1 -> executeUpdateProperty(element, propertyId, value1) );
+
+                        if (propFieldInfo != null) {
+
+                            processedProperties.add(propertyId);
+                            category.withField(propFieldInfo);
+
+                        }
+
                     }
 
                 }
-                
+
+                categories.add(category);
+
             }
-
-            categories.add(category);
-
+            
         }
+        
 
         final Set<?> properties = definitionAdapter.getProperties( definition );
         PropertyEditorCategory pCategory = buildPropertiesCategory(element, processedProperties, properties);
@@ -211,7 +216,7 @@ public class PropertiesEditor implements IsWidget {
         
         final PropertyEditorCategory result = new PropertyEditorCategory( title, 1 );
 
-        if (properties != null) {
+        if ( null != properties && !properties.isEmpty() ) {
             
             for ( final Object property : properties ) {
                 

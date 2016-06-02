@@ -1,3 +1,16 @@
+- Why moving to a new designer?
+    - Problem
+        The BPMN designer is the most important area in the product and also the area that gets the most complaints. These complaints are primarily about reliability, Oryx was inherited from an old community project (for time to market) and came with too much technical debt. There are lots of small details, which can detract from the overall experience.
+        Oryx is not testable and regressions happen with almost every fix, making it very hard and costly to stabilise.
+    - Solution
+        Work with the Lienzo (A modern canvas library) community to build a new visio like tool, that can support BPMN2, and provide a commercial quality experience.
+        Have a strong focus on enabling testability.
+        Real time drawing of shapes and lines during drag. Including real time alignment and distribution guidelines and snap.
+        Proper Orthogonal lines, with multipoint support, and heuristics to provide minimal number of turns for each line.
+        Reduced and more attractive properties (designed by UXD).
+        Change palette from accordion to horizontal bar with fly-outs. Support standard and compact palettes.
+        etc
+    
 - Links
     
     - Some Mark's videos

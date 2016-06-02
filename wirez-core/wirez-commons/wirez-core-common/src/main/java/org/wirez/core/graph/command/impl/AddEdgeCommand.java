@@ -62,6 +62,7 @@ public final class AddEdgeCommand extends AbstractGraphCommand {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
         final DeleteEdgeCommand undoCommand = new DeleteEdgeCommand( edge );
         return undoCommand.execute( context );

@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 @Dependent
 public class ModelRulesManagerImpl extends AbstractRulesManager<ModelContainmentRuleManager, ModelConnectionRuleManager,
-        ModelCardinalityRuleManager, ModelEdgeCardinalityRuleManager> implements ModelRulesManager {
+        ModelCardinalityRuleManager, ModelEdgeCardinalityRuleManager, ModelDockingRuleManager> implements ModelRulesManager {
 
     private static final String NAME = "Domain Model Rules Manager";
 
@@ -16,8 +16,10 @@ public class ModelRulesManagerImpl extends AbstractRulesManager<ModelContainment
     public ModelRulesManagerImpl( final ModelContainmentRuleManager containmentRuleManager, 
                                   final ModelConnectionRuleManager connectionRuleManager, 
                                   final ModelCardinalityRuleManager cardinalityRuleManager, 
-                                  final ModelEdgeCardinalityRuleManager edgeCardinalityRuleManager) {
-        super(containmentRuleManager, connectionRuleManager, cardinalityRuleManager, edgeCardinalityRuleManager);
+                                  final ModelEdgeCardinalityRuleManager edgeCardinalityRuleManager,
+                                  final ModelDockingRuleManager dockingRuleManager) {
+        super(containmentRuleManager, connectionRuleManager, cardinalityRuleManager, 
+                edgeCardinalityRuleManager, dockingRuleManager);
     }
 
     @Override

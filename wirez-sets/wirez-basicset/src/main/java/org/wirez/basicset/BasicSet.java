@@ -8,6 +8,7 @@ import org.wirez.basicset.definition.icon.dynamics.PlusIcon;
 import org.wirez.basicset.definition.icon.dynamics.XORIcon;
 import org.wirez.basicset.definition.icon.statics.BusinessRuleIcon;
 import org.wirez.basicset.definition.icon.statics.ScriptIcon;
+import org.wirez.basicset.definition.icon.statics.TimerIcon;
 import org.wirez.basicset.definition.icon.statics.UserIcon;
 import org.wirez.basicset.definition.property.Height;
 import org.wirez.basicset.definition.property.Name;
@@ -44,7 +45,8 @@ import javax.enterprise.context.ApplicationScoped;
                 // Static Icons.
                 UserIcon.class,
                 ScriptIcon.class,
-                BusinessRuleIcon.class
+                BusinessRuleIcon.class,
+                TimerIcon.class
                 
         },
         builder = BasicSet.BasicSetBuilder.class

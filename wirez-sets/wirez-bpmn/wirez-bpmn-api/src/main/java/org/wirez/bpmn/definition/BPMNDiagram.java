@@ -42,7 +42,7 @@ import java.util.Set;
 public class BPMNDiagram implements BPMNDefinition {
 
     @Category
-    public static final transient String category = "Diagram";
+    public static final transient String category = Categories.DIAGRAM;
     
     @Title
     public static final transient String title = "BPMN Diagram";
@@ -85,7 +85,7 @@ public class BPMNDiagram implements BPMNDefinition {
 
         @Override
         public BPMNDiagram build() {
-            return new BPMNDiagram(  new BPMNGeneral( "Lane" ),
+            return new BPMNDiagram(  new BPMNGeneral( "Diagram" ),
                     new DiagramSet(),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),

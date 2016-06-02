@@ -16,6 +16,10 @@ public interface GraphCommandFactory {
                                        Node parent,
                                        Node candidate);
 
+    AddDockedNodeCommand ADD_DOCKED_NODE(Graph target,
+                                       Node parent,
+                                       Node candidate);
+
     AddEdgeCommand ADD_EDGE(Node target,
                             Edge edge);
 
@@ -42,6 +46,12 @@ public interface GraphCommandFactory {
     DeleteParentEdgeCommand DELETE_PARENT_EDGE(Node parent,
                                                Node candidate);
 
+    AddDockEdgeCommand ADD_DOCK_EDGE(Node parent,
+                                         Node candidate);
+
+    DeleteDockEdgeCommand DELETE_DOCK_EDGE(Node parent,
+                                             Node candidate);
+    
     SetConnectionSourceNodeCommand SET_SOURCE_NODE(Node<? extends View<?>, Edge> sourceNode,
                                                    Edge<? extends View<?>, Node> edge,
                                                    int magnetIndex);

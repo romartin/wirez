@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 @Dependent
 public class GraphRulesManagerImpl extends AbstractRulesManager<GraphContainmentRuleManager, GraphConnectionRuleManager,
-        GraphCardinalityRuleManager, GraphEdgeCardinalityRuleManager> implements GraphRulesManager {
+        GraphCardinalityRuleManager, GraphEdgeCardinalityRuleManager, GraphDockingRuleManager> implements GraphRulesManager {
 
     private static final String NAME = "Graph Rules Manager";
 
@@ -16,8 +16,10 @@ public class GraphRulesManagerImpl extends AbstractRulesManager<GraphContainment
     public GraphRulesManagerImpl(final GraphContainmentRuleManager containmentRuleManager, 
                                  final GraphConnectionRuleManager connectionRuleManager, 
                                  final GraphCardinalityRuleManager cardinalityRuleManager, 
-                                 final GraphEdgeCardinalityRuleManager edgeCardinalityRuleManager) {
-        super(containmentRuleManager, connectionRuleManager, cardinalityRuleManager, edgeCardinalityRuleManager);
+                                 final GraphEdgeCardinalityRuleManager edgeCardinalityRuleManager,
+                                 final GraphDockingRuleManager graphDockingRuleManager) {
+        super(containmentRuleManager, connectionRuleManager, cardinalityRuleManager, 
+                edgeCardinalityRuleManager, graphDockingRuleManager);
     }
 
     @Override

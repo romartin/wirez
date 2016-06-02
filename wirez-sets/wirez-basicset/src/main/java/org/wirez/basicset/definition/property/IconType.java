@@ -21,7 +21,11 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.property.*;
 import org.wirez.core.definition.property.PropertyType;
+import org.wirez.core.definition.property.type.EnumType;
 import org.wirez.core.definition.property.type.StringType;
+import org.wirez.shapes.proxy.icon.dynamics.Icons;
+
+import java.util.ArrayList;
 
 @Portable
 @Bindable
@@ -41,19 +45,26 @@ public class IconType {
     public static final Boolean optional = false;
 
     @Type
-    public static final PropertyType type = new StringType();
+    public static final PropertyType type = new EnumType();
 
     @DefaultValue
-    public static final transient String defaultValue = "plus";
+    public static final transient Icons defaultValue = Icons.PLUS;
 
     @Value
-    private String value = defaultValue;
+    private Icons value = defaultValue;
 
+    @AllowedValues
+    public static final Iterable<Icons> allowedValues = new ArrayList<Icons>( 3 ) {{
+        add( Icons.PLUS );
+        add( Icons.MINUS );
+        add( Icons.XOR );
+    }};
+    
     public IconType() {
     }
 
-    public IconType( final String radius ) {
-        this.value = radius;
+    public IconType( final Icons icon ) {
+        this.value = icon;
     }
 
     public String getCaption() {
@@ -76,16 +87,20 @@ public class IconType {
         return type;
     }
 
-    public String getDefaultValue() {
+    public Icons getDefaultValue() {
         return defaultValue;
     }
     
-    public String getValue() {
+    public Icons getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Icons value) {
         this.value = value;
+    }
+
+    public Iterable<Icons> getAllowedValues() {
+        return allowedValues;
     }
     
 }

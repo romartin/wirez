@@ -22,7 +22,7 @@ public class ModelContainmentRuleManagerImpl extends AbstractContainmentRuleMana
     }
     
     @Override
-    protected RuleViolations dpEvaluate(final String targetId, 
+    protected RuleViolations doEvaluate(final String targetId,
                                         final Set<String> candidateRoles) {
 
         final DefaultRuleViolations results = new DefaultRuleViolations();

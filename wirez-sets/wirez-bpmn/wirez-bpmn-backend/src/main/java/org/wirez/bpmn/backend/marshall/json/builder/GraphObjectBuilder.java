@@ -31,6 +31,8 @@ public interface GraphObjectBuilder<W, T extends Element<View<W>>> {
     GraphObjectBuilder<W, T> boundUL(Double x, Double y);
 
     GraphObjectBuilder<W, T> boundLR(Double x, Double y);
+
+    GraphObjectBuilder<W, T> docker(Double x, Double y);
     
     T build(BuilderContext context);
     

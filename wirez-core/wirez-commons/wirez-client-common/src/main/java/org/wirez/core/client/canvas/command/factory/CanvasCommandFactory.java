@@ -1,11 +1,11 @@
 package org.wirez.core.client.canvas.command.factory;
 
+import org.wirez.core.client.canvas.command.impl.*;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
-import org.wirez.core.client.canvas.command.impl.*;
-import org.wirez.core.client.shape.factory.ShapeFactory;
 
 public interface CanvasCommandFactory {
     
@@ -35,6 +35,12 @@ public interface CanvasCommandFactory {
     DeleteCanvasParentEdgeCommand DELETE_PARENT_EDGE(Node parent,
                                                      Node candidate);
 
+    AddCanvasDockEdgeCommand ADD_DOCK_EDGE(Node parent,
+                                               Node candidate);
+
+    DeleteCanvasDockEdgeCommand DELETE_DOCK_EDGE(Node parent,
+                                                     Node candidate);
+
     UpdateCanvasElementPositionCommand UPDATE_POSITION(Element element,
                                                        Double x,
                                                        Double y);
@@ -46,6 +52,8 @@ public interface CanvasCommandFactory {
     UpdateCanvasElementPropertiesCommand UPDATE_PROPERTIES(Element element);
     
     AddCanvasChildNodeCommand ADD_CHILD_NODE(Node parent, Node candidate, ShapeFactory factory);
+
+    AddCanvasDockedNodeCommand ADD_DOCKED_NODE(Node parent, Node candidate, ShapeFactory factory);
     
     SetCanvasConnectionSourceNodeCommand SET_SOURCE_NODE(Node<? extends View<?>, Edge> node,
                                                          Edge<? extends View<?>, Node> edge,

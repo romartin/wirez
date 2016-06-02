@@ -1,6 +1,7 @@
 package org.wirez.basicset.shape.proxy;
 
 import org.wirez.basicset.definition.PolygonWithIcon;
+import org.wirez.core.client.canvas.controls.toolbox.command.RemoveToolboxCommand;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.BasicShapeProxy;
 import org.wirez.shapes.proxy.HasChildProxies;
@@ -81,9 +82,8 @@ public final class PolygonWithIconProxy implements
         private static final String COLOR = "#000000";
         
         @Override
-        public Icons getIcon(final PolygonWithIcon definition ) {
-            final String icon = definition.getIconType().getValue();
-            return Icons.parse( icon );
+        public Icons getIcon( final PolygonWithIcon definition ) {
+            return definition.getIconType().getValue();
         }
 
         @Override

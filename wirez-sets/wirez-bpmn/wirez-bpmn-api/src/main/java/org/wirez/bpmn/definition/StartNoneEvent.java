@@ -43,7 +43,7 @@ import java.util.Set;
 public class StartNoneEvent implements BPMNDefinition {
 
     @Category
-    public static final transient String category = "Start Events";
+    public static final transient String category = Categories.START_EVENTS;
 
     @Title
     public static final transient String title = "Start Event";

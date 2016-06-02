@@ -43,7 +43,7 @@ import java.util.Set;
 public class EndTerminateEvent implements BPMNDefinition {
 
     @Category
-    public static final transient String category = "End Events";
+    public static final transient String category = Categories.END_EVENTS;
 
     @Title
     public static final transient String title = "End Terminate Event";

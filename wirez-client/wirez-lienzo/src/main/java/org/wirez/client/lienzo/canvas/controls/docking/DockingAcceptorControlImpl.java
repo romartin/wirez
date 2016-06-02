@@ -3,125 +3,92 @@ package org.wirez.client.lienzo.canvas.controls.docking;
 import com.ait.lienzo.client.core.shape.wires.IDockingAcceptor;
 import com.ait.lienzo.client.core.shape.wires.WiresContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
-import com.google.gwt.logging.client.LogConfiguration;
+import org.wirez.client.lienzo.canvas.controls.AbstractContainmentBasedControl;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
 import org.wirez.client.lienzo.canvas.wires.WiresUtils;
-import org.wirez.core.graph.Edge;
-import org.wirez.core.graph.Node;
-import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.docking.DockingAcceptorControl;
 import org.wirez.core.client.session.command.Session;
+import org.wirez.core.command.Command;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.relationship.Dock;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Dependent
-public class DockingAcceptorControlImpl implements DockingAcceptorControl<AbstractCanvasHandler> {
-
-    private static Logger LOGGER = Logger.getLogger(DockingAcceptorControlImpl.class.getName());
-
-    CanvasCommandFactory canvasCommandFactory;
-    CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
-    
-    private AbstractCanvasHandler canvasHandler;
+public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<AbstractCanvasHandler>
+    implements DockingAcceptorControl<AbstractCanvasHandler> {
 
     @Inject
     public DockingAcceptorControlImpl(final CanvasCommandFactory canvasCommandFactory,
-                                      final @Session  CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
-        this.canvasCommandFactory = canvasCommandFactory;
-        this.canvasCommandManager = canvasCommandManager;
+                                       final @Session  CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
+        super( canvasCommandFactory, canvasCommandManager );
     }
 
     @Override
-    public void enable(final AbstractCanvasHandler canvasHandler) {
-        this.canvasHandler = canvasHandler;
-        final WiresCanvas.View canvasView = (WiresCanvas.View) canvasHandler.getCanvas().getView();
-        canvasView.setDockingAcceptor(DOCKING_ACCEPTOR);
+    protected void doEnable(final WiresCanvas.View view) {
+        view.setDockingAcceptor(DOCKING_ACCEPTOR);
     }
 
     @Override
-    public void disable() {
-
-        if ( null != canvasHandler && null != canvasHandler.getCanvas() ) {
-            final WiresCanvas.View canvasView = (WiresCanvas.View) canvasHandler.getCanvas().getView();
-            canvasView.setDockingAcceptor(DOCKING_EMPTY_ACCEPTOR);
-        }
-
-        this.canvasHandler = null;
+    protected void doDisable(final WiresCanvas.View view) {
+        view.setDockingAcceptor(DOCKING_EMPTY_ACCEPTOR);
     }
 
     @Override
-    public boolean allow(final Node parent, 
-                         final Node child) {
-
-        if ( parent == null && child == null ) {
-            return false;
-        }
-        
-        // TODO
-        
-        return true;
-        
-        
+    protected boolean isEdgeAccepted(final Edge edge) {
+        return edge.getContent() instanceof Dock;
     }
 
     @Override
-    public boolean accept(final Node parent, 
-                          final Node child) {
-
-        if ( parent == null && child == null ) {
-            return false;
-        }
-        
-        // TODO
-        
-        return true;
-        
-        
+    protected Command<AbstractCanvasHandler, CanvasViolation> getAddEdgeCommand(final Node parent, final Node child) {
+        return canvasCommandFactory.ADD_DOCK_EDGE( parent, child );
     }
 
-    private boolean isEnabled() {
-        return canvasHandler != null;
+    @Override
+    protected Command<AbstractCanvasHandler, CanvasViolation> getDeleteEdgeCommand(final Node parent, final Node child) {
+        return canvasCommandFactory.DELETE_DOCK_EDGE( parent, child );
     }
+
 
     private final IDockingAcceptor DOCKING_EMPTY_ACCEPTOR = new IDockingAcceptor() {
 
         @Override
-        public boolean dockingAllowed( final WiresContainer wiresContainer, 
+        public boolean dockingAllowed( final WiresContainer wiresContainer,
                                        final WiresShape wiresShape ) {
             return false;
         }
 
         @Override
-        public boolean acceptDocking( final WiresContainer wiresContainer, 
+        public boolean acceptDocking( final WiresContainer wiresContainer,
                                       final WiresShape wiresShape ) {
             return false;
         }
-        
+
     };
-            
+
     private final IDockingAcceptor DOCKING_ACCEPTOR = new IDockingAcceptor() {
         @Override
-        public boolean dockingAllowed(final WiresContainer wiresContainer, 
+        public boolean dockingAllowed(final WiresContainer wiresContainer,
                                       final WiresShape wiresShape) {
 
             if ( !isEnabled() ) {
                 return false;
             }
-            
+
             final Node childNode = WiresUtils.getNode( canvasHandler, wiresShape );
             final Node parentNode = WiresUtils.getNode( canvasHandler, wiresContainer );
-          
+
             return allow( parentNode, childNode );
         }
 
         @Override
-        public boolean acceptDocking(final WiresContainer wiresContainer, 
+        public boolean acceptDocking(final WiresContainer wiresContainer,
                                      final WiresShape wiresShape) {
 
             if ( !isEnabled() ) {
@@ -130,29 +97,9 @@ public class DockingAcceptorControlImpl implements DockingAcceptorControl<Abstra
 
             final Node childNode = WiresUtils.getNode( canvasHandler, wiresShape );
             final Node parentNode = WiresUtils.getNode( canvasHandler, wiresContainer );
-            
+
             return accept( parentNode, childNode );
         }
     };
-    
-    private boolean isSameParent(final Node parent,
-                                 final Edge<Child, Node> edge) {
 
-        if ( null != edge ) {
-            final Node sourceNode = edge.getSourceNode();
-            if ( sourceNode != null && sourceNode.getUUID().equals(parent.getUUID())) {
-                return true;
-            }
-        }
-
-        return parent == null;
-    }
-
-    private void log(final Level level, final String message) {
-        if ( LogConfiguration.loggingIsEnabled() ) {
-            LOGGER.log(level, message);
-        }
-    }
-
-    
 }

@@ -5,21 +5,25 @@ import org.wirez.core.rule.*;
 public abstract class AbstractRulesManager<C extends ContainmentRuleManager,
         L extends ConnectionRuleManager,
         K extends CardinalityRuleManager,
-        E extends EdgeCardinalityRuleManager> implements RulesManager<C, L, K, E> {
+        E extends EdgeCardinalityRuleManager,
+        D extends DockingRuleManager> implements RulesManager<C, L, K, E, D> {
 
     protected final C containmentRuleManager;
     protected final L connectionRuleManager;
     protected final K cardinalityRuleManager;
     protected final E edgeCardinalityRuleManager;
+    protected final D dockingRuleManager;
 
     public AbstractRulesManager(final C containmentRuleManager, 
                                 final L connectionRuleManager, 
                                 final K cardinalityRuleManager, 
-                                final E edgeCardinalityRuleManager) {
+                                final E edgeCardinalityRuleManager,
+                                final D dockingRuleManager) {
         this.containmentRuleManager = containmentRuleManager;
         this.connectionRuleManager = connectionRuleManager;
         this.cardinalityRuleManager = cardinalityRuleManager;
         this.edgeCardinalityRuleManager = edgeCardinalityRuleManager;
+        this.dockingRuleManager = dockingRuleManager;
     }
 
     @Override
@@ -27,7 +31,8 @@ public abstract class AbstractRulesManager<C extends ContainmentRuleManager,
         return connectionRuleManager.supports( rule ) ||
                 containmentRuleManager.supports( rule ) ||
                 cardinalityRuleManager.supports( rule ) ||
-                edgeCardinalityRuleManager.supports( rule );
+                edgeCardinalityRuleManager.supports( rule ) || 
+                dockingRuleManager.supports( rule );
     }
 
     @Override
@@ -50,6 +55,10 @@ public abstract class AbstractRulesManager<C extends ContainmentRuleManager,
             
             edgeCardinalityRuleManager.addRule( rule );
             
+        } else if ( dockingRuleManager.supports( rule ) ) {
+
+            dockingRuleManager.addRule( rule );
+
         }
         
         return this;
@@ -61,6 +70,7 @@ public abstract class AbstractRulesManager<C extends ContainmentRuleManager,
         connectionRuleManager.clearRules();
         cardinalityRuleManager.clearRules();
         edgeCardinalityRuleManager.clearRules();
+        dockingRuleManager.clearRules();
         return this;
     }
 
@@ -82,6 +92,11 @@ public abstract class AbstractRulesManager<C extends ContainmentRuleManager,
     @Override
     public E edgeCardinality() {
         return edgeCardinalityRuleManager;
+    }
+
+    @Override
+    public D docking() {
+        return dockingRuleManager;
     }
     
 }

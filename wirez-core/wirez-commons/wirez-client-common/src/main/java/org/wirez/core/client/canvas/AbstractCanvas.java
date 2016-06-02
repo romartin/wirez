@@ -58,6 +58,10 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
         View addChildShape(ShapeView<?> parent, ShapeView<?> child);
 
         View removeChildShape(ShapeView<?> parent, ShapeView<?> child);
+
+        View dock(ShapeView<?> parent, ShapeView<?> child);
+
+        View undock(ShapeView<?> parent, ShapeView<?> child);
         
         double getAbsoluteX();
 
@@ -130,6 +134,18 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
     public Canvas deleteChildShape(final Shape parent, final Shape child) {
         getView().removeChildShape(parent.getShapeView(), child.getShapeView());
         log(Level.FINE, "Deleting child [" + child.getUUID() + "] from parent [" + parent.getUUID()  + "]");
+        return this;
+    }
+
+    public Canvas dock(final Shape parent, final Shape child) {
+        getView().dock(parent.getShapeView(), child.getShapeView());
+        log(Level.FINE, "Docking child [" + child.getUUID() + "] into parent [" + parent.getUUID() + "]");
+        return this;
+    }
+
+    public Canvas undock(final Shape parent, final Shape child) {
+        getView().undock(parent.getShapeView(), child.getShapeView());
+        log(Level.FINE, "Undocking child [" + child.getUUID() + "] from parent [" + parent.getUUID()  + "]");
         return this;
     }
     

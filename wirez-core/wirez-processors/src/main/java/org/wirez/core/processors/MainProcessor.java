@@ -56,10 +56,13 @@ import java.util.*;
         MainProcessor.ANNOTATION_PROPERTY_SET,
         MainProcessor.ANNOTATION_PROPERTY, 
         MainProcessor.ANNOTATION_NAME_PROPERTY,
-        MainProcessor.ANNOTATION_RULE_CAN_CONTAIN, 
+        MainProcessor.ANNOTATION_RULE_CAN_CONTAIN,
+        MainProcessor.ANNOTATION_RULE_CAN_DOCK,
         MainProcessor.ANNOTATION_RULE_ALLOWED_CONNECTION, 
         MainProcessor.ANNOTATION_RULE_ALLOWED_EDGE_OCCURRS,
-        MainProcessor.ANNOTATION_RULE_ALLOWED_OCCS})
+        MainProcessor.ANNOTATION_RULE_ALLOWED_OCCS,
+        MainProcessor.ANNOTATION_SHAPE,
+        MainProcessor.ANNOTATION_SHAPE_SET})
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
@@ -90,16 +93,16 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     
     
     public static final String ANNOTATION_RULE_CAN_CONTAIN = "org.wirez.core.rule.annotation.CanContain";
+    public static final String ANNOTATION_RULE_CAN_DOCK = "org.wirez.core.rule.annotation.CanDock";
     public static final String ANNOTATION_RULE_ALLOWED_CONNECTION = "org.wirez.core.rule.annotation.AllowedConnections";
-    public static final String ANNOTATION_RULE_CAN_CONNECTION = "org.wirez.core.rule.annotation.CanConnect";
     public static final String ANNOTATION_RULE_ALLOWED_OCCS = "org.wirez.core.rule.annotation.AllowedOccurrences";
-    public static final String ANNOTATION_RULE_OCCURRS = "org.wirez.core.rule.annotation.Occurrences";
     public static final String ANNOTATION_RULE_ALLOWED_EDGE_OCCURRS = "org.wirez.core.rule.annotation.AllowedEdgeOccurrences";
 
     public static final String ANNOTATION_SHAPE_SET = "org.wirez.core.client.annotation.ShapeSet";
     public static final String ANNOTATION_SHAPE = "org.wirez.core.client.annotation.Shape";
     
     public static final String RULE_CONTAINMENT_SUFFIX_CLASSNAME = "ContainmentRule";
+    public static final String RULE_DOCKING_SUFFIX_CLASSNAME = "DockingRule";
     public static final String RULE_CONNECTION_SUFFIX_CLASSNAME = "ConnectionRule";
     public static final String RULE_CARDINALITY_SUFFIX_CLASSNAME = "CardinalityRule";
     public static final String RULE_EDGE_CARDINALITY_SUFFIX_CLASSNAME = "EdgeCardinalityRule";
@@ -119,6 +122,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     private final ConnectionRuleGenerator connectionRuleGenerator;
     private final CardinalityRuleGenerator cardinalityRuleGenerator;
     private final EdgeCardinalityRuleGenerator edgeCardinalityRuleGenerator;
+    private final DockingRuleGenerator dockingRuleGenerator;
     private BindableDefinitionSetAdapterGenerator definitionSetAdapterGenerator;
     private BindableDefinitionAdapterGenerator definitionAdapterGenerator;
     private BindablePropertySetAdapterGenerator propertySetAdapterGenerator;
@@ -134,6 +138,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         ConnectionRuleGenerator connectionRuleGenerator = null;
         CardinalityRuleGenerator cardinalityRuleGenerator = null;
         EdgeCardinalityRuleGenerator edgeCardinalityRuleGenerator = null;
+        DockingRuleGenerator dockingRuleGenerator = null;
         BindableDefinitionSetAdapterGenerator definitionSetAdapterGenerator = null;
         BindableDefinitionAdapterGenerator definitionAdapterGenerator = null;
         BindablePropertySetAdapterGenerator propertySetAdapterGenerator = null;
@@ -152,6 +157,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             connectionRuleGenerator = new ConnectionRuleGenerator();
             cardinalityRuleGenerator = new CardinalityRuleGenerator();
             edgeCardinalityRuleGenerator = new EdgeCardinalityRuleGenerator();
+            dockingRuleGenerator = new DockingRuleGenerator();
             definitionAdapterGenerator = new BindableDefinitionAdapterGenerator();
             definitionSetAdapterGenerator = new BindableDefinitionSetAdapterGenerator();
             propertySetAdapterGenerator = new BindablePropertySetAdapterGenerator();
@@ -168,6 +174,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         this.connectionRuleGenerator = connectionRuleGenerator;
         this.cardinalityRuleGenerator = cardinalityRuleGenerator;
         this.edgeCardinalityRuleGenerator = edgeCardinalityRuleGenerator;
+        this.dockingRuleGenerator = dockingRuleGenerator;
         this.definitionSetAdapterGenerator = definitionSetAdapterGenerator;
         this.definitionAdapterGenerator = definitionAdapterGenerator;
         this.propertySetAdapterGenerator = propertySetAdapterGenerator;
@@ -229,6 +236,10 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
         for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CAN_CONTAIN) ) ) {
             processContainmentRules(set, e, roundEnv);
+        }
+
+        for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_CAN_DOCK) ) ) {
+            processDockingRules(set, e, roundEnv);
         }
 
         for ( Element e : roundEnv.getElementsAnnotatedWith( elementUtils.getTypeElement(ANNOTATION_RULE_ALLOWED_OCCS) ) ) {
@@ -704,6 +715,40 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         
         return true;
         
+    }
+
+    protected boolean processDockingRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+        final Messager messager = processingEnv.getMessager();
+        final boolean isIface = e.getKind() == ElementKind.INTERFACE;
+        final boolean isClass = e.getKind() == ElementKind.CLASS;
+        if (isIface || isClass) {
+
+            TypeElement classElement = (TypeElement) e;
+            PackageElement packageElement = (PackageElement) classElement.getEnclosingElement();
+
+            messager.printMessage(Diagnostic.Kind.NOTE, "Discovered docking rule for class [" + classElement.getSimpleName() + "]");
+
+            final String packageName = packageElement.getQualifiedName().toString();
+            final String classNameActivity = classElement.getSimpleName() + RULE_DOCKING_SUFFIX_CLASSNAME;
+
+            try {
+                //Try generating code for each required class
+                messager.printMessage( Diagnostic.Kind.NOTE, "Generating code for [" + classNameActivity + "]" );
+                dockingRuleGenerator.generate( packageName,
+                        packageElement,
+                        classNameActivity,
+                        classElement,
+                        processingEnv );
+
+            } catch ( GenerationException ge ) {
+                final String msg = ge.getMessage();
+                processingEnv.getMessager().printMessage( Diagnostic.Kind.ERROR, msg, classElement );
+            }
+
+        }
+
+        return true;
+
     }
 
     protected boolean processEdgeCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {

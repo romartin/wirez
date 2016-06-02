@@ -151,6 +151,16 @@
                 - mark as @NonPortable
                 - auto generate when using annotated models?
         - avoid @Portable and @Bindable and generate the Errai.properties for the annotated pojos.
+    
+    - Reverse containment
+        - Eg: Adding a Lane over some other elements
+        - Grouping ( selecting the shapes in an area of the layer )
+        
+    - Definitions "sub-sets"
+        - https://github.com/droolsjbpm/jbpm-designer/tree/master/jbpm-designer-client/src/main/resources/org/jbpm/designer/public/stencilsets/extensions
+        - https://github.com/droolsjbpm/jbpm-designer/blob/master/jbpm-designer-client/src/main/resources/org/jbpm/designer/public/stencilsets/extensions/bpmn2.0jbpmruleflow/bpmn2.0jbpmruleflowsubset.json
+        - only affect to the palette's?
+        - restrict elements & properties
         
     - Morphing rules
         - https://snag.gy/IaH1nm.jpg

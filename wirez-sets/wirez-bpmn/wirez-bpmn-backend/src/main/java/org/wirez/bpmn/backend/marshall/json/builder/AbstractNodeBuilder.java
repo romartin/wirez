@@ -5,17 +5,19 @@ import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Radius;
 import org.wirez.bpmn.definition.property.Width;
 import org.wirez.core.api.FactoryManager;
+import org.wirez.core.command.Command;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
-import org.wirez.core.graph.command.impl.AddChildNodeCommand;
-import org.wirez.core.graph.command.impl.SetConnectionSourceNodeCommand;
+import org.wirez.core.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.graph.content.view.*;
 import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.rule.RuleViolation;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 // TODO: Improve error handling.
@@ -42,6 +44,7 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     protected T doBuild(BuilderContext context) {
 
         FactoryManager factoryManager = context.getFactoryManager();
@@ -134,18 +137,49 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
                     throw new RuntimeException("No outgoing edge builder for " + outgoingNodeId);
                 }
 
-                // Create the outgoing edge.
-                Edge edge = (Edge) outgoingBuilder.build(context);
+                final List<Command<GraphCommandExecutionContext, RuleViolation>> commands = new LinkedList<>();
+                
+                // If outgoing element it's a node means that it's docked.
+                if ( outgoingBuilder instanceof AbstractNodeBuilder ) {
 
-                // Command - Execute the graph command to set the node as the edge connection's source..  
-                int magnetIdx = getSourceConnectionMagnetIndex(context, node, edge);
-                SetConnectionSourceNodeCommand setSourceNodeCommand = context.getCommandFactory().SET_SOURCE_NODE(node, edge, magnetIdx);
-                CommandResult<RuleViolation> results = context.execute( setSourceNodeCommand );
-                if ( hasErrors(results) ) {
-                    throw new RuntimeException("Error building BPMN graph. Command execution failed.");
+                    // Command - Create the docked node.
+                    Node docked = (Node) outgoingBuilder.build(context);
+                    commands.add( context.getCommandFactory().ADD_DOCKED_NODE(context.getGraph(), node, docked) );
+                    
+                    // Obtain docked position and use those for the docked node.
+                    final List<Double[]> dockers = ((AbstractNodeBuilder) outgoingBuilder).dockers;
+                    if ( !dockers.isEmpty() ) {
+                        // TODO: Use not only first docker coordinates?
+                        Double[] dCoords = dockers.get( 0 );
+                        double x = dCoords[0];
+                        double y = dCoords[1];
+                        commands.add( context.getCommandFactory().UPDATE_POSITION( docked, x, y ) );
+                        
+                    }
+                    
+                } else {
+
+                    // Create the outgoing edge.
+                    Edge edge = (Edge) outgoingBuilder.build(context);
+
+                    // Command - Execute the graph command to set the node as the edge connection's source..  
+                    int magnetIdx = getSourceConnectionMagnetIndex(context, node, edge);
+                    commands.add( context.getCommandFactory().SET_SOURCE_NODE(node, edge, magnetIdx) );;
+                   
+                }
+
+                if ( !commands.isEmpty() ) {
+
+                    for ( Command<GraphCommandExecutionContext, RuleViolation> command : commands ) {
+
+                        doExecuteCommand( context, command );
+                        
+                    }
+                    
                 }
                 
             }
+            
         }
 
         // Children connections.
@@ -156,19 +190,39 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
                     throw new RuntimeException("No child node builder for " + childNodeId);
                 }
 
+                Command<GraphCommandExecutionContext, RuleViolation> command = null;
+                
                 if ( childNodeBuilder instanceof NodeObjectBuilder ) {
-                    Node childNode = (Node) childNodeBuilder.build(context);
                     
                     // Command - Create the child node and the parent-child relationship.
-                    AddChildNodeCommand addChildNodeCommand = context.getCommandFactory().ADD_CHILD_NODE(context.getGraph(), node, childNode);
-                    CommandResult<RuleViolation> results = context.execute( addChildNodeCommand );
-                    if ( hasErrors(results) ) {
-                        throw new RuntimeException("Error building BPMN graph. Command 'AddChildNodeCommand' execution failed.");
-                    }
+                    Node childNode = (Node) childNodeBuilder.build(context);
+                    command = context.getCommandFactory().ADD_CHILD_NODE(context.getGraph(), node, childNode);
+                    
                 }
-                
+
+                if ( null != command ) {
+
+                    doExecuteCommand( context, command );
+
+                }
+
             }
+            
         }
+        
+    }
+    
+    private boolean doExecuteCommand( BuilderContext context,
+                                      Command<GraphCommandExecutionContext, RuleViolation> command ) {
+        
+        CommandResult<RuleViolation> results = context.execute( command );
+        if ( hasErrors(results) ) {
+            throw new RuntimeException("Error building BPMN graph. " +
+                    "Command = [" + command.toString() + "] " +
+                    " Resutls = [" + results.toString() + "]");
+        }
+        
+        return true;
     }
     
     public int getSourceConnectionMagnetIndex(BuilderContext context, T node, Edge<ViewConnector<W>, Node> edge) {
@@ -181,7 +235,7 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
 
     @Override
     public String toString() {
-        return new StringBuilder(super.toString()).append(" [defClass=").append(definitionClass.getName()).append("] [childrenIds=").append(childNodeIds).append("] ").toString();
+        return super.toString() + " [defClass=" + definitionClass.getName() + "] [childrenIds=" + childNodeIds + "] ";
     }
     
 }

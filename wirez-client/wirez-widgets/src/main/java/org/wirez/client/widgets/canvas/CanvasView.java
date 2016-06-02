@@ -20,6 +20,7 @@ import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Line;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
+import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -116,6 +117,25 @@ public class CanvasView extends Composite implements org.wirez.core.client.canva
         final WiresShape parentShape = (WiresShape) parent;
         final WiresShape childShape = (WiresShape) child;
         parentShape.remove( childShape );
+        return this;
+    }
+
+    @Override
+    public org.wirez.core.client.canvas.AbstractCanvas.View dock(final ShapeView<?> parent, final ShapeView<?> child) {
+        final WiresShape parentShape = (WiresShape) parent;
+        final WiresShape childShape = (WiresShape) child;
+        child.removeFromParent();
+        parentShape.add( childShape );
+        childShape.setDockedTo(parentShape);
+        return this;
+    }
+
+    @Override
+    public org.wirez.core.client.canvas.AbstractCanvas.View undock(final ShapeView<?> parent, final ShapeView<?> child) {
+        final WiresShape parentShape = (WiresShape) parent;
+        final WiresShape childShape = (WiresShape) child;
+        parentShape.remove( childShape );
+        childShape.setDockedTo( null );
         return this;
     }
 

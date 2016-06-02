@@ -2,10 +2,8 @@ package org.wirez.bpmn.shape.proxy;
 
 import org.wirez.bpmn.definition.EndTerminateEvent;
 import org.wirez.core.client.shape.HasChildren;
-import org.wirez.shapes.proxy.BasicShapeProxy;
-import org.wirez.shapes.proxy.CircleProxy;
-import org.wirez.shapes.proxy.HasChildProxies;
-import org.wirez.shapes.proxy.RingProxy;
+import org.wirez.shapes.proxy.*;
+import org.wirez.shapes.proxy.impl.WrappedBasicNamedShapeProxy;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,11 +70,16 @@ public final class EndTerminateEventShapeProxy implements
     @Override
     public Map<BasicShapeProxy<EndTerminateEvent>, HasChildren.Layout> getChildProxies() {
         return new HashMap<BasicShapeProxy<EndTerminateEvent>, HasChildren.Layout>() {{
-            put( new EndNoneEventRingProxy(), HasChildren.Layout.CENTER );
+            put( new EndNoneEventRingProxy( EndTerminateEventShapeProxy.this ), HasChildren.Layout.CENTER );
         }};
     }
     
-    public final class EndNoneEventRingProxy implements RingProxy<EndTerminateEvent> {
+    public final class EndNoneEventRingProxy extends WrappedBasicNamedShapeProxy<EndTerminateEvent> 
+            implements RingProxy<EndTerminateEvent> {
+
+        public EndNoneEventRingProxy(final BasicNamedShapeProxy<EndTerminateEvent> parent) {
+            super( parent );
+        }
 
         @Override
         public double getInnerRadius( final EndTerminateEvent element ) {
@@ -86,26 +89,6 @@ public final class EndTerminateEventShapeProxy implements
         @Override
         public double getOuterRadius( final EndTerminateEvent element ) {
             return EndTerminateEventShapeProxy.this.getRadius( element ) * 0.9;
-        }
-
-        @Override
-        public String getFontFamily( final EndTerminateEvent element ) {
-            return EndTerminateEventShapeProxy.this.getFontFamily( element );
-        }
-
-        @Override
-        public String getFontColor( final EndTerminateEvent element ) {
-            return EndTerminateEventShapeProxy.this.getFontColor( element );
-        }
-
-        @Override
-        public double getFontSize( final EndTerminateEvent element ) {
-            return EndTerminateEventShapeProxy.this.getFontSize( element );
-        }
-
-        @Override
-        public double getFontBorderSize( final EndTerminateEvent element ) {
-            return EndTerminateEventShapeProxy.this.getFontBorderSize( element );
         }
 
         @Override
@@ -126,16 +109,6 @@ public final class EndTerminateEventShapeProxy implements
         @Override
         public String getGlyphBackgroundColor() {
             return EndTerminateEvent.EndTerminateEventBuilder.RING_COLOR;
-        }
-
-        @Override
-        public String getNamePropertyValue( final EndTerminateEvent element ) {
-            return null;
-        }
-
-        @Override
-        public String getDescription() {
-            return null;
         }
         
     }

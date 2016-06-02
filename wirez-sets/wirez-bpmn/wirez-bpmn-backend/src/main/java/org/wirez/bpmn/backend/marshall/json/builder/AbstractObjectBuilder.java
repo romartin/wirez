@@ -2,9 +2,9 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wirez.bpmn.definition.BPMNDefinition;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.Bpmn2OryxPropertyManager;
+import org.wirez.bpmn.definition.BPMNDefinition;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.command.batch.BatchCommandResult;
 import org.wirez.core.definition.adapter.DefinitionAdapter;
@@ -25,6 +25,7 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
     protected Set<String> outgoingResourceIds;
     protected Double[] boundUL;
     protected Double[] boundLR;
+    protected final List<Double[]> dockers = new LinkedList<>(); 
     protected T result;
             
     public AbstractObjectBuilder() {
@@ -68,7 +69,13 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
         this.boundLR  = new Double[] { x, y };
         return this;
     }
-    
+
+    @Override
+    public GraphObjectBuilder<W, T> docker(Double x, Double y) {
+        this.dockers.add( new Double[] { x, y } );
+        return this;
+    }
+
     protected abstract T doBuild(BuilderContext context);
 
     @Override
@@ -178,8 +185,19 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
         builder.append(" [NodeId=").append(nodeId).append("] ");
         builder.append(" [properties=").append(properties).append("] ");
         builder.append(" [outgoingResourceIds=").append(outgoingResourceIds).append("] ");
-        builder.append(" [boundUL=").append(boundUL).append("] ");
-        builder.append(" [boundLR=").append(boundLR).append("] ");
+        // Bounds.
+        builder.append(" [boundUL=").append( null != boundUL ? ( "{" + boundUL[0] + ", " + boundUL[1] + "}" ) : "null" ).append("] ");
+        builder.append(" [boundLR=").append( null != boundLR ? ( "{" + boundLR[0] + ", " + boundLR[1] + "}" ) : "null" ).append("] ");
+        // Dockers.
+        if ( !dockers.isEmpty() ) {
+            builder.append(" [dockers=");
+            for ( Double[] docker : dockers ) {
+                builder.append(" {").append( docker[0] ).append( ", " ).append( docker[1] ).append( "}" ); 
+            }
+            builder.append("] ");
+        } else {
+            builder.append(" [dockers=null] ");
+        }
         return builder.toString();
     }
 }

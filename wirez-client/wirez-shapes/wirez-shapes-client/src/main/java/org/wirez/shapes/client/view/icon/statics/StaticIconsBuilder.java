@@ -28,6 +28,10 @@ public final class StaticIconsBuilder {
                 case BUSINESS_RULE:
                     
                     return businessRule();
+
+                case TIMER:
+
+                    return timer();
                 
             }
             
@@ -119,6 +123,29 @@ public final class StaticIconsBuilder {
                 "\t\t\tc0.25,1.688,0.042,3.75-1.458,5.584c0,0,1.083,0.75,1.083,1.5s0.125,1.875-1,3s-5.5,1.25-6.75,0S8.668,12.834,8.668,12\n" +
                 "\t\t\ts0.583-1.25,1.25-1.917C8.835,9.5,7.419,7.708,8.043,7.083z", "#F0EFF0", 1, BLACK);
         group.add( path4 );
+
+        return group;
+    }
+
+    private static Group timer() {
+
+        final Group group = new Group();
+
+        final SVGPath path1 = createSVGPath( "M 16 6 L 16 9" +
+                "   M 21 7 L 19.5 10" +
+                "   M 25 11 L 22 12.5" +
+                "   M 26 16 L 23 16" +
+                "   M 25 21 L 22 19.5" +
+                "   M 21 25 L 19.5 22" +
+                "   M 16 26 L 16 23" +
+                "   M 11 25 L 12.5 22" +
+                "   M 7 21 L 10 19.5" +
+                "   M 6 16 L 9 16" +
+                "   M 7 11 L 10 12.5" +
+                "   M 11 7 L 12.5 10" +
+                "   M 18 9 L 16 16 L 20 16", null, 1, BLACK );
+        
+        group.add( path1.setX( -6 ).setY( -6 ) );
 
         return group;
     }

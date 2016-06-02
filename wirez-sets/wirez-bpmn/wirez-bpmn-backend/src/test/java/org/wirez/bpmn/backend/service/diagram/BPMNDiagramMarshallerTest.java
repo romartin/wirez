@@ -5,6 +5,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.wirez.backend.ApplicationFactoryManager;
+import org.wirez.backend.definition.adapter.AnnotatedDefinitionAdapter;
+import org.wirez.backend.definition.adapter.AnnotatedDefinitionSetAdapter;
+import org.wirez.backend.definition.adapter.AnnotatedPropertyAdapter;
+import org.wirez.backend.definition.adapter.AnnotatedPropertySetAdapter;
 import org.wirez.backend.definition.factory.TestScopeModelFactory;
 import org.wirez.bpmn.BPMNDefinitionSet;
 import org.wirez.bpmn.backend.factory.BPMNGraphFactory;
@@ -25,37 +30,36 @@ import org.wirez.core.graph.command.GraphCommandManager;
 import org.wirez.core.graph.command.GraphCommandManagerImpl;
 import org.wirez.core.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.graph.command.factory.GraphCommandFactoryImpl;
+import org.wirez.core.graph.content.relationship.Dock;
+import org.wirez.core.graph.content.view.Bounds;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.content.view.ViewConnector;
 import org.wirez.core.graph.factory.ConnectionEdgeFactory;
 import org.wirez.core.graph.factory.ConnectionEdgeFactoryImpl;
 import org.wirez.core.graph.factory.ViewNodeFactory;
 import org.wirez.core.graph.factory.ViewNodeFactoryImpl;
 import org.wirez.core.graph.util.GraphUtils;
-import org.wirez.backend.ApplicationFactoryManager;
-import org.wirez.backend.definition.adapter.AnnotatedDefinitionAdapter;
-import org.wirez.backend.definition.adapter.AnnotatedDefinitionSetAdapter;
-import org.wirez.backend.definition.adapter.AnnotatedPropertyAdapter;
-import org.wirez.backend.definition.adapter.AnnotatedPropertySetAdapter;
 
 import javax.enterprise.inject.spi.BeanManager;
 import java.io.InputStream;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 // TODO: Improve assertions.
-// TODO: Use archilian to avoid all that CDI mockings. 
+// TODO: Use Archillian to avoid all that CDI mockings. 
 @RunWith(MockitoJUnitRunner.class)
 public class BPMNDiagramMarshallerTest {
 
     protected static final String BPMN_BASIC = "org/wirez/bpmn/backend/service/diagram/basic.bpmn";
     protected static final String BPMN_EVALUATION = "org/wirez/bpmn/backend/service/diagram/evaluation.bpmn";
     protected static final String BPMN_LANES = "org/wirez/bpmn/backend/service/diagram/lanes.bpmn";
-
+    protected static final String BPMN_BOUNDARY_EVENTS = "org/wirez/bpmn/backend/service/diagram/boundaryIntmEvent.bpmn";
+    protected static final String BPMN_NOT_BOUNDARY_EVENTS = "org/wirez/bpmn/backend/service/diagram/notBoundaryIntmEvent.bpmn";
     
     @Mock
     DefinitionManager definitionManager;
@@ -190,6 +194,65 @@ public class BPMNDiagramMarshallerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
+    public void testUmarshallNotBoundaryEvents() throws Exception  {
+        Diagram<Graph, Settings> diagram = unmarshall( BPMN_NOT_BOUNDARY_EVENTS );
+        assertEquals( "Not Boundary Event", diagram.getSettings().getTitle() );
+        assertDiagram( diagram, 6 );
+        // Assert than the intermediate event is connected using a view connector, 
+        // so not boundary to the task ( not docked ).
+        Node event = diagram.getGraph().getNode("_CB178D55-8DC2-4CAA-8C42-4F5028D4A1F6");
+        List<Edge> inEdges = event.getInEdges();
+        boolean foundViewConnector = false;
+        for ( Edge e : inEdges ) {
+            if ( e.getContent() instanceof ViewConnector ) {
+                foundViewConnector = true;
+            }
+        }
+        assertTrue( foundViewConnector );
+
+        // Assert absolute position as the node is not docked.
+        Bounds bounds = ( (View) event.getContent()).getBounds();
+        Bounds.Bound ul = bounds.getUpperLeft();
+        Bounds.Bound lr = bounds.getLowerRight();
+        assertEquals( 305, ul.getX(), 0 );
+        assertEquals( 300, ul.getY(), 0 );
+        assertEquals( 335, lr.getX(), 0 );
+        assertEquals( 330, lr.getY(), 0 );
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testUmarshallBoundaryEvents() throws Exception  {
+        Diagram<Graph, Settings> diagram = unmarshall( BPMN_BOUNDARY_EVENTS );
+        
+        // Basic assertions.
+        assertEquals( "Boundary Event", diagram.getSettings().getTitle() );
+        assertDiagram( diagram, 6 );
+
+        // Assert than the intermediate event is connected using a dock connector, 
+        // so boundary to the task.
+        Node event = diagram.getGraph().getNode("_CB178D55-8DC2-4CAA-8C42-4F5028D4A1F6");
+        List<Edge> inEdges = event.getInEdges();
+        boolean foundDockConector = false;
+        for ( Edge e : inEdges ) {
+            if ( e.getContent() instanceof Dock) {
+                foundDockConector = true;
+            }
+        }
+        assertTrue( foundDockConector );
+
+        // Assert relative position for the docked node.
+        Bounds bounds = ( (View) event.getContent()).getBounds();
+        Bounds.Bound ul = bounds.getUpperLeft();
+        Bounds.Bound lr = bounds.getLowerRight();
+        assertEquals( 57, ul.getX(), 0 );
+        assertEquals( 70, ul.getY(), 0 );
+        assertEquals( 87, lr.getX(), 0 );
+        assertEquals( 100, lr.getY(), 0 );
+    }
+    
+    @Test
     public void testUnmarshallSeveralDiagrams() throws Exception  {
         Diagram<Graph, Settings> diagram1 = unmarshall(BPMN_EVALUATION);
         assertDiagram( diagram1, 8 );
@@ -211,6 +274,20 @@ public class BPMNDiagramMarshallerTest {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_EVALUATION);
         String result = tested.marshall(diagram);
         assertDiagram( result, 1, 7, 7);
+    }
+
+    @Test
+    public void testMarshallNotBoundaryEvents() throws Exception  {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_NOT_BOUNDARY_EVENTS);
+        String result = tested.marshall(diagram);
+        assertDiagram( result, 1, 5, 4);
+    }
+
+    @Test
+    public void testMarshallBoundaryEvents() throws Exception  {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_BOUNDARY_EVENTS);
+        String result = tested.marshall(diagram);
+        assertDiagram( result, 1, 5, 3);
     }
 
     private void assertDiagram(String result, int diagramCount, int nodeCount, int edgeCount) {

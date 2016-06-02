@@ -4,7 +4,7 @@ import org.wirez.core.rule.*;
 
 public abstract class AbstractContainmentRuleManager<A, B> extends AbstractRuleManager<ContainmentRule> implements ContainmentRuleManager<A, B> {
 
-    protected abstract RuleViolations dpEvaluate(A targetId, B candidateRoles );
+    protected abstract RuleViolations doEvaluate(A targetId, B candidateRoles );
 
     @Override
     public boolean supports( final Rule rule ) {
@@ -16,7 +16,7 @@ public abstract class AbstractContainmentRuleManager<A, B> extends AbstractRuleM
         if ( rules.isEmpty() ) {
             return new DefaultRuleViolations();
         }
-        return dpEvaluate( targetId, candidateRoles );
+        return doEvaluate( targetId, candidateRoles );
     }
     
     

@@ -49,7 +49,7 @@ import java.util.Set;
 public class SequenceFlow implements BPMNDefinition {
 
     @Category
-    public static final transient String category = "Connecting Objects";
+    public static final transient String category = Categories.CONNECTING_OBJECTS;
 
     @Title
     public static final transient String title = "Sequence Flow";

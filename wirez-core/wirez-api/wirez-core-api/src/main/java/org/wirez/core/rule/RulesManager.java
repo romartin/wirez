@@ -1,9 +1,10 @@
 package org.wirez.core.rule;
 
-public interface RulesManager<C extends ContainmentRuleManager, 
-        L extends ConnectionRuleManager, 
-        K extends CardinalityRuleManager,
-        E extends EdgeCardinalityRuleManager> 
+public interface RulesManager<  C extends ContainmentRuleManager, 
+                                L extends ConnectionRuleManager, 
+                                K extends CardinalityRuleManager,
+                                E extends EdgeCardinalityRuleManager,
+                                D extends DockingRuleManager >
         extends RuleManager<Rule> {
     
     C containment();
@@ -13,5 +14,7 @@ public interface RulesManager<C extends ContainmentRuleManager,
     K cardinality();
     
     E edgeCardinality();
+    
+    D docking();
     
 }

@@ -33,6 +33,7 @@ import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
 import org.wirez.core.definition.factory.Builder;
 import org.wirez.core.graph.Node;
+import org.wirez.core.rule.annotation.CanDock;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
@@ -42,10 +43,11 @@ import java.util.Set;
 @Bindable
 @Definition( type = Node.class, builder = Task.TaskBuilder.class )
 @Shape( factory = BasicShapesFactory.class, proxy = TaskShapeProxy.class )
+@CanDock( roles = { "IntermediateEventOnActivityBoundary" } )
 public class Task implements BPMNDefinition {
 
     @Category
-    public static final transient String category = "Activities";
+    public static final transient String category = Categories.ACTIVITIES;
 
     @Title
     public static final transient String title = "A Task";

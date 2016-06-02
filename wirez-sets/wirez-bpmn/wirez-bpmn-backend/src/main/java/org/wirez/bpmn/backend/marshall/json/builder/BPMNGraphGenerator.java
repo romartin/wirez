@@ -2,8 +2,8 @@ package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.codehaus.jackson.*;
 import org.wirez.bpmn.BPMNDefinitionSet;
-import org.wirez.bpmn.definition.BPMNDiagram;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
+import org.wirez.bpmn.definition.BPMNDiagram;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.command.Command;
@@ -264,6 +264,8 @@ public class BPMNGraphGenerator extends JsonGenerator {
                 parsers.push(new OutgoingObjectParser());
             } else if ("bounds".equals(fieldName)) {
                 parsers.push(new BoundsObjectParser());
+            } else if ("dockers".equals(fieldName)) {
+                parsers.push(new DockersObjectParser());
             } else {
                 parsers.push(new DummyObjectParser());
             }
@@ -486,6 +488,61 @@ public class BPMNGraphGenerator extends JsonGenerator {
 
         @Override
         public void writeEndArray() {
+
+        }
+    }
+
+    final class DockersObjectParser implements GraphObjectParser {
+
+        String fieldName;
+        Double x = 0d;
+        Double y = 0d;
+
+        @Override
+        public void writeStartObject() {
+            
+        }
+
+        @Override
+        public void writeEndObject() {
+
+                nodeBuilders.peek().docker( x, y );
+
+        }
+
+        @Override
+        public void writeFieldName(String s) {
+            this.fieldName = s;
+        }
+
+        @Override
+        public void writeObject(Object o) {
+            String value = o.toString();
+            Double d = Double.valueOf(value);
+
+            if ("x".equals(fieldName)) {
+                
+                this.x = d;
+                
+            }
+
+            if ("y".equals(fieldName)) {
+
+                this.y = d;
+                
+            }
+            
+        }
+
+        @Override
+        public void writeStartArray() {
+
+        }
+
+        @Override
+        public void writeEndArray() {
+
+            parsers.pop();
 
         }
     }

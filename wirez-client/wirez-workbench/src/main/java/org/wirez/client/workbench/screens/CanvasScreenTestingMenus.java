@@ -73,12 +73,12 @@ public class CanvasScreenTestingMenus {
                 .newTopLevelMenu("Save")
                 .respondsWith(getSaveCommand())
                 .endMenu()
+                .newTopLevelMenu("Switch Docking Control")
+                .respondsWith(getSwitchDockingControlCommand())
+                .endMenu()
                 .build();*/
 
         return MenuFactory
-                .newTopLevelMenu("Switch Docking Ctrol")
-                .respondsWith(getSwitchDockingControlCommand())
-                .endMenu()
                 .newTopLevelMenu("Log Command History")
                 .respondsWith(getLogCommandStackCommand())
                 .endMenu()

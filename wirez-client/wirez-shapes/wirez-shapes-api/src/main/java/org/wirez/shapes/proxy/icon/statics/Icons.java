@@ -6,7 +6,9 @@ public enum Icons {
 
     SCRIPT( "script" ),
 
-    BUSINESS_RULE( "businessRule" );
+    BUSINESS_RULE( "businessRule" ),
+
+    TIMER( "timer" );
 
     private final String id;
 

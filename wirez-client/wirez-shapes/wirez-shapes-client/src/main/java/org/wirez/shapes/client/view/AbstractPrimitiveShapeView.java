@@ -55,11 +55,7 @@ public abstract class AbstractPrimitiveShapeView<T> extends org.wirez.shapes.cli
             updatePath( size, size );
             getShape().getAttributes().setRadius( radius );
             
-            if ( null != decorator ) {
-
-                decorator.getAttributes().setRadius( radius );
-                
-            }
+            setDecoratorRadius( radius );
 
             doMoveChildren( size, size );
 
@@ -67,6 +63,16 @@ public abstract class AbstractPrimitiveShapeView<T> extends org.wirez.shapes.cli
             
         }
         return (T) this;
+    }
+    
+    protected void setDecoratorRadius( final double radius ) {
+
+        if ( null != decorator ) {
+
+            decorator.getAttributes().setRadius( radius );
+
+        }
+        
     }
 
     protected T setSize( final double width, 

@@ -3,6 +3,7 @@ package org.wirez.shapes.client.view.icon.statics;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Rectangle;
+import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.BoundingBox;
@@ -69,6 +70,11 @@ public class StaticIconShapeView<T extends StaticIconShapeView>
         }
         
     }
+
+    /*@Override
+    protected Shape<?> getShape() {
+        return iconGroup.asShape();
+    }*/
 
     @Override
     protected void doDestroy() {

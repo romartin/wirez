@@ -42,7 +42,7 @@ public class RingView<T extends RingView> extends org.wirez.shapes.client.view.a
         setInnerRadius( i );
         return (T) this;
     }
-    
+
     @SuppressWarnings("unchecked")
     public T setOuterRadius(final double radius) {
 
@@ -51,6 +51,7 @@ public class RingView<T extends RingView> extends org.wirez.shapes.client.view.a
         updatePath( size, size );
         
         getShape().getAttributes().setOuterRadius( radius );
+        decorator.getAttributes().setOuterRadius( radius );
 
         super.updateFillGradient( size, size );
         
@@ -62,11 +63,11 @@ public class RingView<T extends RingView> extends org.wirez.shapes.client.view.a
     public T setInnerRadius(final double radius) {
 
         getShape().getAttributes().setInnerRadius( radius );
-
+        decorator.getAttributes().setInnerRadius( radius );
+        
         return (T) this;
 
     }
-
 
     @Override
     protected void doDestroy() {

@@ -36,6 +36,7 @@ public abstract class AbstractPrimitiveShapeView<T> extends org.wirez.shapes.cli
         super.initialize();
         getPath().setFillAlpha(0).setStrokeAlpha(0);
         getPath().moveToTop();
+        createEventHandlerManager( getPrimitive() );
     }
 
     @Override

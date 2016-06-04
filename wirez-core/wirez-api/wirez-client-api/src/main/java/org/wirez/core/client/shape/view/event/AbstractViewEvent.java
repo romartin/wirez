@@ -2,35 +2,15 @@ package org.wirez.core.client.shape.view.event;
 
 public abstract class AbstractViewEvent implements ViewEvent {
 
-    protected final double mouseX;
-    protected final double mouseY;
     protected final boolean isShiftKeyDown;
 
-    public AbstractViewEvent(final double mouseX, 
-                             final double mouseY) {
-        this(mouseX, mouseY, false);
-    }
-
-    public AbstractViewEvent(final double mouseX, 
-                             final double mouseY, 
-                             final boolean isShiftKeyDown) {
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
+    public AbstractViewEvent(final boolean isShiftKeyDown) {
         this.isShiftKeyDown = isShiftKeyDown;
-    }
-
-    @Override
-    public double getMouseX() {
-        return mouseX;
-    }
-
-    @Override
-    public double getMouseY() {
-        return mouseY;
     }
 
     @Override
     public boolean isShiftKeyDown() {
         return isShiftKeyDown;
     }
+    
 }

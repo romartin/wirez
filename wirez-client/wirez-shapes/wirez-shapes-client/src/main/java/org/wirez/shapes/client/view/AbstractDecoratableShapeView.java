@@ -31,7 +31,7 @@ public abstract class AbstractDecoratableShapeView<T> extends org.wirez.shapes.c
         createDecorators();
         
     }
-    
+
     protected void createDecorators() {
 
         if ( null != decorator ) {
@@ -43,16 +43,17 @@ public abstract class AbstractDecoratableShapeView<T> extends org.wirez.shapes.c
         decorators.clear();
 
         decorator = createDecorator();
-        
+
         if ( null != decorator ) {
-        
+
             decorator
-                .setStrokeWidth(0)
-                .setFillAlpha(0)
-                .setStrokeAlpha(0);
-        
+                    .setStrokeWidth(0)
+                    .setFillAlpha(0)
+                    .setStrokeAlpha(0);
+
             decorators.add( decorator );
         }
+
         
     }
     

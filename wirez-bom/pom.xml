@@ -261,6 +261,21 @@
         <classifier>sources</classifier>
       </dependency>
       
+      <!-- Wirez Mobile. -->
+      
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-mobile</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-mobile</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
       <!-- Wirez WebApp -->
       
       <dependency>

@@ -1,36 +1,35 @@
 package org.wirez.shapes.client.view;
 
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
-import com.ait.lienzo.client.core.shape.*;
+import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
+import com.ait.lienzo.client.core.shape.MultiPathDecorator;
+import com.ait.lienzo.client.core.shape.Shape;
+import com.ait.lienzo.client.core.shape.Text;
 import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
-import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.client.lienzo.shape.view.AbstractConnectorView;
+import org.wirez.client.lienzo.shape.view.ViewEventHandlerManager;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.shape.view.HasCanvasState;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.HasTitle;
-import org.wirez.core.client.shape.view.event.MouseClickEvent;
 import org.wirez.core.client.shape.view.event.ViewEvent;
 import org.wirez.core.client.shape.view.event.ViewEventType;
 import org.wirez.core.client.shape.view.event.ViewHandler;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
     implements 
         HasTitle<T>,
         HasEventHandlers<T, Shape<?>>,
         HasCanvasState {
+    
+    private static final ViewEventType[] SUPPORTED_EVENT_TYPES = new ViewEventType[] {
+            ViewEventType.MOUSE_CLICK, ViewEventType.TOUCH
+    };
 
-    protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
-    protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
+    protected ViewEventHandlerManager eventHandlerManager;
     protected Text text;
     protected WiresLayoutContainer.Layout textPosition;
     private Double strokeWidth;
@@ -52,12 +51,10 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
         super(headMagnet, tailMagnet, line, headDecorator, tailDecorator, manager);
     }
 
-    protected abstract HandlerRegistration doAddHandler(final ViewEventType type,
-                                                        final ViewHandler<ViewEvent> eventHandler);
-
     protected void init() {
         super.init();
         this.textPosition = WiresLayoutContainer.Layout.CENTER;
+        this.eventHandlerManager = new ViewEventHandlerManager( getLine(), SUPPORTED_EVENT_TYPES );
     }
     
     
@@ -122,6 +119,11 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
     }
 
     @Override
+    public boolean supports(final ViewEventType type) {
+        return eventHandlerManager.supports( type );
+    }
+
+    @Override
     public Shape<?> getAttachableShape() {
         return getLine();
     }
@@ -130,33 +132,19 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
     public T addHandler(final ViewEventType type,
                         final ViewHandler<? extends ViewEvent> eventHandler) {
 
-        final HandlerRegistration registration = doAddHandler(type, (ViewHandler<ViewEvent>) eventHandler);
-        if ( null != registration ) {
-            registrationMap.put(type, registration);
-            registrationManager.register(registration);
-        }
+        eventHandlerManager.addHandler( type, eventHandler );
+
         return (T) this;
+        
     }
 
     @Override
     public T removeHandler(final ViewHandler<? extends ViewEvent> eventHandler) {
-        final ViewEventType type = eventHandler.getType();
-        if ( registrationMap.containsKey( type ) ) {
-            final HandlerRegistration registration = registrationMap.get( type );
-            registrationManager.isRegistered(registration);
-        }
-        return (T) this;
-    }
+        
+        eventHandlerManager.removeHandler( eventHandler );
 
-    protected HandlerRegistration registerClickHandler(final Node node,
-                                                       final ViewHandler<ViewEvent> eventHandler) {
-        return node.addNodeMouseClickHandler(new NodeMouseClickHandler() {
-            @Override
-            public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
-                final MouseClickEvent event = new MouseClickEvent(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY());
-                eventHandler.handle( event );
-            }
-        });
+        return (T) this;
+        
     }
 
     @Override
@@ -228,8 +216,12 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
     protected void doDestroy() {
 
         // Clear registered event handlers.
-        registrationManager.removeHandler();
-        registrationMap.clear();
+        if ( null != eventHandlerManager ) {
+            
+            eventHandlerManager.destroy();
+            eventHandlerManager = null;
+            
+        }
 
     }
 

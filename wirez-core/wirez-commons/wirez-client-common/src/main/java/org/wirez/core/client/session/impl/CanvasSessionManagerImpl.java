@@ -1,6 +1,8 @@
 package org.wirez.core.client.session.impl;
 
 import com.google.gwt.logging.client.LogConfiguration;
+import org.wirez.core.client.api.platform.ClientPlatform;
+import org.wirez.core.client.api.platform.PlatformManager;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.session.CanvasSession;
@@ -11,7 +13,6 @@ import org.wirez.core.client.session.event.SessionResumedEvent;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,8 +23,7 @@ public class CanvasSessionManagerImpl implements DefaultCanvasSessionManager {
     
     private static Logger LOGGER = Logger.getLogger(CanvasSessionManagerImpl.class.getName());
 
-    Instance<DefaultCanvasReadOnlySession> readOnlySessions;
-    Instance<DefaultCanvasFullSession> defaultSessions;
+    PlatformManager platformManager;
     Event<SessionOpenedEvent> sessionOpenedEvent;
     Event<SessionPausedEvent> sessionPausedEvent;
     Event<SessionResumedEvent> sessionResumedEvent;
@@ -35,14 +35,12 @@ public class CanvasSessionManagerImpl implements DefaultCanvasSessionManager {
     }
     
     @Inject
-    public CanvasSessionManagerImpl(final Instance<DefaultCanvasReadOnlySession> readOnlySessions, 
-                                    final Instance<DefaultCanvasFullSession> defaultSessions,
+    public CanvasSessionManagerImpl(final PlatformManager platformManager,
                                     final Event<SessionOpenedEvent> sessionOpenedEvent,
                                     final Event<SessionDisposedEvent> sessionDisposedEvent,
                                     final Event<SessionPausedEvent> sessionPausedEvent,
                                     final Event<SessionResumedEvent> sessionResumedEvent) {
-        this.readOnlySessions = readOnlySessions;
-        this.defaultSessions = defaultSessions;
+        this.platformManager = platformManager;
         this.sessionOpenedEvent = sessionOpenedEvent;
         this.sessionPausedEvent = sessionPausedEvent;
         this.sessionResumedEvent = sessionResumedEvent;
@@ -109,15 +107,50 @@ public class CanvasSessionManagerImpl implements DefaultCanvasSessionManager {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DefaultCanvasReadOnlySession newReadOnlySession() {
-        return readOnlySessions.get();
+        
+        final ClientPlatform platform = getPlatform();
+
+        DefaultCanvasReadOnlySession session = null;
+        
+        if ( platform instanceof DefaultCanvasSessionProducer ) {
+            
+            final DefaultCanvasSessionProducer sessionProducer = (DefaultCanvasSessionProducer) platform;
+
+            session = sessionProducer.newReadOnlySession();
+            
+        }
+        
+        return session;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public DefaultCanvasFullSession newFullSession() {
-        return defaultSessions.get();
+
+        final ClientPlatform platform = getPlatform();
+
+        DefaultCanvasFullSession session = null;
+
+        if ( platform instanceof DefaultCanvasSessionProducer ) {
+
+            final DefaultCanvasSessionProducer sessionProducer = (DefaultCanvasSessionProducer) platform;
+
+            session = sessionProducer.newFullSession();
+            
+        }
+
+        return session;
     }
 
+    
+    protected ClientPlatform getPlatform() {
+        
+        return platformManager.getCurrentPlatform();
+        
+    }
+    
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

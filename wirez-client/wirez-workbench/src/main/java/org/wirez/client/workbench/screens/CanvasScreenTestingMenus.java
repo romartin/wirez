@@ -8,6 +8,8 @@ import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.session.presenter.impl.AbstractFullSessionPresenter;
 import org.wirez.client.widgets.session.presenter.impl.DefaultFullSessionPresenter;
+import org.wirez.core.client.api.platform.ClientPlatform;
+import org.wirez.core.client.api.platform.PlatformManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManagerImpl;
 import org.wirez.core.client.canvas.command.CanvasViolation;
@@ -15,6 +17,7 @@ import org.wirez.core.client.canvas.controls.docking.DockingAcceptorControl;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +26,9 @@ import java.util.logging.Logger;
 public class CanvasScreenTestingMenus {
 
     private static Logger LOGGER = Logger.getLogger(CanvasScreenTestingMenus.class.getName());
+
+    @Inject
+    PlatformManager platformManager;
     
     private Menus menu = null;
     private DefaultCanvasFullSession session;
@@ -76,6 +82,9 @@ public class CanvasScreenTestingMenus {
                 .newTopLevelMenu("Log Command History")
                 .respondsWith(getLogCommandStackCommand())
                 .endMenu()
+                .newTopLevelMenu("Log Client Platform")
+                .respondsWith(getLogCurrentClientPlatform())
+                .endMenu()
                 .build();
 
     }
@@ -88,7 +97,16 @@ public class CanvasScreenTestingMenus {
         this.canvasSessionPresenter = null;
         this.session = null;
     }
-    
+
+    private Command getLogCurrentClientPlatform() {
+
+        return () -> {
+            
+            final ClientPlatform p = platformManager.getCurrentPlatform();
+            
+        };
+
+    }
     
     private Command getLogCommandStackCommand() {
 

@@ -4,11 +4,6 @@ import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.session.CanvasSessionManager;
 
-public interface DefaultCanvasSessionManager extends CanvasSessionManager<AbstractCanvas, AbstractCanvasHandler> {
+public interface DefaultCanvasSessionManager extends CanvasSessionManager<AbstractCanvas, AbstractCanvasHandler>, DefaultCanvasSessionProducer {
 
-    @Override
-    DefaultCanvasReadOnlySession newReadOnlySession();
-
-    @Override
-    DefaultCanvasFullSession newFullSession();
 }

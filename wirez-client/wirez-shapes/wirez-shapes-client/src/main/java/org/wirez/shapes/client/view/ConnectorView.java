@@ -1,15 +1,10 @@
 package org.wirez.shapes.client.view;
 
-import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.MultiPathDecorator;
 import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.Point2DArray;
-import com.google.gwt.event.shared.HandlerRegistration;
-import org.wirez.core.client.shape.view.event.ViewEvent;
-import org.wirez.core.client.shape.view.event.ViewEventType;
-import org.wirez.core.client.shape.view.event.ViewHandler;
 
 public class ConnectorView<T extends ConnectorView> extends org.wirez.shapes.client.view.animatiion.AnimatedWiresConnectorView<T> {
     
@@ -25,21 +20,7 @@ public class ConnectorView<T extends ConnectorView> extends org.wirez.shapes.cli
                 (MultiPathDecorator) line[2],
                 wiresManager );
     }
-
-    @Override
-    protected HandlerRegistration doAddHandler(final ViewEventType type, final ViewHandler<ViewEvent> eventHandler) {
-        if ( ViewEventType.MOUSE_CLICK.equals( type ) ) {
-            return registerClickHandler(getLine(), eventHandler);
-        }
-        
-        return null;
-    }
-
-    @Override
-    public boolean supports(final ViewEventType type) {
-        return ViewEventType.MOUSE_CLICK.equals( type );
-    }
-
+    
     private static Object[] createLine(final double... points) {
         
         final  MultiPath head = new MultiPath()

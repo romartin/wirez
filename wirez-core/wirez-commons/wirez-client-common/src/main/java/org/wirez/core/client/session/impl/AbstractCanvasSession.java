@@ -1,8 +1,8 @@
 package org.wirez.core.client.session.impl;
 
-import org.wirez.core.util.UUID;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.util.UUID;
 
 public abstract class AbstractCanvasSession implements DefaultCanvasSession {
     

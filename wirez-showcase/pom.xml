@@ -313,6 +313,12 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
+      <artifactId>wirez-mobile</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
       <artifactId>wirez-basicset</artifactId>
     </dependency>
 
@@ -507,6 +513,7 @@
             <compileSourcesArtifact>org.wirez:wirez-lienzo-extensions</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-widgets</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-workbench</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-mobile</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-basicset</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-client</compileSourcesArtifact>

@@ -1,6 +1,6 @@
 package org.wirez.core.client.shape.view.event;
 
-public final class MouseClickEvent extends AbstractViewEvent {
+public final class MouseClickEvent extends AbstractMouseEvent {
     
     public MouseClickEvent(final double mouseX,
                            final double mouseY) {

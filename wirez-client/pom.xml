@@ -19,6 +19,7 @@
     <module>wirez-lienzo</module>
     <module>wirez-widgets</module>
     <module>wirez-workbench</module>
+    <module>wirez-mobile</module>
   </modules>
 
 

@@ -10,24 +10,21 @@ import com.ait.lienzo.client.core.shape.wires.event.DragHandler;
 import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import com.ait.lienzo.shared.core.types.ColorName;
-import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.wirez.client.lienzo.shape.view.AbstractShapeView;
+import org.wirez.client.lienzo.shape.view.ViewEventHandlerManager;
 import org.wirez.client.lienzo.util.LienzoShapeUtils;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.HasFillGradient;
 import org.wirez.core.client.shape.view.HasTitle;
-import org.wirez.core.client.shape.view.event.MouseClickEvent;
 import org.wirez.core.client.shape.view.event.ViewEvent;
 import org.wirez.core.client.shape.view.event.ViewEventType;
 import org.wirez.core.client.shape.view.event.ViewHandler;
 import org.wirez.shapes.client.util.BasicShapesUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         implements 
@@ -36,8 +33,12 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         HasFillGradient<T>,
         HasChildren<BasicShapeView<T>> {
 
-    protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
-    protected final Map<ViewEventType, HandlerRegistration> registrationMap = new HashMap<>();
+    private static final ViewEventType[] SUPPORTED_EVENT_TYPES = new ViewEventType[] {
+            ViewEventType.MOUSE_CLICK, ViewEventType.DRAG, 
+            ViewEventType.TOUCH, ViewEventType.GESTURE
+    };
+    
+    protected ViewEventHandlerManager eventHandlerManager;
     protected final List<BasicShapeView<T>> children = new ArrayList<>();
     protected Text text;
     protected WiresLayoutContainer.Layout textPosition;
@@ -49,6 +50,17 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
                           final WiresManager manager) {
         super(path, manager);
         this.textPosition = WiresLayoutContainer.Layout.BOTTOM;
+        createEventHandlerManager( getShape() );
+    }
+
+    protected void createEventHandlerManager( final Node<?> node ) {
+
+        if ( null != node ) {
+
+            this.eventHandlerManager = new ViewEventHandlerManager( node, SUPPORTED_EVENT_TYPES );
+            
+        }
+        
     }
 
     @Override
@@ -77,27 +89,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
     @Override
     public boolean supports(final ViewEventType type) {
-        return ViewEventType.MOUSE_CLICK.equals( type ) || ViewEventType.DRAG.equals( type );
-    }
-    
-    protected HandlerRegistration doAddHandler(final ViewEventType type,
-                                                final ViewHandler<? extends ViewEvent> eventHandler) {
-
-        if ( supports(type) ) {
-
-            if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
-                return registerClickHandler(getShape(), (ViewHandler<ViewEvent>) eventHandler);
-            }
-
-            if ( ViewEventType.DRAG.equals(type) ) {
-                return registerDragHandler(getShape(), (org.wirez.core.client.shape.view.event.DragHandler) eventHandler);
-            }
-
-            
-        }
-
-        return null;
-        
+        return eventHandlerManager.supports( type );
     }
 
     @Override
@@ -105,7 +97,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         return getShape();
     }
 
-    @Override
+    @Override@SuppressWarnings("unchecked")
     public T setTitle(final String title) {
         
         if ( null == text) {
@@ -120,6 +112,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T setTitlePosition(final Position position) {
         if ( Position.BOTTOM.equals(position) ) {
             this.textPosition = LayoutContainer.Layout.BOTTOM;
@@ -136,36 +129,42 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T setTitleStrokeColor(final String color) {
         text.setStrokeColor(color);
         return (T) this;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T setTitleFontFamily(final String fontFamily) {
         text.setFontFamily(fontFamily);
         return (T) this;
     }
     
     @Override
+    @SuppressWarnings("unchecked")
     public T setTitleFontSize(final double fontSize) {
         text.setFontSize(fontSize);
         return (T) this;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T setTitleStrokeWidth(final double strokeWidth) {
         text.setStrokeWidth(strokeWidth);
         return (T) this;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T moveTitleToTop() {
         text.moveToTop();
         return (T) this;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T refreshTitle() {
 
         // Center the text on the parent using the bb calculation.
@@ -189,44 +188,8 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         return textPosition;
     }
     
-    protected HandlerRegistration registerClickHandler( final Node node,
-                                                        final ViewHandler<ViewEvent> eventHandler ) {
-        return node.addNodeMouseClickHandler(nodeMouseClickEvent -> {
-            final MouseClickEvent event = new MouseClickEvent(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY());
-            eventHandler.handle( event );
-        });
-    }
-
-    protected HandlerRegistration registerDragHandler( final Node node,
-                                                       final ViewHandler<org.wirez.core.client.shape.view.event.DragEvent> eventHandler ) {
-    
-        return setDraggable(true).addWiresHandler(AbstractWiresEvent.DRAG, new DragHandler() {
-            @Override
-            public void onDragStart(final DragEvent dragEvent) {
-                getDragHandler().start(buildEvent(dragEvent.getX(), dragEvent.getY()));
-            }
-
-            @Override
-            public void onDragMove(final DragEvent dragEvent) {
-                getDragHandler().handle(buildEvent(dragEvent.getX(), dragEvent.getY()));
-            }
-
-            @Override
-            public void onDragEnd(final DragEvent dragEvent) {
-                getDragHandler().end(buildEvent(dragEvent.getX(), dragEvent.getY()));
-            }
-            
-            private org.wirez.core.client.shape.view.event.DragHandler getDragHandler() {
-                return (org.wirez.core.client.shape.view.event.DragHandler) eventHandler;
-            }
-            
-            private org.wirez.core.client.shape.view.event.DragEvent buildEvent(final double x, final double y) {
-                return new org.wirez.core.client.shape.view.event.DragEvent(x, y);
-            }
-        });
-    }
-    
     @Override
+    @SuppressWarnings("unchecked")
     public T setFillGradient(final Type type, 
                              final String startColor, 
                              final String endColor) {
@@ -244,7 +207,8 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         
         return (T) this;
     }
-    
+
+    @SuppressWarnings("unchecked")
     protected T updateFillGradient( final double width,
                                     final double height ) {
         
@@ -265,9 +229,13 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     @Override
     protected void doDestroy() {
         
-        // Remove all registered handlers.
-        registrationManager.removeHandler();
-        registrationMap.clear();
+        if ( null != eventHandlerManager ) {
+
+            // Remove all registered handlers.
+            eventHandlerManager.destroy();
+            eventHandlerManager = null;
+            
+        }
         
     }
 
@@ -285,25 +253,72 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T addHandler(final ViewEventType type,
                         final ViewHandler<? extends ViewEvent> eventHandler) {
 
-        final HandlerRegistration registration = doAddHandler(type, eventHandler);
-        if ( null != registration ) {
-            registrationMap.put(type, registration);
-            registrationManager.register(registration);
+
+        if ( supports(type) ) {
+
+            if ( ViewEventType.DRAG.equals( type ) ) {
+
+                final HandlerRegistration[] registrations = 
+                        registerDragHandler( (org.wirez.core.client.shape.view.event.DragHandler) eventHandler );
+                
+                eventHandlerManager.addHandlersRegistration( type, registrations );
+                
+            } else {
+
+                eventHandlerManager.addHandler( type, eventHandler );
+
+            }
+
         }
+
         return (T) this;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T removeHandler(final ViewHandler<? extends ViewEvent> eventHandler) {
-        final ViewEventType type = eventHandler.getType();
-        if ( registrationMap.containsKey( type ) ) {
-            final HandlerRegistration registration = registrationMap.get( type );
-            registrationManager.isRegistered(registration);
-        }
+        
+        eventHandlerManager.removeHandler( eventHandler );
+        
         return (T) this;
+        
+    }
+
+    protected HandlerRegistration[] registerDragHandler( final ViewHandler<org.wirez.core.client.shape.view.event.DragEvent> eventHandler ) {
+
+        return new HandlerRegistration[] {
+
+                setDraggable(true).addWiresHandler(AbstractWiresEvent.DRAG, new DragHandler() {
+                    @Override
+                    public void onDragStart(final DragEvent dragEvent) {
+                        getDragHandler().start(buildEvent( dragEvent.getX(), dragEvent.getY()) );
+                    }
+
+                    @Override
+                    public void onDragMove(final DragEvent dragEvent) {
+                        getDragHandler().handle(buildEvent( dragEvent.getX(), dragEvent.getY()) );
+                    }
+
+                    @Override
+                    public void onDragEnd(final DragEvent dragEvent) {
+                        getDragHandler().end(buildEvent( dragEvent.getX(), dragEvent.getY()) );
+                    }
+
+                    private org.wirez.core.client.shape.view.event.DragHandler getDragHandler() {
+                        return (org.wirez.core.client.shape.view.event.DragHandler) eventHandler;
+                    }
+
+                    private org.wirez.core.client.shape.view.event.DragEvent buildEvent(final double x, 
+                                                                                        final double y) {
+                        return new org.wirez.core.client.shape.view.event.DragEvent(x, y);
+                    }
+                })
+
+        };
     }
     
 }

@@ -28,7 +28,7 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
 
         this.context = context;
         Object definition = element.getContent().getDefinition();
-
+        
         // Resource id field.
         super.addParser(new StringFieldParser("resourceId", element.getUUID()));
 
@@ -53,7 +53,7 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
         }
 
         // Stencil id field.
-        String defId = context.getOryxManager().getMappingsManager().getOryxDefinitionId(definition.getClass());
+        String defId = context.getOryxManager().getMappingsManager().getOryxDefinitionId( definition.getClass() );
         super.addParser( new ObjectParser( "stencil" ).addParser( new StringFieldParser( "id", defId ) ) );
 
         // Bounds.

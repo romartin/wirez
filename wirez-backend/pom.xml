@@ -28,6 +28,11 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
+      <artifactId>wirez-backend-common</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
       <artifactId>wirez-core-common</artifactId>
     </dependency>
 

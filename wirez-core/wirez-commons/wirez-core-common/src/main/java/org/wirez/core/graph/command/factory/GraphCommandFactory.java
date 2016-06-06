@@ -5,6 +5,7 @@ import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.command.impl.*;
+import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.view.View;
 
 public interface GraphCommandFactory {
@@ -67,5 +68,8 @@ public interface GraphCommandFactory {
     UpdateElementPropertyValueCommand UPDATE_PROPERTY_VALUE(Element element,
                                                             String propertyId,
                                                             Object value);
+    
+    MorphNodeCommand MORPH_NODE( Node<Definition, Edge> candidate,
+                                 String morphTarget );
     
 }

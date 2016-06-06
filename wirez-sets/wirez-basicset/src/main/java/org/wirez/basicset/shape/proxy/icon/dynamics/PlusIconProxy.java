@@ -7,12 +7,12 @@ public final class PlusIconProxy
         implements org.wirez.shapes.proxy.icon.dynamics.PlusIconProxy<PlusIcon> {
     
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final PlusIcon definition ) {
         return PlusIcon.COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final PlusIcon definition ) {
         return PlusIcon.description;
     }
     

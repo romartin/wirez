@@ -15,12 +15,12 @@ public class StaticIconProxy implements IconProxy<StaticIcon> {
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final StaticIcon element ) {
         return COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final StaticIcon element ) {
         return DESCRIPTION;
     }
     

@@ -4,6 +4,7 @@ import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.types.BoundingBox;
+import com.ait.lienzo.client.core.util.Geometry;
 import com.google.gwt.core.client.GWT;
 import org.wirez.client.lienzo.shape.view.AbstractConnectorView;
 import org.wirez.client.lienzo.shape.view.AbstractShapeView;
@@ -38,30 +39,9 @@ public class LienzoShapesGlyphBuilder extends AbstractShapeGlyphBuilder<Group> {
         final ShapeView<?> view = shape.getShapeView();
 
         final WiresShape wiresShape = (WiresShape) view;
-        final IPrimitive<?> container = (IPrimitive<?>) wiresShape.getContainer();
-        final BoundingBox bb = wiresShape.getPath().getBoundingBox();
-
-        // Scale, if necessary, to the given glyph size.
-        // TODO: Refactor by Geometry.setScaleToFit(shape, width, height)?
-        final double w = bb.getWidth();
-        final double h = bb.getHeight();
-        final double sw = w > 0 ?  ( width / w) : 1;
-        final double sh = h > 0 ? ( height / h ) : 1;
-        container.setScale( sw, sh );
-
-        // Apply positions.
-        final double x = view instanceof HasRadius ? width / 2 : 0;
-        final double y = view instanceof HasRadius ? height / 2 : 0;
-        
-        if ( view instanceof HasTitle) {
-            
-            final HasTitle hasTitle = (HasTitle) view;
-            hasTitle.setTitle( null );
-            
-        }
 
         Group group = null;
-        
+
         if ( view instanceof AbstractShapeView) {
 
             group = ((AbstractShapeView) view).getGroup();
@@ -73,17 +53,38 @@ public class LienzoShapesGlyphBuilder extends AbstractShapeGlyphBuilder<Group> {
         }
 
         if ( null == group ) {
-            
+
             throw new RuntimeException( "Shape view [" + view.toString() + "] not supported for " +
                     "this shape glyph builder [" + this.getClass().getName() );
-            
+
         }
+
+        if ( view instanceof HasTitle) {
+
+            final HasTitle hasTitle = (HasTitle) view;
+            hasTitle.setTitle( null );
+
+        }
+
+        // Create a copy of this view.
+        group = group.copy();
         
-        final Group result = new Group();
+        // Scale, if necessary, to the given glyph size.
+        final BoundingBox bb = wiresShape.getPath().getBoundingBox();
+
+        // Scale, if necessary, to the given glyph size.
+        final double w = bb.getWidth();
+        final double h = bb.getHeight();
+        final double sw = w > 0 ?  ( width / w) : 1;
+        final double sh = h > 0 ? ( height / h ) : 1;
+        group.setScale( sw, sh );
+
+
+        // Apply positions.
+        final double x = view instanceof HasRadius ? width / 2 : 0;
+        final double y = view instanceof HasRadius ? height / 2 : 0;
         
-        result.add( group.copy().setX( x ).setY( y ) );
-        
-        return new LienzoShapeGlyph( result, width, height );
+        return new LienzoShapeGlyph( group.setX( x ).setY( y ), width, height );
         
     }
 

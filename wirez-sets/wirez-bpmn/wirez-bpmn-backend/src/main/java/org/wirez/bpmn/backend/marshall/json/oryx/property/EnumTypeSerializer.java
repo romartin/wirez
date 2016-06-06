@@ -18,6 +18,10 @@ public class EnumTypeSerializer implements Bpmn2OryxPropertySerializer<Object> {
     
     DefinitionUtils definitionUtils;
 
+    protected EnumTypeSerializer() {
+        this( null );
+    }
+
     @Inject
     public EnumTypeSerializer(DefinitionUtils definitionUtils) {
         this.definitionUtils = definitionUtils;

@@ -1,6 +1,6 @@
 package org.wirez.bpmn.shape.proxy;
 
-import org.wirez.bpmn.definition.Task;
+import org.wirez.bpmn.definition.BaseTask;
 import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.BasicShapeProxy;
@@ -13,63 +13,63 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class TaskShapeProxy implements
-        RectangleProxy<Task>,
-        HasChildProxies<Task> {
+        RectangleProxy<BaseTask>,
+        HasChildProxies<BaseTask> {
     
     @Override
-    public String getBackgroundColor( final Task element ) {
+    public String getBackgroundColor( final BaseTask element ) {
         return element.getBackgroundSet().getBgColor().getValue();
     }
 
     @Override
-    public String getBorderColor( final Task element ) {
+    public String getBorderColor( final BaseTask element ) {
         return element.getBackgroundSet().getBorderColor().getValue();
     }
 
     @Override
-    public double getBorderSize( final Task element ) {
+    public double getBorderSize( final BaseTask element ) {
         return element.getBackgroundSet().getBorderSize().getValue();
     }
 
     @Override
-    public String getFontFamily( final Task element ) {
+    public String getFontFamily( final BaseTask element ) {
         return element.getFontSet().getFontFamily().getValue();
     }
 
     @Override
-    public String getFontColor( final Task element ) {
+    public String getFontColor( final BaseTask element ) {
         return element.getFontSet().getFontColor().getValue();
     }
 
     @Override
-    public double getFontSize( final Task element ) {
+    public double getFontSize( final BaseTask element ) {
         return element.getFontSet().getFontSize().getValue();
     }
 
     @Override
-    public String getNamePropertyValue( final Task element ) {
+    public String getNamePropertyValue( final BaseTask element ) {
         return element.getGeneral().getName().getValue();
     }
 
     @Override
-    public double getFontBorderSize( final Task element ) {
+    public double getFontBorderSize( final BaseTask element ) {
         return element.getFontSet().getFontBorderSize().getValue();
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
-        return Task.TaskBuilder.COLOR;
+    public String getGlyphBackgroundColor( final BaseTask element ) {
+        return element.getBackgroundSet().getBgColor().getValue();
     }
 
     @Override
-    public String getDescription() {
-        return Task.description;
+    public String getDescription( final BaseTask element ) {
+        return "A " + element.getTaskType().getValue().toString() + " Task";
     }
 
     @Override
-    public Map<BasicShapeProxy<Task>, HasChildren.Layout> getChildProxies() {
+    public Map<BasicShapeProxy<BaseTask>, HasChildren.Layout> getChildProxies() {
         
-        return new HashMap<BasicShapeProxy<Task>, HasChildren.Layout>() {{
+        return new HashMap<BasicShapeProxy<BaseTask>, HasChildren.Layout>() {{
             
             put( new TaskTypeProxy(), HasChildren.Layout.CENTER );
             
@@ -77,21 +77,21 @@ public final class TaskShapeProxy implements
     }
 
     @Override
-    public double getWidth( final Task element ) {
+    public double getWidth( final BaseTask element ) {
         return element.getWidth().getValue();
     }
 
     @Override
-    public double getHeight( final Task element ) {
+    public double getHeight( final BaseTask element ) {
         return element.getHeight().getValue();
     }
 
-    public final class TaskTypeProxy implements IconProxy<Task> {
+    public final class TaskTypeProxy implements IconProxy<BaseTask> {
 
         private static final String BLACK = "#000000";
 
         @Override
-        public Icons getIcon( final Task element) {
+        public Icons getIcon( final BaseTask element) {
             
             final TaskType taskType = element.getTaskType();
             
@@ -116,12 +116,12 @@ public final class TaskShapeProxy implements
         }
 
         @Override
-        public String getGlyphBackgroundColor() {
+        public String getGlyphBackgroundColor( final BaseTask element ) {
             return BLACK;
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription( final BaseTask element ) {
             return "The task type";
         }
         

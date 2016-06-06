@@ -43,14 +43,14 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-client-api</artifactId>
+      <artifactId>wirez-backend-common</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-client-common</artifactId>
+      <artifactId>wirez-client-api</artifactId>
     </dependency>
-    
+
     <!-- Uberfire & Errai. -->
     <dependency>
       <groupId>org.jboss.errai</groupId>

@@ -50,12 +50,12 @@ public final class PolygonProxy implements org.wirez.shapes.proxy.PolygonProxy<P
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final Polygon element ) {
         return Polygon.title;
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final Polygon element ) {
         return Polygon.PolygonBuilder.COLOR;
     }
     

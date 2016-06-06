@@ -1,0 +1,73 @@
+
+- BPMN graph impl -> add process properties support
+
+- Morphing 
+    - Annot Processing
+        - annotations 
+            - Add Morphing annotations
+            - Move CanXXX (rules) & Definition annotations to base class? -> refactor adapters...
+        - processors 
+            - generate morphing adapters from morphing annotations
+            - check morph properties must be read only and final?
+    - Support
+        - End events
+        - Task -> types & subprocess
+        - Gateways
+    - Issues
+        - keep graph element's UUID?
+        - BPMN unit test class 
+            - mock morphAdapters or provide some runtime test scope for it.... as TaskMorphAdapter will be generated
+            - OryxMappingsManager -> do not hardcode inheritance morph types....
+        - Toolbox
+            - toolbox morph command -> only show if exist morph targets
+            - one button for each target morph base
+        - Check rules on MorphNodeCommand?
+
+- Docking
+    - issues
+        - undock
+            - from Dock to viewConnector
+            - See undock.txt
+    - shape views
+        - timer icon position
+        - when build first time into canvas -> children zindex different that when updating it
+        
+- Issues
+    - Properties -> Support editable/non editable ( model?, forms, etc )
+    - Improve selection of shapes
+        - In general
+        - Timer event -> cannot select when docked to a task?
+    - Model
+        - Creates Roles class with string memebers ( as current Categories )
+        - genereate errai.properties with bindable/portable entities
+        - Remove annotations from model
+    - Undo
+        - first command cannot be undone
+    - ShapeProxies 
+         - Children -> remove getNameProperty, getGlyphBgColor & getGlyphDescr
+    - Missing decorators for static icons
+    - docking fires with toolbox
+    - View child position issues
+        - Timer icon & bpmn interm event - not well centered
+        - polygon with icon glyph -> icon at center
+        - Shapes with static icons -> just adding on canvas, icon not at center
+        - improves all shapes title (text) positions
+    - Toolbox
+        - Do as genmymodel -> show icons for target base elements -> and then the morhping minipalette
+        - http://huxhzq.axshare.com/#g=1&p=process
+    - Icons 
+        - Mix dynamic & static into same class/proxy?
+        - allow resize all?
+        - provide icons from svg file or mutipaths serialized in some custom format?
+    - Layer#onclick -> show diagram properties 
+    
+        
+- Others
+    - ToolboxProvider that automatically checks rules & determines which 
+        commands (icons) can be present on the toolbox for those element
+    - Remove Diagram shape usage from canvas
+    - Review cdi beans contexts
+        - to improve head performance
+        - MorphAdapters & BindableAdapterFactory -> appScoped
+
+

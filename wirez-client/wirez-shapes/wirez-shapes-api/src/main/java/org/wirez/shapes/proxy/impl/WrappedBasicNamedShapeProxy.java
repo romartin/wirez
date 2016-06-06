@@ -51,12 +51,12 @@ public abstract class WrappedBasicNamedShapeProxy<W> implements BasicNamedShapeP
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final W element ) {
         return null;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final W element) {
         return null;
     }
     

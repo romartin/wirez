@@ -6,10 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.wirez.backend.ApplicationFactoryManager;
-import org.wirez.backend.definition.adapter.AnnotatedDefinitionAdapter;
-import org.wirez.backend.definition.adapter.AnnotatedDefinitionSetAdapter;
-import org.wirez.backend.definition.adapter.AnnotatedPropertyAdapter;
-import org.wirez.backend.definition.adapter.AnnotatedPropertySetAdapter;
 import org.wirez.backend.definition.factory.TestScopeModelFactory;
 import org.wirez.bpmn.BPMNDefinitionSet;
 import org.wirez.bpmn.backend.factory.BPMNGraphFactory;
@@ -17,7 +13,15 @@ import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactor
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
+import org.wirez.bpmn.definition.adapter.morph.TaskMorphAdapter;
+import org.wirez.bpmn.definition.NoneTask;
+import org.wirez.bpmn.definition.UserTask;
 import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionAdapter;
+import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionSetAdapter;
+import org.wirez.core.backend.definition.adapter.annotation.RuntimePropertyAdapter;
+import org.wirez.core.backend.definition.adapter.annotation.RuntimePropertySetAdapter;
+import org.wirez.core.backend.definition.adapter.binding.RuntimeBindableMorphAdapterFactory;
 import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.diagram.DiagramImpl;
@@ -30,6 +34,7 @@ import org.wirez.core.graph.command.GraphCommandManager;
 import org.wirez.core.graph.command.GraphCommandManagerImpl;
 import org.wirez.core.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.graph.command.factory.GraphCommandFactoryImpl;
+import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.relationship.Dock;
 import org.wirez.core.graph.content.view.Bounds;
 import org.wirez.core.graph.content.view.View;
@@ -50,7 +55,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
-// TODO: Improve assertions.
 // TODO: Use Archillian to avoid all that CDI mockings. 
 @RunWith(MockitoJUnitRunner.class)
 public class BPMNDiagramMarshallerTest {
@@ -69,7 +73,7 @@ public class BPMNDiagramMarshallerTest {
     
     @Mock
     ApplicationFactoryManager applicationFactoryManager;
-    
+
     ConnectionEdgeFactory<Object> connectionEdgeFactory;
     ViewNodeFactory<Object> viewNodeFactory;
     DefinitionUtils definitionUtils;
@@ -86,6 +90,8 @@ public class BPMNDiagramMarshallerTest {
 
     TestScopeModelFactory testScopeModelFactory;
     BPMNGraphObjectBuilderFactory objectBuilderFactory;
+
+    TaskMorphAdapter taskMorphAdapter;
     
     private BPMNDiagramMarshaller tested;
     
@@ -99,10 +105,10 @@ public class BPMNDiagramMarshallerTest {
         testScopeModelFactory = new TestScopeModelFactory( new BPMNDefinitionSet.BPMNDefinitionSetBuilder().build() );
         
         // Definition manager.        
-        final AnnotatedDefinitionAdapter definitionAdapter = new AnnotatedDefinitionAdapter( definitionUtils );
-        final AnnotatedDefinitionSetAdapter definitionSetAdapter = new AnnotatedDefinitionSetAdapter( definitionAdapter );
-        final AnnotatedPropertySetAdapter propertySetAdapter = new AnnotatedPropertySetAdapter();
-        final AnnotatedPropertyAdapter propertyAdapter = new AnnotatedPropertyAdapter();
+        final RuntimeDefinitionAdapter definitionAdapter = new RuntimeDefinitionAdapter( definitionUtils );
+        final RuntimeDefinitionSetAdapter definitionSetAdapter = new RuntimeDefinitionSetAdapter( definitionAdapter );
+        final RuntimePropertySetAdapter propertySetAdapter = new RuntimePropertySetAdapter();
+        final RuntimePropertyAdapter propertyAdapter = new RuntimePropertyAdapter();
         when(definitionManager.getDefinitionSetAdapter( any(Class.class) )).thenReturn( definitionSetAdapter );
         when(definitionManager.getDefinitionAdapter( any(Class.class) )).thenReturn( definitionAdapter );
         when(definitionManager.getPropertySetAdapter( any(Class.class) )).thenReturn( propertySetAdapter );
@@ -127,7 +133,7 @@ public class BPMNDiagramMarshallerTest {
             Object model = testScopeModelFactory.accepts( id ) ? testScopeModelFactory.build( id ) : null;
             
             if ( null != model ) {
-                Class<? extends Element> element = AnnotatedDefinitionAdapter.getGraphElement( model.getClass() );
+                Class<? extends Element> element = RuntimeDefinitionAdapter.getGraphElement( model.getClass() );
                 if ( element.isAssignableFrom(Node.class) ) {
                     return viewNodeFactory.build( uuid, model, new HashSet<>() );
                 } else if ( element.isAssignableFrom(Edge.class) ) {
@@ -172,6 +178,14 @@ public class BPMNDiagramMarshallerTest {
         
         // Marshalling factories.
         objectBuilderFactory = new BPMNGraphObjectBuilderFactory( definitionManager, oryxManager );
+
+        RuntimeBindableMorphAdapterFactory morphAdapterFactory = new RuntimeBindableMorphAdapterFactory( applicationFactoryManager );
+        taskMorphAdapter = new TaskMorphAdapter( morphAdapterFactory );
+        final Collection morphAdapters = new ArrayList( 1 ) {{
+            add( taskMorphAdapter );
+        }};
+        when(definitionManager.getMorphAdapters( any(Class.class) )).thenReturn( morphAdapters );
+        
         
         // The tested BPMN marshaller.
         tested = new BPMNDiagramMarshaller( objectBuilderFactory, definitionManager, graphUtils, 
@@ -180,17 +194,27 @@ public class BPMNDiagramMarshallerTest {
 
     // 4 nodes expected: BPMNDiagram, StartNode, Task and EndNode
     @Test
+    @SuppressWarnings("unchecked")
     public void testUnmarshallBasic() throws Exception  {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_BASIC);
         assertDiagram( diagram, 4 );
         assertEquals( "Basic process", diagram.getSettings().getTitle() );
+        Node<? extends Definition, ? > task1 = diagram.getGraph().getNode("810797AB-7D09-4E1F-8A5B-96C424E4B031");
+        assertTrue( task1.getContent().getDefinition() instanceof NoneTask);
     }
     
     @Test
+    @SuppressWarnings("unchecked")
     public void testUmarshallEvaluation() throws Exception  {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_EVALUATION);
         assertDiagram( diagram, 8 );
         assertEquals( "Evaluation", diagram.getSettings().getTitle() );
+        Node<? extends Definition, ? > task1 = diagram.getGraph().getNode("_88233779-B395-4B8C-A086-9EF43698426C");
+        Node<? extends Definition, ? > task2 = diagram.getGraph().getNode("_AE5BF0DC-B720-4FDE-9499-5ED89D41FB1A");
+        Node<? extends Definition, ? > task3 = diagram.getGraph().getNode("_6063D302-9D81-4C86-920B-E808A45377C2");
+        assertTrue( task1.getContent().getDefinition() instanceof UserTask );
+        assertTrue( task2.getContent().getDefinition() instanceof UserTask );
+        assertTrue( task3.getContent().getDefinition() instanceof UserTask );
     }
 
     @Test

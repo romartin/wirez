@@ -17,7 +17,8 @@
 package org.wirez.core.processors.propertyset;
 
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.definition.adapter.binding.BindablePropertySetAdapter;
+import org.wirez.core.definition.adapter.binding.BindableAdapterFactory;
+import org.wirez.core.definition.adapter.binding.BindablePropertySetAdapterProxy;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
 import org.wirez.core.processors.ProcessingPropertySetAnnotations;
 
@@ -43,7 +44,8 @@ public class BindablePropertySetAdapterGenerator extends AbstractBindableAdapter
         root.put("className",
                 className);
         root.put("parentAdapterClassName",
-                BindablePropertySetAdapter.class.getName());
+                BindablePropertySetAdapterProxy.class.getName());
+        root.put("adapterFactoryClassName", BindableAdapterFactory.class.getName());
         root.put("generatedByClassName",
                 BindablePropertySetAdapterGenerator.class.getName());
         

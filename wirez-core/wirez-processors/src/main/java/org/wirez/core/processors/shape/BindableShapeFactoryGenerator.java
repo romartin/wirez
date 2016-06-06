@@ -16,9 +16,8 @@
 
 package org.wirez.core.processors.shape;
 
-import org.apache.commons.lang3.StringUtils;
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.client.shape.factory.AbstractCompositeShapeFactory;
+import org.wirez.core.client.shape.factory.ShapeFactoryWrapper;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
 import org.wirez.core.processors.MainProcessor;
 import org.wirez.core.processors.ProcessingDefinitionAnnotations;
@@ -47,7 +46,7 @@ public class BindableShapeFactoryGenerator extends AbstractBindableAdapterGenera
         root.put("generatedByClassName",
                 BindableShapeFactoryGenerator.class.getName() );
         root.put("parentClassName",
-                AbstractCompositeShapeFactory.class.getName() );
+                ShapeFactoryWrapper.class.getName() );
 
         Map<String, String[]> shapeProxies = processingDefinitionAnnotations.getShapeProxies();
         Set<String> definitionClasses = shapeProxies.keySet();

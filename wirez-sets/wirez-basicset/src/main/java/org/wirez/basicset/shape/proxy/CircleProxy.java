@@ -50,12 +50,12 @@ public final class CircleProxy implements org.wirez.shapes.proxy.CircleProxy<Cir
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final Circle element ) {
         return Circle.title;
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final Circle element ) {
         return Circle.CircleBuilder.COLOR;
     }
     

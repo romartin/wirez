@@ -53,13 +53,13 @@ public class ${className} extends ${parentAdapterClassName}<${defSetClassName}> 
     }
 
     @Override
-    public boolean accepts(final Class<?> pojo) {
-        return pojo.getName().equals( ${defSetClassName}.class.getName() );
+    public Collection<Rule> getRules( final ${defSetClassName} pojo ) {
+        return rules;
     }
 
     @Override
-    protected Collection<Rule> getRules() {
-        return rules;
+    public boolean accepts( final Class<?> type ) {
+        return ${defSetClassName}.class.equals( type );
     }
 
 }

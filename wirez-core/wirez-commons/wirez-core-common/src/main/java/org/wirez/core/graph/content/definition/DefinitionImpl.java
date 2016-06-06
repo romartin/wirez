@@ -16,7 +16,11 @@ public class DefinitionImpl<T> implements Definition<T> {
     public T getDefinition() {
         return definition;
     }
-    
-    
+
+    @Override
+    public void setDefinition( final T definition ) {
+        this.definition = definition;
+    }
+
 
 }

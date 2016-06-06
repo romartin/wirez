@@ -9,7 +9,7 @@ import org.wirez.core.graph.Element;
 import java.util.Set;
 
 /**
- * Model factory for annotated models on test scope.
+ * Model factory for annotated modelsfor using  on test scope.
  */
 public class TestScopeModelFactory extends BindableModelFactory<Object> {
 

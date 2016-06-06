@@ -35,7 +35,6 @@ import javax.inject.Inject;
 @WorkbenchPerspective(identifier = "WirezPerspective", isTransient = false)
 public class WirezPerspective {
 
-    private static final int WEST_PANEL_WIDTH = PaletteScreen.WIDTH;
     private static final int EAST_PANEL_WIDTH = 600;
     private static final int NAVIGATOR_PANEL_HEIGHT = 400;
     
@@ -50,14 +49,20 @@ public class WirezPerspective {
     @Perspective
     public PerspectiveDefinition buildPerspective() {
         PerspectiveDefinition perspective = new PerspectiveDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
-        perspective.setName("Wirez");
+        perspective.setName( "Wirez" );
 
         perspective.getRoot().addPart( new PartDefinitionImpl( new DefaultPlaceRequest( CanvasWizardScreen.SCREEN_ID ) ) );
 
         palettePanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
-        palettePanel.setMinWidth( WEST_PANEL_WIDTH );
-        palettePanel.setWidth( WEST_PANEL_WIDTH );
-        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( PaletteScreen.SCREEN_ID ) ) );
+        
+        /* Accordion Palette.
+        palettePanel.setMinWidth( PaletteAccordionScreen.WIDTH );
+        palettePanel.setWidth( PaletteAccordionScreen.WIDTH );
+        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( PaletteAccordionScreen.SCREEN_ID ) ) );*/
+
+        palettePanel.setMinWidth( PaletteSimpleScreen.WIDTH );
+        palettePanel.setWidth( PaletteSimpleScreen.WIDTH );
+        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( PaletteSimpleScreen.SCREEN_ID ) ) );
 
         treeExplorerPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         treeExplorerPanel.setMinWidth( EAST_PANEL_WIDTH );

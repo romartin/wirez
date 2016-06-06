@@ -4,4 +4,6 @@ public interface Definition<T> {
 
     T getDefinition();
     
+    void setDefinition( T definition );
+    
 }

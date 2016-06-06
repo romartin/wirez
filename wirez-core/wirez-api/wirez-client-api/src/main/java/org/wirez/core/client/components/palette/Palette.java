@@ -48,12 +48,10 @@ public interface Palette<T, V> {
 
     T setY(int y);
 
-    T setIconSize(int iconSize);
-
-    T setPadding(int padding);
-
     T show(Layer layer, V[] items);
     
     T clear();
+
+    void destroy();
     
 }

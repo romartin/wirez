@@ -224,6 +224,8 @@ public class PropertiesEditor implements IsWidget {
                 
                 final String pId = propertyAdapter.getId(property);
                 
+                // TODO: final boolean readOnly = propertyAdapter.isReadOnly( property );
+                        
                 if ( !processedPropertyIds.contains( pId ) ) {
                     
                     final Object value = propertyAdapter.getValue(property);
@@ -321,7 +323,6 @@ public class PropertiesEditor implements IsWidget {
             result.withComboValues( new ArrayList<String>( allowedValues.values() ) );
             
         }
-        
         
         return result;
     }

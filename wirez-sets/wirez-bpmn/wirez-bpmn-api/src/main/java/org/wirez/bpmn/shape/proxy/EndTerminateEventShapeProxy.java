@@ -58,12 +58,12 @@ public final class EndTerminateEventShapeProxy implements
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final EndTerminateEvent element ) {
         return EndTerminateEvent.EndTerminateEventBuilder.COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final EndTerminateEvent element ) {
         return EndTerminateEvent.description;
     }
 
@@ -107,7 +107,7 @@ public final class EndTerminateEventShapeProxy implements
         }
 
         @Override
-        public String getGlyphBackgroundColor() {
+        public String getGlyphBackgroundColor( final EndTerminateEvent element ) {
             return EndTerminateEvent.EndTerminateEventBuilder.RING_COLOR;
         }
         

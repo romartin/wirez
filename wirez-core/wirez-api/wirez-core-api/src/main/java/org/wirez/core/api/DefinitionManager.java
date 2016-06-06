@@ -17,6 +17,7 @@
 package org.wirez.core.api;
 
 import org.wirez.core.definition.adapter.*;
+import org.wirez.core.definition.adapter.MorphAdapter;
 
 import java.util.Collection;
 
@@ -33,29 +34,33 @@ public interface DefinitionManager {
     <T> T getDefinitionSet(String id );
 
     /**
-     * Returns the Definition Set adapter instance for the given pojo's class.
+     * Returns the Definition Set adapter instance for the given type.
      */
-    <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(Class<?> pojoClass );
+    <T> DefinitionSetAdapter<T> getDefinitionSetAdapter( Class <?> type );
 
     /**
-     * Returns the Definition Set rules adapter instance for the given pojo's class.
+     * Returns the Definition Set rules adapter instance for the given type.
      */
-    <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(Class<?> pojoClass );
+    <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter( Class<?> type );
 
     /**
-     * Returns the Definition adapter instance for the given pojo's class.
+     * Returns the Definition adapter instance for the given type.
      */
-    <T> DefinitionAdapter<T> getDefinitionAdapter(Class<?> pojoClass );
+    <T> DefinitionAdapter<T> getDefinitionAdapter( Class<?> type );
 
     /**
-     * Returns the Property Set adapter instance for the given pojo property set's class.
+     * Returns the Property Set adapter instance for the given property set's type.
      */
-    <T> PropertySetAdapter<T> getPropertySetAdapter(Class<?> pojoClass );
+    <T> PropertySetAdapter<T> getPropertySetAdapter( Class<?> type );
 
     /**
-     * Returns the Property adapter instance for the given pojo property's class.
+     * Returns the Property adapter instance for the given property's type.
      */    
-    <T> PropertyAdapter<T, ?> getPropertyAdapter(Class<?> pojoClass );
-    
+    <T> PropertyAdapter<T, ?> getPropertyAdapter( Class<?> type );
+
+    /**
+     * Returns the Morphing adapter instance for a given Definition type.
+     */
+    <T> Iterable<MorphAdapter<T, ?>> getMorphAdapters( Class<?> type );
     
 }

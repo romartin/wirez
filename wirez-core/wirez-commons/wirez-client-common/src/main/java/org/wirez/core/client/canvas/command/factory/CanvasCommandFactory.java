@@ -5,6 +5,7 @@ import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.view.View;
 
 public interface CanvasCommandFactory {
@@ -62,5 +63,8 @@ public interface CanvasCommandFactory {
     SetCanvasConnectionTargetNodeCommand SET_TARGET_NODE(Node<? extends View<?>, Edge> node,
                                                          Edge<? extends View<?>, Node> edge,
                                                          int magnetIndex);
+
+    MorphCanvasNodeCommand MORPH_NODE( Node<? extends Definition<?>, Edge> candidate,
+                                       String morphTarget );
     
 }

@@ -24,7 +24,7 @@ import java.util.LinkedList;
 @NonPortable
 public abstract class CommandResultBuilder<V> {
     
-    public static final String RESULT_SUCCESS = "Success";
+    protected static final String RESULT_SUCCESS = "Success";
     
     private CommandResult.Type type;
     private String message = RESULT_SUCCESS;

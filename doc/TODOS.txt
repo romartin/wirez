@@ -52,7 +52,12 @@
             - Drag event -> cannot get the DragContext
             - In general -> return the handler registration as well in order to remove handlers when no necessary.
         - Remove WiresMananger member from WiresShape/Connector classes
-        - Connectors broken -> all I know is if i set the scale or rotate manually on the viewport
+        
+        
+        
+        - Mediators broke Connectors & shape toolbox, if any
+            - Both zoom ( zoom + move shape ) and pam ( pam + redraw ) brokes connectors
+                    -> all I know is if i set the scale or rotate manually on the viewport
                                the connectors are not in the correct place
                                panel.getViewport().setTransform( new Transform().scale(1.5, 1.5).translate(-75, -75));
                                that breaks the connector
@@ -61,9 +66,13 @@
                                and so is drag, when you release. it jumps
                                there must be a way to get a viewport x/y offset
                                rather than calculate it every single time
+
          - Externalize ControlHandles to be able to provide our own externally
          - Externalize docking visualization to be able to provide our own externally
          
+         - Connectors. lines, grid
+            - http://www.mobtowers.com/html5-canvas-crisp-lines-every-time/
+            
         - WiresConnector
             - Decorators can be null
             - animate rotations both clockwise ( svg only supports single wise )
@@ -101,7 +110,18 @@
             - http://resources.bizagi.com/docs/Workflow%20Patterns%20using%20BizAgi%20Process%20Modeler.pdf
         - copy/cut/paste
         - group
+    
+    - Export diagram to PNG -
+            - See -> http://weworkweplay.com/play/saving-html5-canvas-as-image/
+            - Add button for downloading 
+
+    - Preview widget - Mark's PR about replication
         
+    - Layout
+        - Hooks for simple horizontal layout for now
+        - Optional / enforced
+        - Configurable to fire for given events ( drag, resize, etc )
+
     - Shape Factories
             - ShapeFactories from Shape Set ( annotated on @ShapeSet )
             - ShapeManager#getFactory -> use shapeSetId as argument
@@ -114,7 +134,9 @@
             - Icon titles/tooltips
         - SelectionControl
             - Select multiple
-
+    - CanvasHandler
+        - Move draw logic into a command and refactor CH interface?
+        
     - Load diagram screen
         - Pagination
 

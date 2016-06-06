@@ -5,6 +5,7 @@ import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.command.impl.*;
+import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.view.View;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -119,6 +120,11 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
                                                                    final Object value) {
         return new UpdateElementPropertyValueCommand(element, propertyId, value);
     }
-    
-    
+
+    @Override
+    public MorphNodeCommand MORPH_NODE( final Node<Definition, Edge> candidate, 
+                                        final String morphTarget ) {
+        return new MorphNodeCommand( candidate, morphTarget );
+    }
+
 }

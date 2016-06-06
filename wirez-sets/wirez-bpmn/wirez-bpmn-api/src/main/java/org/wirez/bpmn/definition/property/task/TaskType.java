@@ -53,7 +53,7 @@ public class TaskType implements BPMNProperty {
     public static final PropertyType type = new EnumType();
     
     @ReadOnly
-    public static final Boolean readOnly = false;
+    public static final Boolean readOnly = true;
     
     @Optional
     public static final Boolean optional = false;

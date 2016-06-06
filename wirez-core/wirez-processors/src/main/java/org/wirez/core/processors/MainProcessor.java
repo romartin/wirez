@@ -47,6 +47,7 @@ import javax.lang.model.type.MirroredTypesException;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 import java.util.*;
 
@@ -77,7 +78,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     public static final String ANNOTATION_DEFINITION_PROPERTY = "org.wirez.core.definition.annotation.definition.Property";
     public static final String ANNOTATION_DEFINITION_PROPERTYSET = "org.wirez.core.definition.annotation.definition.PropertySet";
     public static final String ANNOTATION_DEFINITION_TITLE = "org.wirez.core.definition.annotation.definition.Title";
-    
+
     public static final String ANNOTATION_PROPERTY_SET = "org.wirez.core.definition.annotation.propertyset.PropertySet";
     public static final String ANNOTATION_PROPERTY_SET_PROPERTY = "org.wirez.core.definition.annotation.propertyset.Property";
 
@@ -100,7 +101,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     public static final String ANNOTATION_SHAPE_SET = "org.wirez.core.client.annotation.ShapeSet";
     public static final String ANNOTATION_SHAPE = "org.wirez.core.client.annotation.Shape";
-    
+
     public static final String RULE_CONTAINMENT_SUFFIX_CLASSNAME = "ContainmentRule";
     public static final String RULE_DOCKING_SUFFIX_CLASSNAME = "DockingRule";
     public static final String RULE_CONNECTION_SUFFIX_CLASSNAME = "ConnectionRule";
@@ -258,7 +259,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         return true;
     }
 
-    protected boolean processDefinitionSets(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+    private boolean processDefinitionSets(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         final boolean isClass = e.getKind() == ElementKind.CLASS;
         if (isClass) {
@@ -329,7 +330,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         return true;
     }
 
-    protected boolean processDefinitions(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+    private boolean processDefinitions(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
         
         final boolean isClass = e.getKind() == ElementKind.CLASS;
 
@@ -472,7 +473,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processPropertySets(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+    private boolean processPropertySets(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
 
         final boolean isClass = e.getKind() == ElementKind.CLASS;
 
@@ -499,7 +500,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         
     }
 
-    protected boolean processProperties(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+    private boolean processProperties(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
 
         final boolean isClass = e.getKind() == ElementKind.CLASS;
         
@@ -575,8 +576,8 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         return false;
 
     }
-    
-    protected void processFieldName( TypeElement classElement, 
+
+    private void processFieldName( TypeElement classElement,
                                      String propertyClassName, 
                                      String annotation, 
                                      Map<String, String> ctxMap,
@@ -624,7 +625,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected void processFieldNames( TypeElement classElement, 
+    private void processFieldNames( TypeElement classElement,
                                       String propertyClassName, 
                                       String annotation, 
                                       Map<String, Set<String>> ctxMap ) {
@@ -634,38 +635,47 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         ctxMap.put( propertyClassName, new LinkedHashSet<>( fieldNames) );
         
     }
-    
-    protected Collection<String> getFieldNames( TypeElement classElement, 
+
+    private Collection<String> getFieldNames( TypeElement classElement,
                                                 String annotation ) {
 
         final Messager messager = processingEnv.getMessager();
         final Elements elementUtils = processingEnv.getElementUtils();
 
         Set<String> result = new LinkedHashSet<>();
-        List<VariableElement> variableElements = ElementFilter.fieldsIn( classElement.getEnclosedElements() );
 
-        for ( VariableElement variableElement : variableElements ) {
-            
-            if ( GeneratorUtils.getAnnotation( elementUtils, variableElement, annotation ) != null ) {
-                
-                final TypeMirror fieldReturnType = variableElement.asType();
-                
-                final String fieldReturnTypeName = GeneratorUtils.getTypeMirrorDeclaredName(fieldReturnType);
-                
-                final String fieldName = variableElement.getSimpleName().toString();
+        Types typeUtils = processingEnv.getTypeUtils();
 
-                result.add( fieldName );
-                messager.printMessage(Diagnostic.Kind.WARNING, "Discovered property value for class [" + classElement.getSimpleName() + "] at field [" + fieldName + "] of return type [" + fieldReturnTypeName + "]");
+        while ( !classElement.toString().equals( Object.class.getName() ) ) {
+
+            List<VariableElement> variableElements = ElementFilter.fieldsIn( classElement.getEnclosedElements() );
+
+            for ( VariableElement variableElement : variableElements ) {
+
+                if ( GeneratorUtils.getAnnotation( elementUtils, variableElement, annotation ) != null ) {
+
+                    final TypeMirror fieldReturnType = variableElement.asType();
+
+                    final String fieldReturnTypeName = GeneratorUtils.getTypeMirrorDeclaredName(fieldReturnType);
+
+                    final String fieldName = variableElement.getSimpleName().toString();
+
+                    result.add( fieldName );
+                    messager.printMessage(Diagnostic.Kind.WARNING, "Discovered property value for class [" + classElement.getSimpleName() + "] at field [" + fieldName + "] of return type [" + fieldReturnTypeName + "]");
+
+                }
 
             }
-            
+
+            classElement = (TypeElement)typeUtils.asElement( classElement.getSuperclass() );
+
         }
-        
+
         return result;
         
     }
 
-    protected Collection<String> getMethodNames( TypeElement classElement,
+    private Collection<String> getMethodNames( TypeElement classElement,
                                                  String className,
                                                  String annotation ) {
         final String name = GeneratorUtils.getTypedMethodName( classElement, annotation, className, processingEnv );
@@ -682,8 +692,8 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             add( name );
         }};
     }
-    
-    protected boolean processContainmentRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+
+    private boolean processContainmentRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         final boolean isIface = e.getKind() == ElementKind.INTERFACE;
         final boolean isClass = e.getKind() == ElementKind.CLASS;
@@ -717,7 +727,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         
     }
 
-    protected boolean processDockingRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+    private boolean processDockingRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         final boolean isIface = e.getKind() == ElementKind.INTERFACE;
         final boolean isClass = e.getKind() == ElementKind.CLASS;
@@ -751,7 +761,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processEdgeCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+    private boolean processEdgeCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         final boolean isIface = e.getKind() == ElementKind.INTERFACE;
         final boolean isClass = e.getKind() == ElementKind.CLASS;
@@ -784,8 +794,8 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         return true;
 
     }
-    
-    protected boolean processCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
+
+    private boolean processCardinalityRules(Set<? extends TypeElement> set, Element e, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         final boolean isIface = e.getKind() == ElementKind.INTERFACE;
         final boolean isClass = e.getKind() == ElementKind.CLASS;
@@ -819,7 +829,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processConnectionRules(Set<? extends TypeElement> set, Element element, RoundEnvironment roundEnv) throws Exception {
+    private boolean processConnectionRules(Set<? extends TypeElement> set, Element element, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         final boolean isIface = element.getKind() == ElementKind.INTERFACE;
         final boolean isClass = element.getKind() == ElementKind.CLASS;
@@ -854,7 +864,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processLastRound(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+    private boolean processLastRound(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         processLastRoundDefinitionSetProxyAdapter(set, roundEnv);
         processLastRoundDefinitionSetAdapter(set, roundEnv);
         processLastRoundPropertySetAdapter(set, roundEnv);
@@ -867,12 +877,12 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         return true;
     }
 
-    protected boolean processLastRoundRuleAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+    private boolean processLastRoundRuleAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         try {
 
             // Ensure visible on both backend and client sides.
-            final String packageName = getGeneratedPackageName() + ".definition.adapter.rule";
+            final String packageName = getGeneratedPackageName() + ".definition.adapter.binding";
             final String className = getSetClassPrefix() + RULE_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting RuleAdapter generation for class named " + classFQName);
@@ -892,12 +902,12 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processLastRoundDefinitionSetAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+    private boolean processLastRoundDefinitionSetAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         try {
 
-            // Ensure only visible on client side.
-            final String packageName = getGeneratedPackageName() + ".client.adapter.definitionset";
+            // Ensure visible on both backend and client sides.
+            final String packageName = getGeneratedPackageName() + ".definition.adapter.binding";
             final String className = getSetClassPrefix() + DEFINITIONSET_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -917,12 +927,12 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processLastRoundDefinitionSetProxyAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+    private boolean processLastRoundDefinitionSetProxyAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         try {
 
             // Ensure visible on both backend and client sides.
-            final String packageName = getGeneratedPackageName() + ".definition.adapter.definitionset";
+            final String packageName = getGeneratedPackageName() + ".definition.adapter.binding";
             final String className = getSetClassPrefix() + DEFINITIONSET_PROXY_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting DefinitionSetProxyAdapter generation for class named " + classFQName);
@@ -946,12 +956,12 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processLastRoundPropertySetAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+    private boolean processLastRoundPropertySetAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         try {
 
-            // Ensure only visible on client side.
-            final String packageName = getGeneratedPackageName() + ".client.adapter.propertyset";
+            // Ensure visible on both backend and client sides.
+            final String packageName = getGeneratedPackageName() + ".definition.adapter.binding";
             final String className = getSetClassPrefix() + PROPERTYSET_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -971,7 +981,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processLastRoundDefinitionFactory(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+    private boolean processLastRoundDefinitionFactory(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         try {
 
@@ -1017,13 +1027,13 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         return true;
 
     }
-    
-    protected boolean processLastRoundDefinitionAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+
+    private boolean processLastRoundDefinitionAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         try {
 
-            // Ensure only visible on client side.
-            final String packageName = getGeneratedPackageName() + ".client.adapter.definition";
+            // Ensure visible on both backend and client sides.
+            final String packageName = getGeneratedPackageName() + ".definition.adapter.binding";
             final String className = getSetClassPrefix() + DEFINITION_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -1043,12 +1053,12 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processLastRoundPropertyAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+    private boolean processLastRoundPropertyAdapter(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         try {
 
-            // Ensure only visible on client side.
-            final String packageName = getGeneratedPackageName() + ".client.adapter.property";
+            // Ensure visible on both backend and client sides.
+            final String packageName = getGeneratedPackageName() + ".definition.adapter.binding";
             final String className = getSetClassPrefix() + PROPERTY_ADAPTER_CLASSNAME;
             final String classFQName = packageName + "." + className;
             messager.printMessage(Diagnostic.Kind.WARNING, "Starting ErraiBinderAdapter generation named " + classFQName);
@@ -1068,7 +1078,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processLastRoundShapeSetGenerator(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+    private boolean processLastRoundShapeSetGenerator(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         try {
 
@@ -1103,7 +1113,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     }
 
-    protected boolean processLastRoundShapeFactoryGenerator(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
+    private boolean processLastRoundShapeFactoryGenerator(Set<? extends TypeElement> set, RoundEnvironment roundEnv) throws Exception {
         final Messager messager = processingEnv.getMessager();
         try {
 

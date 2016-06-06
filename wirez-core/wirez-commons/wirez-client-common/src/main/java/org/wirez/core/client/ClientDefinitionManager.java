@@ -6,6 +6,7 @@ import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.AbstractDefinitionManager;
 import org.wirez.core.definition.DefinitionSetProxy;
 import org.wirez.core.definition.adapter.*;
+import org.wirez.core.definition.adapter.MorphAdapter;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -17,7 +18,7 @@ public class ClientDefinitionManager extends AbstractDefinitionManager {
     
     SyncBeanManager beanManager;
 
-    // Remove later...
+    // TODO: Remove later...
     public static ClientDefinitionManager get() {
         Collection<SyncBeanDef<ClientDefinitionManager>> beans = IOC.getBeanManager().lookupBeans(ClientDefinitionManager.class);
         SyncBeanDef<ClientDefinitionManager> beanDef = beans.iterator().next();
@@ -28,11 +29,12 @@ public class ClientDefinitionManager extends AbstractDefinitionManager {
     }
 
     @Inject
-    public ClientDefinitionManager(final SyncBeanManager beanManager) {
+    public ClientDefinitionManager( final SyncBeanManager beanManager ) {
         this.beanManager = beanManager;
     }
     
     @PostConstruct
+    @SuppressWarnings("unchecked")
     public void init() {
 
         // Definition Sets.
@@ -82,6 +84,13 @@ public class ClientDefinitionManager extends AbstractDefinitionManager {
             propertyAdapters.add(definitionSet);
         }
         sortAdapters(propertyAdapters);
+
+        // Morph adapters.
+        Collection<SyncBeanDef<MorphAdapter>> beanMorphAdapters = beanManager.lookupBeans(MorphAdapter.class);
+        for (SyncBeanDef<MorphAdapter> morphAdapter : beanMorphAdapters ) {
+            MorphAdapter instance = morphAdapter.getInstance();
+            morphAdapters.add( instance );
+        }
         
     }
 

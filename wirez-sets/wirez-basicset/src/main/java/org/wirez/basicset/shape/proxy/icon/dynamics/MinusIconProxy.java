@@ -7,12 +7,12 @@ public final class MinusIconProxy
         implements org.wirez.shapes.proxy.icon.dynamics.MinusIconProxy<MinusIcon> {
     
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final MinusIcon definition ) {
         return MinusIcon.COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final MinusIcon definition ) {
         return MinusIcon.description;
     }
     

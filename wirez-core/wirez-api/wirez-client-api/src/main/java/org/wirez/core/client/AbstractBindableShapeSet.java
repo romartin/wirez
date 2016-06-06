@@ -13,7 +13,11 @@ public abstract class AbstractBindableShapeSet implements ShapeSet<ShapeFactory<
     protected DefinitionManager definitionManager;
 
     protected String description;
-    
+
+    protected AbstractBindableShapeSet() {
+
+    }
+
     public AbstractBindableShapeSet(final DefinitionManager definitionManager) {
         this.definitionManager = definitionManager;
     }

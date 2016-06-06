@@ -4,6 +4,10 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.*;
 import org.wirez.bpmn.definition.factory.BPMNAbstractGraphFactory;
+import org.wirez.bpmn.definition.BusinessRuleTask;
+import org.wirez.bpmn.definition.NoneTask;
+import org.wirez.bpmn.definition.ScriptTask;
+import org.wirez.bpmn.definition.UserTask;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.ShapeSet;
 import org.wirez.core.definition.annotation.definitionset.DefinitionSet;
@@ -24,13 +28,17 @@ import javax.enterprise.context.ApplicationScoped;
 
                 BPMNDiagram.class,
                 Lane.class,
-                Task.class,
+                NoneTask.class,
+                UserTask.class,
+                ScriptTask.class,
+                BusinessRuleTask.class,
                 StartNoneEvent.class,
                 EndNoneEvent.class,
                 EndTerminateEvent.class,
                 IntermediateTimerEvent.class,
                 ParallelGateway.class,
                 ExclusiveDatabasedGateway.class,
+                ReusableSubprocess.class,
                 SequenceFlow.class
 
         },

@@ -55,12 +55,12 @@ public final class RectangleProxy implements org.wirez.shapes.proxy.RectanglePro
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final Rectangle element ) {
         return Rectangle.title;
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final Rectangle element ) {
         return Rectangle.RectangleBuilder.COLOR;
     }
     

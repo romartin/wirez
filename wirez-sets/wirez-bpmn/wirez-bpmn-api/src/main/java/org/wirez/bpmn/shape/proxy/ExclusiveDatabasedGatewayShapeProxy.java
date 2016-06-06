@@ -61,12 +61,12 @@ public final class ExclusiveDatabasedGatewayShapeProxy implements
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final ExclusiveDatabasedGateway element ) {
         return ExclusiveDatabasedGateway.ExclusiveDatabasedGatewayBuilder.COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final ExclusiveDatabasedGateway element ) {
         return ExclusiveDatabasedGateway.description;
     }
 
@@ -114,12 +114,12 @@ public final class ExclusiveDatabasedGatewayShapeProxy implements
         }
     
         @Override
-        public String getDescription() {
+        public String getDescription( final ExclusiveDatabasedGateway element ) {
             return null;
         }
 
         @Override
-        public String getGlyphBackgroundColor() {
+        public String getGlyphBackgroundColor( final ExclusiveDatabasedGateway element ) {
             return null;
         }
     }

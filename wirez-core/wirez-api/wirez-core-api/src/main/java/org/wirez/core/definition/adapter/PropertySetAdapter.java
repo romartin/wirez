@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * A Property Set pojo adapter.. 
  */
-public interface PropertySetAdapter<T> extends Adapter<T> {
+public interface PropertySetAdapter<T> extends PriorityAdapter {
 
     /**
      * Returns the property set's identifier for a given pojo.

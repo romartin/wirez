@@ -37,6 +37,11 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
+      <artifactId>wirez-backend-common</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
       <artifactId>wirez-bpmn-api</artifactId>
     </dependency>
 
@@ -246,6 +251,21 @@
     </dependency>-->
 
     <!-- Testing scope. -->
+
+    <!-- TODO: Remove. Used for now as tests needs some existing morph adapter, which is on client side.-->
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-client-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- TODO: Remove. Used for now as tests needs some existing morph adapter, which is on client side.-->
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-client-common</artifactId>
+      <scope>test</scope>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

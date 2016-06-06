@@ -20,14 +20,18 @@ import ${parentAdapterClassName};
 
 import javax.annotation.Generated;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.wirez.core.definition.adapter.binding.BindableAdapterFactory;
+import org.wirez.core.definition.adapter.binding.BindablePropertySetAdapter;
+import org.wirez.core.definition.adapter.binding.BindablePropertySetAdapterProxy;
 
 @Generated("${generatedByClassName}")
 @ApplicationScoped
-public class ${className} extends ${parentAdapterClassName} {
+public class ${className} extends ${parentAdapterClassName}<Object> {
 
     private static final Map<Class, String> nameFieldNames = new HashMap<Class, String>(${nameFieldNamesSize}) {{
         <#list nameFieldNames as nameFieldName>
@@ -46,14 +50,19 @@ public class ${className} extends ${parentAdapterClassName} {
         </#list>
     }};
 
-    @Override
-    protected Map<Class, String> getPropertyNameFieldNames() {
-        return nameFieldNames;
+    protected ${className}() {
     }
-    
+
+    @Inject
+    public ${className}(${adapterFactoryClassName} adapterFactory) {
+        super(adapterFactory);
+    }
+
     @Override
-    protected Map<Class, Set<String>> getPropertiesFieldNames() {
-        return propertiesFieldNames;
+    protected void setBindings( final BindablePropertySetAdapter<Object> adapter ) {
+
+        adapter.setBindings( nameFieldNames, propertiesFieldNames );
+
     }
 
 }

@@ -51,12 +51,12 @@ public final class EndNoneEventShapeProxy implements CircleProxy<EndNoneEvent> {
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final EndNoneEvent element ) {
         return EndNoneEvent.EndNoneEventBuilder.COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final EndNoneEvent element ) {
         return EndNoneEvent.description;
     }
 }

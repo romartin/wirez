@@ -1,9 +1,6 @@
 package org.wirez.bpmn.shape.proxy;
 
 import org.wirez.bpmn.definition.IntermediateTimerEvent;
-import org.wirez.bpmn.definition.IntermediateTimerEvent;
-import org.wirez.bpmn.definition.Task;
-import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.*;
 import org.wirez.shapes.proxy.icon.statics.IconProxy;
@@ -17,7 +14,6 @@ public final class IntermediateTimerEventShapeProxy implements
         CircleProxy<IntermediateTimerEvent>,
         HasChildProxies<IntermediateTimerEvent> {
 
-    private static final String BLACK = "#000000";
     private static final String WHITE = "#FFFFFF";
 
     @Override
@@ -66,12 +62,12 @@ public final class IntermediateTimerEventShapeProxy implements
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final IntermediateTimerEvent element ) {
         return IntermediateTimerEvent.IntermediateTimerEventBuilder.COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final IntermediateTimerEvent element ) {
         return IntermediateTimerEvent.description;
     }
 
@@ -100,12 +96,12 @@ public final class IntermediateTimerEventShapeProxy implements
         }
 
         @Override
-        public String getGlyphBackgroundColor() {
+        public String getGlyphBackgroundColor( final IntermediateTimerEvent element ) {
             return WHITE;
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription( final IntermediateTimerEvent element ) {
             return null;
         }
 

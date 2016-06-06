@@ -35,6 +35,8 @@ import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.*;
 import org.wirez.core.client.shape.view.ShapeView;
+import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.client.shape.factory.ShapeFactoryWrapper;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -45,20 +47,21 @@ import javax.annotation.Generated;
 
 @Generated( "${generatedByClassName}" )
 @ApplicationScoped
-public class ${className} extends ${parentClassName}<Object, Shape<?>> {
+public class ${className} extends ${parentClassName} {
 
     <#list shapeProxyFactoryEntities as pc>
         ${pc.className} ${pc.id};
     </#list>
-    
+
+    protected ${className}() {
+    }
+
     @Inject
     public ${className}(
             <#list shapeProxyFactoryEntities as pc>
-                final ${pc.className} ${pc.id},
-            </#list>
-            final DefinitionUtils definitionUtils ) {
+                final ${pc.className} ${pc.id}
+            </#list>) {
 
-        super( definitionUtils );
         <#list shapeProxyFactoryEntities as pc>
             this.${pc.id} = ${pc.id};
         </#list>
@@ -69,14 +72,17 @@ public class ${className} extends ${parentClassName}<Object, Shape<?>> {
     @SuppressWarnings("unchecked")
     public void init() {
 
-        <#list shapeProxyFactoryEntities as pc>
-            super.addFactory( ${pc.id} );
-        </#list>
-
         <#list addProxySentences as ps>
             ${ps}
         </#list>
     
     }
+
+    <#list shapeProxyFactoryEntities as pc>
+        @Override
+        protected ShapeFactory getFactory() {
+            return this.${pc.id};
+        }
+    </#list>
 
 }

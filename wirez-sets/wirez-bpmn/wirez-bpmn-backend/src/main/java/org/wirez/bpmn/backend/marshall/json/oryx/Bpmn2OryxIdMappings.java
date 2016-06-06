@@ -1,7 +1,7 @@
 package org.wirez.bpmn.backend.marshall.json.oryx;
 
 import org.apache.commons.lang3.StringUtils;
-import org.wirez.bpmn.definition.BPMNDiagram;
+import org.wirez.bpmn.definition.*;
 import org.wirez.bpmn.definition.property.general.Name;
 import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.core.api.DefinitionManager;
@@ -28,6 +28,10 @@ public class Bpmn2OryxIdMappings {
         // No custom mappings, for now.
         put( Name.class, "name" );
         put( TaskType.class, "tasktype" );
+        put( NoneTask.class, "Task" );
+        put( UserTask.class, "Task" );
+        put( ScriptTask.class, "Task" );
+        put( BusinessRuleTask.class, "Task" );
     }};
 
     private final Map<Class<?>, Set<String>> skippedProperties = new HashMap<Class<?>, Set<String>>() {{
@@ -46,6 +50,10 @@ public class Bpmn2OryxIdMappings {
                     put(Name.class, "processn");
             }});
     }};
+
+    protected Bpmn2OryxIdMappings() {
+        this( null );
+    }
 
     @Inject
     public Bpmn2OryxIdMappings( DefinitionManager definitionManager ) {

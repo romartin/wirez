@@ -19,6 +19,7 @@ package org.wirez.shapes.client.factory;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
+import org.wirez.core.api.FactoryManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.AbstractCompositeShape;
 import org.wirez.core.client.shape.AbstractShape;
@@ -59,10 +60,11 @@ public class BasicShapesFactoryImpl<W>
     }
     
     @Inject
-    public BasicShapesFactoryImpl(final org.wirez.shapes.client.view.ShapeViewFactory shapeViewFactory,
+    public BasicShapesFactoryImpl(final FactoryManager factoryManager,
+                                  final org.wirez.shapes.client.view.ShapeViewFactory shapeViewFactory,
                                   final DefinitionUtils definitionUtils,
                                   final ShapeGlyphBuilder<Group> glyphBuilder) {
-
+        super( factoryManager );
         this.shapeViewFactory = shapeViewFactory;
         this.definitionUtils = definitionUtils;
         this.glyphBuilder = glyphBuilder;

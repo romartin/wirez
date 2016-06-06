@@ -17,7 +17,7 @@
 package org.wirez.core.processors.rule;
 
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.definition.adapter.binding.BindableDefinitionSetRuleAdapter;
+import org.wirez.core.definition.adapter.AbstractDefinitionSetRuleAdapter;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
 import org.wirez.core.processors.ProcessingRule;
 
@@ -47,7 +47,7 @@ public class BindableDefinitionSetRuleAdapterGenerator extends AbstractBindableA
         root.put("className",
                 className);
         root.put("parentAdapterClassName",
-                BindableDefinitionSetRuleAdapter.class.getName());
+                AbstractDefinitionSetRuleAdapter.class.getName());
         root.put("generatedByClassName",
                 BindableDefinitionSetRuleAdapterGenerator.class.getName());
         root.put("defSetClassName",

@@ -1,7 +1,7 @@
 package org.wirez.core.definition.shape;
 
-public interface GlyphProxy {
+public interface GlyphProxy<W> {
     
-    String getDescription();
+    String getDescription( W element );
     
 }

@@ -56,6 +56,33 @@ public class DefinitionUtils {
         return adapter.getLabels( definition );
         
     }
+
+    public <T> Object getProperty( final T definition, final String propertyId ) {
+
+        final DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+        final Set<?> properties = definitionAdapter.getProperties( definition );
+        
+        if ( null != properties && !properties.isEmpty() ) {
+            
+            for ( final Object property : properties ) {
+                
+                final PropertyAdapter<Object, ?> propertyAdapter = definitionManager.getPropertyAdapter( property.getClass() );
+                
+                final String pId = propertyAdapter.getId( property );
+                
+                if ( pId.equals( propertyId ) ) {
+                    
+                    return property;
+                    
+                }
+                
+            }
+            
+        }
+        
+        return null;
+
+    }
     
     public <T> String getName( final T definition ) {
 
@@ -142,5 +169,7 @@ public class DefinitionUtils {
 
         return null;
     }
+    
+    
     
 }

@@ -7,12 +7,12 @@ public final class XORIconProxy
         implements org.wirez.shapes.proxy.icon.dynamics.XORIconProxy<XORIcon> {
     
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final XORIcon definition ) {
         return XORIcon.COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final XORIcon definition ) {
         return XORIcon.description;
     }
     

@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.wirez.core.api.AbstractDefinitionManager;
 import org.wirez.core.definition.DefinitionSetProxy;
 import org.wirez.core.definition.adapter.*;
-import org.wirez.core.definition.factory.ModelFactory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -39,30 +38,33 @@ public class ApplicationDefinitionManager extends AbstractDefinitionManager {
     Instance<DefinitionAdapter<?>> definitionAdapterInstances;
     Instance<PropertySetAdapter<?>> propertySetAdapterInstances;
     Instance<PropertyAdapter<?, ?>> propertyAdapterInstances;
+    Instance<MorphAdapter<?, ?>> morphAdapterInstances;
 
     protected ApplicationDefinitionManager() {
     }
 
     @Inject
     public ApplicationDefinitionManager(Instance<DefinitionSetProxy<?>> definitionSetsInstances,
-                                        Instance<ModelFactory<?>> modelBuilderInstances,
                                         Instance<DefinitionSetAdapter<?>> definitionSetAdapterInstances,
                                         Instance<DefinitionSetRuleAdapter<?>> definitionSetRuleAdapterInstances,
                                         Instance<DefinitionAdapter<?>> definitionAdapterInstances,
                                         Instance<PropertySetAdapter<?>> propertySetAdapterInstances,
-                                        Instance<PropertyAdapter<?, ?>> propertyAdapterInstances) {
+                                        Instance<PropertyAdapter<?, ?>> propertyAdapterInstances,
+                                        Instance<MorphAdapter<?, ?>> morphAdapterInstances) {
         this.definitionSetsInstances = definitionSetsInstances;
         this.definitionSetAdapterInstances = definitionSetAdapterInstances;
         this.definitionSetRuleAdapterInstances = definitionSetRuleAdapterInstances;
         this.definitionAdapterInstances = definitionAdapterInstances;
         this.propertySetAdapterInstances = propertySetAdapterInstances;
         this.propertyAdapterInstances = propertyAdapterInstances;
+        this.morphAdapterInstances = morphAdapterInstances;
     }
 
     @PostConstruct
     public void init() {
         initDefSets();
         initAdapters();
+        initMorphAdapters();
     }
     
     private void initDefSets() {
@@ -92,6 +94,12 @@ public class ApplicationDefinitionManager extends AbstractDefinitionManager {
             propertyAdapters.add(propertyAdapter);
         }
         sortAdapters(propertyAdapters);
+    }
+
+    private void initMorphAdapters() {
+        for ( MorphAdapter morphAdapter : morphAdapterInstances ) {
+            morphAdapters.add( morphAdapter );
+        }
     }
 
 }

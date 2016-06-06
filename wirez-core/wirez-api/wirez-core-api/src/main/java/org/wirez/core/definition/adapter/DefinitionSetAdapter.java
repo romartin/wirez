@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * A Definition Set pojo adapter.. 
  */
-public interface DefinitionSetAdapter<T> extends Adapter<T> {
+public interface DefinitionSetAdapter<T> extends PriorityAdapter {
 
     /**
      * Returns the definition set's identifier for a given pojo.

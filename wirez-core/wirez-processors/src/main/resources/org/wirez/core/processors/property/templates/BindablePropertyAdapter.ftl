@@ -20,12 +20,16 @@ import ${parentAdapterClassName};
 
 import javax.annotation.Generated;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
+import org.wirez.core.definition.adapter.binding.BindableAdapterFactory;
+import org.wirez.core.definition.adapter.binding.BindablePropertyAdapter;
+import org.wirez.core.definition.adapter.binding.BindablePropertyAdapterProxy;
 
 @Generated("${generatedByClassName}")
 @ApplicationScoped
-public class ${className} extends ${parentAdapterClassName} {
+public class ${className} extends ${parentAdapterClassName}<Object, Object> {
 
     private static final Map<Class, String> propValueFieldNames = new HashMap<Class, String>(${valuePropNamesSize}) {{
         <#list valuePropNames as valuePropName>
@@ -76,44 +80,24 @@ public class ${className} extends ${parentAdapterClassName} {
         </#list>
     }};
 
-    @Override
-    protected Map<Class, String> getPropertyValueFieldNames() {
-        return propValueFieldNames;
+    protected ${className}() {
     }
-    
-    @Override
-    protected Map<Class, String> getPropertyDefaultValueFieldNames() {
-        return propDefaultValueFieldNames;
-    }
-    
-    @Override
-    protected Map<Class, String> getPropertyAllowedValuesFieldNames() {
-        return propAllowedValuesFieldNames;
+
+    @Inject
+    public ${className}(${adapterFactoryClassName} adapterFactory) {
+        super(adapterFactory);
     }
 
     @Override
-    protected Map<Class, String> getPropertyTypeFieldNames() {
-         return propTypeFieldNames;
-    }
-    
-    @Override
-    protected Map<Class, String> getPropertyCaptionFieldNames() {
-          return propCaptionFieldNames;
-    }
-    
-    @Override
-    protected Map<Class, String> getPropertyDescriptionFieldNames() {
-          return propDescriptionFieldNames;
-    }
-    
-    @Override
-    protected Map<Class, String> getPropertyReadOnlyFieldNames() {
-          return propReadOnlyFieldNames;
-    }
-    
-    @Override
-    protected Map<Class, String> getPropertyOptionalFieldNames() {
-          return propOptionalFieldNames;
+    protected void setBindings(final BindablePropertyAdapter<Object, Object> adapter) {
+        adapter.setBindings(    propTypeFieldNames,
+                                propCaptionFieldNames,
+                                propDescriptionFieldNames,
+                                propReadOnlyFieldNames,
+                                propOptionalFieldNames,
+                                propValueFieldNames,
+                                propDefaultValueFieldNames,
+                                propAllowedValuesFieldNames );
     }
 
 }

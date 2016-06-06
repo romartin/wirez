@@ -57,7 +57,15 @@ public class HasValuePropertyAdapter implements PropertyAdapter<PropertyImpl, Ob
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void setValue(final PropertyImpl pojo, final Object value) {
+        
+        if ( pojo.isReadOnly() ) {
+            
+            throw new RuntimeException( "Cannot set new value for property [" + pojo.getId() + "] as it is read only! " );
+            
+        }
+        
         pojo.setValue(value);
     }
 

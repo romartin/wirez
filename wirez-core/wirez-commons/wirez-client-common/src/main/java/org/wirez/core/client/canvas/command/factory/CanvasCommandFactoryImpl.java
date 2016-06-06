@@ -5,6 +5,7 @@ import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.view.View;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -115,6 +116,12 @@ public class CanvasCommandFactoryImpl implements CanvasCommandFactory {
                                                                 final Edge<? extends View<?>, Node> edge, 
                                                                 final int magnetIndex) {
         return new SetCanvasConnectionTargetNodeCommand(node, edge, magnetIndex);
+    }
+
+    @Override
+    public MorphCanvasNodeCommand MORPH_NODE( final Node<? extends Definition<?>, Edge> candidate, 
+                                              final String morphTarget ) {
+        return new MorphCanvasNodeCommand( candidate, morphTarget );
     }
 
 }

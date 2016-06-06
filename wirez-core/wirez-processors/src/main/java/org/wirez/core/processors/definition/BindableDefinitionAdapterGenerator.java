@@ -17,7 +17,9 @@
 package org.wirez.core.processors.definition;
 
 import org.uberfire.annotations.processors.exceptions.GenerationException;
+import org.wirez.core.definition.adapter.binding.BindableAdapterFactory;
 import org.wirez.core.definition.adapter.binding.BindableDefinitionAdapter;
+import org.wirez.core.definition.adapter.binding.BindableDefinitionAdapterProxy;
 import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
 import org.wirez.core.processors.ProcessingDefinitionAnnotations;
@@ -45,10 +47,10 @@ public class BindableDefinitionAdapterGenerator extends AbstractBindableAdapterG
         root.put("className",
                 className);
         root.put("parentAdapterClassName",
-                BindableDefinitionAdapter.class.getName());
+                BindableDefinitionAdapterProxy.class.getName());
         root.put("generatedByClassName",
                 BindableDefinitionAdapterGenerator.class.getName());
-        root.put("utilsClassName", DefinitionUtils.class.getName());
+        root.put("adapterFactoryClassName", BindableAdapterFactory.class.getName());
         root.put("namePropertyClass",
                 namePropertyClass);
         

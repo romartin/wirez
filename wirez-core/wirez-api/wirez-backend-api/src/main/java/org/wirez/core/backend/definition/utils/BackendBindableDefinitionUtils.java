@@ -2,6 +2,7 @@ package org.wirez.core.backend.definition.utils;
 
 import org.wirez.core.definition.annotation.definitionset.DefinitionSet;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,14 +13,12 @@ public class BackendBindableDefinitionUtils {
 
         if ( null != definitionSet ) {
 
-            DefinitionSet annotation = definitionSet.getClass().getAnnotation(DefinitionSet.class);
+            DefinitionSet annotation = definitionSet.getClass().getAnnotation( DefinitionSet.class );
             if ( null != annotation ) {
                 Class<?>[] definitions = annotation.definitions();
-                if ( null != definitions ) {
+                if ( definitions.length > 0 ) {
                     result = new HashSet<Class<?>>( definitions.length );
-                    for ( Class<?> defClass : definitions ) {
-                        result.add( defClass );
-                    }
+                    Collections.addAll(result, definitions);
                 }
             }
 

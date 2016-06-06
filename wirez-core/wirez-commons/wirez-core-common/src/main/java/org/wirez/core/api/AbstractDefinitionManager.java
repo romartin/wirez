@@ -18,6 +18,7 @@ package org.wirez.core.api;
 
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.definition.adapter.*;
+import org.wirez.core.definition.adapter.MorphAdapter;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -32,6 +33,7 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     protected final List<DefinitionAdapter> definitionAdapters = new LinkedList<>();
     protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
     protected final List<PropertyAdapter> propertyAdapters = new LinkedList<>();
+    protected final List<MorphAdapter> morphAdapters = new LinkedList<>();
 
     public AbstractDefinitionManager() {
     }
@@ -60,79 +62,97 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(final Class<?> pojoClass) {
-        final Class<?> clazz = handleBindableProxyClass( pojoClass );
+    public <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(final Class<?> type) {
+        final Class<?> clazz = handleBindableProxyClass( type );
         for (DefinitionSetAdapter adapter : definitionSetAdapters) {
             if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
 
-        return nullHandling("Definition Set", pojoClass);
+        return nullHandling("Definition Set", type);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(final Class<?> pojoClass) {
-        final Class<?> clazz = handleBindableProxyClass( pojoClass );
+    public <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(final Class<?> type) {
+        final Class<?> clazz = handleBindableProxyClass( type );
         for (DefinitionSetRuleAdapter adapter : definitionSetRuleAdapters) {
             if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
 
-        return nullHandling("Definition Set rules", pojoClass);
+        return nullHandling("Definition Set rules", type);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> DefinitionAdapter<T> getDefinitionAdapter(final Class<?> pojoClass) {
-        final Class<?> clazz = handleBindableProxyClass( pojoClass );
+    public <T> DefinitionAdapter<T> getDefinitionAdapter(final Class<?> type) {
+        final Class<?> clazz = handleBindableProxyClass( type );
         for (DefinitionAdapter adapter : definitionAdapters) {
             if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
 
-        return nullHandling("Definition", pojoClass);
+        return nullHandling("Definition", type);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public<T> PropertySetAdapter<T> getPropertySetAdapter(final Class<?> pojoClass) {
-        final Class<?> clazz = handleBindableProxyClass( pojoClass );
+    public<T> PropertySetAdapter<T> getPropertySetAdapter(final Class<?> type) {
+        final Class<?> clazz = handleBindableProxyClass( type );
         for (PropertySetAdapter adapter : propertySetAdapters) {
             if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
 
-        return nullHandling("Property Set", pojoClass);
+        return nullHandling("Property Set", type);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public<T> PropertyAdapter<T, ?> getPropertyAdapter(final Class<?> pojoClass) {
-        final Class<?> clazz = handleBindableProxyClass( pojoClass );
+    public<T> PropertyAdapter<T, ?> getPropertyAdapter(final Class<?> type) {
+        final Class<?> clazz = handleBindableProxyClass( type );
         for (PropertyAdapter adapter : propertyAdapters) {
             if ( adapter.accepts( clazz ) ) {
                 return adapter;
             }
         }
 
-        return nullHandling("Property", pojoClass);
+        return nullHandling("Property", type);
     }
 
-    private Class<?> handleBindableProxyClass(final Class<?> pojoClass) {
-        return BindableAdapterUtils.handleBindableProxyClass( pojoClass );
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Iterable<MorphAdapter<T, ?>> getMorphAdapters(final Class<?> type) {
+        
+        final List<MorphAdapter<T, ?>> result = new LinkedList<>();
+        
+        final Class<?> clazz = handleBindableProxyClass( type );
+        
+        for ( MorphAdapter adapter : morphAdapters ) {
+            
+            if ( adapter.accepts( clazz ) ) {
+                result.add( adapter );
+            }
+        }
+        
+        return result.isEmpty() ? null : result;
     }
 
-    public static <T extends Adapter> void sortAdapters(List<T> adapters) {
+    private Class<?> handleBindableProxyClass(final Class<?> type) {
+        return BindableAdapterUtils.handleBindableProxyClass( type );
+    }
+
+    public static <T extends PriorityAdapter> void sortAdapters(List<T> adapters) {
         Collections.sort(adapters, (o1, o2) -> o1.getPriority() - o2.getPriority());
     }
     
-    private <T> T nullHandling(String domain, Class<?> pojoClass) {
-        final String message = "No " + domain + " adapter found for pojo with class [" + pojoClass.getName() + "]";
+    private <T> T nullHandling(String domain, Class<?> type) {
+        final String message = "No " + domain + " adapter found for pojo with class [" + type.getName() + "]";
         LOGGER.severe( message );
         throw new NullPointerException( message );
     }

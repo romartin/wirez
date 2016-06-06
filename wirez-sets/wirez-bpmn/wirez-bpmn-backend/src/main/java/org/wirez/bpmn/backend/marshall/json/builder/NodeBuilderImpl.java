@@ -5,7 +5,7 @@ import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
 
-public final class NodeBuilderImpl extends AbstractNodeBuilder<BPMNDefinition, Node<View<BPMNDefinition>, Edge>> {
+public class NodeBuilderImpl extends AbstractNodeBuilder<BPMNDefinition, Node<View<BPMNDefinition>, Edge>> {
 
     public NodeBuilderImpl(Class<?> definitionClass) {
         super(definitionClass);

@@ -61,12 +61,12 @@ public final class PolygonWithIconProxy implements
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final PolygonWithIcon element ) {
         return PolygonWithIcon.title;
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final PolygonWithIcon element ) {
         return PolygonWithIcon.PolygonWithIconBuilder.COLOR;
     }
 
@@ -112,12 +112,12 @@ public final class PolygonWithIconProxy implements
         }
 
         @Override
-        public String getDescription() {
+        public String getDescription( final PolygonWithIcon element ) {
             return null;
         }
 
         @Override
-        public String getGlyphBackgroundColor() {
+        public String getGlyphBackgroundColor( final PolygonWithIcon element ) {
             return null;
         }
     }

@@ -61,12 +61,12 @@ public final class ParallelGatewayShapeProxy implements
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final ParallelGateway element ) {
         return ParallelGateway.ParallelGatewayBuilder.COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final ParallelGateway element ) {
         return ParallelGateway.description;
     }
 
@@ -114,12 +114,12 @@ public final class ParallelGatewayShapeProxy implements
         }
     
         @Override
-        public String getDescription() {
+        public String getDescription( final ParallelGateway element ) {
             return null;
         }
 
         @Override
-        public String getGlyphBackgroundColor() {
+        public String getGlyphBackgroundColor( final ParallelGateway element ) {
             return null;
         }
     }

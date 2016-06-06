@@ -24,10 +24,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
+import org.wirez.core.definition.adapter.binding.BindableAdapterFactory;
+import org.wirez.core.definition.adapter.binding.BindableDefinitionSetAdapter;
+import org.wirez.core.definition.adapter.binding.BindableDefinitionSetAdapterProxy;
 
 @Generated("${generatedByClassName}")
 @ApplicationScoped
-public class ${className} extends ${parentAdapterClassName} {
+public class ${className} extends ${parentAdapterClassName}<Object> {
 
     private static final Map<Class, String> descriptionFieldNames = new HashMap<Class, String>(${valuePropNamesSize}) {{
         <#list valuePropNames as valuePropName>
@@ -54,24 +58,17 @@ public class ${className} extends ${parentAdapterClassName} {
     </#list>
         }};
 
-    @Override
-    protected Map<Class, String> getPropertyDescriptionFieldNames() {
-        return descriptionFieldNames;
+    protected ${className}() {
+    }
+
+    @Inject
+    public ${className}(${adapterFactoryClassName} adapterFactory) {
+        super(adapterFactory);
     }
     
     @Override
-    protected Set<String> getDefinitionIds() {
-        return definitionIds;
+    protected void setBindings(final BindableDefinitionSetAdapter<Object> adapter) {
+        adapter.setBindings( descriptionFieldNames, graphTypes, graphFactories, definitionIds );
     }
-
-    @Override
-    protected Map<Class, Class> getGraphTypes() {
-        return graphTypes;
-    }
-
-    @Override
-    protected Map<Class, String> getGraphFactory() {
-        return graphFactories;
-    }
-
+        
 }

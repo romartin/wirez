@@ -15,6 +15,7 @@
 
   <modules>
     <module>wirez-core-common</module>
+    <module>wirez-backend-common</module>
     <module>wirez-client-common</module>
   </modules>
   

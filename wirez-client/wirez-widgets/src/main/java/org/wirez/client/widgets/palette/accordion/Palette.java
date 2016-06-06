@@ -24,10 +24,10 @@ import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.uberfire.client.mvp.UberView;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
+import org.wirez.client.widgets.palette.ShapeSetPalette;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroup;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.components.glyph.GlyphTooltip;
@@ -38,6 +38,7 @@ import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.view.ShapeGlyph;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -46,15 +47,17 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-// TODO: Refactor implementing org.wirez.core.client.components.palette.Palette
+// TODO: This in an old impl, in deed it's the first palette coded. 
+// TODO: Should be nice to refactor it using latest components or just drop it.
 @Dependent
-public class Palette implements IsWidget {
+@Accordion
+public class Palette implements ShapeSetPalette {
 
     private static Logger LOGGER = Logger.getLogger(Palette.class.getName());
     
     public interface View extends UberView<Palette> {
         
-        View setNoCanvasViewVisible(boolean isVisible);
+        View setEmptyViewVisible(boolean isVisible);
         
         View setGroupsViewVisible(boolean isVisible);
         
@@ -64,11 +67,6 @@ public class Palette implements IsWidget {
         
         View clear();
 
-    }
-
-    public interface Callback {
-
-        void onAddShape( Object definition, ShapeFactory<?, ?, ? extends Shape> factory, double x, double y );
     }
 
     ShapeManager shapeManager;
@@ -104,7 +102,7 @@ public class Palette implements IsWidget {
     @PostConstruct
     public void init() {
         view.init(this);
-        showNoCanvasState();
+        showEmpty();
     }
     
     @Override
@@ -112,13 +110,16 @@ public class Palette implements IsWidget {
         return view.asWidget();
     }
 
-    public void showNoCanvasState() {
+    @Override
+    public void showEmpty() {
         clear();
         view.setGroupsViewVisible(false);
-        view.setNoCanvasViewVisible(true);
+        view.setEmptyViewVisible(true);
     }
-    
-    public void show(final int width, final String shapeSetId, final Callback callback) {
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void show(final int width, final String shapeSetId, final org.wirez.client.widgets.palette.Palette.Callback callback) {
         this.callback = callback;
         clear();
         final ShapeSet wirezShapeSet = getShapeSet(shapeSetId);
@@ -128,7 +129,7 @@ public class Palette implements IsWidget {
             @Override
             public void onSuccess(final Object definitionSet) {
                 doShow(width, wirezShapeSet, definitionSet);
-                view.setNoCanvasViewVisible(false);
+                view.setEmptyViewVisible(false);
                 view.setGroupsViewVisible(true);
             }
 

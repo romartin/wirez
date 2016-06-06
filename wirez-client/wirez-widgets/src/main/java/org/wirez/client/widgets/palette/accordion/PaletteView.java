@@ -51,7 +51,7 @@ public class PaletteView extends Composite implements Palette.View {
     }
 
     @Override
-    public Palette.View setNoCanvasViewVisible(boolean isVisible) {
+    public Palette.View setEmptyViewVisible(boolean isVisible) {
         noCanvasPanel.setVisible(isVisible);
         return this;
     }

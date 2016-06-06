@@ -1,14 +1,13 @@
 package org.wirez.core.definition.adapter.binding;
 
-import org.jboss.errai.databinding.client.BindableProxy;
-import org.jboss.errai.databinding.client.HasProperties;
-import org.jboss.errai.databinding.client.PropertyType;
-import org.jboss.errai.databinding.client.api.DataBinder;
-
-import java.util.Map;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.logging.Logger;
 
 public class BindableAdapterUtils {
 
+    private static Logger LOGGER = Logger.getLogger(BindableAdapterUtils.class.getName());
+    
     public static final String SHAPE_SET_SUFFIX = "ShapeSet";
     
     public static String getDefinitionId( final Class<?> pojoClass ) {
@@ -55,70 +54,24 @@ public class BindableAdapterUtils {
         return pojoClass;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T> T newInstance( final Class<?> pojoType ) {
+    public static  <T> Collection<Class<?>> toClassCollection( final Iterable<T> source ) {
 
-        if ( null != pojoType ) {
+        if ( null != source && source.iterator().hasNext() ) {
 
-            return (T) DataBinder.forType( pojoType ).getModel();
+            final LinkedList<Class<?>> result = new LinkedList<>();
 
-        }
+            for ( final Object sourceObject : source ) {
 
-        return null;
-    }
+                result.add( sourceObject.getClass() );
 
-    @SuppressWarnings("unchecked")
-    public static <T> T clone( final T pojo ) {
-        
-        if ( null != pojo ) {
-
-            final BindableProxy proxy = (BindableProxy) DataBinder.forModel (pojo ).getModel();
-            
-            return (T) proxy.deepUnwrap();
-
-        }
-        
-        return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T, R> R morph( final T pojo,
-                                  final Class<?> targetType ) {
-
-        if (null != pojo) {
-            
-            final HasProperties hasProperties = (HasProperties) DataBinder.forModel( pojo ).getModel();
-
-            if ( null != hasProperties ) {
-                
-                final Map<String, PropertyType> propertyTypeMap = hasProperties.getBeanProperties();
-
-                if ( null != propertyTypeMap && !propertyTypeMap.isEmpty() ) {
-
-                    final Object target = DataBinder.forType( targetType ).getModel();
-                    final HasProperties targetProperties = (HasProperties) DataBinder.forModel( target ).getModel();
-
-                    for ( final Map.Entry<String, PropertyType> entry : propertyTypeMap.entrySet() ) {
-                        
-                        final String pId = entry.getKey();
-                        
-                        // TODO: Check here if property must be set into target taget type.
-                        if ( true ) {
-                            
-                            targetProperties.set( pId, hasProperties.get( pId ) );
-                        }
-                        
-                    }
-                    
-                    return (R) target;
-                    
-                }
-                
             }
 
+            return result;
+
         }
 
         return null;
+
     }
-    
+
 }

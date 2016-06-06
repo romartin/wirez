@@ -51,12 +51,12 @@ public final class StartNoneEventShapeProxy implements CircleProxy<StartNoneEven
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final StartNoneEvent element ) {
         return StartNoneEvent.StartNoneEventBuilder.COLOR;
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final StartNoneEvent element ) {
         return StartNoneEvent.description;
     }
 }

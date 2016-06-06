@@ -50,7 +50,7 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
         FactoryManager factoryManager = context.getFactoryManager();
 
         // Build the graph node for the definition.
-        String definitionId = context.getOryxManager().getMappingsManager().getDefinitionId( definitionClass );
+        String definitionId = getDefinitionToBuild( context );
         T result = (T) factoryManager.newElement(this.nodeId, definitionId);
         
         // Set the def properties.
@@ -63,6 +63,10 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
         afterNodeBuild(context, result);
         
         return result;
+    }
+    
+    protected String getDefinitionToBuild( BuilderContext context ) {
+        return context.getOryxManager().getMappingsManager().getDefinitionId( definitionClass );
     }
 
     protected void setBounds(BuilderContext context, T node) {

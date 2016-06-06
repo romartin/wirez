@@ -30,6 +30,9 @@ public class ${className} extends ${parentClassName} {
     
     public static final String ID = "${className}";
 
+    protected ${className}() {
+    }
+
     @Inject
     public ${className}( final DefinitionManager definitionManager) {
         super( definitionManager );

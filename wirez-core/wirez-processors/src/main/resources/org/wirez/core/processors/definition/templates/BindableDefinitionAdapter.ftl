@@ -17,7 +17,7 @@
 package ${packageName};
 
 import ${parentAdapterClassName};
-import ${utilsClassName};
+import ${adapterFactoryClassName};
 
 import javax.annotation.Generated;
 import javax.enterprise.context.ApplicationScoped;
@@ -26,15 +26,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.wirez.core.definition.adapter.binding.BindableAdapterFactory;
+import org.wirez.core.definition.adapter.binding.BindableDefinitionAdapter;
+import org.wirez.core.definition.adapter.binding.BindableDefinitionAdapterProxy;
 
 @Generated("${generatedByClassName}")
 @ApplicationScoped
-public class ${className} extends ${parentAdapterClassName} {
-
-    @Inject
-    public ${className}(${utilsClassName} utils) {
-        super(utils);
-    }
+public class ${className} extends ${parentAdapterClassName}<Object> {
 
     private static final Map<Class, String> categoryFieldNames = new HashMap<Class, String>(${categoryFieldNamesSize}) {{
         <#list categoryFieldNames as categoryFieldName>
@@ -92,50 +90,26 @@ public class ${className} extends ${parentAdapterClassName} {
             }} );
         </#list>
     }};
-        
-    @Override
-    protected Class<?> getNamePropertyClass() {
-        return ${namePropertyClass};
-    }
-        
-    @Override
-    protected Map<Class, Set<String>> getPropertySetsFieldNames() {
-        return propertySetsFieldNames;
-    }
-    
-    @Override
-    protected Map<Class, Set<String>> getPropertiesFieldNames() {
-        return propertiesFieldNames;
+
+    protected ${className}() {
     }
 
-    @Override
-    protected Map<Class, Class> getPropertyGraphElementFieldNames() {
-         return graphElementFieldNames;
+    @Inject
+    public ${className}(${adapterFactoryClassName} adapterFactory) {
+        super(adapterFactory);
     }
     
     @Override
-    protected Map<Class, String> getPropertyElementFactoryFieldNames() {
-          return elementFactoryFieldNames;
-    }
-    
-    @Override
-    protected Map<Class, String> getPropertyLabelsFieldNames() {
-          return labelsFieldNames;
-    }
-    
-    @Override
-    protected Map<Class, String> getPropertyTitleFieldNames() {
-          return titleFieldNames;
-    }
-    
-    @Override
-    protected Map<Class, String> getPropertyCategoryFieldNames() {
-          return categoryFieldNames;
-    }
-
-    @Override
-    protected Map<Class, String> getPropertyDescriptionFieldNames() {
-        return descriptionFieldNames;
+    protected void setBindings(final BindableDefinitionAdapter<Object> adapter) {
+        adapter.setBindings(  ${namePropertyClass},
+                propertySetsFieldNames,
+                propertiesFieldNames,
+                graphElementFieldNames,
+                elementFactoryFieldNames,
+                labelsFieldNames,
+                titleFieldNames,
+                categoryFieldNames,
+                descriptionFieldNames);
     }
                 
 }

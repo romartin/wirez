@@ -35,6 +35,11 @@ public final class ViewImpl<W> implements View<W> {
     }
 
     @Override
+    public void setDefinition(final W definition) {
+        this.definition = definition;
+    }
+
+    @Override
     public Bounds getBounds() {
         return bounds;
     }

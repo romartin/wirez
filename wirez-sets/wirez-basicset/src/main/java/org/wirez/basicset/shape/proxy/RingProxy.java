@@ -55,12 +55,12 @@ public final class RingProxy implements org.wirez.shapes.proxy.RingProxy<Ring> {
     }
 
     @Override
-    public String getDescription() {
+    public String getDescription( final Ring element ) {
         return Ring.title;
     }
 
     @Override
-    public String getGlyphBackgroundColor() {
+    public String getGlyphBackgroundColor( final Ring elementRing) {
         return Ring.RingBuilder.COLOR;
     }
     

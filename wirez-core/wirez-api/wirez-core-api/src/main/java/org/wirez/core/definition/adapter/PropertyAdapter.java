@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * A Property pojo adapter.. 
  */
-public interface PropertyAdapter<T, V> extends Adapter<T> {
+public interface PropertyAdapter<T, V> extends PriorityAdapter {
 
     /**
      * Returns the property's identifier for a given pojo.

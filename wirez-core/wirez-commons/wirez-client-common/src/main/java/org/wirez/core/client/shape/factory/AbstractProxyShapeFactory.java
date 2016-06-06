@@ -16,12 +16,14 @@
 
 package org.wirez.core.client.shape.factory;
 
+import org.wirez.core.api.FactoryManager;
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.definition.shape.ShapeProxy;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 import org.wirez.core.client.shape.view.ShapeView;
+import org.wirez.core.definition.util.DefinitionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +33,16 @@ public abstract class AbstractProxyShapeFactory<W, V extends ShapeView, S extend
         extends AbstractBindableShapeFactory<W, S> implements ShapeProxyFactory<W, AbstractCanvasHandler, S, P> {
     
     protected final Map<Class<?>, P> proxies = new HashMap<Class<?>, P>();
+
+    protected FactoryManager factoryManager;
+
+    protected AbstractProxyShapeFactory() {
+    }
     
+    public AbstractProxyShapeFactory( final FactoryManager factoryManager ) {
+        this.factoryManager = factoryManager;
+    }
+
     public Set<Class<?>> getSupportedModelClasses() {
         return proxies.keySet();
     }
@@ -39,7 +50,9 @@ public abstract class AbstractProxyShapeFactory<W, V extends ShapeView, S extend
     @Override
     public String getDescription( final String definitionId ) {
         final P proxy = getProxy( definitionId );
-        return proxy.getDescription();
+        // TODO: Avoid creating domain object instance here.
+        final W tempObject = factoryManager.newDomainObject( definitionId );
+        return proxy.getDescription( tempObject );
     }
 
     @Override

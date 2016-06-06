@@ -1,6 +1,6 @@
 package org.wirez.client.mobile.session.impl;
 
-import org.wirez.client.mobile.api.Mobile;
+import org.wirez.client.mobile.api.platform.Mobile;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.pan.PanControl;

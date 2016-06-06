@@ -1,4 +1,4 @@
-package org.wirez.client.mobile.api;
+package org.wirez.client.mobile.api.platform;
 
 import java.lang.annotation.RetentionPolicy;
 

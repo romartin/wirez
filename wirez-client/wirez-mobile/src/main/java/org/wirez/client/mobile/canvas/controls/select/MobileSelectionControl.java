@@ -1,7 +1,7 @@
 package org.wirez.client.mobile.canvas.controls.select;
 
 import com.google.gwt.core.client.GWT;
-import org.wirez.client.mobile.api.Mobile;
+import org.wirez.client.mobile.api.platform.Mobile;
 import org.wirez.core.client.animation.Deselect;
 import org.wirez.core.client.animation.Select;
 import org.wirez.core.client.animation.ShapeAnimation;

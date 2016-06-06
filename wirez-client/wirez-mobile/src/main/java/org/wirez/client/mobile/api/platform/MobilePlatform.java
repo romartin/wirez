@@ -1,4 +1,4 @@
-package org.wirez.client.mobile.api;
+package org.wirez.client.mobile.api.platform;
 
 import org.wirez.client.mobile.session.impl.MobileFullSession;
 import org.wirez.client.mobile.session.impl.MobileReadOnlySession;

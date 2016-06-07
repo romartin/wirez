@@ -6,6 +6,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.livespark.formmodeler.metaModel.FieldDef;
+import org.livespark.formmodeler.metaModel.TextArea;
 import org.wirez.bpmn.api.BPMNPropertySet;
 import org.wirez.core.api.definition.annotation.propertyset.Property;
 import org.wirez.core.api.definition.annotation.propertyset.PropertySet;
@@ -23,6 +24,7 @@ public class BPMNGeneral implements BPMNPropertySet {
 
     @Property
     @FieldDef( label = "Documentation", property = "value")
+    @TextArea( rows = 3, placeHolder = "Documentation" )
     @Valid
     private Documentation documentation;
 

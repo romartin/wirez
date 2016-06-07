@@ -36,7 +36,7 @@ public class ColorPickerFieldRenderer extends FieldRenderer<ColorPickerFieldDefi
     }
 
     @Override
-    public String getSupportedFieldDefinitionCode() {
+    public String getSupportedCode() {
         return ColorPickerFieldDefinition.CODE;
     }
 }

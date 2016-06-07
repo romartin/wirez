@@ -43,8 +43,7 @@ public class ColorPickerAnnotationProcessor extends AbstractFieldAnnotationProce
     protected ColorPickerFieldDefinition buildFieldDefinition( Annotation annotation, FieldSetting setting ) {
         ColorPickerFieldDefinition field = new ColorPickerFieldDefinition();
 
-        if ( !Arrays.asList( field.getSupportedTypes() ).contains( setting.getType().getName() )
-                || !supportsAnnotation( annotation )) {
+        if ( !supportsAnnotation( annotation )) {
             return null;
         }
 

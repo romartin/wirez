@@ -17,16 +17,14 @@ public class ColorPickerFieldDefinition extends FieldDefinition {
 
     public static final String CODE = "ColorPicker";
 
-    private String code = CODE;
 
     @FieldDef( label = "Default value")
     @ColorPicker
     @Pattern( regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "Invalid color code")
     private String defaultValue;
 
-    @Override
-    public String getCode() {
-        return code;
+    public ColorPickerFieldDefinition() {
+        super( CODE );
     }
 
     public String getDefaultValue() {
@@ -35,13 +33,6 @@ public class ColorPickerFieldDefinition extends FieldDefinition {
 
     public void setDefaultValue( String defaultValue ) {
         this.defaultValue = defaultValue;
-    }
-
-    @Override
-    public String[] getSupportedTypes() {
-        return new String[] {
-                String.class.getName()
-        };
     }
 
     @Override

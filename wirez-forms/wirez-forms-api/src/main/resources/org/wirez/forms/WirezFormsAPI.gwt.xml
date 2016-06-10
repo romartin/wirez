@@ -23,4 +23,5 @@
   <inherits name="org.livespark.formmodeler.FormModelerAPI"/>
 
   <source path="model"/>
+  <source path="service"/>
 </module>

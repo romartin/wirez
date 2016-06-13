@@ -36,8 +36,7 @@ import javax.inject.Inject;
 public class WirezPerspective {
 
     private static final int EAST_PANEL_WIDTH = 600;
-    private static final int NAVIGATOR_PANEL_HEIGHT = 400;
-    
+
     PanelDefinition palettePanel;
     PanelDefinition notificationsPanel;
     PanelDefinition propertiesPanel;
@@ -74,7 +73,8 @@ public class WirezPerspective {
         propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         propertiesPanel.setMinWidth( EAST_PANEL_WIDTH );
         propertiesPanel.setWidth( EAST_PANEL_WIDTH );
-        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
+        // propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
+        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( FormsPropertiesScreen.SCREEN_ID ) ) );
 
         propertiesPanel.appendChild(CompassPosition.SOUTH, treeExplorerPanel);
 

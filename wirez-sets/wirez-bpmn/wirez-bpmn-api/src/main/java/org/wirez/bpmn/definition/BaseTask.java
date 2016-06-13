@@ -18,6 +18,7 @@ package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Width;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
@@ -48,18 +49,22 @@ public abstract class BaseTask implements BPMNDefinition {
     public static final transient String description = "A task is a unit of work - the job to be performed";
 
     @PropertySet
+    @FieldDef( label = "General Settings", position = 0)
     protected BPMNGeneral general;
 
     @PropertySet
+    @FieldDef( label = "Background Settings", position = 1)
     protected BackgroundSet backgroundSet;
 
     @PropertySet
     protected FontSet fontSet;
 
     @Property
+    @FieldDef(label = "Width", property = "value")
     protected Width width;
 
     @Property
+    @FieldDef(label = "Height", property = "value")
     protected Height height;
 
     @Property
@@ -72,27 +77,35 @@ public abstract class BaseTask implements BPMNDefinition {
     protected Mean mean;
 
     @Property
+    @FieldDef(label = "TimeUnit", property = "value")
     protected TimeUnit timeUnit;
 
     @Property
+    @FieldDef(label = "Standard Deviation", property = "value")
     protected StandardDeviation standardDeviation;
 
     @Property
+    @FieldDef(label = "Distribution Type", property = "value")
     protected DistributionType distributionType;
 
     @Property
+    @FieldDef(label = "Quantity", property = "value")
     protected Quantity quantity;
 
     @Property
+    @FieldDef(label = "WorkingHours", property = "value")
     protected WorkingHours workingHours;
 
     @Property
+    @FieldDef(label = "UnitCost", property = "value")
     protected UnitCost unitCost;
 
     @Property
+    @FieldDef(label = "Currency", property = "value")
     protected Currency currency;
 
     @Property
+    @FieldDef(label = "Task Type", property = "value")
     protected final TaskType taskType;
     
     @Labels

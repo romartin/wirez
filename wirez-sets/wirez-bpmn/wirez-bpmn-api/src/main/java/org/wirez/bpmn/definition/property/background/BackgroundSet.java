@@ -3,10 +3,15 @@ package org.wirez.bpmn.definition.property.background;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
+import org.livespark.formmodeler.metaModel.Slider;
 import org.wirez.bpmn.definition.BPMNPropertySet;
 import org.wirez.core.definition.annotation.Name;
 import org.wirez.core.definition.annotation.propertyset.Property;
 import org.wirez.core.definition.annotation.propertyset.PropertySet;
+import org.wirez.forms.meta.definition.ColorPicker;
+
+import javax.validation.Valid;
 
 @Portable
 @Bindable
@@ -17,12 +22,21 @@ public class BackgroundSet implements BPMNPropertySet {
     public static final transient String propertySetName = "Background Set";
 
     @Property
+    @FieldDef(label = "Background Color", property = "value")
+    @ColorPicker
+    @Valid
     private BgColor bgColor;
 
     @Property
+    @FieldDef(label = "Border Color", property = "value")
+    @ColorPicker
+    @Valid
     private BorderColor borderColor;
 
     @Property
+    @FieldDef(label = "Border Size", property = "value")
+    @Slider( min = 0.0, max = 5.0, step = 0.5)
+    @Valid
     private BorderSize borderSize;
 
     public BackgroundSet() {

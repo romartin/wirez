@@ -33,6 +33,9 @@
     <version.de.benediktmeurer.gwt-slf4j>0.0.2</version.de.benediktmeurer.gwt-slf4j>
     <version.org.jbpm.jbpm-bpmn2-emfextmodel>6.3.0.Final</version.org.jbpm.jbpm-bpmn2-emfextmodel>
     <version.javax.el.api>2.2</version.javax.el.api>
+    <version.org.livespark>0.0.1-SNAPSHOT</version.org.livespark>
+    <version.hibernate.validator>4.1.0.Final</version.hibernate.validator>
+    <version.validation.api>1.0.0.GA</version.validation.api>
     <!-- TODO: Remove when moving to latest parent IP BOM. -->
     <version.com.google.gwt.gwtmockito>1.1.6</version.com.google.gwt.gwtmockito>
     <version.com.ahome-it.lienzo-tests>1.0.0-RC1</version.com.ahome-it.lienzo-tests>
@@ -139,6 +142,75 @@
         <groupId>de.benediktmeurer.gwt-slf4j</groupId>
         <artifactId>gwt-slf4j</artifactId>
         <version>${version.de.benediktmeurer.gwt-slf4j}</version>
+      </dependency>
+
+      <!-- LiveSpark. -->
+
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-crud-component</artifactId>
+        <version>${version.org.livespark}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-form-modeler-api</artifactId>
+        <version>${version.org.livespark}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-form-modeler-processing-engine</artifactId>
+        <version>${version.org.livespark}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-form-modeler-dynamic-renderer-api</artifactId>
+        <version>${version.org.livespark}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-form-modeler-dynamic-renderer-backend</artifactId>
+        <version>${version.org.livespark}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-form-modeler-dynamic-renderer-client</artifactId>
+        <version>${version.org.livespark}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-form-modeler-rendering-api</artifactId>
+        <version>${version.org.livespark}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${version.validation.api}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${version.validation.api}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${version.hibernate.validator}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${version.hibernate.validator}</version>
+        <classifier>sources</classifier>
       </dependency>
 
       <!-- JSON parsing. -->

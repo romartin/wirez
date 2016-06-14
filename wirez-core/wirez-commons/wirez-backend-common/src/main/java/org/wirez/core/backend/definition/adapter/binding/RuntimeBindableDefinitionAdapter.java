@@ -2,68 +2,22 @@ package org.wirez.core.backend.definition.adapter.binding;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.wirez.core.backend.definition.adapter.AbstractRuntimeAdapter;
+import org.wirez.core.definition.adapter.binding.AbstractBindableDefinitionAdapter;
 import org.wirez.core.definition.adapter.binding.BindableDefinitionAdapter;
-import org.wirez.core.graph.Element;
+import org.wirez.core.definition.util.DefinitionUtils;
 
-import java.util.Map;
 import java.util.Set;
 
-class RuntimeBindableDefinitionAdapter<T>  extends AbstractRuntimeAdapter<T>
+import static org.wirez.core.backend.definition.adapter.RuntimeAdapterUtils.getFieldValue;
+import static org.wirez.core.backend.definition.adapter.RuntimeAdapterUtils.getFieldValues;
+
+class RuntimeBindableDefinitionAdapter<T>  extends AbstractBindableDefinitionAdapter<T>
         implements BindableDefinitionAdapter<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(RuntimeBindableDefinitionAdapter.class);
 
-    private Class<?> namePropertyClass;
-    private Map<Class, Set<String>> propertySetsFieldNames;
-    private Map<Class, Set<String>> propertiesFieldNames;
-    private Map<Class, Class> propertyGraphElementFieldNames;
-    private Map<Class, String> propertyElementFactoryFieldNames;
-    private Map<Class, String> propertyLabelsFieldNames;
-    private Map<Class, String> propertyTitleFieldNames;
-    private Map<Class, String> propertyCategoryFieldNames;
-    private Map<Class, String> propertyDescriptionFieldNames;
-
-    @Override
-    public void setBindings( final Class<?> namePropertyClass,
-                             final Map<Class, Set<String>> propertySetsFieldNames,
-                             final Map<Class, Set<String>> propertiesFieldNames,
-                             final Map<Class, Class> propertyGraphElementFieldNames,
-                             final Map<Class, String> propertyElementFactoryFieldNames,
-                             final Map<Class, String> propertyLabelsFieldNames,
-                             final Map<Class, String> propertyTitleFieldNames,
-                             final Map<Class, String> propertyCategoryFieldNames,
-                             final Map<Class, String> propertyDescriptionFieldNames) {
-        this.namePropertyClass = namePropertyClass;
-        this.propertySetsFieldNames = propertySetsFieldNames;
-        this.propertiesFieldNames = propertiesFieldNames;
-        this.propertyGraphElementFieldNames = propertyGraphElementFieldNames;
-        this.propertyElementFactoryFieldNames = propertyElementFactoryFieldNames;
-        this.propertyLabelsFieldNames = propertyLabelsFieldNames;
-        this.propertyTitleFieldNames = propertyTitleFieldNames;
-        this.propertyCategoryFieldNames = propertyCategoryFieldNames;
-        this.propertyDescriptionFieldNames = propertyDescriptionFieldNames;
-    }
-
-    @Override
-    public String getId(T definition) {
-        return getDefinitionId( definition );
-    }
-
-    @Override
-    public Object getNameProperty(T definition) {
-        String namePropId = getPropertyId( namePropertyClass );
-        Set<?> properties = getProperties( definition );
-        if ( null != properties && !properties.isEmpty() ) {
-            for ( Object property : properties ) {
-                String pId = getPropertyId( property.getClass() );
-                if ( pId.equals( namePropId) ) {
-                    return property;
-                }
-            }
-        }
-
-        return null;
+    RuntimeBindableDefinitionAdapter( final DefinitionUtils definitionUtils ) {
+        super(definitionUtils);
     }
 
     @Override
@@ -128,7 +82,7 @@ class RuntimeBindableDefinitionAdapter<T>  extends AbstractRuntimeAdapter<T>
     }
 
     @Override
-    public Set<?> getProperties(T definition) {
+    protected Set<?> getBindProperties(T definition) {
         Class<?> type = definition.getClass();
         Set<String> fields = propertiesFieldNames.get( type );
         try {
@@ -138,24 +92,6 @@ class RuntimeBindableDefinitionAdapter<T>  extends AbstractRuntimeAdapter<T>
         }
 
         return null;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Class<? extends Element> getGraphElement(T definition) {
-        Class<?> type = definition.getClass();
-        return propertyGraphElementFieldNames.get( type );
-    }
-
-    @Override
-    public String getElementFactory(T definition) {
-        Class<?> type = definition.getClass();
-        return propertyElementFactoryFieldNames.get( type );
-    }
-
-    @Override
-    public boolean accepts(Class<?> type) {
-        return null != propertyGraphElementFieldNames && propertyGraphElementFieldNames.containsKey( type );
     }
 
 }

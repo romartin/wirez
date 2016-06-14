@@ -44,10 +44,10 @@ public class CanvasCommandManagerImpl extends AbstractCanvasCommandManager<Abstr
     @Override
     @SuppressWarnings("unchecked")
     protected void afterCommandExecuted(final AbstractCanvasHandler context,
-                                        final Command<AbstractCanvasHandler, CanvasViolation> command, 
+                                        final Command<AbstractCanvasHandler, CanvasViolation> command,
                                         final CommandResult<CanvasViolation> result) {
         super.afterCommandExecuted( context, command, result );
-        
+
         if ( null != canvasCommandExecutedEvent ) {
             canvasCommandExecutedEvent.fire( new CanvasCommandExecutedEvent( context, command, result ) );
         }

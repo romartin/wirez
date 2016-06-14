@@ -1,28 +1,6 @@
 
 - BPMN graph impl -> add process properties support
 
-- Morphing 
-    - Annot Processing
-        - annotations 
-            - Add Morphing annotations
-            - Move CanXXX (rules) & Definition annotations to base class? -> refactor adapters...
-        - processors 
-            - generate morphing adapters from morphing annotations
-            - check morph properties must be read only and final?
-    - Support
-        - End events
-        - Task -> types & subprocess
-        - Gateways
-    - Issues
-        - keep graph element's UUID?
-        - BPMN unit test class 
-            - mock morphAdapters or provide some runtime test scope for it.... as TaskMorphAdapter will be generated
-            - OryxMappingsManager -> do not hardcode inheritance morph types....
-        - Toolbox
-            - toolbox morph command -> only show if exist morph targets
-            - one button for each target morph base
-        - Check rules on MorphNodeCommand?
-
 - Docking
     - issues
         - undock

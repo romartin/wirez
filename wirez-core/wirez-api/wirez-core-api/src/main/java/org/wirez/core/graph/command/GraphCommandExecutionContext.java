@@ -10,7 +10,7 @@ import org.wirez.core.rule.graph.GraphRulesManager;
 public interface GraphCommandExecutionContext {
     
     DefinitionManager getDefinitionManager();
-    
+
     FactoryManager getFactoryManager();
     
     GraphRulesManager getRulesManager();

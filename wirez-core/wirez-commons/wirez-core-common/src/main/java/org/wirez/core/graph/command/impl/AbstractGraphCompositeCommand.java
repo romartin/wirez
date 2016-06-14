@@ -49,7 +49,7 @@ public abstract class AbstractGraphCompositeCommand extends AbstractCompositeCom
     }
 
     private EmptyRulesCommandExecutionContext buildEmptyExecutionContext(final GraphCommandExecutionContext context ) {
-        return new EmptyRulesCommandExecutionContext( context.getDefinitionManager(), 
+        return new EmptyRulesCommandExecutionContext( context.getDefinitionManager(),
                 context.getFactoryManager() );
     }
 }

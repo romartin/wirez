@@ -1,7 +1,12 @@
 package org.wirez.core.client.util;
 
 import com.google.gwt.core.client.GWT;
+import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.canvas.Canvas;
@@ -10,6 +15,8 @@ import org.wirez.core.client.shape.EdgeShape;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.animation.HasAnimations;
+import org.wirez.core.graph.content.definition.Definition;
+import org.wirez.core.graph.content.view.View;
 
 import java.util.Collection;
 
@@ -18,7 +25,16 @@ public class ShapeUtils {
     public static String getModuleAbsPath( final String path ) {
         return GWT.getModuleBaseURL() + path;
     }
-    
+
+    public static ShapeFactory getDefaultShapeFactory( final AbstractCanvasHandler context,
+                                            final Element<? extends Definition<?>> element ) {
+        final ClientDefinitionManager manager = context.getClientDefinitionManager();
+        final Object def = element.getContent().getDefinition();
+        final DefinitionAdapter<Object> adapter = manager.getDefinitionAdapter( def.getClass() );
+        final String id = adapter.getId( def );
+        return context.getShapeManager().getFactory( id );
+    }
+
     @SuppressWarnings("unchecked")
     public static void applyConnections(final Edge<?, ?> edge,
                                  final CanvasHandler canvasHandler,

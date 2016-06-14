@@ -42,7 +42,7 @@ public class RuntimeBindingUtils {
 
                             // Just skip it, Go to next property.
 
-                            LOGGER.log( Level.INFO, "RuntimeBindingUtils#merge - Skipping merge property [" + pId + "]" );
+                            LOGGER.log( Level.INFO, "RuntimeBindingUtils#merge - Cannot set merge property [" + pId + "]" );
 
                         }
 

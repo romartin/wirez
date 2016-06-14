@@ -22,7 +22,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.definition.adapter.MorphAdapter;
-import org.wirez.core.definition.util.MorphingUtils;
+import org.wirez.core.definition.morph.MorphDefinition;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.command.GraphCommandExecutionContext;
@@ -39,13 +39,17 @@ import java.util.Set;
 public final class MorphNodeCommand extends AbstractGraphCommand {
 
     private Node<Definition, Edge> candidate;
+    private MorphDefinition morphDefinition;
     private String morphTarget;
     private String oldMorphTarget;
 
     public MorphNodeCommand(@MapsTo("candidate") Node<Definition, Edge> candidate,
+                            @MapsTo("morphDefinition") MorphDefinition morphDefinition,
                             @MapsTo("morphTarget") String morphTarget) {
         this.candidate = PortablePreconditions.checkNotNull( "candidate",
                                                              candidate );
+        this.morphDefinition = PortablePreconditions.checkNotNull( "morphDefinition",
+                morphDefinition );
         this.morphTarget = PortablePreconditions.checkNotNull( "morphTarget",
                 morphTarget );
         
@@ -66,14 +70,12 @@ public final class MorphNodeCommand extends AbstractGraphCommand {
         if ( !results.getType().equals( CommandResult.Type.ERROR ) ) {
             
             final DefinitionManager definitionManager = context.getDefinitionManager();
-            final MorphingUtils morphingUtils = new MorphingUtils( definitionManager );
-            
+
             final Object currentDef = candidate.getContent().getDefinition();
             final String currentDefId = definitionManager.getDefinitionAdapter( currentDef.getClass() ).getId( currentDef );
             this.oldMorphTarget = currentDefId;
 
-
-            final MorphAdapter<Object, ?> morphAdapter = morphingUtils.getMorphAdapter( currentDef, morphTarget );
+            final MorphAdapter<Object> morphAdapter = context.getDefinitionManager().getMorphAdapter( currentDef.getClass() );
 
             if ( null == morphAdapter ) {
 
@@ -82,7 +84,7 @@ public final class MorphNodeCommand extends AbstractGraphCommand {
 
             }
             
-            final Object newDef = morphAdapter.morph( currentDef, morphTarget );
+            final Object newDef = morphAdapter.morph( currentDef, morphDefinition, morphTarget );
 
             if ( null == newDef ) {
 
@@ -120,7 +122,7 @@ public final class MorphNodeCommand extends AbstractGraphCommand {
 
     @Override
     public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
-        final MorphNodeCommand undoCommand = new MorphNodeCommand( candidate, oldMorphTarget );
+        final MorphNodeCommand undoCommand = new MorphNodeCommand( candidate, morphDefinition, oldMorphTarget );
         return undoCommand.execute( context );
     }
 

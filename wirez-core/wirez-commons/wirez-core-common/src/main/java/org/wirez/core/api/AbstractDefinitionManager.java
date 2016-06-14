@@ -16,9 +16,8 @@
 
 package org.wirez.core.api;
 
-import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.definition.adapter.*;
-import org.wirez.core.definition.adapter.MorphAdapter;
+import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -127,20 +126,20 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Iterable<MorphAdapter<T, ?>> getMorphAdapters(final Class<?> type) {
-        
-        final List<MorphAdapter<T, ?>> result = new LinkedList<>();
-        
+    public <T> MorphAdapter<T> getMorphAdapter( final Class<?> type ) {
+
         final Class<?> clazz = handleBindableProxyClass( type );
-        
         for ( MorphAdapter adapter : morphAdapters ) {
-            
+
             if ( adapter.accepts( clazz ) ) {
-                result.add( adapter );
+
+                return adapter;
+
             }
+
         }
-        
-        return result.isEmpty() ? null : result;
+
+        return null;
     }
 
     private Class<?> handleBindableProxyClass(final Class<?> type) {

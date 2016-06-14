@@ -66,6 +66,7 @@
                                and so is drag, when you release. it jumps
                                there must be a way to get a viewport x/y offset
                                rather than calculate it every single time
+                    -> see mediators_issues.txt
 
          - Externalize ControlHandles to be able to provide our own externally
          - Externalize docking visualization to be able to provide our own externally

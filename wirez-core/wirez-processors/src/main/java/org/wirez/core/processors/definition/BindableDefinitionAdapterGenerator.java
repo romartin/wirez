@@ -53,7 +53,8 @@ public class BindableDefinitionAdapterGenerator extends AbstractBindableAdapterG
         root.put("adapterFactoryClassName", BindableAdapterFactory.class.getName());
         root.put("namePropertyClass",
                 namePropertyClass);
-        
+
+        addFields("baseTypes", root, processingDefinitionAnnotations.getBaseTypes());
         addFields("categoryFieldNames", root, processingDefinitionAnnotations.getCategoryFieldNames());
         addFields("titleFieldNames", root, processingDefinitionAnnotations.getTitleFieldNames());
         addFields("descriptionFieldNames", root, processingDefinitionAnnotations.getDescriptionFieldNames());

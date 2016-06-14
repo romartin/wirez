@@ -1,5 +1,6 @@
 package org.wirez.core.graph.command.factory;
 
+import org.wirez.core.definition.morph.MorphDefinition;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
@@ -122,9 +123,10 @@ public class GraphCommandFactoryImpl implements GraphCommandFactory {
     }
 
     @Override
-    public MorphNodeCommand MORPH_NODE( final Node<Definition, Edge> candidate, 
+    public MorphNodeCommand MORPH_NODE( final Node<Definition, Edge> candidate,
+                                        final MorphDefinition morphDefinition,
                                         final String morphTarget ) {
-        return new MorphNodeCommand( candidate, morphTarget );
+        return new MorphNodeCommand( candidate, morphDefinition, morphTarget );
     }
 
 }

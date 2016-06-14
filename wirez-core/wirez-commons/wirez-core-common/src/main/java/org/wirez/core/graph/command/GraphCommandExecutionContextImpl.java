@@ -14,8 +14,8 @@ public class GraphCommandExecutionContextImpl implements GraphCommandExecutionCo
     protected final transient GraphRulesManager rulesManager;
     protected final transient GraphUtils graphUtils;
 
-    public GraphCommandExecutionContextImpl(final DefinitionManager definitionManager, 
-                                            final FactoryManager factoryManager, 
+    public GraphCommandExecutionContextImpl(final DefinitionManager definitionManager,
+                                            final FactoryManager factoryManager,
                                             final GraphRulesManager rulesManager, 
                                             final GraphUtils graphUtils) {
         this.definitionManager = definitionManager;

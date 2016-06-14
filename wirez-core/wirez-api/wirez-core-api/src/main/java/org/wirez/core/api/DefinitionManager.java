@@ -17,7 +17,6 @@
 package org.wirez.core.api;
 
 import org.wirez.core.definition.adapter.*;
-import org.wirez.core.definition.adapter.MorphAdapter;
 
 import java.util.Collection;
 
@@ -61,6 +60,6 @@ public interface DefinitionManager {
     /**
      * Returns the Morphing adapter instance for a given Definition type.
      */
-    <T> Iterable<MorphAdapter<T, ?>> getMorphAdapters( Class<?> type );
-    
+    <T> MorphAdapter<T> getMorphAdapter( Class<?> type );
+
 }

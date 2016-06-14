@@ -4,6 +4,9 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.definition.adapter.PropertyAdapter;
 import org.wirez.core.definition.adapter.PropertySetAdapter;
+import org.wirez.core.definition.adapter.binding.HasInheritance;
+import org.wirez.core.definition.morph.MorphDefinition;
+import org.wirez.core.definition.morph.MorphPolicy;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -115,6 +118,39 @@ public class DefinitionUtils {
 
         return null;
     }
+
+    /**
+     * Returns the identifiers for the defintion type and its parent, if any.
+     */
+    public <T> String[] getDefinitionIds( final T definition ) {
+
+        final Class<?> type = definition.getClass();
+        final DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( type );
+        final String definitionId = definitionAdapter.getId( definition );
+
+        String baseId = null;
+        if ( definitionAdapter instanceof HasInheritance) {
+
+            baseId = ( (HasInheritance) definitionAdapter).getBaseType( type );
+
+        }
+
+        return new String[] { definitionId, baseId };
+
+    }
+
+    public boolean isAllPolicy( final MorphDefinition definition ) {
+        return MorphPolicy.ALL.equals( definition.getPolicy() );
+    }
+
+    public boolean isNonePolicy( final MorphDefinition definition ) {
+        return MorphPolicy.NONE.equals( definition.getPolicy() );
+    }
+
+    public boolean isDefaultPolicy( final MorphDefinition definition ) {
+        return MorphPolicy.DEFAULT.equals( definition.getPolicy() );
+    }
+
 
     public DefinitionManager getDefinitionManager() {
         return definitionManager;

@@ -17,7 +17,7 @@ import org.wirez.core.client.components.glyph.GlyphTooltip;
 import org.wirez.core.client.components.palette.glyph.SimpleGlyphPalette;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.session.command.Session;
-import org.wirez.core.definition.util.MorphingUtils;
+import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.lookup.util.CommonLookups;
 
@@ -29,8 +29,7 @@ import javax.inject.Inject;
 public class MorphToolboxCommand extends org.wirez.core.client.canvas.controls.toolbox.command.morph.AbstractMorphCommand<Shape<?>> {
     
     @Inject
-    public MorphToolboxCommand(final DefinitionManager definitionManager,
-                               final MorphingUtils morphingUtils,
+    public MorphToolboxCommand(final DefinitionUtils definitionUtils,
                                final CanvasCommandFactory commandFactory,
                                final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
                                final ClientFactoryServices clientFactoryServices,
@@ -44,7 +43,7 @@ public class MorphToolboxCommand extends org.wirez.core.client.canvas.controls.t
                                final @Select ShapeAnimation selectionAnimation,
                                final @Deselect ShapeDeSelectionAnimation deSelectionAnimation) {
         
-        super( definitionManager, morphingUtils, commandFactory, canvasCommandManager, clientFactoryServices,
+        super( definitionUtils, commandFactory, canvasCommandManager, clientFactoryServices,
                 commonLookups,shapeManager, glyphTooltip, glyphMiniPalette, nodeDragProxyFactory,
                 nodeBuilderControl, graphBoundsIndexer, selectionAnimation, deSelectionAnimation,
                 SVGUtils.createSVGIcon(SVGUtils.getSightIcon()) );

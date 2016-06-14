@@ -1,5 +1,6 @@
 package org.wirez.bpmn.shape.proxy;
 
+import org.wirez.bpmn.definition.BaseEndEvent;
 import org.wirez.bpmn.definition.EndTerminateEvent;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.*;

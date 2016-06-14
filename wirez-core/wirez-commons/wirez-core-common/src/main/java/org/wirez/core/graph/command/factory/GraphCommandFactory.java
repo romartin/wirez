@@ -1,5 +1,6 @@
 package org.wirez.core.graph.command.factory;
 
+import org.wirez.core.definition.morph.MorphDefinition;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
@@ -70,6 +71,7 @@ public interface GraphCommandFactory {
                                                             Object value);
     
     MorphNodeCommand MORPH_NODE( Node<Definition, Edge> candidate,
+                                 MorphDefinition morphDefinition,
                                  String morphTarget );
     
 }

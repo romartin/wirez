@@ -160,7 +160,7 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
                             
                         } catch (Exception e) {
                             
-                            LOG.error("Cannot parse value [" + pValue + "] for property [" + pId + "]");
+                            LOG.error("Cannot parse value [" + pValue + "] for property [" + pId + "]", e);
                             
                         }
                         

@@ -6,7 +6,6 @@ import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.api.AbstractDefinitionManager;
 import org.wirez.core.definition.DefinitionSetProxy;
 import org.wirez.core.definition.adapter.*;
-import org.wirez.core.definition.adapter.MorphAdapter;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -86,12 +85,12 @@ public class ClientDefinitionManager extends AbstractDefinitionManager {
         sortAdapters(propertyAdapters);
 
         // Morph adapters.
-        Collection<SyncBeanDef<MorphAdapter>> beanMorphAdapters = beanManager.lookupBeans(MorphAdapter.class);
-        for (SyncBeanDef<MorphAdapter> morphAdapter : beanMorphAdapters ) {
+        Collection<SyncBeanDef<MorphAdapter>> beanMorphAdapters = beanManager.lookupBeans( MorphAdapter.class );
+        for ( SyncBeanDef<MorphAdapter> morphAdapter : beanMorphAdapters ) {
             MorphAdapter instance = morphAdapter.getInstance();
             morphAdapters.add( instance );
         }
-        
+
     }
 
 }

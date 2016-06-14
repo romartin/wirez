@@ -15,6 +15,7 @@ import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.core.definition.annotation.definition.Definition;
 import org.wirez.core.definition.annotation.definition.Property;
 import org.wirez.core.definition.annotation.definition.Title;
+import org.wirez.core.definition.annotation.morph.Morph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.rule.annotation.CanDock;
 
@@ -22,6 +23,7 @@ import org.wirez.core.rule.annotation.CanDock;
 @Bindable
 @Definition( type = Node.class, builder = ScriptTask.ScriptTaskBuilder.class )
 @CanDock( roles = { "IntermediateEventOnActivityBoundary" } )
+@Morph( base = BaseTask.class )
 public class ScriptTask extends BaseTask {
 
     @Title

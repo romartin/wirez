@@ -2,7 +2,8 @@ package org.wirez.core.definition.adapter.binding;
 
 import org.wirez.core.definition.adapter.DefinitionAdapterWrapper;
 
-public abstract class BindableDefinitionAdapterProxy<T> extends DefinitionAdapterWrapper<T, BindableDefinitionAdapter<T>> {
+public abstract class BindableDefinitionAdapterProxy<T> extends DefinitionAdapterWrapper<T, BindableDefinitionAdapter<T>>
+    implements HasInheritance {
 
     protected abstract void setBindings( BindableDefinitionAdapter<T> adapter );
 
@@ -14,5 +15,15 @@ public abstract class BindableDefinitionAdapterProxy<T> extends DefinitionAdapte
         super( adapterFactory.newBindableDefinitionAdapter() );
         setBindings( adapter );
     }
-    
+
+    @Override
+    public String getBaseType( final Class<?> type ) {
+        return adapter.getBaseType( type );
+    }
+
+    @Override
+    public String[] getTypes( final String baseType ) {
+        return adapter.getTypes( baseType );
+    }
+
 }

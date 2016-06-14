@@ -69,7 +69,7 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
     
     private GraphCommandExecutionContext createGraphContext() {
         return new EmptyRulesCommandExecutionContext( 
-                definitionManager, 
+                definitionManager,
                 factoryManager );
     }
 

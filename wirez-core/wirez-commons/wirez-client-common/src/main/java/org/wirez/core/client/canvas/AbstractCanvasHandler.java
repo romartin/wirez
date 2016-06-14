@@ -324,8 +324,15 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         ***************************************************************************************
      */
 
+    public void register( final ShapeFactory<Object, AbstractCanvasHandler, Shape> factory,
+                          final Element<View<?>> candidate ) {
+        register( factory, candidate, true );
+    }
+
     @SuppressWarnings("unchecked")
-    public void register(final ShapeFactory<Object, AbstractCanvasHandler, Shape> factory, final Element<View<?>> candidate) {
+    protected void register( final ShapeFactory<Object, AbstractCanvasHandler, Shape> factory,
+                          final Element<View<?>> candidate,
+                          final boolean fireEvents ) {
         assert factory != null && candidate != null;
         
         final Shape shape = factory.build( candidate.getContent().getDefinition(), AbstractCanvasHandler.this );
@@ -344,23 +351,37 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         // Parents can register controls etc here.
         doRegister(shape, candidate, factory);
         
-        // Fire updates.
-        afterElementAdded(candidate, shape);
+        if ( fireEvents ) {
+            // Fire updates.
+            afterElementAdded(candidate, shape);
+        }
+
     }
     
     protected void doRegister(final Shape shape, final Element element, final ShapeFactory factory) {
         
     }
 
-    public void deregister(final Element element) {
+    public void deregister( final Element element) {
+        deregister( element, true );
+    }
+
+    protected void deregister( final Element element,
+                            final boolean fireEvents ) {
         final Shape shape = canvas.getShape(element.getUUID());
-        beforeElementDeleted(element, shape);
+
+        if ( fireEvents ) {
+            beforeElementDeleted(element, shape);
+        }
+
         // TODO: Delete connector connections to the node being deleted?
         doDeregister(shape, element);
         canvas.deleteShape(shape);
         canvas.draw();
-        afterElementDeleted(element, shape);
 
+        if ( fireEvents ) {
+            afterElementDeleted(element, shape);
+        }
     }
 
     protected void doDeregister(final Shape shape, final Element element) {

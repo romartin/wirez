@@ -14,6 +14,7 @@ public class ProcessingContext {
     private final ProcessingDefinitionAnnotations definitionAnnotations = new ProcessingDefinitionAnnotations();
     private final ProcessingPropertySetAnnotations propertySetAnnotations = new ProcessingPropertySetAnnotations();
     private final ProcessingPropertyAnnotations propertyAnnotations = new ProcessingPropertyAnnotations();
+    private final ProcessingMorphingAnnotations morphingAnnotations = new ProcessingMorphingAnnotations();
 
     public synchronized static ProcessingContext getInstance() {
         if ( null == context ) {
@@ -67,5 +68,9 @@ public class ProcessingContext {
 
     public ProcessingPropertyAnnotations getPropertyAnnotations() {
         return propertyAnnotations;
+    }
+
+    public ProcessingMorphingAnnotations getMorphingAnnotations() {
+        return morphingAnnotations;
     }
 }

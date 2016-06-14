@@ -21,7 +21,7 @@ public class RuntimeBindableAdapterFactory implements BindableAdapterFactory {
     }
 
     public BindableDefinitionAdapter newBindableDefinitionAdapter() {
-        return new RuntimeBindableDefinitionAdapter();
+        return new RuntimeBindableDefinitionAdapter( definitionUtils );
     }
     
     public BindableDefinitionSetAdapter newBindableDefinitionSetAdapter() {

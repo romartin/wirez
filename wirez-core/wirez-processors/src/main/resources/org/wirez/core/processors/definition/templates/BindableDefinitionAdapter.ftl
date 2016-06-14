@@ -34,11 +34,16 @@ import org.wirez.core.definition.adapter.binding.BindableDefinitionAdapterProxy;
 @ApplicationScoped
 public class ${className} extends ${parentAdapterClassName}<Object> {
 
+    private static final Map<Class, Class> baseTypes = new HashMap<Class, Class>(${baseTypesSize}) {{
+        <#list baseTypes as baseType>
+            put( ${baseType.className}.class, ${baseType.methodName}.class );
+        </#list>
+    }};
+
     private static final Map<Class, String> categoryFieldNames = new HashMap<Class, String>(${categoryFieldNamesSize}) {{
         <#list categoryFieldNames as categoryFieldName>
             put( ${categoryFieldName.className}.class, "${categoryFieldName.methodName}" );
         </#list>
-    
     }};
 
     private static final Map<Class, String> titleFieldNames = new HashMap<Class, String>(${titleFieldNamesSize}) {{
@@ -102,6 +107,7 @@ public class ${className} extends ${parentAdapterClassName}<Object> {
     @Override
     protected void setBindings(final BindableDefinitionAdapter<Object> adapter) {
         adapter.setBindings(  ${namePropertyClass},
+                baseTypes,
                 propertySetsFieldNames,
                 propertiesFieldNames,
                 graphElementFieldNames,

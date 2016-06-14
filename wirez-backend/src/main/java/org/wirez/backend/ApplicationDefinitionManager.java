@@ -38,7 +38,7 @@ public class ApplicationDefinitionManager extends AbstractDefinitionManager {
     Instance<DefinitionAdapter<?>> definitionAdapterInstances;
     Instance<PropertySetAdapter<?>> propertySetAdapterInstances;
     Instance<PropertyAdapter<?, ?>> propertyAdapterInstances;
-    Instance<MorphAdapter<?, ?>> morphAdapterInstances;
+    Instance<MorphAdapter<?>> morphAdapterInstances;
 
     protected ApplicationDefinitionManager() {
     }
@@ -50,7 +50,7 @@ public class ApplicationDefinitionManager extends AbstractDefinitionManager {
                                         Instance<DefinitionAdapter<?>> definitionAdapterInstances,
                                         Instance<PropertySetAdapter<?>> propertySetAdapterInstances,
                                         Instance<PropertyAdapter<?, ?>> propertyAdapterInstances,
-                                        Instance<MorphAdapter<?, ?>> morphAdapterInstances) {
+                                        Instance<MorphAdapter<?>> morphAdapterInstances) {
         this.definitionSetsInstances = definitionSetsInstances;
         this.definitionSetAdapterInstances = definitionSetAdapterInstances;
         this.definitionSetRuleAdapterInstances = definitionSetRuleAdapterInstances;

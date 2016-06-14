@@ -19,6 +19,7 @@ package org.wirez.bpmn.definition;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.livespark.formmodeler.metaModel.FieldDef;
+import org.livespark.formmodeler.metaModel.Slider;
 import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Width;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
@@ -38,6 +39,7 @@ import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.validation.Valid;
 
 @Shape( factory = BasicShapesFactory.class, proxy = TaskShapeProxy.class )
 public abstract class BaseTask implements BPMNDefinition {
@@ -50,10 +52,12 @@ public abstract class BaseTask implements BPMNDefinition {
 
     @PropertySet
     @FieldDef( label = "General Settings", position = 0)
+    @Valid
     protected BPMNGeneral general;
 
     @PropertySet
     @FieldDef( label = "Background Settings", position = 1)
+    @Valid
     protected BackgroundSet backgroundSet;
 
     @PropertySet
@@ -61,10 +65,14 @@ public abstract class BaseTask implements BPMNDefinition {
 
     @Property
     @FieldDef(label = "Width", property = "value")
+    @Slider( min = 100.0, max = 300.0, step = 10.0, precision = 0.0 )
+    @Valid
     protected Width width;
 
     @Property
     @FieldDef(label = "Height", property = "value")
+    @Slider( min = 40.0, max = 100.0, step = 5.0, precision = 0.0 )
+    @Valid
     protected Height height;
 
     @Property
@@ -78,6 +86,7 @@ public abstract class BaseTask implements BPMNDefinition {
 
     @Property
     @FieldDef(label = "TimeUnit", property = "value")
+    @Valid
     protected TimeUnit timeUnit;
 
     @Property
@@ -106,8 +115,8 @@ public abstract class BaseTask implements BPMNDefinition {
 
     @Property
     @FieldDef(label = "Task Type", property = "value")
-    protected final TaskType taskType;
-    
+    protected TaskType taskType;
+
     @Labels
     protected final Set<String> labels = new HashSet<String>() {{
         add( "all" );
@@ -132,11 +141,11 @@ public abstract class BaseTask implements BPMNDefinition {
         public static final String BORDER_COLOR = "#000000";
 
     }
-    
+
     protected BaseTask( final TaskType.TaskTypes type ) {
         this.taskType = new TaskType( type );
     }
-    
+
     public BaseTask(@MapsTo("general") BPMNGeneral general,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
@@ -307,5 +316,8 @@ public abstract class BaseTask implements BPMNDefinition {
     public TaskType getTaskType() {
         return taskType;
     }
-    
+
+    public void setTaskType( TaskType taskType ) {
+        this.taskType = taskType;
+    }
 }

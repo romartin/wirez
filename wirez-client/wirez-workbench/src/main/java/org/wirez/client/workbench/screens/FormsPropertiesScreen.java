@@ -18,6 +18,8 @@ package org.wirez.client.workbench.screens;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.jboss.errai.databinding.client.BindableProxy;
+import org.jboss.errai.databinding.client.BindableProxyFactory;
 import org.jboss.errai.databinding.client.HasProperties;
 import org.jboss.errai.databinding.client.api.DataBinder;
 import org.livespark.formmodeler.renderer.client.DynamicFormRenderer;
@@ -140,7 +142,10 @@ public class FormsPropertiesScreen {
             final Element<? extends View<?>> element = getCanvasHandler().getGraphIndex().get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
                 final Object definition = element.getContent().getDefinition();
-                formRenderer.renderDefaultForm( definition, () -> {
+
+                BindableProxy proxy = (BindableProxy)BindableProxyFactory.getBindableProxy( definition );
+
+                formRenderer.renderDefaultForm( proxy.deepUnwrap(), () -> {
                     formRenderer.addFieldChangeHandler((fieldName, newValue) -> {
 
                         try {

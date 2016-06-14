@@ -26,7 +26,7 @@ public class BPMNGeneral implements BPMNPropertySet {
 
     @Property
     @FieldDef( label = "Documentation", property = "value")
-    @TextArea( rows = 3, placeHolder = "Documentation", label = "Documentation" )
+    @TextArea( rows = 3, placeHolder = "Documentation" )
     @Valid
     private Documentation documentation;
 

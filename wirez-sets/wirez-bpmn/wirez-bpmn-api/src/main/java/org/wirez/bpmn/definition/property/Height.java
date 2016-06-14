@@ -16,6 +16,9 @@
 
 package org.wirez.bpmn.definition.property;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.BPMNProperty;
@@ -48,10 +51,12 @@ public class Height implements BPMNProperty {
     public static final Double defaultValue = 50d;
 
     @Value
+    @Max( 100 )
+    @Min( 40 )
     private Double value = defaultValue;
 
     public Height() {
-        
+
     }
 
     public Height( final Double value ) {
@@ -82,7 +87,7 @@ public class Height implements BPMNProperty {
     public Double getDefaultValue() {
         return defaultValue;
     }
-    
+
     public Double getValue() {
         return value;
     }
@@ -90,5 +95,5 @@ public class Height implements BPMNProperty {
     public void setValue(Double value) {
         this.value = value;
     }
-    
+
 }

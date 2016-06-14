@@ -31,6 +31,16 @@
 
   <dependencies>
 
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+
     <!-- Wirez. -->
 
     <dependency>
@@ -54,13 +64,13 @@
       <artifactId>wirez-shapes-api</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-processors</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- GWT. -->
 
     <dependency>

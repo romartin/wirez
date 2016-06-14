@@ -16,6 +16,9 @@
 
 package org.wirez.bpmn.definition.property.general;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.BPMNProperty;
@@ -44,16 +47,18 @@ public class Documentation implements BPMNProperty {
 
     @Type
     public static final PropertyType type = new StringType();
-    
+
     @DefaultValue
-    public static final transient String defaultValue = "";
+    public static final transient String defaultValue = "Sample Documentation";
 
     @Value
+    @NotEmpty
+    @NotNull
     private String value = defaultValue;
 
     public Documentation() {
     }
-    
+
     public Documentation( final String value ) {
         this.value = value;
     }
@@ -81,7 +86,7 @@ public class Documentation implements BPMNProperty {
     public String getDefaultValue() {
         return defaultValue;
     }
-    
+
     public String getValue() {
         return value;
     }
@@ -89,5 +94,5 @@ public class Documentation implements BPMNProperty {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
 }

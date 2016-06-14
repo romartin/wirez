@@ -31,21 +31,25 @@
   <name>Wirez - Showcase webapp</name>
 
   <properties>
-    <errai.version>${version.org.jboss.errai}</errai.version>
-    <as.version>8.1.0.Final</as.version>
-    <errai.jboss.home>${project.build.directory}/wildfly-${as.version}</errai.jboss.home>
+    <errai.jboss.home>${project.build.directory}/wildfly-${version.org.wildfly.gwt.sdm}</errai.jboss.home>
+    <gwt.compiler.localWorkers>4</gwt.compiler.localWorkers>
   </properties>
 
   <dependencies>
 
     <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-widgets-service-backend</artifactId>
+        <groupId>org.jboss.xnio</groupId>
+        <artifactId>xnio-api</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-backend-api</artifactId>
+        <groupId>org.uberfire</groupId>
+        <artifactId>uberfire-widgets-service-backend</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.uberfire</groupId>
+        <artifactId>uberfire-backend-api</artifactId>
     </dependency>
 
     <!-- dependencies added because of new illegal transitive dependency check -->
@@ -465,7 +469,7 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
           <strict>true</strict>
-          <localWorkers>1</localWorkers>
+          <localWorkers>${gwt.compiler.localWorkers}</localWorkers>
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
           <extraJvmArgs>-Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.server.classOutput=${project.build.outputDirectory} -Derrai.jboss.home=${errai.jboss.home}</extraJvmArgs>
           <module>org.wirez.FastCompiledWirezShowcase</module>
@@ -558,7 +562,7 @@
                 <artifactItem>
                   <groupId>org.wildfly</groupId>
                   <artifactId>wildfly-dist</artifactId>
-                  <version>${as.version}</version>
+                  <version>${version.org.wildfly.gwt.sdm}</version>
                   <type>zip</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}</outputDirectory>

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.jboss.integration-platform</groupId>
-    <artifactId>jboss-integration-platform-parent</artifactId>
+    <artifactId>jboss-integration-platform-bom</artifactId>
     <!-- Keep in sync with property <version.org.jboss.integration-platform> -->
     <version>7.0.0.CR1</version>
   </parent>

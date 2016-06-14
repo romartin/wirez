@@ -16,16 +16,16 @@ Building
 Running the application
 -----------------------
 
-**Wildfly 8.x**                         
+**Wildfly 10.x**
 
-There exist a concrete distribution for Wilfly 8.x you can use, instructions [here](./wirez-distros/src/main/wildfly8/README.md).         
+There exist a concrete distribution for Wilfly 10.x you can use, instructions [here](./wirez-distros/src/main/wildfly8/README.md).
 
 Another option is to run the application using GWT SuperDevMode. If you're planning more than just try the tool, 
 the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if you just want to run it quicly you can use the command line as the following sections describe.                                  
 
 **SuperDevMove - Running from command line**                                          
 
-    mvn gwt:run -DrunTarget=wirez.html -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-8.1.0.Final
+    mvn gwt:run -DrunTarget=wirez.html -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-10.0.0.Final
 
 **SuperDevMove - Running from IntelliJ IDEA**                                          
 
@@ -41,7 +41,7 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
   - *GWT Modules to load*: org.wirez.FastCompiledWirezShowcase             
   - *VM options*: 
         
-        -Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-8.1.0.Final
+        -Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-10.0.0.Final
                       
   - *Dev mode parameters*: 
         

@@ -1,5 +1,5 @@
-Deployment onto JBoss Widlfly 8.X
-=================================
+Deployment onto JBoss Widlfly 8.X & 10.X
+========================================
 
 Please follow the next steps in order to deploy the application.           
 

@@ -19,7 +19,8 @@
     <version.org.uberfire>0.9.0-SNAPSHOT</version.org.uberfire>
     <version.org.jboss.errai>4.0.0-SNAPSHOT</version.org.jboss.errai>
     <version.org.jboss.errai.cdi10-compatible>3.0.6.Final</version.org.jboss.errai.cdi10-compatible>
-    <version.org.jboss.xnio>3.2.0.Final</version.org.jboss.xnio>
+    <!-- WildFly version used together with the GWT's Super Dev Mode -->
+    <version.org.wildfly.gwt.sdm>10.0.0.Final</version.org.wildfly.gwt.sdm>
     <version.com.ahomeit.lienzo.core>2.0.270-RELEASE</version.com.ahomeit.lienzo.core>
     <version.com.ahomeit.lienzo.tooling.nativetools>1.0.170-RELEASE</version.com.ahomeit.lienzo.tooling.nativetools>
     <version.com.ahomeit.lienzo.tooling.common>1.0.150-RELEASE</version.com.ahomeit.lienzo.tooling.common>
@@ -92,18 +93,6 @@
         <groupId>org.owasp.encoder</groupId>
         <artifactId>encoder</artifactId>
         <version>${version.org.owasp.encoder}</version>
-      </dependency>
-
-      <!-- Override needed by Errai Embedded WildFly -->
-      <dependency>
-        <groupId>org.jboss.xnio</groupId>
-        <artifactId>xnio-api</artifactId>
-        <version>${version.org.jboss.xnio}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.xnio</groupId>
-        <artifactId>xnio-nio</artifactId>
-        <version>${version.org.jboss.xnio}</version>
       </dependency>
 
       <dependency>

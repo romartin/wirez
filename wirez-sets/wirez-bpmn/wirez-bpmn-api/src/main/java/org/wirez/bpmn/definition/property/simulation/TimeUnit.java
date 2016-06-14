@@ -16,6 +16,9 @@
 
 package org.wirez.bpmn.definition.property.simulation;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.BPMNProperty;
@@ -49,6 +52,8 @@ public class TimeUnit implements BPMNProperty {
     public static final transient String defaultValue = "ms";
 
     @Value
+    @NotEmpty
+    @NotNull
     private String value = defaultValue;
 
     public TimeUnit() {
@@ -81,7 +86,7 @@ public class TimeUnit implements BPMNProperty {
     public String getDefaultValue() {
         return defaultValue;
     }
-    
+
     public String getValue() {
         return value;
     }
@@ -89,5 +94,5 @@ public class TimeUnit implements BPMNProperty {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
 }

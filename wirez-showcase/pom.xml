@@ -267,7 +267,7 @@
       <groupId>org.wirez</groupId>
       <artifactId>wirez-backend-common</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.wirez</groupId>
       <artifactId>wirez-processors</artifactId>
@@ -346,7 +346,7 @@
       <artifactId>wirez-bpmn-client</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- Lienzo. -->
 
     <dependency>
@@ -446,17 +446,17 @@
     </dependency>
 
     <!-- UberFire Plugins Extension -->
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-runtime-plugins-api</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-runtime-plugins-backend</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-runtime-plugins-client</artifactId>
@@ -464,32 +464,32 @@
     </dependency>
 
     <!-- UberFire Commons Editor -->
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons-editor-api</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons-editor-client</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons-editor-backend</artifactId>
     </dependency>
 
     <!-- Layout Editor API -->
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-layout-editor-api</artifactId>
     </dependency>
 
     <!-- UberFire Apps -->
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-apps-api</artifactId>
@@ -500,7 +500,7 @@
       <artifactId>uberfire-apps-client</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-apps-backend</artifactId>
@@ -558,9 +558,9 @@
           <runTarget>wirez.html</runTarget>
           <hostedWebapp>src/main/webapp</hostedWebapp>
           <logLevel>INFO</logLevel>
-          
+
           <compileSourcesArtifacts>
-            
+
             <!-- UberFire -->
             <compileSourcesArtifact>org.uberfire:uberfire-commons</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-nio2-model</compileSourcesArtifact>
@@ -613,6 +613,8 @@
             <compileSourcesArtifact>org.wirez:wirez-basicset</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-forms-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-forms-client</compileSourcesArtifact>
 
           </compileSourcesArtifacts>
         </configuration>

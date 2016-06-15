@@ -23,6 +23,7 @@ import org.livespark.formmodeler.metaModel.Slider;
 import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Width;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
+import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.*;
@@ -56,7 +57,12 @@ public abstract class BaseTask implements BPMNDefinition {
     protected BPMNGeneral general;
 
     @PropertySet
-    @FieldDef( label = "Background Settings", position = 1)
+    @FieldDef( label = "Data IO", position = 1)
+    @Valid
+    protected DataIOSet dataIOSet;
+
+    @PropertySet
+    @FieldDef( label = "Background Settings", position = 2)
     @Valid
     protected BackgroundSet backgroundSet;
 
@@ -147,6 +153,7 @@ public abstract class BaseTask implements BPMNDefinition {
     }
 
     public BaseTask(@MapsTo("general") BPMNGeneral general,
+                    @MapsTo("dataIOSet") DataIOSet dataIOSet,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
                     @MapsTo("width") Width width,
@@ -163,6 +170,7 @@ public abstract class BaseTask implements BPMNDefinition {
                     @MapsTo("currency") Currency currency,
                     @MapsTo("taskType") TaskType taskType ) {
         this.general = general;
+        this.dataIOSet = dataIOSet;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.width = width;
@@ -195,6 +203,10 @@ public abstract class BaseTask implements BPMNDefinition {
 
     public BPMNGeneral getGeneral() {
         return general;
+    }
+
+    public DataIOSet getDataIOSet() {
+        return dataIOSet;
     }
 
     public BackgroundSet getBackgroundSet() {
@@ -255,6 +267,10 @@ public abstract class BaseTask implements BPMNDefinition {
 
     public void setGeneral( BPMNGeneral general ) {
         this.general = general;
+    }
+
+    public void setDataIOSet( DataIOSet dataIOSet ) {
+        this.dataIOSet = dataIOSet;
     }
 
     public void setBackgroundSet( BackgroundSet backgroundSet ) {

@@ -20,9 +20,15 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.BPMNProperty;
 import org.wirez.core.definition.annotation.Description;
-import org.wirez.core.definition.annotation.property.*;
+import org.wirez.core.definition.annotation.property.Caption;
+import org.wirez.core.definition.annotation.property.DefaultValue;
+import org.wirez.core.definition.annotation.property.Optional;
+import org.wirez.core.definition.annotation.property.Property;
+import org.wirez.core.definition.annotation.property.ReadOnly;
+import org.wirez.core.definition.annotation.property.Type;
+import org.wirez.core.definition.annotation.property.Value;
 import org.wirez.core.definition.property.PropertyType;
-import org.wirez.core.definition.property.type.StringType;
+import org.wirez.core.definition.property.type.AssignmentsType;
 
 @Portable
 @Bindable
@@ -42,7 +48,7 @@ public class InputData implements BPMNProperty {
     public static final Boolean optional = false;
 
     @Type
-    public static final PropertyType type = new StringType();
+    public static final PropertyType type = new AssignmentsType();
 
     @DefaultValue
     public static final String defaultValue = "";

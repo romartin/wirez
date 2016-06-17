@@ -26,6 +26,7 @@ import org.wirez.bpmn.definition.BPMNPropertySet;
 import org.wirez.core.definition.annotation.Name;
 import org.wirez.core.definition.annotation.propertyset.Property;
 import org.wirez.core.definition.annotation.propertyset.PropertySet;
+import org.wirez.forms.meta.definition.AssignmentsEditor;
 
 @Portable
 @Bindable
@@ -33,15 +34,17 @@ import org.wirez.core.definition.annotation.propertyset.PropertySet;
 public class DataIOSet implements BPMNPropertySet {
 
     @Name
-    public static final transient String propertySetName = "Data IO";
+    public static final transient String propertySetName = "Task Data";
 
     @Property
-    @FieldDef(label = "Input Data", property = "value")
+    @FieldDef(label = "Send to Task", property = "value")
+    @AssignmentsEditor
     @Valid
     private InputData inputData;
 
     @Property
-    @FieldDef(label = "Output Data", property = "value")
+    @FieldDef(label = "Return from Task", property = "value")
+    @AssignmentsEditor
     @Valid
     private OutputData outputData;
 

@@ -63,7 +63,7 @@ public abstract class BaseTask implements BPMNDefinition {
     protected BPMNGeneral general;
 
     @PropertySet
-    @FieldDef( label = "Data IO", position = 1)
+    @FieldDef( label = "Task Data", position = 1)
     @Valid
     protected DataIOSet dataIOSet;
 

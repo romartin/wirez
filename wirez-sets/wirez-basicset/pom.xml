@@ -11,91 +11,11 @@
 
   <artifactId>wirez-basicset</artifactId>
   <name>Wirez - Basic Set</name>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
-  <dependencies>
-
-    <!-- Wirez. -->
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-core-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-client-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-core-common</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-processors</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-shapes-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-client-common</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.wirez</groupId>
-      <artifactId>wirez-shapes-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- GWT. -->
-
-    <dependency>
-      <groupId>com.google.gwt</groupId>
-      <artifactId>gwt-user</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- Uberfire & Errai. -->
-
-    <dependency>
-      <groupId>org.jboss.errai</groupId>
-      <artifactId>errai-bus</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.errai</groupId>
-      <artifactId>errai-common</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.errai</groupId>
-      <artifactId>errai-ioc</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.errai</groupId>
-      <artifactId>errai-data-binding</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-commons</artifactId>
-    </dependency>
-
-  </dependencies>
+  <modules>
+    <module>wirez-basicset-api</module>
+    <module>wirez-basicset-client</module>
+  </modules>
 
 </project>

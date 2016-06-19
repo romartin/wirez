@@ -70,12 +70,12 @@ public class Decorator extends Group {
 
     public IPrimitive<?> build(final IPrimitive<?> item, final double width, final double height) {
 
-        decorator = createRectangle(width, height);
+        decorator = createRectangle( width, height );
 
         this.add(decorator);
         this.add(item);
-        item.setX( item.getX() + ( padding / 2 ) );
-        item.setY( item.getY() + ( padding / 2 ) );
+        decorator.setX( item.getX() - ( padding / 4 ) );
+        decorator.setY( item.getY() - ( padding / 4 ) );
 
         decorator.addNodeMouseEnterHandler(nodeMouseEnterEvent -> show(nodeMouseEnterEvent.getMouseEvent().getClientX(), nodeMouseEnterEvent.getMouseEvent().getClientY()));
         decorator.addNodeMouseExitHandler(nodeMouseExitEvent -> hide());
@@ -92,7 +92,7 @@ public class Decorator extends Group {
                 .setCornerRadius(5)
                 .setFillColor(ColorName.BLACK)
                 .setFillAlpha(0.01)
-                .setStrokeWidth(2)
+                .setStrokeWidth(1)
                 .setStrokeColor(ColorName.BLACK)
                 .setStrokeAlpha(0);
     }

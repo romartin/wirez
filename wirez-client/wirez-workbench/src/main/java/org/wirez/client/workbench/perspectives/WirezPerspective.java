@@ -55,14 +55,10 @@ public class WirezPerspective {
 
         palettePanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         
-        /* Accordion Palette.
-        palettePanel.setMinWidth( PaletteAccordionScreen.WIDTH );
-        palettePanel.setWidth( PaletteAccordionScreen.WIDTH );
-        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( PaletteAccordionScreen.SCREEN_ID ) ) );*/
-
-        palettePanel.setMinWidth( PaletteSimpleScreen.WIDTH );
-        palettePanel.setWidth( PaletteSimpleScreen.WIDTH );
-        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( PaletteSimpleScreen.SCREEN_ID ) ) );
+        palettePanel.setMinWidth( DefinitionSetPaletteScreen.WIDTH );
+        palettePanel.setWidth( DefinitionSetPaletteScreen.WIDTH );
+        // palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( DefinitionsPaletteScreen.SCREEN_ID ) ) );
+        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( DefinitionSetPaletteScreen.SCREEN_ID ) ) );
 
         treeExplorerPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         treeExplorerPanel.setMinWidth( EAST_PANEL_WIDTH );

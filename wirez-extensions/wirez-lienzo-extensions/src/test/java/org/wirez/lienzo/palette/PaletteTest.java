@@ -54,13 +54,13 @@ public class PaletteTest {
                 .setPadding(PADDING)
                 .setX(X)
                 .setY(Y);
-        grid = spy(miniPalette.createGrid(arrayOfPrimitives));
+        grid = spy(miniPalette.createGrid( arrayOfPrimitives.length ));
         pointIterator = spy(grid.iterator());
         doReturn(pointIterator).when(grid).iterator();
         miniPalette = spy(miniPalette);
 
         doReturn(miniPalette).when(miniPalette).add(anyObject());
-        doReturn(decorator).when(miniPalette).createDecorator(anyInt());
+        doReturn(decorator).when(miniPalette).createDecorator(anyInt(), anyDouble(), anyDouble());
         doReturn(grid).when(miniPalette).createGrid(any());
 
         doReturn(decorator).when(decorator).build(anyObject(), anyDouble(), anyDouble());
@@ -71,11 +71,11 @@ public class PaletteTest {
 
     @Test
     public void testBuild() {
-        miniPalette.build(firstPrimitive, secondPrimitive);
+        miniPalette.build( new AbstractPalette.Item( firstPrimitive, AbstractPalette.ItemDecorator.DEFAULT),
+                new AbstractPalette.Item( secondPrimitive, AbstractPalette.ItemDecorator.DEFAULT ) );
 
         verify(miniPalette).clear();
-        verify(miniPalette).createGrid(arrayOfPrimitives);
-        verify(miniPalette).addPaletteDecorator(grid);
+        verify(miniPalette).createGrid( arrayOfPrimitives.length );
         verify(miniPalette, times(2)).add(decorator);
 
         verify(pointIterator, times(2)).next();
@@ -100,9 +100,9 @@ public class PaletteTest {
                 .setX(X)
                 .setY(Y));
 
-        ItemCallback callback = spy(miniPalette.createDecoratorCallback(1));
+        ItemCallback callback = spy(miniPalette.createDecoratorCallback(1, 0 , 0));
         callback.onShow(6.0, 4.0);
-        verify(miniPalette).doShowItem(1, 6.0, 4.0);
+        verify(miniPalette).doShowItem(1, 6.0, 4.0, 0, 0);
 
         callback.onHide();
         verify(miniPalette).doItemOut(1);
@@ -117,22 +117,22 @@ public class PaletteTest {
     @Test
     public void testNullCallback() {
         miniPalette.setItemCallback(null);
-        miniPalette.doShowItem(1, 4, 3.2);
+        miniPalette.doShowItem(1, 4, 3.2, 0, 0);
         miniPalette.doItemOut(1);
-        miniPalette.onItemMouseDown(1, 4, 7);
-        miniPalette.onItemClick(1, 2, 3);
+        miniPalette.onItemMouseDown(1, 4, 7, 0, 0);
+        miniPalette.onItemClick(1, 2, 3, 0, 0);
     }
 
     @Test
     public void testCallback() {
         miniPalette.setItemCallback(callback);
-        miniPalette.doShowItem(1, 4, 3.2);
-        verify(callback).onItemHover(1, 4.0, 3.2);
+        miniPalette.doShowItem(1, 4, 3.2, 0, 0);
+        verify(callback).onItemHover(1, 4.0, 3.2, 0, 0);
         miniPalette.doItemOut(1);
         verify(callback).onItemOut(1);
-        miniPalette.onItemMouseDown(1, 4, 7);
-        verify(callback).onItemMouseDown(1, 4, 7);
-        miniPalette.onItemClick(1, 2, 3);
-        verify(miniPalette).onItemClick(1, 2, 3);
+        miniPalette.onItemMouseDown(1, 4, 7, 0, 0);
+        verify(callback).onItemMouseDown(1, 4, 7, 0, 0);
+        miniPalette.onItemClick(1, 2, 3, 0, 0);
+        verify(miniPalette).onItemClick(1, 2, 3, 0, 0);
     }
 }

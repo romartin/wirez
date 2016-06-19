@@ -25,7 +25,7 @@ import org.wirez.core.rule.annotation.CanDock;
 public class NoneTask extends BaseTask {
 
     @Title
-    public static final transient String title = "A None Task";
+    public static final transient String title = "None Task";
 
     @NonPortable
     public static class NoneTaskBuilder extends BaseTaskBuilder<NoneTask> {

@@ -471,15 +471,17 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
                     } catch( MirroredTypesException mte ) {
                         morphTargetMirrors =  mte.getTypeMirrors();
                     }
-                    if ( null == morphTargetMirrors ) {
-                        throw new RuntimeException("No morph target classes specifyed for the @MorphBase.");
+
+                    if ( null != morphTargetMirrors ) {
+
+                        Set<String> morphTargetMirrorClasses = new LinkedHashSet<>();
+                        for ( TypeMirror morphTargetMirror : morphTargetMirrors ) {
+                            String morphTargetMirrorClassName = morphTargetMirror.toString();
+                            morphTargetMirrorClasses.add( morphTargetMirrorClassName );
+                        }
+                        processingContext.getMorphingAnnotations().getBaseTargets().put( morphBaseClassName, morphTargetMirrorClasses );
+
                     }
-                    Set<String> morphTargetMirrorClasses = new LinkedHashSet<>();
-                    for ( TypeMirror morphTargetMirror : morphTargetMirrors ) {
-                        String morphTargetMirrorClassName = morphTargetMirror.toString();
-                        morphTargetMirrorClasses.add( morphTargetMirrorClassName );
-                    }
-                    processingContext.getMorphingAnnotations().getBaseTargets().put( morphBaseClassName, morphTargetMirrorClasses );
 
                     // Morph Properties.
                     processMorphProperties( superElement, morphBaseClassName );

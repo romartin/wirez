@@ -1,6 +1,7 @@
 package org.wirez.core.definition.adapter.binding;
 
 import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.graph.Element;
 
 import java.util.Map;
 import java.util.Set;
@@ -18,5 +19,8 @@ public interface BindableDefinitionAdapter<T> extends DefinitionAdapter<T>, HasI
                      Map<Class, String> propertyCategoryFieldNames,
                      Map<Class, String> propertyDescriptionFieldNames);
 
+    Class<? extends Element> getGraphElement( Class<?> type );
+
+    String getElementFactory( Class<?> type );
 
 }

@@ -5,5 +5,9 @@ public interface ToolboxButtonEvent {
     int getX();
     
     int getY();
+
+    int getClientX();
+
+    int getClientY();
     
 }

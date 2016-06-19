@@ -59,14 +59,14 @@ public class ShapeViewDragProxyFactoryImpl implements ShapeViewDragProxyFactory<
 
             final WiresShape wiresShape = (WiresShape) item;
             
-            new WiresShapeDragProxy( layer.getLienzoLayer(), wiresShape, x, y, 200, c );
+            new WiresShapeDragProxy( layer.getLienzoLayer(), wiresShape, x, y, 100, c );
             
             
         } else if ( item instanceof WiresConnector) {
             
             final WiresConnector wiresConnector = (WiresConnector) item;
             
-            new WiresConnectorDragProxy(layer.getLienzoLayer(), wiresConnector, x, y, 200, c);
+            new WiresConnectorDragProxy(layer.getLienzoLayer(), wiresConnector, x, y, 100, c);
 
         }
         

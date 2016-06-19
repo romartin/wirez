@@ -28,7 +28,7 @@
   <inherits name="org.wirez.client.WirezWorkbench"/>
   <inherits name="org.wirez.client.WirezLienzo"/>
   <inherits name="org.wirez.client.WirezMobile"/>
-  <inherits name="org.wirez.basicset.WirezBasicSet"/>
+  <inherits name="org.wirez.basicset.WirezBasicSetClient"/>
   <inherits name="org.wirez.bpmn.WirezBpmnClient"/>
 
   <!-- We don't need to support IE10 or older -->

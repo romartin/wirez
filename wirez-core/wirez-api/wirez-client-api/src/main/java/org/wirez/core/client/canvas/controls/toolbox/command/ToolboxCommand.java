@@ -9,13 +9,13 @@ public interface ToolboxCommand<H extends CanvasHandler, I> {
         ENABLED, DISABLED;
     }
     
-    I getIcon();
+    I getIcon( double width, double height );
     
     String getTitle();
     
     // TODO: add method -> Status check( Element element );
     
-    void execute(Context<H> context, Element element); 
+    void execute( Context<H> context, Element element );
     
     void destroy();
     

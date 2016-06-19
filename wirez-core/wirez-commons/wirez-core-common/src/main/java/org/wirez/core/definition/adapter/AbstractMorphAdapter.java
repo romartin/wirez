@@ -222,6 +222,18 @@ public abstract class AbstractMorphAdapter<S> implements MorphAdapter<S>  {
         }
     }
 
+    protected boolean contains( final Iterable<String> iterable, String value ){
+        if ( null != iterable && iterable.iterator().hasNext() ) {
+            for ( final String v : iterable ) {
+                if ( value.equals( v ) ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     protected boolean hasMorphDefinitions() {
         return !morphDefinitions.isEmpty();
     }

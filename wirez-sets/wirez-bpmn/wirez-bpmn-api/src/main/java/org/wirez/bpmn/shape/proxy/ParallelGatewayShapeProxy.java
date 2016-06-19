@@ -2,16 +2,16 @@ package org.wirez.bpmn.shape.proxy;
 
 import org.wirez.bpmn.definition.ParallelGateway;
 import org.wirez.core.client.shape.HasChildren;
-import org.wirez.shapes.proxy.BasicShapeProxy;
-import org.wirez.shapes.proxy.HasChildProxies;
-import org.wirez.shapes.proxy.PolygonProxy;
+import org.wirez.shapes.proxy.*;
 import org.wirez.shapes.proxy.icon.dynamics.DynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.Icons;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class ParallelGatewayShapeProxy implements
+public final class ParallelGatewayShapeProxy
+        extends AbstractBasicShapeProxy<ParallelGateway>
+        implements
         PolygonProxy<ParallelGateway>,
         HasChildProxies<ParallelGateway> {
     
@@ -66,7 +66,7 @@ public final class ParallelGatewayShapeProxy implements
     }
 
     @Override
-    public String getDescription( final ParallelGateway element ) {
+    public String getGlyphDescription(final ParallelGateway element ) {
         return ParallelGateway.description;
     }
 
@@ -81,7 +81,9 @@ public final class ParallelGatewayShapeProxy implements
         
     }
 
-    public final class IconProxy implements DynamicIconProxy<ParallelGateway> {
+    public final class IconProxy
+            extends AbstractBasicGlyphProxy<ParallelGateway>
+            implements DynamicIconProxy<ParallelGateway> {
 
         @Override
         public Icons getIcon(final ParallelGateway definition ) {
@@ -114,7 +116,7 @@ public final class ParallelGatewayShapeProxy implements
         }
     
         @Override
-        public String getDescription( final ParallelGateway element ) {
+        public String getGlyphDescription(final ParallelGateway element ) {
             return null;
         }
 

@@ -29,6 +29,12 @@ public abstract class BindableMorphDefinition implements MorphDefinition {
     }
 
     @Override
+    public String getBase() {
+        final Class<?> baseType = getDomainMorphs().keySet().iterator().next();
+        return getDefinitionId( baseType );
+    }
+
+    @Override
     public MorphPolicy getPolicy() {
         return MorphPolicy.DEFAULT;
     }

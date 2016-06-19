@@ -28,6 +28,6 @@ public interface ShapeGlyphDragHandler<P, G> {
         
     }
 
-    void show(P parentLienzoPanel, ShapeGlyph<G> shapeGlyph, double x, double y, Callback<P> callback);
+    void show( P parentLienzoPanel, ShapeGlyph<G> shapeGlyph, double x, double y, Callback<P> callback);
     
 }

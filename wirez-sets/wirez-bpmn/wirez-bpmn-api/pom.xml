@@ -60,7 +60,13 @@
       <artifactId>wirez-processors</artifactId>
       <scope>provided</scope>
     </dependency>
-    
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-basicset-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- GWT. -->
 
     <dependency>

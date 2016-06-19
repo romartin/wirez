@@ -102,7 +102,7 @@ public class BPMNDiagramMarshallerTest {
     public void setup() throws Exception {
         
         // Graph utils.
-        definitionUtils = new DefinitionUtils( definitionManager );
+        definitionUtils = new DefinitionUtils( definitionManager, applicationFactoryManager );
         graphUtils = new GraphUtils( definitionManager, definitionUtils );
 
         testScopeModelFactory = new TestScopeModelFactory( new BPMNDefinitionSet.BPMNDefinitionSetBuilder().build() );

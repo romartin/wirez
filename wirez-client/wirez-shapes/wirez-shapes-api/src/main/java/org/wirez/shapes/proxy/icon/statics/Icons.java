@@ -30,6 +30,10 @@ public enum Icons {
             return BUSINESS_RULE;
         }
 
+        if ( TIMER.id.equals( id ) ) {
+            return TIMER;
+        }
+
         return null;
     }
     

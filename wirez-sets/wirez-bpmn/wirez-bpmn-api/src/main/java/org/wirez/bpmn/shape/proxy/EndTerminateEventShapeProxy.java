@@ -1,15 +1,16 @@
 package org.wirez.bpmn.shape.proxy;
 
-import org.wirez.bpmn.definition.BaseEndEvent;
 import org.wirez.bpmn.definition.EndTerminateEvent;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.*;
-import org.wirez.shapes.proxy.impl.WrappedBasicNamedShapeProxy;
+import org.wirez.shapes.proxy.WrappedBasicNamedShapeProxy;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class EndTerminateEventShapeProxy implements 
+public final class EndTerminateEventShapeProxy
+        extends AbstractBasicShapeProxy<EndTerminateEvent>
+        implements
         CircleProxy<EndTerminateEvent>,
         HasChildProxies<EndTerminateEvent> {
     
@@ -64,7 +65,7 @@ public final class EndTerminateEventShapeProxy implements
     }
 
     @Override
-    public String getDescription( final EndTerminateEvent element ) {
+    public String getGlyphDescription(final EndTerminateEvent element ) {
         return EndTerminateEvent.description;
     }
 

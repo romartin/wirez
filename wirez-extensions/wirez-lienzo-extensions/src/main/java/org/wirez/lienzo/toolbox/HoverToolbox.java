@@ -65,12 +65,12 @@ public class HoverToolbox implements GridToolbox {
         this.group = new Group().setDraggable( false );
         
         Iterator<Grid.Point> gridIterator = grid.iterator();
-        for (ToolboxButton button : buttons) {
+        for ( ToolboxButton button : buttons ) {
             Grid.Point point = gridIterator.next();
-            button.getShape().setX(point.getX()).setY(point.getY());
+            button.getShape().setX( point.getX()).setY(point.getY() );
             button.getShape().getGroup().setAlpha(0);
-            HandlerRegistration hr1 = button.getDecorator().addNodeMouseEnterHandler(hoverTimer);
-            HandlerRegistration hr2 = button.getDecorator().addNodeMouseExitHandler(hoverTimer);
+            HandlerRegistration hr1 = button.getDecorator().addNodeMouseEnterHandler( hoverTimer );
+            HandlerRegistration hr2 = button.getDecorator().addNodeMouseExitHandler( hoverTimer );
             handlerRegistrationManager.register(hr1);
             handlerRegistrationManager.register(hr2);
             group.add( button.getShape().getGroup() );
@@ -101,10 +101,30 @@ public class HoverToolbox implements GridToolbox {
         };
 
         // Attribute change handlers.
-        shape.getGroup().addAttributesChangedHandler(Attribute.X, handler);
-        shape.getGroup().addAttributesChangedHandler(Attribute.Y, handler);
-        shape.getPath().addAttributesChangedHandler(Attribute.WIDTH, handler);
-        shape.getPath().addAttributesChangedHandler(Attribute.HEIGHT, handler);
+        handlerRegistrationManager.register(
+
+            shape.getGroup().addAttributesChangedHandler( Attribute.X, handler )
+
+        );
+
+        handlerRegistrationManager.register(
+
+            shape.getGroup().addAttributesChangedHandler(Attribute.Y, handler)
+
+        );
+
+        handlerRegistrationManager.register(
+
+            shape.getPath().addAttributesChangedHandler(Attribute.WIDTH, handler)
+
+        );
+
+        handlerRegistrationManager.register(
+
+            shape.getPath().addAttributesChangedHandler(Attribute.HEIGHT, handler)
+
+        );
+
     }
     
     private void reposition() {
@@ -120,10 +140,23 @@ public class HoverToolbox implements GridToolbox {
     public void show() {
         
         if (!showing) {
+
             for (ToolboxButton button : buttons) {
+
                 button.getShape().getGroup().animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 500, new AnimationCallback());
-                button.getShape().getGroup().addNodeMouseEnterHandler(hoverTimer);
-                button.getShape().getGroup().addNodeMouseExitHandler(hoverTimer);
+
+                handlerRegistrationManager.register(
+
+                    button.getShape().getGroup().addNodeMouseEnterHandler(hoverTimer)
+
+                );
+
+                handlerRegistrationManager.register(
+
+                    button.getShape().getGroup().addNodeMouseExitHandler(hoverTimer)
+
+                );
+
             }
 
             showing = true;
@@ -148,12 +181,20 @@ public class HoverToolbox implements GridToolbox {
         
         if (showing) {
             for (final ToolboxButton button : buttons) {
-                button.getShape().getGroup().animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(0)), 500, new AnimationCallback() {
-                    @Override
-                    public void onClose(final IAnimation animation, 
-                                        final IAnimationHandle handle) {
-                    }
+
+                button.getShape().getGroup().animate(
+                        AnimationTweener.LINEAR,
+                        AnimationProperties.toPropertyList( AnimationProperty.Properties.ALPHA( 0 ) ),
+                        500,
+                        new AnimationCallback() {
+
+                            @Override
+                            public void onClose(final IAnimation animation,
+                                                final IAnimationHandle handle) {
+                            }
+
                 });
+
             }
             
             showing = false;
@@ -185,8 +226,8 @@ public class HoverToolbox implements GridToolbox {
 
     private void registerHandlers( final Shape<?> attachTo ) {
         Node<?> node = attachTo != null ? attachTo : shape.getPath();
-        HandlerRegistration hr1 = node.addNodeMouseEnterHandler(this.hoverTimer);
-        HandlerRegistration hr2 = node.addNodeMouseExitHandler(this.hoverTimer);
+        HandlerRegistration hr1 = node.addNodeMouseEnterHandler( this.hoverTimer );
+        HandlerRegistration hr2 = node.addNodeMouseExitHandler( this.hoverTimer );
         handlerRegistrationManager.register( hr1 );
         handlerRegistrationManager.register( hr2 );
     }

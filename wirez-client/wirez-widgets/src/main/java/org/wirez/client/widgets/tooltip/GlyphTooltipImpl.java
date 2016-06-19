@@ -34,8 +34,10 @@ public class GlyphTooltipImpl implements GlyphTooltip<Group>, IsWidget {
     
     public interface View extends UberView<GlyphTooltipImpl> {
         
-        View show(IPrimitive<?> glyph, String text, double width, double height, double x, double y);
-        
+        View show( String text, double x, double y, Direction direction );
+
+        View show( IPrimitive<?> glyph, String text, double x, double y, double width, double height, Direction direction );
+
         View hide();
 
         View remove();
@@ -65,8 +67,16 @@ public class GlyphTooltipImpl implements GlyphTooltip<Group>, IsWidget {
     }
 
     @Override
-    public void show(final ShapeGlyph<Group> glyph, final String text, final double x, final double y) {
-        view.show(glyph.getGroup(), text, glyph.getWidth(), glyph.getHeight(), x, y);
+    public void show( final String text,
+                      final double x,
+                      final double y,
+                      final Direction direction) {
+        view.show( text, x, y, direction );
+    }
+
+    @Override
+    public void show(final ShapeGlyph<Group> glyph, final String text, final double x, final double y, final Direction direction) {
+        view.show( glyph.getGroup(), text, x, y, glyph.getWidth(), glyph.getHeight(), direction );
     }
 
     @Override

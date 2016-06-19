@@ -83,12 +83,6 @@ public abstract class AbstractDragProxy<T> {
                     yDiff = initialY - mouseMoveEvent.getY();
                 }
                 
-                if ( timer.isRunning() ) {
-                    timer.cancel();
-                }
-                
-                timer.schedule( timeout );
-                
                 final int x = xDiff + mouseMoveEvent.getX();
                 final int y = yDiff + mouseMoveEvent.getY();
 
@@ -102,8 +96,14 @@ public abstract class AbstractDragProxy<T> {
                 setY( copy, y );
 
                 layer.batch();
-                
-                timeoutRunnable = () -> callback.onMove( x, y );
+
+                if ( !timer.isRunning() ) {
+
+                    timer.schedule( timeout );
+
+                }
+
+                timeoutRunnable = () -> callback.onMove( x, y );  timer.schedule( timeout );
                 
             }
             

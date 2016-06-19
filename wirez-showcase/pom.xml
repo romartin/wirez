@@ -232,6 +232,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-cdi-shared</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.owasp.encoder</groupId>
       <artifactId>encoder</artifactId>
     </dependency>
@@ -328,7 +333,13 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-basicset</artifactId>
+      <artifactId>wirez-basicset-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-basicset-client</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -523,7 +534,8 @@
             <compileSourcesArtifact>org.wirez:wirez-widgets</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-workbench</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-mobile</compileSourcesArtifact>
-            <compileSourcesArtifact>org.wirez:wirez-basicset</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-basicset-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-basicset-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-bpmn-client</compileSourcesArtifact>
 

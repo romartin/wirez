@@ -18,6 +18,7 @@ package org.wirez.client.widgets.tooltip;
 
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.google.gwt.user.client.ui.FlowPanel;
+import org.wirez.core.client.components.glyph.GlyphTooltip;
 import org.wirez.lienzo.primitive.PrimitiveTooltip;
 
 public class GlyphTooltipView extends FlowPanel implements GlyphTooltipImpl.View {
@@ -33,14 +34,27 @@ public class GlyphTooltipView extends FlowPanel implements GlyphTooltipImpl.View
     }
 
     @Override
+    public GlyphTooltipImpl.View show( final String text,
+                                       final double x,
+                                       final double y,
+                                       final GlyphTooltip.Direction direction) {
+
+        tooltip.show( null, text, 0, 0, x, y, getDirection( direction ) );
+
+        return this;
+
+    }
+
+    @Override
     public GlyphTooltipImpl.View show(final IPrimitive<?> _glyph,
                                       final String text,
+                                      final double x,
+                                      final double y,
                                       final double width,
                                       final double height,
-                                      final double x,
-                                      final double y) {
+                                      final GlyphTooltip.Direction direction) {
 
-        tooltip.show( _glyph, text, width, height, x, y );
+        tooltip.show( _glyph, text, width, height, x, y, getDirection( direction ) );
         
         return this;
     }
@@ -57,6 +71,12 @@ public class GlyphTooltipView extends FlowPanel implements GlyphTooltipImpl.View
     public GlyphTooltipImpl.View remove() {
         tooltip.remove();
         return this;
+    }
+
+    protected PrimitiveTooltip.Direction getDirection( final GlyphTooltip.Direction direction ) {
+
+        return GlyphTooltip.Direction.WEST.equals( direction ) ? PrimitiveTooltip.Direction.WEST : PrimitiveTooltip.Direction.NORTH;
+
     }
 
 }

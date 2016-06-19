@@ -1,57 +1,55 @@
 package org.wirez.core.client.components.palette;
 
-import org.wirez.core.client.canvas.Layer;
+import org.wirez.core.client.components.palette.model.HasPaletteItems;
+import org.wirez.core.client.components.palette.model.PaletteDefinition;
+import org.wirez.core.client.components.palette.view.PaletteView;
 
-public interface Palette<T, V> {
+public interface Palette<I extends HasPaletteItems> {
 
     interface CloseCallback {
 
-        void onClose();
+        boolean onClose();
 
     }
-    
+
     interface ItemHoverCallback {
 
-        void onItemHover(int index, double x, double y);
+        boolean onItemHover( int pos, double mouseX, double mouseY, double itemX, double itemY );
 
     }
 
     interface ItemOutCallback {
 
-        void onItemOut(int index);
+        boolean onItemOut( int pos );
 
     }
 
     interface ItemMouseDownCallback {
 
-        void onItemMouseDown(int index, int x, int y);
+        boolean onItemMouseDown( int pos, double mouseX, double mouseY, double itemX, double itemY );
 
     }
 
     interface ItemClickCallback {
 
-        void onItemClick(int index, int x, int y);
+        boolean onItemClick( int pos, double mouseX, double mouseY, double itemX, double itemY );
 
     }
 
-    T setCloseCallback(CloseCallback callback);
+    Palette<I> onItemHover( ItemHoverCallback callback );
 
-    T setItemHoverCallback(ItemHoverCallback callback);
+    Palette<I> onItemOut( ItemOutCallback callback );
 
-    T setItemOutCallback(ItemOutCallback callback);
+    Palette<I> onItemMouseDown( ItemMouseDownCallback callback );
 
-    T setItemMouseDownCallback(ItemMouseDownCallback callback);
+    Palette<I> onItemClick( ItemClickCallback callback );
 
-    T setItemClickCallback(ItemClickCallback callback);
-    
-    T setX(int x);
+    Palette<I> onClose( CloseCallback callback );
 
-    T setY(int y);
+    Palette<I> bind( I paletteDefinition );
 
-    T show(Layer layer, V[] items);
-    
-    T clear();
+    I getDefinition();
 
     void destroy();
-    
+
 }

@@ -1,5 +1,6 @@
 package org.wirez.lienzo.toolbox.builder;
 
+import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
@@ -61,7 +62,7 @@ public abstract class AbstractBuilder implements On, Towards, ButtonsOrRegister,
     }
 
     @Override
-    public Button add(Shape<?> iconShape) {
+    public Button add(IPrimitive<?> iconShape) {
         return new ButtonBuilder(this.shape.getWiresLayer().getLayer(), this, iconShape);
     }
 
@@ -72,13 +73,13 @@ public abstract class AbstractBuilder implements On, Towards, ButtonsOrRegister,
         private final Layer layer;
         private final AbstractBuilder builder;
         private final List<WhenReady> whenReadyCallbacks = new ArrayList<>();
-        private final Shape<?> shape;
+        private final IPrimitive<?> shape;
         private ToolboxButtonEventHandler clickHandler;
         private ToolboxButtonEventHandler dragEndHandler;
         private ToolboxButtonEventHandler mouseEnterHandler;
         private ToolboxButtonEventHandler mouseExitHandler;
 
-        public ButtonBuilder(Layer layer, AbstractBuilder builder, Shape<?> shape) {
+        public ButtonBuilder(Layer layer, AbstractBuilder builder, IPrimitive<?> shape) {
             this.layer = layer;
             this.builder = builder;
             this.shape = shape;

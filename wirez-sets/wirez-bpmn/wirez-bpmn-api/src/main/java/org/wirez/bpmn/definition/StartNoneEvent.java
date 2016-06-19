@@ -42,7 +42,7 @@ import org.wirez.shapes.factory.BasicShapesFactory;
 public class StartNoneEvent extends BaseStartEvent {
 
     @Title
-    public static final transient String title = "Start Event";
+    public static final transient String title = "Start None Event";
 
     @Description
     public static final transient String description = "Untyped start event";

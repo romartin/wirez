@@ -23,7 +23,6 @@ import org.wirez.core.client.shape.Shape;
 import org.wirez.core.definition.shape.ShapeProxy;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 import org.wirez.core.client.shape.view.ShapeView;
-import org.wirez.core.definition.util.DefinitionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +51,7 @@ public abstract class AbstractProxyShapeFactory<W, V extends ShapeView, S extend
         final P proxy = getProxy( definitionId );
         // TODO: Avoid creating domain object instance here.
         final W tempObject = factoryManager.newDomainObject( definitionId );
-        return proxy.getDescription( tempObject );
+        return proxy.getGlyphDescription( tempObject );
     }
 
     @Override

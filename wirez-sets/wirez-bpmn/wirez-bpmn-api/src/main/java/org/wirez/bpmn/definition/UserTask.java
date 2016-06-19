@@ -27,7 +27,7 @@ import org.wirez.core.rule.annotation.CanDock;
 public class UserTask extends BaseTask {
 
     @Title
-    public static final transient String title = "A User Task";
+    public static final transient String title = "User Task";
     
     @Property
     protected Actor actor;

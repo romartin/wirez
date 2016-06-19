@@ -27,60 +27,27 @@ import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.shape.proxy.ParallelGatewayShapeProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
-import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.definition.factory.Builder;
+import org.wirez.core.definition.annotation.definition.Definition;
+import org.wirez.core.definition.annotation.definition.Title;
+import org.wirez.core.definition.annotation.morph.Morph;
 import org.wirez.core.graph.Node;
 import org.wirez.shapes.factory.BasicShapesFactory;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Portable
 @Bindable
 @Definition( type = Node.class, builder = ParallelGateway.ParallelGatewayBuilder.class )
 @Shape( factory = BasicShapesFactory.class, proxy = ParallelGatewayShapeProxy.class )
-public class ParallelGateway implements BPMNDefinition {
-
-    @Category
-    public static final transient String category = Categories.GATEWAYS;
+@Morph( base = BaseGateway.class )
+public class ParallelGateway extends BaseGateway {
 
     @Title
     public static final transient String title = "Parallel Gateway";
 
     @Description
     public static final transient String description = "Parallel Gateway";
-    
-    @PropertySet
-    private BPMNGeneral general;
-
-    @PropertySet
-    private BackgroundSet backgroundSet;
-
-    @PropertySet
-    private FontSet fontSet;
-
-    @Property
-    private Radius radius;
-
-    @Labels
-    private final Set<String> labels = new HashSet<String>() {{
-        add( "all" );
-        add( "sequence_start" );
-        add( "sequence_end" );
-        add( "choreography_sequence_start" );
-        add( "choreography_sequence_end" );
-        add( "fromtoall" );
-        add( "GatewaysMorph" );
-    }};
 
     @NonPortable
-    public static class ParallelGatewayBuilder implements Builder<ParallelGateway> {
-
-        public static final transient String COLOR = "#f2ea9e";
-        public static final transient String ICON_COLOR = "#ae8104";
-        public static final transient String BORDER_COLOR = "#000000";
-        public static final Double BORDER_SIZE = 1d;
-        public static final Double RADIUS = 20d;
+    public static class ParallelGatewayBuilder extends BaseGatewayBuilder<ParallelGateway> {
 
         @Override
         public ParallelGateway build() {
@@ -100,14 +67,9 @@ public class ParallelGateway implements BPMNDefinition {
                            @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                            @MapsTo("fontSet") FontSet fontSet,
                            @MapsTo("radius") Radius radius) {
-        this.general = general;
-        this.backgroundSet = backgroundSet;
-        this.fontSet = fontSet;
-        this.radius = radius;
-    }
 
-    public String getCategory() {
-        return category;
+        super( general, backgroundSet, fontSet, radius );
+
     }
 
     public String getTitle() {
@@ -118,39 +80,4 @@ public class ParallelGateway implements BPMNDefinition {
         return description;
     }
 
-    public Set<String> getLabels() {
-        return labels;
-    }
-
-    public BPMNGeneral getGeneral() {
-        return general;
-    }
-
-    public BackgroundSet getBackgroundSet() {
-        return backgroundSet;
-    }
-
-    public FontSet getFontSet() {
-        return fontSet;
-    }
-
-    public Radius getRadius() {
-        return radius;
-    }
-
-    public void setGeneral( BPMNGeneral general ) {
-        this.general = general;
-    }
-
-    public void setBackgroundSet( BackgroundSet backgroundSet ) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet( FontSet fontSet ) {
-        this.fontSet = fontSet;
-    }
-
-    public void setRadius( Radius radius ) {
-        this.radius = radius;
-    }
 }

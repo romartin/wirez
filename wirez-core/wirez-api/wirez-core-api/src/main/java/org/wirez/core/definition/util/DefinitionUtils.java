@@ -1,12 +1,14 @@
 package org.wirez.core.definition.util;
 
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
-import org.wirez.core.definition.adapter.PropertyAdapter;
-import org.wirez.core.definition.adapter.PropertySetAdapter;
+import org.wirez.core.api.FactoryManager;
+import org.wirez.core.definition.adapter.*;
 import org.wirez.core.definition.adapter.binding.HasInheritance;
 import org.wirez.core.definition.morph.MorphDefinition;
 import org.wirez.core.definition.morph.MorphPolicy;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,14 +20,18 @@ import java.util.Set;
 public class DefinitionUtils {
 
     DefinitionManager definitionManager;
+    FactoryManager factoryManager;
 
     protected DefinitionUtils() {
+        this( null, null );
     }
     
     @Inject
     @SuppressWarnings("all")
-    public DefinitionUtils(DefinitionManager definitionManager) {
+    public DefinitionUtils( final DefinitionManager definitionManager,
+                            final FactoryManager factoryManager ) {
         this.definitionManager = definitionManager;
+        this.factoryManager = factoryManager;
     }
 
     public <T> String getDefinitionId( final T definition ) {
@@ -41,6 +47,14 @@ public class DefinitionUtils {
         final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
 
         return adapter.getTitle( definition );
+
+    }
+
+    public <T> String getDefinitionCategory( final T definition ) {
+
+        final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
+
+        return adapter.getCategory( definition );
 
     }
 
@@ -119,6 +133,22 @@ public class DefinitionUtils {
         return null;
     }
 
+    public <T> MorphDefinition getMorphDefinition( final T definition ) {
+
+        final MorphAdapter<Object> adapter = definitionManager.getMorphAdapter( definition.getClass() );
+
+        final Iterable<MorphDefinition> definitions = adapter.getMorphDefinitions( definition );
+
+        if ( null != definitions && definitions.iterator().hasNext() ) {
+
+            return definitions.iterator().next();
+
+        }
+
+        return null;
+
+    }
+
     /**
      * Returns the identifiers for the defintion type and its parent, if any.
      */
@@ -137,6 +167,46 @@ public class DefinitionUtils {
 
         return new String[] { definitionId, baseId };
 
+    }
+
+    public String getDefaultConnectorId( final String definitionSetId ) {
+
+        final Object defSet = getDefinitionManager().getDefinitionSet( definitionSetId );
+
+        if ( null != defSet ) {
+
+            final DefinitionSetAdapter<Object> definitionSetAdapter = getDefinitionManager().getDefinitionSetAdapter( defSet.getClass() );
+            final Set<String> definitions = definitionSetAdapter.getDefinitions( defSet );
+
+            if ( null != definitions && !definitions.isEmpty() ) {
+
+                for ( final String defId : definitions ) {
+
+                    // TODO: Find a way to have a default connector for a DefSet or at least do not create objects here.
+
+                    final Object def = factoryManager.newDomainObject( defId );
+
+                    if ( null != def ) {
+
+                        final DefinitionAdapter<Object> definitionAdapter = getDefinitionManager().getDefinitionAdapter( def.getClass() );
+                        final Class<? extends Element> graphElement = definitionAdapter.getGraphElement( def );
+
+                        if ( isEdge( graphElement ) ) {
+
+                            return defId;
+
+                        }
+
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return null;
     }
 
     public boolean isAllPolicy( final MorphDefinition definition ) {
@@ -205,7 +275,17 @@ public class DefinitionUtils {
 
         return null;
     }
-    
-    
+
+    public static boolean isNode( final Class<?> graphElementClass) {
+
+        return graphElementClass.equals( Node.class );
+
+    }
+
+    public static boolean isEdge( final Class<?> graphElementClass) {
+
+        return graphElementClass.equals( Edge.class );
+
+    }
     
 }

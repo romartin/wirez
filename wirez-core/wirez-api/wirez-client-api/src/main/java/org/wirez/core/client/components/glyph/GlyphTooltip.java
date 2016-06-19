@@ -19,8 +19,16 @@ package org.wirez.core.client.components.glyph;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
 public interface GlyphTooltip<G>  {
-    
-    void show(ShapeGlyph<G> glyph, String text, double x, double y);
+
+    enum Direction {
+
+        WEST, NORTH;
+
+    }
+
+    void show( String text, double x, double y, Direction direction );
+
+    void show(ShapeGlyph<G> glyph, String text, double x, double y, Direction direction );
     
     void hide();
     

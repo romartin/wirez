@@ -28,6 +28,6 @@ public @interface MorphBase {
 
     Class<?> defaultType();
 
-    Class<?>[] targets();
+    Class<?>[] targets() default {};
 
 }

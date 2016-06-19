@@ -37,7 +37,7 @@ import java.util.Set;
 public abstract class BaseStartEvent implements BPMNDefinition {
 
     @Category
-    public static final transient String category = Categories.START_EVENTS;
+    public static final transient String category = Categories.EVENTS;
 
     @PropertySet
     protected BPMNGeneral general;

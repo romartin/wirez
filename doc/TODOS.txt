@@ -111,10 +111,19 @@
             - http://resources.bizagi.com/docs/Workflow%20Patterns%20using%20BizAgi%20Process%20Modeler.pdf
         - copy/cut/paste
         - group
-    
+
+    - Grid
+        - https://docs.google.com/document/d/1gCmxYGBFxHeqVoPLC6n5YhA0AyoejiDIzIjTz3-SJpM/edit
+
     - Export diagram to PNG -
             - See -> http://weworkweplay.com/play/saving-html5-canvas-as-image/
-            - Add button for downloading 
+            - Add button for downloading
+
+    - Forms
+        - Validation error messages -> https://docs.google.com/document/d/1UPx4smbKUsbyzL84LoEGlCyI5u89nPNs4cd2I0x4-WM/edit#heading=h.s01718cfssg4
+
+    - Themes
+        - https://github.com/droolsjbpm/jbpm-designer/blob/master/jbpm-designer-client/src/main/resources/org/jbpm/designer/public/defaults/themes.json
 
     - Preview widget - Mark's PR about replication
         

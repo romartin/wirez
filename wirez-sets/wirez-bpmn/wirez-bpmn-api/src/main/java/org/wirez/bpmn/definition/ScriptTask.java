@@ -27,7 +27,7 @@ import org.wirez.core.rule.annotation.CanDock;
 public class ScriptTask extends BaseTask {
 
     @Title
-    public static final transient String title = "An Script Task";
+    public static final transient String title = "Script Task";
     
     @Property
     protected Script script;

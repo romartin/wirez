@@ -52,7 +52,7 @@ public class NodePropertyMorphBuilderImpl extends NodeBuilderImpl {
         
         final Object defaultDefinition = context.getFactoryManager().newDomainObject( defaultDefinitionId );
         
-        final DefinitionUtils definitionUtils = new DefinitionUtils( context.getDefinitionManager() );
+        final DefinitionUtils definitionUtils = new DefinitionUtils( context.getDefinitionManager(), context.getFactoryManager() );
 
         final Object mp = definitionUtils.getProperty( defaultDefinition, morphProperty.getProperty() );
 

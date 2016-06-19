@@ -75,9 +75,15 @@ public class GraphUtils {
         return null;
     }
 
-    public boolean isNode(Class<?> graphElementClass) {
+    public static boolean isNode( final Class<?> graphElementClass) {
 
-        return graphElementClass.equals(Node.class);
+        return DefinitionUtils.isNode( graphElementClass );
+
+    }
+
+    public static boolean isEdge( final Class<?> graphElementClass) {
+
+        return DefinitionUtils.isEdge( graphElementClass );
 
     }
 

@@ -110,6 +110,17 @@ public class LienzoToolboxBuilderImpl
             public int getY() {
                 return event.getY();
             }
+
+            @Override
+            public int getClientX() {
+                return event.getClientX();
+            }
+
+            @Override
+            public int getClientY() {
+                return event.getClientY();
+            }
+
         });
         
     }

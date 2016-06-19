@@ -125,27 +125,39 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
         return result;
     }
 
-    protected String getDefinitionId( Class<?> type ) {
-        return BindableAdapterUtils.getDefinitionId( type );
-    }
-
     @SuppressWarnings("unchecked")
-    public Class<? extends Element> getGraphElement(final T pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getPropertyGraphElementFieldNames().get( clazz );
+    public Class<? extends Element> getGraphElement( final T pojo) {
+        return getGraphElement( pojo.getClass() );
     }
 
     public String getElementFactory(final T pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
+        return getElementFactory( pojo.getClass() );
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Class<? extends Element> getGraphElement( final Class<?> type ) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( type );
+        return getPropertyGraphElementFieldNames().get( clazz );
+    }
+
+    @Override
+    public String getElementFactory( final Class<?> type ) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( type );
         return getPropertyElementFactoryFieldNames().get( clazz );
     }
 
-    public boolean accepts(final Class<?> pojoClass ) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass(pojoClass);
-        final boolean hasType = getPropertyCategoryFieldNames().containsKey(clazz);
+    public boolean accepts( final Class<?> type ) {
+        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( type );
+        final boolean hasType = getPropertyCategoryFieldNames().containsKey( clazz );
 
         // If not types found, check if it's a super type.
-        return hasType || baseTypes.values().contains(clazz);
+        return hasType || baseTypes.values().contains( clazz );
+    }
+
+    @Override
+    public int getPriority() {
+        return 0;
     }
 
     protected Class<?> getNamePropertyClass() {
@@ -184,9 +196,8 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
         return propertyDescriptionFieldNames;
     }
 
-    @Override
-    public int getPriority() {
-        return 0;
+    protected String getDefinitionId( final Class<?> type ) {
+        return BindableAdapterUtils.getDefinitionId( type );
     }
 
 }

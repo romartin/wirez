@@ -64,7 +64,7 @@ import java.util.*;
         MainProcessor.ANNOTATION_RULE_ALLOWED_OCCS,
         MainProcessor.ANNOTATION_SHAPE,
         MainProcessor.ANNOTATION_SHAPE_SET})
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
     public static final String ANNOTATION_DESCRIPTION = "org.wirez.core.definition.annotation.Description";

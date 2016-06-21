@@ -18,13 +18,11 @@ package org.wirez.backend;
 
 import org.jboss.errai.security.shared.api.identity.User;
 import org.jboss.errai.security.shared.service.AuthenticationService;
-import org.uberfire.backend.server.IOWatchServiceNonDotImpl;
+import org.uberfire.backend.server.IOWatchServiceAllImpl;
 import org.uberfire.commons.services.cdi.Startup;
 import org.uberfire.commons.services.cdi.StartupType;
 import org.uberfire.io.IOService;
 import org.uberfire.io.impl.IOServiceNio2WrapperImpl;
-import org.uberfire.security.authz.AuthorizationManager;
-import org.uberfire.security.impl.authz.RuntimeAuthorizationManager;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -38,20 +36,20 @@ import javax.inject.Named;
 public class ApplicationScopedProducer {
 
     @Inject
-    IOWatchServiceNonDotImpl watchService;
+    private AuthenticationService authenticationService;
 
     @Inject
-    private AuthenticationService authenticationService;
-    
+    private IOWatchServiceAllImpl watchService;
+
     private IOService ioService;
 
     @PostConstruct
     public void setup() {
-        ioService  = new IOServiceNio2WrapperImpl("1", watchService );
+        ioService  = new IOServiceNio2WrapperImpl("1", watchService);
     }
-    
+
     @Produces
-    @Named( "ioStrategy" )
+    @Named("ioStrategy")
     public IOService ioService() {
         return ioService;
     }
@@ -62,9 +60,5 @@ public class ApplicationScopedProducer {
         return authenticationService.getUser();
     }
 
-    @Produces
-    public AuthorizationManager getAuthManager() {
-        return new RuntimeAuthorizationManager();
-    }
-
 }
+

@@ -32,6 +32,8 @@ public class PaletteTest {
     @Mock
     private Group group;
     @Mock
+    private Group itemsGroup;
+    @Mock
     private Rectangle rectangle;
 
     private static final int ICON_SIZE = 10;
@@ -60,13 +62,16 @@ public class PaletteTest {
         miniPalette = spy(miniPalette);
 
         doReturn(miniPalette).when(miniPalette).add(anyObject());
+        when(itemsGroup.add(anyObject())).thenReturn(itemsGroup);
         doReturn(decorator).when(miniPalette).createDecorator(anyInt(), anyDouble(), anyDouble());
-        doReturn(grid).when(miniPalette).createGrid(any());
+        doReturn(grid).when(miniPalette).createGrid(anyInt());
 
         doReturn(decorator).when(decorator).build(anyObject(), anyDouble(), anyDouble());
         doReturn(decorator).when(decorator).setX(anyDouble());
         doReturn(decorator).when(decorator).setY(anyDouble());
         doReturn(group).when(decorator).add(anyObject());
+
+        miniPalette.itemsGroup = itemsGroup;
     }
 
     @Test
@@ -76,7 +81,7 @@ public class PaletteTest {
 
         verify(miniPalette).clear();
         verify(miniPalette).createGrid( arrayOfPrimitives.length );
-        verify(miniPalette, times(2)).add(decorator);
+        verify(itemsGroup, times(2)).add(decorator);
 
         verify(pointIterator, times(2)).next();
 

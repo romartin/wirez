@@ -56,7 +56,7 @@ public abstract class AbstractPalette<T> extends Group {
     protected int rows = -1;
     protected int cols = -1;
     protected Callback callback;
-    protected final Group itemsGroup = new Group();
+    protected Group itemsGroup = new Group();
     protected final HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
 
     public AbstractPalette() {
@@ -125,11 +125,9 @@ public abstract class AbstractPalette<T> extends Group {
                     itemDecorator.build( item.getPrimitive(), toDouble( iconSize ), toDouble( iconSize ) ) :
                     item.getPrimitive() ;
 
-            this.itemsGroup.add( i
-                    .setX( px )
-                    .setY( py )
-                    .moveToTop()
-            );
+            i.setX( px ).setY( py ).moveToTop();
+
+            this.itemsGroup.add( i );
 
             handlerRegistrationManager.register(
                     i.addNodeMouseDownHandler(event -> onItemMouseDown(index, event.getX(), event.getY(), px, py ))

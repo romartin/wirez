@@ -6,10 +6,10 @@ import java.util.NoSuchElementException;
 import com.ait.lienzo.shared.core.types.Direction;
 
 public class Grid implements Iterable<Grid.Point> {
-    private final int padding;
-    private final int iconSize;
-    private final int rows;
-    private final int cols;
+    private int padding;
+    private int iconSize;
+    private int rows;
+    private int cols;
 
     public Grid(int padding, int iconSize, int rows, int cols) {
         if (padding < 0 || iconSize < 0 || rows < 1 || cols < 1) {

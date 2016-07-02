@@ -5,9 +5,6 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
-import org.wirez.core.graph.Edge;
-import org.wirez.core.graph.Element;
-import org.wirez.core.graph.Node;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
@@ -15,6 +12,9 @@ import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.select.SelectionControl;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 import org.wirez.core.client.shape.Shape;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -40,7 +40,7 @@ public class DeleteSelectionCommand extends AbstractSelectionToolbarCommand<Defa
 
     @Override
     public IconType getIcon() {
-        return IconType.CLOSE;
+        return IconType.TRASH_O;
     }
 
     @Override

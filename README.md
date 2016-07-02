@@ -18,7 +18,7 @@ Running the application
 
 **Wildfly 10.x**
 
-There exist a concrete distribution for Wilfly 10.x you can use, instructions [here](./wirez-distros/src/main/wildfly8/README.md).
+There exist a concrete distribution for Wilfly 10.x you can use, instructions [here](./wirez-distros/src/main/wildfly/README.md).
 
 Another option is to run the application using GWT SuperDevMode. If you're planning more than just try the tool, 
 the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if you just want to run it quicly you can use the command line as the following sections describe.                                  

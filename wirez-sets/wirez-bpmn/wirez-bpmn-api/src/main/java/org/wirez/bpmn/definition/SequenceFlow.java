@@ -22,12 +22,15 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
+import org.wirez.bpmn.shape.proxy.SequenceFlowConnectorProxy;
 import org.wirez.core.definition.annotation.Description;
+import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
 import org.wirez.core.definition.factory.Builder;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.rule.annotation.CanConnect;
 import org.wirez.core.rule.annotation.EdgeOccurrences;
+import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +49,7 @@ import java.util.Set;
 @EdgeOccurrences(role="Startevents_all", type = EdgeOccurrences.EdgeType.INCOMING, max = 0)
 @EdgeOccurrences(role="Endevents_all", type = EdgeOccurrences.EdgeType.OUTGOING, max = 0)
 
+@Shape( factory = BasicShapesFactory.class, proxy = SequenceFlowConnectorProxy.class )
 public class SequenceFlow implements BPMNDefinition {
 
     @Category
@@ -74,11 +78,11 @@ public class SequenceFlow implements BPMNDefinition {
 
         public static final transient String COLOR = "#000000";
         public static final transient String BORDER_COLOR = "#000000";
-        public static final Double BORDER_SIZE = 1d;
+        public static final Double BORDER_SIZE = 3d;
 
         @Override
         public SequenceFlow build() {
-            return new SequenceFlow(  new BPMNGeneral( "seq flow" ),
+            return new SequenceFlow(  new BPMNGeneral( "Sequence" ),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ) );
         }
 

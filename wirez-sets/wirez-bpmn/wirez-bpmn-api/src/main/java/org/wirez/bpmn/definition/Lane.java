@@ -25,11 +25,14 @@ import org.wirez.bpmn.definition.property.Width;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
+import org.wirez.bpmn.shape.proxy.LaneShapeProxy;
 import org.wirez.core.definition.annotation.Description;
+import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
 import org.wirez.core.definition.factory.Builder;
 import org.wirez.core.graph.Node;
 import org.wirez.core.rule.annotation.CanContain;
+import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +41,7 @@ import java.util.Set;
 @Bindable
 @Definition( type = Node.class, builder = Lane.LaneBuilder.class )
 @CanContain( roles = { "all" } )
+@Shape( factory = BasicShapesFactory.class, proxy = LaneShapeProxy.class )
 public class Lane implements BPMNDefinition {
 
     @Category

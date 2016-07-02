@@ -120,6 +120,11 @@ public abstract class AbstractConnector<W, E extends Edge<ViewConnector<W>, Node
         
     }
 
+
+    protected void _applyFillAlpha( final double alpha, final MutationContext mutationContext ) {
+        getShapeView().setFillAlpha( alpha );
+    }
+
     protected void  _applyBorders(final String color, 
                                   final Double width,
                                   final MutationContext mutationContext) {
@@ -154,6 +159,11 @@ public abstract class AbstractConnector<W, E extends Edge<ViewConnector<W>, Node
         }
         
     }
+
+    protected void _applyBorderAlpha( final double alpha, final MutationContext mutationContext ) {
+        getShapeView().setStrokeAlpha( alpha );
+    }
+
 
     @Override
     public void applyConnections( final E element, 

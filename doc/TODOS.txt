@@ -77,7 +77,10 @@
         - WiresConnector
             - Decorators can be null
             - animate rotations both clockwise ( svg only supports single wise )
-            - 
+            - Do not move if parent shapes are dragged ( the source / target shapes are moved as the parent, but not the connectors )
+            - do not work fine with mediators ( pan / zoom )
+            - Cannot be "unconnected" - "No source magnet found.. Defense programming" message from lienzo??
+
     - Performance issues on class Geometry
     - External configs -> Connectors / docking hotspot size
     - When dragging parent shapes, the connectors on the children are not drag
@@ -100,7 +103,7 @@
 
     - General
         - Help widgets & tooltips/popovers
-        - Error handling
+        - Improve Error handling
         - refactor use of CDI qualifiers ( managers & services ) -> CDI @Priority 
         - Show/Hide grid toolbar button
         - cpu perf on adding shapes / minipalette drags

@@ -7,6 +7,10 @@ public interface Settings {
     String getDefinitionSetId();
     
     String getShapeSetId();
+
+    String getCanvasRootUUID();
+
+    void setCanvasRootUUID( String uuid );
     
     String getVFSPath();
     

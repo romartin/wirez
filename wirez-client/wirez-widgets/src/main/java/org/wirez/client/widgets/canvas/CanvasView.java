@@ -26,11 +26,14 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.canvas.AbstractCanvas;
+import org.wirez.core.client.canvas.CanvasGrid;
 import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.annotation.PostConstruct;
 
 public class CanvasView extends Composite implements org.wirez.core.client.canvas.AbstractCanvas.View {
+
+    private static final String Bg_COLOR = "#FFFFFF";
 
     protected FlowPanel mainPanel = new FlowPanel();
     protected FlowPanel toolsPanel = new FlowPanel();
@@ -54,26 +57,9 @@ public class CanvasView extends Composite implements org.wirez.core.client.canva
     public AbstractCanvas.View show(final int width, final int height, final int padding) {
         
         panel = new FocusableLienzoPanel( width + padding, height + padding );
+        panel.getElement().getStyle().setBackgroundColor( Bg_COLOR );
         mainPanel.add(toolsPanel);
         mainPanel.add(panel);
-
-        //Grid...
-        Line line1 = new Line( 0,
-                0,
-                0,
-                0 ).setStrokeColor( ColorName.BLUE ).setAlpha( 0.2 ); // primary lines
-        Line line2 = new Line( 0,
-                0,
-                0,
-                0 ).setStrokeColor( ColorName.GREEN ).setAlpha( 0.2 ); // secondary dashed-lines
-        line2.setDashArray( 2,
-                2 );
-
-        GridLayer gridLayer = new GridLayer( 100,
-                line1,
-                25,
-                line2 );
-        panel.setBackgroundLayer( gridLayer );
 
         panel.getScene().add( canvasLayer );
         
@@ -147,6 +133,38 @@ public class CanvasView extends Composite implements org.wirez.core.client.canva
     @Override
     public double getAbsoluteY() {
         return panel.getAbsoluteTop();
+    }
+
+    @Override
+    public AbstractCanvas.View setGrid( final CanvasGrid grid ) {
+
+        if ( null != grid ) {
+
+            // Grid.
+            Line line1 = new Line( 0, 0, 0, 0 )
+                    .setStrokeColor( grid.getPrimaryColor() )
+                    .setAlpha( grid.getPrimaryAlpha() );
+            Line line2 = new Line( 0, 0, 0, 0 )
+                    .setStrokeColor( grid.getSecondaryColor() )
+                    .setAlpha( grid.getSecondaryAlpha() );
+
+            line2.setDashArray( 2,
+                    2 );
+
+            GridLayer gridLayer = new GridLayer( grid.getPrimarySize(),
+                    line1,
+                    grid.getSecondarySize(),
+                    line2 );
+
+            panel.setBackgroundLayer( gridLayer );
+
+        } else {
+
+            panel.setBackgroundLayer( null );
+
+        }
+
+        return this;
     }
 
     @Override

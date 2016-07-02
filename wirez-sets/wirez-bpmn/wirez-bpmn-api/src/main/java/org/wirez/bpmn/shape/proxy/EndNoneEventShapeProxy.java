@@ -1,11 +1,11 @@
 package org.wirez.bpmn.shape.proxy;
 
 import org.wirez.bpmn.definition.EndNoneEvent;
-import org.wirez.shapes.proxy.AbstractBasicShapeProxy;
+import org.wirez.shapes.proxy.AbstractBasicDynamicShapeProxy;
 import org.wirez.shapes.proxy.CircleProxy;
 
 public final class EndNoneEventShapeProxy
-        extends AbstractBasicShapeProxy<EndNoneEvent>
+        extends AbstractBasicDynamicShapeProxy<EndNoneEvent>
         implements CircleProxy<EndNoneEvent> {
     
     @Override

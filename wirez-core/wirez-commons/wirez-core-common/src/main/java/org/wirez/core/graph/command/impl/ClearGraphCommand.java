@@ -20,9 +20,12 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.graph.Graph;
+import org.wirez.core.graph.Node;
 import org.wirez.core.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.graph.command.GraphCommandResultBuilder;
 import org.wirez.core.rule.RuleViolation;
+
+import java.util.Iterator;
 
 /**
  * A Command to clear all elements in a graph
@@ -33,22 +36,54 @@ import org.wirez.core.rule.RuleViolation;
 public final class ClearGraphCommand extends AbstractGraphCommand {
 
     private Graph target;
+    private String rootUUID;
 
-    public ClearGraphCommand(@MapsTo("target") Graph target) {
+    public ClearGraphCommand(@MapsTo("target") Graph target,
+                             @MapsTo("rootUUID") String rootUUID) {
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );;
+        this.rootUUID = PortablePreconditions.checkNotNull( "rootUUID",
+                rootUUID );;
     }
-    
+
     @Override
     public CommandResult<RuleViolation> allow(final GraphCommandExecutionContext context) {
         return check( context );
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
         final CommandResult<RuleViolation> results = check( context );
+
         if ( !results.getType().equals(CommandResult.Type.ERROR) ) {
-            target.clear();
+
+            if ( hasRootUUID() ) {
+
+                Iterator<Node> nodes = target.nodes().iterator();
+
+                if ( null != nodes ) {
+
+                    while ( nodes.hasNext() ) {
+
+                        final Node node = nodes.next();
+
+                        if ( !node.getUUID().equals( rootUUID ) ) {
+
+                            nodes.remove();
+
+                        }
+
+                    }
+                    
+                }
+
+            } else {
+
+                target.clear();
+
+            }
+
         }
         return results;
     }
@@ -60,6 +95,10 @@ public final class ClearGraphCommand extends AbstractGraphCommand {
     @Override
     public CommandResult<RuleViolation> undo(GraphCommandExecutionContext context) {
         throw new UnsupportedOperationException( "Clear graph command undo is still not supported. ");
+    }
+
+    private boolean hasRootUUID() {
+        return null != this.rootUUID && rootUUID.trim().length() > 0;
     }
 
     @Override

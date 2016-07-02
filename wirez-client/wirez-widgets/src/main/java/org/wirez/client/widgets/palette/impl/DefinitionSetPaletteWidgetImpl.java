@@ -60,13 +60,12 @@ public class DefinitionSetPaletteWidgetImpl
     SyncBeanManager beanManager;
 
     PaletteWidgetFloatingView floatingView;
-    ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler;
 
     private LienzoDefinitionSetPalette mainPalette;
     private LienzoGlyphsHoverPalette glyphsFloatingPalette;
 
     protected DefinitionSetPaletteWidgetImpl() {
-        this( null, null, null, null, null, null );
+        this( null, null, null, null, null );
     }
 
     @Inject
@@ -74,12 +73,10 @@ public class DefinitionSetPaletteWidgetImpl
                                           final ClientFactoryServices clientFactoryServices,
                                           final PaletteWidgetViewImpl view,
                                           final SyncBeanManager beanManager,
-                                          final PaletteWidgetFloatingView floatingView,
-                                          final ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler) {
+                                          final PaletteWidgetFloatingView floatingView) {
         super(shapeManager, clientFactoryServices, view);
         this.beanManager = beanManager;
         this.floatingView = floatingView;
-        this.shapeGlyphDragHandler = shapeGlyphDragHandler;
     }
 
     @PostConstruct

@@ -39,6 +39,11 @@ public abstract class AbstractProxyTitledShape<W, V extends org.wirez.shapes.cli
     }
 
     @Override
+    protected Double getBackgroundAlpha( final Node<View<W>, Edge> element ) {
+        return proxy.getBackgroundAlpha( getDefinition( element ) );
+    }
+
+    @Override
     protected String getBorderColor(final Node<View<W>, Edge> element) {
         return proxy.getBorderColor( getDefinition( element ) );
     }
@@ -46,6 +51,11 @@ public abstract class AbstractProxyTitledShape<W, V extends org.wirez.shapes.cli
     @Override
     protected Double getBorderSize(final Node<View<W>, Edge> element) {
         return proxy.getBorderSize( getDefinition( element ) );
+    }
+
+    @Override
+    protected Double getBorderAlpha( final Node<View<W>, Edge> element ) {
+        return proxy.getBorderAlpha( getDefinition( element ) );
     }
 
     @Override

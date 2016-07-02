@@ -1,10 +1,10 @@
 package org.wirez.basicset.shape.proxy;
 
 import org.wirez.basicset.definition.Ring;
-import org.wirez.shapes.proxy.AbstractBasicShapeProxy;
+import org.wirez.shapes.proxy.AbstractBasicDynamicShapeProxy;
 
 public final class RingProxy
-        extends AbstractBasicShapeProxy<Ring>
+        extends AbstractBasicDynamicShapeProxy<Ring>
         implements org.wirez.shapes.proxy.RingProxy<Ring> {
 
     @Override

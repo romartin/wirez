@@ -1,10 +1,10 @@
 package org.wirez.basicset.shape.proxy;
 
 import org.wirez.basicset.definition.Circle;
-import org.wirez.shapes.proxy.AbstractBasicShapeProxy;
+import org.wirez.shapes.proxy.AbstractBasicDynamicShapeProxy;
 
 public final class CircleProxy
-        extends AbstractBasicShapeProxy<Circle>
+        extends AbstractBasicDynamicShapeProxy<Circle>
         implements org.wirez.shapes.proxy.CircleProxy<Circle> {
 
     @Override

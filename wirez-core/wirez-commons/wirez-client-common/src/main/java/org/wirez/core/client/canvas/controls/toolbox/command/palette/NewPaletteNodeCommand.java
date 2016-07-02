@@ -10,6 +10,7 @@ import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequest;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequestImpl;
 import org.wirez.core.client.canvas.util.CanvasHighlight;
 import org.wirez.core.client.components.drag.DragProxyCallback;
+import org.wirez.core.client.components.drag.NodeDragProxyCallback;
 import org.wirez.core.client.components.drag.NodeDragProxyFactory;
 import org.wirez.core.client.components.palette.Palette;
 import org.wirez.core.client.components.palette.model.GlyphPaletteItem;
@@ -132,7 +133,7 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
 
                         nodeDragProxyFactory
                                 .proxyFor( canvasHandler )
-                                .newInstance(item, (int) x, (int) y, new DragProxyCallback() {
+                                .newInstance(item, (int) x, (int) y, new NodeDragProxyCallback() {
 
                                     @Override
                                     public void onStart(final int x,
@@ -167,8 +168,15 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
                                     public void onComplete(final int x,
                                                            final int y) {
 
-                                        final NodeBuildRequest request = new NodeBuildRequestImpl( x, y , node, edge );
-                                        
+
+
+                                    }
+
+                                    @Override
+                                    public void onComplete( int x, int y, int sourceMagnet, int targetMagnet ) {
+
+                                        final NodeBuildRequest request = new NodeBuildRequestImpl( x, y , node, edge, sourceMagnet, targetMagnet );
+
                                         nodeBuilderControl.build( request );
 
                                         nodeBuilderControl.disable();
@@ -176,6 +184,7 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
                                         canvasHighlight.unhighLight();
 
                                     }
+
                                 });
 
                     }

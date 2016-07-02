@@ -131,17 +131,22 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
                     graphCommandManager,
                     commandFactory);
             
-            parser.setProfile(new DefaultProfileImpl());
-            final Graph graph = parser.unmarshall(definitions, null);
-            final String title = getFirstDiagramTitle(graph);
+            parser.setProfile( new DefaultProfileImpl() );
+            final Graph graph = parser.unmarshall( definitions, null );
+            final Node diagramNode = getFirstDiagramNode( graph );
+            final BPMNDiagram diagram = null != diagramNode ?
+                    (BPMNDiagram) ( (Definition) diagramNode.getContent()).getDefinition() : null;
+            final String rootUUID = null != diagramNode ? diagramNode.getUUID() : null;
+            final String title = getTitle( diagram );
 
             final String defSetId = BindableAdapterUtils.getDefinitionSetId( BPMNDefinitionSet.class );
-            final Diagram<Graph, Settings> diagram = new DiagramImpl( UUID.uuid(), graph, 
-                    new SettingsImpl(title, defSetId, BindableAdapterUtils.getShapeSetId( BPMNDefinitionSet.class ) ));
+            final Diagram<Graph, Settings> result = new DiagramImpl( UUID.uuid(), graph,
+                    new SettingsImpl( title, defSetId,
+                            BindableAdapterUtils.getShapeSetId( BPMNDefinitionSet.class ), rootUUID ));
 
             LOG.info("BPMN diagram loading finished successfully.");
 
-            return diagram;
+            return result;
             
         } catch (IOException e) {
             LOG.error("Error parsing bpmn file.", e);
@@ -174,9 +179,8 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
     }
     
     @SuppressWarnings("unchecked")
-    protected String getFirstDiagramTitle( final Graph graph ) {
-        String title = null;
-        
+    protected Node getFirstDiagramNode( final Graph graph ) {
+
         if ( null != graph ) {
             Iterable<Node> nodesIterable = graph.nodes();
             if ( null != nodesIterable ) {
@@ -188,9 +192,7 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
                         if ( content instanceof Definition ) {
                             Definition definitionContent = (Definition) content;
                             if (  definitionContent.getDefinition() instanceof BPMNDiagram ) {
-                                BPMNDiagram diagram = (BPMNDiagram) definitionContent.getDefinition();
-                                title = diagram.getGeneral().getName().getValue();
-                                break;
+                                return node;
                             }
                         }
                         
@@ -200,6 +202,11 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
             
         }
         
+        return null;
+    }
+
+    protected String getTitle( BPMNDiagram diagram ) {
+        final String title = diagram.getGeneral().getName().getValue();
         return title != null && title.trim().length() > 0 ? title : "-- Untitled BPMN2 diagram --";
     }
 }

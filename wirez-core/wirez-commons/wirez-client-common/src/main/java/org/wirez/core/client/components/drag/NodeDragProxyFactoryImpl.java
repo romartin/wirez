@@ -32,7 +32,7 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
     }
 
     @Override
-    public DragProxyFactory<AbstractCanvasHandler, Item, DragProxyCallback> proxyFor(final AbstractCanvasHandler context) {
+    public DragProxyFactory<AbstractCanvasHandler, Item, NodeDragProxyCallback> proxyFor(final AbstractCanvasHandler context) {
         this.canvasHandler = context;
         this.shapeDragProxyFactory.proxyFor( context.getCanvas() );
         return this;
@@ -40,10 +40,10 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
 
     @Override
     @SuppressWarnings("unchecked")
-    public DragProxyFactory<AbstractCanvasHandler, Item, DragProxyCallback> newInstance(final Item item, 
+    public DragProxyFactory<AbstractCanvasHandler, Item, NodeDragProxyCallback> newInstance(final Item item,
                                                                                         final int x, 
                                                                                         final int y, 
-                                                                                        final DragProxyCallback callback) {
+                                                                                        final NodeDragProxyCallback callback) {
 
         final AbstractCanvas canvas = canvasHandler.getCanvas();
 
@@ -98,24 +98,30 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
             public void onComplete(final int x,
                                    final int y) {
 
-                callback.onComplete( x ,y );
+                final int[] magnets = getMagnets();
+
+                callback.onComplete( x, y );
+
+                callback.onComplete( x, y, magnets[0], magnets[1] );
                 
                 canvas.deleteTransientShape( edgeShape );
 
                 canvas.draw();
 
+
             }
             
             private void drawEdge() {
 
+
                 if ( inEdge.getContent() instanceof ViewConnector) {
 
+                    final int[] magnets = getMagnets();
+
                     final ViewConnector viewConnector = (ViewConnector) inEdge.getContent();
-                    final int[] magnetIndexes = magnetsHelper.getDefaultMagnetsIndex( edgeSourceNodeShape.getShapeView(), 
-                            nodeShape.getShapeView() );
-                    
-                    viewConnector.setSourceMagnetIndex( magnetIndexes[0] );
-                    viewConnector.setTargetMagnetIndex( magnetIndexes[1] );
+
+                    viewConnector.setSourceMagnetIndex( magnets[0] );
+                    viewConnector.setTargetMagnetIndex( magnets[1] );
 
                 }
 
@@ -126,6 +132,13 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
                 
                 canvas.draw();
                 
+            }
+
+            private int[] getMagnets() {
+
+                return magnetsHelper.getDefaultMagnetsIndex( edgeSourceNodeShape.getShapeView(),
+                        nodeShape.getShapeView() );
+
             }
             
         });

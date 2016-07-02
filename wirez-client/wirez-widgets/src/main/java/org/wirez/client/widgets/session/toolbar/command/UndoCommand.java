@@ -4,12 +4,12 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
+import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.event.command.CanvasCommandExecutedEvent;
 import org.wirez.core.client.canvas.event.command.CanvasUndoCommandExecutedEvent;
+import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.command.stack.StackCommandManager;
-import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;

@@ -3,6 +3,7 @@ package org.wirez.bpmn.shape.proxy;
 import org.wirez.bpmn.definition.ParallelGateway;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.*;
+import org.wirez.shapes.proxy.icon.dynamics.AbstractDynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.DynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.Icons;
 
@@ -10,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class ParallelGatewayShapeProxy
-        extends AbstractBasicShapeProxy<ParallelGateway>
+        extends AbstractBasicDynamicShapeProxy<ParallelGateway>
         implements
         PolygonProxy<ParallelGateway>,
         HasChildProxies<ParallelGateway> {
@@ -82,7 +83,7 @@ public final class ParallelGatewayShapeProxy
     }
 
     public final class IconProxy
-            extends AbstractBasicGlyphProxy<ParallelGateway>
+            extends AbstractDynamicIconProxy<ParallelGateway>
             implements DynamicIconProxy<ParallelGateway> {
 
         @Override

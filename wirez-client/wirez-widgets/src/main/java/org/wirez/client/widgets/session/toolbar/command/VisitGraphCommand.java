@@ -28,7 +28,7 @@ public class VisitGraphCommand extends AbstractToolbarCommand<DefaultCanvasReadO
 
     @Override
     public IconType getIcon() {
-        return IconType.EYE;
+        return IconType.AUTOMOBILE;
     }
 
     @Override

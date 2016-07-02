@@ -6,6 +6,7 @@ import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
+import org.wirez.core.client.components.drag.DragProxyCallback;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.components.glyph.GlyphTooltip;
 import org.wirez.core.client.service.ClientFactoryServices;
@@ -104,4 +105,37 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
 
         return factory;
     }
+
+    @Override
+    protected DragProxyCallback getDragProxyCallback( final Element element,
+                                                      final Element item ) {
+        return new DragProxyCallback() {
+
+            @Override
+            public void onStart(final int x1,
+                                final int y1) {
+
+                AbstractElementBuilderCommand.this.onStart(  element, item, x1, y1 );
+
+            }
+
+            @Override
+            public void onMove(final int x1,
+                               final int y1) {
+
+                AbstractElementBuilderCommand.this.onMove(  element, item, x1, y1 );
+
+            }
+
+            @Override
+            public void onComplete(final int x1,
+                                   final int y1) {
+
+                AbstractElementBuilderCommand.this.onComplete(  element, item, x1, y1 );
+
+            }
+        };
+
+    }
+
 }

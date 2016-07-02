@@ -33,61 +33,81 @@ public abstract class AbstractDynamicShape<W, V extends org.wirez.shapes.client.
     }
 
     @Override
-    public void applyProperties(Node<View<W>, Edge> element, final MutationContext mutationContext) {
-        super.applyProperties(element, mutationContext);
+    public void applyProperties( Node<View<W>, Edge> element, final MutationContext mutationContext ) {
+        super.applyProperties( element, mutationContext );
 
         // Fill color.
-        _applyFillColor(element, mutationContext);
+        _applyFillColor( element, mutationContext );
+
+        // Fill alpha.
+        _applyFillApha( element, mutationContext );
 
         // Apply border styles.
-        _applyBorders(element, mutationContext);
+        _applyBorders( element, mutationContext );
+
+        // Apply border alpha.
+        _applyBorderApha( element, mutationContext );
+
 
     }
     
     protected abstract String getBackgroundColor( Node<View<W>, Edge> element );
+    protected abstract Double getBackgroundAlpha( Node<View<W>, Edge> element );
     protected abstract String getBorderColor( Node<View<W>, Edge> element );
     protected abstract Double getBorderSize( Node<View<W>, Edge> element );
+    protected abstract Double getBorderAlpha( Node<View<W>, Edge> element );
 
-    protected AbstractDynamicShape<W, V> _applyFillColor(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
+    protected AbstractDynamicShape<W, V> _applyFillColor( final Node<View<W>, Edge> element, final MutationContext mutationContext ) {
         final String color = getBackgroundColor( element );
-        super._applyFillColor(color, mutationContext);
+        super._applyFillColor( color, mutationContext );
         return this;
     }
 
-    protected AbstractDynamicShape<W, V> _applyBorders(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
+    protected AbstractDynamicShape<W, V> _applyFillApha( final Node<View<W>, Edge> element, final MutationContext mutationContext ) {
+        final Double alpha = getBackgroundAlpha( element );
+        super._applyFillAlpha( alpha, mutationContext );
+        return this;
+    }
+
+    protected AbstractDynamicShape<W, V> _applyBorders( final Node<View<W>, Edge> element, final MutationContext mutationContext ) {
         final String color = getBorderColor( element );
         final Double width = getBorderSize( element );
-        super._applyBorders(color, width, mutationContext);
-        
+        super._applyBorders( color, width, mutationContext );
         return this;
     }
 
-    protected AbstractDynamicShape<W, V> _applyWidthAndHeight(final Node<View<W>, Edge> element,
-                                                              final Double width,
-                                                              final Double height,
-                                                              final MutationContext mutationContext) {
-        applySize((HasSize) getShapeView(), width, height, mutationContext);
-        GraphUtils.updateBounds(width, height, element.getContent());
+    protected AbstractDynamicShape<W, V> _applyBorderApha( final Node<View<W>, Edge> element, final MutationContext mutationContext ) {
+        final Double alpha = getBorderAlpha( element );
+        super._applyBorderAlpha( alpha, mutationContext );
         return this;
     }
 
-    protected AbstractDynamicShape<W, V> _applyRadius(final Node<View<W>, Edge> element,
-                                                      final Double radius,
-                                                      final MutationContext mutationContext) {
+    protected AbstractDynamicShape<W, V> _applyWidthAndHeight( final Node<View<W>, Edge> element,
+                                                               final Double width,
+                                                               final Double height,
+                                                               final MutationContext mutationContext ) {
+        applySize( ( HasSize ) getShapeView(), width, height, mutationContext );
+        GraphUtils.updateBounds( width, height, element.getContent() );
+        return this;
+    }
+
+    protected AbstractDynamicShape<W, V> _applyRadius( final Node<View<W>, Edge> element,
+                                                       final Double radius,
+                                                       final MutationContext mutationContext ) {
         if ( null != radius ) {
-            applyRadius((HasRadius) getShapeView(), radius, mutationContext);
-            GraphUtils.updateBounds(radius, element.getContent());
+            applyRadius( ( HasRadius ) getShapeView(), radius, mutationContext );
+            GraphUtils.updateBounds( radius, element.getContent() );
         }
         return this;
     }
-    
+
     protected W getDefinition( final Node<View<W>, Edge> element ) {
         return element.getContent().getDefinition();
     }
 
     @Override
     protected void doDestroy() {
-        
+
     }
     
 }

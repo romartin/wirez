@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class TaskShapeProxy
-        extends AbstractBasicShapeProxy<BaseTask>
+        extends AbstractBasicDynamicShapeProxy<BaseTask>
         implements RectangleProxy<BaseTask>, HasChildProxies<BaseTask> {
     
     @Override

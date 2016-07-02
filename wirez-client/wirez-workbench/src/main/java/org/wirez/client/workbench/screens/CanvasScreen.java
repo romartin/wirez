@@ -72,7 +72,7 @@ public class CanvasScreen {
         session = canvasSessionManager.newFullSession();
         
         // Initialize the session presenter.
-        canvasSessionPresenter.initialize( session, 1000, 1000 );
+        canvasSessionPresenter.initialize( session, 1400, 650 );
         
         // Menus for testing things while coding...
         testingMenus.init( session, canvasSessionPresenter );

@@ -3,6 +3,7 @@ package org.wirez.bpmn.shape.proxy;
 import org.wirez.bpmn.definition.ExclusiveDatabasedGateway;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.*;
+import org.wirez.shapes.proxy.icon.dynamics.AbstractDynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.DynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.Icons;
 
@@ -10,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class ExclusiveDatabasedGatewayShapeProxy
-        extends AbstractBasicShapeProxy<ExclusiveDatabasedGateway>
+        extends AbstractBasicDynamicShapeProxy<ExclusiveDatabasedGateway>
         implements
         PolygonProxy<ExclusiveDatabasedGateway>,
         HasChildProxies<ExclusiveDatabasedGateway> {
@@ -82,7 +83,7 @@ public final class ExclusiveDatabasedGatewayShapeProxy
     }
 
     public final class IconProxy
-            extends AbstractBasicGlyphProxy<ExclusiveDatabasedGateway>
+            extends AbstractDynamicIconProxy<ExclusiveDatabasedGateway>
             implements DynamicIconProxy<ExclusiveDatabasedGateway> {
 
         @Override

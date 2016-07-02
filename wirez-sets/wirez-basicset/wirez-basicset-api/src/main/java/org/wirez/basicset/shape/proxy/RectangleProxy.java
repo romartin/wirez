@@ -1,10 +1,10 @@
 package org.wirez.basicset.shape.proxy;
 
 import org.wirez.basicset.definition.Rectangle;
-import org.wirez.shapes.proxy.AbstractBasicShapeProxy;
+import org.wirez.shapes.proxy.AbstractBasicDynamicShapeProxy;
 
 public final class RectangleProxy
-        extends AbstractBasicShapeProxy<Rectangle>
+        extends AbstractBasicDynamicShapeProxy<Rectangle>
         implements org.wirez.shapes.proxy.RectangleProxy<Rectangle> {
 
     @Override

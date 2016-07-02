@@ -3,9 +3,10 @@ package org.wirez.basicset.shape.proxy;
 import org.wirez.basicset.definition.PolygonWithIcon;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.AbstractBasicGlyphProxy;
-import org.wirez.shapes.proxy.AbstractBasicShapeProxy;
+import org.wirez.shapes.proxy.AbstractBasicDynamicShapeProxy;
 import org.wirez.shapes.proxy.BasicShapeProxy;
 import org.wirez.shapes.proxy.HasChildProxies;
+import org.wirez.shapes.proxy.icon.dynamics.AbstractDynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.DynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.Icons;
 
@@ -13,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class PolygonWithIconProxy
-        extends AbstractBasicShapeProxy<PolygonWithIcon>
+        extends AbstractBasicDynamicShapeProxy<PolygonWithIcon>
         implements
         org.wirez.shapes.proxy.PolygonProxy<PolygonWithIcon>,
         HasChildProxies<PolygonWithIcon> {
@@ -81,7 +82,7 @@ public final class PolygonWithIconProxy
     }
 
     public final class IconProxy
-            extends AbstractBasicGlyphProxy<PolygonWithIcon>
+            extends AbstractDynamicIconProxy<PolygonWithIcon>
             implements DynamicIconProxy<PolygonWithIcon> {
 
         private static final String COLOR = "#000000";

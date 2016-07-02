@@ -35,7 +35,7 @@ import javax.inject.Inject;
 @WorkbenchPerspective(identifier = "WirezPerspective", isTransient = false)
 public class WirezPerspective {
 
-    private static final int EAST_PANEL_WIDTH = 600;
+    private static final int EAST_PANEL_WIDTH = 300;
     private static final int NAVIGATOR_PANEL_HEIGHT = 400;
     
     PanelDefinition palettePanel;

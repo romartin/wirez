@@ -3,6 +3,7 @@ package org.wirez.client.widgets.session.presenter.impl;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.command.ClearSelectionCommand;
+import org.wirez.client.widgets.session.toolbar.command.SwitchGridCommand;
 import org.wirez.client.widgets.session.toolbar.command.VisitGraphCommand;
 import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
 import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
@@ -22,11 +23,12 @@ public abstract class ReadOnlySessionPresenterImpl extends AbstractReadOnlySessi
                                         final AbstractToolbar<DefaultCanvasReadOnlySession> toolbar,
                                         final ClearSelectionCommand clearSelectionCommand,
                                         final VisitGraphCommand visitGraphCommand,
+                                        final SwitchGridCommand switchGridCommand,
                                         final ErrorPopupPresenter errorPopupPresenter,
                                         final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
                                         final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                         final View view) {
-        super( canvasSessionManager, clientDiagramServices, toolbar, clearSelectionCommand, visitGraphCommand,
+        super( canvasSessionManager, clientDiagramServices, toolbar, clearSelectionCommand, visitGraphCommand, switchGridCommand,
                 errorPopupPresenter, canvasProcessingStartedEvent, canvasProcessingCompletedEvent, view );
     }
     

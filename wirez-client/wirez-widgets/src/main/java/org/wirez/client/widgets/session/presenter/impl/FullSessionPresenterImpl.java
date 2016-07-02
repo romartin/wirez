@@ -30,6 +30,7 @@ public class FullSessionPresenterImpl extends AbstractFullSessionPresenter<Defau
                                     final SaveCommand saveCommand,
                                     final UndoCommand undoCommand,
                                     final VisitGraphCommand visitGraphCommand,
+                                    final SwitchGridCommand switchGridCommand,
                                     final CanvasCommandFactory commandFactory,
                                     final ClientDiagramServices clientDiagramServices,
                                     final ErrorPopupPresenter errorPopupPresenter,
@@ -38,8 +39,8 @@ public class FullSessionPresenterImpl extends AbstractFullSessionPresenter<Defau
                                     final View view) {
         super( canvasSessionManager, clientDefinitionManager, clientFactoryServices,
                 commandFactory, clientDiagramServices, toolbar, clearSelectionCommand, clearCommand, 
-                deleteSelectionCommand, saveCommand, undoCommand, visitGraphCommand, errorPopupPresenter,
-                canvasProcessingStartedEvent, canvasProcessingCompletedEvent, view );
+                deleteSelectionCommand, saveCommand, undoCommand, visitGraphCommand, switchGridCommand,
+                errorPopupPresenter, canvasProcessingStartedEvent, canvasProcessingCompletedEvent, view );
     }
     
 }

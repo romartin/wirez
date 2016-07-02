@@ -3,15 +3,15 @@ package org.wirez.bpmn.shape.proxy;
 import org.wirez.bpmn.definition.ReusableSubprocess;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.*;
+import org.wirez.shapes.proxy.icon.dynamics.AbstractDynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.DynamicIconProxy;
-import org.wirez.shapes.proxy.icon.dynamics.IconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.Icons;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class ReusableSubprocessShapeProxy
-        extends AbstractBasicShapeProxy<ReusableSubprocess>
+        extends AbstractBasicDynamicShapeProxy<ReusableSubprocess>
         implements
         RectangleProxy<ReusableSubprocess>,
         HasChildProxies<ReusableSubprocess> {
@@ -87,7 +87,7 @@ public final class ReusableSubprocessShapeProxy
     }
 
     public final class ProcessIconProxy
-            extends AbstractBasicGlyphProxy<ReusableSubprocess>
+            extends AbstractDynamicIconProxy<ReusableSubprocess>
             implements DynamicIconProxy<ReusableSubprocess> {
 
         private static final String BLACK = "#000000";

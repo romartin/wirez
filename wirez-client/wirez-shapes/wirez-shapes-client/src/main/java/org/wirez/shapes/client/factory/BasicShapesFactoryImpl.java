@@ -18,6 +18,7 @@ package org.wirez.shapes.client.factory;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -34,9 +35,11 @@ import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.shapes.client.proxy.DynamicIconShape;
 import org.wirez.shapes.client.proxy.RectangleShape;
 import org.wirez.shapes.client.proxy.StaticIconShape;
+import org.wirez.shapes.client.view.ConnectorView;
 import org.wirez.shapes.client.view.PolygonView;
 import org.wirez.shapes.client.view.RectangleView;
 import org.wirez.shapes.client.view.ShapeViewFactory;
+import org.wirez.shapes.client.view.glyph.ConnectorGlyph;
 import org.wirez.shapes.client.view.icon.dynamics.DynamicIconShapeView;
 import org.wirez.shapes.client.view.icon.statics.StaticIconShapeView;
 import org.wirez.shapes.factory.BasicShapesFactory;
@@ -150,6 +153,16 @@ public class BasicShapesFactoryImpl
 
         }
 
+        if ( isConnector( proxy ) ) {
+
+            final ConnectorProxy<Object> polygonProxy = (ConnectorProxy<Object>) proxy;
+
+            final ConnectorView view = shapeViewFactory.connector( wiresManager, 0, 0, 100, 100 );
+
+            shape = new org.wirez.shapes.client.proxy.ConnectorShape( view, polygonProxy );
+
+        }
+
         if ( isStaticIcon( proxy ) ) {
 
             final org.wirez.shapes.proxy.icon.statics.IconProxy<Object> iconProxy = 
@@ -230,7 +243,11 @@ public class BasicShapesFactoryImpl
     private boolean isPolygon( final BasicShapeProxy<Object> proxy ) {
         return proxy instanceof PolygonProxy;
     }
-    
+
+    private boolean isConnector( final BasicShapeProxy<Object> proxy ) {
+        return proxy instanceof ConnectorProxy;
+    }
+
     private boolean isDynamicIcon(final BasicShapeProxy<Object> proxy ) {
         return proxy instanceof org.wirez.shapes.proxy.icon.dynamics.IconProxy;
     }
@@ -247,6 +264,17 @@ public class BasicShapesFactoryImpl
 
         final String id = getDefinitionId( clazz );
         final BasicShapeProxy<Object> proxy = getProxy( id );
+
+        // Custom shape glyphs.
+
+        if ( null != proxy && isConnector( proxy ) ) {
+
+            return new ConnectorGlyph( width, height, ColorName.BLACK.getColorString() );
+
+        }
+
+        // Use of Shape Glyph Builder - it builds the glyph by building the shape for the given Definition
+        // and scaling it to the given size.
 
         if ( null != proxy ) {
 
@@ -266,6 +294,7 @@ public class BasicShapesFactoryImpl
         } else {
 
             glyphBuilder.definition( id );
+
         }
 
 

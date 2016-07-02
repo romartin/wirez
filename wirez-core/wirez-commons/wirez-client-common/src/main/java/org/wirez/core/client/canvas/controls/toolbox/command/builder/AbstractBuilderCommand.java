@@ -13,6 +13,8 @@ import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.util.CanvasHighlight;
 import org.wirez.core.client.components.drag.DragProxyCallback;
 import org.wirez.core.client.components.drag.DragProxyFactory;
+import org.wirez.core.client.components.drag.NodeDragProxyCallback;
+import org.wirez.core.client.components.drag.NodeDragProxyFactory;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
@@ -58,6 +60,8 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
 
     protected abstract DragProxyFactory getDragProxyFactory();
 
+    protected abstract DragProxyCallback getDragProxyCallback( Element element, Element newElement );
+
     protected abstract BuilderControl getBuilderControl();
 
     protected abstract Object createtBuilderControlItem( Context<AbstractCanvasHandler> context, Element source, Element newElement );
@@ -83,7 +87,9 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
         final AbstractCanvasHandler canvasHandler = context.getCanvasHandler();
         final double x = context.getX();
         final double y = context.getY();
-        
+
+        graphBoundsIndexer.setRootUUID( canvasHandler.getDiagram().getSettings().getCanvasRootUUID() );
+
         clientFactoryServices.newElement( UUID.uuid(), getDefinitionIdentifier( context ), new ServiceCallback<Element>() {
             
             @Override
@@ -97,58 +103,16 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
 
                     graphBoundsIndexer.build( canvasHandler.getDiagram().getGraph() );
 
+                    DragProxyCallback proxyCallback = getDragProxyCallback( element, item );
+
                     getDragProxyFactory()
                             .proxyFor( canvasHandler )
-                            .newInstance( createtBuilderControlItem( context, element, item ), (int) x, (int) y, new DragProxyCallback() {
-
-                                @Override
-                                public void onStart(final int x1,
-                                                    final int y1) {
-
-                                }
-
-                                @Override
-                                public void onMove(final int x1,
-                                                   final int y1) {
-
-                                    // TODO: Two expensive calls to bounds indexer, this one and the one inside connectorDragProxyFactory.
-
-                                    final Node targetNode = graphBoundsIndexer.getAt(x1, y1);
-
-                                    final boolean accepts = onDragProxyMove(x1, y1, element, item, targetNode );
-
-                                    if ( accepts ) {
-
-                                        canvasHighlight.highLight( targetNode );
-
-                                    } else {
-
-                                        canvasHighlight.unhighLight();
-
-                                    }
-
-
-                                }
-
-                                @Override
-                                public void onComplete(final int x1,
-                                                       final int y1) {
-
-                                    final Node targetNode = graphBoundsIndexer.getAt(x1, y1);
-
-                                    if ( null != targetNode ) {
-
-                                        final BuildRequest buildRequest = createBuildRequest(x1, y1, element, item, targetNode );
-
-                                        getBuilderControl().build( buildRequest );
-
-
-                                    }
-
-                                    canvasHighlight.unhighLight();
-
-                                }
-                            });
+                            .newInstance(
+                                    createtBuilderControlItem( context, element, item ),
+                                    (int) x,
+                                    (int) y,
+                                    proxyCallback
+                            );
 
                 });
 
@@ -163,6 +127,58 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
         
     }
 
+    @SuppressWarnings( "unchecked" )
+    protected void onStart( final Element element,
+                         final Element item,
+                         final int x1,
+                         final int y1 ) {
+
+    }
+
+    @SuppressWarnings( "unchecked" )
+    protected void onMove( final Element element,
+                         final Element item,
+                         final int x1,
+                         final int y1 ) {
+
+        // TODO: Two expensive calls to bounds indexer, this one and the one inside connectorDragProxyFactory.
+
+        final Node targetNode = graphBoundsIndexer.getAt(x1, y1);
+
+        final boolean accepts = onDragProxyMove(x1, y1, element, item, targetNode );
+
+        if ( accepts ) {
+
+            canvasHighlight.highLight( targetNode );
+
+        } else {
+
+            canvasHighlight.unhighLight();
+
+        }
+
+    }
+
+    @SuppressWarnings( "unchecked" )
+    protected void onComplete( final Element element,
+                         final Element item,
+                         final int x1,
+                         final int y1 ) {
+
+        final Node targetNode = graphBoundsIndexer.getAt(x1, y1);
+
+        if ( null != targetNode ) {
+
+            final BuildRequest buildRequest = createBuildRequest(x1, y1, element, item, targetNode );
+
+            getBuilderControl().build( buildRequest );
+
+
+        }
+
+        canvasHighlight.unhighLight();
+
+    }
 
     @Override
     public void destroy() {

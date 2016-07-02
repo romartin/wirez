@@ -12,7 +12,9 @@ import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequest;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequestImpl;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
+import org.wirez.core.client.components.drag.DragProxyCallback;
 import org.wirez.core.client.components.drag.DragProxyFactory;
+import org.wirez.core.client.components.drag.NodeDragProxyCallback;
 import org.wirez.core.client.components.drag.NodeDragProxyFactory;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.service.ClientFactoryServices;
@@ -33,6 +35,8 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
     DefinitionUtils definitionUtils;
 
     protected String definitionId;
+    protected int sourceMagnet;
+    protected int targetMagnet;
 
     protected NewNodeCommand() {
         this( null, null, null, null, null, null, null, null, null, null );
@@ -92,6 +96,50 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
     @Override
     protected BuilderControl getBuilderControl() {
         return nodeBuilderControl;
+    }
+
+    @Override
+    protected DragProxyCallback getDragProxyCallback( final Element element,
+                                                      final Element item ) {
+
+        return new NodeDragProxyCallback() {
+
+            @Override
+            public void onStart( final int x,
+                                 final int y ) {
+
+                NewNodeCommand.this.onStart(  element, item, x, y );
+
+            }
+
+            @Override
+            public void onMove( final int x,
+                                final int y ) {
+
+                NewNodeCommand.this.onMove(  element, item, x, y );
+
+            }
+
+            @Override
+            public void onComplete( final int x,
+                                    final int y ) {
+
+            }
+
+            @Override
+            public void onComplete( final int x,
+                                    final int y, final int sourceMagnet,
+                                    final int targetMagnet ) {
+
+                NewNodeCommand.this.sourceMagnet = sourceMagnet;
+                NewNodeCommand.this.targetMagnet = targetMagnet;
+
+                NewNodeCommand.this.onComplete(  element, item, x, y );
+
+            }
+
+        };
+
     }
 
     @Override
@@ -198,7 +246,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
         final Edge<View<?>, Node> edge = (Edge<View<?>, Node>) newElement;
         final Node<View<?>, Edge> node = (Node<View<?>, Edge>) edge.getTargetNode();
 
-        return new NodeBuildRequestImpl( x, y , node, edge );
+        return new NodeBuildRequestImpl( x, y , node, edge, this.sourceMagnet, this.targetMagnet  );
     }
 
     @Override

@@ -3,15 +3,13 @@ package org.wirez.bpmn.shape.proxy;
 import org.wirez.bpmn.definition.EndTerminateEvent;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.*;
-import org.wirez.shapes.proxy.WrappedBasicNamedShapeProxy;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class EndTerminateEventShapeProxy
-        extends AbstractBasicShapeProxy<EndTerminateEvent>
-        implements
-        CircleProxy<EndTerminateEvent>,
+        extends AbstractBasicDynamicShapeProxy<EndTerminateEvent>
+        implements CircleProxy<EndTerminateEvent>,
         HasChildProxies<EndTerminateEvent> {
     
     @Override

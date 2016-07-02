@@ -1,4 +1,4 @@
-package org.wirez.bpmn.client.shape.view.glyph;
+package org.wirez.shapes.client.view.glyph;
 
 import com.ait.lienzo.client.core.shape.Arrow;
 import com.ait.lienzo.client.core.shape.Group;
@@ -7,9 +7,9 @@ import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.shared.core.types.ArrowType;
 import org.wirez.client.lienzo.shape.view.glyph.AbstractLienzoShapeGlyph;
 
-public class SequenceFlowGlyph extends AbstractLienzoShapeGlyph {
+public final class ConnectorGlyph extends AbstractLienzoShapeGlyph {
 
-    public SequenceFlowGlyph(final double width, final double height, final String color) {
+    public ConnectorGlyph(final double width, final double height, final String color) {
         super( new Group(), width, height );
         build(width, height, color);
     }

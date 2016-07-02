@@ -1,7 +1,5 @@
 package org.wirez.shapes.proxy;
 
-import org.wirez.shapes.proxy.BasicNamedShapeProxy;
-
 public abstract class WrappedBasicNamedShapeProxy<W>
         extends AbstractBasicShapeProxy<W>
         implements BasicNamedShapeProxy<W> {
@@ -43,6 +41,11 @@ public abstract class WrappedBasicNamedShapeProxy<W>
     }
 
     @Override
+    public double getBackgroundAlpha( final W element ) {
+        return parent.getBackgroundAlpha(  element );
+    }
+
+    @Override
     public String getBorderColor( final W element ) {
         return parent.getBorderColor( element );
     }
@@ -50,6 +53,11 @@ public abstract class WrappedBasicNamedShapeProxy<W>
     @Override
     public double getBorderSize( final W element ) {
         return parent.getBorderSize( element );
+    }
+
+    @Override
+    public double getBorderAlpha( final W element ) {
+        return parent.getBorderAlpha( element );
     }
 
     @Override

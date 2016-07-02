@@ -31,7 +31,10 @@ import javax.enterprise.context.ApplicationScoped;
                 Ring.class,
                 Polygon.class,
                 PolygonWithIcon.class,
-                
+
+                // Connectors.
+                BasicConnector.class,
+
                 // Dynamic Icons.
                 MinusIcon.class,
                 PlusIcon.class,

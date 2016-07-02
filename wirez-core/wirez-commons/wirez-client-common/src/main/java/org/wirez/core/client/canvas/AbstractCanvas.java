@@ -66,7 +66,9 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
         double getAbsoluteX();
 
         double getAbsoluteY();
-        
+
+        View setGrid( CanvasGrid grid );
+
         Layer getLayer();
         
         View clear();
@@ -180,7 +182,13 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
     public double getAbsoluteY() {
         return view.getAbsoluteY();
     }
-    
+
+    @Override
+    public Canvas setGrid( final CanvasGrid grid ) {
+        view.setGrid( grid );
+        return this;
+    }
+
     @Override
     public Layer getLayer() {
         return layer;

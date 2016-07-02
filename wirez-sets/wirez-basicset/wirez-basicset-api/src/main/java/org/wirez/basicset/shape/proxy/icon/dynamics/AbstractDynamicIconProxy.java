@@ -1,11 +1,12 @@
 package org.wirez.basicset.shape.proxy.icon.dynamics;
 
 import org.wirez.basicset.definition.icon.dynamics.DynamicIcon;
-import org.wirez.shapes.proxy.AbstractBasicShapeProxy;
+import org.wirez.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.wirez.shapes.proxy.AbstractBasicDynamicShapeProxy;
 import org.wirez.shapes.proxy.icon.dynamics.IconProxy;
 
 public abstract class AbstractDynamicIconProxy<I extends DynamicIcon>
-        extends AbstractBasicShapeProxy<I>
+        extends AbstractBasicDynamicShapeProxy<I>
         implements IconProxy<I> {
     
     @Override
@@ -32,6 +33,5 @@ public abstract class AbstractDynamicIconProxy<I extends DynamicIcon>
     public double getBorderSize( final I element ) {
         return element.getBackgroundSet().getBorderSize().getValue();
     }
-
 
 }

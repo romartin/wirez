@@ -1,4 +1,4 @@
-Deployment onto JBoss Widlfly 8.X & 10.X
+Deployment onto JBoss Widlfly 10.X
 ========================================
 
 Please follow the next steps in order to deploy the application.           
@@ -10,14 +10,14 @@ Run your JBoss Wildfly instance using the `full` server profile as:
 
     $JBOSS_HOME/bin/standalone.sh --server-config=standalone-full.xml
 
-Once server is up and running, get the proper WAR file (e.g. `wirez-<version>-wildfly8.war`) and execute the following command to deploy the application into your JBoss Wildfly instance:              
+Once server is up and running, get the proper WAR file (e.g. `wirez-<version>-wildfly10.war`) and execute the following command to deploy the application into your JBoss Wildfly instance:
 
     $ cd $JBOSS_HOME/bin
     $ ./jboss-cli.sh --connect --command="deploy <path_to_war_file>"
     
     NOTES:
         - <path_to_war_file>: is the local path to the application war file.
-        - e.g. $ ./jboss-cli.sh --connect --command="deploy /home/myuser/myfiles/wirez-0.X.Y-SNAPSHOT-wildfly8.war" )
+        - e.g. $ ./jboss-cli.sh --connect --command="deploy /home/myuser/myfiles/wirez-0.X.Y-SNAPSHOT-wildfly10.war" )
 
 
 User Authentication

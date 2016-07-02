@@ -8,6 +8,7 @@ import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.command.ClearSelectionCommand;
+import org.wirez.client.widgets.session.toolbar.command.SwitchGridCommand;
 import org.wirez.client.widgets.session.toolbar.command.VisitGraphCommand;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.client.canvas.AbstractCanvas;
@@ -36,6 +37,7 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
     protected AbstractToolbar<S> toolbar;
     protected ClearSelectionCommand clearSelectionCommand;
     protected VisitGraphCommand visitGraphCommand;
+    protected SwitchGridCommand switchGridCommand;
     protected Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
     protected Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
 
@@ -45,6 +47,7 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
                                             final AbstractToolbar<S> toolbar,
                                             final ClearSelectionCommand clearSelectionCommand,
                                             final VisitGraphCommand visitGraphCommand,
+                                            final SwitchGridCommand switchGridCommand,
                                             final ErrorPopupPresenter errorPopupPresenter,
                                             final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
                                             final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
@@ -55,6 +58,7 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
         this.toolbar = toolbar;
         this.clearSelectionCommand = clearSelectionCommand;
         this.visitGraphCommand = visitGraphCommand;
+        this.switchGridCommand = switchGridCommand;
         this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
         this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
     }
@@ -76,6 +80,7 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
     protected void setToolbarCommands() {
         addToolbarCommand( (ToolbarCommand<S>) this.clearSelectionCommand );
         addToolbarCommand( (ToolbarCommand<S>) this.visitGraphCommand );
+        addToolbarCommand( (ToolbarCommand<S>) this.switchGridCommand );
     }
 
     @Override
@@ -180,13 +185,18 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
         if ( null != visitGraphCommand ) {
             this.visitGraphCommand.destroy();
         }
+
+        if ( null != switchGridCommand ) {
+            this.switchGridCommand.destroy();
+        }
         
         this.canvasSessionManager = null;
         this.clientDiagramServices = null;
         this.toolbar = null;
         this.clearSelectionCommand = null;
         this.visitGraphCommand = null;
-        
+        this.switchGridCommand = null;
+
     }
 
     protected void fireProcessingStarted() {

@@ -3,7 +3,9 @@ package org.wirez.core.client.canvas.command.impl;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
 import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.shape.EdgeShape;
 import org.wirez.core.client.shape.MutationContext;
+import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.util.ShapeUtils;
 import org.wirez.core.command.Command;
@@ -16,6 +18,7 @@ import org.wirez.core.graph.command.impl.MorphNodeCommand;
 import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.graph.content.relationship.Dock;
+import org.wirez.core.graph.content.view.View;
 import org.wirez.core.rule.RuleViolation;
 
 import java.util.List;
@@ -40,14 +43,13 @@ public final class MorphCanvasNodeCommand extends AbstractCanvasGraphCommand {
 
     @Override
     @SuppressWarnings("unchecked")
-    public CommandResult<CanvasViolation> execute(final AbstractCanvasHandler context) {
+    public CommandResult<CanvasViolation> execute( final AbstractCanvasHandler context) {
 
         // Keep undo metadata.
         final Object definition = candidate.getContent().getDefinition();
-        final String dId = context.getClientDefinitionManager()
+        this.oldMorphTarget = context.getClientDefinitionManager()
                 .getDefinitionAdapter( definition.getClass() )
                 .getId( definition );
-        this.oldMorphTarget = dId;
 
         // Deregister the existing shape.
         Node parent = getParent();
@@ -63,7 +65,65 @@ public final class MorphCanvasNodeCommand extends AbstractCanvasGraphCommand {
         }
         context.applyElementMutation( candidate, MutationContext.STATIC );
 
+        // Update incoming connections for new shape ( so magnets, connectors, etc on view side ).
+        final List<Edge> inEdges = candidate.getInEdges();
+        if ( null != inEdges && !inEdges.isEmpty() ) {
+
+            for ( final Edge inEdge : inEdges ) {
+
+                if ( isViewEdge(  inEdge ) ) {
+
+                    final Node inNode = inEdge.getSourceNode();
+
+                    updateConnections( context, inEdge, inNode, candidate );
+
+                }
+
+            }
+
+        }
+
+        // Update outgoing connections as well for new shape.
+        final List<Edge> outEdges = candidate.getOutEdges();
+        if ( null != outEdges && !outEdges.isEmpty() ) {
+
+            for ( final Edge outEdge : outEdges ) {
+
+                if ( isViewEdge(  outEdge ) ) {
+
+                    final Node targetNode = outEdge.getTargetNode();
+
+                    updateConnections( context, outEdge, candidate, targetNode );
+
+                }
+
+            }
+
+        }
+
+
         return buildResult();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private void updateConnections( final AbstractCanvasHandler context,
+                                    final Edge edge,
+                                    final Node sourceNode,
+                                    final Node targetNode ) {
+
+        if ( null != edge && null != sourceNode && null != targetNode ) {
+
+            final EdgeShape edgeShape = ( EdgeShape ) context.getCanvas().getShape(  edge.getUUID() );
+            final Shape sourceNodeShape = context.getCanvas().getShape(  sourceNode.getUUID() );
+            final Shape targetNodeShape = context.getCanvas().getShape(  targetNode.getUUID() );
+
+            edgeShape.applyConnections( edge,
+                    sourceNodeShape.getShapeView(),
+                    targetNodeShape.getShapeView(),
+                    MutationContext.STATIC );
+
+        }
+
     }
 
     @Override
@@ -103,6 +163,8 @@ public final class MorphCanvasNodeCommand extends AbstractCanvasGraphCommand {
         return edge.getContent() instanceof Dock;
     }
 
-
+    private boolean isViewEdge( final Edge edge ) {
+        return edge.getContent() instanceof View;
+    }
 
 }

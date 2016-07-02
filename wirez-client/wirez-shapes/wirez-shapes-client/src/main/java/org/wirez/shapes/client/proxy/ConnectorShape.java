@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.client.shape;
+package org.wirez.shapes.client.proxy;
 
-import org.wirez.bpmn.definition.SequenceFlow;
-import org.wirez.bpmn.definition.property.background.BackgroundSet;
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
-import org.wirez.core.graph.content.view.ViewConnector;
+import org.wirez.core.graph.content.view.View;
 import org.wirez.shapes.client.view.ConnectorView;
+import org.wirez.shapes.client.view.RectangleView;
+import org.wirez.shapes.proxy.ConnectorProxy;
+import org.wirez.shapes.proxy.RectangleProxy;
 
-public class SequenceFlowShape extends BPMNBasicConnector<SequenceFlow, ConnectorView> {
+public class ConnectorShape<W> extends AbstractProxyConnector<W, ConnectorView, ConnectorProxy<W>> {
 
-    public SequenceFlowShape(final ConnectorView view) {
-        super(view);
+
+    public ConnectorShape( final ConnectorView view,
+                           final ConnectorProxy<W> proxy ) {
+        super( view, proxy );
     }
-    
-    @Override
-    protected BackgroundSet getBackgroundSet(final Edge<ViewConnector<SequenceFlow>, Node> element) {
-        return element.getContent().getDefinition().getBackgroundSet();
-    }
-    
+
     @Override
     public String toString() {
-        return "SequenceFlowShape{}";
+        return "ConnectorShape{}";
     }
-
+    
 }

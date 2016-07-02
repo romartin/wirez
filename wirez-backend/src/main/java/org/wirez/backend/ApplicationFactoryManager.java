@@ -89,8 +89,4 @@ public class ApplicationFactoryManager extends AbstractFactoryManager {
         return (T) beanManager.getReference(bean, bean.getBeanClass(), ctx);
     }
 
-    @Override
-    public <G extends Graph, S extends Settings> Diagram<G, S> newDiagram(String uuid, G graph, S settings) {
-        return (Diagram<G, S>) new DiagramImpl( uuid, graph, settings );
-    }
 }

@@ -30,10 +30,7 @@
         - polygon with icon glyph -> icon at center
         - Shapes with static icons -> just adding on canvas, icon not at center
         - improves all shapes title (text) positions
-    - Toolbox
-        - Do as genmymodel -> show icons for target base elements -> and then the morhping minipalette
-        - http://huxhzq.axshare.com/#g=1&p=process
-    - Icons 
+    - Icons
         - Mix dynamic & static into same class/proxy?
         - allow resize all?
         - provide icons from svg file or mutipaths serialized in some custom format?

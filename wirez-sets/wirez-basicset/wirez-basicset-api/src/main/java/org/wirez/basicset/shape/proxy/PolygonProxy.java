@@ -1,10 +1,10 @@
 package org.wirez.basicset.shape.proxy;
 
 import org.wirez.basicset.definition.Polygon;
-import org.wirez.shapes.proxy.AbstractBasicShapeProxy;
+import org.wirez.shapes.proxy.AbstractBasicDynamicShapeProxy;
 
 public final class PolygonProxy
-        extends AbstractBasicShapeProxy<Polygon>
+        extends AbstractBasicDynamicShapeProxy<Polygon>
         implements org.wirez.shapes.proxy.PolygonProxy<Polygon> {
     
     @Override

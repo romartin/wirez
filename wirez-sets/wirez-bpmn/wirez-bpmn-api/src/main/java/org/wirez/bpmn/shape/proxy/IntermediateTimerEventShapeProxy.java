@@ -5,13 +5,12 @@ import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.*;
 import org.wirez.shapes.proxy.icon.statics.IconProxy;
 import org.wirez.shapes.proxy.icon.statics.Icons;
-import org.wirez.shapes.proxy.WrappedBasicNamedShapeProxy;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class IntermediateTimerEventShapeProxy
-        extends AbstractBasicShapeProxy<IntermediateTimerEvent>
+        extends AbstractBasicDynamicShapeProxy<IntermediateTimerEvent>
         implements
         CircleProxy<IntermediateTimerEvent>,
         HasChildProxies<IntermediateTimerEvent> {

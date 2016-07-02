@@ -25,7 +25,7 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
 
 **SuperDevMove - Running from command line**                                          
 
-    mvn gwt:run -DrunTarget=wirez.html -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-10.0.0.Final
+    mvn clean gwt:run
 
 **SuperDevMove - Running from IntelliJ IDEA**                                          
 
@@ -41,7 +41,15 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
   - *GWT Modules to load*: org.wirez.FastCompiledWirezShowcase             
   - *VM options*: 
         
-        -Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-10.0.0.Final
+        -Xmx2048m
+        -Xms1024m
+        -Xss1M
+        -XX:CompileThreshold=7000
+        -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-10.0.0.Final
+        -Derrai.server.classOutput=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target
+        -Djava.util.prefs.syncInterval=2000000
+        -Dorg.uberfire.async.executor.safemode=true
+        -Dgwt.watchFileChanges=false
                       
   - *Dev mode parameters*: 
         
@@ -68,3 +76,7 @@ Requirements
 * Maven 3.2.5+       
 * Git 1.8+        
 
+Documentation
+-------------
+
+All Stunner documents are shared in a public Google Docs folder [here](https://drive.google.com/open?id=0B5LZ7oQ3Bza2Qk1GY1ZPeEN6Q0E).

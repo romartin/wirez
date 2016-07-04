@@ -1,12 +1,12 @@
 /*
  * Copyright 2016 Red Hat, Inc. and/or its affiliates.
- *  
+ * Â 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
- *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ * Â 
+ * Â Â Â http://www.apache.org/licenses/LICENSE-2.0
+ * Â 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,7 @@ import org.wirez.bpmn.definition.property.diagram.DiagramSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.shape.proxy.BPMNDiagramShapeProxy;
+import org.wirez.bpmn.definition.property.variables.VariablesSet;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
@@ -36,9 +37,9 @@ import org.wirez.core.graph.Node;
 import org.wirez.core.rule.annotation.CanContain;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
-import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
+import javax.validation.Valid;
 
 @Portable
 @Bindable
@@ -49,29 +50,34 @@ public class BPMNDiagram implements BPMNDefinition {
 
     @Category
     public static final transient String category = Categories.LANES;
-    
+
     @Title
     public static final transient String title = "BPMN Diagram";
-    
+
     @Description
-    public static final transient String description = "BPMN Diagam";
-    
+    public static final transient String description = "BPMN Diagram";
+
     @PropertySet
     @FieldDef( label = "General Settings", position = 0)
     @Valid
     private BPMNGeneral general;
 
     @PropertySet
-    // TODO: FieldDef
+    @FieldDef( label = "Diagram Settings", position = 1)
+    @Valid
     private DiagramSet diagramSet;
 
     @PropertySet
-    @FieldDef( label = "Background Settings", position = 2)
+    @FieldDef( label = "Process Variables", position = 2)
+    @Valid
+    protected VariablesSet variablesSet;
+
+    @PropertySet
+    @FieldDef( label = "Background Settings", position = 3)
     @Valid
     private BackgroundSet backgroundSet;
 
     @PropertySet
-    // TODO: FieldDef
     private FontSet fontSet;
 
     @Property
@@ -99,6 +105,7 @@ public class BPMNDiagram implements BPMNDefinition {
         public BPMNDiagram build() {
             return new BPMNDiagram(  new BPMNGeneral( "Diagram" ),
                     new DiagramSet(),
+                    new VariablesSet(),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
                     new Width( WIDTH ),
@@ -112,13 +119,15 @@ public class BPMNDiagram implements BPMNDefinition {
     }
 
     public BPMNDiagram(@MapsTo("general") BPMNGeneral general,
-                @MapsTo("diagramSet") DiagramSet diagramSet,
-                @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                @MapsTo("fontSet") FontSet fontSet,
-                @MapsTo("width") Width width,
-                @MapsTo("height") Height height) {
+            @MapsTo("diagramSet") DiagramSet diagramSet,
+            @MapsTo("variablesSet") VariablesSet variablesSet,
+            @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+            @MapsTo("fontSet") FontSet fontSet,
+            @MapsTo("width") Width width,
+            @MapsTo("height") Height height) {
         this.general = general;
         this.diagramSet = diagramSet;
+        this.variablesSet = variablesSet;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.width = width;
@@ -157,6 +166,10 @@ public class BPMNDiagram implements BPMNDefinition {
         return width;
     }
 
+    public VariablesSet getVariablesSet() {
+        return variablesSet;
+    }
+
     public BackgroundSet getBackgroundSet() {
         return backgroundSet;
     }
@@ -171,6 +184,10 @@ public class BPMNDiagram implements BPMNDefinition {
 
     public void setDiagramSet( DiagramSet diagramSet ) {
         this.diagramSet = diagramSet;
+    }
+
+    public void setVariablesSet( VariablesSet variablesSet ) {
+        this.variablesSet = variablesSet;
     }
 
     public void setBackgroundSet( BackgroundSet backgroundSet ) {

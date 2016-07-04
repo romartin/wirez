@@ -29,6 +29,7 @@ import org.wirez.core.definition.annotation.property.Type;
 import org.wirez.core.definition.annotation.property.Value;
 import org.wirez.core.definition.property.PropertyType;
 import org.wirez.core.definition.property.type.StringType;
+import org.wirez.core.definition.property.type.VariablesType;
 
 @Portable
 @Bindable
@@ -48,7 +49,7 @@ public class Variables implements BPMNProperty {
     public static final Boolean optional = false;
 
     @Type
-    public static final PropertyType type = new StringType();
+    public static final PropertyType type = new VariablesType();
 
     @DefaultValue
     public static final String defaultValue = "";

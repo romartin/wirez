@@ -22,6 +22,7 @@ import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEven
 import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementsClearEvent;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
@@ -51,12 +52,13 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
                               final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
                               final Event<CanvasElementRemovedEvent> canvasElementRemovedEvent,
                               final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent,
+                              final Event<CanvasElementsClearEvent> canvasElementsClearEvent,
                               final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
                               final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
 
         super( clientDefinitionManager, clientFactoryServices, rulesManager, graphUtils,
                 indexBuilder, treeWalkTraverseProcessor, shapeManager, canvasInitializationCompletedEvent,
-                canvasElementAddedEvent, canvasElementRemovedEvent, canvasElementUpdatedEvent,
+                canvasElementAddedEvent, canvasElementRemovedEvent, canvasElementUpdatedEvent, canvasElementsClearEvent,
                 canvasProcessingStartedEvent, canvasProcessingCompletedEvent );
         
     }

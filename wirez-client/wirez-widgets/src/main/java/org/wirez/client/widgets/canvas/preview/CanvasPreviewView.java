@@ -16,13 +16,18 @@
 
 package org.wirez.client.widgets.canvas.preview;
 
+import com.ait.lienzo.client.core.mediator.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import org.wirez.client.lienzo.LienzoLayer;
+import org.wirez.client.widgets.canvas.FocusableLienzoPanelView;
+import org.wirez.core.client.canvas.Layer;
+
+import java.util.Iterator;
 
 public class CanvasPreviewView extends Composite implements CanvasPreview.View {
 
@@ -35,8 +40,10 @@ public class CanvasPreviewView extends Composite implements CanvasPreview.View {
     
     @UiField
     FlowPanel mainPanel;
-    
+
     CanvasPreview presenter;
+    private FocusableLienzoPanelView panel;
+    private com.ait.lienzo.client.core.shape.Layer canvasLayer = new com.ait.lienzo.client.core.shape.Layer();
 
     @Override
     public void init(final CanvasPreview presenter) {
@@ -45,19 +52,137 @@ public class CanvasPreviewView extends Composite implements CanvasPreview.View {
     }
 
     @Override
-    public CanvasPreview.View show(final String dataUrl,
-                                   final String width,
-                                   final String height) {
-        final Image thumb = new Image( dataUrl );
-        thumb.setSize( width, height);
-        mainPanel.add( thumb );
+    public CanvasPreview.View show(final Layer layer,
+                                   final int width,
+                                   final int height) {
+
+        final LienzoLayer lienzoLayer = ( LienzoLayer ) layer;
+
+        panel = new FocusableLienzoPanelView( width, height );
+
+        mainPanel.add(panel);
+
+        panel.add( canvasLayer );
+
+        canvasLayer.getContext().scale(0.2, 0.2);
+
+        com.ait.lienzo.client.core.shape.Layer replicatingDragLayer = panel.getViewport().getDragLayer();
+        replicatingDragLayer.getContext().scale(0.2, 0.2);
+
+        // TODO: lienzoLayer.getLienzoLayer().setReplicatedLayer(  canvasLayer );
+
+        return this;
+    }
+
+    @Override
+    public CanvasPreview.View addMediator( final MediatorType type,
+                                           final MediatorEventFilter eventFilter ) {
+        final Mediators mediators = canvasLayer.getViewport().getMediators();
+
+        final IEventFilter iEventFilter = null != eventFilter ?  translate( eventFilter ) : null;
+
+        final IEventFilter[] filters = null != iEventFilter ? new IEventFilter[] { iEventFilter } : null;
+
+        final IMediator mediator = isZoomMediator( type ) ?
+                createMouseWheelZoomMediator( filters ) : createMousePanMediator( filters );
+
+        mediators.push( mediator );
+
         return this;
     }
 
     @Override
     public CanvasPreview.View clear() {
+        destroyLienzoStuff();
         mainPanel.clear();
         return this;
+    }
+
+    private void destroyLienzoStuff() {
+
+        if ( null != canvasLayer && null != canvasLayer.getViewport() ) {
+
+            final Mediators mediators = canvasLayer.getViewport().getMediators();
+
+            if ( null != mediators && mediators.iterator().hasNext() ) {
+
+                final Iterator<IMediator> mediatorIterator = mediators.iterator();
+
+                while ( mediatorIterator.hasNext() ) {
+
+                    final IMediator mediator = mediatorIterator.next();
+
+                    mediators.remove( mediator );
+
+                }
+
+            }
+
+            canvasLayer.clear();
+            canvasLayer.removeFromParent();
+
+        }
+
+        if ( null != panel ) {
+
+            panel.clear();
+            panel.removeFromParent();
+            panel = null;
+        }
+
+    }
+
+    private IEventFilter translate( final MediatorEventFilter eventFilter ) {
+
+        switch ( eventFilter )  {
+
+            case CTROL:
+                return EventFilter.CONTROL;
+
+            case SHIFT:
+                return EventFilter.SHIFT;
+
+            case META:
+                return EventFilter.META;
+
+            case ALT:
+                return EventFilter.ALT;
+
+        }
+
+        return null;
+    }
+
+    private MouseWheelZoomMediator createMouseWheelZoomMediator( final IEventFilter[] filters ) {
+
+        if ( null != filters ) {
+
+            return new MouseWheelZoomMediator( filters );
+
+        }
+
+        return new MouseWheelZoomMediator();
+
+    }
+
+    private MousePanMediator createMousePanMediator( final IEventFilter[] filters ) {
+
+        if ( null != filters ) {
+
+            return new MousePanMediator( filters );
+
+        }
+
+        return new MousePanMediator();
+
+    }
+
+    private boolean isZoomMediator( final MediatorType type ) {
+        return MediatorType.MOUSE_ZOOM_WHEEL.equals( type );
+    }
+
+    private boolean isPanMediator( final MediatorType type ) {
+        return MediatorType.MOUSE_PAN.equals( type );
     }
 
 }

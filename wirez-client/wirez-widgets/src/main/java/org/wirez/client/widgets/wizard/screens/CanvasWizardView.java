@@ -62,7 +62,6 @@ public class CanvasWizardView extends Composite implements CanvasWizard.View {
 
     @Override
     public CanvasWizard.View setBackButtonText(final String caption) {
-        backButton.setText(caption);
         backButton.setTitle(caption);
         return this;
     }
@@ -75,7 +74,6 @@ public class CanvasWizardView extends Composite implements CanvasWizard.View {
 
     @Override
     public CanvasWizard.View setNextButtonText(final String caption) {
-        nextButton.setText(caption);
         nextButton.setTitle(caption);
         return this;
     }

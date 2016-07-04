@@ -20,6 +20,7 @@ import com.ait.lienzo.client.core.shape.wires.IConnectionAcceptor;
 import com.ait.lienzo.client.core.shape.wires.IContainmentAcceptor;
 import com.ait.lienzo.client.core.shape.wires.IDockingAcceptor;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.client.lienzo.Lienzo;
 import org.wirez.core.client.canvas.AbstractCanvas;
@@ -39,9 +40,11 @@ import java.util.logging.Logger;
  */
 public abstract class WiresCanvas extends AbstractCanvas<WiresCanvas.View> {
 
+    public static final String WIRES_CANVAS_GROUP_ID = "wirez.wiresCanvas";
+
     private static Logger LOGGER = Logger.getLogger(WiresCanvas.class.getName());
 
-    public interface View extends AbstractCanvas.View {
+    public interface View extends AbstractCanvas.View<LienzoPanel> {
 
         View setConnectionAcceptor(IConnectionAcceptor connectionAcceptor);
         

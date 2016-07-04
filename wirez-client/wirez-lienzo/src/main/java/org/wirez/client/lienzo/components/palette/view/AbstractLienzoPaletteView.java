@@ -3,10 +3,6 @@ package org.wirez.client.lienzo.components.palette.view;
 import com.ait.lienzo.client.core.animation.AnimationProperties;
 import com.ait.lienzo.client.core.animation.AnimationProperty;
 import com.ait.lienzo.client.core.animation.AnimationTweener;
-import com.ait.lienzo.client.core.event.NodeMouseEnterEvent;
-import com.ait.lienzo.client.core.event.NodeMouseEnterHandler;
-import com.ait.lienzo.client.core.event.NodeMouseExitEvent;
-import com.ait.lienzo.client.core.event.NodeMouseExitHandler;
 import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.shared.core.types.ArrowType;
@@ -223,13 +219,13 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
         final Arrow expandArrow =
                 new Arrow( new Point2D( 0, h / 2), new Point2D( w, h / 2), h / 2, h, 45, 90, ArrowType.AT_END_TAPERED )
-                .setFillColor( ColorName.LIGHTGREY )
+                .setFillColor( getArrowOutColor() )
                 .setFillAlpha( 0.5 )
                 .setVisible( !isExpanded );
 
         final Arrow collapseArrow =
                 new Arrow( new Point2D( w, h / 2), new Point2D( 0, h / 2), h / 2, h, 45, 90, ArrowType.AT_END_TAPERED )
-                        .setFillColor( ColorName.LIGHTGREY )
+                        .setFillColor( getArrowOutColor() )
                         .setFillAlpha( 0.5 )
                         .setVisible( isExpanded );
 
@@ -267,11 +263,11 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
                     if ( presenter.isExpanded() ) {
 
-                        animate( collapseArrow, ColorName.DARKGREY.getColorString(), 1, 1 );
+                        animate( collapseArrow, getArrowHoverColor(), 1, 1 );
 
                     } else {
 
-                        animate( expandArrow, ColorName.DARKGREY.getColorString(), 1, 1 );
+                        animate( expandArrow, getArrowHoverColor(), 1, 1 );
 
 
                     }
@@ -287,11 +283,11 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
                     if ( presenter.isExpanded() ) {
 
-                        animate( collapseArrow, ColorName.LIGHTGREY.getColorString(), 0.5, 0.5 );
+                        animate( collapseArrow, getArrowOutColor(), 0.5, 0.5 );
 
                     } else {
 
-                        animate( expandArrow, ColorName.LIGHTGREY.getColorString(), 0.5, 0.5 );
+                        animate( expandArrow, getArrowOutColor(), 0.5, 0.5 );
 
 
                     }
@@ -420,6 +416,14 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
         }
 
+    }
+
+    protected String getArrowHoverColor() {
+        return ColorName.DARKBLUE.getColorString();
+    }
+
+    protected String getArrowOutColor() {
+        return ColorName.LIGHTBLUE.getColorString();
     }
 
 }

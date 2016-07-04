@@ -51,6 +51,7 @@ public class DefinitionsPaletteWidgetImpl
     public void init() {
 
         view.setPresenter( this );
+        view.showEmptyView( true );
 
         lienzoGlyphsPalette.setIconSize( ICON_SIZE );
         lienzoGlyphsPalette.setPadding( PADDING );

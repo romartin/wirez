@@ -19,6 +19,7 @@ import java.util.List;
 
 public class ToolboxButton {
     private final WiresShape primitive;
+
     public static final double ANIMATION_DURATION = 200;
     private final Layer layer;
     private final HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
@@ -28,9 +29,20 @@ public class ToolboxButton {
     private ToolboxButtonEventHandler mouseExitHandler;
     private double iScaleX;
     private double iScaleY;
-    private boolean isHover;
+    private String iFillColor;
+    private String iStrokeColor;
+    private boolean isHovering;
+    private boolean isHoverComplete;
+    private boolean isOutRequested;
+    private HoverAnimation animation;
 
     private MultiPath decorator;
+
+    public enum HoverAnimation {
+
+        ELASTIC, HOVER_COLOR;
+
+    }
 
     public ToolboxButton(final Layer layer,
                          final IPrimitive<?> shape,
@@ -38,14 +50,18 @@ public class ToolboxButton {
                          final ToolboxButtonEventHandler clickHandler,
                          final ToolboxButtonEventHandler dragEndHandler,
                          final ToolboxButtonEventHandler mouseEnterHandler,
-                         final ToolboxButtonEventHandler mouseExitHandler) {
+                         final ToolboxButtonEventHandler mouseExitHandler,
+                         final HoverAnimation animation) {
         this.layer = layer;
         this.clickHandler = clickHandler;
         this.dragEndHandler = dragEndHandler;
         this.mouseEnterHandler = mouseEnterHandler;
         this.mouseExitHandler = mouseExitHandler;
         this.primitive = build( shape );
-        this.isHover = false;
+        this.isHovering = false;
+        this.isHoverComplete = false;
+        this.isOutRequested = false;
+        this.animation = animation;
 
         for (Button.WhenReady callback : callbacks) {
             callback.whenReady(this);
@@ -63,7 +79,9 @@ public class ToolboxButton {
 
     public void remove() {
         handlerRegistrationManager.removeHandler();
+        decorator.removeFromParent();
         primitive.removeFromParent();
+        layer.batch();
     }
 
     private WiresShape build( final IPrimitive<?> shape ) {
@@ -77,6 +95,11 @@ public class ToolboxButton {
                 .setDraggable( false );
 
         final Point2D scale = shape.getScale();
+
+        this.iFillColor = shape.getAttributes().getFillColor();
+        this.iStrokeColor = shape.getAttributes().getStrokeColor();
+        this.iFillColor = null != this.iFillColor ? this.iFillColor : "#000000";
+        this.iStrokeColor = null != this.iStrokeColor ? this.iStrokeColor : "#000000";
 
         if ( null != scale ) {
 
@@ -93,6 +116,7 @@ public class ToolboxButton {
         }
 
         WiresManager manager = WiresManager.get( layer );
+        // TODO: DO not add into Align&Distro index neither set the Docking acceptor.
         WiresShape wiresShape = manager.createShape( decorator ).setDraggable( false );
 
         wiresShape.getContainer().add( shape.setDraggable( false ) );
@@ -189,11 +213,11 @@ public class ToolboxButton {
     
     private void onButtonMouseEnter( final IPrimitive<?> shape ) {
 
-        if ( !isHover ) {
+        if ( !isHoverComplete && !isHovering) {
 
-            this.isHover = true;
+            this.isHovering = true;
 
-            doButtonAnimate( shape, iScaleX * 2, iScaleY * 2, 2, true );
+            doButtonAnimate( shape, iScaleX * 2, iScaleY * 2, 2, ColorName.BLUE.getColorString(),  ColorName.BLUE.getColorString(), true );
 
         }
 
@@ -201,7 +225,15 @@ public class ToolboxButton {
 
     private void onButtonMouseExit( final IPrimitive<?> shape ) {
 
-        doButtonAnimate( shape, iScaleX, iScaleY, 1, false );
+        if ( isHoverComplete ) {
+
+            doButtonAnimate( shape, iScaleX, iScaleY, 1, iFillColor, iStrokeColor, false );
+
+        } else {
+
+            isOutRequested = true;
+
+        }
 
     }
     
@@ -209,34 +241,19 @@ public class ToolboxButton {
                                   final double scaleX,
                                   final double scaleY,
                                   final double decoratorScale,
+                                  final String fillColor,
+                                  final String strokeColor,
                                   final boolean isHover ) {
 
-        shape.animate(
-                AnimationTweener.LINEAR,
-                AnimationProperties.toPropertyList(
-                        AnimationProperty.Properties.SCALE( scaleX, scaleY )
-                ),
-                ANIMATION_DURATION,
-                new AnimationCallback() {
+        if ( HoverAnimation.ELASTIC.equals( animation ) ) {
 
-                    @Override
-                    public void onClose(final IAnimation animation, final IAnimationHandle handle) {
+            animateElastic( shape, scaleX, scaleY, decoratorScale, isHover );
 
-                        super.onClose( animation, handle );
+        } else {
 
-                        ToolboxButton.this.isHover = isHover;
-                    }
+            animateHoverColor( shape, fillColor, strokeColor, isHover );
 
-                }
-        );
-
-        decorator.animate(
-                AnimationTweener.LINEAR,
-                AnimationProperties.toPropertyList(
-                        AnimationProperty.Properties.SCALE( decoratorScale )
-                ),
-                ANIMATION_DURATION
-        );
+        }
 
     }
     
@@ -265,6 +282,79 @@ public class ToolboxButton {
             }
         };
         
+    }
+
+    private void animateElastic( final IPrimitive<?> shape,
+                                 final double scaleX,
+                                 final double scaleY,
+                                 final double decoratorScale,
+                                 final boolean isHover ) {
+
+        shape.animate(
+                AnimationTweener.LINEAR,
+                AnimationProperties.toPropertyList(
+                        AnimationProperty.Properties.SCALE( scaleX, scaleY )
+                ),
+                ANIMATION_DURATION
+        );
+
+        decorator.animate(
+                AnimationTweener.LINEAR,
+                AnimationProperties.toPropertyList(
+                        AnimationProperty.Properties.SCALE( decoratorScale )
+                ),
+                ANIMATION_DURATION,
+                new HoverAnimationCallback( isHover, shape )
+        );
+
+    }
+
+    private void animateHoverColor( final IPrimitive<?> shape,
+                                    final String fillColor,
+                                    final String strokeColor,
+                                 final boolean isHover ) {
+
+        shape.animate(
+                AnimationTweener.LINEAR,
+                AnimationProperties.toPropertyList(
+                        AnimationProperty.Properties.FILL_COLOR( fillColor ),
+                        AnimationProperty.Properties.STROKE_COLOR( strokeColor )
+                ),
+                ANIMATION_DURATION,
+                new HoverAnimationCallback( isHover, shape )
+        );
+
+
+    }
+
+    private final class HoverAnimationCallback extends AnimationCallback {
+
+        private final boolean isHoverComplete;
+        private final IPrimitive<?> shape;
+
+        private HoverAnimationCallback( final boolean isHoverComplete,
+                                        final IPrimitive<?> shape ) {
+            this.isHoverComplete = isHoverComplete;
+            this.shape = shape;
+        }
+
+        @Override
+        public void onClose(final IAnimation animation, final IAnimationHandle handle) {
+
+            super.onClose( animation, handle );
+
+            ToolboxButton.this.isHovering = false;
+            ToolboxButton.this.isHoverComplete = isHoverComplete;
+
+            if ( ToolboxButton.this.isOutRequested ) {
+
+                onButtonMouseExit( shape );
+                ToolboxButton.this.isOutRequested = false;
+
+            }
+
+        }
+
     }
 
 }

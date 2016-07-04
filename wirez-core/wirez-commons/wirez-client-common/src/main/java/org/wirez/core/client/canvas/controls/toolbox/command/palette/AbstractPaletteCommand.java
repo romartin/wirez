@@ -18,6 +18,7 @@ import org.wirez.core.client.components.palette.model.PaletteDefinitionBuilder;
 import org.wirez.core.client.components.palette.model.definition.DefinitionsPalette;
 import org.wirez.core.client.components.palette.model.definition.DefinitionsPaletteBuilder;
 import org.wirez.core.client.components.palette.view.PaletteView;
+import org.wirez.core.client.components.toolbox.ToolboxButton;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.shape.factory.ShapeFactory;
@@ -53,6 +54,7 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
     protected CanvasHighlight canvasHighlight;
     protected Node<? extends Definition<Object>, ? extends Edge> sourceNode;
     protected boolean paletteVisible;
+    protected String elementUUID;
 
     protected AbstractPaletteCommand() {
         this( null, null, null, null, null, null, null, null, null, null, null );
@@ -101,6 +103,11 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
     }
 
     @Override
+    public ToolboxButton.HoverAnimation getButtonAnimation() {
+        return ToolboxButton.HoverAnimation.HOVER_COLOR;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public void mouseEnter(final Context<AbstractCanvasHandler> context,
                            final Element element) {
@@ -131,6 +138,7 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
     protected void showPalette(final Context<AbstractCanvasHandler> context,
                                final Element element) {
 
+        this.elementUUID = element.getUUID();
         this.paletteVisible = true;
         this.canvasHandler = context.getCanvasHandler();
         this.sourceNode = (Node<? extends Definition<Object>, ? extends Edge>) element;
@@ -187,6 +195,7 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
     
     public void clear() {
         this.paletteVisible = false;
+        this.elementUUID = null;
         getPaletteView().clear();
     }
 

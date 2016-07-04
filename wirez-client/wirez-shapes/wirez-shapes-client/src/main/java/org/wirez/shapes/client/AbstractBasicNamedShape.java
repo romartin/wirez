@@ -41,16 +41,20 @@ public abstract class AbstractBasicNamedShape<W, V extends org.wirez.shapes.clie
     protected abstract String getFontColor( Node<View<W>, Edge> element );
     protected abstract Double getFontSize( Node<View<W>, Edge> element );
     protected abstract Double getFontBorderSize( Node<View<W>, Edge> element );
-    
+
+    protected Double getFontAlpha( Node<View<W>, Edge> element ) {
+        return 1d;
+    }
+
     protected AbstractBasicNamedShape<W, V> _applyFont(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
         
-        if ( view instanceof HasTitle ) {
-            final String family = getFontFamily( element );
-            final String color = getFontColor( element );
-            final Double size = getFontSize( element );
-            final Double borderSize = getFontBorderSize( element );
-            super._applyFont(family, color, size, borderSize, mutationContext);
-        }
+        final String family = getFontFamily( element );
+        final String color = getFontColor( element );
+        final Double size = getFontSize( element );
+        final Double borderSize = getFontBorderSize( element );
+        final Double alpha = getFontAlpha( element );
+
+        super._applyFont(family, color, size, borderSize, alpha, mutationContext);
 
         return this;
     }

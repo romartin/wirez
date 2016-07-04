@@ -16,10 +16,12 @@
 
 package org.wirez.client.widgets.canvas.wires;
 
+import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.wirez.client.lienzo.Lienzo;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
+import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
 import org.wirez.core.client.canvas.event.CanvasDrawnEvent;
@@ -36,20 +38,19 @@ public class WiresCanvasPresenter extends WiresCanvas implements IsWidget {
 
     private static final int PADDING = 15;
 
+    org.wirez.client.widgets.canvas.LienzoPanel lienzoPanel;
+
     @Inject
     public WiresCanvasPresenter(final Event<CanvasClearEvent> canvasClearEvent,
                                 final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
                                 final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
                                 final Event<CanvasDrawnEvent> canvasDrawnEvent,
                                 final @Lienzo Layer layer,
-                                final WiresCanvas.View view) {
+                                final WiresCanvas.View view,
+                                final org.wirez.client.widgets.canvas.LienzoPanel lienzoPanel) {
         super( canvasClearEvent, canvasShapeAddedEvent, canvasShapeRemovedEvent, 
                 canvasDrawnEvent, layer, view );
-    }
-
-    @PostConstruct
-    public void init() {
-        super.init();
+        this.lienzoPanel = lienzoPanel;
     }
 
     @Override
@@ -59,7 +60,9 @@ public class WiresCanvasPresenter extends WiresCanvas implements IsWidget {
 
     @Override
     public org.wirez.core.client.canvas.Canvas initialize(final int width, final int height) {
-        view.show(width, height, PADDING);
+        lienzoPanel.show( width, height, PADDING );
+        view.show( ( LienzoPanel ) lienzoPanel.asWidget(), layer );
+        layer.onAfterDraw(() -> WiresCanvasPresenter.this.afterDrawCanvas());
         return this;
     }
 
@@ -75,6 +78,7 @@ public class WiresCanvasPresenter extends WiresCanvas implements IsWidget {
 
     public WiresCanvasPresenter clear() {
         super.clear();
+        lienzoPanel.clear();
         view.clear();
         return this;
     }

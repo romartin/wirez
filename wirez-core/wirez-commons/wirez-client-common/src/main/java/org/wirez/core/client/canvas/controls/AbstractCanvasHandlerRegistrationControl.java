@@ -3,9 +3,11 @@ package org.wirez.core.client.canvas.controls;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.event.AbstractCanvasHandlerEvent;
+import org.wirez.core.client.canvas.event.CanvasClearEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementsClearEvent;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.event.ViewHandler;
@@ -23,11 +25,10 @@ public abstract class AbstractCanvasHandlerRegistrationControl extends AbstractC
     public void update( final Element element ) {
         // Do nothing by default.
     }
-    
+
     protected void registerHandler( String uuid, ViewHandler<?> handler ) {
         handlers.put( uuid, handler );
     }
-
 
     @Override
     protected void doDisable() {
@@ -37,7 +38,7 @@ public abstract class AbstractCanvasHandlerRegistrationControl extends AbstractC
             final String uuid = entry.getKey();
             final Shape shape = canvasHandler.getCanvas().getShape( uuid );
             final ViewHandler<?> handler = entry.getValue();
-            doDeregister(shape, handler);
+            doDeregisterHandler(shape, handler);
         }
         
     }
@@ -45,26 +46,11 @@ public abstract class AbstractCanvasHandlerRegistrationControl extends AbstractC
     @Override
     public void deregister( final Element element ) {
 
-        final Shape<?> shape = (Shape<?>) canvasHandler.getCanvas().getShape( element.getUUID() );
-
-        deregisterShape( element, shape );
-        
-    }
-
-    protected void deregisterShape( final Element element,
-                                    final Shape<?> shape ) {
-
-        if ( null != shape ) {
-
-            ViewHandler<?> handler = handlers.get( element.getUUID() );
-            doDeregister(shape, handler);
-            handlers.remove( element.getUUID() );
-
-        }
+        handlers.remove( element.getUUID() );
 
     }
 
-    protected void doDeregister(final Shape shape,
+    protected void doDeregisterHandler(final Shape shape,
                                 final ViewHandler<?> handler) {
 
         if ( null != shape && null != handler ) {
@@ -73,7 +59,12 @@ public abstract class AbstractCanvasHandlerRegistrationControl extends AbstractC
         }
 
     }
-    
+
+    protected void deregisterAll() {
+
+        handlers.clear();
+
+    }
 
     void onCanvasElementAddedEvent(@Observes CanvasElementAddedEvent canvasElementAddedEvent) {
         if ( checkEventContext(canvasElementAddedEvent) ) {
@@ -90,6 +81,12 @@ public abstract class AbstractCanvasHandlerRegistrationControl extends AbstractC
     void onCanvasElementUpdatedEvent(@Observes CanvasElementUpdatedEvent elementUpdatedEvent) {
         if ( checkEventContext(elementUpdatedEvent) ) {
             this.update( elementUpdatedEvent.getElement() );
+        }
+    }
+
+    void onCanvasElementsClearEvent( @Observes CanvasElementsClearEvent canvasClearEvent ) {
+        if ( checkEventContext( canvasClearEvent ) ) {
+            this.deregisterAll();
         }
     }
     

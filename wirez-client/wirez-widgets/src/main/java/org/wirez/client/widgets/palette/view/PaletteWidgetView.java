@@ -13,6 +13,8 @@ public interface PaletteWidgetView extends IsWidget {
 
     void setBackgroundColor( String color );
 
+    void setMarginTop( int mTop );
+
     void show( PaletteView<?, ?, ?> paletteView );
 
     void show( PaletteView<?, ?, ?> paletteView, int width, int height );

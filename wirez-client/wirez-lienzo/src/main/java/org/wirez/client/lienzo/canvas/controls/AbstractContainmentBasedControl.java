@@ -1,7 +1,10 @@
 package org.wirez.client.lienzo.canvas.controls;
 
+import com.ait.lienzo.client.core.shape.wires.WiresContainer;
+import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
+import org.wirez.client.lienzo.canvas.wires.WiresUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
@@ -160,6 +163,21 @@ public abstract class AbstractContainmentBasedControl<H extends CanvasHandler> i
         }
         
         return null;
+    }
+
+    protected boolean isAccept( final WiresContainer wiresContainer,
+                                  final WiresShape wiresShape ) {
+
+        if ( !isEnabled() || !isWirezShape( wiresContainer ) || !isWirezShape( wiresShape ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean isWirezShape( final WiresContainer wiresShape ) {
+        return null != wiresShape.getContainer().getUserData() &&
+                wiresShape.getContainer().getUserData().equals( WiresCanvas.WIRES_CANVAS_GROUP_ID );
     }
 
     protected boolean isAccept(final CommandResult<CanvasViolation> result) {

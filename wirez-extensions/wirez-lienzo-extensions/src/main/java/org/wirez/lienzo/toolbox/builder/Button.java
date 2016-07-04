@@ -9,6 +9,8 @@ public interface Button {
         void whenReady(ToolboxButton button);
     }
 
+    Button setAnimation( ToolboxButton.HoverAnimation animation );
+
     Button setClickHandler(ToolboxButtonEventHandler handler);
 
     Button setDragEndHandler(ToolboxButtonEventHandler handler);

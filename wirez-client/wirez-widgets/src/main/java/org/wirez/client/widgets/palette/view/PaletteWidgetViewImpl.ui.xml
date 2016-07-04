@@ -20,10 +20,14 @@
 >
 
   <ui:style>
+    .mainPanel {
+      height: 100%;
+    }
     .noCanvasPanel {
       padding: 5px;
     }
     .palette {
+      float: left;
       padding: 5px;
     }
     .emptyText {
@@ -32,15 +36,15 @@
     }
   </ui:style>
 
-  <g:FlowPanel ui:field="mainPanel">
+  <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
     
     <g:FlowPanel ui:field="noCanvasPanel" addStyleNames="{style.noCanvasPanel}">
-      <g:HTML text="No canvas currently in use" addStyleNames="{style.emptyText}"/>  
+      <!--<g:HTML text="No canvas currently in use" addStyleNames="{style.emptyText}"/>-->
     </g:FlowPanel>
 
-    <g:VerticalPanel styleName="{style.palette}">
+    <g:FlowPanel ui:field="paletteContainer" styleName="{style.palette}">
       <g:SimplePanel ui:field="palettePanel"/>
-    </g:VerticalPanel>
+    </g:FlowPanel>
     
   </g:FlowPanel>
 

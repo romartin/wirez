@@ -72,6 +72,11 @@ public final class ClearGraphCommand extends AbstractGraphCommand {
 
                             nodes.remove();
 
+                        } else {
+
+                            // Clear outgoing edges for canvas root element.
+                            node.getOutEdges().clear();
+
                         }
 
                     }
@@ -85,9 +90,10 @@ public final class ClearGraphCommand extends AbstractGraphCommand {
             }
 
         }
+
         return results;
     }
-    
+
     protected CommandResult<RuleViolation> doCheck(final GraphCommandExecutionContext context) {
         return GraphCommandResultBuilder.RESULT_OK;        
     }

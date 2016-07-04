@@ -8,6 +8,7 @@ import com.ait.lienzo.shared.core.types.Direction;
 import org.wirez.lienzo.toolbox.HoverToolbox;
 import org.wirez.lienzo.toolbox.ToolboxButton;
 import org.wirez.lienzo.toolbox.event.ToolboxButtonEventHandler;
+import org.wirez.lienzo.toolbox.grid.GridToolbox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public abstract class AbstractBuilder implements On, Towards, ButtonsOrRegister,
     }
 
     @Override
-    public abstract HoverToolbox register();
+    public abstract GridToolbox register();
 
     public static class ButtonBuilder implements Button {
         private final Layer layer;
@@ -78,11 +79,21 @@ public abstract class AbstractBuilder implements On, Towards, ButtonsOrRegister,
         private ToolboxButtonEventHandler dragEndHandler;
         private ToolboxButtonEventHandler mouseEnterHandler;
         private ToolboxButtonEventHandler mouseExitHandler;
+        private ToolboxButton.HoverAnimation animation;
 
-        public ButtonBuilder(Layer layer, AbstractBuilder builder, IPrimitive<?> shape) {
+        public ButtonBuilder( final Layer layer,
+                              final AbstractBuilder builder,
+                              final IPrimitive<?> shape) {
             this.layer = layer;
             this.builder = builder;
             this.shape = shape;
+            this.animation = ToolboxButton.HoverAnimation.ELASTIC;
+        }
+
+        @Override
+        public Button setAnimation( final ToolboxButton.HoverAnimation animation ) {
+            this.animation = animation;
+            return this;
         }
 
         @Override
@@ -118,7 +129,7 @@ public abstract class AbstractBuilder implements On, Towards, ButtonsOrRegister,
         @Override
         public ButtonsOrRegister end() {
             builder.add( new ToolboxButton( layer, shape, this.whenReadyCallbacks, clickHandler, dragEndHandler,
-                    mouseEnterHandler, mouseExitHandler ) );
+                    mouseEnterHandler, mouseExitHandler, animation ) );
             return builder;
         }
     }

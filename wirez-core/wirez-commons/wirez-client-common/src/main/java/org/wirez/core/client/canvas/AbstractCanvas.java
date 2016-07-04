@@ -41,12 +41,10 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
 
     private static Logger LOGGER = Logger.getLogger(AbstractCanvas.class.getName());
 
-    public interface View extends IsWidget {
+    public interface View<P> extends IsWidget {
 
-        View init(Layer layer);
+        View show( P panel, Layer layer );
         
-        View show(int width, int height, int padding);
-
         View add(IsWidget widget);
 
         View remove(IsWidget widget);
@@ -102,11 +100,6 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View> implements C
         this.layer = layer;
         this.view = view;
         this.uuid = UUID.uuid();
-    }
-
-    public void init() {
-        view.init(layer);
-        layer.onAfterDraw(() -> AbstractCanvas.this.afterDrawCanvas());
     }
 
     public abstract void addControl( IsWidget controlView );

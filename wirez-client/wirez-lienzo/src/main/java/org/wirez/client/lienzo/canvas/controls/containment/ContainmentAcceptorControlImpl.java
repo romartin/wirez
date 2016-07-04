@@ -76,7 +76,7 @@ public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedCont
         public boolean containmentAllowed(final WiresContainer wiresContainer,
                                           final WiresShape wiresShape) {
 
-            if ( !isEnabled() ) {
+            if ( !isAccept(  wiresContainer, wiresShape ) ) {
                 return false;
             }
             
@@ -90,7 +90,7 @@ public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedCont
         public boolean acceptContainment(final WiresContainer wiresContainer,
                                          final WiresShape wiresShape) {
 
-            if ( !isEnabled() ) {
+            if ( !isAccept(  wiresContainer, wiresShape ) ) {
                 return false;
             }
             

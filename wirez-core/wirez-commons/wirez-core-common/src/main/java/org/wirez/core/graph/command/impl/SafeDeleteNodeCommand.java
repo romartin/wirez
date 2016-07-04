@@ -10,8 +10,10 @@ import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.graph.command.GraphCommandResultBuilder;
+import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.util.SafeDeleteNodeProcessor;
 import org.wirez.core.rule.RuleManager;
 import org.wirez.core.rule.RuleViolation;
 
@@ -42,41 +44,45 @@ public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
         
         final List<Command<GraphCommandExecutionContext, RuleViolation>> commands = new LinkedList<>();
         
-        // Check node's children, if any.
-        final List<Node> children = getChildNodes( candidate );
-        for ( Node child : children ) {
-            commands.add( new SafeDeleteNodeCommand( target, child) );
-        }
-        
-        // Check if is a child node, so if exists an ingoing child edge ( from parent node ).
-        final List<Edge> inEdges = candidate.getInEdges();
-        if ( null != inEdges && !inEdges.isEmpty() ) {
-            for (final Edge inEdge : inEdges) {
-                if ( inEdge.getContent() instanceof Child) {
-                    final Node parent = inEdge.getSourceNode();
-                    commands.add( new DeleteChildEdgeCommand( parent, candidate) );
-                } else if ( inEdge.getContent() instanceof View) {
-                    commands.add( new SetConnectionTargetNodeCommand( null, inEdge, 0) );
-                }
-            }
-        }
+        // Delete & set incoming & outgoing edges for the node being deleted.
+        new SafeDeleteNodeProcessor( candidate ).run( new SafeDeleteNodeProcessor.DeleteNodeCallback() {
 
-        final List<Edge> outEdges = candidate.getOutEdges();
-        if ( null != outEdges && !outEdges.isEmpty() ) {
-            for (final Edge outEdge : outEdges) {
-                if ( outEdge.getContent() instanceof View ) {
-                    commands.add( new SetConnectionSourceNodeCommand( null, outEdge, 0) );
-                }
+            @Override
+            public void deleteChildNode( final Node<Definition<?>, Edge> node ) {
+                commands.add( new SafeDeleteNodeCommand( target, node ) );
             }
-        }
-        
-        // Add the commands above.
+
+            @Override
+            public void deleteInViewEdge( final Edge<View<?>, Node> edge ) {
+
+                commands.add( new SetConnectionTargetNodeCommand( null, edge, 0) );
+
+            }
+
+            @Override
+            public void deleteInChildEdge( final Node parent,
+                                           final Edge<Child, Node> edge ) {
+                commands.add( new DeleteChildEdgeCommand( parent, candidate) );
+            }
+
+            @Override
+            public void deleteOutEdge( final Edge<? extends View<?>, Node> edge ) {
+
+                commands.add( new SetConnectionSourceNodeCommand( null, edge, 0) );
+
+            }
+
+            @Override
+            public void deleteNode( final Node<Definition<?>, Edge> node ) {
+                commands.add( new DeleteNodeCommand( target, candidate ) );
+            }
+
+        } );
+
+        // Add the commands above as composited.
         for ( Command<GraphCommandExecutionContext, RuleViolation> command : commands ) {
             this.addCommand( command );
         }
-        
-        // After above commands, just delete the node.
-        this.addCommand( new DeleteNodeCommand( target, candidate ) );
         
     }
 
@@ -133,20 +139,6 @@ public final class SafeDeleteNodeCommand extends AbstractGraphCompositeCommand {
         return builder.build();
     }
 
-    private List<Node> getChildNodes(final Node node) {
-        final List<Node> nodesToRemove = new LinkedList<>();
-        final List<Edge<?, Node>> outEdges = node.getOutEdges();
-        if ( null != outEdges && !outEdges.isEmpty() ) {
-            for ( Edge<?, Node> outEdge : outEdges ) {
-                if ( outEdge.getContent() instanceof Child) {
-                    final Node target = outEdge.getTargetNode();
-                    nodesToRemove.add( target );
-                }
-            }
-        }
-        
-        return nodesToRemove;
-    }
 
     @Override
     public String toString() {

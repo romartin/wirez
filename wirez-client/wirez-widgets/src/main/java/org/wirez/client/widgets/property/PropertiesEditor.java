@@ -28,6 +28,7 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.client.canvas.event.AbstractCanvasHandlerEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementsClearEvent;
 import org.wirez.core.client.canvas.event.selection.CanvasClearSelectionEvent;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.definition.adapter.DefinitionAdapter;
@@ -534,8 +535,8 @@ public class PropertiesEditor implements IsWidget {
         doClear();
     }
 
-    void onCanvasClearEvent(@Observes CanvasClearEvent canvasClearEvent) {
-        if ( canvasHandler != null && canvasHandler.getCanvas().equals(canvasClearEvent.getCanvas()) ) {
+    void onCanvasElementsClearEvent( @Observes CanvasElementsClearEvent canvasClearEvent ) {
+        if ( checkEventContext( canvasClearEvent ) ) {
             doClear();
         }
     }

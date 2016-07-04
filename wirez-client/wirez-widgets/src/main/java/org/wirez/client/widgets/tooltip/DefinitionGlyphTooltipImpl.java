@@ -4,6 +4,7 @@ import com.ait.lienzo.client.core.shape.Group;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.components.glyph.GlyphTooltip;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.view.ShapeGlyph;
@@ -20,6 +21,9 @@ public class DefinitionGlyphTooltipImpl
     ShapeManager shapeManager;
     FactoryManager factoryManager;
 
+    private String prefix;
+    private String suffix;
+
     protected DefinitionGlyphTooltipImpl() {
         this ( null, null, null, null );
     }
@@ -35,8 +39,21 @@ public class DefinitionGlyphTooltipImpl
         this.shapeManager = shapeManager;
     }
 
+
     @Override
-    public void showTooltip(final String definitionId,
+    public DefinitionGlyphTooltip<Group> setPrefix( final String prefix ) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    @Override
+    public DefinitionGlyphTooltip<Group> setSuffix( final String suffix ) {
+        this.suffix = suffix;
+        return this;
+    }
+
+    @Override
+    public DefinitionGlyphTooltipImpl showTooltip(final String definitionId,
                             final double x,
                             final double y,
                             final GlyphTooltip.Direction direction) {
@@ -45,14 +62,15 @@ public class DefinitionGlyphTooltipImpl
 
         if ( null != title ) {
 
-            this.show( title, x, y, direction );
+            this.show( getTitleToShow( title ), x, y, direction );
 
         }
 
+        return this;
     }
 
     @Override
-    public void showGlyph( final String definitionId,
+    public DefinitionGlyphTooltipImpl showGlyph( final String definitionId,
                       final double x,
                       final double y,
                       final double width,
@@ -67,13 +85,14 @@ public class DefinitionGlyphTooltipImpl
 
             final ShapeGlyph glyph = factory.glyph ( definitionId, width, height );
 
-            this.show( glyph, title, x, y, direction );
+            this.show( glyph, getTitleToShow( title ), x, y, direction );
 
         }
 
+        return this;
     }
 
-    // TODO: Do not create model isntances here.
+    // TODO: Do not create model instances here.
     private String getTitle( final String id ) {
 
         if ( null != id && id.trim().length() > 0 ) {
@@ -89,6 +108,13 @@ public class DefinitionGlyphTooltipImpl
         }
 
         return null;
+    }
+
+    private String getTitleToShow( final String text ) {
+        return ( null != prefix && prefix.trim().length() > 0 ? prefix : "" )
+                + text
+                + ( null != suffix && suffix.trim().length() > 0 ? suffix : "" );
+
     }
 
 }

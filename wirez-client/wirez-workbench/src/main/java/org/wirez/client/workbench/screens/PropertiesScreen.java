@@ -78,6 +78,7 @@ public class PropertiesScreen {
     private PlaceRequest placeRequest;
     
     @PostConstruct
+    @SuppressWarnings( "unchecked" )
     public void init() {
         propertiesEditor.setEditorCallback(new PropertiesEditor.EditorCallback() {
             @Override

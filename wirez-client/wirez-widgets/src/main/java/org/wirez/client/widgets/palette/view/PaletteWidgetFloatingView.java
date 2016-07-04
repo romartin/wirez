@@ -6,7 +6,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import org.wirez.core.client.components.glyph.ShapeGlyphDragHandler;
 import org.wirez.core.client.components.palette.view.PaletteView;
 
@@ -82,11 +85,6 @@ public class PaletteWidgetFloatingView extends AbstractPaletteWidgetView impleme
     @Override
     protected Panel getParentPanel() {
         return mainPanel;
-    }
-
-    @Override
-    public void showEmptyView( final boolean visible ) {
-        // Does nothing here.
     }
 
     private void attach() {

@@ -16,6 +16,7 @@ import org.wirez.core.command.Command;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.relationship.Dock;
+import org.wirez.lienzo.toolbox.ToolboxButton;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -25,33 +26,33 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
     implements DockingAcceptorControl<AbstractCanvasHandler> {
 
     @Inject
-    public DockingAcceptorControlImpl(final CanvasCommandFactory canvasCommandFactory,
-                                       final @Session  CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
+    public DockingAcceptorControlImpl( final CanvasCommandFactory canvasCommandFactory,
+                                       final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager ) {
         super( canvasCommandFactory, canvasCommandManager );
     }
 
     @Override
-    protected void doEnable(final WiresCanvas.View view) {
-        view.setDockingAcceptor(DOCKING_ACCEPTOR);
+    protected void doEnable( final WiresCanvas.View view ) {
+        view.setDockingAcceptor( DOCKING_ACCEPTOR );
     }
 
     @Override
-    protected void doDisable(final WiresCanvas.View view) {
-        view.setDockingAcceptor(DOCKING_EMPTY_ACCEPTOR);
+    protected void doDisable( final WiresCanvas.View view ) {
+        view.setDockingAcceptor( DOCKING_EMPTY_ACCEPTOR );
     }
 
     @Override
-    protected boolean isEdgeAccepted(final Edge edge) {
+    protected boolean isEdgeAccepted( final Edge edge ) {
         return edge.getContent() instanceof Dock;
     }
 
     @Override
-    protected Command<AbstractCanvasHandler, CanvasViolation> getAddEdgeCommand(final Node parent, final Node child) {
+    protected Command<AbstractCanvasHandler, CanvasViolation> getAddEdgeCommand( final Node parent, final Node child ) {
         return canvasCommandFactory.ADD_DOCK_EDGE( parent, child );
     }
 
     @Override
-    protected Command<AbstractCanvasHandler, CanvasViolation> getDeleteEdgeCommand(final Node parent, final Node child) {
+    protected Command<AbstractCanvasHandler, CanvasViolation> getDeleteEdgeCommand( final Node parent, final Node child ) {
         return canvasCommandFactory.DELETE_DOCK_EDGE( parent, child );
     }
 
@@ -74,10 +75,10 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
 
     private final IDockingAcceptor DOCKING_ACCEPTOR = new IDockingAcceptor() {
         @Override
-        public boolean dockingAllowed(final WiresContainer wiresContainer,
-                                      final WiresShape wiresShape) {
+        public boolean dockingAllowed( final WiresContainer wiresContainer,
+                                       final WiresShape wiresShape ) {
 
-            if ( !isEnabled() ) {
+            if ( !isAccept(  wiresContainer, wiresShape ) ) {
                 return false;
             }
 
@@ -88,10 +89,10 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
         }
 
         @Override
-        public boolean acceptDocking(final WiresContainer wiresContainer,
-                                     final WiresShape wiresShape) {
+        public boolean acceptDocking( final WiresContainer wiresContainer,
+                                      final WiresShape wiresShape ) {
 
-            if ( !isEnabled() ) {
+            if ( !isAccept(  wiresContainer, wiresShape ) ) {
                 return false;
             }
 

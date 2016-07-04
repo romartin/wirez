@@ -43,6 +43,10 @@ public abstract class AbstractLienzoGlyphItemsPalette<V extends LienzoPaletteVie
         return this;
     }
 
+    public DefinitionGlyphTooltip getDefinitionGlyphTooltip() {
+        return definitionGlyphTooltip;
+    }
+
     @Override
     protected void doInit() {
 

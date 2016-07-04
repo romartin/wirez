@@ -25,6 +25,7 @@ import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEven
 import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementsClearEvent;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
@@ -82,6 +83,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     protected Event<CanvasElementAddedEvent> canvasElementAddedEvent;
     protected Event<CanvasElementRemovedEvent> canvasElementRemovedEvent;
     protected Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent;
+    protected Event<CanvasElementsClearEvent> canvasElementsClearEvent;
     protected Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
     protected Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
     
@@ -102,6 +104,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                                  final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
                                  final Event<CanvasElementRemovedEvent> canvasElementRemovedEvent,
                                  final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent,
+                                 final Event<CanvasElementsClearEvent> canvasElementsClearEvent,
                                  final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent, 
                                  final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
         this.clientDefinitionManager = clientDefinitionManager;
@@ -115,6 +118,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         this.canvasElementAddedEvent = canvasElementAddedEvent;
         this.canvasElementRemovedEvent = canvasElementRemovedEvent;
         this.canvasElementUpdatedEvent = canvasElementUpdatedEvent;
+        this.canvasElementsClearEvent = canvasElementsClearEvent;
         this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
         this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
         this.uuid = UUID.uuid();
@@ -336,7 +340,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     }
 
     @SuppressWarnings("unchecked")
-    protected void register( final ShapeFactory<Object, AbstractCanvasHandler, Shape> factory,
+    public void register( final ShapeFactory<Object, AbstractCanvasHandler, Shape> factory,
                           final Element<View<?>> candidate,
                           final boolean fireEvents ) {
         assert factory != null && candidate != null;
@@ -372,7 +376,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         deregister( element, true );
     }
 
-    protected void deregister( final Element element,
+    public void deregister( final Element element,
                             final boolean fireEvents ) {
         final Shape shape = canvas.getShape(element.getUUID());
 
@@ -575,9 +579,14 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     }
 
     public void clearCanvas() {
+
         fireProcessingCompleted();
+
+        canvasElementsClearEvent.fire( new CanvasElementsClearEvent( this ) );
+
         canvas.clear();
         canvas.draw();
+
     }
     
     @Override

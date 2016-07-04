@@ -16,12 +16,10 @@
 package org.wirez.client.widgets.canvas;
 
 import com.ait.lienzo.client.core.shape.GridLayer;
-import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Line;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
-import com.ait.lienzo.client.core.types.Point2D;
-import com.ait.lienzo.shared.core.types.ColorName;
+import com.ait.lienzo.client.widget.*;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -31,13 +29,13 @@ import org.wirez.core.client.shape.view.ShapeView;
 
 import javax.annotation.PostConstruct;
 
-public class CanvasView extends Composite implements org.wirez.core.client.canvas.AbstractCanvas.View {
+public class CanvasView extends Composite implements org.wirez.core.client.canvas.AbstractCanvas.View<com.ait.lienzo.client.widget.LienzoPanel> {
 
     private static final String Bg_COLOR = "#FFFFFF";
 
     protected FlowPanel mainPanel = new FlowPanel();
     protected FlowPanel toolsPanel = new FlowPanel();
-    protected FocusableLienzoPanel panel;
+    protected com.ait.lienzo.client.widget.LienzoPanel panel;
     protected Layer canvasLayer = new Layer();
     protected org.wirez.core.client.canvas.Layer layer;
 
@@ -47,22 +45,20 @@ public class CanvasView extends Composite implements org.wirez.core.client.canva
     }
 
     @Override
-    public org.wirez.core.client.canvas.AbstractCanvas.View init(final org.wirez.core.client.canvas.Layer layer) {
+    public org.wirez.core.client.canvas.AbstractCanvas.View show( final com.ait.lienzo.client.widget.LienzoPanel panel,
+                                                                  final org.wirez.core.client.canvas.Layer layer ) {
+        this.panel = panel;
         this.layer = layer;
-        layer.initialize( canvasLayer );
-        return this;
-    }
 
-    @Override
-    public AbstractCanvas.View show(final int width, final int height, final int padding) {
-        
-        panel = new FocusableLienzoPanel( width + padding, height + padding );
+        layer.initialize( canvasLayer );
+
         panel.getElement().getStyle().setBackgroundColor( Bg_COLOR );
         mainPanel.add(toolsPanel);
         mainPanel.add(panel);
 
         panel.getScene().add( canvasLayer );
-        
+
+
         return this;
     }
 

@@ -81,12 +81,7 @@ public class HoverPalette extends AbstractPalette<HoverPalette> {
         if ( null == decorator ) {
 
             decorator = new Rectangle( 1, 1 )
-                    .setCornerRadius(5)
-                    .setFillColor(ColorName.LIGHTGREY)
-                    .setFillAlpha(0.2)
-                    .setStrokeWidth(2)
-                    .setStrokeColor(ColorName.GREY)
-                    .setStrokeAlpha(0.2);
+                    .setFillColor(ColorName.LIGHTGREY);
 
             this.add( decorator );
 

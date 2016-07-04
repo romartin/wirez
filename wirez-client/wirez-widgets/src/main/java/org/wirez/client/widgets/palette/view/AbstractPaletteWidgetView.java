@@ -15,6 +15,8 @@ public abstract class AbstractPaletteWidgetView
         extends Composite
         implements PaletteWidgetView {
 
+    private static final String WHITE = "#FFFFFF";
+
     ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler;
 
     protected LienzoPanel lienzoPanel;
@@ -22,6 +24,8 @@ public abstract class AbstractPaletteWidgetView
     protected AbstractPaletteWidget presenter;
     protected PaletteView paletteView;
     protected final Rectangle background = new Rectangle( 1, 1 ).setFillAlpha( 0 ).setStrokeAlpha( 0 );
+    protected String bgColor = null;
+    protected int marginTop = 0;
 
     public AbstractPaletteWidgetView( final ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler ) {
         this.shapeGlyphDragHandler = shapeGlyphDragHandler;
@@ -36,7 +40,35 @@ public abstract class AbstractPaletteWidgetView
 
     @Override
     public void setBackgroundColor( final String color ) {
+        this.bgColor = color;
         background.setFillAlpha( 1 ).setFillColor( color );
+    }
+
+    @Override
+    public void setMarginTop( final int mTop ) {
+        this.marginTop = mTop;
+    }
+
+    @Override
+    public int getAbsoluteTop() {
+        return super.getAbsoluteTop() + this.marginTop;
+    }
+
+    @Override
+    public void showEmptyView( final boolean visible ) {
+
+        if ( null != this.bgColor && visible ) {
+
+            final String bg = this.bgColor;
+            setBackgroundColor( WHITE );
+            this.bgColor = bg;
+
+        } else if ( null != this.bgColor ) {
+
+            setBackgroundColor( this.bgColor );
+
+        }
+
     }
 
     @Override

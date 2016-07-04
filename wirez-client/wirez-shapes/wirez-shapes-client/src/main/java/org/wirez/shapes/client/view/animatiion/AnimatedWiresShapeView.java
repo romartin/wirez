@@ -20,6 +20,7 @@ public abstract class AnimatedWiresShapeView<T> extends org.wirez.shapes.client.
 
     protected final List<AnimationProperty> shapeAnimationProperties = new LinkedList<>();
     protected final List<AnimationProperty> decoratorAnimationProperties = new LinkedList<>();
+    protected final List<AnimationProperty> textAnimationProperties = new LinkedList<>();
     protected final List<Command> animationCloseCallbacks = new LinkedList<>();
 
     @Override
@@ -65,7 +66,16 @@ public abstract class AnimatedWiresShapeView<T> extends org.wirez.shapes.client.
 
                     animateStrokeWidth( (Double) property.getValue() );
 
+                } else if ( FONT_SIZE.class.equals( property.getClass()) ) {
+
+                    animateFontSize( (Double) property.getValue() );
+
+                } else if ( FONT_ALPHA.class.equals( property.getClass()) ) {
+
+                    animateFontAlpha( (Double) property.getValue() );
+
                 }
+
             }
         
             // Position.
@@ -85,6 +95,7 @@ public abstract class AnimatedWiresShapeView<T> extends org.wirez.shapes.client.
 
         shapeAnimationProperties.clear();
         decoratorAnimationProperties.clear();
+        textAnimationProperties.clear();
         animationCloseCallbacks.clear();
         
     }
@@ -136,7 +147,15 @@ public abstract class AnimatedWiresShapeView<T> extends org.wirez.shapes.client.
     protected void animateStrokeWidth( final Double value ) {
         shapeAnimationProperties.add( AnimationProperty.Properties.STROKE_WIDTH( value ) );
     }
-    
+
+    protected void animateFontSize( final Double value ) {
+        textAnimationProperties.add( AnimationProperty.Properties.FONT_SIZE( value ) );
+    }
+
+    protected void animateFontAlpha( final Double value ) {
+        textAnimationProperties.add( AnimationProperty.Properties.ALPHA( value ) );
+    }
+
     public T animate(final org.wirez.core.client.shape.view.animation.AnimationTweener tweener, final double duration ) {
 
         // Shape property animations.
@@ -150,6 +169,10 @@ public abstract class AnimatedWiresShapeView<T> extends org.wirez.shapes.client.
             decoratorAnimationProperties.clear();
             
         }
+
+        // Text animations.
+        AnimatedWiresUtils.animate( text, tweener, duration, textAnimationProperties, animationCloseCallbacks );
+        textAnimationProperties.clear();
 
         // Clear current animation close callbacks.
         animationCloseCallbacks.clear();

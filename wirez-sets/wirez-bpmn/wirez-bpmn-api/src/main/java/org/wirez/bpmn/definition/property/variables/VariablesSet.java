@@ -26,6 +26,7 @@ import org.wirez.bpmn.definition.BPMNPropertySet;
 import org.wirez.core.definition.annotation.Name;
 import org.wirez.core.definition.annotation.propertyset.Property;
 import org.wirez.core.definition.annotation.propertyset.PropertySet;
+import org.wirez.forms.meta.definition.VariablesEditor;
 
 @Portable
 @Bindable
@@ -37,6 +38,7 @@ public class VariablesSet implements BPMNPropertySet {
     
     @Property
     @FieldDef(label = "Variables", property = "value")
+    @VariablesEditor
     @Valid
     private Variables variables;
 

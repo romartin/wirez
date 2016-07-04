@@ -66,6 +66,7 @@
                                and so is drag, when you release. it jumps
                                there must be a way to get a viewport x/y offset
                                rather than calculate it every single time
+                    -> see mediators_issues.txt
 
          - Externalize ControlHandles to be able to provide our own externally
          - Externalize docking visualization to be able to provide our own externally
@@ -76,7 +77,10 @@
         - WiresConnector
             - Decorators can be null
             - animate rotations both clockwise ( svg only supports single wise )
-            - 
+            - Do not move if parent shapes are dragged ( the source / target shapes are moved as the parent, but not the connectors )
+            - do not work fine with mediators ( pan / zoom )
+            - Cannot be "unconnected" - "No source magnet found.. Defense programming" message from lienzo??
+
     - Performance issues on class Geometry
     - External configs -> Connectors / docking hotspot size
     - When dragging parent shapes, the connectors on the children are not drag
@@ -99,7 +103,7 @@
 
     - General
         - Help widgets & tooltips/popovers
-        - Error handling
+        - Improve Error handling
         - refactor use of CDI qualifiers ( managers & services ) -> CDI @Priority 
         - Show/Hide grid toolbar button
         - cpu perf on adding shapes / minipalette drags
@@ -110,10 +114,19 @@
             - http://resources.bizagi.com/docs/Workflow%20Patterns%20using%20BizAgi%20Process%20Modeler.pdf
         - copy/cut/paste
         - group
-    
+
+    - Grid
+        - https://docs.google.com/document/d/1gCmxYGBFxHeqVoPLC6n5YhA0AyoejiDIzIjTz3-SJpM/edit
+
     - Export diagram to PNG -
             - See -> http://weworkweplay.com/play/saving-html5-canvas-as-image/
-            - Add button for downloading 
+            - Add button for downloading
+
+    - Forms
+        - Validation error messages -> https://docs.google.com/document/d/1UPx4smbKUsbyzL84LoEGlCyI5u89nPNs4cd2I0x4-WM/edit#heading=h.s01718cfssg4
+
+    - Themes
+        - https://github.com/droolsjbpm/jbpm-designer/blob/master/jbpm-designer-client/src/main/resources/org/jbpm/designer/public/defaults/themes.json
 
     - Preview widget - Mark's PR about replication
         

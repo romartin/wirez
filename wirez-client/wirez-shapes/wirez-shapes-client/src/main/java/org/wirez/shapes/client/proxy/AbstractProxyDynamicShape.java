@@ -36,27 +36,28 @@ public abstract class AbstractProxyDynamicShape<W, V extends org.wirez.shapes.cl
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void applyProperties( final Node<View<W>, Edge> element, 
-                                 final MutationContext mutationContext)  {
-
-        super.applyProperties(element, mutationContext);
-       
-    }
-
-    @Override
-    protected String getBackgroundColor(final Node<View<W>, Edge> element) {
+    protected String getBackgroundColor( final Node<View<W>, Edge> element ) {
         return proxy.getBackgroundColor( getDefinition( element ) );
     }
 
     @Override
-    protected String getBorderColor(final Node<View<W>, Edge> element) {
+    protected Double getBackgroundAlpha( final Node<View<W>, Edge> element ) {
+        return proxy.getBackgroundAlpha( getDefinition( element ) );
+    }
+
+    @Override
+    protected String getBorderColor( final Node<View<W>, Edge> element ) {
         return proxy.getBorderColor( getDefinition( element ) );
     }
 
     @Override
-    protected Double getBorderSize(final Node<View<W>, Edge> element) {
+    protected Double getBorderSize( final Node<View<W>, Edge> element ) {
         return proxy.getBorderSize( getDefinition( element ) );
+    }
+
+    @Override
+    protected Double getBorderAlpha( final Node<View<W>, Edge> element ) {
+        return proxy.getBackgroundAlpha( getDefinition( element ) );
     }
 
 }

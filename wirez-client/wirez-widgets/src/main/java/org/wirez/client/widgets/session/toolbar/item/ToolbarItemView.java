@@ -17,6 +17,7 @@
 package org.wirez.client.widgets.session.toolbar.item;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -42,6 +43,7 @@ public class ToolbarItemView extends Composite implements ToolbarItem.View {
     public void init(final AbstractToolbarItem presenter) {
         this.presenter = presenter;
         initWidget( uiBinder.createAndBindUi( this ) );
+        button.getElement().getStyle().setMargin( 5, Style.Unit.PX );
     }
 
     @Override

@@ -16,19 +16,26 @@
 package org.wirez.client;
 
 import com.google.gwt.animation.client.Animation;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.RootPanel;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.uberfire.client.mvp.ActivityManager;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.client.workbench.widgets.menu.WorkbenchMenuBarPresenter;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
 
 import javax.inject.Inject;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.uberfire.workbench.model.menu.MenuFactory.newTopLevelMenu;
 
@@ -38,6 +45,8 @@ import static org.uberfire.workbench.model.menu.MenuFactory.newTopLevelMenu;
 @EntryPoint
 public class ShowcaseEntryPoint {
 
+    private static Logger LOGGER = Logger.getLogger(ShowcaseEntryPoint.class.getName());
+
     @Inject
     private PlaceManager placeManager;
 
@@ -46,24 +55,39 @@ public class ShowcaseEntryPoint {
 
     @Inject
     private ActivityManager activityManager;
+
+    @Inject
+    private ErrorPopupPresenter errorPopupPresenter;
     
     @AfterInitialization
     public void startApp() {
+
+        setupGlobalErrorHandler();
+
         setupMenu();
+
         hideLoadingPopup();
 
         // Default perspective.
-        placeManager.goTo( new DefaultPlaceRequest( "HomePerspective" ) );
+        placeManager.goTo( new DefaultPlaceRequest( "WirezPerspective" ) );
+    }
+
+    private void setupGlobalErrorHandler() {
+
+        GWT.setUncaughtExceptionHandler( throwable -> {
+
+            final String message = "Uncaught error on client side: " + throwable.getMessage();
+
+            errorPopupPresenter.showMessage( message );
+
+            log( Level.SEVERE, throwable.getMessage() );
+
+        } );
+
     }
 
     private void setupMenu() {
         final Menus menus =
-                newTopLevelMenu("Home").respondsWith(new Command() {
-                    @Override
-                    public void execute() {
-                        placeManager.goTo(new DefaultPlaceRequest("HomePerspective"));
-                    }
-                }).endMenu().
                 newTopLevelMenu("Wirez").respondsWith(new Command() {
                     @Override
                     public void execute() {
@@ -95,5 +119,11 @@ public class ShowcaseEntryPoint {
     public static native void redirect( String url )/*-{
         $wnd.location = url;
     }-*/;
+
+    private void log( final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
+    }
 
 }

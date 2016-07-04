@@ -10,5 +10,9 @@ public interface NodeBuildRequest extends BuildRequest {
     Node<View<?>, Edge> getNode();
     
     Edge<View<?>, Node> getInEdge();
+
+    int getSourceManger();
+
+    int getTargetMagnet();
     
 }

@@ -6,8 +6,8 @@ import org.wirez.core.client.components.toolbox.builder.ToolboxButtonGridBuilder
 
 public class LienzoToolboxButtonGridBuilder implements ToolboxButtonGridBuilder {
 
-    public static final int PADDING = 2;
-    public static final int ICON_SIZE = 16;
+    public static final int PADDING = 5;
+    public static final int ICON_SIZE = 12;
     
     private int padding = PADDING;
     private int iconSize = ICON_SIZE;

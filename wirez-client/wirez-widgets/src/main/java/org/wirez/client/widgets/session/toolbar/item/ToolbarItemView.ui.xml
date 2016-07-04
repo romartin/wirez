@@ -19,6 +19,5 @@
              xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
 
   <b:Button ui:field="button"/>
-    
 
 </ui:UiBinder>

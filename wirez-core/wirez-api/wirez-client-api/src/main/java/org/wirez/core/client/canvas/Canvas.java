@@ -33,6 +33,11 @@ public interface Canvas<S extends Shape> {
     Canvas draw();
 
     /**
+     * Set the background grid for the canvas.
+     */
+    Canvas setGrid( CanvasGrid grid );
+
+    /**
      * Get a list of all Shapes on the Canvas
      * @return
      */

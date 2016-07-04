@@ -1,6 +1,8 @@
 package org.wirez.bpmn.definition.factory;
 
 import org.wirez.bpmn.definition.BPMNDiagram;
+import org.wirez.bpmn.definition.property.Height;
+import org.wirez.bpmn.definition.property.Width;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.graph.Graph;
@@ -60,7 +62,7 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
         
         graphCommandManager
                 .batch( graphCommandFactory.ADD_NODE( graph, diagramNode ) )
-                .batch( graphCommandFactory.UPDATE_POSITION( diagramNode, 30d, 30d) )
+                .batch( graphCommandFactory.UPDATE_POSITION( diagramNode, 0d, 0d) )
                 .executeBatch( createGraphContext() );
         
         return graph;
@@ -69,7 +71,7 @@ public abstract class BPMNAbstractGraphFactory extends BaseGraphFactory<Definiti
     
     private GraphCommandExecutionContext createGraphContext() {
         return new EmptyRulesCommandExecutionContext( 
-                definitionManager, 
+                definitionManager,
                 factoryManager );
     }
 

@@ -44,7 +44,7 @@ import java.util.Set;
 public class IntermediateTimerEvent implements BPMNDefinition {
 
     @Category
-    public static final transient String category = Categories.CATCHING_INTERMEDIATE_EVENTS;
+    public static final transient String category = Categories.EVENTS;
 
     @Title
     public static final transient String title = "Timer Intermediate Event";

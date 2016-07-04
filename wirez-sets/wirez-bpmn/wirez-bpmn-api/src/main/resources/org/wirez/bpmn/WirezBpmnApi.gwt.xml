@@ -22,6 +22,7 @@
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.wirez.core.WirezCoreClientApi"/>
 	<inherits name="org.wirez.shapes.WirezShapesApi"/>
+	<inherits name="org.wirez.basicset.WirezBasicSetApi"/>
 
 	<source path="definition"/>
 	<source path="shape/proxy"/>

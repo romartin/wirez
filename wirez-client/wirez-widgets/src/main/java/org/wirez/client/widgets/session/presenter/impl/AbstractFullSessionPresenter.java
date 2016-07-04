@@ -60,11 +60,12 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
                                         final SaveCommand saveCommand,
                                         final UndoCommand undoCommand,
                                         final VisitGraphCommand visitGraphCommand,
+                                        final SwitchGridCommand switchGridCommand,
                                         final ErrorPopupPresenter errorPopupPresenter,
                                         final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
                                         final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                         final View view) {
-        super(canvasSessionManager, clientDiagramServices, toolbar, clearSelectionCommand, visitGraphCommand,
+        super(canvasSessionManager, clientDiagramServices, toolbar, clearSelectionCommand, visitGraphCommand, switchGridCommand,
                 errorPopupPresenter, canvasProcessingStartedEvent, canvasProcessingCompletedEvent, view);
         this.commandFactory = commandFactory;
         this.clientDefinitionManager = clientDefinitionManager;
@@ -113,7 +114,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         clientFactoryServices.newGraph(UUID.uuid(), definitionSetId, new ServiceCallback<Graph>() {
             @Override
             public void onSuccess(final Graph graph) {
-                final Settings diagramSettings = new SettingsImpl( title, definitionSetId, shapeSetId );
+                final Settings diagramSettings = new SettingsImpl( title, definitionSetId, shapeSetId, null );
                 Diagram<Graph, Settings> diagram = clientFactoryServices.newDiagram( UUID.uuid(), graph, diagramSettings );
                 open(diagram, callback);
             }

@@ -13,15 +13,17 @@ import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactor
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
-import org.wirez.bpmn.definition.adapter.morph.TaskMorphAdapter;
+import org.wirez.bpmn.definition.BusinessRuleTask;
 import org.wirez.bpmn.definition.NoneTask;
+import org.wirez.bpmn.definition.ScriptTask;
 import org.wirez.bpmn.definition.UserTask;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionAdapter;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionSetAdapter;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimePropertyAdapter;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimePropertySetAdapter;
-import org.wirez.core.backend.definition.adapter.binding.RuntimeBindableMorphAdapterFactory;
+import org.wirez.core.backend.definition.adapter.binding.RuntimeBindableMorphAdapter;
+import org.wirez.core.definition.morph.MorphDefinition;
 import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.diagram.DiagramImpl;
@@ -52,6 +54,7 @@ import java.util.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
@@ -91,7 +94,7 @@ public class BPMNDiagramMarshallerTest {
     TestScopeModelFactory testScopeModelFactory;
     BPMNGraphObjectBuilderFactory objectBuilderFactory;
 
-    TaskMorphAdapter taskMorphAdapter;
+    TaskTypeMorphDefinition taskMorphDefinition;
     
     private BPMNDiagramMarshaller tested;
     
@@ -99,7 +102,7 @@ public class BPMNDiagramMarshallerTest {
     public void setup() throws Exception {
         
         // Graph utils.
-        definitionUtils = new DefinitionUtils( definitionManager );
+        definitionUtils = new DefinitionUtils( definitionManager, applicationFactoryManager );
         graphUtils = new GraphUtils( definitionManager, definitionUtils );
 
         testScopeModelFactory = new TestScopeModelFactory( new BPMNDefinitionSet.BPMNDefinitionSetBuilder().build() );
@@ -179,13 +182,17 @@ public class BPMNDiagramMarshallerTest {
         // Marshalling factories.
         objectBuilderFactory = new BPMNGraphObjectBuilderFactory( definitionManager, oryxManager );
 
-        RuntimeBindableMorphAdapterFactory morphAdapterFactory = new RuntimeBindableMorphAdapterFactory( applicationFactoryManager );
-        taskMorphAdapter = new TaskMorphAdapter( morphAdapterFactory );
-        final Collection morphAdapters = new ArrayList( 1 ) {{
-            add( taskMorphAdapter );
+        taskMorphDefinition = new TaskTypeMorphDefinition();
+        Collection<MorphDefinition> morphDefinitions = new ArrayList<MorphDefinition>() {{
+           add( taskMorphDefinition );
         }};
-        when(definitionManager.getMorphAdapters( any(Class.class) )).thenReturn( morphAdapters );
-        
+        RuntimeBindableMorphAdapter<Object> morphAdapter =
+                new RuntimeBindableMorphAdapter( definitionUtils, applicationFactoryManager, morphDefinitions );
+        when(definitionManager.getMorphAdapter( eq(UserTask.class) )).thenReturn( morphAdapter );
+        when(definitionManager.getMorphAdapter( eq(NoneTask.class) )).thenReturn( morphAdapter );
+        when(definitionManager.getMorphAdapter( eq(ScriptTask.class) )).thenReturn( morphAdapter );
+        when(definitionManager.getMorphAdapter( eq(BusinessRuleTask.class) )).thenReturn( morphAdapter );
+
         
         // The tested BPMN marshaller.
         tested = new BPMNDiagramMarshaller( objectBuilderFactory, definitionManager, graphUtils, 

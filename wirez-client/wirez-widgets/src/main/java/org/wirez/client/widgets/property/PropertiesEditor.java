@@ -514,7 +514,7 @@ public class PropertiesEditor implements IsWidget {
         final ShapeState state = event.getState();
         final Shape shape = event.getShape();
         if ( shape != null ) {
-            // If shape exist, show the properties for the underlying model element.
+            // If shape exist, attach the properties for the underlying model element.
             final String shapeUUID = shape.getUUID();
             final Element<? extends org.wirez.core.graph.content.view.View<?>> element = this.canvasHandler.getGraphIndex().get(shapeUUID);
             if (element != null && ShapeState.SELECTED.equals(state)) {
@@ -523,7 +523,7 @@ public class PropertiesEditor implements IsWidget {
                 view.clear();
             }
         } else {
-            // If shape is null means no shape selected, so show the properties for the underlying graph.
+            // If shape is null means no shape selected, so attach the properties for the underlying graph.
             doClear();
         }
         

@@ -1,23 +1,23 @@
 package org.wirez.client.lienzo.components.toolbox;
 
-import com.ait.lienzo.client.core.shape.Shape;
+import com.ait.lienzo.client.core.shape.IPrimitive;
 import org.wirez.core.client.components.toolbox.ToolboxButton;
 import org.wirez.core.client.components.toolbox.event.ToolboxButtonEventHandler;
 
-public class LienzoToolboxButton implements ToolboxButton<Shape<?>> {
+public class LienzoToolboxButton implements ToolboxButton<IPrimitive<?>> {
 
-    private final Shape<?> icon;
+    private final IPrimitive<?> icon;
     private ToolboxButtonEventHandler clickHandler;
     private ToolboxButtonEventHandler dragHandler;
     private ToolboxButtonEventHandler mouseEnterHandler;
     private ToolboxButtonEventHandler mouseExitHandler;
     
-    public LienzoToolboxButton( final Shape<?> icon ) {
+    public LienzoToolboxButton( final IPrimitive<?> icon ) {
         this.icon = icon;
     }
 
     @Override
-    public Shape<?> getIcon() {
+    public IPrimitive<?> getIcon() {
         return icon;
     }
 

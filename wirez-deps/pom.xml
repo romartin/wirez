@@ -16,7 +16,7 @@
   <properties>
 
     <version.org.jboss.integration-platform>6.0.0.Final</version.org.jboss.integration-platform>
-    <version.org.uberfire>0.9.0-SNAPSHOT</version.org.uberfire>
+    <version.org.uberfire>1.0.0-SNAPSHOT</version.org.uberfire>
     <version.org.jboss.errai>4.0.0-SNAPSHOT</version.org.jboss.errai>
     <version.org.jboss.errai.cdi10-compatible>3.0.6.Final</version.org.jboss.errai.cdi10-compatible>
     <!-- WildFly version used together with the GWT's Super Dev Mode -->
@@ -74,14 +74,6 @@
       </dependency>
 
       <dependency>
-        <groupId>org.uberfire</groupId>
-        <artifactId>uberfire-extensions-bom</artifactId>
-        <type>pom</type>
-        <version>${version.org.uberfire}</version>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
         <groupId>org.jboss.errai.bom</groupId>
         <artifactId>errai-internal-bom</artifactId>
         <type>pom</type>
@@ -118,6 +110,12 @@
       <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-dev</artifactId>
+        <version>${version.com.google.gwt}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-servlet</artifactId>
         <version>${version.com.google.gwt}</version>
       </dependency>
 

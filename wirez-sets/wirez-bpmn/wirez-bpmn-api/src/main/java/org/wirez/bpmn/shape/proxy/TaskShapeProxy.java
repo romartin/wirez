@@ -1,20 +1,22 @@
 package org.wirez.bpmn.shape.proxy;
 
+import org.wirez.basicset.definition.icon.statics.StaticIcons;
 import org.wirez.bpmn.definition.BaseTask;
+import org.wirez.bpmn.definition.BusinessRuleTask;
+import org.wirez.bpmn.definition.ScriptTask;
+import org.wirez.bpmn.definition.UserTask;
 import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.core.client.shape.HasChildren;
-import org.wirez.shapes.proxy.BasicShapeProxy;
-import org.wirez.shapes.proxy.HasChildProxies;
-import org.wirez.shapes.proxy.RectangleProxy;
+import org.wirez.shapes.proxy.*;
 import org.wirez.shapes.proxy.icon.statics.IconProxy;
 import org.wirez.shapes.proxy.icon.statics.Icons;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class TaskShapeProxy implements
-        RectangleProxy<BaseTask>,
-        HasChildProxies<BaseTask> {
+public final class TaskShapeProxy
+        extends AbstractBasicDynamicShapeProxy<BaseTask>
+        implements RectangleProxy<BaseTask>, HasChildProxies<BaseTask> {
     
     @Override
     public String getBackgroundColor( final BaseTask element ) {
@@ -62,8 +64,38 @@ public final class TaskShapeProxy implements
     }
 
     @Override
-    public String getDescription( final BaseTask element ) {
+    public String getGlyphDescription(final BaseTask element ) {
         return "A " + element.getTaskType().getValue().toString() + " Task";
+    }
+
+    @Override
+    public String getGlyphDefinitionId( final Class<?> clazz ) {
+
+        Icons icon = null;
+
+        if ( UserTask.class.equals( clazz ) ) {
+
+            icon = Icons.USER;
+
+        } else if ( ScriptTask.class.equals( clazz ) ) {
+
+            icon = Icons.SCRIPT;
+
+        } else if ( BusinessRuleTask.class.equals( clazz ) ) {
+
+            icon = Icons.BUSINESS_RULE;
+
+        }
+
+        if ( null != icon ) {
+
+            final String iconDefinitionId = StaticIcons.getIconDefinitionId( icon );
+
+            return super.getGlyphDefinitionId( iconDefinitionId );
+
+        }
+
+        return super.getGlyphDefinitionId( clazz );
     }
 
     @Override
@@ -86,9 +118,7 @@ public final class TaskShapeProxy implements
         return element.getHeight().getValue();
     }
 
-    public final class TaskTypeProxy implements IconProxy<BaseTask> {
-
-        private static final String BLACK = "#000000";
+    public final class TaskTypeProxy extends AbstractBasicGlyphProxy<BaseTask> implements IconProxy<BaseTask> {
 
         @Override
         public Icons getIcon( final BaseTask element) {
@@ -115,16 +145,6 @@ public final class TaskShapeProxy implements
             
         }
 
-        @Override
-        public String getGlyphBackgroundColor( final BaseTask element ) {
-            return BLACK;
-        }
-
-        @Override
-        public String getDescription( final BaseTask element ) {
-            return "The task type";
-        }
-        
     }
     
 }

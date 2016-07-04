@@ -18,6 +18,7 @@ package org.wirez.shapes.client.factory;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -26,6 +27,7 @@ import org.wirez.core.client.shape.AbstractShape;
 import org.wirez.core.client.shape.HasChildren;
 import org.wirez.core.client.shape.MutableShape;
 import org.wirez.core.client.shape.factory.AbstractProxyShapeFactory;
+import org.wirez.core.client.shape.view.AbstractBindableShapeGlyphBuilder;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 import org.wirez.core.client.shape.view.ShapeGlyphBuilder;
 import org.wirez.core.client.shape.view.ShapeView;
@@ -33,22 +35,25 @@ import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.shapes.client.proxy.DynamicIconShape;
 import org.wirez.shapes.client.proxy.RectangleShape;
 import org.wirez.shapes.client.proxy.StaticIconShape;
+import org.wirez.shapes.client.view.ConnectorView;
 import org.wirez.shapes.client.view.PolygonView;
 import org.wirez.shapes.client.view.RectangleView;
 import org.wirez.shapes.client.view.ShapeViewFactory;
+import org.wirez.shapes.client.view.glyph.ConnectorGlyph;
 import org.wirez.shapes.client.view.icon.dynamics.DynamicIconShapeView;
 import org.wirez.shapes.client.view.icon.statics.StaticIconShapeView;
 import org.wirez.shapes.factory.BasicShapesFactory;
 import org.wirez.shapes.proxy.*;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.util.Map;
 
-@Dependent
-public class BasicShapesFactoryImpl<W> 
-        extends AbstractProxyShapeFactory<W, ShapeView, MutableShape<W, ShapeView>, BasicShapeProxy<W>>
-        implements BasicShapesFactory<W, AbstractCanvasHandler> {
+@ApplicationScoped
+public class BasicShapesFactoryImpl 
+        extends AbstractProxyShapeFactory<Object, ShapeView, MutableShape<Object, ShapeView>, BasicShapeProxy<Object>>
+        implements BasicShapesFactory<Object, AbstractCanvasHandler> {
 
     protected static final double DEFAULT_SIZE = 50;
 
@@ -73,28 +78,28 @@ public class BasicShapesFactoryImpl<W>
 
     @Override
     @SuppressWarnings("unchecked")
-    public MutableShape<W, ShapeView> build( final W definition, 
+    public MutableShape<Object, ShapeView> build( final Object definition, 
                      final AbstractCanvasHandler context) {
 
         final String id = definitionUtils.getDefinitionId( definition );
-        final BasicShapeProxy<W> proxy = getProxy( id );
+        final BasicShapeProxy<Object> proxy = getProxy( id );
 
         return build( definition, proxy, context );
     }
 
     @SuppressWarnings("unchecked")
-    protected MutableShape<W, ShapeView> build( final W definition,
-                                                final BasicShapeProxy<W> proxy,
+    protected MutableShape<Object, ShapeView> build( final Object definition,
+                                                final BasicShapeProxy<Object> proxy,
                                                 final AbstractCanvasHandler context) {
 
         WiresManager wiresManager = context != null ?
                 ((WiresCanvas) context.getCanvas()).getWiresManager() : null;
         
-        MutableShape<W, ShapeView> shape = null;
+        MutableShape<Object, ShapeView> shape = null;
         
         if ( isCircle( proxy ) ) {
 
-            final CircleProxy<W> circleProxy = (CircleProxy<W>) proxy;
+            final CircleProxy<Object> circleProxy = (CircleProxy<Object>) proxy;
 
             final double radius = circleProxy.getRadius( definition );
 
@@ -107,7 +112,7 @@ public class BasicShapesFactoryImpl<W>
 
         if ( isRing( proxy ) ) {
 
-            final RingProxy<W> ringProxy = (RingProxy<W>) proxy;
+            final RingProxy<Object> ringProxy = (RingProxy<Object>) proxy;
 
             final double oRadius = ringProxy.getOuterRadius( definition );
 
@@ -120,7 +125,7 @@ public class BasicShapesFactoryImpl<W>
 
         if ( isRectangle( proxy ) ) {
 
-            final RectangleProxy<W> rectangleProxy = (RectangleProxy<W>) proxy;
+            final RectangleProxy<Object> rectangleProxy = (RectangleProxy<Object>) proxy;
 
             final double width = rectangleProxy.getWidth( definition );
             final double height = rectangleProxy.getHeight( definition );
@@ -134,7 +139,7 @@ public class BasicShapesFactoryImpl<W>
 
         if ( isPolygon( proxy ) ) {
 
-            final PolygonProxy<W> polygonProxy = (PolygonProxy<W>) proxy;
+            final PolygonProxy<Object> polygonProxy = (PolygonProxy<Object>) proxy;
 
             final double radius = polygonProxy.getRadius( definition );
             final String fillColor = polygonProxy.getBackgroundColor( definition );
@@ -148,10 +153,20 @@ public class BasicShapesFactoryImpl<W>
 
         }
 
+        if ( isConnector( proxy ) ) {
+
+            final ConnectorProxy<Object> polygonProxy = (ConnectorProxy<Object>) proxy;
+
+            final ConnectorView view = shapeViewFactory.connector( wiresManager, 0, 0, 100, 100 );
+
+            shape = new org.wirez.shapes.client.proxy.ConnectorShape( view, polygonProxy );
+
+        }
+
         if ( isStaticIcon( proxy ) ) {
 
-            final org.wirez.shapes.proxy.icon.statics.IconProxy<W> iconProxy = 
-                    (org.wirez.shapes.proxy.icon.statics.IconProxy<W>) proxy;
+            final org.wirez.shapes.proxy.icon.statics.IconProxy<Object> iconProxy = 
+                    (org.wirez.shapes.proxy.icon.statics.IconProxy<Object>) proxy;
 
             final org.wirez.shapes.proxy.icon.statics.Icons icon = iconProxy.getIcon( definition );
 
@@ -164,8 +179,8 @@ public class BasicShapesFactoryImpl<W>
 
         if ( isDynamicIcon( proxy ) ) {
 
-            final org.wirez.shapes.proxy.icon.dynamics.IconProxy<W> iconProxy =
-                    (org.wirez.shapes.proxy.icon.dynamics.IconProxy<W>) proxy;
+            final org.wirez.shapes.proxy.icon.dynamics.IconProxy<Object> iconProxy =
+                    (org.wirez.shapes.proxy.icon.dynamics.IconProxy<Object>) proxy;
 
             final org.wirez.shapes.proxy.icon.dynamics.Icons icon = DynamicIconShape.getIcon( definition, iconProxy );
             final double width = iconProxy.getWidth( definition );
@@ -181,15 +196,15 @@ public class BasicShapesFactoryImpl<W>
         // Add children, if any.
         if ( null != shape && proxy instanceof HasChildProxies) {
 
-            final HasChildProxies<W> hasChildren = (HasChildProxies<W>) proxy;
-            final Map<BasicShapeProxy<W>, HasChildren.Layout> childProxies = hasChildren.getChildProxies();
+            final HasChildProxies<Object> hasChildren = (HasChildProxies<Object>) proxy;
+            final Map<BasicShapeProxy<Object>, HasChildren.Layout> childProxies = hasChildren.getChildProxies();
             if ( null != childProxies && !childProxies.isEmpty() ) {
-                for ( final Map.Entry<BasicShapeProxy<W>, HasChildren.Layout> entry : childProxies.entrySet() ) {
+                for ( final Map.Entry<BasicShapeProxy<Object>, HasChildren.Layout> entry : childProxies.entrySet() ) {
 
-                    final BasicShapeProxy<W> child = entry.getKey();
+                    final BasicShapeProxy<Object> child = entry.getKey();
                     final HasChildren.Layout layout = entry.getValue();
 
-                    final MutableShape<W, ShapeView> childShape = this.build( definition, child, context);
+                    final MutableShape<Object, ShapeView> childShape = this.build( definition, child, context);
 
                     if ( childShape instanceof AbstractCompositeShape ) {
 
@@ -213,27 +228,31 @@ public class BasicShapesFactoryImpl<W>
 
     }
     
-    private boolean isCircle( final BasicShapeProxy<W> proxy ) {
+    private boolean isCircle( final BasicShapeProxy<Object> proxy ) {
         return proxy instanceof CircleProxy;
     }
 
-    private boolean isRing( final BasicShapeProxy<W> proxy ) {
+    private boolean isRing( final BasicShapeProxy<Object> proxy ) {
         return proxy instanceof RingProxy;
     }
 
-    private boolean isRectangle( final BasicShapeProxy<W> proxy ) {
+    private boolean isRectangle( final BasicShapeProxy<Object> proxy ) {
         return proxy instanceof RectangleProxy;
     }
 
-    private boolean isPolygon( final BasicShapeProxy<W> proxy ) {
+    private boolean isPolygon( final BasicShapeProxy<Object> proxy ) {
         return proxy instanceof PolygonProxy;
     }
-    
-    private boolean isDynamicIcon(final BasicShapeProxy<W> proxy ) {
+
+    private boolean isConnector( final BasicShapeProxy<Object> proxy ) {
+        return proxy instanceof ConnectorProxy;
+    }
+
+    private boolean isDynamicIcon(final BasicShapeProxy<Object> proxy ) {
         return proxy instanceof org.wirez.shapes.proxy.icon.dynamics.IconProxy;
     }
 
-    private boolean isStaticIcon(final BasicShapeProxy<W> proxy ) {
+    private boolean isStaticIcon(final BasicShapeProxy<Object> proxy ) {
         return proxy instanceof org.wirez.shapes.proxy.icon.statics.IconProxy;
     }
     
@@ -244,9 +263,42 @@ public class BasicShapesFactoryImpl<W>
                                 final double height) {
 
         final String id = getDefinitionId( clazz );
+        final BasicShapeProxy<Object> proxy = getProxy( id );
+
+        // Custom shape glyphs.
+
+        if ( null != proxy && isConnector( proxy ) ) {
+
+            return new ConnectorGlyph( width, height, ColorName.BLACK.getColorString() );
+
+        }
+
+        // Use of Shape Glyph Builder - it builds the glyph by building the shape for the given Definition
+        // and scaling it to the given size.
+
+        if ( null != proxy ) {
+
+            if ( glyphBuilder instanceof AbstractBindableShapeGlyphBuilder ) {
+
+                final AbstractBindableShapeGlyphBuilder bindableShapeGlyphBuilder =
+                        (AbstractBindableShapeGlyphBuilder) glyphBuilder;
+
+                bindableShapeGlyphBuilder.glyphProxy( proxy, clazz );
+
+            } else {
+
+                glyphBuilder.glyphProxy( proxy, id );
+
+            }
+
+        } else {
+
+            glyphBuilder.definition( id );
+
+        }
+
 
         return glyphBuilder
-                .definition( id )
                 .factory( this )
                 .height( height )
                 .width( width )

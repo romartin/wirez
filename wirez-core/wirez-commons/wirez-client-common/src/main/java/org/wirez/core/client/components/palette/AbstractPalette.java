@@ -1,85 +1,182 @@
 package org.wirez.core.client.components.palette;
 
-public abstract class AbstractPalette<T, V> implements Palette<T, V> {
+import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.components.palette.model.HasPaletteItems;
+import org.wirez.core.client.components.palette.model.PaletteDefinition;
+import org.wirez.core.client.components.palette.view.PaletteGrid;
+import org.wirez.core.client.components.palette.view.PaletteView;
+import org.wirez.core.client.shape.factory.ShapeFactory;
+
+public abstract class AbstractPalette<D extends HasPaletteItems> implements Palette<D> {
+
+    protected final ShapeManager shapeManager;
 
     protected CloseCallback closeCallback;
     protected ItemHoverCallback itemHoverCallback;
     protected ItemOutCallback itemOutCallback;
     protected ItemMouseDownCallback itemMouseDownCallback;
     protected ItemClickCallback itemClickCallback;
-    protected double x;
-    protected double y;
+    protected D paletteDefinition;
 
-    protected abstract void doClear();
+    protected AbstractPalette() {
+        this( null );
+    }
 
-    protected abstract void doDestroy();
+    protected AbstractPalette( final ShapeManager shapeManager ) {
+        this.shapeManager = shapeManager;
+    }
+
+    protected abstract AbstractPalette<D> bind();
+
+    protected abstract void  doDestroy();
 
     @Override
     @SuppressWarnings("unchecked")
-    public T setCloseCallback(final CloseCallback callback) {
+    public AbstractPalette<D> bind( final D paletteDefinition ) {
+
+        this.paletteDefinition = paletteDefinition;
+
+        beforeBind();
+
+        bind();
+
+        afterBind();
+
+        return this;
+    }
+
+    protected void beforeBind() {
+    }
+
+    protected void afterBind() {
+    }
+
+
+        @Override
+    @SuppressWarnings("unchecked")
+    public AbstractPalette<D> onClose(final CloseCallback callback) {
         this.closeCallback = callback;
-        return (T) this;
+        return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T setItemHoverCallback(final ItemHoverCallback callback) {
+    public AbstractPalette<D> onItemHover( final ItemHoverCallback callback ) {
         this.itemHoverCallback = callback;
-        return (T) this;
+        return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T setItemOutCallback(final ItemOutCallback callback) {
+    public AbstractPalette<D> onItemOut( final ItemOutCallback callback ) {
         this.itemOutCallback = callback;
-        return (T) this;
+        return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T setItemMouseDownCallback(ItemMouseDownCallback callback) {
+    public AbstractPalette<D> onItemMouseDown( final ItemMouseDownCallback callback ) {
         this.itemMouseDownCallback = callback;
-        return (T) this;
+        return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public T setItemClickCallback(ItemClickCallback callback) {
+    public AbstractPalette<D> onItemClick( final ItemClickCallback callback ) {
         this.itemClickCallback = callback;
-        return (T) this;
+        return this;
+    }
+
+    public boolean onClose() {
+
+
+        if ( null != closeCallback ) {
+
+            return closeCallback.onClose();
+
+        }
+
+        return true;
+
+    }
+
+    public boolean onItemHover(final int index,
+                               final double mouseX,
+                               final double mouseY,
+                               final double itemX,
+                               final double itemY) {
+
+        if (null != itemHoverCallback) {
+
+            return itemHoverCallback.onItemHover(index, mouseX, mouseY, itemX, itemY );
+
+        }
+
+        return true;
+    }
+
+    public boolean onItemOut(final int index) {
+
+        if ( null != itemOutCallback ) {
+
+            return itemOutCallback.onItemOut( index );
+
+        }
+
+        return true;
+    }
+
+    public boolean onItemMouseDown(final int index,
+                                   final double mouseX,
+                                   final double mouseY,
+                                   final double itemX,
+                                   final double itemY) {
+
+        if ( null != itemMouseDownCallback ) {
+
+            return itemMouseDownCallback.onItemMouseDown( index, mouseX, mouseY, itemX, itemY );
+
+        }
+
+        return true;
+    }
+
+    public boolean onItemClick(final int index,
+                               final double mouseX,
+                               final double mouseY,
+                               final double itemX,
+                               final double itemY) {
+
+        if ( null != itemClickCallback ) {
+
+            return itemClickCallback.onItemClick( index, mouseX, mouseY, itemX, itemY );
+
+        }
+
+        return true;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T setX(final int x) {
-        this.x = x;
-        return (T) this;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public T setY(final int y) {
-        this.y = y;
-        return (T) this;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public T clear() {
-        doClear();
-        this.x = 0;
-        this.y = 0;
-        return (T) this;
+    public D getDefinition() {
+        return paletteDefinition;
     }
 
     @Override
     public void destroy() {
+
         doDestroy();
+
         this.closeCallback = null;
         this.itemHoverCallback = null;
         this.itemOutCallback = null;
         this.itemMouseDownCallback = null;
         this.itemClickCallback = null;
+        this.paletteDefinition = null;
+
+    }
+
+    protected  ShapeFactory getFactory(final String id ) {
+        return shapeManager.getFactory( id );
     }
 
 }

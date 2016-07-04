@@ -18,6 +18,7 @@ import java.util.Stack;
 public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
 
     private Graph<View, Node<View, Edge>> graph;
+    private String rootUUID = null;
 
     @Override
     public GraphBoundsIndexerImpl build(Graph<View, Node<View, Edge>> graph) {
@@ -104,6 +105,10 @@ public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
                              final double mouseX,
                              final double mouseY) {
 
+        if ( null != rootUUID && node.getUUID().equals( rootUUID ) ) {
+            return true;
+        }
+
         final View content = (View) node.getContent();
         final Bounds bounds = content.getBounds();
         final Bounds.Bound ulBound = bounds.getUpperLeft();
@@ -122,4 +127,9 @@ public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
         return false;
     }
 
+    @Override
+    public GraphBoundsIndexer setRootUUID( final String uuid ) {
+        this.rootUUID = uuid;
+        return this;
+    }
 }

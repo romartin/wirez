@@ -35,14 +35,20 @@ import org.wirez.core.definition.annotation.definition.Category;
 import org.wirez.core.definition.annotation.definition.Labels;
 import org.wirez.core.definition.annotation.definition.Property;
 import org.wirez.core.definition.annotation.definition.PropertySet;
+import org.wirez.core.definition.annotation.morph.MorphBase;
+import org.wirez.core.definition.annotation.morph.MorphProperty;
+import org.wirez.core.definition.annotation.morph.MorphPropertyValueBinding;
 import org.wirez.core.definition.factory.Builder;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.validation.Valid;
 
 @Shape( factory = BasicShapesFactory.class, proxy = TaskShapeProxy.class )
+@MorphBase( defaultType = NoneTask.class, targets = { ReusableSubprocess.class } )
 public abstract class BaseTask implements BPMNDefinition {
 
     @Category
@@ -121,7 +127,30 @@ public abstract class BaseTask implements BPMNDefinition {
 
     @Property
     @FieldDef(label = "Task Type", property = "value")
+    @MorphProperty( binder = TaskTypeMorphPropertyBinding.class )
     protected TaskType taskType;
+
+    public static class TaskTypeMorphPropertyBinding implements MorphPropertyValueBinding<TaskType, TaskType.TaskTypes> {
+
+        private static final Map<TaskType.TaskTypes, Class<?>> MORPH_TARGETS =
+                new HashMap<TaskType.TaskTypes, Class<?>>( 4 ) {{
+                    put( TaskType.TaskTypes.NONE, NoneTask.class );
+                    put( TaskType.TaskTypes.USER, UserTask.class );
+                    put( TaskType.TaskTypes.SCRIPT, ScriptTask.class );
+                    put( TaskType.TaskTypes.BUSINESS_RULE, BusinessRuleTask.class );
+                }};
+
+        @Override
+        public TaskType.TaskTypes getValue( final TaskType property ) {
+            return property.getValue();
+        }
+
+        @Override
+        public Map<TaskType.TaskTypes, Class<?>> getMorphTargets() {
+            return MORPH_TARGETS;
+        }
+
+    }
 
     @Labels
     protected final Set<String> labels = new HashSet<String>() {{
@@ -138,7 +167,7 @@ public abstract class BaseTask implements BPMNDefinition {
     }};
 
     @NonPortable
-    public static abstract class BaseTaskBuilder<T extends BaseTask> implements Builder<T> {
+    static abstract class BaseTaskBuilder<T extends BaseTask> implements Builder<T> {
 
         public static final String COLOR = "#f9fad2";
         public static final Double WIDTH = 136d;

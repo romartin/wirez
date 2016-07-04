@@ -119,7 +119,7 @@ public abstract class AbstractSelectionControl extends AbstractCanvasRegistratio
                 }
             }
 
-            // Batch a draw operation.
+            // Batch a show operation.
             canvas.draw();
 
         }
@@ -210,7 +210,7 @@ public abstract class AbstractSelectionControl extends AbstractCanvasRegistratio
         
         if ( null != canvas ) {
 
-            // Force batch re-draw.
+            // Force batch re-show.
             canvas.draw();
             
         }

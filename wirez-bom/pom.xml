@@ -259,13 +259,26 @@
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-basicset</artifactId>
+        <artifactId>wirez-basicset-api</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-basicset</artifactId>
+        <artifactId>wirez-basicset-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-basicset-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-basicset-client</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>

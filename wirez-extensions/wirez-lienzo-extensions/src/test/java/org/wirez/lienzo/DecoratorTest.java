@@ -52,10 +52,6 @@ public class DecoratorTest {
         verify(decorator).add(primitive);
         verify(decorator).add(rectangle);
 
-        verify(primitive).setX(anyDouble());
-        verify(primitive).setY(anyDouble());
-        verify(primitive).setDraggable(false);
-
         verify(rectangle).addNodeMouseEnterHandler(anyObject());
         verify(rectangle).addNodeMouseExitHandler(anyObject());
         verify(rectangle).addNodeMouseMoveHandler(anyObject());

@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class ProcessingDefinitionAnnotations {
 
+    private final Map<String, String> baseTypes = new HashMap<>();
     private final Map<String, Set<String>> propertySetFieldNames = new HashMap<>();
     private final Map<String, Set<String>> propertyFieldNames = new HashMap<>();
     private final Map<String, String> graphElementFieldNames = new HashMap<>();
@@ -16,6 +17,10 @@ public class ProcessingDefinitionAnnotations {
     private final Map<String, String> descriptionFieldNames = new HashMap<>();
     private final Map<String, String> builderFieldNames = new HashMap<>();
     private final Map<String, String[]> shapeProxies = new HashMap<>();
+
+    public Map<String, String> getBaseTypes() {
+        return baseTypes;
+    }
 
     public Map<String, Set<String>> getPropertySetFieldNames() {
         return propertySetFieldNames;

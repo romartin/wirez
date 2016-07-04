@@ -2,6 +2,7 @@ package org.wirez.core.client.canvas.command.factory;
 
 import org.wirez.core.client.canvas.command.impl.*;
 import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.definition.morph.MorphDefinition;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
@@ -119,9 +120,11 @@ public class CanvasCommandFactoryImpl implements CanvasCommandFactory {
     }
 
     @Override
-    public MorphCanvasNodeCommand MORPH_NODE( final Node<? extends Definition<?>, Edge> candidate, 
-                                              final String morphTarget ) {
-        return new MorphCanvasNodeCommand( candidate, morphTarget );
+    public MorphCanvasNodeCommand MORPH_NODE( final Node<? extends Definition<?>, Edge> candidate,
+                                              final MorphDefinition morphDefinition,
+                                              final String morphTarget,
+                                              final ShapeFactory factory) {
+        return new MorphCanvasNodeCommand( candidate, morphDefinition, morphTarget, factory );
     }
 
 }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.backend.definition.adapter.AbstractRuntimeAdapter;
 import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.definition.adapter.binding.HasInheritance;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.definition.*;
 import org.wirez.core.definition.annotation.property.NameProperty;
@@ -20,9 +21,18 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Dependent
-public class RuntimeDefinitionAdapter<T> extends AbstractRuntimeAdapter<T> implements DefinitionAdapter<T> {
+public class RuntimeDefinitionAdapter<T> extends AbstractRuntimeAdapter<T>
+        implements DefinitionAdapter<T>, HasInheritance {
 
     private static final Logger LOG = LoggerFactory.getLogger(RuntimeDefinitionAdapter.class);
+
+    private static final Class[] DEF_ANNOTATIONS = new Class[] {
+            Title.class,
+            Category.class,
+            Description.class,
+            PropertySet.class,
+            Property.class
+    };
 
     DefinitionUtils definitionUtils;
 
@@ -38,7 +48,7 @@ public class RuntimeDefinitionAdapter<T> extends AbstractRuntimeAdapter<T> imple
 
     @Override
     public String getId(T definition) {
-        return getDefinitionId( definition );
+        return getDefinitionId( definition.getClass() );
     }
 
     @Override
@@ -225,5 +235,42 @@ public class RuntimeDefinitionAdapter<T> extends AbstractRuntimeAdapter<T> imple
         
         return null;
     }
+
+    @Override
+    public String getBaseType( Class<?> type ) {
+        if ( null != type ) {
+            Definition annotation = getClassAnnotation( type, Definition.class );
+            if ( null != annotation ) {
+                Class<?> parentType = type.getSuperclass();
+                if (isBaseType( parentType ) ) {
+                    return getDefinitionId( parentType );
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public String[] getTypes( String baseType ) {
+        throw new UnsupportedOperationException( "Not implemented yet. Must keep some collection for this. " );
+    }
+
+    private boolean isBaseType( Class<?> type ) {
+        Field[] fields = type.getDeclaredFields();
+        if ( null != fields ) {
+            for ( Field field : fields ) {
+                for ( Class a : DEF_ANNOTATIONS ) {
+                    Annotation annotation = field.getAnnotation( a );
+                    if ( null != annotation) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
 
 }

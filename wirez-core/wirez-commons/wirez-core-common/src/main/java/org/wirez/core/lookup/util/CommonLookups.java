@@ -1,6 +1,9 @@
 package org.wirez.core.lookup.util;
 
 import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.api.FactoryManager;
+import org.wirez.core.definition.morph.MorphDefinition;
+import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.Graph;
@@ -36,23 +39,27 @@ import java.util.Set;
 @ApplicationScoped
 public class CommonLookups {
 
-    DefinitionManager definitionManager;
+    DefinitionUtils definitionUtils;
     DefinitionLookupManager definitionLookupManager;
     RuleLookupManager ruleLookupManager;
     GraphUtils graphUtils;
+    FactoryManager factoryManager;
 
     protected CommonLookups() {
+        this( null, null, null, null, null );
     }
 
     @Inject
-    public CommonLookups(final DefinitionManager definitionManager,
+    public CommonLookups(final DefinitionUtils definitionUtils,
                          final GraphUtils graphUtils,
                          final @Criteria DefinitionLookupManager definitionLookupManager,
-                         final @Criteria RuleLookupManager ruleLookupManager) {
-        this.definitionManager = definitionManager;
+                         final @Criteria RuleLookupManager ruleLookupManager,
+                         final FactoryManager factoryManager) {
+        this.definitionUtils = definitionUtils;
         this.graphUtils = graphUtils;
         this.definitionLookupManager = definitionLookupManager;
         this.ruleLookupManager = ruleLookupManager;
+        this.factoryManager = factoryManager;
     }
 
     /**
@@ -90,6 +97,41 @@ public class CommonLookups {
         }
 
         return result;
+    }
+
+    public <T> Set<String> getAllowedMorphDefaultDefinitions(final String defSetId,
+                                                             final Graph<?, ? extends Node> graph,
+                                                             final Node<? extends Definition<T>, ? extends Edge> sourceNode,
+                                                             final String edgeId,
+                                                             final int page,
+                                                             final int pageSize) {
+
+        final Set<String> allowedDefinitions = getAllowedDefinitions( defSetId, graph, sourceNode, edgeId, page, pageSize );
+
+        if ( null != allowedDefinitions && !allowedDefinitions.isEmpty() ) {
+
+            final Set<String> result = new HashSet<>( allowedDefinitions.size() );
+
+            for ( final String defId : allowedDefinitions ) {
+
+                // TODO: Avoid new instances here.
+                final Object definition = factoryManager.newDomainObject( defId );
+
+                final MorphDefinition morphDefinition = definitionUtils.getMorphDefinition( definition );
+
+                final boolean hasMorphBase = null != morphDefinition;
+
+                final String id = hasMorphBase ? morphDefinition.getDefault() : defId;
+
+                result.add( id );
+
+            }
+
+            return result;
+
+        }
+
+        return null;
     }
 
     /**
@@ -407,6 +449,10 @@ public class CommonLookups {
         final List<? extends Edge> edges = sourceNode.getOutEdges();
         return graphUtils.countEdges( edgeId, edges );
 
+    }
+
+    private DefinitionManager getDefinitionManager() {
+        return definitionUtils.getDefinitionManager();
     }
 
 }

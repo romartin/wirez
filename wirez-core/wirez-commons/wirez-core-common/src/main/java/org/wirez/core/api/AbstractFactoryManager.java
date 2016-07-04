@@ -5,16 +5,18 @@ import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.definition.adapter.DefinitionSetAdapter;
 import org.wirez.core.definition.factory.ModelFactory;
 import org.wirez.core.api.FactoryManager;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.DiagramImpl;
+import org.wirez.core.diagram.Settings;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.Definition;
+import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.factory.*;
 
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class AbstractFactoryManager implements FactoryManager {
 
@@ -80,6 +82,56 @@ public abstract class AbstractFactoryManager implements FactoryManager {
         
         return (W) elementFactory.build(uuid, definition, labels);
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <G extends Graph, S extends Settings> Diagram<G, S> newDiagram(String uuid, G graph, S settings) {
+        return (Diagram<G, S>) new DiagramImpl( uuid, graph, handleCanvasRoot( graph, settings ) );
+    }
+
+    // TODO: Refactor this- only applies for bpmn?
+    protected Settings handleCanvasRoot( final Graph graph,
+                                         final Settings settings ) {
+
+        if ( null != graph && null != settings ) {
+
+            final Node view = getFirstGraphViewNode( graph );
+
+            if ( null != view ) {
+
+                settings.setCanvasRootUUID( view.getUUID() );
+
+            }
+
+        }
+
+        return settings;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Node getFirstGraphViewNode( final Graph graph ) {
+
+        if ( null != graph ) {
+            Iterable<Node> nodesIterable = graph.nodes();
+            if ( null != nodesIterable ) {
+                Iterator<Node> nodesIt = nodesIterable.iterator();
+                if ( null != nodesIt ) {
+                    while ( nodesIt.hasNext() ) {
+                        Node node = nodesIt.next();
+                        Object content = node.getContent();
+                        if ( content instanceof View) {
+                            return node;
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+        return null;
+    }
+
 
     protected abstract ElementFactory getElementFactory(Object definition,
                                                         Class<?> graphElementClass,

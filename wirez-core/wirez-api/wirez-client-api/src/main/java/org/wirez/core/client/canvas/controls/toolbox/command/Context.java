@@ -15,4 +15,8 @@ public interface Context<H extends CanvasHandler> {
     double getX();
 
     double getY();
+
+    double getClientX();
+
+    double getClientY();
 }

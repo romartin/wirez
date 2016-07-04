@@ -1,7 +1,7 @@
 package org.wirez.core.client.canvas.controls.toolbox.command;
 
-import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.graph.Element;
 
 public abstract class AbstractToolboxCommand<I> implements ToolboxCommand<AbstractCanvasHandler, I> {
 

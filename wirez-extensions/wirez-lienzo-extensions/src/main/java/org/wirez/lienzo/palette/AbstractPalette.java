@@ -1,27 +1,51 @@
 package org.wirez.lienzo.palette;
 
-import java.util.Iterator;
-
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
-import com.ait.lienzo.client.core.shape.Rectangle;
-import com.ait.lienzo.client.core.util.Geometry;
-import com.ait.lienzo.shared.core.types.ColorName;
+import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import org.wirez.lienzo.Decorator;
 import org.wirez.lienzo.Decorator.ItemCallback;
 import org.wirez.lienzo.grid.Grid;
 
+import java.util.Iterator;
+
 public abstract class AbstractPalette<T> extends Group {
+
+    public static class Item {
+
+        private final IPrimitive<?> primitive;
+        private final ItemDecorator decorator;
+
+        public Item( final IPrimitive<?> primitive,
+                     final ItemDecorator decorator ) {
+            this.primitive = primitive;
+            this.decorator = decorator;
+        }
+
+        public IPrimitive<?> getPrimitive() {
+            return primitive;
+        }
+
+        public ItemDecorator getDecorator() {
+            return decorator;
+        }
+    }
+
+    public enum ItemDecorator {
+
+        DEFAULT;
+
+    }
 
     public interface Callback {
 
-        void onItemHover(int index, double x, double y);
+        void onItemHover( int index, double eventX, double eventY, double itemX, double itemY );
 
-        void onItemOut(int index);
+        void onItemOut( int index );
 
-        void onItemMouseDown(int index, int x, int y);
+        void onItemMouseDown( int index, double eventX, double eventY, double itemX, double itemY );
 
-        void onItemClick(int index, int x, int y);
+        void onItemClick( int index, double eventX, double eventY, double itemX, double itemY  );
 
     }
 
@@ -32,6 +56,8 @@ public abstract class AbstractPalette<T> extends Group {
     protected int rows = -1;
     protected int cols = -1;
     protected Callback callback;
+    protected Group itemsGroup = new Group();
+    protected final HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
 
     public AbstractPalette() {
 
@@ -72,53 +98,88 @@ public abstract class AbstractPalette<T> extends Group {
         return (T) this;
     }
 
-    public T build(final IPrimitive<?>... items) {
+    public T build( final Item... items ) {
 
         clear();
 
-        final Grid grid = createGrid(items);
+        this.add( itemsGroup );
+
+        beforeBuild();
+
+        final Grid grid = createGrid( items.length );
+
         final Iterator<Grid.Point> pointIterator = grid.iterator();
-        addPaletteDecorator(grid);
 
         for (int c = 0; c < items.length; c++) {
             final Grid.Point point = pointIterator.next();
-            final IPrimitive<?> item = items[c];
+            final Item item = items[c];
             final int index = c;
-
-            final Decorator itemDecorator = createDecorator(index);
 
             final double px = x + point.getX();
             final double py = y + point.getY();
 
-            final IPrimitive<?> i = itemDecorator.build(item, toDouble(iconSize), toDouble(iconSize))
-                    .setX(px)
-                    .setY(py);
+            final Decorator itemDecorator = item.getDecorator() != null ?
+                    createDecorator( index, px, py ) : null;
 
-            this.add(i);
+            final IPrimitive<?> i = null != itemDecorator ?
+                    itemDecorator.build( item.getPrimitive(), toDouble( iconSize ), toDouble( iconSize ) ) :
+                    item.getPrimitive() ;
 
-            i.addNodeMouseDownHandler(event -> onItemMouseDown(index, event.getX(), event.getY()));
-            i.addNodeMouseClickHandler(event -> onItemClick(index, event.getX(), event.getY()));
+            i.setX( px ).setY( py ).moveToTop();
+
+            this.itemsGroup.add( i );
+
+            handlerRegistrationManager.register(
+                    i.addNodeMouseDownHandler(event -> onItemMouseDown(index, event.getX(), event.getY(), px, py ))
+            );
+
+            handlerRegistrationManager.register(
+                i.addNodeMouseClickHandler(event -> onItemClick(index, event.getX(), event.getY(), px, py ))
+            );
         }
+
+        afterBuild();
 
         return (T) this;
     }
 
-    protected Grid createGrid(IPrimitive<?>[] items) {
-        final int r = rows > 0 ? rows : items.length;
-        final int c = cols > 0 ? cols : 1;
+    protected void doRedraw() {
+
+    }
+
+    public void redraw() {
+        doRedraw();
+        this.batch();
+    }
+
+    protected void beforeBuild() {
+
+    }
+
+    protected void afterBuild() {
+
+    }
+
+    protected Grid createGrid( final int itemsSize ) {
+        final int r = rows > 0 ? rows : itemsSize;
+        final int c = cols > 0 ? cols : itemsSize;
         return new Grid( padding, iconSize, r, c );
     }
 
-    protected Decorator createDecorator(final int index) {
-        return new Decorator(createDecoratorCallback(index));
+    protected Decorator createDecorator( final int index,
+                                         final double itemX,
+                                         final double itemY ) {
+        return new Decorator( createDecoratorCallback( index, itemX, itemY ) );
     }
 
-    protected ItemCallback createDecoratorCallback(final int index) {
+    protected ItemCallback createDecoratorCallback( final int index,
+                                                    final double itemX,
+                                                    final double itemY ) {
         return new ItemCallback() {
 
             @Override
-            public void onShow(final double x, final double y) {
-                doShowItem(index, x, y);
+            public void onShow( final double x, final double y ) {
+                doShowItem(index, x, y, itemX, itemY );
             }
 
             @Override
@@ -129,16 +190,21 @@ public abstract class AbstractPalette<T> extends Group {
     }
 
     public T clear() {
+        this.handlerRegistrationManager.removeHandler();
+        this.itemsGroup.removeAll();
         this.removeAll();
+
         return (T) this;
     }
 
     protected void doShowItem(final int index,
                               final double x,
-                              final double y) {
+                              final double y,
+                              final double itemX,
+                              final double itemY) {
 
         if (null != callback) {
-            callback.onItemHover(index, x, y);
+            callback.onItemHover( index, x, y, itemX, itemY );
         }
     }
 
@@ -149,39 +215,18 @@ public abstract class AbstractPalette<T> extends Group {
         }
     }
 
-    protected void onItemMouseDown(final int index, int x, int y) {
+    protected void onItemMouseDown(final int index, double eventX, double eventY, double itemX, double itemY ) {
 
         if (null != callback) {
-            callback.onItemMouseDown(index, x, y);
+            callback.onItemMouseDown(index, eventX, eventY, itemX, itemY );
         }
     }
 
-    protected void onItemClick(final int index, final int x, final int y) {
+    protected void onItemClick(final int index, double eventX, double eventY, double itemX, double itemY ) {
 
         if (null != callback) {
-            callback.onItemClick(index, x, y);
+            callback.onItemClick(index, eventX, eventY, itemX, itemY );
         }
-    }
-
-    protected Rectangle addPaletteDecorator(final Grid grid) {
-
-        double halfOfPadding = 0;
-        if (padding != 0) {
-            halfOfPadding = padding / 2.0;
-        }
-        final Rectangle decorator = new Rectangle(grid.getWidth() - halfOfPadding, grid.getHeight() - halfOfPadding)
-                .setCornerRadius(5)
-                .setFillColor(ColorName.LIGHTGREY)
-                .setFillAlpha(0.2)
-                .setStrokeWidth(2)
-                .setStrokeColor(ColorName.GREY)
-                .setStrokeAlpha(0.2)
-                .setX(x + halfOfPadding)
-                .setY(y + halfOfPadding);
-
-        this.add(decorator.moveToBottom());
-
-        return decorator;
     }
 
     private double toDouble(final int i) {

@@ -2,16 +2,17 @@ package org.wirez.bpmn.shape.proxy;
 
 import org.wirez.bpmn.definition.ExclusiveDatabasedGateway;
 import org.wirez.core.client.shape.HasChildren;
-import org.wirez.shapes.proxy.BasicShapeProxy;
-import org.wirez.shapes.proxy.HasChildProxies;
-import org.wirez.shapes.proxy.PolygonProxy;
+import org.wirez.shapes.proxy.*;
+import org.wirez.shapes.proxy.icon.dynamics.AbstractDynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.DynamicIconProxy;
 import org.wirez.shapes.proxy.icon.dynamics.Icons;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class ExclusiveDatabasedGatewayShapeProxy implements
+public final class ExclusiveDatabasedGatewayShapeProxy
+        extends AbstractBasicDynamicShapeProxy<ExclusiveDatabasedGateway>
+        implements
         PolygonProxy<ExclusiveDatabasedGateway>,
         HasChildProxies<ExclusiveDatabasedGateway> {
     
@@ -66,7 +67,7 @@ public final class ExclusiveDatabasedGatewayShapeProxy implements
     }
 
     @Override
-    public String getDescription( final ExclusiveDatabasedGateway element ) {
+    public String getGlyphDescription(final ExclusiveDatabasedGateway element ) {
         return ExclusiveDatabasedGateway.description;
     }
 
@@ -81,7 +82,9 @@ public final class ExclusiveDatabasedGatewayShapeProxy implements
         
     }
 
-    public final class IconProxy implements DynamicIconProxy<ExclusiveDatabasedGateway> {
+    public final class IconProxy
+            extends AbstractDynamicIconProxy<ExclusiveDatabasedGateway>
+            implements DynamicIconProxy<ExclusiveDatabasedGateway> {
 
         @Override
         public Icons getIcon(final ExclusiveDatabasedGateway definition ) {
@@ -114,7 +117,7 @@ public final class ExclusiveDatabasedGatewayShapeProxy implements
         }
     
         @Override
-        public String getDescription( final ExclusiveDatabasedGateway element ) {
+        public String getGlyphDescription(final ExclusiveDatabasedGateway element ) {
             return null;
         }
 

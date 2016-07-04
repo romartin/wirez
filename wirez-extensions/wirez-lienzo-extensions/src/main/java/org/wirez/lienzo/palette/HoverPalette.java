@@ -1,9 +1,9 @@
 package org.wirez.lienzo.palette;
 
-import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Rectangle;
+import com.ait.lienzo.client.core.types.BoundingBox;
+import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.user.client.Timer;
-import org.wirez.lienzo.grid.Grid;
 
 public class HoverPalette extends AbstractPalette<HoverPalette> {
 
@@ -13,6 +13,7 @@ public class HoverPalette extends AbstractPalette<HoverPalette> {
         
     }
 
+    private Rectangle decorator;
     private Timer timer;
     private CloseCallback closeCallback;
     private int timeout= 800;
@@ -28,22 +29,12 @@ public class HoverPalette extends AbstractPalette<HoverPalette> {
     }
 
     @Override
-    protected Rectangle addPaletteDecorator( final Grid grid ) {
-        
-        final Rectangle decorator = super.addPaletteDecorator(grid);
-
-        decorator.addNodeMouseEnterHandler(event -> stopTimeout() );
-        
-        decorator.addNodeMouseExitHandler(event -> startTimeout() );
-        
-        return decorator;
-    }
-
-    @Override
     protected void doShowItem(final int index,
                               final double x,
-                              final double y) {
-        super.doShowItem(index, x, y);
+                              final double y,
+                              final double itemX,
+                              final double itemY) {
+        super.doShowItem( index, x, y, itemX, itemY );
         stopTimeout();
     }
 
@@ -54,27 +45,112 @@ public class HoverPalette extends AbstractPalette<HoverPalette> {
     }
 
     @Override
-    public HoverPalette build(final IPrimitive<?>... items) {
-        HoverPalette result = super.build(items);
+    public HoverPalette build(final Item... items) {
+        HoverPalette result = super.build( items );
         startTimeout();
         return result;
     }
 
     @Override
+    public void doRedraw() {
+        drawPaletteDecorator();
+    }
+
+    @Override
     public HoverPalette clear() {
-        HoverPalette result = super.clear();
         stopTimeout();
+        this.decorator.removeFromParent();
+        this.decorator = null;
+        HoverPalette result = super.clear();
         return result;
     }
 
-    private void startTimeout() {
+    @Override
+    protected void beforeBuild() {
+        super.beforeBuild();
+        registerHoverEventHandlers();
+    }
+
+    @Override
+    protected void afterBuild() {
+        super.afterBuild();
+    }
+
+    private void addPaletteDecorator() {
+
+        if ( null == decorator ) {
+
+            decorator = new Rectangle( 1, 1 )
+                    .setCornerRadius(5)
+                    .setFillColor(ColorName.LIGHTGREY)
+                    .setFillAlpha(0.2)
+                    .setStrokeWidth(2)
+                    .setStrokeColor(ColorName.GREY)
+                    .setStrokeAlpha(0.2);
+
+            this.add( decorator );
+
+            itemsGroup.moveToTop();
+
+            handlerRegistrationManager.register(
+                    decorator.addNodeMouseEnterHandler(event -> stopTimeout() )
+            );
+
+            handlerRegistrationManager.register(
+                    decorator.addNodeMouseExitHandler(event -> startTimeout() )
+            );
+
+        }
+
+    }
+
+    private void drawPaletteDecorator() {
+
+        if ( null == decorator ) {
+
+            addPaletteDecorator();
+
+        }
+
+        if ( null != decorator ) {
+
+            final double halfOfPadding = padding != 0 ? padding / 2 : 0;
+            final BoundingBox boundingBox = itemsGroup.getBoundingBox();
+            final double width = boundingBox.getWidth();
+            final double height = boundingBox.getHeight();
+            final double w = width + halfOfPadding;
+            final double h = height + halfOfPadding;
+
+            decorator
+                    .setWidth( w )
+                    .setHeight( h )
+                    .setX( x + halfOfPadding )
+                    .setY( y + halfOfPadding );
+
+        }
+
+    }
+
+    private void registerHoverEventHandlers() {
+
+        handlerRegistrationManager.register(
+                this.addNodeMouseEnterHandler(event -> stopTimeout() )
+        );
+
+        handlerRegistrationManager.register(
+                this.addNodeMouseExitHandler(event -> startTimeout() )
+        );
+
+    }
+
+    public void startTimeout() {
         
         if ( null == timer || !timer.isRunning() ) {
 
             timer = new Timer() {
                 @Override
                 public void run() {
-                    if ( null != HoverPalette.this.callback ) {
+                    if ( null != HoverPalette.this.closeCallback ) {
                         HoverPalette.this.closeCallback.onClose();
                     }
                 }
@@ -86,7 +162,7 @@ public class HoverPalette extends AbstractPalette<HoverPalette> {
         
     }
 
-    private void stopTimeout() {
+    public void stopTimeout() {
         
         if ( null != timer && timer.isRunning() ) {
             timer.cancel();

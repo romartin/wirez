@@ -5,12 +5,13 @@ import org.wirez.core.client.shape.HasChildren;
 import org.wirez.shapes.proxy.*;
 import org.wirez.shapes.proxy.icon.statics.IconProxy;
 import org.wirez.shapes.proxy.icon.statics.Icons;
-import org.wirez.shapes.proxy.impl.WrappedBasicNamedShapeProxy;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class IntermediateTimerEventShapeProxy implements 
+public final class IntermediateTimerEventShapeProxy
+        extends AbstractBasicDynamicShapeProxy<IntermediateTimerEvent>
+        implements
         CircleProxy<IntermediateTimerEvent>,
         HasChildProxies<IntermediateTimerEvent> {
 
@@ -67,7 +68,7 @@ public final class IntermediateTimerEventShapeProxy implements
     }
 
     @Override
-    public String getDescription( final IntermediateTimerEvent element ) {
+    public String getGlyphDescription(final IntermediateTimerEvent element ) {
         return IntermediateTimerEvent.description;
     }
 
@@ -88,7 +89,9 @@ public final class IntermediateTimerEventShapeProxy implements
     }
 
     // The timer icon.
-    public final class TimerIconProxy implements IconProxy<IntermediateTimerEvent> {
+    public final class TimerIconProxy
+            extends AbstractBasicGlyphProxy<IntermediateTimerEvent>
+            implements IconProxy<IntermediateTimerEvent> {
 
         @Override
         public Icons getIcon(final IntermediateTimerEvent element) {
@@ -101,7 +104,7 @@ public final class IntermediateTimerEventShapeProxy implements
         }
 
         @Override
-        public String getDescription( final IntermediateTimerEvent element ) {
+        public String getGlyphDescription(final IntermediateTimerEvent element ) {
             return null;
         }
 

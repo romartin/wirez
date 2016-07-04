@@ -45,7 +45,7 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
                               final GraphRulesManager rulesManager,
                               final GraphUtils graphUtils,
                               final IncrementalIndexBuilder indexBuilder,
-                              final TreeWalkTraverseProcessor treeWalkTraverseProcessor, 
+                              final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
                               final ShapeManager shapeManager,
                               final Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent,
                               final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
@@ -54,7 +54,7 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
                               final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
                               final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
 
-        super( clientDefinitionManager, clientFactoryServices, rulesManager, graphUtils, 
+        super( clientDefinitionManager, clientFactoryServices, rulesManager, graphUtils,
                 indexBuilder, treeWalkTraverseProcessor, shapeManager, canvasInitializationCompletedEvent,
                 canvasElementAddedEvent, canvasElementRemovedEvent, canvasElementUpdatedEvent,
                 canvasProcessingStartedEvent, canvasProcessingCompletedEvent );

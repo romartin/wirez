@@ -1,9 +1,6 @@
 package org.wirez.client.lienzo.canvas.wires;
 
-import com.ait.lienzo.client.core.shape.wires.WiresConnector;
-import com.ait.lienzo.client.core.shape.wires.WiresContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
-import com.ait.lienzo.client.core.shape.wires.WiresShape;
+import com.ait.lienzo.client.core.shape.wires.*;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -20,6 +17,16 @@ public final class WiresUtils {
 
             return canvasHandler.getGraphIndex().getNode(view.getUUID());
             
+        } else if ( shape instanceof WiresLayer ) {
+
+            final String canvasRoot = canvasHandler.getDiagram().getSettings().getCanvasRootUUID();
+
+            if ( null != canvasRoot ) {
+
+                return canvasHandler.getGraphIndex().getNode( canvasRoot );
+
+            }
+
         }
         
         return null;
@@ -29,15 +36,8 @@ public final class WiresUtils {
                                final WiresMagnet magnet) {
 
         final WiresShape shape = magnet.getMagnets().getWiresShape();
-        
-        if ( shape instanceof ShapeView ) {
-            
-            final ShapeView view = (ShapeView) shape;
 
-            return canvasHandler.getGraphIndex().getNode(view.getUUID());
-        }
-        
-        return null;
+        return getNode( canvasHandler, shape );
     }
 
     public static Edge getEdge(final AbstractCanvasHandler canvasHandler,

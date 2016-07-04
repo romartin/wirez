@@ -44,6 +44,7 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
     public DragProxyFactory<AbstractCanvasHandler, Item, DragProxyCallback> proxyFor(final AbstractCanvasHandler context) {
         this.canvasHandler = context;
         this.shapeViewDragProxyFactory.proxyFor( context.getCanvas() );
+        this.graphBoundsIndexer.setRootUUID( context.getDiagram().getSettings().getCanvasRootUUID() );
         return this;
     }
 

@@ -1,9 +1,12 @@
 package org.wirez.bpmn.shape.proxy;
 
 import org.wirez.bpmn.definition.EndNoneEvent;
+import org.wirez.shapes.proxy.AbstractBasicDynamicShapeProxy;
 import org.wirez.shapes.proxy.CircleProxy;
 
-public final class EndNoneEventShapeProxy implements CircleProxy<EndNoneEvent> {
+public final class EndNoneEventShapeProxy
+        extends AbstractBasicDynamicShapeProxy<EndNoneEvent>
+        implements CircleProxy<EndNoneEvent> {
     
     @Override
     public double getRadius( final EndNoneEvent element ) {
@@ -56,7 +59,7 @@ public final class EndNoneEventShapeProxy implements CircleProxy<EndNoneEvent> {
     }
 
     @Override
-    public String getDescription( final EndNoneEvent element ) {
+    public String getGlyphDescription(final EndNoneEvent element ) {
         return EndNoneEvent.description;
     }
 }

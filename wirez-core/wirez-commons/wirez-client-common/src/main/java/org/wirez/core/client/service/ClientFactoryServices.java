@@ -107,11 +107,6 @@ public class ClientFactoryServices extends AbstractFactoryManager {
     }
 
     @Override
-    public <G extends Graph, S extends Settings> Diagram<G, S> newDiagram(String uuid, G graph, S settings) {
-        return (Diagram<G, S>) new DiagramImpl( uuid, graph, settings );
-    }
-
-    @Override
     protected ElementFactory getElementFactory(final Object definition,
                                                    final Class<?> graphElementClass,
                                                    final String factory) {

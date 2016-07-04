@@ -1,6 +1,7 @@
 package org.wirez.core.client.shape.view;
 
 import org.wirez.core.api.FactoryManager;
+import org.wirez.core.definition.shape.GlyphProxy;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.util.UUID;
@@ -23,6 +24,14 @@ public abstract class AbstractShapeGlyphBuilder<G> implements ShapeGlyphBuilder<
     @Override
     public ShapeGlyphBuilder<G> definition(final String id) {
         this.id = id;
+        return this;
+    }
+
+    @Override
+    public ShapeGlyphBuilder<G> glyphProxy( final GlyphProxy<?> glyphProxy,
+                                            final String id) {
+
+        this.id = glyphProxy.getGlyphDefinitionId( id );
         return this;
     }
 

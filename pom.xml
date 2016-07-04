@@ -6,7 +6,7 @@
     <groupId>org.jboss.integration-platform</groupId>
     <artifactId>jboss-integration-platform-bom</artifactId>
     <!-- Keep in sync with property <version.org.jboss.integration-platform> -->
-    <version>7.0.0.CR1</version>
+    <version>7.0.0.CR4</version>
   </parent>
 
   <groupId>org.wirez</groupId>

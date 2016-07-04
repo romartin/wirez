@@ -114,7 +114,7 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         final double y = request.getY();
         final Object definition = request.getDefinition();
         final ShapeFactory<?, AbstractCanvasHandler, ?> factory = request.getShapeFactory();
-        
+
         // Notify processing starts.
         fireProcessingStarted();
 
@@ -204,15 +204,23 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         if ( element instanceof Node) {
 
             if ( null != parent ) {
+
                 command = canvasCommandFactory.ADD_CHILD_NODE( parent, (Node) element, factory );
+
             } else {
+
                 command = canvasCommandFactory.ADD_NODE((Node) element, factory);
+
             }
 
         } else if ( element instanceof Edge && null != parent ) {
+
             command = canvasCommandFactory.ADD_EDGE( parent, (Edge) element, factory );
+
         } else {
+
             throw new RuntimeException("Unrecognized element type for " + element);
+
         }
 
         // Execute both add element and move commands in batch, so undo will be done in batch as well.
@@ -221,6 +229,7 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
 
 
         final List<Command<AbstractCanvasHandler, CanvasViolation>> commandList = new LinkedList<Command<AbstractCanvasHandler, CanvasViolation>>();
+
         commandList.add( command );
         commandList.add( moveCanvasElementCommand );
 
@@ -233,7 +242,8 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
 
         if ( _x > -1 && _y > -1) {
 
-            graphBoundsIndexer.build( canvasHandler.getDiagram().getGraph() );
+            final String rootUUID = canvasHandler.getDiagram().getSettings().getCanvasRootUUID();
+            graphBoundsIndexer.setRootUUID( rootUUID ).build( canvasHandler.getDiagram().getGraph() );
             final Node<View<?>, Edge> r = graphBoundsIndexer.getAt( _x, _y );
             return r;
 

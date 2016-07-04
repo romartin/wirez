@@ -148,6 +148,10 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         }
     }
 
+    protected void _applyFillAlpha( final double alpha, final MutationContext mutationContext ) {
+        view.setFillAlpha( alpha );
+    }
+
     protected void  _applyBorders(final String color, final Double width, final MutationContext mutationContext) {
         if (color != null && color.trim().length() > 0) {
             view.setStrokeColor(color);
@@ -155,6 +159,10 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         if (width != null) {
             view.setStrokeWidth(width);
         }
+    }
+
+    protected void  _applyBorderAlpha(final double alpha, final MutationContext mutationContext) {
+        view.setStrokeAlpha( alpha );
     }
 
     protected void  _applyFont(final String family,

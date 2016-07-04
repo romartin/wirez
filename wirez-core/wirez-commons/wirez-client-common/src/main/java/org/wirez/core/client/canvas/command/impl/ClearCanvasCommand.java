@@ -24,8 +24,12 @@ public final class ClearCanvasCommand extends AbstractCanvasGraphCommand {
     }
 
     @Override
-    protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand(AbstractCanvasHandler context) {
-        return new ClearGraphCommand( context.getDiagram().getGraph() );
+    protected Command<GraphCommandExecutionContext, RuleViolation> buildGraphCommand( final AbstractCanvasHandler context ) {
+
+        final String rootUUID = context.getDiagram().getSettings().getCanvasRootUUID();
+
+        return new ClearGraphCommand( context.getDiagram().getGraph(), rootUUID );
+
     }
 
 }

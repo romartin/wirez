@@ -57,7 +57,7 @@ public abstract class AbstractCanvasHandlerRegistrationControl extends AbstractC
     protected void doDeregister(final Shape shape,
                                 final ViewHandler<?> handler) {
 
-        if (null != handler) {
+        if ( null != shape && null != handler ) {
             final HasEventHandlers hasEventHandlers = (HasEventHandlers) shape.getShapeView();
             hasEventHandlers.removeHandler(handler);
         }

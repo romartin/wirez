@@ -28,6 +28,8 @@ import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.client.canvas.event.AbstractCanvasHandlerEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasClearSelectionEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.definition.adapter.PropertyAdapter;
 import org.wirez.core.definition.adapter.PropertySetAdapter;
@@ -508,25 +510,28 @@ public class PropertiesEditor implements IsWidget {
         elementUUID = null;
         view.clear();
     }
-    
-    void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
+
+    void onCanvasElementSelectedEvent(@Observes CanvasElementSelectedEvent event) {
         checkNotNull("event", event);
-        final ShapeState state = event.getState();
-        final Shape shape = event.getShape();
-        if ( shape != null ) {
-            // If shape exist, attach the properties for the underlying model element.
-            final String shapeUUID = shape.getUUID();
-            final Element<? extends org.wirez.core.graph.content.view.View<?>> element = this.canvasHandler.getGraphIndex().get(shapeUUID);
-            if (element != null && ShapeState.SELECTED.equals(state)) {
-                show(element);
-            } else if (ShapeState.DESELECTED.equals(state)) {
-                view.clear();
-            }
+
+        final String uuid = event.getElementUUID();
+
+        if ( null != uuid ) {
+
+            final Element<? extends org.wirez.core.graph.content.view.View<?>> element = this.canvasHandler.getGraphIndex().get( uuid );
+            show(element);
+
         } else {
-            // If shape is null means no shape selected, so attach the properties for the underlying graph.
+
             doClear();
+
         }
-        
+
+    }
+
+    void CanvasClearSelectionEvent( @Observes CanvasClearSelectionEvent clearSelectionEvent) {
+        checkNotNull( "clearSelectionEvent", clearSelectionEvent );
+        doClear();
     }
 
     void onCanvasClearEvent(@Observes CanvasClearEvent canvasClearEvent) {

@@ -68,7 +68,7 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
         super.doInitialize(session, width, height);
 
         // Enable canvas controls.
-        enableControl( session.getShapeSelectionControl(), session.getCanvas() );
+        enableControl( session.getShapeSelectionControl(), session.getCanvasHandler() );
         enableControl( session.getZoomControl(), session.getCanvas() );
         enableControl( session.getPanControl(), session.getCanvas() );
        

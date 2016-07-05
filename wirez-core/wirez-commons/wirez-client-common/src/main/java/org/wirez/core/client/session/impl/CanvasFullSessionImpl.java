@@ -31,7 +31,7 @@ public class CanvasFullSessionImpl extends AbstractFullSession {
                                  final ConnectionAcceptorControl<AbstractCanvasHandler> connectionAcceptorControl,
                                  final ContainmentAcceptorControl<AbstractCanvasHandler> containmentAcceptorControl,
                                  final DockingAcceptorControl<AbstractCanvasHandler> dockingAcceptorControl,
-                                 final @Desktop SelectionControl<AbstractCanvas, Shape> selectionControl,
+                                 final @Desktop SelectionControl<AbstractCanvasHandler, Element> selectionControl,
                                  final DragControl<AbstractCanvasHandler, Element> dragControl,
                                  final ToolboxControl<AbstractCanvasHandler, Element> toolboxControl,
                                  final @Observer  ElementBuilderControl<AbstractCanvasHandler> builderControl,

@@ -20,6 +20,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Width;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
@@ -35,6 +36,7 @@ import org.wirez.core.graph.Node;
 import org.wirez.core.rule.annotation.CanContain;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,15 +57,21 @@ public class BPMNDiagram implements BPMNDefinition {
     public static final transient String description = "BPMN Diagam";
     
     @PropertySet
+    @FieldDef( label = "General Settings", position = 0)
+    @Valid
     private BPMNGeneral general;
 
     @PropertySet
+    // TODO: FieldDef
     private DiagramSet diagramSet;
 
     @PropertySet
+    @FieldDef( label = "Background Settings", position = 2)
+    @Valid
     private BackgroundSet backgroundSet;
 
     @PropertySet
+    // TODO: FieldDef
     private FontSet fontSet;
 
     @Property

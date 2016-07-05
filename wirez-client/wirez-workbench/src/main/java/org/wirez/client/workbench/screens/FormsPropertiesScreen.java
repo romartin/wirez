@@ -34,17 +34,16 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.event.ShapeStateModifiedEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasClearSelectionEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.session.CanvasSession;
 import org.wirez.core.client.session.event.SessionDisposedEvent;
 import org.wirez.core.client.session.event.SessionOpenedEvent;
 import org.wirez.core.client.session.event.SessionPausedEvent;
 import org.wirez.core.client.session.event.SessionResumedEvent;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
-import org.wirez.core.client.shape.Shape;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.content.view.View;
 
@@ -132,15 +131,17 @@ public class FormsPropertiesScreen {
         return canvasSession != null ? canvasSession.getCanvasHandler() : null;
     }
 
-    void onCanvasShapeStateModifiedEvent(@Observes ShapeStateModifiedEvent event) {
+    @SuppressWarnings( "unchecked" )
+    void onCanvasElementSelectedEvent(@Observes CanvasElementSelectedEvent event) {
         checkNotNull("event", event);
-        final ShapeState state = event.getState();
-        final Shape shape = event.getShape();
-        if ( shape != null ) {
-            // If shape exist, show the properties for the underlying model element.
-            final String shapeUUID = shape.getUUID();
-            final Element<? extends View<?>> element = getCanvasHandler().getGraphIndex().get(shapeUUID);
-            if (element != null && ShapeState.SELECTED.equals(state)) {
+
+        if ( null != getCanvasHandler() ) {
+
+            final String uuid = event.getElementUUID();
+            final Element<? extends View<?>> element = null != uuid ? getCanvasHandler().getGraphIndex().get( uuid ) : null;
+
+            if ( null != element ) {
+
                 final Object definition = element.getContent().getDefinition();
 
                 BindableProxy proxy = (BindableProxy)BindableProxyFactory.getBindableProxy( definition );
@@ -166,14 +167,19 @@ public class FormsPropertiesScreen {
                     });
                 } );
 
-            } else if (ShapeState.DESELECTED.equals(state)) {
+            } else {
+
                 doClear();
+
             }
-        } else {
-            // If shape is null means no shape selected, so show the properties for the underlying graph.
-            doClear();
+
         }
 
+    }
+
+    void CanvasClearSelectionEvent( @Observes CanvasClearSelectionEvent clearSelectionEvent) {
+        checkNotNull( "clearSelectionEvent", clearSelectionEvent );
+        doClear();
     }
 
     private String getModifiedPropertyId( HasProperties model, String fieldName ) {

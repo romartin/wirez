@@ -1,6 +1,7 @@
 package org.wirez.bpmn.backend.service.diagram;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -59,7 +60,8 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 // TODO: Use Archillian to avoid all that CDI mockings. 
-@RunWith(MockitoJUnitRunner.class)
+// TODO: @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class BPMNDiagramMarshallerTest {
 
     protected static final String BPMN_BASIC = "org/wirez/bpmn/backend/service/diagram/basic.bpmn";

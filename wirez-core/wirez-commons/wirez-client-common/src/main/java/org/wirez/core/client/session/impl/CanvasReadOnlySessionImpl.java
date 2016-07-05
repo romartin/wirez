@@ -8,6 +8,7 @@ import org.wirez.core.client.canvas.controls.select.SelectionControl;
 import org.wirez.core.client.canvas.controls.zoom.Wheel;
 import org.wirez.core.client.canvas.controls.zoom.ZoomControl;
 import org.wirez.core.client.shape.Shape;
+import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -18,7 +19,7 @@ public class CanvasReadOnlySessionImpl extends AbstractReadOnlySession {
     @Inject
     public CanvasReadOnlySessionImpl(final AbstractCanvas canvas, 
                                      final AbstractCanvasHandler canvasHandler,
-                                     final @Desktop  SelectionControl<AbstractCanvas, Shape> selectionControl,
+                                     final @Desktop  SelectionControl<AbstractCanvasHandler, Element> selectionControl,
                                      final @Wheel ZoomControl<AbstractCanvas> zoomControl,
                                      final PanControl<AbstractCanvas> panControl) {
         

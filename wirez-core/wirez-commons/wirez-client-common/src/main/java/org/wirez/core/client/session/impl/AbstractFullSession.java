@@ -30,7 +30,7 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
     
     public AbstractFullSession(final AbstractCanvas canvas,
                                final AbstractCanvasHandler canvasHandler,
-                               final SelectionControl<AbstractCanvas, Shape> selectionControl,
+                               final SelectionControl<AbstractCanvasHandler, Element> selectionControl,
                                final ZoomControl<AbstractCanvas> zoomControl,
                                final PanControl<AbstractCanvas> panControl,
                                final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,

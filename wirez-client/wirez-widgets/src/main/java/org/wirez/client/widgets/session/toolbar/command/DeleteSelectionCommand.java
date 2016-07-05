@@ -26,14 +26,14 @@ import java.util.logging.Logger;
 @Dependent
 public class DeleteSelectionCommand extends AbstractSelectionToolbarCommand<DefaultCanvasFullSession> {
 
-    private static Logger LOGGER = Logger.getLogger(DeleteSelectionCommand.class.getName());
+    private static Logger LOGGER = Logger.getLogger( DeleteSelectionCommand.class.getName() );
 
     CanvasCommandFactory canvasCommandFactory;
 
     @Inject
-    public DeleteSelectionCommand(final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent,
-                                  final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent,
-                                  final CanvasCommandFactory canvasCommandFactory) {
+    public DeleteSelectionCommand( final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent,
+                                   final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent,
+                                   final CanvasCommandFactory canvasCommandFactory ) {
         super( enableToolbarCommandEvent, disableToolbarCommandEvent );
         this.canvasCommandFactory = canvasCommandFactory;
     }
@@ -54,54 +54,61 @@ public class DeleteSelectionCommand extends AbstractSelectionToolbarCommand<Defa
     }
 
     @Override
-    public <T> void execute(final ToolbarCommandCallback<T> callback) {
+    public <T> void execute( final ToolbarCommandCallback<T> callback ) {
 
         if ( null != session.getShapeSelectionControl() ) {
 
-            executeWithConfirm(() -> {
+            executeWithConfirm( () -> {
 
                 final AbstractCanvasHandler canvasHandler = session.getCanvasHandler();
                 final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager = session.getCanvasCommandManager();
-                final SelectionControl<AbstractCanvas, Shape> selectionControl = session.getShapeSelectionControl();
+                final SelectionControl<AbstractCanvasHandler, Element> selectionControl = session.getShapeSelectionControl();
 
-                final Collection<Shape> selectedItems = selectionControl.getSelectedItems();
-                if (selectedItems != null && !selectedItems.isEmpty()) {
+                final Collection<String> selectedItems = selectionControl.getSelectedItems();
 
-                    for (Shape shape : selectedItems) {
-                        Element element = canvasHandler.getGraphIndex().getNode(shape.getUUID());
-                        if (element == null) {
-                            element = canvasHandler.getGraphIndex().getEdge(shape.getUUID());
-                            if (element != null) {
-                                log(Level.FINE, "Deleting edge with id " + element.getUUID());
-                                canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_EDGE((Edge) element));
+                if ( selectedItems != null && !selectedItems.isEmpty() ) {
+
+                    for ( final String selectedItemUUID : selectedItems ) {
+
+                        Element element = canvasHandler.getGraphIndex().getNode( selectedItemUUID );
+
+                        if ( element == null ) {
+
+                            element = canvasHandler.getGraphIndex().getEdge( selectedItemUUID );
+
+                            if ( element != null ) {
+                                log( Level.FINE, "Deleting edge with id " + element.getUUID() );
+                                canvasCommandManager.execute( canvasHandler, canvasCommandFactory.DELETE_EDGE( ( Edge ) element ) );
                             }
+
                         } else {
-                            log(Level.FINE, "Deleting node with id " + element.getUUID());
-                            canvasCommandManager.execute(canvasHandler, canvasCommandFactory.DELETE_NODE((Node) element));
+                            log( Level.FINE, "Deleting node with id " + element.getUUID() );
+                            canvasCommandManager.execute( canvasHandler, canvasCommandFactory.DELETE_NODE( ( Node ) element ) );
 
                         }
+
                     }
 
                 } else {
 
-                    log(Level.FINE, "Cannot delete element, no element selected on canvas.");
+                    log( Level.FINE, "Cannot delete element, no element selected on canvas." );
 
                 }
 
-                if (null != callback) {
-                    callback.onSuccess(null);
+                if ( null != callback ) {
+                    callback.onSuccess( null );
                 }
 
-            });
+            } );
 
         }
-        
+
     }
-    
-    private void log(final Level level, final String message) {
-        if (LogConfiguration.loggingIsEnabled()) {
-            LOGGER.log(level, message);
+
+    private void log( final Level level, final String message ) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log( level, message );
         }
     }
-    
+
 }

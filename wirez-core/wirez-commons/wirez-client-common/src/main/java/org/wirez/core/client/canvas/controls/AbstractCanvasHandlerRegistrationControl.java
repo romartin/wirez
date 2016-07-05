@@ -1,6 +1,5 @@
 package org.wirez.core.client.canvas.controls;
 
-import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.event.AbstractCanvasHandlerEvent;
@@ -10,6 +9,7 @@ import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.event.ViewHandler;
+import org.wirez.core.graph.Element;
 
 import javax.enterprise.event.Observes;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public abstract class AbstractCanvasHandlerRegistrationControl extends AbstractC
 
     private final Map<String, ViewHandler<?>> handlers = new HashMap<>();
 
-    public void update(final Element element) {
+    public void update( final Element element ) {
         // Do nothing by default.
     }
     
@@ -43,15 +43,25 @@ public abstract class AbstractCanvasHandlerRegistrationControl extends AbstractC
     }
 
     @Override
-    public void deregister(Element element) {
+    public void deregister( final Element element ) {
 
         final Shape<?> shape = (Shape<?>) canvasHandler.getCanvas().getShape( element.getUUID() );
+
+        deregisterShape( element, shape );
+        
+    }
+
+    protected void deregisterShape( final Element element,
+                                    final Shape<?> shape ) {
+
         if ( null != shape ) {
+
             ViewHandler<?> handler = handlers.get( element.getUUID() );
             doDeregister(shape, handler);
             handlers.remove( element.getUUID() );
+
         }
-        
+
     }
 
     protected void doDeregister(final Shape shape,

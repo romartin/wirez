@@ -2,7 +2,7 @@ package org.wirez.client.widgets.session.toolbar.command;
 
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
-import org.wirez.core.client.canvas.event.ShapeStateModifiedEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.session.CanvasReadOnlySession;
 
 import javax.enterprise.event.Event;
@@ -46,12 +46,19 @@ public abstract class AbstractSelectionToolbarCommand<S extends CanvasReadOnlySe
             enable();
             
         }
-        
+
     }
-    
-    void onShapeStateModified(@Observes ShapeStateModifiedEvent shapeStateModifiedEvent) {
-        checkNotNull("shapeStateModifiedEvent", shapeStateModifiedEvent);
+
+    void onCanvasElementSelectedEvent( @Observes CanvasElementSelectedEvent event ) {
+        checkNotNull( "event", event );
         checkState();
     }
+
+    void CanvasClearSelectionEvent( @Observes CanvasElementSelectedEvent event ) {
+        checkNotNull( "event", event );
+        checkState();
+    }
+    
+
 
 }

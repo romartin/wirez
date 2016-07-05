@@ -7,13 +7,15 @@ import org.wirez.core.client.animation.Select;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.controls.select.AbstractSelectionControl;
-import org.wirez.core.client.canvas.event.ShapeStateModifiedEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasClearSelectionEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.ShapeView;
 import org.wirez.core.client.shape.view.event.TouchEvent;
 import org.wirez.core.client.shape.view.event.TouchHandler;
 import org.wirez.core.client.shape.view.event.ViewEventType;
+import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -24,10 +26,14 @@ import javax.inject.Inject;
 public final class MobileSelectionControl extends AbstractSelectionControl {
 
     @Inject
-    public MobileSelectionControl(final Event<ShapeStateModifiedEvent> canvasShapeStateModifiedEvent,
+    public MobileSelectionControl(final Event<CanvasElementSelectedEvent> elementSelectedEventEvent,
+                                  final Event<CanvasClearSelectionEvent> clearSelectionEventEvent,
                                   final @Select  ShapeAnimation selectionAnimation,
                                   final @Deselect ShapeDeSelectionAnimation deSelectionAnimation) {
-        super( canvasShapeStateModifiedEvent, selectionAnimation, deSelectionAnimation );
+
+        super( elementSelectedEventEvent, clearSelectionEventEvent,
+                selectionAnimation, deSelectionAnimation );
+
     }
 
     /*
@@ -36,8 +42,10 @@ public final class MobileSelectionControl extends AbstractSelectionControl {
         ***************************************************************
      */
 
+
     @Override
-    public void register(final Shape shape) {
+    public void register( final Element element,
+                          final Shape shape ) {
 
         // Selection handling.
         final ShapeView shapeView = shape.getShapeView();
@@ -53,9 +61,9 @@ public final class MobileSelectionControl extends AbstractSelectionControl {
 
                     log( "TouchStart", event );
 
-                    final boolean isSelected = isSelected(shape);
+                    final boolean isSelected = isSelected( element );
 
-                    MobileSelectionControl.super.handleSelection( shape, isSelected, !event.isShiftKeyDown() );
+                    MobileSelectionControl.super.handleElementSelection( element, isSelected, !event.isShiftKeyDown() );
                     
                 }
 

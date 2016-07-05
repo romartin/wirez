@@ -6,17 +6,18 @@ import org.wirez.core.client.canvas.controls.pan.PanControl;
 import org.wirez.core.client.canvas.controls.select.SelectionControl;
 import org.wirez.core.client.canvas.controls.zoom.ZoomControl;
 import org.wirez.core.client.shape.Shape;
+import org.wirez.core.graph.Element;
 
 public abstract class AbstractReadOnlySession extends AbstractCanvasSession 
         implements DefaultCanvasReadOnlySession {
 
-    SelectionControl<AbstractCanvas, Shape> selectionControl;
+    SelectionControl<AbstractCanvasHandler, Element> selectionControl;
     ZoomControl<AbstractCanvas> zoomControl;
     PanControl<AbstractCanvas> panControl;
     
     public AbstractReadOnlySession(final AbstractCanvas canvas,
                                    final AbstractCanvasHandler canvasHandler,
-                                   final SelectionControl<AbstractCanvas, Shape> selectionControl,
+                                   final SelectionControl<AbstractCanvasHandler, Element> selectionControl,
                                    final ZoomControl<AbstractCanvas> zoomControl,
                                    final PanControl<AbstractCanvas> panControl) {
         super( canvas, canvasHandler );
@@ -26,7 +27,7 @@ public abstract class AbstractReadOnlySession extends AbstractCanvasSession
     }
 
     @Override
-    public SelectionControl<AbstractCanvas, Shape> getShapeSelectionControl() {
+    public SelectionControl<AbstractCanvasHandler, Element> getShapeSelectionControl() {
         return selectionControl;
     }
 

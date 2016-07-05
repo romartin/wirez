@@ -16,25 +16,25 @@
 
 package org.wirez.core.client.canvas.controls.select;
 
-import org.wirez.core.client.canvas.Canvas;
+import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.controls.CanvasRegistationControl;
-import org.wirez.core.client.shape.Shape;
+import org.wirez.core.graph.Element;
 
 import java.util.Collection;
 
 /**
- * Mediator for shape selection operations in a canvas.
+ * Mediator for elements selection operations in a canvas.
  */
-public interface SelectionControl<C extends Canvas, S extends Shape> extends CanvasRegistationControl<C, S> {
+public interface SelectionControl<C extends CanvasHandler, E extends Element> extends CanvasRegistationControl<C, E> {
 
-    SelectionControl<C, S> select(final S item);
+    SelectionControl<C, E> select(final E item);
 
-    SelectionControl<C, S> deselect(final S item);
+    SelectionControl<C, E> deselect(final E item);
 
-    boolean isSelected(final S item);
+    boolean isSelected(final E item);
 
-    Collection<S> getSelectedItems();
+    Collection<String> getSelectedItems();
 
-    SelectionControl<C, S> clearSelection();
+    SelectionControl<C, E> clearSelection();
 
 }

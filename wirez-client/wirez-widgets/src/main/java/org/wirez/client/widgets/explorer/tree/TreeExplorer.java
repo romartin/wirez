@@ -8,6 +8,7 @@ import org.wirez.core.client.canvas.event.AbstractCanvasHandlerEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
@@ -15,7 +16,6 @@ import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.ChildrenTraverseProcessor;
 import org.wirez.core.client.canvas.AbstractCanvas;
-import org.wirez.core.client.canvas.controls.event.SelectSingleShapeEvent;
 import org.wirez.core.client.canvas.event.*;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -53,7 +53,7 @@ public class TreeExplorer implements IsWidget {
     DefinitionManager definitionManager;
     ChildrenTraverseProcessor childrenTraverseProcessor;
     Instance<TreeExplorerItem> treeExplorerItemInstances;
-    Event<SelectSingleShapeEvent> selectShapeEvent;
+    Event<CanvasElementSelectedEvent> elementSelectedEventEvent;
     View view;
 
     private CanvasHandler canvasHandler;
@@ -62,12 +62,12 @@ public class TreeExplorer implements IsWidget {
     public TreeExplorer(final DefinitionManager definitionManager,
                         final ChildrenTraverseProcessor childrenTraverseProcessor,
                         final Instance<TreeExplorerItem> treeExplorerItemInstances,
-                        final Event<SelectSingleShapeEvent> selectShapeEvent,
+                        final Event<CanvasElementSelectedEvent> elementSelectedEventEvent,
                         final View view) {
         this.definitionManager = definitionManager;
         this.childrenTraverseProcessor = childrenTraverseProcessor;
         this.treeExplorerItemInstances = treeExplorerItemInstances;
-        this.selectShapeEvent = selectShapeEvent;
+        this.elementSelectedEventEvent = elementSelectedEventEvent;
         this.view = view;
     }
 
@@ -189,8 +189,8 @@ public class TreeExplorer implements IsWidget {
     }
 
     private void selectShape(final Canvas canvas, final String uuid) {
-        final Shape shape = canvas.getShape(uuid);
-        selectShapeEvent.fire( new SelectSingleShapeEvent((AbstractCanvas) canvas, shape) );
+        elementSelectedEventEvent.fire( new CanvasElementSelectedEvent( canvasHandler, uuid ) );
+
     }
 
     void onCanvasClearEvent(@Observes CanvasClearEvent canvasClearEvent) {

@@ -100,7 +100,7 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
         final Set<?> properties = getProperties( pojo );
         if ( null != properties && !properties.isEmpty() ) {
             for (final Object property : properties) {
-                if ( getNamePropertyClass().equals( property.getClass() )) {
+                if ( getNamePropertyClass().equals( BindableAdapterUtils.handleBindableProxyClass( property.getClass() ) )) {
                     return property;
                 }
             }

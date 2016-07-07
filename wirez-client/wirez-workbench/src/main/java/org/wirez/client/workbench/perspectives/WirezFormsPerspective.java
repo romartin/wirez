@@ -32,8 +32,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-@WorkbenchPerspective(identifier = "WirezPerspective", isTransient = false)
-public class WirezPerspective {
+@WorkbenchPerspective(identifier = "WirezFormsPerspective", isTransient = false)
+public class WirezFormsPerspective {
 
     private static final int EAST_PANEL_WIDTH = 300;
     private static final int NAVIGATOR_PANEL_HEIGHT = 400;
@@ -49,7 +49,7 @@ public class WirezPerspective {
     @Perspective
     public PerspectiveDefinition buildPerspective() {
         PerspectiveDefinition perspective = new PerspectiveDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
-        perspective.setName( "Wirez OLD" );
+        perspective.setName( "Wirez Forms" );
 
         perspective.getRoot().addPart( new PartDefinitionImpl( new DefaultPlaceRequest( CanvasWizardScreen.SCREEN_ID ) ) );
 
@@ -70,7 +70,7 @@ public class WirezPerspective {
         propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         propertiesPanel.setMinWidth( EAST_PANEL_WIDTH );
         propertiesPanel.setWidth( EAST_PANEL_WIDTH );
-        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
+        propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( FormsPropertiesScreen.SCREEN_ID ) ) );
 
         propertiesPanel.appendChild(CompassPosition.SOUTH, treeExplorerPanel);
 

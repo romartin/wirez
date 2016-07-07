@@ -69,7 +69,7 @@ public class ShowcaseEntryPoint {
         hideLoadingPopup();
 
         // Default perspective.
-        placeManager.goTo( new DefaultPlaceRequest( "WirezPerspective" ) );
+        placeManager.goTo( new DefaultPlaceRequest( "WirezFormsPerspective" ) );
     }
 
     private void setupGlobalErrorHandler() {
@@ -88,7 +88,13 @@ public class ShowcaseEntryPoint {
 
     private void setupMenu() {
         final Menus menus =
-                newTopLevelMenu("Wirez").respondsWith(new Command() {
+                newTopLevelMenu("Wirez Forms").respondsWith(new Command() {
+                    @Override
+                    public void execute() {
+                        placeManager.goTo(new DefaultPlaceRequest("WirezFormsPerspective"));
+                    }
+                }).endMenu()
+                .newTopLevelMenu("Wirez").respondsWith(new Command() {
                     @Override
                     public void execute() {
                         placeManager.goTo(new DefaultPlaceRequest("WirezPerspective"));

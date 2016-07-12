@@ -25,21 +25,18 @@ class ClientBindablePropertySetAdapter extends AbstractClientBindableAdapter<Obj
 
     @Override
     public String getName(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyNameFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyNameFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
     public Set<?> getProperties(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedSet( pojo, getPropertiesFieldNames().get( clazz ) );
+        return getProxiedSet( pojo, getPropertiesFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
     public boolean accepts(final Class<?> pojoClass) {
         if ( null != propertyNameFieldNames ) {
-            final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojoClass  );
-            return getPropertyNameFieldNames().containsKey( clazz );
+            return getPropertyNameFieldNames().containsKey( pojoClass );
         }
         return false;
     }

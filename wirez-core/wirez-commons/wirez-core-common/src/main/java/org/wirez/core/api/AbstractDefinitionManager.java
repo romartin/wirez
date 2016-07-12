@@ -62,9 +62,8 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     @Override
     @SuppressWarnings("unchecked")
     public <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(final Class<?> type) {
-        final Class<?> clazz = handleBindableProxyClass( type );
         for (DefinitionSetAdapter adapter : definitionSetAdapters) {
-            if ( adapter.accepts( clazz ) ) {
+            if ( adapter.accepts( type ) ) {
                 return adapter;
             }
         }
@@ -75,9 +74,8 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     @Override
     @SuppressWarnings("unchecked")
     public <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(final Class<?> type) {
-        final Class<?> clazz = handleBindableProxyClass( type );
         for (DefinitionSetRuleAdapter adapter : definitionSetRuleAdapters) {
-            if ( adapter.accepts( clazz ) ) {
+            if ( adapter.accepts( type ) ) {
                 return adapter;
             }
         }
@@ -88,9 +86,8 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     @Override
     @SuppressWarnings("unchecked")
     public <T> DefinitionAdapter<T> getDefinitionAdapter(final Class<?> type) {
-        final Class<?> clazz = handleBindableProxyClass( type );
         for (DefinitionAdapter adapter : definitionAdapters) {
-            if ( adapter.accepts( clazz ) ) {
+            if ( adapter.accepts( type ) ) {
                 return adapter;
             }
         }
@@ -101,9 +98,8 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     @Override
     @SuppressWarnings("unchecked")
     public<T> PropertySetAdapter<T> getPropertySetAdapter(final Class<?> type) {
-        final Class<?> clazz = handleBindableProxyClass( type );
         for (PropertySetAdapter adapter : propertySetAdapters) {
-            if ( adapter.accepts( clazz ) ) {
+            if ( adapter.accepts( type ) ) {
                 return adapter;
             }
         }
@@ -114,9 +110,8 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     @Override
     @SuppressWarnings("unchecked")
     public<T> PropertyAdapter<T, ?> getPropertyAdapter(final Class<?> type) {
-        final Class<?> clazz = handleBindableProxyClass( type );
         for (PropertyAdapter adapter : propertyAdapters) {
-            if ( adapter.accepts( clazz ) ) {
+            if ( adapter.accepts( type ) ) {
                 return adapter;
             }
         }
@@ -128,10 +123,9 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     @SuppressWarnings("unchecked")
     public <T> MorphAdapter<T> getMorphAdapter( final Class<?> type ) {
 
-        final Class<?> clazz = handleBindableProxyClass( type );
         for ( MorphAdapter adapter : morphAdapters ) {
 
-            if ( adapter.accepts( clazz ) ) {
+            if ( adapter.accepts( type ) ) {
 
                 return adapter;
 
@@ -140,10 +134,6 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
         }
 
         return null;
-    }
-
-    private Class<?> handleBindableProxyClass(final Class<?> type) {
-        return BindableAdapterUtils.handleBindableProxyClass( type );
     }
 
     public static <T extends PriorityAdapter> void sortAdapters(List<T> adapters) {

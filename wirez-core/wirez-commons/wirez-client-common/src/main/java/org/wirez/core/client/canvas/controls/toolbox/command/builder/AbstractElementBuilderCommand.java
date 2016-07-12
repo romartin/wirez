@@ -6,6 +6,9 @@ import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
+import org.wirez.core.client.canvas.event.keyboard.KeyPressEvent;
+import org.wirez.core.client.canvas.event.keyboard.KeyboardEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
 import org.wirez.core.client.components.drag.DragProxyCallback;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.components.glyph.GlyphTooltip;
@@ -14,6 +17,11 @@ import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
+
+import javax.enterprise.event.Observes;
+import javax.inject.Inject;
+
+import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCommand<I> {
 
@@ -26,6 +34,7 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
         this( null, null, null, null, null, null, null );
     }
 
+    @Inject
     public AbstractElementBuilderCommand(final ClientDefinitionManager clientDefinitionManager,
                                          final ClientFactoryServices clientFactoryServices,
                                          final ShapeManager shapeManager,
@@ -77,7 +86,7 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
 
             glyphTooltip
                     .showTooltip( getGlyphDefinitionId(),
-                            context.getClientX(),
+                            context.getClientX() + 20,
                             context.getClientY(),
                             GlyphTooltip.Direction.WEST );
 
@@ -135,6 +144,19 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
 
             }
         };
+
+    }
+
+    void onkeyPressEvent( @Observes KeyPressEvent keyPressEvent) {
+        checkNotNull( "keyPressEvent", keyPressEvent );
+
+        final KeyboardEvent.Key key = keyPressEvent.getKey();
+
+        if ( null != key && KeyboardEvent.Key.ESC.equals( key ) ) {
+
+            getDragProxyFactory().destroy();
+
+        }
 
     }
 

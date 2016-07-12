@@ -15,6 +15,7 @@ import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -38,6 +39,11 @@ public class LienzoNewConnectorToolboxCommand extends NewConnectorCommand<Shape<
         super( clientDefinitionManager, clientFactoryServices, shapeManager, glyphTooltip,
                 graphBoundsIndexer, connectorDragProxyFactory, edgeBuilderControl,
                 selectionAnimation, deSelectionAnimation );
+    }
+
+    @PostConstruct
+    public void init() {
+        glyphTooltip.setPrefix( "Create a new " );
     }
     
 }

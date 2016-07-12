@@ -1,5 +1,6 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
+import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.command.CommandUtils;
 import org.wirez.core.command.batch.BatchCommandResult;
@@ -143,6 +144,8 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
             LOGGER.log( Level.SEVERE, results.toString() );
             
         }
+
+        canvasHandler.applyElementMutation( edge, MutationContext.STATIC );
 
         fireProcessingCompleted();
         

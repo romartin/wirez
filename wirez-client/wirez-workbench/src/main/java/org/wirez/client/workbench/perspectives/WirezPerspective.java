@@ -35,12 +35,13 @@ import javax.inject.Inject;
 @WorkbenchPerspective(identifier = "WirezPerspective", isTransient = false)
 public class WirezPerspective {
 
-    private static final int EAST_PANEL_WIDTH = 300;
-    private static final int NAVIGATOR_PANEL_HEIGHT = 400;
-    
+    public static final int WEST_PANEL_WIDTH = 65;
+    public static final int EAST_PANEL_WIDTH = 300;
+
     PanelDefinition palettePanel;
     PanelDefinition notificationsPanel;
     PanelDefinition propertiesPanel;
+    PanelDefinition previewPanel;
     PanelDefinition treeExplorerPanel;
 
     @Inject
@@ -67,11 +68,16 @@ public class WirezPerspective {
         treeExplorerPanel.setHeight( 300 );
         treeExplorerPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(TreeExplorerScreen.SCREEN_ID ) ) );
 
+        /*previewPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
+        previewPanel.setMinWidth( EAST_PANEL_WIDTH );
+        previewPanel.setWidth( EAST_PANEL_WIDTH );
+        previewPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(CanvasPreviewScreen.SCREEN_ID ) ) );
+        propertiesPanel.appendChild(CompassPosition.SOUTH, previewPanel);*/
+
         propertiesPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         propertiesPanel.setMinWidth( EAST_PANEL_WIDTH );
         propertiesPanel.setWidth( EAST_PANEL_WIDTH );
         propertiesPanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest(PropertiesScreen.SCREEN_ID ) ) );
-
         propertiesPanel.appendChild(CompassPosition.SOUTH, treeExplorerPanel);
 
         notificationsPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );

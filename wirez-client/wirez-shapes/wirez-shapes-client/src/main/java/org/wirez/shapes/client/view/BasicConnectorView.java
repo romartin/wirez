@@ -207,6 +207,13 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
     }
 
     @Override
+    public T setTitleAlpha( final double alpha ) {
+        text.setAlpha( alpha );
+        return (T) this;
+
+    }
+
+    @Override
     public T refreshTitle() {
         return (T) this;
     }

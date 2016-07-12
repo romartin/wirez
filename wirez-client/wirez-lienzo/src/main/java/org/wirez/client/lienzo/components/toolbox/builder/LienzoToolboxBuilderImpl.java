@@ -27,7 +27,7 @@ public class LienzoToolboxBuilderImpl
 
         if ( view instanceof WiresShape ) {
 
-            on = Toolboxes.hoverToolBoxFor((WiresShape) view);
+            on = Toolboxes.staticToolBoxFor((WiresShape) view);
 
             if ( view instanceof HasEventHandlers) {
 
@@ -90,6 +90,11 @@ public class LienzoToolboxBuilderImpl
 
             b.setMouseExitHandler( buildHandler( button.getMouseExitHandler() ) );
 
+        }
+
+        if ( null != button.getAnimation() ) {
+
+            b.setAnimation( getAnimation( button.getAnimation() ) );
         }
         
         b.end();
@@ -165,6 +170,21 @@ public class LienzoToolboxBuilderImpl
         }
         
         throw new UnsupportedOperationException( "Toolbox direction [" + direction.name() + "] not supported." );
+    }
+
+    private org.wirez.lienzo.toolbox.ToolboxButton.HoverAnimation getAnimation( final ToolboxButton.HoverAnimation animation ) {
+
+        switch ( animation ) {
+
+            case ELASTIC:
+                return org.wirez.lienzo.toolbox.ToolboxButton.HoverAnimation.ELASTIC;
+
+            case HOVER_COLOR:
+                return org.wirez.lienzo.toolbox.ToolboxButton.HoverAnimation.HOVER_COLOR;
+
+        }
+
+        throw new UnsupportedOperationException( "Animation [" + animation.name() + "] not supported." );
     }
     
     

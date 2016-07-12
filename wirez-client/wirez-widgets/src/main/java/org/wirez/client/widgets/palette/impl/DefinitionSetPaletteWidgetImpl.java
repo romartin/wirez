@@ -1,8 +1,5 @@
 package org.wirez.client.widgets.palette.impl;
 
-import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.client.widget.LienzoPanel;
-import com.ait.lienzo.shared.core.types.ColorName;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.client.lienzo.components.palette.LienzoDefinitionSetPalette;
 import org.wirez.client.lienzo.components.palette.LienzoGlyphItemsPalette;
@@ -13,9 +10,7 @@ import org.wirez.client.widgets.palette.DefinitionSetPaletteWidget;
 import org.wirez.client.widgets.palette.view.PaletteWidgetFloatingView;
 import org.wirez.client.widgets.palette.view.PaletteWidgetViewImpl;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.components.glyph.GlyphTooltip;
-import org.wirez.core.client.components.glyph.ShapeGlyphDragHandler;
 import org.wirez.core.client.components.palette.ClientPaletteUtils;
 import org.wirez.core.client.components.palette.model.GlyphPaletteItem;
 import org.wirez.core.client.components.palette.model.HasPaletteItems;
@@ -52,8 +47,8 @@ public class DefinitionSetPaletteWidgetImpl
         extends AbstractPaletteWidget<DefinitionSetPalette, PaletteWidgetViewImpl>
         implements DefinitionSetPaletteWidget {
 
-    private static final int COLLAPSED_ICON_SIZE = 40;
-    private static final int COLLAPSED_PADDING = 15;
+    private static final int COLLAPSED_ICON_SIZE = 30;
+    private static final int COLLAPSED_PADDING = 10;
     private static final int EXPANDED_ICON_SIZE = 50;
     private static final int EXPANDED_PADDING = 30;
 
@@ -86,7 +81,7 @@ public class DefinitionSetPaletteWidgetImpl
         this.glyphsFloatingPalette = beanManager.lookupBean( LienzoGlyphsHoverPalette.class ).newInstance();
 
         view.setPresenter( this );
-        view.setBackgroundColor( ColorName.LIGHTGREY.getColorString() );
+        view.showEmptyView( true );
         floatingView.setPresenter( this );
 
         mainPalette.setExpandable( false );
@@ -103,15 +98,35 @@ public class DefinitionSetPaletteWidgetImpl
 
     }
 
+
+    @Override
+    public void unbind() {
+
+        super.unbind();
+
+        floatingView.clear();
+
+    }
+
+    @Override
+    public double getIconSize() {
+        return expanded ? EXPANDED_ICON_SIZE : COLLAPSED_ICON_SIZE;
+    }
+
+    @Override
+    public double getPadding() {
+        return expanded ? EXPANDED_PADDING : COLLAPSED_PADDING ;
+    }
+
     private final LienzoGlyphItemsPalette.GlyphTooltipCallback floatingPaletteGlyphTooltipCallback =
             (glyphTooltip, item, mouseX, mouseY, itemX, itemY) -> {
 
                 final int[] mainPaletteSize = getMainPaletteSize();
 
-                final double pX = mainPaletteSize[0] + itemX - ( getIconSize() / 2 );
-                final double pY = itemY + floatingView.getAbsoluteTop() + getIconSize() + getPadding();
+                final double pX = mainPaletteSize[0] + itemX;
+                final double pY = itemY + floatingView.getAbsoluteTop() + ( getIconSize() / 2 ) - getPadding();
 
-                glyphTooltip.showTooltip( item.getDefinitionId(), pX, pY, GlyphTooltip.Direction.NORTH );
+                glyphTooltip.showTooltip( item.getDefinitionId(), pX, pY, GlyphTooltip.Direction.WEST );
 
                 return false;
 
@@ -123,9 +138,11 @@ public class DefinitionSetPaletteWidgetImpl
                 final int[] mainPaletteSize = getMainPaletteSize();
 
                 final double pX = mainPaletteSize[0] + itemX - ( getIconSize() / 2 );
-                final double pY = itemY + view.getAbsoluteTop() + ( getIconSize() / 2 );
+                final double pY = itemY + getViewAbsoluteTop() + ( getIconSize() / 2 );
 
                 glyphTooltip.showTooltip( item.getDefinitionId(), pX, pY, GlyphTooltip.Direction.WEST );
+
+                floatingView.clear();
 
                 return false;
 
@@ -178,15 +195,6 @@ public class DefinitionSetPaletteWidgetImpl
 
     }
 
-    @Override
-    public void unbind() {
-
-        super.unbind();
-
-        floatingView.clear();
-
-    }
-
     @SuppressWarnings("unchecked")
     private boolean showFloatingPalette( final int pos,
                                          final double x,
@@ -206,8 +214,8 @@ public class DefinitionSetPaletteWidgetImpl
 
             final int[] mainPaletteSize = getMainPaletteSize();
 
-            final double pX = mainPaletteSize[0] - ( getPadding() / 2 );
-            final double pY = itemY + view.getAbsoluteTop() - getPadding();
+            final double pX = mainPaletteSize[0] - ( getPadding() * 1.5 ) - getIconSize();
+            final double pY = itemY + getViewAbsoluteTop() - ( getPadding() * 2 ) + ( getIconSize() / 2 );
 
             floatingView
                     .setX( pX )
@@ -251,15 +259,6 @@ public class DefinitionSetPaletteWidgetImpl
 
     }
 
-    @Override
-    public double getIconSize() {
-        return expanded ? EXPANDED_ICON_SIZE : COLLAPSED_ICON_SIZE;
-    }
-
-    @Override
-    public double getPadding() {
-        return expanded ? EXPANDED_PADDING : COLLAPSED_PADDING ;
-    }
 
     private int[] getMainPaletteSize() {
 
@@ -327,6 +326,10 @@ public class DefinitionSetPaletteWidgetImpl
 
         return paletteDefinition.getItems().get( index );
 
+    }
+
+    private double getViewAbsoluteTop() {
+        return view.getAbsoluteTop();
     }
 
     private int _getIconSize() {

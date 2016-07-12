@@ -64,7 +64,7 @@ public class FlowActionsToolboxControlProvider extends AbstractToolboxControlPro
         return buttonGridBuilder
                 .setRows( 5 )
                 .setColumns( 2 )
-                .setIconSize( 10 )
+                .setIconSize( 12 )
                 .setPadding( 5 )
                 .build();
     }

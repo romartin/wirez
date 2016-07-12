@@ -151,6 +151,13 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
     @Override
     @SuppressWarnings("unchecked")
+    public T setTitleAlpha( final double alpha ) {
+        text.setAlpha( alpha );
+        return (T) this;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public T setTitleStrokeWidth(final double strokeWidth) {
         text.setStrokeWidth(strokeWidth);
         return (T) this;
@@ -181,7 +188,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
     protected Text buildText(String _text) {
         Text text = new Text(_text).setFontSize(14).setFillColor(ColorName.BLACK).setStrokeWidth(1);
-        return text.moveToTop().setDraggable(false);
+        return text.moveToTop().setDraggable(false).setAlpha( 0 );
     }
     
     private WiresLayoutContainer.Layout getTextPosition() {

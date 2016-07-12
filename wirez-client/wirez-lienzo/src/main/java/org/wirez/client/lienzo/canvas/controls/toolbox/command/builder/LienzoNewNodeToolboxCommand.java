@@ -16,6 +16,7 @@ import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -41,5 +42,11 @@ public class LienzoNewNodeToolboxCommand extends NewNodeCommand<IPrimitive<?>> {
                 nodeDragProxyFactory, nodeBuilderControl, selectionAnimation, deSelectionAnimation,
                 definitionUtils );
     }
+
+    @PostConstruct
+    public void init() {
+        glyphTooltip.setPrefix( "Create a new " );
+    }
+
 
 }

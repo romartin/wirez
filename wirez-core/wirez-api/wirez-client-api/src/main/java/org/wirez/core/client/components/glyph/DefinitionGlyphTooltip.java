@@ -18,8 +18,12 @@ package org.wirez.core.client.components.glyph;
 
 public interface DefinitionGlyphTooltip<G> extends GlyphTooltip<G> {
 
-    void showTooltip( String definitionId, double x, double y, GlyphTooltip.Direction direction );
+    DefinitionGlyphTooltip<G> setPrefix( String prefix );
 
-    void showGlyph( String definitionId, double x, double y, double width, double height, GlyphTooltip.Direction direction );
+    DefinitionGlyphTooltip<G> setSuffix( String suffix );
+
+    DefinitionGlyphTooltip<G> showTooltip( String definitionId, double x, double y, GlyphTooltip.Direction direction );
+
+    DefinitionGlyphTooltip<G> showGlyph( String definitionId, double x, double y, double width, double height, GlyphTooltip.Direction direction );
 
 }

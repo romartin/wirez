@@ -25,10 +25,10 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * LienzoPanel that can take the Focus (and more importantly cause other Widgets to loose the Focus)
  */
-public class FocusableLienzoPanel extends LienzoPanel {
+public class FocusableLienzoPanelView extends com.ait.lienzo.client.widget.LienzoPanel {
 
-    public FocusableLienzoPanel(final int width,
-                                final int height ) {
+    public FocusableLienzoPanelView( final int width,
+                                     final int height ) {
         super( width,
                height );
 

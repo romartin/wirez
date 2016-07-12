@@ -26,6 +26,8 @@ public abstract class AbstractDragProxy<T> {
     private Runnable timeoutRunnable;
     private Integer xDiff = null;
     private Integer yDiff = null;
+    private Layer layer = null;
+    private T shapeProxy = null;
     
     protected abstract void addToLayer( Layer layer, T shape );
 
@@ -56,55 +58,62 @@ public abstract class AbstractDragProxy<T> {
         this.timer.schedule( timeout );
         this.xDiff = null;
         this.yDiff = null;
-        
-        create( layer, shape, x, y, timeout, callback );
+        this.layer = layer;
+        this.shapeProxy = shape;
+
+        create( x, y, timeout, callback );
         
     }
 
-    private void create(final Layer layer, 
-                        final T copy, 
-                        final int initialX, 
+    private void create(final int initialX,
                         final int initialY, 
                         final int timeout, 
                         final Callback callback ) {
-        
+
+        if ( !attached ) {
+            addToLayer( layer, shapeProxy );
+            setX( shapeProxy, initialX );
+            setY( shapeProxy, initialY );
+            attached = true;
+            callback.onStart( initialX, initialY );
+        }
+
+
         final HandlerRegistration[] handlerRegs = new HandlerRegistration[ 2 ];
 
         handlerRegs[ 0 ] = RootPanel.get().addDomHandler(new MouseMoveHandler() {
 
             @Override
             public void onMouseMove( final MouseMoveEvent mouseMoveEvent ) {
-                
-                if ( xDiff == null ) {
-                    xDiff = initialX - mouseMoveEvent.getX();
+
+                if ( attached ) {
+
+                    if ( xDiff == null ) {
+                        xDiff = initialX - mouseMoveEvent.getX();
+                    }
+
+                    if ( yDiff == null ) {
+                        yDiff = initialY - mouseMoveEvent.getY();
+                    }
+
+                    final int x = getXDiff() + mouseMoveEvent.getX();
+                    final int y = getYDiff() + mouseMoveEvent.getY();
+
+                    setX( shapeProxy, x );
+                    setY( shapeProxy, y );
+
+                    layer.batch();
+
+                    if ( !timer.isRunning() ) {
+
+                        timer.schedule( timeout );
+
+                    }
+
+                    timeoutRunnable = () -> callback.onMove( x, y );  timer.schedule( timeout );
+
                 }
 
-                if ( yDiff == null ) {
-                    yDiff = initialY - mouseMoveEvent.getY();
-                }
-                
-                final int x = xDiff + mouseMoveEvent.getX();
-                final int y = yDiff + mouseMoveEvent.getY();
-
-                if ( !attached ) {
-                    addToLayer( layer, copy );
-                    attached = true;
-                    callback.onStart( x, y );
-                }
-                
-                setX( copy, x );
-                setY( copy, y );
-
-                layer.batch();
-
-                if ( !timer.isRunning() ) {
-
-                    timer.schedule( timeout );
-
-                }
-
-                timeoutRunnable = () -> callback.onMove( x, y );  timer.schedule( timeout );
-                
             }
             
         }, MouseMoveEvent.getType() );
@@ -120,15 +129,13 @@ public abstract class AbstractDragProxy<T> {
 
                     timer.cancel();
 
-                    final int x = xDiff + mouseUpEvent.getX();
-                    final int y = yDiff + mouseUpEvent.getY();
-
-                    removeFromLayer( layer, copy );
-                    
-                    callback.onComplete( x, y );
+                    final int x = getXDiff() + mouseUpEvent.getX();
+                    final int y = getYDiff() + mouseUpEvent.getY();
 
                     AbstractDragProxy.this.destroy();
-                    
+
+                    callback.onComplete( x, y );
+
                 }
                 
             }
@@ -139,6 +146,8 @@ public abstract class AbstractDragProxy<T> {
 
     public void destroy() {
 
+        removeFromLayer( layer, shapeProxy );
+
         if ( null != this.timer && this.timer.isRunning()  ) {
             this.timer.cancel();
         }
@@ -147,7 +156,18 @@ public abstract class AbstractDragProxy<T> {
         this.attached = false;
         this.xDiff = null;
         this.yDiff = null;
+        this.layer = null;
+        this.shapeProxy = null;
         
     }
-    
+
+
+    private int getXDiff() {
+        return null != xDiff ? xDiff : 0;
+    }
+
+    private int getYDiff() {
+        return null != yDiff ? yDiff : 0;
+    }
+
 }

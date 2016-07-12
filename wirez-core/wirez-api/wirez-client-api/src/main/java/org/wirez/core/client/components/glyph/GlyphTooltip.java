@@ -28,7 +28,7 @@ public interface GlyphTooltip<G>  {
 
     void show( String text, double x, double y, Direction direction );
 
-    void show(ShapeGlyph<G> glyph, String text, double x, double y, Direction direction );
+    void show( ShapeGlyph<G> glyph, String text, double x, double y, Direction direction );
     
     void hide();
     

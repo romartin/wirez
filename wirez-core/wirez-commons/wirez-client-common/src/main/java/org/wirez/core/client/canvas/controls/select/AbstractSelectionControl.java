@@ -10,7 +10,6 @@ import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerRegistrationControl;
-import org.wirez.core.client.canvas.event.CanvasClearEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
 import org.wirez.core.client.canvas.event.selection.CanvasClearSelectionEvent;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
@@ -155,6 +154,12 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
     }
 
     @Override
+    protected void deregisterAll() {
+        super.deregisterAll();
+        selectedElements.clear();
+    }
+
+    @Override
     protected void doDisable() {
 
         super.doDisable();
@@ -246,8 +251,20 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
 
     public SelectionControl<AbstractCanvasHandler, Element> select( final String uuid,
                                                                     final boolean fireEvent ) {
-        final Element element = canvasHandler.getGraphIndex().get( uuid );
-        return this.select( element, fireEvent );
+
+        // GWT.log("***** SELECTING " + uuid );
+
+        selectedElements.add( uuid );
+
+        updateViewShapesState();
+
+        if ( fireEvent ) {
+
+            elementSelectedEventEvent.fire( new CanvasElementSelectedEvent( canvasHandler, uuid ) );
+
+        }
+
+        return this;
     }
 
     @Override
@@ -258,34 +275,16 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
     public SelectionControl<AbstractCanvasHandler, Element> select( final Element element,
                                                                     final boolean fireEvent ) {
 
-        selectedElements.add( element.getUUID() );
-
-        updateViewShapesState();
-
-        if ( fireEvent ) {
-
-            elementSelectedEventEvent.fire( new CanvasElementSelectedEvent( canvasHandler, element.getUUID() ) );
-
-        }
-
+        this.select( element.getUUID(), fireEvent );
         return this;
     }
 
     public SelectionControl<AbstractCanvasHandler, Element> deselect( final String uuid,
                                                                       final boolean fireEvent ) {
-        final Element element = canvasHandler.getGraphIndex().get( uuid );
-        return this.deselect( element, fireEvent );
-    }
 
-    @Override
-    public SelectionControl<AbstractCanvasHandler, Element> deselect( final Element element ) {
-        return deselect( element, true );
-    }
+        // GWT.log("***** DESELECTING " + uuid );
 
-    public SelectionControl<AbstractCanvasHandler, Element> deselect( final Element element,
-                                                                      final boolean fireEvent ) {
-
-        selectedElements.remove( element.getUUID() );
+        selectedElements.remove( uuid );
 
         updateViewShapesState();
 
@@ -296,6 +295,18 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
         }
 
         return this;
+    }
+
+    @Override
+    public SelectionControl<AbstractCanvasHandler, Element> deselect( final Element element ) {
+        return deselect( element, true );
+    }
+
+    public SelectionControl<AbstractCanvasHandler, Element> deselect( final Element element,
+                                                                      final boolean fireEvent ) {
+
+        return this.deselect( element.getUUID(), fireEvent );
+
     }
 
     protected boolean isSelected( final String uuid ) {
@@ -331,6 +342,7 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
             }
 
         }
+
         selectedElements.clear();
 
         if ( null != getCanvas() ) {
@@ -369,8 +381,16 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
 
         final String uuid = event.getElementUUID();
 
-        if ( null != canvasHandler && canvasHandler.equals( event.getCanvasHandler() ) &&
-                !isSelected( uuid ) ) {
+        if ( null != canvasHandler && canvasHandler.equals( event.getCanvasHandler() ) ) {
+
+            doSelect( uuid );
+
+        }
+    }
+
+    private void doSelect( final String uuid ) {
+
+        if ( !isSelected( uuid ) ) {
 
             this.clearSelection( false );
 

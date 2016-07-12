@@ -51,36 +51,40 @@ public class DefinitionsPaletteBuilderImpl
 
             for (final String definitionId : definitions) {
 
-                clientFactoryServices.newDomainObject( definitionId, new ServiceCallback<Object>() {
+                if ( !exclusions.contains( definitionId ) ) {
 
-                    @Override
-                    public void onSuccess( final Object definition ) {
+                    clientFactoryServices.newDomainObject( definitionId, new ServiceCallback<Object>() {
 
-                        final String id = toValidId( definitionId );
+                        @Override
+                        public void onSuccess( final Object definition ) {
 
-                        final String title = definitionUtils.getDefinitionTitle( definition );
+                            final String id = toValidId( definitionId );
 
-                        final String description = definitionUtils.getDefinitionDescription( definition );
+                            final String title = definitionUtils.getDefinitionTitle( definition );
 
-                        final DefinitionPaletteItemImpl.DefinitionPaletteItemBuilder itemBuilder =
-                                new DefinitionPaletteItemImpl.DefinitionPaletteItemBuilder( id )
-                                        .definitionId( definitionId )
-                                        .title( title )
-                                        .description( description )
-                                        .tooltip( description );
+                            final String description = definitionUtils.getDefinitionDescription( definition );
 
-                        builders.add( itemBuilder );
+                            final DefinitionPaletteItemImpl.DefinitionPaletteItemBuilder itemBuilder =
+                                    new DefinitionPaletteItemImpl.DefinitionPaletteItemBuilder( id )
+                                            .definitionId( definitionId )
+                                            .title( title )
+                                            .description( description )
+                                            .tooltip( description );
 
-                    }
+                            builders.add( itemBuilder );
 
-                    @Override
-                    public void onError(final ClientRuntimeError error) {
+                        }
 
-                        callback.onError(error);
+                        @Override
+                        public void onError(final ClientRuntimeError error) {
 
-                    }
+                            callback.onError(error);
 
-                });
+                        }
+
+                    });
+
+                }
 
             }
 

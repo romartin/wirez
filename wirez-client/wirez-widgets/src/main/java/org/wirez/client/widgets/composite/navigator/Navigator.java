@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class Navigator implements IsWidget {
 
     private static Logger LOGGER = Logger.getLogger(Navigator.class.getName());
-    
+
     Card card;
     CanvasPreview canvasPreview;
     TreeExplorer treeExplorer;
@@ -47,7 +47,7 @@ public class Navigator implements IsWidget {
     public void show(final CanvasHandler canvasHandler) {
         
         // Initialize the widgets.
-        canvasPreview.start( canvasHandler.getCanvas() );
+        canvasPreview.show( canvasHandler.getCanvas(), 400, 400 );
         treeExplorer.show( canvasHandler );
         
         // Show the view.

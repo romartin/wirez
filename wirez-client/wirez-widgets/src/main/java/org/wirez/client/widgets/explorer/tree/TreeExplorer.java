@@ -8,6 +8,7 @@ import org.wirez.core.client.canvas.event.AbstractCanvasHandlerEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
+import org.wirez.core.client.canvas.event.registration.CanvasElementsClearEvent;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
@@ -208,6 +209,12 @@ public class TreeExplorer implements IsWidget {
     void onCanvasElementRemovedEvent(@Observes CanvasElementRemovedEvent elementRemovedEvent) {
         if ( checkEventContext(elementRemovedEvent) ) {
             showEventGraph( elementRemovedEvent );
+        }
+    }
+
+    void onCanvasElementsClearEvent( @Observes CanvasElementsClearEvent canvasClearEvent ) {
+        if ( checkEventContext( canvasClearEvent ) ) {
+            showEventGraph( canvasClearEvent );
         }
     }
 

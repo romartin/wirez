@@ -85,6 +85,7 @@ public class PrimitivePopup extends FlowPanel {
 
         this.getElement().getStyle().setLeft(x, Style.Unit.PX);
         this.getElement().getStyle().setTop(y, Style.Unit.PX);
+        this.getElement().getStyle().setZIndex( zIndex );
         this.getElement().getStyle().setDisplay(Style.Display.INLINE);
 
     }

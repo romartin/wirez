@@ -24,6 +24,12 @@ public class SwitchGridCommand extends AbstractToolbarCommand<DefaultCanvasReadO
     }
 
     @Override
+    public void initialize( final DefaultCanvasReadOnlySession session ) {
+        super.initialize( session );
+        showGrid();
+    }
+
+    @Override
     public IconType getIcon() {
         return IconType.TH;
     }

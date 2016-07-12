@@ -165,25 +165,41 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         view.setStrokeAlpha( alpha );
     }
 
-    protected void  _applyFont(final String family,
+    protected void _applyFont( final String family,
                                final String color,
                                final Double size,
                                final Double borderSize,
-                               final MutationContext mutationContext) {
+                               final Double alpha,
+                               final MutationContext mutationContext ) {
         if ( view instanceof HasTitle ) {
-            final HasTitle hasTitle = (HasTitle) view;
-            
-            if (family != null && family.trim().length() > 0) {
-                hasTitle.setTitleFontFamily(family);
+            final HasTitle hasTitle = ( HasTitle ) view;
+            final boolean isAnimation = isAnimationMutation( mutationContext );
+
+            if ( family != null && family.trim().length() > 0 ) {
+                hasTitle.setTitleFontFamily( family );
             }
-            if (color != null && color.trim().length() > 0) {
-                hasTitle.setTitleStrokeColor(color);
+            if ( color != null && color.trim().length() > 0 ) {
+                hasTitle.setTitleStrokeColor( color );
             }
-            if (size != null && size > 0) {
-                hasTitle.setTitleFontSize(size);
+
+            if ( size != null && size > 0 ) {
+
+                hasTitle.setTitleFontSize( size );
+
             }
-            if (borderSize != null && borderSize > 0) {
-                hasTitle.setTitleStrokeWidth(borderSize);
+
+            if ( isAnimation ) {
+
+                addAnimationProperties( new AnimationProperties.FONT_ALPHA( alpha ) );
+
+            } else {
+
+                hasTitle.setTitleAlpha( alpha );
+
+            }
+
+            if ( borderSize != null && borderSize > 0 ) {
+                hasTitle.setTitleStrokeWidth( borderSize );
             }
 
             // Refresh to update size changes etc.

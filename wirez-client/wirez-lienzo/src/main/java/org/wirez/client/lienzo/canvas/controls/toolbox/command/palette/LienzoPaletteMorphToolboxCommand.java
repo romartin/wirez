@@ -2,8 +2,10 @@ package org.wirez.client.lienzo.canvas.controls.toolbox.command.palette;
 
 import com.ait.lienzo.client.core.shape.Shape;
 import org.wirez.client.lienzo.LienzoLayer;
+import org.wirez.client.lienzo.components.palette.AbstractLienzoGlyphItemsPalette;
 import org.wirez.client.lienzo.components.palette.LienzoGlyphsHoverPalette;
 import org.wirez.client.lienzo.components.palette.LienzoPalette;
+import org.wirez.client.lienzo.components.palette.impl.LienzoGlyphsHoverPaletteImpl;
 import org.wirez.client.lienzo.util.SVGUtils;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.Deselect;
@@ -56,10 +58,14 @@ public class LienzoPaletteMorphToolboxCommand extends AbstractPaletteMorphComman
     @PostConstruct
     public void init() {
         getLienzoPalette()
-                .expand()
-                .setIconSize( 15 )
-                .setPadding( 5 )
-                .setLayout(LienzoPalette.Layout.VERTICAL );
+                .collapse()
+                .setExpandable( false )
+                .setIconSize( 18 )
+                .setPadding( 10 )
+                .setLayout(LienzoPalette.Layout.HORIZONTAL );
+
+        ( (AbstractLienzoGlyphItemsPalette ) getLienzoPalette()).getDefinitionGlyphTooltip().setPrefix( "Convert to " );
+
     }
 
     @Override

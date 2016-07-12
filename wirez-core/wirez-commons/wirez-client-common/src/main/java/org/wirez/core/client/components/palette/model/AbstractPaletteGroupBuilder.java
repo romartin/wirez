@@ -1,9 +1,5 @@
 package org.wirez.core.client.components.palette.model;
 
-import org.wirez.core.client.components.palette.model.definition.impl.DefinitionPaletteGroupImpl;
-import org.wirez.core.client.components.palette.view.AbstractPaletteGridBuilder;
-import org.wirez.core.client.components.palette.view.PaletteGrid;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +19,23 @@ public abstract class AbstractPaletteGroupBuilder<B, G, I>  extends AbstractPale
     public B addItem( PaletteItemBuilder item ) {
         items.add( item );
         return (B) this;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public B addItem( final int index,
+                      final PaletteItemBuilder item ) {
+
+        if ( index < items.size() ) {
+
+            items.add( index, item );
+            return (B) this;
+
+        } else {
+
+            return addItem( item );
+        }
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.wirez.core.client.canvas.controls.toolbox.command;
 
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.components.toolbox.ToolboxButton;
 import org.wirez.core.graph.Element;
 
 public abstract class AbstractToolboxCommand<I> implements ToolboxCommand<AbstractCanvasHandler, I> {
@@ -20,7 +21,12 @@ public abstract class AbstractToolboxCommand<I> implements ToolboxCommand<Abstra
     public void mouseExit( final Context<AbstractCanvasHandler> context, final Element element ) {
         
     }
-    
+
+    @Override
+    public ToolboxButton.HoverAnimation getButtonAnimation() {
+        return ToolboxButton.HoverAnimation.ELASTIC;
+    }
+
     @Override
     public void execute( final Context<AbstractCanvasHandler> context, 
                          final Element element ) {

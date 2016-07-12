@@ -33,6 +33,7 @@ public class PrimitiveTooltip extends PrimitivePopup {
     private static final double PADDING = 10;
     private static final double TRIANGLE_SIZE = 10;
     private static final double ALPHA = 1;
+    private static final String BG_COLOR = ColorName.DARKSLATEGREY.getColorString();
 
     public enum Direction {
 
@@ -41,7 +42,7 @@ public class PrimitiveTooltip extends PrimitivePopup {
     }
 
     public PrimitiveTooltip() {
-        setzIndex( 50 );
+        setzIndex( 100 );
     }
 
     public PrimitiveTooltip show(final IPrimitive<?> _glyph,
@@ -57,7 +58,8 @@ public class PrimitiveTooltip extends PrimitivePopup {
         final Text descText = new Text( text )
                 .setFontSize( 8 )
                 .setFontFamily( "Open Sans" )
-                .setStrokeWidth( 1 );
+                .setStrokeWidth( 1 )
+                .setStrokeColor( ColorName.WHITE );
 
         final BoundingBox descTextBB = descText.getBoundingBox();
         final double descTextBbW = descTextBB.getWidth();
@@ -80,7 +82,7 @@ public class PrimitiveTooltip extends PrimitivePopup {
 
         super.show( g, w, h, x , y );
 
-        double _x = w / 2;
+        double _x = ( w / 2 ) + ( isWest( direction ) ? PADDING / 2 : 0 );
 
         double _y = PADDING / 2 + ( isNorth( direction ) ? TRIANGLE_SIZE : 0 );
 
@@ -115,12 +117,10 @@ public class PrimitiveTooltip extends PrimitivePopup {
         final Point2D c = isWest ? new Point2D( TRIANGLE_SIZE , h2 - s2 ) : new Point2D( w2 - s2 , TRIANGLE_SIZE );
 
         final Triangle triangle = new Triangle( a, b, c )
-                .setFillColor( ColorName.BLACK )
+                .setFillColor( BG_COLOR )
                 .setFillAlpha( ALPHA )
-                .setStrokeColor( ColorName.BLACK )
-                .setStrokeWidth( 2 )
-                .setStrokeAlpha(1);
-        
+                .setStrokeWidth( 0 );
+
         final Rectangle rectangle =
                 new Rectangle(
                         width + ( isWest ? TRIANGLE_SIZE : 0 ),
@@ -128,10 +128,10 @@ public class PrimitiveTooltip extends PrimitivePopup {
                 .setX( isWest ? TRIANGLE_SIZE : 0 )
                 .setY( isWest ? 0 : TRIANGLE_SIZE)
                 .setCornerRadius( 10 )
-                .setFillColor( ColorName.LIGHTGREY )
+                .setFillColor( BG_COLOR )
                 .setFillAlpha( ALPHA )
-                .setStrokeAlpha( 0 );
-                //.setShadow(SHADOW);
+                .setStrokeAlpha( 0 )
+                .setCornerRadius( 5 );
 
         final Group decorator = new Group();
         decorator.add(rectangle);

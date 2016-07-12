@@ -89,5 +89,27 @@ public class AnimationProperties {
         }
 
     }
+
+    public static final class FONT_SIZE extends org.wirez.core.client.shape.view.animation.AbstractAnimationProperty<Double> {
+
+        public FONT_SIZE() {
+        }
+
+        public FONT_SIZE(final Double value) {
+            super(value);
+        }
+
+    }
+
+    public static final class FONT_ALPHA extends org.wirez.core.client.shape.view.animation.AbstractAnimationProperty<Double> {
+
+        public FONT_ALPHA() {
+        }
+
+        public FONT_ALPHA(final Double value) {
+            super(value);
+        }
+
+    }
     
 }

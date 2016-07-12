@@ -7,11 +7,13 @@ import org.wirez.core.client.components.toolbox.event.ToolboxButtonEventHandler;
 public class LienzoToolboxButton implements ToolboxButton<IPrimitive<?>> {
 
     private final IPrimitive<?> icon;
+
     private ToolboxButtonEventHandler clickHandler;
     private ToolboxButtonEventHandler dragHandler;
     private ToolboxButtonEventHandler mouseEnterHandler;
     private ToolboxButtonEventHandler mouseExitHandler;
-    
+    private HoverAnimation animation;
+
     public LienzoToolboxButton( final IPrimitive<?> icon ) {
         this.icon = icon;
     }
@@ -19,6 +21,11 @@ public class LienzoToolboxButton implements ToolboxButton<IPrimitive<?>> {
     @Override
     public IPrimitive<?> getIcon() {
         return icon;
+    }
+
+    @Override
+    public HoverAnimation getAnimation() {
+        return animation;
     }
 
     @Override
@@ -41,7 +48,12 @@ public class LienzoToolboxButton implements ToolboxButton<IPrimitive<?>> {
         return mouseExitHandler;
     }
 
-    public LienzoToolboxButton setClickHandler(ToolboxButtonEventHandler clickHandler) {
+    public LienzoToolboxButton setAnimation( final HoverAnimation animation ) {
+        this.animation = animation;
+        return this;
+    }
+
+    public LienzoToolboxButton setClickHandler( final ToolboxButtonEventHandler clickHandler) {
         this.clickHandler = clickHandler;
         return this;
     }

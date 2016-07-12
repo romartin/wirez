@@ -2,6 +2,7 @@ package org.wirez.client.lienzo.canvas.controls.toolbox.command.palette;
 
 import com.ait.lienzo.client.core.shape.Shape;
 import org.wirez.client.lienzo.LienzoLayer;
+import org.wirez.client.lienzo.components.palette.AbstractLienzoGlyphItemsPalette;
 import org.wirez.client.lienzo.components.palette.LienzoGlyphsHoverPalette;
 import org.wirez.client.lienzo.components.palette.LienzoPalette;
 import org.wirez.client.lienzo.util.SVGUtils;
@@ -20,6 +21,7 @@ import org.wirez.core.lookup.util.CommonLookups;
 
 import javax.annotation.PostConstruct;
 
+/// Abstract for not being discovered by the CDI environment, for now...
 public abstract class LienzoNewPaletteNodeToolboxCommand extends NewPaletteNodeCommand<Shape<?>> {
     
     public LienzoNewPaletteNodeToolboxCommand(final ClientFactoryServices clientFactoryServices,
@@ -46,6 +48,9 @@ public abstract class LienzoNewPaletteNodeToolboxCommand extends NewPaletteNodeC
                 .setIconSize( 15 )
                 .setPadding( 5 )
                 .setLayout(LienzoPalette.Layout.VERTICAL );
+
+        ( (AbstractLienzoGlyphItemsPalette ) getLienzoPalette()).getDefinitionGlyphTooltip().setPrefix( "Create a new " );
+
     }
 
     @Override

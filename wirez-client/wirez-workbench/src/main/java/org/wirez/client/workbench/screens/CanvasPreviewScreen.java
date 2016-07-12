@@ -25,8 +25,12 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.canvas.preview.CanvasPreview;
+import org.wirez.client.workbench.perspectives.WirezPerspective;
+import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.session.event.SessionDisposedEvent;
+import org.wirez.core.client.session.event.SessionOpenedEvent;
 import org.wirez.core.client.session.event.SessionPausedEvent;
+import org.wirez.core.client.session.event.SessionResumedEvent;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -40,12 +44,11 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 public class CanvasPreviewScreen {
 
     public static final String SCREEN_ID = "CanvasPreviewScreen";
+    public static final int WIDTH = WirezPerspective.EAST_PANEL_WIDTH;
+    public static final int HEIGHT = 200;
 
     @Inject
     CanvasPreview canvasPreview;
-    
-    @Inject
-    ErrorPopupPresenter errorPopupPresenter;
     
     private PlaceRequest placeRequest;
     
@@ -66,17 +69,25 @@ public class CanvasPreviewScreen {
 
     @OnClose
     public void onClose() {
-        canvasPreview.clear();
+        clear();
     }
 
+
+    public void show( final Canvas canvas ) {
+
+        canvasPreview.show( canvas, WIDTH, HEIGHT );
+
+    }
+
+    public void clear() {
+
+        canvasPreview.clear();
+
+    }
 
     @WorkbenchMenu
     public Menus getMenu() {
         return null;
-    }
-
-    private void showError(final String message) {
-        errorPopupPresenter.showMessage(message);
     }
 
     @WorkbenchPartTitle
@@ -94,18 +105,24 @@ public class CanvasPreviewScreen {
         return "CanvasPreviewScreenContext";
     }
 
+    void onCanvasSessionOpened(@Observes SessionOpenedEvent sessionOpenedEvent) {
+        checkNotNull("sessionOpenedEvent", sessionOpenedEvent);
+        show( sessionOpenedEvent.getSession().getCanvas() );
+    }
+
+    void onCanvasSessionResumed(@Observes SessionResumedEvent sessionResumedEvent) {
+        checkNotNull("sessionResumedEvent", sessionResumedEvent);
+        show( sessionResumedEvent.getSession().getCanvas() );
+    }
+
     void onCanvasSessionDisposed(@Observes SessionDisposedEvent sessionDisposedEvent) {
         checkNotNull("sessionDisposedEvent", sessionDisposedEvent);
-        doCloseSession();
+        clear();
     }
 
     void onCanvasSessionPaused(@Observes SessionPausedEvent sessionPausedEvent) {
         checkNotNull("sessionPausedEvent", sessionPausedEvent);
-        doCloseSession();
+        clear();
     }
 
-    private void doCloseSession() {
-        canvasPreview.clear();
-    }
-    
 }

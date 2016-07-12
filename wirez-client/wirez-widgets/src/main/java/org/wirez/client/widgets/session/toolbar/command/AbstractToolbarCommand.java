@@ -26,7 +26,7 @@ public abstract class AbstractToolbarCommand<S extends CanvasSession> implements
     }
     
     @Override
-    public void initialize(final S session) {
+    public void initialize( final S session ) {
         this.session = session;
     }
 

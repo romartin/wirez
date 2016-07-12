@@ -10,6 +10,7 @@ import org.wirez.core.client.components.toolbox.event.ToolboxButtonEventHandler;
 public class LienzoToolboxButtonBuilder implements ToolboxButtonBuilder<IPrimitive<?>> {
 
     private IPrimitive<?> icon;
+    private ToolboxButton.HoverAnimation animation;
     private ToolboxButtonEventHandler clickHandler;
     private ToolboxButtonEventHandler dragEndHandler;
     private ToolboxButtonEventHandler mouseEnterHandler;
@@ -18,6 +19,12 @@ public class LienzoToolboxButtonBuilder implements ToolboxButtonBuilder<IPrimiti
     @Override
     public ToolboxButtonBuilder<IPrimitive<?>> setIcon( final IPrimitive<?> icon ) {
         this.icon = icon;
+        return this;
+    }
+
+    @Override
+    public ToolboxButtonBuilder<IPrimitive<?>> setHoverAnimation( ToolboxButton.HoverAnimation animation ) {
+        this.animation = animation;
         return this;
     }
 
@@ -48,6 +55,7 @@ public class LienzoToolboxButtonBuilder implements ToolboxButtonBuilder<IPrimiti
     @Override
     public ToolboxButton<IPrimitive<?>> build() {
         return new LienzoToolboxButton( icon )
+                .setAnimation( animation )
                 .setClickHandler( clickHandler )
                 .setDragHandler( dragEndHandler )
                 .setMouseEnterHandler( mouseEnterHandler )

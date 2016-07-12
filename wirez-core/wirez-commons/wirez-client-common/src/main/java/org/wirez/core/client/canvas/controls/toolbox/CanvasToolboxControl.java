@@ -25,6 +25,8 @@ import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerRegistrationCo
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.controls.toolbox.command.ContextImpl;
 import org.wirez.core.client.canvas.controls.toolbox.command.ToolboxCommand;
+import org.wirez.core.client.canvas.event.selection.CanvasClearSelectionEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.components.toolbox.Toolbox;
 import org.wirez.core.client.components.toolbox.ToolboxButton;
 import org.wirez.core.client.components.toolbox.ToolboxButtonGrid;
@@ -37,42 +39,47 @@ import org.wirez.core.client.shape.Shape;
 import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.*;
+
+import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @Dependent
 public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationControl 
         implements ToolboxControl<AbstractCanvasHandler, Element>, IsWidget {
 
-    public interface View extends IsWidget{
+    public interface View extends IsWidget {
 
-        View addWidget(IsWidget widget);
+        View addWidget( IsWidget widget );
 
         View clear();
 
     }
 
-    private final Map<String, List<Toolbox>> toolboxMap = new HashMap<>();
     SyncBeanManager beanManager;
     ToolboxFactory toolboxFactory;
     View view;
+    private final Map<String, List<Toolbox>> toolboxMap = new HashMap<>();
+    private String currentToolboxUUID;
 
     @Inject
-    public CanvasToolboxControl(final SyncBeanManager beanManager, 
-                                final ToolboxFactory toolboxFactory,
-                                final View view) {
+    public CanvasToolboxControl( final SyncBeanManager beanManager,
+                                 final ToolboxFactory toolboxFactory,
+                                 final View view ) {
         this.beanManager = beanManager;
         this.toolboxFactory = toolboxFactory;
         this.view = view;
+        this.currentToolboxUUID = null;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     protected List<ToolboxControlProvider<AbstractCanvasHandler, Element>> getToolboxProviders( final Element element ) {
 
-        if ( element.getContent() instanceof org.wirez.core.graph.content.view.View) {
+        if ( element.getContent() instanceof org.wirez.core.graph.content.view.View ) {
 
             final org.wirez.core.graph.content.view.View viewContent =
-                    (org.wirez.core.graph.content.view.View) element.getContent();
+                    ( org.wirez.core.graph.content.view.View ) element.getContent();
 
             final List<ToolboxControlProvider<AbstractCanvasHandler, Element>> result = new LinkedList<>();
 
@@ -80,11 +87,11 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
             final Collection<SyncBeanDef<ToolboxControlProvider>> beanDefSets =
                     beanManager.lookupBeans( ToolboxControlProvider.class );
 
-            for (SyncBeanDef<ToolboxControlProvider> providersSet : beanDefSets) {
+            for ( SyncBeanDef<ToolboxControlProvider> providersSet : beanDefSets ) {
 
                 final Object definition = viewContent.getDefinition();
 
-                final ToolboxControlProvider<AbstractCanvasHandler, Element> toolboxProvider  = providersSet.newInstance();
+                final ToolboxControlProvider<AbstractCanvasHandler, Element> toolboxProvider = providersSet.newInstance();
 
                 if ( toolboxProvider.supports( definition ) ) {
 
@@ -103,15 +110,15 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
     }
 
     @Override
-    public void enable(final AbstractCanvasHandler canvasHandler) {
+    public void enable( final AbstractCanvasHandler canvasHandler ) {
         // Add the control view.
         canvasHandler.getCanvas().addControl( CanvasToolboxControl.this.asWidget() );
         super.enable( canvasHandler );
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void register(final Element element) {
+    @SuppressWarnings( "unchecked" )
+    public void register( final Element element ) {
 
         final Shape shape = canvasHandler.getCanvas().getShape( element.getUUID() );
 
@@ -128,7 +135,7 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
                     if ( null != commands && !commands.isEmpty() ) {
 
                         final ToolboxBuilder<?, ToolboxButtonGrid, ?> toolboxBuilder =
-                                (ToolboxBuilder<?, ToolboxButtonGrid, ?>) toolboxFactory.toolboxBuilder();
+                                ( ToolboxBuilder<?, ToolboxButtonGrid, ?> ) toolboxFactory.toolboxBuilder();
 
                         final ToolboxButtonGrid grid = toolboxControlProvider.getGrid( canvasHandler, element );
                         toolboxBuilder.forView( shape.getShapeView() );
@@ -136,17 +143,18 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
                         toolboxBuilder.grid( grid );
 
                         final ToolboxButtonBuilder<Object> buttonBuilder =
-                                (ToolboxButtonBuilder<Object>) toolboxFactory.toolboxButtonBuilder();
+                                ( ToolboxButtonBuilder<Object> ) toolboxFactory.toolboxButtonBuilder();
 
-                        for (final ToolboxCommand<?, ?> command : commands) {
+                        for ( final ToolboxCommand<?, ?> command : commands ) {
 
                             // TODO: Use command title (tooltip).
 
-                            final ToolboxButton button = buttonBuilder.setIcon( command.getIcon( grid.getButtonSize() , grid.getButtonSize()) )
-                                    .setClickHandler(event -> fireCommandExecution( element, command, event, Context.Event.CLICK) )
-                                    .setMouseEnterHandler(event -> fireCommandExecution( element, command, event, Context.Event.MOUSE_ENTER) )
-                                    .setMouseExitHandler(event -> fireCommandExecution( element, command, event, Context.Event.MOUSE_EXIT) )
-                                    .setDragEndHandler(event -> fireCommandExecution( element, command, event, Context.Event.DRAG) )
+                            final ToolboxButton button = buttonBuilder.setIcon( command.getIcon( grid.getButtonSize(), grid.getButtonSize() ) )
+                                    .setClickHandler( event -> fireCommandExecution( element, command, event, Context.Event.CLICK ) )
+                                    .setMouseEnterHandler( event -> fireCommandExecution( element, command, event, Context.Event.MOUSE_ENTER ) )
+                                    .setMouseExitHandler( event -> fireCommandExecution( element, command, event, Context.Event.MOUSE_EXIT ) )
+                                    .setDragEndHandler( event -> fireCommandExecution( element, command, event, Context.Event.DRAG ) )
+                                    .setHoverAnimation( command.getButtonAnimation() )
                                     .build();
 
                             toolboxBuilder.add( button );
@@ -164,7 +172,7 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
             }
 
         }
-            
+
     }
 
     private void addToolbox( final String uuid,
@@ -178,6 +186,8 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
 
                 toolboxes = new LinkedList<>();
 
+                toolboxMap.put( uuid, toolboxes );
+
             }
 
             toolboxes.add( toolbox );
@@ -185,28 +195,34 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
 
     }
 
-    @SuppressWarnings("unchecked")
-    private void fireCommandExecution(final Element element,
-                                      final ToolboxCommand command,
-                                      final ToolboxButtonEvent event,
-                                      final Context.Event eventType ) {
-        
+    @SuppressWarnings( "unchecked" )
+    private void fireCommandExecution( final Element element,
+                                       final ToolboxCommand command,
+                                       final ToolboxButtonEvent event,
+                                       final Context.Event eventType ) {
+
         Context _context = new ContextImpl( canvasHandler,
                 eventType,
                 event.getX(),
                 event.getY(),
                 event.getClientX(),
                 event.getClientY() );
-        
-        setCommandView( command ).execute(_context, element);
-        
+
+        setCommandView( command ).execute( _context, element );
+
     }
 
     @Override
-    public void deregister(final Element element) {
+    public void deregister( final Element element ) {
 
-        final List<Toolbox> toolboxes = toolboxMap.get( element.getUUID() );
-        
+        this.deregister( element.getUUID() );
+
+    }
+
+    private void deregister( final String uuid ) {
+
+        final List<Toolbox> toolboxes = toolboxMap.get( uuid );
+
         if ( null != toolboxes && !toolboxes.isEmpty() ) {
 
             for ( final Toolbox toolbox : toolboxes ) {
@@ -215,8 +231,30 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
 
             }
 
+            toolboxMap.remove( uuid );
+
         }
-        
+
+    }
+
+    @Override
+    protected void deregisterAll() {
+
+        super.deregisterAll();
+
+        final Collection<List<Toolbox>> allToolboxes = toolboxMap.values();
+
+        for( final List<Toolbox> toolboxes : allToolboxes ) {
+
+            for ( final Toolbox toolbox : toolboxes ) {
+
+                toolbox.remove();
+            }
+
+        }
+
+        toolboxMap.clear();
+
     }
 
     @Override
@@ -250,7 +288,7 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
 
         if ( command instanceof IsWidget ) {
 
-            view.addWidget( ((IsWidget) command).asWidget() );
+            view.addWidget( ( ( IsWidget ) command ).asWidget() );
         }
 
         return command;
@@ -259,6 +297,88 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
     @Override
     public Widget asWidget() {
         return view.asWidget();
+    }
+
+    void onCanvasElementSelectedEvent( @Observes CanvasElementSelectedEvent event ) {
+        checkNotNull( "event", event );
+
+        if ( checkEventContext(event) ) {
+
+            final String uuid = event.getElementUUID();
+
+            if ( null != uuid ) {
+
+                switchVisibility( uuid );
+
+            }
+
+        }
+
+    }
+
+    void CanvasClearSelectionEvent( @Observes CanvasClearSelectionEvent event ) {
+        checkNotNull( "event", event );
+
+        if ( null != this.currentToolboxUUID ) {
+
+            setVisibile( this.currentToolboxUUID, false );
+
+            this.currentToolboxUUID = null;
+
+        }
+
+    }
+
+    private boolean isVisible( final String uuid ) {
+        return currentToolboxUUID != null && currentToolboxUUID.equals( uuid );
+    }
+
+    private void switchVisibility( final String uuid ) {
+
+        if ( isVisible( uuid ) ) {
+
+            setVisibile( this.currentToolboxUUID, false );
+
+            this.currentToolboxUUID = null;
+
+        } else {
+
+            if ( null != this.currentToolboxUUID ) {
+
+                setVisibile( this.currentToolboxUUID, false );
+
+            }
+
+            setVisibile( uuid, true );
+
+            this.currentToolboxUUID = uuid;
+
+        }
+
+    }
+
+    private void setVisibile( final String uuid, final boolean visible ) {
+
+        final List<Toolbox> toolboxes = toolboxMap.get( uuid );
+
+        if ( null != toolboxes ) {
+
+            for ( final Toolbox toolbox : toolboxes ) {
+
+                if ( visible ) {
+
+                    toolbox.show();
+
+                } else {
+
+                    toolbox.hide();
+
+                }
+
+            }
+
+        }
+
     }
 
 }

@@ -1,8 +1,8 @@
 package org.wirez.lienzo.toolbox.builder;
 
 
-import org.wirez.lienzo.toolbox.HoverToolbox;
+import org.wirez.lienzo.toolbox.grid.GridToolbox;
 
 interface Register {
-    HoverToolbox register();
+    GridToolbox register();
 }

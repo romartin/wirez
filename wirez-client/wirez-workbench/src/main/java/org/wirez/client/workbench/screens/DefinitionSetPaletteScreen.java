@@ -29,6 +29,7 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.palette.DefinitionSetPaletteWidget;
+import org.wirez.client.workbench.perspectives.WirezPerspective;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -57,7 +58,9 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 public class DefinitionSetPaletteScreen {
 
     public static final String SCREEN_ID = "DefinitionSetPaletteScreen";
-    public static final int WIDTH = 75;
+    public static final int WIDTH = WirezPerspective.WEST_PANEL_WIDTH;
+    public static final int MARGIN_TOP = 40;
+    public static final String BACKGROUND_COLOR = "#D3D3D3";
 
     @Inject
     DefinitionSetPaletteWidget paletteWiget;
@@ -85,11 +88,6 @@ public class DefinitionSetPaletteScreen {
     private CanvasHandler canvasHandler;
     private Menus menu = null;
 
-    
-    @PostConstruct
-    public void init() {
-    }
-
     private Menus makeMenuBar() {
         return MenuFactory
                 .newTopLevelMenu("Col")
@@ -102,19 +100,11 @@ public class DefinitionSetPaletteScreen {
     }
 
     private Command getCollapseCommand() {
-        return new Command() {
-            public void execute() {
-                paletteWiget.collapse();
-            }
-        };
+        return () -> paletteWiget.collapse();
     }
 
     private Command getExpandCommand() {
-        return new Command() {
-            public void execute() {
-                paletteWiget.expand();
-            }
-        };
+        return () -> paletteWiget.expand();
     }
 
     @OnStartup
@@ -122,8 +112,11 @@ public class DefinitionSetPaletteScreen {
         this.placeRequest = placeRequest;
         // this.menu = makeMenuBar();
         this.shapeSetId = placeRequest.getParameter( "shapeSetId", "" );
-        // paletteWiget.setMaxWidth( WIDTH );
         paletteWiget.setMaxWidth( 300 );
+        paletteWiget.getView().setMarginTop( MARGIN_TOP );
+        paletteWiget.getView().setBackgroundColor( BACKGROUND_COLOR );
+        paletteWiget.getView().showEmptyView( true );
+
         open();
     }
     

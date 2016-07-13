@@ -2,7 +2,6 @@ package org.wirez.core.client.components.palette.model.definition.impl;
 
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.client.components.palette.model.AbstractPaletteDefinitionBuilder;
-import org.wirez.core.client.components.palette.model.PaletteItemBuilder;
 import org.wirez.core.client.components.palette.model.definition.DefinitionPaletteCategory;
 import org.wirez.core.client.components.palette.model.definition.DefinitionSetPalette;
 import org.wirez.core.client.components.palette.model.definition.DefinitionSetPaletteBuilder;
@@ -33,6 +32,9 @@ public class DefinitionSetPaletteBuilderImpl
     DefinitionUtils definitionUtils;
     ClientFactoryServices clientFactoryServices;
 
+    private PaletteCategoryProvider paletteCategoryProvider;
+    private PaletteMorphGroupProvider paletteMorphGroupProvider;
+
     protected DefinitionSetPaletteBuilderImpl() {
         this( null, null );
     }
@@ -43,6 +45,8 @@ public class DefinitionSetPaletteBuilderImpl
 
         this.definitionUtils = definitionUtils;
         this.clientFactoryServices = clientFactoryServices;
+        this.paletteCategoryProvider = CATEGORY_PROVIDER;
+        this.paletteMorphGroupProvider = MORPH_GROUP_PROVIDER;
     }
 
     public void build( final Object definitionSet,
@@ -50,6 +54,8 @@ public class DefinitionSetPaletteBuilderImpl
 
         final Object definitionSetObject = definitionSet instanceof String ?
                 getDefinitionManager().getDefinitionSet( (String) definitionSet ) : definitionSet;
+
+        final String defSetId = definitionUtils.getDefinitionSetId( definitionSetObject );
 
         final Collection<String> definitions =
                 getDefinitionManager().getDefinitionSetAdapter( definitionSetObject.getClass() ).getDefinitions( definitionSetObject );
@@ -80,9 +86,9 @@ public class DefinitionSetPaletteBuilderImpl
 
                                 categoryGroupBuilder =
                                         new DefinitionPaletteCategoryImpl.DefinitionPaletteCategoryBuilder( categoryId )
-                                                .title( category )
-                                                .tooltip( category )
-                                                .description( category );
+                                                .title( paletteCategoryProvider.getTitle( categoryId ) )
+                                                .tooltip( paletteCategoryProvider.getTitle( categoryId ) )
+                                                .description( paletteCategoryProvider.getDescription( categoryId ) );
 
                                 categoryBuilders.add( categoryGroupBuilder );
                             }
@@ -116,9 +122,9 @@ public class DefinitionSetPaletteBuilderImpl
                                     morphGroupBuilder =
                                             new DefinitionPaletteGroupImpl.DefinitionPaletteGroupBuilder( morphBaseId )
                                                     .definitionId( morphDefault )
-                                                    .title( morphTitle )
-                                                    .description( morphBase )
-                                                    .tooltip( morphBase );
+                                                    .title( paletteMorphGroupProvider.getTitle( morphBase, morphDefinition ) )
+                                                    .description( paletteMorphGroupProvider.getDescription( morphBase, morphDefinition ) )
+                                                    .tooltip( paletteMorphGroupProvider.getTitle( morphBase, morphDefinition ) );
 
                                     categoryGroupBuilder.addItem( morphGroupBuilder );
 
@@ -182,7 +188,7 @@ public class DefinitionSetPaletteBuilderImpl
 
                 }
 
-                final DefinitionSetPaletteImpl definitionPalette = new DefinitionSetPaletteImpl( categories );
+                final DefinitionSetPaletteImpl definitionPalette = new DefinitionSetPaletteImpl( categories, defSetId );
 
                 callback.onSuccess( definitionPalette );
 
@@ -201,6 +207,36 @@ public class DefinitionSetPaletteBuilderImpl
 
     }
 
+    static final PaletteCategoryProvider CATEGORY_PROVIDER = new PaletteCategoryProvider() {
+
+        @Override
+        public String getTitle( final String id ) {
+            return id;
+        }
+
+        @Override
+        public String getDescription( final String id ) {
+            return id;
+        }
+
+    };
+
+    static final PaletteMorphGroupProvider MORPH_GROUP_PROVIDER = new PaletteMorphGroupProvider() {
+
+        @Override
+        public String getTitle( final String morphBaseId,
+                                final Object definition ) {
+
+            return morphBaseId;
+        }
+
+        @Override
+        public String getDescription( final String morphBaseId,
+                                      final Object definition ) {
+            return morphBaseId;
+        }
+
+    };
 
     protected DefinitionManager getDefinitionManager() {
 
@@ -208,5 +244,17 @@ public class DefinitionSetPaletteBuilderImpl
 
     }
 
+
+    @Override
+    public DefinitionSetPaletteBuilder setCategoryProvider( final PaletteCategoryProvider categoryProvider ) {
+        this.paletteCategoryProvider = categoryProvider;
+        return this;
+    }
+
+    @Override
+    public DefinitionSetPaletteBuilder setMorphGroupProvider( final PaletteMorphGroupProvider groupProvider ) {
+        this.paletteMorphGroupProvider = groupProvider;
+        return this;
+    }
 
 }

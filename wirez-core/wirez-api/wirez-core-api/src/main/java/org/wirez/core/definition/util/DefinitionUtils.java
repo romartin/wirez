@@ -34,6 +34,14 @@ public class DefinitionUtils {
         this.factoryManager = factoryManager;
     }
 
+    public <T> String getDefinitionSetId( final T definitionSet ) {
+
+        final DefinitionSetAdapter<Object> adapter = definitionManager.getDefinitionSetAdapter( definitionSet.getClass() );
+
+        return adapter.getId( definitionSet );
+
+    }
+
     public <T> String getDefinitionId( final T definition ) {
         
         final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );

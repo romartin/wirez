@@ -1,7 +1,6 @@
-package org.wirez.client.widgets.palette.view;
+package org.wirez.client.widgets.palette.lienzo.view;
 
 import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -17,14 +16,16 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-@Dependent
-public class PaletteWidgetFloatingView extends AbstractPaletteWidgetView implements PaletteWidgetView {
+// TODO: Refactor using WidgetFloatingView.
 
-    interface ViewBinder extends UiBinder<Widget, PaletteWidgetFloatingView> {
+@Dependent
+public class LienzoPaletteWidgetFloatingView extends AbstractLienzoPaletteWidgetView {
+
+    interface ViewBinder extends UiBinder<Widget, LienzoPaletteWidgetFloatingView> {
 
     }
 
-    private static PaletteWidgetFloatingView.ViewBinder uiBinder = GWT.create( PaletteWidgetFloatingView.ViewBinder.class );
+    private static ViewBinder uiBinder = GWT.create( ViewBinder.class );
 
     private double x;
     private double y;
@@ -33,12 +34,12 @@ public class PaletteWidgetFloatingView extends AbstractPaletteWidgetView impleme
     @UiField
     SimplePanel mainPanel;
 
-    protected PaletteWidgetFloatingView() {
+    protected LienzoPaletteWidgetFloatingView() {
         this( null );
     }
 
     @Inject
-    public PaletteWidgetFloatingView(final ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler ) {
+    public LienzoPaletteWidgetFloatingView( final ShapeGlyphDragHandler<Group> shapeGlyphDragHandler ) {
         super( shapeGlyphDragHandler );
         this.attached = false;
     }
@@ -62,12 +63,12 @@ public class PaletteWidgetFloatingView extends AbstractPaletteWidgetView impleme
         detach();
     }
 
-    public PaletteWidgetFloatingView setX( final double x ) {
+    public LienzoPaletteWidgetFloatingView setX( final double x ) {
         this.x = x;
         return this;
     }
 
-    public PaletteWidgetFloatingView setY( final double y ) {
+    public LienzoPaletteWidgetFloatingView setY( final double y ) {
         this.y = y;
         return this;
     }

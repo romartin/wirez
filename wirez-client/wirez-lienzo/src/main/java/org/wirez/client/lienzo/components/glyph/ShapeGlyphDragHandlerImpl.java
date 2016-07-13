@@ -33,12 +33,15 @@ import javax.enterprise.context.Dependent;
 
 // TODO: Refactor implementing DragProxy<T>
 @Dependent
-public class ShapeGlyphDragHandlerImpl implements ShapeGlyphDragHandler<LienzoPanel, Group> {
+public class ShapeGlyphDragHandlerImpl implements ShapeGlyphDragHandler<Group> {
 
     private static final int ZINDEX = Integer.MAX_VALUE;
 
     @Override
-    public void show(LienzoPanel parentLienzoPanel, ShapeGlyph<Group> shapeGlyph, double x, double y, Callback<LienzoPanel> callback) {
+    public void show( final ShapeGlyph<Group> shapeGlyph,
+                      final double x,
+                      final double y,
+                      final Callback callback) {
 
         final double proxyWidth = shapeGlyph.getWidth();
         final double proxyHeight = shapeGlyph.getHeight();
@@ -53,7 +56,7 @@ public class ShapeGlyphDragHandlerImpl implements ShapeGlyphDragHandler<LienzoPa
         dragProxyPanel.add( dragProxyLayer );
         dragProxyLayer.batch();
 
-        setDragProxyPosition( parentLienzoPanel,
+        setDragProxyPosition(
                 dragProxyPanel,
                 proxyWidth,
                 proxyHeight,
@@ -64,17 +67,16 @@ public class ShapeGlyphDragHandlerImpl implements ShapeGlyphDragHandler<LienzoPa
         RootPanel.get().add( dragProxyPanel );
     }
     
-    private void setDragProxyPosition( final LienzoPanel dragProxyParentPanel,
-                                       final LienzoPanel dragProxyPanel,
+    private void setDragProxyPosition( final LienzoPanel dragProxyPanel,
                                        final double proxyWidth,
                                        final double proxyHeight,
                                        final double x,
                                        final double y) {
         Style style = dragProxyPanel.getElement().getStyle();
         style.setPosition( Style.Position.ABSOLUTE );
-        style.setLeft( dragProxyParentPanel.getAbsoluteLeft() + x - ( proxyWidth / 2 ),
+        style.setLeft( x - ( proxyWidth / 2 ),
                 Style.Unit.PX );
-        style.setTop( dragProxyParentPanel.getAbsoluteTop() + y - ( proxyHeight / 2 ),
+        style.setTop( y - ( proxyHeight / 2 ),
                 Style.Unit.PX );
         style.setZIndex( ZINDEX );
     }
@@ -94,7 +96,7 @@ public class ShapeGlyphDragHandlerImpl implements ShapeGlyphDragHandler<LienzoPa
                         Style.Unit.PX );
                 final double x = mouseMoveEvent.getX();
                 final double y = mouseMoveEvent.getY();
-                callback.onMove(floatingPanel, x, y);
+                callback.onMove( x, y);
             }
         }, MouseMoveEvent.getType() );
 
@@ -108,7 +110,7 @@ public class ShapeGlyphDragHandlerImpl implements ShapeGlyphDragHandler<LienzoPa
                 RootPanel.get().remove( floatingPanel );
                 final double x = mouseUpEvent.getX();
                 final double y = mouseUpEvent.getY();
-                callback.onComplete(floatingPanel, x, y);
+                callback.onComplete( x, y);
             }
         }, MouseUpEvent.getType() );
     }

@@ -16,6 +16,7 @@
 
   <modules>
     <module>wirez-lienzo-extensions</module>
+    <module>wirez-lienzo-palette-widgets</module>
   </modules>
 
 </project>

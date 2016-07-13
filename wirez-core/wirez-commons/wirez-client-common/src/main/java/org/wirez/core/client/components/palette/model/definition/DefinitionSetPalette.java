@@ -10,4 +10,5 @@ import org.wirez.core.client.components.palette.model.PaletteDefinition;
  */
 public interface DefinitionSetPalette extends PaletteDefinition<DefinitionPaletteCategory> {
 
+    String getDefinitionSetId();
 }

@@ -1,6 +1,5 @@
 package org.wirez.client.widgets.palette;
 
-import org.wirez.client.widgets.palette.view.PaletteWidgetView;
 import org.wirez.core.client.components.palette.model.PaletteDefinition;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
@@ -22,10 +21,6 @@ public interface PaletteWidget<D extends PaletteDefinition, V extends PaletteWid
     PaletteWidget<D, V> setMaxWidth( int maxWidth );
 
     PaletteWidget<D, V> setMaxHeight( int maxHeight );
-
-    PaletteWidget<D, V> expand();
-
-    PaletteWidget<D, V> collapse();
 
     void unbind();
 

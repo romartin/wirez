@@ -170,7 +170,6 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-client-api</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -182,7 +181,11 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-widgets-properties-editor-api</artifactId>
-      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-widgets-properties-editor-backend</artifactId>
     </dependency>
 
     <dependency>
@@ -347,6 +350,11 @@
       <groupId>org.wirez</groupId>
       <artifactId>wirez-widgets</artifactId>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-lienzo-palette-widgets</artifactId>
     </dependency>
 
     <dependency>
@@ -630,6 +638,7 @@
             <compileSourcesArtifact>org.wirez:wirez-shapes-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-lienzo-extensions</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-widgets</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-lienzo-palette-widgets</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-workbench</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-mobile</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-basicset-api</compileSourcesArtifact>

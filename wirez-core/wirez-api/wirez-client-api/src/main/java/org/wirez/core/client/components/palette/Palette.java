@@ -14,25 +14,25 @@ public interface Palette<I extends HasPaletteItems> {
 
     interface ItemHoverCallback {
 
-        boolean onItemHover( int pos, double mouseX, double mouseY, double itemX, double itemY );
+        boolean onItemHover( String id, double mouseX, double mouseY, double itemX, double itemY );
 
     }
 
     interface ItemOutCallback {
 
-        boolean onItemOut( int pos );
+        boolean onItemOut( String id );
 
     }
 
     interface ItemMouseDownCallback {
 
-        boolean onItemMouseDown( int pos, double mouseX, double mouseY, double itemX, double itemY );
+        boolean onItemMouseDown( String id, double mouseX, double mouseY, double itemX, double itemY );
 
     }
 
     interface ItemClickCallback {
 
-        boolean onItemClick( int pos, double mouseX, double mouseY, double itemX, double itemY );
+        boolean onItemClick( String id, double mouseX, double mouseY, double itemX, double itemY );
 
     }
 

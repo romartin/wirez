@@ -1,12 +1,10 @@
-package org.wirez.client.widgets.palette.impl;
+package org.wirez.client.widgets.palette.lienzo;
 
 import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.client.widget.LienzoPanel;
 import org.wirez.client.lienzo.components.palette.LienzoGlyphsPalette;
 import org.wirez.client.lienzo.components.palette.LienzoPalette;
 import org.wirez.client.widgets.palette.AbstractPaletteWidget;
-import org.wirez.client.widgets.palette.DefinitionsPaletteWidget;
-import org.wirez.client.widgets.palette.view.PaletteWidgetViewImpl;
+import org.wirez.client.widgets.palette.lienzo.view.LienzoPaletteWidgetViewImpl;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.components.glyph.ShapeGlyphDragHandler;
 import org.wirez.core.client.components.palette.model.definition.DefinitionPaletteItem;
@@ -21,26 +19,26 @@ import javax.inject.Inject;
  * Palette Widget that binds with a DefinitionsPalette definition..
  */
 @Dependent
-public class DefinitionsPaletteWidgetImpl
-        extends AbstractPaletteWidget<DefinitionsPalette, PaletteWidgetViewImpl>
-        implements DefinitionsPaletteWidget {
+public class LienzoDefinitionsPaletteWidgetImpl
+        extends AbstractPaletteWidget<DefinitionsPalette, LienzoPaletteWidgetViewImpl>
+        implements LienzoDefinitionsPaletteWidget {
 
     private static final int ICON_SIZE = 50;
     private static final int PADDING = 10;
 
     LienzoGlyphsPalette lienzoGlyphsPalette;
-    ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler;
+    ShapeGlyphDragHandler<Group> shapeGlyphDragHandler;
 
-    protected DefinitionsPaletteWidgetImpl() {
+    protected LienzoDefinitionsPaletteWidgetImpl() {
         this( null, null, null, null, null );
     }
 
     @Inject
-    public DefinitionsPaletteWidgetImpl(final ShapeManager shapeManager,
-                                        final ClientFactoryServices clientFactoryServices,
-                                        final LienzoGlyphsPalette lienzoGlyphsPalette,
-                                        final ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler,
-                                        final PaletteWidgetViewImpl view ) {
+    public LienzoDefinitionsPaletteWidgetImpl( final ShapeManager shapeManager,
+                                               final ClientFactoryServices clientFactoryServices,
+                                               final LienzoGlyphsPalette lienzoGlyphsPalette,
+                                               final ShapeGlyphDragHandler<Group> shapeGlyphDragHandler,
+                                               final LienzoPaletteWidgetViewImpl view ) {
         super( shapeManager, clientFactoryServices, view );
         this.lienzoGlyphsPalette = lienzoGlyphsPalette;
         this.shapeGlyphDragHandler = shapeGlyphDragHandler;
@@ -60,18 +58,16 @@ public class DefinitionsPaletteWidgetImpl
     }
 
     @Override
-    protected DefinitionsPaletteWidgetImpl bind() {
+    protected LienzoDefinitionsPaletteWidgetImpl bind() {
 
         lienzoGlyphsPalette.bind( paletteDefinition );
 
         // TODO: View's panel size.
         view.show( lienzoGlyphsPalette.getView(), maxWidth, 900 );
 
-        lienzoGlyphsPalette.onItemMouseDown((pos, mouseX, mouseY, itemX, itemY) -> {
+        lienzoGlyphsPalette.onItemMouseDown(( id, mouseX, mouseY, itemX, itemY) -> {
 
-            final DefinitionPaletteItem item = getItem( pos, paletteDefinition );
-
-            view.showDragProxy( item.getDefinitionId(), mouseX, mouseY );
+            view.showDragProxy( id, mouseX, mouseY );
 
             return true;
 
@@ -82,28 +78,14 @@ public class DefinitionsPaletteWidgetImpl
     }
 
     @Override
+    protected String getPaletteItemId( int index ) {
+        final DefinitionPaletteItem item = getItem( index, paletteDefinition );
+        return null != item ? item.getId() : null;
+    }
+
+    @Override
     public double getIconSize() {
         return ICON_SIZE;
-    }
-
-    @Override
-    public double getPadding() {
-        return PADDING;
-    }
-
-    @Override
-    protected void doExpandCollapse() {
-
-        if ( expanded ) {
-
-            lienzoGlyphsPalette.expand();
-
-        } else  {
-
-            lienzoGlyphsPalette.collapse();
-
-        }
-
     }
 
     protected DefinitionPaletteItem getItem(final int index, final DefinitionsPalette paletteDefinition ) {

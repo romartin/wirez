@@ -220,6 +220,19 @@
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-lienzo-palette-widgets</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.wirez</groupId>
+        <artifactId>wirez-lienzo-palette-widgets</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
       
       <!-- Wirez Default Sets-->
 

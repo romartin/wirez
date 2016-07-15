@@ -16,21 +16,38 @@
 
 package org.wirez.forms.client.fields.variablesEditor;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.livespark.formmodeler.renderer.client.rendering.FieldRenderer;
+import org.wirez.forms.client.fields.model.Variable;
+import org.wirez.forms.client.fields.model.VariableRow;
+import org.wirez.forms.client.fields.util.StringUtils;
+import org.wirez.forms.client.fields.widgets.ListBoxValues;
 import org.wirez.forms.model.VariablesEditorFieldDefinition;
 
 @Dependent
-public class VariablesEditorFieldRenderer extends FieldRenderer<VariablesEditorFieldDefinition> {
+public class VariablesEditorFieldRenderer extends FieldRenderer<VariablesEditorFieldDefinition>
+        implements VariablesEditorWidgetView.Presenter {
 
-    private VariablesEditorWidget variablesEditor;
+    private VariablesEditorWidgetView view;
+
+    private Variable.VariableType variableType = Variable.VariableType.PROCESS;
+
+    private List<String> dataTypes = new ArrayList<String>();
+
+    private List<String> dataTypeDisplayNames = new ArrayList<String>();
+
+    ListBoxValues dataTypeListBoxValues;
 
     @Inject
-    public VariablesEditorFieldRenderer( VariablesEditorWidget variablesEditor ) {
-        this.variablesEditor = variablesEditor;
+    public VariablesEditorFieldRenderer(VariablesEditorWidgetView variablesEditor) {
+        this.view = variablesEditor;
     }
 
     @Override
@@ -40,16 +57,132 @@ public class VariablesEditorFieldRenderer extends FieldRenderer<VariablesEditorF
 
     @Override
     public void initInputWidget() {
-
+        view.init(this);
     }
 
     @Override
     public IsWidget getInputWidget() {
-        return variablesEditor;
+        return (VariablesEditorWidgetViewImpl) view;
     }
 
     @Override
     public String getSupportedCode() {
         return VariablesEditorFieldDefinition.CODE;
     }
+
+    @Override
+    public void doSave() {
+        view.doSave();
+    }
+
+    @Override
+    public void addVariable() {
+        List<VariableRow> as = view.getVariableRows();
+        if (as.isEmpty()) {
+            view.setTableDisplayStyle();
+        }
+
+        VariableRow newVariable = new VariableRow();
+        newVariable.setVariableType(variableType);
+        as.add(newVariable);
+
+        VariableListItemWidgetView widget = view.getVariableWidget(view.getVariableRowsCount() - 1);
+        widget.setDataTypes(dataTypeListBoxValues);
+        widget.setParentWidget(this);
+        widget.addValueChangeHandler(new ValueChangeHandler<String>() {
+            @Override public void onValueChange(ValueChangeEvent<String> valueChangeEvent) {
+                doSave();
+            }
+        });
+
+    }
+
+    @Override
+    public void setDataTypes(List<String> dataTypes, List<String> dataTypeDisplayNames) {
+        this.dataTypes = dataTypes;
+        this.dataTypeDisplayNames = dataTypeDisplayNames;
+
+        dataTypeListBoxValues = new ListBoxValues(VariableListItemWidgetView.CUSTOM_PROMPT, "Edit" + " ", dataTypesTester());
+        dataTypeListBoxValues.addValues(dataTypeDisplayNames);
+
+        view.setVariablesDataTypes(dataTypeListBoxValues);
+    }
+
+    @Override
+    public List<VariableRow> deserializeVariables(String s) {
+        // TODO: use DataTypes to check for custom datatypes
+        List<VariableRow> variableRows = new ArrayList<VariableRow>();
+        if (s != null && !s.isEmpty()) {
+            String[] vs = s.split(",");
+            for (String v : vs) {
+                if (!v.isEmpty()) {
+                    Variable var = Variable.deserialize(v, Variable.VariableType.PROCESS);
+                    if (var != null && var.getName() != null && !var.getName().isEmpty()) {
+                        variableRows.add(new VariableRow(var));
+                    }
+                }
+            }
+        }
+
+//        List<VariableRow> variableRows = new ArrayList<VariableRow>();
+//        variableRows.add(new VariableRow(Variable.VariableType.PROCESS, "s1", "String", null));
+//        variableRows.add(new VariableRow(Variable.VariableType.PROCESS, "i1", "Integer", null));
+        return variableRows;
+    }
+
+    @Override
+    public String serializeVariables(List<VariableRow> variableRows) {
+        List<Variable> variables = new ArrayList<Variable>();
+        for (VariableRow row : variableRows) {
+            if (row.getName() != null && row.getName().length() > 0) {
+                variables.add(new Variable(row));
+            }
+        }
+        return StringUtils.getStringForList(variables);
+    }
+
+    /**
+     * Tests whether a Row name occurs more than once in the list of rows
+     * @param name
+     * @return
+     */
+    public boolean isDuplicateName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return false;
+        }
+        List<VariableRow> as = view.getVariableRows();
+        if (as != null && !as.isEmpty()) {
+            int nameCount = 0;
+            for (VariableRow row : as) {
+                if (name.trim().compareTo(row.getName()) == 0) {
+                    nameCount++;
+                    if (nameCount > 1) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void removeVariable(VariableRow variableRow) {
+        view.getVariableRows().remove(variableRow);
+        view.doSave();
+    }
+
+    @Override
+    public ListBoxValues.ValueTester dataTypesTester() {
+        return new ListBoxValues.ValueTester() {
+            public String getNonCustomValueForUserString(String userValue) {
+                // TODO
+                //if (variablesData != null) {
+                //    return variablesData.getDataTypeDisplayNameForUserString(userValue);
+                //} else {
+                //    return null;
+                //}
+                return null;
+            }
+        };
+    }
+
 }

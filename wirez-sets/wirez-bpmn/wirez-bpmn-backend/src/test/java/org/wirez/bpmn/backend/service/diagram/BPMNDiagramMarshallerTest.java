@@ -14,10 +14,12 @@ import org.wirez.bpmn.backend.marshall.json.builder.BPMNGraphObjectBuilderFactor
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
+import org.wirez.bpmn.definition.BPMNDiagram;
 import org.wirez.bpmn.definition.BusinessRuleTask;
 import org.wirez.bpmn.definition.NoneTask;
 import org.wirez.bpmn.definition.ScriptTask;
 import org.wirez.bpmn.definition.UserTask;
+import org.wirez.bpmn.definition.property.variables.Variables;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionAdapter;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionSetAdapter;
@@ -68,7 +70,8 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_LANES = "org/wirez/bpmn/backend/service/diagram/lanes.bpmn";
     protected static final String BPMN_BOUNDARY_EVENTS = "org/wirez/bpmn/backend/service/diagram/boundaryIntmEvent.bpmn";
     protected static final String BPMN_NOT_BOUNDARY_EVENTS = "org/wirez/bpmn/backend/service/diagram/notBoundaryIntmEvent.bpmn";
-    
+    protected static final String BPMN_PROCESSVARIABLES = "org/wirez/bpmn/backend/service/diagram/processVariables.bpmn";
+
     @Mock
     DefinitionManager definitionManager;
 
@@ -231,6 +234,21 @@ public class BPMNDiagramMarshallerTest {
 
     @Test
     @SuppressWarnings("unchecked")
+    public void testUnmarshallProcessVariables() throws Exception  {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_PROCESSVARIABLES);
+        assertDiagram( diagram, 8 );
+        assertEquals( "ProcessVariables", diagram.getSettings().getTitle() );
+        Node<? extends Definition, ? > diagramNode = diagram.getGraph().getNode("_luRBMdEjEeWXpsZ1tNStKQ");
+        assertTrue( diagramNode.getContent().getDefinition() instanceof BPMNDiagram);
+        BPMNDiagram bpmnDiagram = (BPMNDiagram)  diagramNode.getContent().getDefinition();
+        assertTrue( bpmnDiagram.getVariablesSet() != null);
+        assertTrue( bpmnDiagram.getVariablesSet().getVariables() != null);
+        Variables variables = bpmnDiagram.getVariablesSet().getVariables();
+        assertEquals(variables.getValue(), "employee:java.lang.String,reason:java.lang.String,performance:java.lang.String");
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
     public void testUmarshallNotBoundaryEvents() throws Exception  {
         Diagram<Graph, Settings> diagram = unmarshall( BPMN_NOT_BOUNDARY_EVENTS );
         assertEquals( "Not Boundary Event", diagram.getSettings().getTitle() );
@@ -325,6 +343,23 @@ public class BPMNDiagramMarshallerTest {
         String result = tested.marshall(diagram);
         assertDiagram( result, 1, 5, 3);
     }
+
+    @Test
+    public void testMarshallProcessVariables() throws Exception  {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_EVALUATION);
+        String result = tested.marshall(diagram);
+        assertDiagram( result, 1, 7, 7);
+
+        assertTrue(result.contains("<bpmn2:itemDefinition id=\"_employeeItem\" structureRef=\"java.lang.String\"/>"));
+        assertTrue(result.contains("<bpmn2:itemDefinition id=\"_reasonItem\" structureRef=\"java.lang.String\"/>"));
+        assertTrue(result.contains("<bpmn2:itemDefinition id=\"_performanceItem\" structureRef=\"java.lang.String\"/>"));
+
+        assertTrue(result.contains("<bpmn2:property id=\"employee\" itemSubjectRef=\"_employeeItem\"/>"));
+        assertTrue(result.contains("<bpmn2:property id=\"reason\" itemSubjectRef=\"_reasonItem\"/>"));
+        assertTrue(result.contains("<bpmn2:property id=\"performance\" itemSubjectRef=\"_performanceItem\"/>"));
+
+    }
+
 
     private void assertDiagram(String result, int diagramCount, int nodeCount, int edgeCount) {
         int d = count( result, "<bpmndi:BPMNDiagram" );

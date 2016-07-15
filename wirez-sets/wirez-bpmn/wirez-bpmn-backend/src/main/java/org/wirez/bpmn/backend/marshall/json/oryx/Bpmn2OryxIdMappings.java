@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.wirez.bpmn.definition.*;
 import org.wirez.bpmn.definition.property.general.Name;
 import org.wirez.bpmn.definition.property.task.TaskType;
+import org.wirez.bpmn.definition.property.variables.Variables;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
@@ -44,11 +45,12 @@ public class Bpmn2OryxIdMappings {
     private final Map<Class<?>, Map<Class<?>, String>> definitionMappings = new HashMap<Class<?>, Map<Class<?>, String>>() {{
         // Add here class <-> oryxId mappings just for a concrete definition (stencil), if any.
         
-        // The name property the diagram stencil is "processn".
-        put(BPMNDiagram.class, 
-                new HashMap<Class<?>, String>() {{ 
-                    put(Name.class, "processn");
-            }});
+        Map<Class<?>, String> diagramPropertiesMap = new HashMap<Class<?>, String>();
+        put(BPMNDiagram.class, diagramPropertiesMap);
+        // The name property in the diagram stencil is "processn".
+        diagramPropertiesMap.put(Name.class, "processn");
+        // The process variables property in the diagram stencil is "vardefs".
+        diagramPropertiesMap.put(Variables.class, "vardefs");
     }};
 
     protected Bpmn2OryxIdMappings() {

@@ -60,8 +60,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
 // TODO: Use Archillian to avoid all that CDI mockings. 
-// TODO: @RunWith(MockitoJUnitRunner.class)
-@Ignore
+@RunWith(MockitoJUnitRunner.class)
 public class BPMNDiagramMarshallerTest {
 
     protected static final String BPMN_BASIC = "org/wirez/bpmn/backend/service/diagram/basic.bpmn";
@@ -170,6 +169,8 @@ public class BPMNDiagramMarshallerTest {
         DoubleTypeSerializer doubleTypeSerializer = new DoubleTypeSerializer();
         IntegerTypeSerializer integerTypeSerializer = new IntegerTypeSerializer();
         EnumTypeSerializer enumTypeSerializer = new EnumTypeSerializer( definitionUtils );
+        AssignmentsTypeSerializer assignmentsTypeSerializer = new AssignmentsTypeSerializer();
+        VariablesTypeSerializer variablesTypeSerializer = new VariablesTypeSerializer();
         List<Bpmn2OryxPropertySerializer<?>> propertySerializers = new LinkedList<>();
         propertySerializers.add( stringTypeSerializer );
         propertySerializers.add( booleanTypeSerializer );
@@ -177,6 +178,8 @@ public class BPMNDiagramMarshallerTest {
         propertySerializers.add( doubleTypeSerializer );
         propertySerializers.add( integerTypeSerializer );
         propertySerializers.add( enumTypeSerializer );
+        propertySerializers.add( assignmentsTypeSerializer );
+        propertySerializers.add( variablesTypeSerializer );
         oryxPropertyManager = new Bpmn2OryxPropertyManager( propertySerializers );
         oryxManager = new Bpmn2OryxManager( oryxIdMappings, oryxPropertyManager );
         oryxManager.init();

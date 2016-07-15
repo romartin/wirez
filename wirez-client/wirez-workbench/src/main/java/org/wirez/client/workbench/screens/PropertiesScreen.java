@@ -48,6 +48,11 @@ import javax.inject.Inject;
 
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
+// ***************************************************************************************************************
+// This screen uses the "OLD" properties widget based on the UF properties editor - currently replaced
+// by FormsPropertiesScreen, which uses Livespark's forms.
+// ***************************************************************************************************************
+
 @Dependent
 @WorkbenchScreen(identifier = PropertiesScreen.SCREEN_ID )
 public class PropertiesScreen {

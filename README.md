@@ -5,13 +5,18 @@ A multi-purpose modelling tool based on [JBoss Uberfire](http://www.uberfirefram
 
 Building
 --------
-1.- Build the project from command line
-    
-    mvn clean install -DskipTests
 
-2.- Go to wirez-showcase subproject and execute
-    
-    mvn clean process-resources
+The project currently depends on Livespark's Forms modules, so you must previously clone and build locally [Livespark](https://github.com/droolsjbpm/livespark) as:
+
+	git clone https://github.com/droolsjbpm/livespark.git
+	cd livespark/
+	mvn clean install -DskipTests -Dgwt.compiler.skip=true
+
+Once you have Livespark artifacts in you local Maven repository, you can clone and build Stunner as:
+
+	git clone https://github.com/romartin/wirez.git
+	cd wirez/
+	mvn clean install -DskipTests
 
 Running the application
 -----------------------

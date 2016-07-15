@@ -100,7 +100,7 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
         final Set<?> properties = getProperties( pojo );
         if ( null != properties && !properties.isEmpty() ) {
             for (final Object property : properties) {
-                if ( getNamePropertyClass().equals( property.getClass() )) {
+                if ( getNamePropertyClass().equals( property.getClass() ) ) {
                     return property;
                 }
             }
@@ -137,22 +137,19 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
     @Override
     @SuppressWarnings("unchecked")
     public Class<? extends Element> getGraphElement( final Class<?> type ) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( type );
-        return getPropertyGraphElementFieldNames().get( clazz );
+        return getPropertyGraphElementFieldNames().get( type );
     }
 
     @Override
     public String getElementFactory( final Class<?> type ) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( type );
-        return getPropertyElementFactoryFieldNames().get( clazz );
+        return getPropertyElementFactoryFieldNames().get( type );
     }
 
     public boolean accepts( final Class<?> type ) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( type );
-        final boolean hasType = getPropertyCategoryFieldNames().containsKey( clazz );
+        final boolean hasType = getPropertyCategoryFieldNames().containsKey( type );
 
         // If not types found, check if it's a super type.
-        return hasType || baseTypes.values().contains( clazz );
+        return hasType || baseTypes.values().contains( type );
     }
 
     @Override

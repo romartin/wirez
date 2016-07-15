@@ -18,6 +18,7 @@ package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.definition.property.Radius;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
@@ -40,9 +41,11 @@ public abstract class BaseStartEvent implements BPMNDefinition {
     public static final transient String category = Categories.EVENTS;
 
     @PropertySet
+    @FieldDef( label = "BPMN General Settings")
     protected BPMNGeneral general;
 
     @PropertySet
+    @FieldDef( label = "Background Settings")
     protected BackgroundSet backgroundSet;
 
     @PropertySet
@@ -52,6 +55,7 @@ public abstract class BaseStartEvent implements BPMNDefinition {
     protected CatchEventAttributes catchEventAttributes;
 
     @Property
+    @FieldDef(label = "Radius", property = "value")
     protected Radius radius;
 
     @Labels

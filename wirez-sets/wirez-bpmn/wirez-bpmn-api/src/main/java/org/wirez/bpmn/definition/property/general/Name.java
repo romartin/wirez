@@ -16,6 +16,9 @@
 
 package org.wirez.bpmn.definition.property.general;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.BPMNProperty;
@@ -48,6 +51,8 @@ public class Name implements BPMNProperty {
     public static final transient String defaultValue = "My name";
 
     @Value
+    @NotNull
+    @NotEmpty
     private String value = defaultValue;
 
     public Name() {

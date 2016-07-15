@@ -48,6 +48,40 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Forms integration. -->
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-crud-component</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-processing-engine</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-dynamic-renderer-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-dynamic-renderer-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-dynamic-renderer-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Uberfire. -->
 
     <dependency>

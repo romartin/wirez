@@ -18,9 +18,12 @@ package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
+import org.livespark.formmodeler.metaModel.FieldDef;
+import org.livespark.formmodeler.metaModel.Slider;
 import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Width;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
+import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.*;
@@ -42,6 +45,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.validation.Valid;
 
 @Shape( factory = BasicShapesFactory.class, proxy = TaskShapeProxy.class )
 @MorphBase( defaultType = NoneTask.class, targets = { ReusableSubprocess.class } )
@@ -54,18 +58,33 @@ public abstract class BaseTask implements BPMNDefinition {
     public static final transient String description = "A task is a unit of work - the job to be performed";
 
     @PropertySet
+    @FieldDef( label = "General Settings", position = 0)
+    @Valid
     protected BPMNGeneral general;
 
     @PropertySet
+    @FieldDef( label = "Task Data", position = 1)
+    @Valid
+    protected DataIOSet dataIOSet;
+
+    @PropertySet
+    @FieldDef( label = "Background Settings", position = 2)
+    @Valid
     protected BackgroundSet backgroundSet;
 
     @PropertySet
     protected FontSet fontSet;
 
     @Property
+    @FieldDef(label = "Width", property = "value")
+    @Slider( min = 100.0, max = 300.0, step = 10.0, precision = 0.0 )
+    @Valid
     protected Width width;
 
     @Property
+    @FieldDef(label = "Height", property = "value")
+    @Slider( min = 40.0, max = 100.0, step = 5.0, precision = 0.0 )
+    @Valid
     protected Height height;
 
     @Property
@@ -78,29 +97,38 @@ public abstract class BaseTask implements BPMNDefinition {
     protected Mean mean;
 
     @Property
+    @FieldDef(label = "TimeUnit", property = "value")
+    @Valid
     protected TimeUnit timeUnit;
 
     @Property
+    @FieldDef(label = "Standard Deviation", property = "value")
     protected StandardDeviation standardDeviation;
 
     @Property
+    @FieldDef(label = "Distribution Type", property = "value")
     protected DistributionType distributionType;
 
     @Property
+    @FieldDef(label = "Quantity", property = "value")
     protected Quantity quantity;
 
     @Property
+    @FieldDef(label = "WorkingHours", property = "value")
     protected WorkingHours workingHours;
 
     @Property
+    @FieldDef(label = "UnitCost", property = "value")
     protected UnitCost unitCost;
 
     @Property
+    @FieldDef(label = "Currency", property = "value")
     protected Currency currency;
 
     @Property
+    @FieldDef(label = "Task Type", property = "value")
     @MorphProperty( binder = TaskTypeMorphPropertyBinding.class )
-    protected final TaskType taskType;
+    protected TaskType taskType;
 
     public static class TaskTypeMorphPropertyBinding implements MorphPropertyValueBinding<TaskType, TaskType.TaskTypes> {
 
@@ -148,12 +176,13 @@ public abstract class BaseTask implements BPMNDefinition {
         public static final String BORDER_COLOR = "#000000";
 
     }
-    
+
     protected BaseTask( final TaskType.TaskTypes type ) {
         this.taskType = new TaskType( type );
     }
-    
+
     public BaseTask(@MapsTo("general") BPMNGeneral general,
+                    @MapsTo("dataIOSet") DataIOSet dataIOSet,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
                     @MapsTo("width") Width width,
@@ -170,6 +199,7 @@ public abstract class BaseTask implements BPMNDefinition {
                     @MapsTo("currency") Currency currency,
                     @MapsTo("taskType") TaskType taskType ) {
         this.general = general;
+        this.dataIOSet = dataIOSet;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.width = width;
@@ -202,6 +232,10 @@ public abstract class BaseTask implements BPMNDefinition {
 
     public BPMNGeneral getGeneral() {
         return general;
+    }
+
+    public DataIOSet getDataIOSet() {
+        return dataIOSet;
     }
 
     public BackgroundSet getBackgroundSet() {
@@ -264,6 +298,10 @@ public abstract class BaseTask implements BPMNDefinition {
         this.general = general;
     }
 
+    public void setDataIOSet( DataIOSet dataIOSet ) {
+        this.dataIOSet = dataIOSet;
+    }
+
     public void setBackgroundSet( BackgroundSet backgroundSet ) {
         this.backgroundSet = backgroundSet;
     }
@@ -323,5 +361,8 @@ public abstract class BaseTask implements BPMNDefinition {
     public TaskType getTaskType() {
         return taskType;
     }
-    
+
+    public void setTaskType( TaskType taskType ) {
+        this.taskType = taskType;
+    }
 }

@@ -7,6 +7,7 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.property.Height;
 import org.wirez.bpmn.definition.property.Width;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
+import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.*;
@@ -38,6 +39,7 @@ public class ScriptTask extends BaseTask {
         @Override
         public ScriptTask build() {
             return new ScriptTask(new BPMNGeneral("Task"),
+                    new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
                     new FontSet(),
                     new Width(WIDTH),
@@ -63,6 +65,7 @@ public class ScriptTask extends BaseTask {
     }
 
     public ScriptTask(@MapsTo("general") BPMNGeneral general,
+                      @MapsTo("dataIOSet") DataIOSet dataIOSet,
                       @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                       @MapsTo("fontSet") FontSet fontSet,
                       @MapsTo("width") Width width,
@@ -80,7 +83,7 @@ public class ScriptTask extends BaseTask {
                       @MapsTo("taskType") TaskType taskType,
                       @MapsTo("script") Script script) {
         
-        super(general, backgroundSet, fontSet, width, height, min, max, mean, timeUnit, standardDeviation, 
+        super(general, dataIOSet, backgroundSet, fontSet, width, height, min, max, mean, timeUnit, standardDeviation,
                 distributionType, quantity, workingHours, unitCost, currency, taskType);
         this.script = script;
         

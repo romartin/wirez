@@ -39,15 +39,13 @@ class ClientBindableDefinitionSetAdapter extends AbstractClientBindableAdapter<O
 
     @Override
     public String getDomain(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        String n = clazz.getName();
+        String n = pojo.getClass().getName();
         return n.substring( n.lastIndexOf(".") + 1, n.length() );
     }
 
     @Override
     public String getDescription(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
@@ -57,22 +55,19 @@ class ClientBindableDefinitionSetAdapter extends AbstractClientBindableAdapter<O
 
     @Override
     public String getGraphFactory(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getGraphFactory().get( clazz );
+        return getGraphFactory().get( pojo.getClass() );
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public Class<? extends Graph> getGraph(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getGraphTypes().get( clazz );
+        return getGraphTypes().get( pojo.getClass() );
     }
 
     @Override
     public boolean accepts(final Class<?> pojoClass) {
         if ( null != propertyDescriptionFieldNames ) {
-            final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojoClass );
-            return getPropertyDescriptionFieldNames().containsKey( clazz );
+            return getPropertyDescriptionFieldNames().containsKey( pojoClass );
         }
         return false;
     }

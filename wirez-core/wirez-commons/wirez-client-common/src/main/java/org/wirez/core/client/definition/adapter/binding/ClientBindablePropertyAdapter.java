@@ -60,44 +60,37 @@ class ClientBindablePropertyAdapter extends AbstractClientBindableAdapter<Object
 
     @Override
     public PropertyType getType(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyTypeFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyTypeFieldNames().get( pojo.getClass() ) );
     }
     
     @Override
     public String getCaption(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyCaptionFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyCaptionFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
     public String getDescription(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
     public boolean isReadOnly(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyReadOnlyFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyReadOnlyFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
     public boolean isOptional(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyOptionalFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyOptionalFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
     public Object getValue(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyValueFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyValueFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
     public Object getDefaultValue(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyDefaultValueFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyDefaultValueFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
@@ -109,18 +102,14 @@ class ClientBindablePropertyAdapter extends AbstractClientBindableAdapter<Object
 
         }
 
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        
-        setProxiedValue( pojo, getPropertyValueFieldNames().get( clazz ), value );
+        setProxiedValue( pojo, getPropertyValueFieldNames().get( pojo.getClass() ), value );
         
     }
 
     @Override
     public Map<Object, String> getAllowedValues( final Object pojo ) {
         
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        
-        final Iterable<Object> result = getProxiedValue( pojo, getPropertyAllowedValuesFieldNames().get( clazz ) );
+        final Iterable<Object> result = getProxiedValue( pojo, getPropertyAllowedValuesFieldNames().get( pojo.getClass() ) );
         
         if ( null != result ) {
             
@@ -142,8 +131,7 @@ class ClientBindablePropertyAdapter extends AbstractClientBindableAdapter<Object
     @Override
     public boolean accepts(final Class<?> pojoClass ) {
         if ( null != propertyValueFieldNames ) {
-            final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojoClass );
-            return getPropertyValueFieldNames().containsKey(clazz);
+            return getPropertyValueFieldNames().containsKey( pojoClass );
         }
         return false;
     }

@@ -17,6 +17,8 @@
 package org.wirez.bpmn.definition;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
+import org.livespark.formmodeler.metaModel.FieldDef;
+import org.livespark.formmodeler.metaModel.Slider;
 import org.wirez.bpmn.definition.property.Radius;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
@@ -51,6 +53,8 @@ public abstract class BaseEndEvent implements BPMNDefinition {
     protected FontSet fontSet;
 
     @Property
+    @FieldDef(label = "Radius", property = "value")
+    @Slider( min = 25.0, max = 50.0, step = 1, precision = 0.0 )
     protected Radius radius;
 
     @Labels

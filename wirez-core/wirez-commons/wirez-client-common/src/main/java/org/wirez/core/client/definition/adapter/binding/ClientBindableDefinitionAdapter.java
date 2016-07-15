@@ -17,35 +17,29 @@ class ClientBindableDefinitionAdapter extends AbstractBindableDefinitionAdapter<
     }
 
     public String getCategory(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyCategoryFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyCategoryFieldNames().get( pojo.getClass() ) );
     }
 
     public String getTitle(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyTitleFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyTitleFieldNames().get( pojo.getClass() ) );
     }
 
     public String getDescription(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get( clazz ) );
+        return getProxiedValue( pojo, getPropertyDescriptionFieldNames().get( pojo.getClass() ) );
     }
 
     public Set<String> getLabels(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        final String fName = getPropertyLabelsFieldNames().get( clazz );
+        final String fName = getPropertyLabelsFieldNames().get( pojo.getClass() );
         return getProxiedValue( pojo, fName );
     }
 
     public Set<?> getPropertySets(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedSet( pojo, getPropertySetsFieldNames().get( clazz ) );
+        return getProxiedSet( pojo, getPropertySetsFieldNames().get( pojo.getClass() ) );
     }
 
     @Override
     protected Set<?> getBindProperties(final Object pojo) {
-        final Class<?> clazz = BindableAdapterUtils.handleBindableProxyClass( pojo.getClass() );
-        return getProxiedSet( pojo, getPropertiesFieldNames().get( clazz) );
+        return getProxiedSet( pojo, getPropertiesFieldNames().get( pojo.getClass()) );
     }
 
     private <T, R> R getProxiedValue(final T pojo, final String fieldName) {

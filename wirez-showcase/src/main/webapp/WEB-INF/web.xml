@@ -144,6 +144,16 @@
     </auth-constraint>
   </security-constraint>
 
+  <!-- public resources -->
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>public</web-resource-name>
+      <url-pattern>/org.wirez.WirezShowcase/css/*</url-pattern>
+      <url-pattern>/org.wirez.WirezShowcase/fonts/*</url-pattern>
+      <url-pattern>/org.wirez.WirezShowcase/img/*</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

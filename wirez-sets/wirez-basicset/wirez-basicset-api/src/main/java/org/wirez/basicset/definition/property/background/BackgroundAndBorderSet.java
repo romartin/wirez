@@ -3,9 +3,12 @@ package org.wirez.basicset.definition.property.background;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.core.definition.annotation.Name;
 import org.wirez.core.definition.annotation.propertyset.Property;
 import org.wirez.core.definition.annotation.propertyset.PropertySet;
+
+import javax.validation.Valid;
 
 @Portable
 @Bindable
@@ -16,12 +19,18 @@ public class BackgroundAndBorderSet {
     public static final transient String propertySetName = "Background And Borders";
 
     @Property
+    @FieldDef(label = "Background Color", property = "value")
+    @Valid
     private BgColor bgColor;
 
     @Property
+    @FieldDef(label = "Border Color", property = "value")
+    @Valid
     private BorderColor borderColor;
 
     @Property
+    @FieldDef(label = "Border Size", property = "value")
+    @Valid
     private BorderSize borderSize;
 
     public BackgroundAndBorderSet() {

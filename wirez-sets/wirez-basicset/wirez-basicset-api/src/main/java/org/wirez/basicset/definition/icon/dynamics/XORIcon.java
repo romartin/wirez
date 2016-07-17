@@ -20,6 +20,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.basicset.definition.Categories;
 import org.wirez.basicset.definition.property.Height;
 import org.wirez.basicset.definition.property.Name;
@@ -35,6 +36,8 @@ import org.wirez.shapes.factory.BasicShapesFactory;
 import java.util.HashSet;
 import java.util.Set;
 import org.wirez.core.definition.annotation.definition.*;
+
+import javax.validation.Valid;
 
 @Portable
 @Bindable
@@ -53,15 +56,23 @@ public class XORIcon implements DynamicIcon {
     public static final transient String description = "XOR Icon";
 
     @Property
+    @FieldDef( label = "Name", property = "value" )
+    @Valid
     private Name name;
 
     @PropertySet
+    @FieldDef( label = "Background and Borders", position = 0 )
+    @Valid
     private BackgroundAndBorderSet backgroundSet;
 
     @Property
+    @FieldDef( label = "Width", property = "value" )
+    @Valid
     private Width width;
 
     @Property
+    @FieldDef( label = "Height", property = "value" )
+    @Valid
     private Height height;
 
     @Labels

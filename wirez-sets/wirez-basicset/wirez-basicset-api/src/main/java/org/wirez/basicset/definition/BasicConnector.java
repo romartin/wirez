@@ -20,6 +20,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.basicset.definition.property.Name;
 import org.wirez.basicset.definition.property.background.BackgroundAndBorderSet;
 import org.wirez.basicset.shape.proxy.BasicConnectorProxy;
@@ -31,6 +32,7 @@ import org.wirez.core.graph.Edge;
 import org.wirez.core.rule.annotation.CanConnect;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,9 +53,13 @@ public class BasicConnector  {
     public static final transient String description = "A Basic Connector";
 
     @Property
+    @FieldDef( label = "Name", property = "value" )
+    @Valid
     private Name name;
 
     @PropertySet
+    @FieldDef( label = "Background and Borders", position = 0 )
+    @Valid
     private BackgroundAndBorderSet backgroundSet;
 
     @Labels

@@ -20,6 +20,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.basicset.definition.property.InnerRadius;
 import org.wirez.basicset.definition.property.Name;
 import org.wirez.basicset.definition.property.OuterRadius;
@@ -35,6 +36,9 @@ import org.wirez.shapes.factory.BasicShapesFactory;
 import java.util.HashSet;
 import java.util.Set;
 import org.wirez.core.definition.annotation.definition.*;
+
+import javax.validation.Valid;
+
 @Portable
 @Bindable
 @Definition( type = Node.class, builder = Ring.RingBuilder.class )
@@ -51,18 +55,28 @@ public class Ring {
     public static final transient String description = "A ring";
     
     @Property
+    @FieldDef( label = "Name", property = "value" )
+    @Valid
     private Name name;
 
     @PropertySet
+    @FieldDef( label = "Background and Borders", position = 0 )
+    @Valid
     private BackgroundAndBorderSet backgroundSet;
 
     @PropertySet
+    @FieldDef( label = "Font", position = 1 )
+    @Valid
     private FontSet fontSet;
 
     @Property
+    @FieldDef( label = "Outer Radius", property = "value" )
+    @Valid
     private OuterRadius outerRadius;
 
     @Property
+    @FieldDef( label = "Inner Radius", property = "value" )
+    @Valid
     private InnerRadius innerRadius;
 
     @Labels

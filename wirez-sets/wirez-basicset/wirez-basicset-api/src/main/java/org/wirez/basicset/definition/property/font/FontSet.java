@@ -3,9 +3,12 @@ package org.wirez.basicset.definition.property.font;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.core.definition.annotation.Name;
 import org.wirez.core.definition.annotation.propertyset.Property;
 import org.wirez.core.definition.annotation.propertyset.PropertySet;
+
+import javax.validation.Valid;
 
 @Portable
 @Bindable
@@ -16,15 +19,23 @@ public class FontSet {
     public static final transient String propertySetName = "Font";
 
     @Property
+    @FieldDef(label = "Font Family", property = "value")
+    @Valid
     private FontFamily fontFamily;
 
     @Property
+    @FieldDef(label = "Font Color", property = "value")
+    @Valid
     private FontColor fontColor;
 
     @Property
+    @FieldDef(label = "Font Size", property = "value")
+    @Valid
     private FontSize fontSize;
 
     @Property
+    @FieldDef(label = "Font Border Size", property = "value")
+    @Valid
     private FontBorderSize fontBorderSize;
 
     public FontSet() {

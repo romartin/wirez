@@ -20,6 +20,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.basicset.definition.property.Height;
 import org.wirez.basicset.definition.property.Name;
 import org.wirez.basicset.definition.property.Width;
@@ -35,6 +36,9 @@ import org.wirez.shapes.factory.BasicShapesFactory;
 import java.util.HashSet;
 import java.util.Set;
 import org.wirez.core.definition.annotation.definition.*;
+
+import javax.validation.Valid;
+
 @Portable
 @Bindable
 @Definition( type = Node.class, builder = Rectangle.RectangleBuilder.class )
@@ -51,18 +55,28 @@ public class Rectangle {
     public static final transient String description = "A rectangle";
     
     @Property
+    @FieldDef( label = "Name", property = "value" )
+    @Valid
     private Name name;
 
     @PropertySet
+    @FieldDef( label = "Background and Borders", position = 0 )
+    @Valid
     private BackgroundAndBorderSet backgroundSet;
 
     @PropertySet
+    @FieldDef( label = "Font", position = 1 )
+    @Valid
     private FontSet fontSet;
 
     @Property
+    @FieldDef( label = "Width", property = "value" )
+    @Valid
     private Width width;
 
     @Property
+    @FieldDef( label = "Height", property = "value" )
+    @Valid
     private Height height;
     
     @Labels

@@ -4,7 +4,7 @@ public interface PaletteDefinitionBuilder<T, P, E> {
 
     interface Callback<P, E> {
 
-        void onSuccess( P palette );
+        void onSuccess( P paletteDefinition );
 
         void onError( E error );
 

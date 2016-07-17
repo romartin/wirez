@@ -118,8 +118,21 @@ public abstract class AbstractLienzoGlyphItemsPalette<V extends LienzoPaletteVie
         return (List<GlyphPaletteItem>) paletteItems.getItems();
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
+    protected String getPaletteItemId( final int index ) {
 
+        final List<GlyphPaletteItem> items = getItems();
+
+        if ( null != items && items.size() > index ) {
+
+            return items.get( index ).getId();
+
+        }
+
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public double[] computePaletteSize() {
 

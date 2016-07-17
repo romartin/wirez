@@ -199,7 +199,7 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
         getPaletteView().clear();
     }
 
-    private boolean _onItemClick(final int index,
+    private boolean _onItemClick(final String id,
                                  final double mouseX,
                                  final double mouseY,
                                  final double itemX,
@@ -213,18 +213,15 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
 
 
     @SuppressWarnings("unchecked")
-    private boolean _onItemMouseDown(final int index,
+    private boolean _onItemMouseDown(final String id,
                                      final double mouseX,
                                      final double mouseY,
                                      final double itemX,
                                      final double itemY) {
 
-        final GlyphPaletteItem items = palette.getDefinition().getItems().get( index );
+        final ShapeFactory<?, ?, ?> factory = shapeManager.getFactory( id );
 
-        final String defId = items.getDefinitionId();
-        final ShapeFactory<?, ?, ?> factory = shapeManager.getFactory( defId );
-
-        onItemSelected( defId, factory, mouseX, mouseY );
+        onItemSelected( id, factory, mouseX, mouseY );
 
         return true;
     }

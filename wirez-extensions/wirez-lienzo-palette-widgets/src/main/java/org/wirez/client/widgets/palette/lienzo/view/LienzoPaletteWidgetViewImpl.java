@@ -1,7 +1,6 @@
-package org.wirez.client.widgets.palette.view;
+package org.wirez.client.widgets.palette.lienzo.view;
 
 import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -17,13 +16,13 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class PaletteWidgetViewImpl extends AbstractPaletteWidgetView implements PaletteWidgetView {
+public class LienzoPaletteWidgetViewImpl extends AbstractLienzoPaletteWidgetView {
 
-    interface ViewBinder extends UiBinder<Widget, PaletteWidgetViewImpl> {
+    interface ViewBinder extends UiBinder<Widget, LienzoPaletteWidgetViewImpl> {
 
     }
 
-    private static PaletteWidgetViewImpl.ViewBinder uiBinder = GWT.create( PaletteWidgetViewImpl.ViewBinder.class );
+    private static ViewBinder uiBinder = GWT.create( ViewBinder.class );
 
     @UiField
     FlowPanel mainPanel;
@@ -38,7 +37,7 @@ public class PaletteWidgetViewImpl extends AbstractPaletteWidgetView implements 
     FlowPanel paletteContainer;
 
     @Inject
-    public PaletteWidgetViewImpl( final ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler ) {
+    public LienzoPaletteWidgetViewImpl( final ShapeGlyphDragHandler<Group> shapeGlyphDragHandler ) {
         super( shapeGlyphDragHandler );
     }
 

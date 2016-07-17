@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 @Dependent
 public class TreeExplorerItem implements IsWidget {
     
-    private static Logger LOGGER = Logger.getLogger("org.wirez.client.widgets.explorer.tree.TreeExplorerItem");
+    private static Logger LOGGER = Logger.getLogger( TreeExplorerItem.class.getName() );
 
     public interface View extends UberView<TreeExplorerItem> {
 

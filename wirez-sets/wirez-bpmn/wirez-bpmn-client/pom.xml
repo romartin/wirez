@@ -60,6 +60,12 @@
       <artifactId>wirez-lienzo</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-widgets</artifactId>
+      <scope>provided</scope>
+    </dependency>
     
     <dependency>
       <groupId>org.wirez</groupId>
@@ -81,12 +87,18 @@
       <groupId>org.wirez</groupId>
       <artifactId>wirez-bpmn-backend</artifactId>
     </dependency>
-    
-    <!-- GWT. -->
+
+    <!-- GWT and GWT Extensions -->
 
     <dependency>
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.gwtbootstrap3</groupId>
+      <artifactId>gwtbootstrap3</artifactId>
       <scope>provided</scope>
     </dependency>
 

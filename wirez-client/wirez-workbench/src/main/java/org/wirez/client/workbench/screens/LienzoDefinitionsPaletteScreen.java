@@ -24,11 +24,9 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.widgets.palette.DefinitionsPaletteWidget;
+import org.wirez.client.widgets.palette.lienzo.LienzoDefinitionsPaletteWidget;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -53,17 +51,17 @@ import javax.inject.Inject;
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @Dependent
-@WorkbenchScreen(identifier = DefinitionsPaletteScreen.SCREEN_ID )
-public class DefinitionsPaletteScreen {
+@WorkbenchScreen(identifier = LienzoDefinitionsPaletteScreen.SCREEN_ID )
+public class LienzoDefinitionsPaletteScreen {
 
     private static final int _WIDTH = 70;
-    public static final String SCREEN_ID = "DefinitionsPaletteScreen";
+    public static final String SCREEN_ID = "LienzoDefinitionsPaletteScreen";
     // public static final int WIDTH = _WIDTH + 10;
     public static final int WIDTH = 350;
 
 
     @Inject
-    DefinitionsPaletteWidget paletteWiget;
+    LienzoDefinitionsPaletteWidget paletteWiget;
 
     @Inject
     DefinitionsPaletteBuilder definitionsPaletteBuilder;
@@ -93,37 +91,9 @@ public class DefinitionsPaletteScreen {
     public void init() {
     }
 
-    private Menus makeMenuBar() {
-        return MenuFactory
-                .newTopLevelMenu("Col")
-                .respondsWith(getCollapseCommand())
-                .endMenu()
-                .newTopLevelMenu("Exp")
-                .respondsWith(getExpandCommand())
-                .endMenu()
-                .build();
-    }
-
-    private Command getCollapseCommand() {
-        return new Command() {
-            public void execute() {
-                paletteWiget.collapse();
-            }
-        };
-    }
-
-    private Command getExpandCommand() {
-        return new Command() {
-            public void execute() {
-                paletteWiget.expand();
-            }
-        };
-    }
-
     @OnStartup
     public void onStartup(final PlaceRequest placeRequest) {
         this.placeRequest = placeRequest;
-        this.menu = makeMenuBar();
         this.shapeSetId = placeRequest.getParameter( "shapeSetId", "" );
         // paletteWiget.setMaxWidth( WIDTH );
         paletteWiget.setMaxWidth( 300 );
@@ -196,7 +166,7 @@ public class DefinitionsPaletteScreen {
     
     @WorkbenchContextId
     public String getMyContextRef() {
-        return "definitionsPaletteScreenContext";
+        return "lienzoDefinitionsPaletteScreenContext";
     }
 
     void onCanvasSessionOpened(@Observes SessionOpenedEvent sessionOpenedEvent) {

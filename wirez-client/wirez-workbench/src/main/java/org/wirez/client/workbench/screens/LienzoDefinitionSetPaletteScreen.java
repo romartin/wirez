@@ -24,11 +24,9 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.client.widgets.palette.DefinitionSetPaletteWidget;
+import org.wirez.client.widgets.palette.lienzo.LienzoDefinitionSetPaletteWidget;
 import org.wirez.client.workbench.perspectives.WirezPerspective;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
@@ -45,7 +43,6 @@ import org.wirez.core.client.session.event.SessionOpenedEvent;
 import org.wirez.core.client.session.event.SessionPausedEvent;
 import org.wirez.core.client.session.event.SessionResumedEvent;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
@@ -54,16 +51,15 @@ import javax.inject.Inject;
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @Dependent
-@WorkbenchScreen(identifier = DefinitionSetPaletteScreen.SCREEN_ID )
-public class DefinitionSetPaletteScreen {
+@WorkbenchScreen(identifier = LienzoDefinitionSetPaletteScreen.SCREEN_ID )
+public class LienzoDefinitionSetPaletteScreen {
 
-    public static final String SCREEN_ID = "DefinitionSetPaletteScreen";
+    public static final String SCREEN_ID = "LienzoDefinitionSetPaletteScreen";
     public static final int WIDTH = WirezPerspective.WEST_PANEL_WIDTH;
     public static final int MARGIN_TOP = 40;
-    public static final String BACKGROUND_COLOR = "#D3D3D3";
 
     @Inject
-    DefinitionSetPaletteWidget paletteWiget;
+    LienzoDefinitionSetPaletteWidget paletteWiget;
 
     @Inject
     DefinitionSetPaletteBuilder definitionSetPaletteBuilder;
@@ -88,25 +84,6 @@ public class DefinitionSetPaletteScreen {
     private CanvasHandler canvasHandler;
     private Menus menu = null;
 
-    private Menus makeMenuBar() {
-        return MenuFactory
-                .newTopLevelMenu("Col")
-                .respondsWith(getCollapseCommand())
-                .endMenu()
-                .newTopLevelMenu("Exp")
-                .respondsWith(getExpandCommand())
-                .endMenu()
-                .build();
-    }
-
-    private Command getCollapseCommand() {
-        return () -> paletteWiget.collapse();
-    }
-
-    private Command getExpandCommand() {
-        return () -> paletteWiget.expand();
-    }
-
     @OnStartup
     public void onStartup(final PlaceRequest placeRequest) {
         this.placeRequest = placeRequest;
@@ -114,7 +91,6 @@ public class DefinitionSetPaletteScreen {
         this.shapeSetId = placeRequest.getParameter( "shapeSetId", "" );
         paletteWiget.setMaxWidth( 300 );
         paletteWiget.getView().setMarginTop( MARGIN_TOP );
-        paletteWiget.getView().setBackgroundColor( BACKGROUND_COLOR );
         paletteWiget.getView().showEmptyView( true );
 
         open();
@@ -186,7 +162,7 @@ public class DefinitionSetPaletteScreen {
     
     @WorkbenchContextId
     public String getMyContextRef() {
-        return "definitionSetPaletteScreenContext";
+        return "lienzoDefinitionSetPaletteScreenContext";
     }
 
     void onCanvasSessionOpened(@Observes SessionOpenedEvent sessionOpenedEvent) {

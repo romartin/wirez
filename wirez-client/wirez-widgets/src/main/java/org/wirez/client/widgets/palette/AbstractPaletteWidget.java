@@ -1,6 +1,5 @@
 package org.wirez.client.widgets.palette;
 
-import org.wirez.client.widgets.palette.view.PaletteWidgetView;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.components.palette.AbstractPalette;
 import org.wirez.core.client.components.palette.model.PaletteDefinition;
@@ -18,7 +17,6 @@ public abstract class AbstractPaletteWidget<D extends PaletteDefinition, V exten
     protected V view;
     protected int maxWidth;
     protected int maxHeight;
-    protected boolean expanded;
 
     public AbstractPaletteWidget(final ShapeManager shapeManager,
                                  final ClientFactoryServices clientFactoryServices,
@@ -26,14 +24,9 @@ public abstract class AbstractPaletteWidget<D extends PaletteDefinition, V exten
         super( shapeManager );
         this.clientFactoryServices = clientFactoryServices;
         this.view = view;
-        this.expanded = false;
     }
 
     public abstract double getIconSize();
-
-    public abstract double getPadding();
-
-    protected abstract void doExpandCollapse();
 
     @Override
     public PaletteWidget<D, V> onItemDrop( final ItemDropCallback callback ) {
@@ -62,20 +55,6 @@ public abstract class AbstractPaletteWidget<D extends PaletteDefinition, V exten
 
         }
 
-    }
-
-    @Override
-    public PaletteWidget<D, V> expand() {
-        this.expanded = true;
-        doExpandCollapse();
-        return this;
-    }
-
-    @Override
-    public PaletteWidget<D, V> collapse() {
-        this.expanded = false;
-        doExpandCollapse();
-        return this;
     }
 
     @Override
@@ -115,10 +94,6 @@ public abstract class AbstractPaletteWidget<D extends PaletteDefinition, V exten
 
     public ShapeGlyph<?> getShapeGlyph( final String definitionId ) {
         return getFactory( definitionId ).glyph( definitionId, getIconSize(), getIconSize() );
-    }
-
-    public boolean isExpanded() {
-        return expanded;
     }
 
     @Override

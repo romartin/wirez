@@ -13,6 +13,9 @@ import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
+import javax.enterprise.context.Dependent;
+
+@Dependent
 public class TreeExplorerItemView extends Composite implements TreeExplorerItem.View {
 
     interface ViewBinder extends UiBinder<Widget, TreeExplorerItemView> {

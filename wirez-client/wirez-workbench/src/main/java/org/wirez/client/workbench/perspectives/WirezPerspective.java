@@ -35,7 +35,7 @@ import javax.inject.Inject;
 @WorkbenchPerspective( identifier = "WirezPerspective", isTransient = false )
 public class WirezPerspective {
 
-    public static final int WEST_PANEL_WIDTH = 65;
+    public static final int WEST_PANEL_WIDTH = 80;
     public static final int EAST_PANEL_WIDTH = 300;
 
     PanelDefinition palettePanel;
@@ -55,11 +55,9 @@ public class WirezPerspective {
         perspective.getRoot().addPart( new PartDefinitionImpl( new DefaultPlaceRequest( CanvasWizardScreen.SCREEN_ID ) ) );
 
         palettePanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
-
-        palettePanel.setMinWidth( DefinitionSetPaletteScreen.WIDTH );
-        palettePanel.setWidth( DefinitionSetPaletteScreen.WIDTH );
-        // palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( DefinitionsPaletteScreen.SCREEN_ID ) ) );
-        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( DefinitionSetPaletteScreen.SCREEN_ID ) ) );
+        palettePanel.setMinWidth( WEST_PANEL_WIDTH );
+        palettePanel.setWidth( WEST_PANEL_WIDTH );
+        palettePanel.addPart( new PartDefinitionImpl( new DefaultPlaceRequest( BS3PaletteScreen.SCREEN_ID ) ) );
 
         treeExplorerPanel = new PanelDefinitionImpl( MultiListWorkbenchPanelPresenter.class.getName() );
         treeExplorerPanel.setMinWidth( EAST_PANEL_WIDTH );

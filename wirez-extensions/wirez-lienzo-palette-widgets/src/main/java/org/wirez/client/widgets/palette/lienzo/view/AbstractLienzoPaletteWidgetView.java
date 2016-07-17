@@ -1,4 +1,4 @@
-package org.wirez.client.widgets.palette.view;
+package org.wirez.client.widgets.palette.lienzo.view;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Layer;
@@ -7,17 +7,18 @@ import com.ait.lienzo.client.widget.LienzoPanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Panel;
 import org.wirez.client.widgets.palette.AbstractPaletteWidget;
+import org.wirez.client.widgets.palette.PaletteWidgetView;
 import org.wirez.core.client.components.glyph.ShapeGlyphDragHandler;
 import org.wirez.core.client.components.palette.view.PaletteView;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
-public abstract class AbstractPaletteWidgetView
+public abstract class AbstractLienzoPaletteWidgetView
         extends Composite
-        implements PaletteWidgetView {
+        implements PaletteWidgetView<PaletteView<?, ?, ?>> {
 
     private static final String WHITE = "#FFFFFF";
 
-    ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler;
+    ShapeGlyphDragHandler<Group> shapeGlyphDragHandler;
 
     protected LienzoPanel lienzoPanel;
     protected final Layer lienzoLayer = new Layer().setTransformable(true);
@@ -27,13 +28,13 @@ public abstract class AbstractPaletteWidgetView
     protected String bgColor = null;
     protected int marginTop = 0;
 
-    public AbstractPaletteWidgetView( final ShapeGlyphDragHandler<LienzoPanel, Group> shapeGlyphDragHandler ) {
+    public AbstractLienzoPaletteWidgetView( final ShapeGlyphDragHandler<Group> shapeGlyphDragHandler ) {
         this.shapeGlyphDragHandler = shapeGlyphDragHandler;
     }
 
     protected abstract Panel getParentPanel();
 
-    public AbstractPaletteWidgetView setPresenter(final AbstractPaletteWidget presenter) {
+    public AbstractLienzoPaletteWidgetView setPresenter( final AbstractPaletteWidget presenter) {
         this.presenter = presenter;
         return this;
     }
@@ -79,10 +80,13 @@ public abstract class AbstractPaletteWidgetView
 
         final ShapeGlyph<Group> glyph = presenter.getShapeGlyph( itemId );
 
-        shapeGlyphDragHandler.show( lienzoPanel, glyph, x, y, new ShapeGlyphDragHandler.Callback<LienzoPanel>() {
+        shapeGlyphDragHandler.show( glyph,
+                lienzoPanel.getAbsoluteLeft() + x,
+                lienzoPanel.getAbsoluteTop() + y,
+                new ShapeGlyphDragHandler.Callback() {
+
             @Override
-            public void onMove( final LienzoPanel floatingPanel,
-                                final double x,
+            public void onMove( final double x,
                                 final double y) {
 
                 presenter.onDragProxyMove( itemId, x, y );
@@ -90,13 +94,13 @@ public abstract class AbstractPaletteWidgetView
             }
 
             @Override
-            public void onComplete( final LienzoPanel floatingPanel,
-                                    final double x,
+            public void onComplete( final double x,
                                     final double y ) {
 
                 presenter.onDragProxyComplete( itemId, x, y  );
 
             }
+
         });
 
     }
@@ -132,18 +136,6 @@ public abstract class AbstractPaletteWidgetView
     protected void beforeShow( final PaletteView paletteView,
                                final int width,
                                final int height ) {
-    }
-
-    @Override
-    public void setPaletteSize( final int width,
-                                final int height ) {
-
-        if ( null != lienzoPanel ) {
-
-            initLienzoPanel( width, height );
-
-        }
-
     }
 
     protected void initLienzoPanel(final int width,

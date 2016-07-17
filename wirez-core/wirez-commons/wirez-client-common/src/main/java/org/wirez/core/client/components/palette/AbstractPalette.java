@@ -30,6 +30,8 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
 
     protected abstract void  doDestroy();
 
+    protected abstract String getPaletteItemId( int index );
+
     @Override
     @SuppressWarnings("unchecked")
     public AbstractPalette<D> bind( final D paletteDefinition ) {
@@ -108,7 +110,7 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
 
         if (null != itemHoverCallback) {
 
-            return itemHoverCallback.onItemHover(index, mouseX, mouseY, itemX, itemY );
+            return itemHoverCallback.onItemHover( getPaletteItemId( index ), mouseX, mouseY, itemX, itemY );
 
         }
 
@@ -119,7 +121,7 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
 
         if ( null != itemOutCallback ) {
 
-            return itemOutCallback.onItemOut( index );
+            return itemOutCallback.onItemOut( getPaletteItemId( index ) );
 
         }
 
@@ -134,7 +136,7 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
 
         if ( null != itemMouseDownCallback ) {
 
-            return itemMouseDownCallback.onItemMouseDown( index, mouseX, mouseY, itemX, itemY );
+            return itemMouseDownCallback.onItemMouseDown( getPaletteItemId( index ), mouseX, mouseY, itemX, itemY );
 
         }
 
@@ -149,7 +151,7 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
 
         if ( null != itemClickCallback ) {
 
-            return itemClickCallback.onItemClick( index, mouseX, mouseY, itemX, itemY );
+            return itemClickCallback.onItemClick( getPaletteItemId( index ), mouseX, mouseY, itemX, itemY );
 
         }
 

@@ -18,16 +18,16 @@ package org.wirez.core.client.components.glyph;
 
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
-public interface ShapeGlyphDragHandler<P, G> {
+public interface ShapeGlyphDragHandler<G> {
 
-    interface Callback<P> {
+    interface Callback {
         
-        void onMove(P floatingPanel, double x, double y);
+        void onMove( double x, double y);
 
-        void onComplete(P floatingPanel, double x, double y);
+        void onComplete( double x, double y);
         
     }
 
-    void show( P parentLienzoPanel, ShapeGlyph<G> shapeGlyph, double x, double y, Callback<P> callback);
+    void show( ShapeGlyph<G> shapeGlyph, double x, double y, Callback callback);
     
 }

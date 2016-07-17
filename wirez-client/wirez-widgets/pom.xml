@@ -119,6 +119,18 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.ahome-it</groupId>
+      <artifactId>ahome-tooling-nativetools</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.ahome-it</groupId>
+      <artifactId>ahome-tooling-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Property Editor - Uberfire Extensions -->
     <dependency>
       <groupId>org.uberfire</groupId>

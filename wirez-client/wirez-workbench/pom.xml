@@ -82,6 +82,11 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-lienzo-palette-widgets</artifactId>
+    </dependency>
+
     <!-- Uberfire. -->
 
     <dependency>

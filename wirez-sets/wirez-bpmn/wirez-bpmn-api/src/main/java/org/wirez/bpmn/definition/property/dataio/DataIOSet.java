@@ -51,15 +51,15 @@ public class DataIOSet implements BPMNPropertySet {
     @Property
     @FieldDef(label = "Assignments", property = "value")
     @Valid
-    private Assignments assignments;
+    private TAssignments assignments;
 
     public DataIOSet() {
-        this( new InputData(), new OutputData(), new Assignments());
+        this( new InputData(), new OutputData(), new TAssignments());
     }
 
     public DataIOSet(@MapsTo("inputData") InputData inputData,
             @MapsTo("outputData") OutputData outputData,
-            @MapsTo("assignments") Assignments assignments ) {
+            @MapsTo("assignments") TAssignments assignments ) {
         this.inputData = inputData;
         this.outputData = outputData;
         this.assignments = assignments;
@@ -68,7 +68,7 @@ public class DataIOSet implements BPMNPropertySet {
     public DataIOSet( String inputData, String outputData, String assignments) {
         this.inputData = new InputData( inputData );
         this.outputData = new OutputData( outputData );
-        this.assignments = new Assignments( assignments );
+        this.assignments = new TAssignments( assignments );
     }
 
     public String getPropertySetName() {
@@ -83,7 +83,7 @@ public class DataIOSet implements BPMNPropertySet {
         return outputData;
     }
 
-    public Assignments getAssignments() {
+    public TAssignments getAssignments() {
         return assignments;
     }
 
@@ -95,7 +95,7 @@ public class DataIOSet implements BPMNPropertySet {
         this.outputData = outputData;
     }
 
-    public void setAssignments( Assignments assignments ) {
+    public void setAssignments( TAssignments assignments ) {
         this.assignments = assignments;
     }
 

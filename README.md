@@ -6,7 +6,7 @@ A multi-purpose modelling tool based on [JBoss Uberfire](http://www.uberfirefram
 Building
 --------
 
-The project currently depends on Livespark's Forms modules, so you must previously clone and build locally [Livespark](https://github.com/droolsjbpm/livespark) as:
+**IMPORTANT**: The project currently depends on Livespark's Forms modules, so you must previously clone and build locally [Livespark](https://github.com/droolsjbpm/livespark) as:
 
 	git clone https://github.com/droolsjbpm/livespark.git
 	cd livespark/

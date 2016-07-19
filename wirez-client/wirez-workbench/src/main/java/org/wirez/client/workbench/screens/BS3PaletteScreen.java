@@ -102,8 +102,15 @@ public class BS3PaletteScreen {
     }
     
     private void close() {
-        paletteWidget.unbind();
+
+        if ( null != paletteWidget ) {
+
+            paletteWidget.unbind();
+
+        }
+
         this.sessionScreenView.setScreenViewBgColor( EMPTY_VIEW_BG_COLOR );
+
     }
 
     @WorkbenchMenu

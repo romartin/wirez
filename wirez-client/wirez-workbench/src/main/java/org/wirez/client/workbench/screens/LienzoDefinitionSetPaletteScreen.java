@@ -55,8 +55,6 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 public class LienzoDefinitionSetPaletteScreen {
 
     public static final String SCREEN_ID = "LienzoDefinitionSetPaletteScreen";
-    public static final int WIDTH = WirezPerspective.WEST_PANEL_WIDTH;
-    public static final int MARGIN_TOP = 40;
 
     @Inject
     LienzoDefinitionSetPaletteWidget paletteWiget;
@@ -90,8 +88,6 @@ public class LienzoDefinitionSetPaletteScreen {
         // this.menu = makeMenuBar();
         this.shapeSetId = placeRequest.getParameter( "shapeSetId", "" );
         paletteWiget.setMaxWidth( 300 );
-        paletteWiget.getView().setMarginTop( MARGIN_TOP );
-        paletteWiget.getView().showEmptyView( true );
 
         open();
     }
@@ -109,6 +105,8 @@ public class LienzoDefinitionSetPaletteScreen {
     private void open() {
 
         if ( null != shapeSetId && shapeSetId.trim().length() > 0 ) {
+
+            paletteWiget.getView().showEmptyView( false );
 
             final String definitionSetId = getShapeSet( shapeSetId ).getDefinitionSetId();
 
@@ -139,6 +137,7 @@ public class LienzoDefinitionSetPaletteScreen {
     
     private void close() {
         paletteWiget.unbind();
+        paletteWiget.getView().showEmptyView( true );
     }
 
     @WorkbenchMenu

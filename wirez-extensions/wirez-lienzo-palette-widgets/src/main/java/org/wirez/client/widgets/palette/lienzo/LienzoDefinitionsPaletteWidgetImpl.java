@@ -23,7 +23,7 @@ public class LienzoDefinitionsPaletteWidgetImpl
         extends AbstractPaletteWidget<DefinitionsPalette, LienzoPaletteWidgetViewImpl>
         implements LienzoDefinitionsPaletteWidget {
 
-    private static final int ICON_SIZE = 50;
+    private static final int ICON_SIZE = 30;
     private static final int PADDING = 10;
 
     LienzoGlyphsPalette lienzoGlyphsPalette;
@@ -51,6 +51,7 @@ public class LienzoDefinitionsPaletteWidgetImpl
         view.setPresenter( this );
         view.showEmptyView( true );
 
+        lienzoGlyphsPalette.setExpandable( false );
         lienzoGlyphsPalette.setIconSize( ICON_SIZE );
         lienzoGlyphsPalette.setPadding( PADDING );
         lienzoGlyphsPalette.setLayout( LienzoPalette.Layout.VERTICAL );

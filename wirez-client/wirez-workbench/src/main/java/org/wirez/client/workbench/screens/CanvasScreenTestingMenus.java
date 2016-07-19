@@ -76,14 +76,14 @@ public class CanvasScreenTestingMenus {
                 .newTopLevelMenu("Switch Docking Control")
                 .respondsWith(getSwitchDockingControlCommand())
                 .endMenu()
+                .newTopLevelMenu("Log Client Platform")
+                .respondsWith(getLogCurrentClientPlatform())
+                .endMenu()
                 .build();*/
 
         return MenuFactory
                 .newTopLevelMenu("Log Command History")
                 .respondsWith(getLogCommandStackCommand())
-                .endMenu()
-                .newTopLevelMenu("Log Client Platform")
-                .respondsWith(getLogCurrentClientPlatform())
                 .endMenu()
                 .build();
 

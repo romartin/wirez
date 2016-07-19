@@ -265,7 +265,9 @@ public class PropertiesEditor implements IsWidget {
         
         final Map<Object, String> allowedValues = new LinkedHashMap<>();
         
-        if ( sourceType instanceof StringType ) {
+        if ( ( sourceType instanceof StringType )
+                || ( sourceType instanceof AssignmentsType )
+                || (sourceType instanceof VariablesType ) ) {
             
             type = PropertyEditorType.TEXT;
             

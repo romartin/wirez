@@ -54,11 +54,7 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 @WorkbenchScreen(identifier = LienzoDefinitionsPaletteScreen.SCREEN_ID )
 public class LienzoDefinitionsPaletteScreen {
 
-    private static final int _WIDTH = 70;
     public static final String SCREEN_ID = "LienzoDefinitionsPaletteScreen";
-    // public static final int WIDTH = _WIDTH + 10;
-    public static final int WIDTH = 350;
-
 
     @Inject
     LienzoDefinitionsPaletteWidget paletteWiget;

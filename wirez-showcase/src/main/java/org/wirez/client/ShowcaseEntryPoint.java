@@ -94,6 +94,12 @@ public class ShowcaseEntryPoint {
                         placeManager.goTo(new DefaultPlaceRequest("WirezPerspective"));
                     }
                 }).endMenu()
+            .newTopLevelMenu("Other widgets").respondsWith(new Command() {
+                @Override
+                public void execute() {
+                    placeManager.goTo(new DefaultPlaceRequest("WirezPerspective2"));
+                }
+            }).endMenu()
                 .build();
         menubar.addMenus(menus);
     }

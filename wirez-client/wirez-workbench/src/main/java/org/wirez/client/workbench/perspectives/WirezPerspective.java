@@ -26,6 +26,7 @@ import org.uberfire.workbench.model.impl.PanelDefinitionImpl;
 import org.uberfire.workbench.model.impl.PartDefinitionImpl;
 import org.uberfire.workbench.model.impl.PerspectiveDefinitionImpl;
 import org.wirez.client.widgets.loading.LoadingBox;
+import org.wirez.client.widgets.palette.bs3.BS3PaletteWidgetImpl;
 import org.wirez.client.workbench.screens.*;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -35,7 +36,7 @@ import javax.inject.Inject;
 @WorkbenchPerspective( identifier = "WirezPerspective", isTransient = false )
 public class WirezPerspective {
 
-    public static final int WEST_PANEL_WIDTH = 80;
+    public static final int WEST_PANEL_WIDTH = BS3PaletteWidgetImpl.getDefaultWidth();
     public static final int EAST_PANEL_WIDTH = 300;
 
     PanelDefinition palettePanel;

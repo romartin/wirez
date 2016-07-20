@@ -34,7 +34,7 @@ public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPal
     private static final int CATEGORY_ICON_SIZE = 100;
     private static final int CATEGORY_VIEW_WIDTH = 300;
     private static final int CATEGORY_VIEW_HEIGHT = 600;
-    private static final int PADDING = 50;
+    private static final int PADDING = 80;
     private static final int FLOATING_VIEW_TIMEOUT = 2500;
 
     BS3PaletteCategories paletteCategories;
@@ -57,6 +57,10 @@ public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPal
         this.paletteCategory = paletteCategory;
         this.floatingView = floatingView;
         this.shapeGlyphDragHandler = shapeGlyphDragHandler;
+    }
+
+    public static int getDefaultWidth() {
+        return GLYPH_ICON_SIZE + PADDING;
     }
 
     @PostConstruct

@@ -1,6 +1,7 @@
 package org.wirez.client.widgets.palette.bs3;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -27,7 +28,7 @@ public class BS3PaletteCategoriesView extends Composite implements BS3PaletteCat
     }
 
     private static ViewBinder uiBinder = GWT.create( ViewBinder.class );
-    
+
     private BS3PaletteCategories presenter;
     private final List<HandlerRegistration> handlerRegistrationList = new LinkedList<>();
     private int iconSize = 25;
@@ -73,7 +74,9 @@ public class BS3PaletteCategoriesView extends Composite implements BS3PaletteCat
 
             if ( view instanceof Icon ) {
 
-                final IconType type = ( ( Icon ) view ).getType();
+                final Icon icon = ( Icon ) view;
+                final IconType type = icon.getType();
+
                 item.setIcon( type );
                 item.setIconSize( IconSize.TIMES4 );
 
@@ -88,7 +91,12 @@ public class BS3PaletteCategoriesView extends Composite implements BS3PaletteCat
             item.setText( categoryTitle );
         }
 
-        // TODO: setPadding( item );
+        // Styling.
+        final double w = iconSize +  padding;
+        final double h = iconSize +  padding;
+        item.getElement().getStyle().setWidth( w, Style.Unit.PX );
+        item.getElement().getStyle().setHeight( h, Style.Unit.PX );
+        item.getElement().getStyle().setTextAlign( Style.TextAlign.CENTER );
 
         final HandlerRegistration handlerRegistration = item.addDomHandler( mouseOverEvent ->
                 presenter.onItemHover( categoryId, mouseOverEvent.getX(), mouseOverEvent.getY(), mouseOverEvent.getX(), mouseOverEvent.getY() ), MouseOverEvent.getType() );

@@ -19,9 +19,13 @@
              xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
 
   <ui:style>
+    @external item fa;
 
+    .item .fa {
+        color: grey;
+    }
   </ui:style>
 
-  <b:NavPills ui:field="mainContainer" stacked="true"/>
+  <b:NavPills ui:field="mainContainer" pull="LEFT" stacked="true" addStyleNames="{style.item}"/>
 
 </ui:UiBinder>

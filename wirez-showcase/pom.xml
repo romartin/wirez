@@ -836,39 +836,35 @@
   </build>
 
   <profiles>
+
+    <!-- Full profile builds all GWT permutations -->
     <profile>
       <id>fullProfile</id>
-
       <activation>
         <property>
           <name>full</name>
         </property>
       </activation>
-
-      <dependencies>
-        <!-- Add back ANT when building full profile as it's needed by AS7 and Tomcat -->
-        <dependency>
-          <groupId>org.apache.ant</groupId>
-          <artifactId>ant</artifactId>
-        </dependency>
-      </dependencies>
-
+      <properties>
+        <gwt.memory.settings>-Xmx3g -Xms1g -Xss1M</gwt.memory.settings>
+        <gwt.compiler.localWorkers>4</gwt.compiler.localWorkers>
+      </properties>
       <build>
-        <plugins>
-          <plugin><!-- Keep in sync with soa profile -->
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>gwt-maven-plugin</artifactId>
-            <configuration>
-              <!-- Build all GWT permutations and optimize them -->
-              <module>org.wirez.WirezShowcase</module>
-              <draftCompile>false</draftCompile>
-              <localWorkers>4</localWorkers>
-              <extraJvmArgs>-Xmx4096m -Xms2048m -Xss1M</extraJvmArgs>
-            </configuration>
-          </plugin>
-        </plugins>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>gwt-maven-plugin</artifactId>
+              <configuration>
+                <module>org.wirez.WirezShowcase</module>
+                <draftCompile>false</draftCompile>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
       </build>
     </profile>
+
   </profiles>
 
 </project>

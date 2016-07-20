@@ -211,6 +211,20 @@ public class BS3PaletteCategory extends AbstractPalette<DefinitionPaletteCategor
 
     }
 
+    void onMouseClick( final String id,
+                      final int mouseX,
+                      final int mouseY,
+                      final int itemX,
+                      final int itemY ) {
+
+        if ( null != itemClickCallback ) {
+
+            itemClickCallback.onItemClick( id, mouseX, mouseY, itemX, itemY );
+
+        }
+
+    }
+
     private int getIndex( final String id ) {
 
         final DefinitionPaletteCategory category = paletteDefinition;

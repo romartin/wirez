@@ -2,12 +2,10 @@ package org.wirez.client.widgets.palette.bs3;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.MouseDownEvent;
-import com.google.gwt.event.dom.client.MouseDownHandler;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.*;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Container;
@@ -26,8 +24,10 @@ public class BS3PaletteCategoryView extends Composite implements BS3PaletteCateg
     }
 
     private static ViewBinder uiBinder = GWT.create( ViewBinder.class );
-    
+    private static final int MOUSE_DOWN_TIMER_DURATION = 150;
+
     private BS3PaletteCategory presenter;
+    private Timer itemMouseDownTimer;
 
     @UiField
     Container mainContainer;
@@ -107,13 +107,75 @@ public class BS3PaletteCategoryView extends Composite implements BS3PaletteCateg
         row.setPaddingBottom( 5 );
         row.setPaddingTop( 5 );
 
+        row.addDomHandler( new ClickHandler() {
+
+            @Override
+            public void onClick( ClickEvent clickEvent ) {
+
+                clearItemMouseDownTimer();
+
+                BS3PaletteCategoryView.this.onMouseClick( id,
+                        clickEvent.getClientX(), clickEvent.getClientY(),
+                        clickEvent.getX(), clickEvent.getY() );
+
+            }
+
+        }, ClickEvent.getType() );
+
+        row.addDomHandler( new MouseMoveHandler() {
+
+            @Override
+            public void onMouseMove( final MouseMoveEvent mouseMoveEvent ) {
+
+                if ( null != BS3PaletteCategoryView.this.itemMouseDownTimer ) {
+
+                    BS3PaletteCategoryView.this.itemMouseDownTimer.run();
+
+                    BS3PaletteCategoryView.this.clearItemMouseDownTimer();
+
+                }
+
+            }
+
+        }, MouseMoveEvent.getType() );
+
+        row.addDomHandler( new MouseDownHandler() {
+            @Override
+            public void onMouseDown( MouseDownEvent mouseDownEvent ) {
+
+                final int mX = mouseDownEvent.getClientX();
+                final int mY = mouseDownEvent.getClientY();
+                final int iX = mouseDownEvent.getX();
+                final int iY = mouseDownEvent.getY();
+
+                // This timeout is used to differentiate between mouse down and click events.
+                // If calling presenter login when mouse down and presenter clear the palette view,
+                // the click event is never fired on the DOM.
+                // So using this timer the mouse down job is postponed, so if after MOUSE_DOWN_TIMER_DURATION
+                // there is no click event, this timer fires and shows the drag proxy. If click event fires, will
+                // cancer the timer so the mouse down job is not performed, as expected. Same for mouse move event just
+                // after the mouse down one.
+                BS3PaletteCategoryView.this.itemMouseDownTimer = new Timer() {
+
+                    @Override
+                    public void run() {
+
+                        BS3PaletteCategoryView.this.onMouseDown( id, mX, mY, iX, iY );
+
+                    }
+
+                };
+
+                BS3PaletteCategoryView.this.itemMouseDownTimer.schedule( MOUSE_DOWN_TIMER_DURATION );
+
+
+
+            }
+        }, MouseDownEvent.getType() );
+
         row.addDomHandler( mouseOverEvent -> BS3PaletteCategoryView.this.onMouseOver( row ), MouseOverEvent.getType() );
 
         row.addDomHandler( mouseOutEvent -> BS3PaletteCategoryView.this.onMouseOut( row ), MouseOutEvent.getType() );
-
-        row.addDomHandler( mouseDownEvent -> BS3PaletteCategoryView.this.onMouseDown( id,
-                mouseDownEvent.getClientX(), mouseDownEvent.getClientY(),
-                mouseDownEvent.getX(), mouseDownEvent.getY() ), MouseDownEvent.getType() );
 
         mainContainer.add( row );
 
@@ -136,10 +198,32 @@ public class BS3PaletteCategoryView extends Composite implements BS3PaletteCateg
         presenter.onMouseDown( id, mouseX, mouseY, itemX, itemY );
     }
 
+    private void onMouseClick( final String id,
+                              final int mouseX,
+                              final int mouseY,
+                              final int itemX,
+                              final int itemY ) {
+        presenter.onMouseClick( id, mouseX, mouseY, itemX, itemY );
+    }
+
     @Override
     public BS3PaletteCategory.View clear() {
+        clearItemMouseDownTimer();
         mainContainer.clear();
         return this;
+    }
+
+    private void clearItemMouseDownTimer() {
+
+        if ( null != this.itemMouseDownTimer ) {
+
+            if ( this.itemMouseDownTimer.isRunning() ) {
+                this.itemMouseDownTimer.cancel();
+            }
+
+            this.itemMouseDownTimer = null;
+        }
+
     }
 
     private void addHeader( final String text,

@@ -23,7 +23,11 @@ public class DesktopPlatform implements ClientPlatform, DefaultCanvasSessionProd
 
     @Override
     public boolean supports( final String platform ) {
-        return null != platform && platform.contains( "x86" );
+        return null != platform && !isMobilePlatform( platform );
+    }
+
+    public static boolean isMobilePlatform( final String platform ) {
+        return platform.contains( "arm" ) || platform.contains("iOS");
     }
 
     @Override

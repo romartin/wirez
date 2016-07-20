@@ -128,15 +128,12 @@ public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPal
 
             } );
 
-            paletteCategories.onItemOut( new ItemOutCallback() {
-                @Override
-                public boolean onItemOut( String id ) {
+            paletteCategories.onItemOut( id -> {
 
-                    // Set the floating visibility timeout once not hover the concrete navigation item.
-                    floatingView.setTimeOut( FLOATING_VIEW_TIMEOUT ).show();
+                // Set the floating visibility timeout once not hover the concrete navigation item.
+                floatingView.setTimeOut( FLOATING_VIEW_TIMEOUT ).show();
 
-                    return false;
-                }
+                return false;
             } );
 
         }
@@ -174,7 +171,18 @@ public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPal
 
                 floatingView.hide();
 
-                return true;
+                return false;
+
+            } );
+
+
+            paletteCategory.onItemClick( ( id12, mouseX, mouseY, itemX12, itemY12 ) -> {
+
+                // Add the element into canvas.
+                // TODO: Fixed target position. Replace this when some canvas layout manager available.
+                BS3PaletteWidgetImpl.this.onDragProxyComplete( id12, 500, 300 );
+
+                return false;
 
             } );
 
@@ -267,6 +275,8 @@ public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPal
         paletteCategory.clear();
 
     }
+
+
 
     IsWidget getCategoryView( final String id ) {
         return viewFactory.getCategoryView( id, CATEGORY_ICON_SIZE, CATEGORY_ICON_SIZE );

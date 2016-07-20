@@ -1,5 +1,6 @@
 package org.wirez.core.client.api.platform;
 
+import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
@@ -11,9 +12,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class PlatformManagerImpl implements PlatformManager {
+
+    private static Logger LOGGER = Logger.getLogger(PlatformManagerImpl.class.getName());
 
     SyncBeanManager beanManager;
     private final List<ClientPlatform> supportedPlatforms = new LinkedList<>();
@@ -55,10 +60,15 @@ public class PlatformManagerImpl implements PlatformManager {
             
         }
         
-        // final String result = "ClientManagerImpl [platform='" + platform + "'] [userAgent='" + userAgent + "']"; 
-        // GWT.log( result );
-        
+        log( Level.SEVERE, "No client plaform found for [" + platform + "]" );
+
         return null;
+    }
+
+    private void log( final Level level, final String message) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log(level, message);
+        }
     }
     
 }

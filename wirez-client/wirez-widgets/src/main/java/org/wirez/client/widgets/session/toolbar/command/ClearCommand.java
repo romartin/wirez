@@ -1,6 +1,7 @@
 package org.wirez.client.widgets.session.toolbar.command;
 
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
@@ -18,7 +19,6 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-
 import java.util.Iterator;
 
 import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
@@ -69,9 +69,10 @@ public class ClearCommand extends AbstractToolbarCommand<DefaultCanvasFullSessio
     }
 
     @Override
-    public void initialize( final DefaultCanvasFullSession session ) {
+    public ToolbarCommand<DefaultCanvasFullSession> initialize( final DefaultCanvasFullSession session ) {
         super.initialize( session );
         checkState();
+        return this;
     }
 
     @Override

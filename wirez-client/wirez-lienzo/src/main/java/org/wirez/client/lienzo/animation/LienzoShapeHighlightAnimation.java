@@ -17,24 +17,21 @@
 package org.wirez.client.lienzo.animation;
 
 import com.ait.lienzo.client.core.animation.AnimationProperties;
-import org.wirez.core.client.animation.Highlight;
+import org.wirez.core.client.canvas.ShapeState;
 
-import javax.enterprise.context.Dependent;
 import java.util.Collection;
 
 import static com.ait.lienzo.client.core.animation.AnimationProperty.Properties.*;
 
-@Dependent
-@Highlight
-public final class ShapeHighlightAnimation extends AbstractSelectionAnimation {
+final class LienzoShapeHighlightAnimation extends AbstractSelectionAnimation {
 
-    private static final String COLOR = "#3366cc";
+    private static final String COLOR = ShapeState.HIGHLIGHT.getColor();
 
     private double[] _width;
     private double[] _alpha;
     private String[] _color;
 
-    public ShapeHighlightAnimation() {
+    public LienzoShapeHighlightAnimation() {
         this.setColor( COLOR );
     }
 

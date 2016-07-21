@@ -2,8 +2,7 @@ package org.wirez.client.mobile.canvas.controls.select;
 
 import com.google.gwt.core.client.GWT;
 import org.wirez.client.mobile.api.platform.Mobile;
-import org.wirez.core.client.animation.Deselect;
-import org.wirez.core.client.animation.Select;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.controls.select.AbstractSelectionControl;
@@ -15,6 +14,7 @@ import org.wirez.core.client.shape.view.ShapeView;
 import org.wirez.core.client.shape.view.event.TouchEvent;
 import org.wirez.core.client.shape.view.event.TouchHandler;
 import org.wirez.core.client.shape.view.event.ViewEventType;
+import org.wirez.core.client.util.ShapeStateUtils;
 import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.Dependent;
@@ -28,11 +28,9 @@ public final class MobileSelectionControl extends AbstractSelectionControl {
     @Inject
     public MobileSelectionControl(final Event<CanvasElementSelectedEvent> elementSelectedEventEvent,
                                   final Event<CanvasClearSelectionEvent> clearSelectionEventEvent,
-                                  final @Select  ShapeAnimation selectionAnimation,
-                                  final @Deselect ShapeDeSelectionAnimation deSelectionAnimation) {
+                                  final ShapeStateUtils shapeStateUtils ) {
 
-        super( elementSelectedEventEvent, clearSelectionEventEvent,
-                selectionAnimation, deSelectionAnimation );
+        super( elementSelectedEventEvent, clearSelectionEventEvent, shapeStateUtils );
 
     }
 

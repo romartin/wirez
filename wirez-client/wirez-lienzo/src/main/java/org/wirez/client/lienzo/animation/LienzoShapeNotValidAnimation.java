@@ -20,42 +20,33 @@ import com.ait.lienzo.client.core.animation.AnimationProperties;
 import com.ait.lienzo.client.core.animation.AnimationTweener;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.lienzo.shared.core.types.IColor;
-import org.wirez.core.client.animation.Select;
+import org.wirez.core.client.canvas.ShapeState;
 
-import javax.enterprise.context.Dependent;
 import java.util.Collection;
 
 import static com.ait.lienzo.client.core.animation.AnimationProperty.Properties.STROKE_ALPHA;
 
-@Dependent
-@Select
-public final class ShapeSelectionAnimation extends AbstractSelectionAnimation {
+final class LienzoShapeNotValidAnimation extends AbstractSelectionAnimation {
 
     private double strokeWidth = 4;
-    private IColor color = ColorName.RED;
     private AnimationTweener animationTweener = AnimationTweener.LINEAR;
-    
-    public ShapeSelectionAnimation setStrokeWidth(double strokeWidth) {
+
+    public LienzoShapeNotValidAnimation() {
+        this.color = ShapeState.INVALID.getColor();
+    }
+
+    public LienzoShapeNotValidAnimation setStrokeWidth( double strokeWidth) {
         this.strokeWidth = strokeWidth;
         return this;
     }
 
-    public ShapeSelectionAnimation setColor(IColor color) {
-        this.color = color;
-        return this;
-    }
-
-    public ShapeSelectionAnimation setAnimationTweener(AnimationTweener animationTweener) {
+    public LienzoShapeNotValidAnimation setAnimationTweener( AnimationTweener animationTweener) {
         this.animationTweener = animationTweener;
         return this;
     }
 
     public double getStrokeWidth() {
         return strokeWidth;
-    }
-
-    public String getColor() {
-        return color.getColorString();
     }
 
     public AnimationTweener getAnimationTweener() {

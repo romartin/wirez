@@ -178,9 +178,10 @@ public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPal
 
             paletteCategory.onItemClick( ( id12, mouseX, mouseY, itemX12, itemY12 ) -> {
 
-                // Add the element into canvas.
-                // TODO: Fixed target position. Replace this when some canvas layout manager available.
-                BS3PaletteWidgetImpl.this.onDragProxyComplete( id12, 500, 300 );
+                // Add the element into canvas, no target coordinates specified, let the builder control determine those.
+                BS3PaletteWidgetImpl.this.onDragProxyComplete( id12 );
+
+                floatingView.hide();
 
                 return false;
 

@@ -2,6 +2,7 @@ package org.wirez.core.client.canvas.controls.toolbox.command.palette;
 
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -46,13 +47,12 @@ public abstract class AbstractPaletteMorphCommand<I> extends AbstractPaletteComm
                                        final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
                                        final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                        final GraphBoundsIndexer graphBoundsIndexer,
-                                       final ShapeAnimation selectionAnimation,
-                                       final ShapeDeSelectionAnimation deSelectionAnimation,
+                                       final AnimationFactory animationFactory,
                                        final I icon) {
         
         super( clientFactoryServices, commonLookups, shapeManager, definitionsPaletteBuilder, palette,
                 nodeDragProxyFactory, nodeBuilderControl, graphBoundsIndexer, 
-                selectionAnimation, deSelectionAnimation, icon );
+                animationFactory, icon );
 
         this.definitionUtils = definitionUtils;
         this.commandFactory = commandFactory;

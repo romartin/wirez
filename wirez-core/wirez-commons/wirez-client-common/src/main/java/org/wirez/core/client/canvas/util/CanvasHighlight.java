@@ -7,7 +7,7 @@ import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.shape.Shape;
-import org.wirez.core.client.shape.view.HasCanvasState;
+import org.wirez.core.client.shape.view.HasState;
 import org.wirez.core.client.shape.view.HasDecorators;
 
 public class CanvasHighlight {
@@ -41,9 +41,9 @@ public class CanvasHighlight {
             if ( null != shape ) {
                 this.shape = shape;
 
-                if (shape.getShapeView() instanceof HasCanvasState) {
+                if (shape.getShapeView() instanceof HasState ) {
                     
-                    final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
+                    final HasState canvasStateMutation = (HasState ) shape.getShapeView();
                     canvasStateMutation.applyState(ShapeState.HIGHLIGHT);
                     
                 } else if (shape.getShapeView() instanceof HasDecorators) {
@@ -62,9 +62,9 @@ public class CanvasHighlight {
     public void unhighLight() {
         if ( null != this.shape ) {
 
-            if (shape instanceof HasCanvasState) {
+            if (shape instanceof HasState ) {
                 
-                final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
+                final HasState canvasStateMutation = (HasState ) shape.getShapeView();
                 canvasStateMutation.applyState(ShapeState.UNHIGHLIGHT);
                 
             } else if (shape.getShapeView() instanceof HasDecorators) {

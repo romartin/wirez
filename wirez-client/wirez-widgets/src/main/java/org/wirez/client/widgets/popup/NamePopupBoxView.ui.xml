@@ -25,23 +25,19 @@
       min-height: 20px;
       min-width: 80px;
     }
-    .jumbotron {
-      padding: 5px;
-    }
-    .closeButton {
+    .button {
       margin-left: 5px;
     }
   </ui:style>
 
   <g:FlowPanel ui:field="mainPanel" addStyleNames="{style.mainPanel}">
 
-    <b:Jumbotron addStyleNames="{style.jumbotron}">
-      <g:HorizontalPanel>
-        <b:TextBox ui:field="nameBox"/>
-        <b:Icon ui:field="closeButton" type="REMOVE" size="LARGE" addStyleNames="{style.closeButton}"/>
-      </g:HorizontalPanel>
-    </b:Jumbotron>
-    
+    <g:HorizontalPanel>
+      <b:TextBox ui:field="nameBox"/>
+      <b:Icon ui:field="saveButton" type="CHECK" size="LARGE" addStyleNames="{style.button}"/>
+      <b:Icon ui:field="closeButton" type="REMOVE" size="LARGE" addStyleNames="{style.button}"/>
+    </g:HorizontalPanel>
+
   </g:FlowPanel>
   
 

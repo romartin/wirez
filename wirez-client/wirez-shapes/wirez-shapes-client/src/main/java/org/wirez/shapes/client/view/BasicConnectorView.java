@@ -8,11 +8,10 @@ import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresMagnet;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.client.lienzo.shape.view.AbstractConnectorView;
 import org.wirez.client.lienzo.shape.view.ViewEventHandlerManager;
 import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.shape.view.HasCanvasState;
+import org.wirez.core.client.shape.view.HasState;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.HasTitle;
 import org.wirez.core.client.shape.view.event.ViewEvent;
@@ -23,7 +22,7 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
     implements 
         HasTitle<T>,
         HasEventHandlers<T, Shape<?>>,
-        HasCanvasState {
+        HasState {
     
     private static final ViewEventType[] SUPPORTED_EVENT_TYPES = new ViewEventType[] {
             ViewEventType.MOUSE_CLICK, ViewEventType.TOUCH
@@ -69,16 +68,22 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
             applyUnSelectedState();
         } else if ( ShapeState.UNHIGHLIGHT.equals(shapeState) ) {
             applyUnHighlightState();
+        } else if ( ShapeState.INVALID.equals(shapeState) ) {
+            applyInvalidState();
         }
 
     }
     
     public T applySelectedState() {
-        return applyActiveState(true);
+        return applyActiveState(ShapeState.SELECTED.getColor());
+    }
+
+    public T applyInvalidState() {
+        return applyActiveState(ShapeState.INVALID.getColor());
     }
 
     public T applyHighlightState() {
-        return applyActiveState(false);
+        return applyActiveState(ShapeState.HIGHLIGHT.getColor());
     }
 
     public T applyUnSelectedState() {
@@ -89,7 +94,7 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
         return applyDeActiveState();
     }
 
-    protected T applyActiveState(final boolean isSelectedState) {
+    protected T applyActiveState(final String color ) {
         if ( null == this.strokeWidth) {
             this.strokeWidth = getLine().getStrokeWidth();
         }
@@ -99,7 +104,7 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
         }
 
         getLine().setStrokeWidth(5);
-        getLine().setStrokeColor(isSelectedState ? ColorName.RED : ColorName.BLUE);
+        getLine().setStrokeColor( color );
         
         return (T) this;
     }

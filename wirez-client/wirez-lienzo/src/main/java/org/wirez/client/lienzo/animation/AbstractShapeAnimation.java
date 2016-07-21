@@ -22,7 +22,7 @@ import org.wirez.core.client.shape.view.HasDecorators;
 
 import java.util.Collection;
 
-public abstract class AbstractShapeAnimation extends org.wirez.core.client.animation.AbstractShapeAnimation {
+abstract class AbstractShapeAnimation extends org.wirez.core.client.animation.AbstractShapeAnimation {
     
     protected com.ait.lienzo.client.core.animation.AnimationCallback animationCallback = new com.ait.lienzo.client.core.animation.AnimationCallback() {
 

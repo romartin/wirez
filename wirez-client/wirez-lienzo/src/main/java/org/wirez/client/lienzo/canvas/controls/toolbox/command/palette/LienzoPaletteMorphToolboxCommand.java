@@ -5,11 +5,9 @@ import org.wirez.client.lienzo.LienzoLayer;
 import org.wirez.client.lienzo.components.palette.AbstractLienzoGlyphItemsPalette;
 import org.wirez.client.lienzo.components.palette.LienzoGlyphsHoverPalette;
 import org.wirez.client.lienzo.components.palette.LienzoPalette;
-import org.wirez.client.lienzo.components.palette.impl.LienzoGlyphsHoverPaletteImpl;
 import org.wirez.client.lienzo.util.SVGUtils;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.animation.Deselect;
-import org.wirez.core.client.animation.Select;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -45,12 +43,11 @@ public class LienzoPaletteMorphToolboxCommand extends AbstractPaletteMorphComman
                                             final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
                                             final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                             final GraphBoundsIndexer graphBoundsIndexer,
-                                            final @Select ShapeAnimation selectionAnimation,
-                                            final @Deselect ShapeDeSelectionAnimation deSelectionAnimation) {
+                                            final AnimationFactory animationFactory ) {
         
         super( definitionUtils, commandFactory, canvasCommandManager, clientFactoryServices,
                 commonLookups,shapeManager, definitionsPaletteBuilder, palette, nodeDragProxyFactory,
-                nodeBuilderControl, graphBoundsIndexer, selectionAnimation, deSelectionAnimation,
+                nodeBuilderControl, graphBoundsIndexer, animationFactory,
                 SVGUtils.createSVGIcon( SVGUtils.getGearIcon() ) );
         
     }

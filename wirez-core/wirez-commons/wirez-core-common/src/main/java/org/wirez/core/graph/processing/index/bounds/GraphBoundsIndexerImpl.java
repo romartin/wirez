@@ -6,12 +6,14 @@ import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.graph.content.view.Bounds;
 import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.processing.traverse.content.AbstractChildrenTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
 import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 import org.wirez.core.graph.util.GraphUtils;
 
 import javax.enterprise.context.Dependent;
+import java.util.Iterator;
 import java.util.Stack;
 
 @Dependent
@@ -21,15 +23,15 @@ public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
     private String rootUUID = null;
 
     @Override
-    public GraphBoundsIndexerImpl build(Graph<View, Node<View, Edge>> graph) {
+    public GraphBoundsIndexerImpl build( Graph<View, Node<View, Edge>> graph ) {
         this.graph = graph;
         return this;
     }
 
     @Override
-    public Node<View<?>, Edge> getAt(final double x,
-                                     final double y) {
-        return traverseChildren(x, y);
+    public Node<View<?>, Edge> getAt( final double x,
+                                      final double y ) {
+        return traverseChildren( x, y );
     }
 
     @Override
@@ -37,73 +39,70 @@ public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
         this.graph = null;
     }
 
-    public Node<View<?>, Edge> traverseChildren(final double x, final double y) {
+    public Node<View<?>, Edge> traverseChildren( final double x, final double y ) {
         final Node[] result = new Node[1];
 
 
-        new ChildrenTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AbstractContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>() {
-
-            final Stack<Node> parents = new Stack<>();
+        new ChildrenTraverseProcessorImpl( new TreeWalkTraverseProcessorImpl() ).traverse( graph, new AbstractChildrenTraverseCallback<Node<View, Edge>, Edge<Child, Node>>() {
 
             @Override
-            public void startGraphTraversal(Graph<View, Node<View, Edge>> graph) {
-                super.startGraphTraversal(graph);
-                parents.clear();
+            public void startNodeTraversal( final Node<View, Edge> node ) {
+                super.startNodeTraversal( node );
+
+                onStartNodeTraversal( null, node );
             }
 
             @Override
-            public void startEdgeTraversal(Edge<Child, Node> edge) {
-                Node parent = edge.getSourceNode();
-                parents.push(parent);
+            public boolean startNodeTraversal( final Iterator<Node<View, Edge>> parents,
+                                               final Node<View, Edge> node ) {
+                super.startNodeTraversal( parents, node );
+
+                onStartNodeTraversal( parents, node );
+
+                return true;
             }
 
-            @Override
-            public void endEdgeTraversal(Edge<Child, Node> edge) {
-                super.endEdgeTraversal(edge);
-                parents.pop();
-            }
+            private void onStartNodeTraversal( final Iterator<Node<View, Edge>> parents,
+                                                final Node<View, Edge> node ) {
 
-            @Override
-            public void startNodeTraversal(final Node<View, Edge> node) {
-                super.startNodeTraversal(node);
                 double parentX = 0;
                 double parentY = 0;
 
-                if ( !parents.isEmpty() ) {
+                if ( null != parents && parents.hasNext() ) {
 
-                    for ( Node tParent : parents ) {
+                    while ( parents.hasNext() ) {
+
+                        Node tParent = parents.next();
                         final Object content = tParent.getContent();
-                        if (content instanceof View) {
-                            final View viewContent = (View) content;
-                            final Double[] parentCoords = GraphUtils.getPosition(viewContent);
+
+                        if ( content instanceof View ) {
+                            final View viewContent = ( View ) content;
+                            final Double[] parentCoords = GraphUtils.getPosition( viewContent );
                             parentX += parentCoords[0];
                             parentY += parentCoords[1];
                         }
+
                     }
 
                 }
 
-                if (isNodeAt(node, parentX, parentY, x, y)) {
+                if ( isNodeAt( node, parentX, parentY, x, y ) ) {
                     result[0] = node;
                 }
+
             }
 
-            @Override
-            public void endGraphTraversal() {
-                super.endGraphTraversal();
-                parents.clear();
-            }
             
         });
 
         return result[0];
     }
 
-    private boolean isNodeAt(final Node node,
-                             final double parentX,
-                             final double parentY,
-                             final double mouseX,
-                             final double mouseY) {
+    private boolean isNodeAt( final Node node,
+                              final double parentX,
+                              final double parentY,
+                              final double mouseX,
+                              final double mouseY ) {
 
         if ( null != rootUUID && node.getUUID().equals( rootUUID ) ) {
             return true;

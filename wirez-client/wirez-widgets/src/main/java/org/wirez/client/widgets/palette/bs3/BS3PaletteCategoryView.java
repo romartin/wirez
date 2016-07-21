@@ -55,7 +55,7 @@ public class BS3PaletteCategoryView extends Composite implements BS3PaletteCateg
 
     @Override
     public BS3PaletteCategory.View addTitle( final String title ) {
-        addHeader( title, HeadingSize.H1, true );
+        addHeader( title, HeadingSize.H1, false );
         return this;
     }
 

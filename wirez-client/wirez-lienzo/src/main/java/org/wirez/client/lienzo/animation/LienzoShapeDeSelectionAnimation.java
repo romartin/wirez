@@ -18,16 +18,12 @@ package org.wirez.client.lienzo.animation;
 
 import com.ait.lienzo.client.core.animation.AnimationProperties;
 import com.ait.lienzo.client.core.animation.AnimationTweener;
-import org.wirez.core.client.animation.Deselect;
 
-import javax.enterprise.context.Dependent;
 import java.util.Collection;
 
 import static com.ait.lienzo.client.core.animation.AnimationProperty.Properties.STROKE_ALPHA;
 
-@Dependent
-@Deselect
-public final class ShapeDeSelectionAnimation extends AbstractShapeAnimation 
+final class LienzoShapeDeSelectionAnimation extends AbstractShapeAnimation
         implements org.wirez.core.client.animation.ShapeDeSelectionAnimation {
 
     private double strokeWidth;

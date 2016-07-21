@@ -44,6 +44,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
     protected DeleteSelectionCommand deleteSelectionCommand;
     protected SaveCommand saveCommand;
     protected UndoCommand undoCommand;
+    protected ValidateCommand validateCommand;
 
     private static Logger LOGGER = Logger.getLogger(FullSessionPresenter.class.getName());
     
@@ -59,6 +60,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
                                         final DeleteSelectionCommand deleteSelectionCommand,
                                         final SaveCommand saveCommand,
                                         final UndoCommand undoCommand,
+                                        final ValidateCommand validateCommand,
                                         final VisitGraphCommand visitGraphCommand,
                                         final SwitchGridCommand switchGridCommand,
                                         final ErrorPopupPresenter errorPopupPresenter,
@@ -74,6 +76,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         this.deleteSelectionCommand = deleteSelectionCommand;
         this.saveCommand = saveCommand;
         this.undoCommand = undoCommand;
+        this.validateCommand = validateCommand;
     }
 
     @Override
@@ -100,6 +103,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         // Toolbar commands for canvas controls.
         super.addToolbarCommand( (ToolbarCommand<S>) clearCommand );
         super.addToolbarCommand( (ToolbarCommand<S>) deleteSelectionCommand );
+        super.addToolbarCommand( (ToolbarCommand<S>) validateCommand );
         super.addToolbarCommand( (ToolbarCommand<S>) saveCommand );
         super.addToolbarCommand( (ToolbarCommand<S>) undoCommand );
     }
@@ -189,7 +193,11 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         if ( null != undoCommand ) {
             this.undoCommand.destroy();
         }
-        
+
+        if ( null != validateCommand ) {
+            this.validateCommand.destroy();
+        }
+
         this.clientDefinitionManager = null;
         this.clientFactoryServices = null;
         this.commandFactory = null;
@@ -197,7 +205,8 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         this.deleteSelectionCommand = null;
         this.saveCommand = null;
         this.undoCommand = null;
-        
+        this.validateCommand = null;
+
     }
 
     @Override

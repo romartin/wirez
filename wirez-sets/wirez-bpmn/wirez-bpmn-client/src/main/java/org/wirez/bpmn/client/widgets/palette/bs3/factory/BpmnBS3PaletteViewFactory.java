@@ -1,6 +1,7 @@
 package org.wirez.bpmn.client.widgets.palette.bs3.factory;
 
 import org.gwtbootstrap3.client.ui.Icon;
+import org.gwtbootstrap3.client.ui.constants.IconRotate;
 import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.bpmn.BPMNDefinitionSet;
@@ -19,7 +20,7 @@ public class BpmnBS3PaletteViewFactory extends BindableBS3PaletteGlyphViewFactor
     private final static Map<String, Icon> CATEGORY_VIEWS = new HashMap<String, Icon>() {{
         put( Categories.ACTIVITIES,  getIcon( IconType.SQUARE ) );
         put( Categories.LANES,  getIcon( IconType.COLUMNS ) );
-        put( Categories.GATEWAYS,  getIcon( IconType.RANDOM ) );
+        put( Categories.GATEWAYS,  getGatewaysCategoryIcon() );
         put( Categories.EVENTS,  getIcon( IconType.CIRCLE ) );
         put( Categories.CONNECTING_OBJECTS,  getIcon( IconType.LONG_ARROW_RIGHT ) );
     }};
@@ -71,6 +72,14 @@ public class BpmnBS3PaletteViewFactory extends BindableBS3PaletteGlyphViewFactor
 
     private static Icon getIcon( final IconType iconType ) {
         return new Icon( iconType );
+    }
+
+    // TODO: Rotate by multiples of 45 degrees not possible?
+    private static Icon getGatewaysCategoryIcon() {
+        //final Icon icon = new Icon( IconType.SQUARE );
+        // icon.setRotate( IconRotate.ROTATE_270 );
+        final Icon icon = new Icon( IconType.RANDOM );
+        return icon;
     }
 
 }

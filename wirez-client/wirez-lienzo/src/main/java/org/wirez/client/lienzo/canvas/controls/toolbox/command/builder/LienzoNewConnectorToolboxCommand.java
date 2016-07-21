@@ -3,8 +3,7 @@ package org.wirez.client.lienzo.canvas.controls.toolbox.command.builder;
 import com.ait.lienzo.client.core.shape.Shape;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.animation.Deselect;
-import org.wirez.core.client.animation.Select;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -23,7 +22,7 @@ import javax.inject.Inject;
 public class LienzoNewConnectorToolboxCommand extends NewConnectorCommand<Shape<?>> {
 
     protected LienzoNewConnectorToolboxCommand() {
-        this( null, null, null, null, null, null, null, null, null );
+        this( null, null, null, null, null, null, null, null );
     }
 
     @Inject
@@ -34,11 +33,9 @@ public class LienzoNewConnectorToolboxCommand extends NewConnectorCommand<Shape<
                                             final GraphBoundsIndexer graphBoundsIndexer,
                                             final ConnectorDragProxyFactory<AbstractCanvasHandler> connectorDragProxyFactory,
                                             final EdgeBuilderControl<AbstractCanvasHandler> edgeBuilderControl,
-                                            final @Select ShapeAnimation selectionAnimation,
-                                            final @Deselect ShapeDeSelectionAnimation deSelectionAnimation ) {
+                                            final AnimationFactory animationFactory ) {
         super( clientDefinitionManager, clientFactoryServices, shapeManager, glyphTooltip,
-                graphBoundsIndexer, connectorDragProxyFactory, edgeBuilderControl,
-                selectionAnimation, deSelectionAnimation );
+                graphBoundsIndexer, connectorDragProxyFactory, edgeBuilderControl, animationFactory );
     }
 
     @PostConstruct

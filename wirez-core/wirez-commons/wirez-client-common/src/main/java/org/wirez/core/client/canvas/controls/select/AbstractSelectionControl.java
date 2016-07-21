@@ -1,10 +1,7 @@
 package org.wirez.core.client.canvas.controls.select;
 
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.client.animation.Deselect;
-import org.wirez.core.client.animation.Select;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.Layer;
@@ -15,12 +12,13 @@ import org.wirez.core.client.canvas.event.selection.CanvasClearSelectionEvent;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.shape.EdgeShape;
 import org.wirez.core.client.shape.Shape;
-import org.wirez.core.client.shape.view.HasCanvasState;
+import org.wirez.core.client.shape.view.HasState;
 import org.wirez.core.client.shape.view.HasDecorators;
 import org.wirez.core.client.shape.view.event.MouseClickEvent;
 import org.wirez.core.client.shape.view.event.MouseClickHandler;
 import org.wirez.core.client.shape.view.event.ViewEventType;
 import org.wirez.core.client.shape.view.event.ViewHandler;
+import org.wirez.core.client.util.ShapeStateUtils;
 import org.wirez.core.graph.Element;
 
 import javax.enterprise.event.Event;
@@ -39,12 +37,10 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
         implements SelectionControl<AbstractCanvasHandler, Element> {
 
     private static Logger LOGGER = Logger.getLogger( AbstractSelectionControl.class.getName() );
-    public static final long ANIMATION_SELECTION_DURATION = 250;
 
     Event<CanvasElementSelectedEvent> elementSelectedEventEvent;
     Event<CanvasClearSelectionEvent> clearSelectionEventEvent;
-    ShapeAnimation selectionAnimation;
-    ShapeDeSelectionAnimation deSelectionAnimation;
+    ShapeStateUtils shapeStateUtils;
 
     protected final List<String> selectedElements = new ArrayList<String>();
     protected ViewHandler<?> layerClickHandler;
@@ -52,12 +48,10 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
     @Inject
     public AbstractSelectionControl( final Event<CanvasElementSelectedEvent> elementSelectedEventEvent,
                                      final Event<CanvasClearSelectionEvent> clearSelectionEventEvent,
-                                     final @Select ShapeAnimation selectionAnimation,
-                                     final @Deselect ShapeDeSelectionAnimation deSelectionAnimation ) {
+                                     final ShapeStateUtils shapeStateUtils ) {
         this.elementSelectedEventEvent = elementSelectedEventEvent;
         this.clearSelectionEventEvent = clearSelectionEventEvent;
-        this.selectionAnimation = selectionAnimation;
-        this.deSelectionAnimation = deSelectionAnimation;
+        this.shapeStateUtils = shapeStateUtils;
     }
 
     /*
@@ -205,41 +199,13 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
 
     protected void selectShape( final Shape shape ) {
 
-        if ( shape.getShapeView() instanceof HasCanvasState ) {
-
-            final HasCanvasState canvasStateMutation = ( HasCanvasState ) shape.getShapeView();
-            canvasStateMutation.applyState( ShapeState.SELECTED );
-
-        } else if ( shape.getShapeView() instanceof HasDecorators ) {
-
-            selectionAnimation.forShape( shape )
-                    .forCanvas( getCanvas() )
-                    .setDuration( ANIMATION_SELECTION_DURATION )
-                    .run();
-        }
+        shapeStateUtils.select( getCanvas(), shape );
 
     }
 
     protected void deselectShape( final Shape shape ) {
 
-        final boolean isConnector = shape instanceof EdgeShape;
-
-        if ( shape.getShapeView() instanceof HasCanvasState ) {
-
-            final HasCanvasState canvasStateMutation = ( HasCanvasState ) shape.getShapeView();
-            canvasStateMutation.applyState( ShapeState.DESELECTED );
-
-        } else if ( shape.getShapeView() instanceof HasDecorators ) {
-
-            deSelectionAnimation.setStrokeWidth( isConnector ? 1 : 0 )
-                    .setStrokeAlpha( isConnector ? 1 : 0 )
-                    .setColor( "#000000" )
-                    .forShape( shape )
-                    .forCanvas( getCanvas() )
-                    .setDuration( ANIMATION_SELECTION_DURATION )
-                    .run();
-
-        }
+        shapeStateUtils.deselect( getCanvas(), shape );
 
     }
     

@@ -22,6 +22,9 @@ import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class if a helper during development. It provides menu entires for some testing stuff.
+ */
 @Dependent
 public class CanvasScreenTestingMenus {
 
@@ -29,7 +32,7 @@ public class CanvasScreenTestingMenus {
 
     @Inject
     PlatformManager platformManager;
-    
+
     private Menus menu = null;
     private DefaultCanvasFullSession session;
     private HandlerRegistration mousePointerCoordsHandlerReg;

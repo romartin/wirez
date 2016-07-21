@@ -9,7 +9,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public final class ViewTraverseProcessorImpl extends AbstractContentTraverseProcessor<View<?>, Node<View, Edge>, Edge<View<?>, Node>>
+public final class ViewTraverseProcessorImpl extends AbstractContentTraverseProcessor<View<?>, Node<View, Edge>, Edge<View<?>, Node>, ContentTraverseCallback<View<?>, Node<View, Edge>, Edge<View<?>, Node>>>
         implements ViewTraverseProcessor {
 
     @Inject
@@ -23,13 +23,8 @@ public final class ViewTraverseProcessorImpl extends AbstractContentTraverseProc
     }
 
     @Override
-    protected boolean doStartEdgeTraversal(final Edge edge) {
+    protected boolean accepts( final Edge edge ) {
         return edge.getContent() instanceof View ;
-    }
-
-    @Override
-    protected boolean doEndEdgeTraversal(final Edge edge) {
-        return edge.getContent() instanceof View;
     }
 
 }

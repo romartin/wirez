@@ -2,6 +2,7 @@ package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -31,7 +32,7 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
     protected ShapeFactory factory;
 
     protected AbstractElementBuilderCommand() {
-        this( null, null, null, null, null, null, null );
+        this( null, null, null, null, null, null );
     }
 
     @Inject
@@ -40,9 +41,8 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
                                          final ShapeManager shapeManager,
                                          final DefinitionGlyphTooltip<?> glyphTooltip,
                                          final GraphBoundsIndexer graphBoundsIndexer,
-                                         final ShapeAnimation selectionAnimation,
-                                         final ShapeDeSelectionAnimation deSelectionAnimation) {
-        super( clientDefinitionManager, clientFactoryServices, graphBoundsIndexer, selectionAnimation, deSelectionAnimation );
+                                         final AnimationFactory animationFactory ) {
+        super( clientDefinitionManager, clientFactoryServices, graphBoundsIndexer, animationFactory );
         this.shapeManager = shapeManager;
         this.glyphTooltip = glyphTooltip;
     }

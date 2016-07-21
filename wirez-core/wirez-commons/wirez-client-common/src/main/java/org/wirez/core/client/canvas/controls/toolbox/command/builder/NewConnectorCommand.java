@@ -2,6 +2,7 @@ package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -30,7 +31,7 @@ public abstract class NewConnectorCommand<I> extends AbstractElementBuilderComma
     private String edgeId;
 
     protected NewConnectorCommand() {
-        this( null, null, null, null, null, null, null, null, null );
+        this( null, null, null, null, null, null, null, null );
     }
 
     public NewConnectorCommand(final ClientDefinitionManager clientDefinitionManager,
@@ -40,10 +41,9 @@ public abstract class NewConnectorCommand<I> extends AbstractElementBuilderComma
                                 final GraphBoundsIndexer graphBoundsIndexer,
                                 final ConnectorDragProxyFactory<AbstractCanvasHandler> connectorDragProxyFactory,
                                 final EdgeBuilderControl<AbstractCanvasHandler> edgeBuilderControl,
-                                final ShapeAnimation selectionAnimation,
-                                final ShapeDeSelectionAnimation deSelectionAnimation) {
+                                final AnimationFactory animationFactory ) {
         super( clientDefinitionManager, clientFactoryServices, shapeManager, glyphTooltip, graphBoundsIndexer,
-                selectionAnimation, deSelectionAnimation );
+                animationFactory );
         this.connectorDragProxyFactory = connectorDragProxyFactory;
         this.edgeBuilderControl = edgeBuilderControl;
 

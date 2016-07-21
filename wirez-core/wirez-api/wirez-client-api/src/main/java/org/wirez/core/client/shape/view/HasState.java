@@ -21,8 +21,8 @@ import org.wirez.core.client.canvas.ShapeState;
 /**
  * A shape that its size depends on width and height properties present in the Definition.
  */
-public interface HasCanvasState {
+public interface HasState {
     
-    void applyState(ShapeState shapeState);
+    void applyState( ShapeState shapeState );
     
 }

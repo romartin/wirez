@@ -1,5 +1,6 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
+import org.wirez.core.client.canvas.util.CanvasLayoutUtils;
 import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.rule.model.ModelCardinalityRuleManager;
@@ -24,23 +25,24 @@ import java.util.logging.Logger;
 @Element
 public class ElementBuilderControlImpl extends AbstractElementBuilderControl {
 
-    private static Logger LOGGER = Logger.getLogger(ElementBuilderControlImpl.class.getName());
+    private static Logger LOGGER = Logger.getLogger( ElementBuilderControlImpl.class.getName() );
 
     @Inject
-    public ElementBuilderControlImpl(final ClientDefinitionManager clientDefinitionManager,
-                                     final ClientFactoryServices clientFactoryServices,
-                                     final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
-                                     final GraphUtils graphUtils,
-                                     final ModelContainmentRuleManager modelContainmentRuleManager,
-                                     final ModelCardinalityRuleManager modelCardinalityRuleManager,
-                                     final CanvasCommandFactory canvasCommandFactory,
-                                     final GraphBoundsIndexer graphBoundsIndexer,
-                                     final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                     final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
-        super( clientDefinitionManager, clientFactoryServices, canvasCommandManager, graphUtils, 
+    public ElementBuilderControlImpl( final ClientDefinitionManager clientDefinitionManager,
+                                      final ClientFactoryServices clientFactoryServices,
+                                      final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
+                                      final GraphUtils graphUtils,
+                                      final ModelContainmentRuleManager modelContainmentRuleManager,
+                                      final ModelCardinalityRuleManager modelCardinalityRuleManager,
+                                      final CanvasCommandFactory canvasCommandFactory,
+                                      final GraphBoundsIndexer graphBoundsIndexer,
+                                      final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
+                                      final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
+                                      final CanvasLayoutUtils canvasLayoutUtils ) {
+        super( clientDefinitionManager, clientFactoryServices, canvasCommandManager, graphUtils,
                 modelContainmentRuleManager, modelCardinalityRuleManager, canvasCommandFactory, graphBoundsIndexer,
-                canvasProcessingStartedEvent, canvasProcessingCompletedEvent);
-        
+                canvasProcessingStartedEvent, canvasProcessingCompletedEvent, canvasLayoutUtils );
+
     }
-    
+
 }

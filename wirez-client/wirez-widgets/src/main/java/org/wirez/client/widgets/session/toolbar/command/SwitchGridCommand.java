@@ -1,6 +1,7 @@
 package org.wirez.client.widgets.session.toolbar.command;
 
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
@@ -24,9 +25,10 @@ public class SwitchGridCommand extends AbstractToolbarCommand<DefaultCanvasReadO
     }
 
     @Override
-    public void initialize( final DefaultCanvasReadOnlySession session ) {
+    public ToolbarCommand<DefaultCanvasReadOnlySession> initialize( final DefaultCanvasReadOnlySession session ) {
         super.initialize( session );
         showGrid();
+        return this;
     }
 
     @Override

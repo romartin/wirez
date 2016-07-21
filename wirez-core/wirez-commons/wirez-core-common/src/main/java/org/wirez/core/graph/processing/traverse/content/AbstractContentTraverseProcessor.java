@@ -9,74 +9,134 @@ import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 
 import javax.inject.Inject;
 
-public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, Edge>, E extends Edge<C, Node>>
-        implements ContentTraverseProcessor<C, N, E, ContentTraverseCallback<C, N, E>> {
+public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, Edge>, E extends Edge<C, Node>, K extends ContentTraverseCallback<C, N, E>>
+        implements ContentTraverseProcessor<C, N, E, K> {
 
     TreeWalkTraverseProcessor treeWalkTraverseProcessor;
 
     @Inject
-    public AbstractContentTraverseProcessor(final TreeWalkTraverseProcessor treeWalkTraverseProcessor) {
+    public AbstractContentTraverseProcessor( final TreeWalkTraverseProcessor treeWalkTraverseProcessor ) {
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
     }
 
-    protected abstract boolean doStartEdgeTraversal(final Edge edge);
-
-    protected abstract boolean doEndEdgeTraversal(final Edge edge);
-
     protected abstract TreeWalkTraverseProcessor.TraversePolicy getPolicy();
-    
+
+    @SuppressWarnings( "unchecked" )
+    protected boolean doStartEdgeTraversal( final Edge edge,
+                                            final K callback ) {
+
+        if ( accepts( edge ) ) {
+
+            callback.startEdgeTraversal( ( E ) edge );
+
+        }
+
+        return true;
+
+    }
+
+    @SuppressWarnings( "unchecked" )
+    protected boolean doEndEdgeTraversal( final Edge edge,
+                                          final K callback ) {
+
+        if ( accepts( edge ) ) {
+
+            callback.endEdgeTraversal( ( E ) edge );
+
+        }
+
+        return true;
+
+    }
+
+    protected boolean accepts( final Edge edge ) {
+        return true;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    protected void doStartGraphTraversal( final Graph graph,
+                                          final K callback ) {
+
+        if ( graph.getContent() instanceof View ) {
+
+            callback.startGraphTraversal( graph );
+
+        }
+
+    }
+
+    @SuppressWarnings( "unchecked" )
+    protected boolean doStartNodeTraversal( final Node node,
+                                            final K callback ) {
+
+        if ( node.getContent() instanceof View ) {
+
+            callback.startNodeTraversal( ( N ) node );
+
+            return true;
+
+        }
+
+        return false;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    protected void doEndNodeTraversal( final Node node,
+                                       final K callback ) {
+
+        if ( node.getContent() instanceof View ) {
+
+            callback.endNodeTraversal( ( N ) node );
+
+        }
+
+    }
+
+    protected void doEndGraphTraversal( final Graph graph,
+                                        final K callback ) {
+
+        callback.endGraphTraversal();
+
+    }
+
     @Override
-    public void traverse(final Graph<View, N> graph,
-                         final ContentTraverseCallback<C, N, E> callback) {
+    public void traverse( final Graph<View, N> graph,
+                          final K callback ) {
 
         treeWalkTraverseProcessor
-                .usePolicy(getPolicy())
-                .traverse(graph, new TreeTraverseCallback<Graph, Node, Edge>() {
+                .usePolicy( getPolicy() )
+                .traverse( graph, new TreeTraverseCallback<Graph, Node, Edge>() {
 
                     @Override
-                    public void startGraphTraversal(final Graph graph) {
-                        if (graph.getContent() instanceof View) {
-                            callback.startGraphTraversal(graph);
-                        }
+                    public void startGraphTraversal( final Graph graph ) {
+                        AbstractContentTraverseProcessor.this.doStartGraphTraversal( graph, callback );
                     }
 
                     @Override
-                    public boolean startNodeTraversal(final Node node) {
-                        if (node.getContent() instanceof View) {
-                            callback.startNodeTraversal((N) node);
-                            return true;
-                        }
-                        return false;
+                    public boolean startNodeTraversal( final Node node ) {
+                        return AbstractContentTraverseProcessor.this.doStartNodeTraversal( node, callback );
                     }
 
                     @Override
-                    public boolean startEdgeTraversal(final Edge edge) {
-                        if (doStartEdgeTraversal(edge)) {
-                            callback.startEdgeTraversal((E) edge);
-                            return true;
-                        }
-                        return false;
+                    public boolean startEdgeTraversal( final Edge edge ) {
+                        return AbstractContentTraverseProcessor.this.doStartEdgeTraversal( edge, callback );
                     }
 
                     @Override
-                    public void endNodeTraversal(final Node node) {
-                        if (node.getContent() instanceof View) {
-                            callback.endNodeTraversal((N) node);
-                        }
+                    public void endNodeTraversal( final Node node ) {
+                        AbstractContentTraverseProcessor.this.doEndNodeTraversal( node, callback );
                     }
 
                     @Override
-                    public void endEdgeTraversal(final Edge edge) {
-                        if (doEndEdgeTraversal( edge )) {
-                            callback.endEdgeTraversal((E) edge);
-                        }
+                    public void endEdgeTraversal( final Edge edge ) {
+                        AbstractContentTraverseProcessor.this.doEndEdgeTraversal( edge, callback );
                     }
 
                     @Override
                     public void endGraphTraversal() {
-                        callback.endGraphTraversal();
+                        AbstractContentTraverseProcessor.this.doEndGraphTraversal( graph, callback );
                     }
-                });
+                } );
 
     }
 

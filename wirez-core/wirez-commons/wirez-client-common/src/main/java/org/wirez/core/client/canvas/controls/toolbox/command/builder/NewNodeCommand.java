@@ -3,6 +3,7 @@ package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 import org.uberfire.mvp.Command;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -39,7 +40,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
     protected int targetMagnet;
 
     protected NewNodeCommand() {
-        this( null, null, null, null, null, null, null, null, null, null );
+        this( null, null, null, null, null, null, null, null, null );
     }
 
     public NewNodeCommand(final ClientDefinitionManager clientDefinitionManager,
@@ -49,11 +50,10 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
                           final GraphBoundsIndexer graphBoundsIndexer,
                           final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
                           final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
-                          final ShapeAnimation selectionAnimation,
-                          final ShapeDeSelectionAnimation deSelectionAnimation,
+                          final AnimationFactory animationFactory,
                           final DefinitionUtils definitionUtils) {
         super( clientDefinitionManager, clientFactoryServices, shapeManager, glyphTooltip, graphBoundsIndexer,
-                selectionAnimation, deSelectionAnimation );
+                animationFactory );
         this.nodeDragProxyFactory = nodeDragProxyFactory;
         this.nodeBuilderControl = nodeBuilderControl;
         this.definitionUtils = definitionUtils;

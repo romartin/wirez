@@ -18,16 +18,16 @@ package org.wirez.client.widgets.popup;
 
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
-import org.wirez.core.definition.util.DefinitionUtils;
-import org.wirez.core.graph.Element;
-import org.wirez.core.graph.content.definition.Definition;
-import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.command.impl.UpdateCanvasElementPropertyCommand;
 import org.wirez.core.client.components.popup.AbstractPopupBox;
 import org.wirez.core.client.session.command.Session;
+import org.wirez.core.definition.util.DefinitionUtils;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.content.definition.Definition;
+import org.wirez.core.graph.util.GraphUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -35,13 +35,13 @@ import javax.inject.Inject;
 
 @Dependent
 public class NamePopupBox extends AbstractPopupBox<Element> {
-    
+
     public interface View extends UberView<NamePopupBox> {
-        
-        View show(String name, double x, double y);
-        
+
+        View show( String name, double x, double y );
+
         View hide();
-        
+
     }
 
     View view;
@@ -50,55 +50,66 @@ public class NamePopupBox extends AbstractPopupBox<Element> {
     CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
     GraphUtils graphUtils;
     private Element<? extends Definition> element;
+    private String nameValue;
 
     @Inject
-    public NamePopupBox(final DefinitionUtils definitionUtils,
-                        final CanvasCommandFactory canvasCommandFactory,
-                        final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
-                        final GraphUtils graphUtils,
-                        final View view) {
+    public NamePopupBox( final DefinitionUtils definitionUtils,
+                         final CanvasCommandFactory canvasCommandFactory,
+                         final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
+                         final GraphUtils graphUtils,
+                         final View view ) {
         this.definitionUtils = definitionUtils;
         this.canvasCommandFactory = canvasCommandFactory;
         this.canvasCommandManager = canvasCommandManager;
         this.graphUtils = graphUtils;
         this.view = view;
+        this.element = null;
+        this.nameValue = null;
     }
 
     @PostConstruct
     public void setup() {
-        view.init(this);
+        view.init( this );
     }
-    
+
     @Override
-    public void show(final Element element, final double x, final double y) {
+    public void show( final Element element, final double x, final double y ) {
         this.element = element;
         final String name = definitionUtils.getName( this.element.getContent().getDefinition() );
-        view.show(name, x, y);
+        view.show( name, x, y );
     }
 
     @Override
     public void hide() {
         view.hide();
+        this.nameValue = null;
     }
 
     @Override
     public Widget asWidget() {
         return view.asWidget();
     }
-    
+
+    void onChangeName( final String name ) {
+        this.nameValue = name;
+    }
+
     // TODO: Check command result.
-    void onChangeName(final String name) {
-        final Object def = element.getContent().getDefinition();
-        final String nameId = definitionUtils.getNameIdentifier( def );
-        if ( null != name && null != nameId ) {
-            UpdateCanvasElementPropertyCommand command = canvasCommandFactory.UPDATE_PROPERTY(element, nameId, name);
-            canvasCommandManager.execute( canvasHandler, command );
+    void onSave() {
+        if ( null != this.nameValue ) {
+            final Object def = element.getContent().getDefinition();
+            final String nameId = definitionUtils.getNameIdentifier( def );
+            if ( null != nameId ) {
+                UpdateCanvasElementPropertyCommand command = canvasCommandFactory.UPDATE_PROPERTY( element, nameId, this.nameValue );
+                canvasCommandManager.execute( canvasHandler, command );
+
+            }
         }
         view.hide();
     }
-    
+
     void onClose() {
-        this.hide();   
+        this.hide();
     }
-    
+
 }

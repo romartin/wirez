@@ -3,8 +3,7 @@ package org.wirez.client.lienzo.canvas.controls.toolbox.command.builder;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.animation.Deselect;
-import org.wirez.core.client.animation.Select;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -24,7 +23,7 @@ import javax.inject.Inject;
 public class LienzoNewNodeToolboxCommand extends NewNodeCommand<IPrimitive<?>> {
 
     protected LienzoNewNodeToolboxCommand() {
-        this( null, null, null, null, null, null, null, null, null, null );
+        this( null, null, null, null, null, null, null, null, null );
     }
 
     @Inject
@@ -35,11 +34,10 @@ public class LienzoNewNodeToolboxCommand extends NewNodeCommand<IPrimitive<?>> {
                                        final GraphBoundsIndexer graphBoundsIndexer,
                                        final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
                                        final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
-                                       final @Select ShapeAnimation selectionAnimation,
-                                       final @Deselect ShapeDeSelectionAnimation deSelectionAnimation,
+                                       final AnimationFactory animationFactory,
                                        final DefinitionUtils definitionUtils) {
         super( clientDefinitionManager, clientFactoryServices, shapeManager, glyphTooltip, graphBoundsIndexer,
-                nodeDragProxyFactory, nodeBuilderControl, selectionAnimation, deSelectionAnimation,
+                nodeDragProxyFactory, nodeBuilderControl, animationFactory,
                 definitionUtils );
     }
 

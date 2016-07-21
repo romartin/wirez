@@ -39,54 +39,63 @@ public class NamePopupBoxView extends Composite implements NamePopupBox.View {
 
     @UiField
     FlowPanel mainPanel;
-    
+
     @UiField
     TextBox nameBox;
-    
+
     @UiField
     Icon closeButton;
-    
+
+    @UiField
+    Icon saveButton;
+
     private NamePopupBox presenter;
-    
+
     @Override
-    public void init(final NamePopupBox presenter) {
+    public void init( final NamePopupBox presenter ) {
         this.presenter = presenter;
         initWidget( uiBinder.createAndBindUi( this ) );
-        mainPanel.getElement().getStyle().setPosition(Style.Position.ABSOLUTE);
-        mainPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
-        nameBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+        mainPanel.getElement().getStyle().setPosition( Style.Position.ABSOLUTE );
+        mainPanel.getElement().getStyle().setDisplay( Style.Display.NONE );
+        nameBox.addValueChangeHandler( new ValueChangeHandler<String>() {
             @Override
-            public void onValueChange(final ValueChangeEvent<String> event) {
+            public void onValueChange( final ValueChangeEvent<String> event ) {
                 final String name = event.getValue();
-                presenter.onChangeName(name);
+                presenter.onChangeName( name );
             }
-        });
-        closeButton.addClickHandler(new ClickHandler() {
+        } );
+        saveButton.addClickHandler( new ClickHandler() {
             @Override
-            public void onClick(final ClickEvent event) {
+            public void onClick( final ClickEvent event ) {
+                presenter.onSave();
+            }
+        } );
+        closeButton.addClickHandler( new ClickHandler() {
+            @Override
+            public void onClick( final ClickEvent event ) {
                 presenter.onClose();
             }
-        });
+        } );
     }
 
     @Override
-    public NamePopupBox.View show(final String name,
-                                  final double x,
-                                  final double y) {
-        nameBox.setValue(name);
-        nameBox.setText(name);
-        mainPanel.setVisible(true);
-        mainPanel.getElement().getStyle().setLeft(x, Style.Unit.PX);
-        mainPanel.getElement().getStyle().setTop(y, Style.Unit.PX);
-        mainPanel.getElement().getStyle().setDisplay(Style.Display.BLOCK);
+    public NamePopupBox.View show( final String name,
+                                   final double x,
+                                   final double y ) {
+        nameBox.setValue( name );
+        nameBox.setText( name );
+        mainPanel.setVisible( true );
+        mainPanel.getElement().getStyle().setLeft( x, Style.Unit.PX );
+        mainPanel.getElement().getStyle().setTop( y, Style.Unit.PX );
+        mainPanel.getElement().getStyle().setDisplay( Style.Display.BLOCK );
         return this;
     }
 
     @Override
     public NamePopupBox.View hide() {
-        mainPanel.getElement().getStyle().setDisplay(Style.Display.NONE);
+        mainPanel.getElement().getStyle().setDisplay( Style.Display.NONE );
         return this;
     }
 
-    
+
 }

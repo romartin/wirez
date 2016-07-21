@@ -1,17 +1,5 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
-import org.wirez.core.command.Command;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
-import org.wirez.core.graph.Edge;
-import org.wirez.core.graph.Node;
-import org.wirez.core.graph.content.view.View;
-import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
-import org.wirez.core.graph.util.GraphUtils;
-import org.wirez.core.rule.RuleManager;
-import org.wirez.core.rule.RuleViolation;
-import org.wirez.core.rule.RuleViolations;
-import org.wirez.core.rule.model.ModelCardinalityRuleManager;
-import org.wirez.core.rule.model.ModelContainmentRuleManager;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
@@ -22,11 +10,24 @@ import org.wirez.core.client.canvas.controls.builder.ElementBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequest;
 import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
 import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.util.CanvasLayoutUtils;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.command.Command;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
+import org.wirez.core.graph.util.GraphUtils;
+import org.wirez.core.rule.RuleManager;
+import org.wirez.core.rule.RuleViolation;
+import org.wirez.core.rule.RuleViolations;
+import org.wirez.core.rule.model.ModelCardinalityRuleManager;
+import org.wirez.core.rule.model.ModelContainmentRuleManager;
 import org.wirez.core.util.UUID;
 
 import javax.enterprise.event.Event;
@@ -51,6 +52,7 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
     Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
     Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
     GraphBoundsIndexer graphBoundsIndexer;
+    CanvasLayoutUtils canvasLayoutUtils;
 
     public AbstractElementBuilderControl(final ClientDefinitionManager clientDefinitionManager,
                                          final ClientFactoryServices clientFactoryServices,
@@ -61,7 +63,8 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
                                          final CanvasCommandFactory canvasCommandFactory,
                                          final GraphBoundsIndexer graphBoundsIndexer,
                                          final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                         final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
+                                         final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
+                                         final CanvasLayoutUtils canvasLayoutUtils) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
         this.canvasCommandManager = canvasCommandManager;
@@ -72,6 +75,7 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         this.graphBoundsIndexer = graphBoundsIndexer;
         this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
         this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
+        this.canvasLayoutUtils = canvasLayoutUtils;
     }
     
     @Override
@@ -110,8 +114,21 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
             return;
         }
 
-        final double x = request.getX();
-        final double y = request.getY();
+        double x = 0;
+        double y = 0;
+        if ( request.getX() == -1 || request.getY() == -1 ) {
+
+            final double[] p = canvasLayoutUtils.getNextLayoutPosition( canvasHandler );
+            x = p[0] + 50;
+            y = p[1] > 0 ? p[1] : 200 ;
+
+        } else {
+
+            x = request.getX();
+            y = request.getY();
+
+        }
+
         final Object definition = request.getDefinition();
         final ShapeFactory<?, AbstractCanvasHandler, ?> factory = request.getShapeFactory();
 

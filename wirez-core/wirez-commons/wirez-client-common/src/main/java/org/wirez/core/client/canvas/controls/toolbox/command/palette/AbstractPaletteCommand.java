@@ -2,6 +2,7 @@ package org.wirez.core.client.canvas.controls.toolbox.command.palette;
 
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvas;
@@ -47,9 +48,8 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
     protected NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory;
     protected NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl;
     protected GraphBoundsIndexer graphBoundsIndexer;
-    protected ShapeAnimation selectionAnimation;
-    protected ShapeDeSelectionAnimation deSelectionAnimation;
-    
+    protected AnimationFactory animationFactory;
+
     protected AbstractCanvasHandler canvasHandler;
     protected CanvasHighlight canvasHighlight;
     protected Node<? extends Definition<Object>, ? extends Edge> sourceNode;
@@ -57,7 +57,7 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
     protected String elementUUID;
 
     protected AbstractPaletteCommand() {
-        this( null, null, null, null, null, null, null, null, null, null, null );
+        this( null, null, null, null, null, null, null, null, null, null );
     }
 
     public AbstractPaletteCommand(final ClientFactoryServices clientFactoryServices,
@@ -68,8 +68,7 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
                                   final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
                                   final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                   final GraphBoundsIndexer graphBoundsIndexer,
-                                  final ShapeAnimation selectionAnimation,
-                                  final ShapeDeSelectionAnimation deSelectionAnimation,
+                                  final AnimationFactory animationFactory,
                                   final I icon) {
         this.clientFactoryServices = clientFactoryServices;
         this.commonLookups = commonLookups;
@@ -79,8 +78,7 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
         this.nodeDragProxyFactory = nodeDragProxyFactory;
         this.nodeBuilderControl = nodeBuilderControl;
         this.graphBoundsIndexer = graphBoundsIndexer;
-        this.selectionAnimation = selectionAnimation;
-        this.deSelectionAnimation = deSelectionAnimation;
+        this.animationFactory = animationFactory;
         this.icon = icon;
         this.paletteVisible = false;
     }
@@ -247,9 +245,8 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
         this.nodeDragProxyFactory = null;
         this.nodeBuilderControl = null;
         this.graphBoundsIndexer = null;
-        this.selectionAnimation = null;
-        this.deSelectionAnimation = null;
-        
+        this.animationFactory = null;
+
     }
 
     protected abstract PaletteView getPaletteView();

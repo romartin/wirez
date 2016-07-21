@@ -2,6 +2,7 @@ package org.wirez.core.client.canvas.controls.toolbox.command.palette;
 
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -44,13 +45,12 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
                                  final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
                                  final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                  final GraphBoundsIndexer graphBoundsIndexer,
-                                 final ShapeAnimation selectionAnimation,
-                                 final ShapeDeSelectionAnimation deSelectionAnimation,
+                                 final AnimationFactory animationFactory,
                                  final I icon) {
         
         super(clientFactoryServices, commonLookups, shapeManager, definitionsPaletteBuilder, palette,
                 nodeDragProxyFactory, nodeBuilderControl, graphBoundsIndexer, 
-                selectionAnimation, deSelectionAnimation, icon);
+                animationFactory, icon);
         
     }
 
@@ -70,6 +70,7 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     protected void onItemSelected( final String definitionId, 
                                    final ShapeFactory<?, ?, ?> factory,
                                    final double x,
@@ -127,7 +128,8 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
                         nodeBuilderControl.enable( canvasHandler );
 
                         canvasHighlight = new CanvasHighlight( canvasHandler,
-                                selectionAnimation, deSelectionAnimation );
+                                animationFactory.newShapeSelectAnimation(),
+                                animationFactory.newShapeDeselectAnimation() );
 
                         graphBoundsIndexer.build( canvasHandler.getDiagram().getGraph() );
 

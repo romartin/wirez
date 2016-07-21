@@ -1,5 +1,6 @@
 package org.wirez.client.widgets.session.toolbar.command;
 
+import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
@@ -21,9 +22,10 @@ public abstract class AbstractSelectionToolbarCommand<S extends CanvasReadOnlySe
     }
 
     @Override
-    public void initialize(S session) {
+    public ToolbarCommand<S> initialize( S session) {
         super.initialize(session);
         checkState();
+        return this;
     }
 
     @Override

@@ -13,11 +13,11 @@ import org.wirez.core.util.UUID;
 import java.util.Iterator;
 
 public final class CanvasCommandNotification 
-        extends AbstractNotification<CanvasNotificationSource, CanvasNotificationContext>{
+        extends AbstractNotification<CanvasCommandNotificationSource, CanvasNotificationContext>{
 
     CanvasCommandNotification(final String uuid, 
                                      final Type type, 
-                                     final CanvasNotificationSource source, 
+                                     final CanvasCommandNotificationSource source,
                                      final CanvasNotificationContext context) {
         super(uuid, type, source, context);
     }
@@ -57,7 +57,7 @@ public final class CanvasCommandNotification
             }
             
             final String resultMsg = getResultMessage( result );
-            final CanvasNotificationSource source = new CanvasNotificationSource( command.toString(),  resultMsg );
+            final CanvasCommandNotificationSource source = new CanvasCommandNotificationSource( command.toString(),  resultMsg );
             
             final Diagram diagram = canvasHander.getDiagram();
             final String diagramUUID = diagram.getUUID();

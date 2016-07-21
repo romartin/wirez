@@ -10,6 +10,7 @@ import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.content.view.ViewConnector;
+import org.wirez.core.graph.processing.traverse.content.AbstractChildrenTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
 import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
@@ -17,10 +18,7 @@ import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessorIm
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 // See org.codehaus.jackson.impl.ReaderBasedParser
 
@@ -47,9 +45,8 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
 
         final Map<String, EdgeParser> edgeParsers = new HashMap<>();
         
-        // TODO: Only support for a single root node for now.
         new ChildrenTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
-                .traverse(graph, new AbstractContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>() {
+                .traverse(graph, new AbstractChildrenTraverseCallback<Node<View, Edge>, Edge<Child, Node>>() {
 
                     final Stack<NodeParser> parsers = new Stack<NodeParser>();
                     NodeParser currentParser = null;
@@ -60,16 +57,31 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
                     }
 
                     @Override
-                    public void startNodeTraversal(Node<View, Edge> node) {
+                    public boolean startNodeTraversal( final Iterator<Node<View, Edge>> parents,
+                                                       final Node<View, Edge> node ) {
+                        super.startNodeTraversal( parents, node );
+
+                        onNodeTraversal( node );
+
+                        return true;
+                    }
+
+                    @Override
+                    public void startNodeTraversal( final Node<View, Edge> node ) {
                         super.startNodeTraversal(node);
 
+                        onNodeTraversal( node );
+                    }
+
+                    private void onNodeTraversal( final Node node ) {
+
                         NodeParser p = new NodeParser("", node);
-                        
+
                         if ( null != currentParser ) {
                             parsers.peek().addChild( p );
                         } else {
                             BPMN2JsonParser.this.rootParser = p;
-                            
+
                         }
 
                         currentParser = p;
@@ -83,7 +95,7 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
                                 }
                             }
                         }
-                        
+
                     }
                     
 

@@ -7,6 +7,7 @@ import org.wirez.client.lienzo.components.palette.LienzoGlyphsHoverPalette;
 import org.wirez.client.lienzo.components.palette.LienzoPalette;
 import org.wirez.client.lienzo.util.SVGUtils;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -32,12 +33,10 @@ public abstract class LienzoNewPaletteNodeToolboxCommand extends NewPaletteNodeC
                                               final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
                                               final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                               final GraphBoundsIndexer graphBoundsIndexer,
-                                              final ShapeAnimation selectionAnimation,
-                                              final ShapeDeSelectionAnimation deSelectionAnimation) {
+                                              final AnimationFactory animationFactory ) {
         super(clientFactoryServices, commonLookups, shapeManager,
                 definitionsPaletteBuilder, palette, nodeDragProxyFactory,
-                nodeBuilderControl, graphBoundsIndexer,
-                selectionAnimation, deSelectionAnimation,
+                nodeBuilderControl, graphBoundsIndexer, animationFactory,
                 SVGUtils.createSVGIcon(SVGUtils.getAddIcon()) );
     }
 

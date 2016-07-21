@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.NavPills;
+import org.gwtbootstrap3.client.ui.constants.IconRotate;
 import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
@@ -75,10 +76,15 @@ public class BS3PaletteCategoriesView extends Composite implements BS3PaletteCat
             if ( view instanceof Icon ) {
 
                 final Icon icon = ( Icon ) view;
-                final IconType type = icon.getType();
-
-                item.setIcon( type );
                 item.setIconSize( IconSize.TIMES4 );
+
+                final IconType type = icon.getType();
+                item.setIcon( type );
+
+                final IconRotate rotate = icon.getRotate();
+                if ( null != rotate ) {
+                    item.setIconRotate( rotate );
+                }
 
             } else {
 

@@ -75,6 +75,12 @@ public abstract class AbstractPaletteWidget<D extends PaletteDefinition, V exten
 
     }
 
+    public void onDragProxyComplete( final String definitionId ) {
+
+        onDragProxyComplete( definitionId, -1, -1  );
+
+    }
+
     @SuppressWarnings("unchecked")
     public void onDragProxyComplete( final String definitionId,
                               final double x,

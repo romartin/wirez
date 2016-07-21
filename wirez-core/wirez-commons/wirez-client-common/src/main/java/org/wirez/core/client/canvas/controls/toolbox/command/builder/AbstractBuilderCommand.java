@@ -3,6 +3,7 @@ package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 import org.uberfire.mvp.Command;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -35,25 +36,22 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
     protected ClientDefinitionManager clientDefinitionManager;
     protected ClientFactoryServices clientFactoryServices;
     protected GraphBoundsIndexer graphBoundsIndexer;
-    protected ShapeAnimation selectionAnimation;
-    protected ShapeDeSelectionAnimation deSelectionAnimation;
+    protected AnimationFactory animationFactory;
 
     protected CanvasHighlight canvasHighlight;
 
     protected AbstractBuilderCommand() {
-        this( null, null, null, null, null );
+        this( null, null, null, null );
     }
 
     public AbstractBuilderCommand(final ClientDefinitionManager clientDefinitionManager,
                                   final ClientFactoryServices clientFactoryServices,
                                   final GraphBoundsIndexer graphBoundsIndexer,
-                                  final ShapeAnimation selectionAnimation,
-                                  final ShapeDeSelectionAnimation deSelectionAnimation) {
+                                  final AnimationFactory animationFactory ) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
         this.graphBoundsIndexer = graphBoundsIndexer;
-        this.selectionAnimation = selectionAnimation;
-        this.deSelectionAnimation = deSelectionAnimation;
+        this.animationFactory = animationFactory;
     }
 
     protected abstract String getDefinitionIdentifier( Context<AbstractCanvasHandler> context );
@@ -99,7 +97,9 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
 
                     getBuilderControl().enable( canvasHandler );
 
-                    canvasHighlight = new CanvasHighlight( canvasHandler, selectionAnimation, deSelectionAnimation  );
+                    canvasHighlight = new CanvasHighlight( canvasHandler,
+                            animationFactory.newShapeSelectAnimation(),
+                            animationFactory.newShapeDeselectAnimation() );
 
                     graphBoundsIndexer.build( canvasHandler.getDiagram().getGraph() );
 
@@ -191,8 +191,7 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
         this.clientDefinitionManager = null;
         this.clientFactoryServices = null;
         this.graphBoundsIndexer = null;
-        this.selectionAnimation = null;
-        this.deSelectionAnimation = null;
+        this.animationFactory = null;
         this.canvasHighlight = null;
         
     }

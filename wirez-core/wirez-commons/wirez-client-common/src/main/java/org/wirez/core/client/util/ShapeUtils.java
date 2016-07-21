@@ -2,27 +2,26 @@ package org.wirez.core.client.util;
 
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.client.ClientDefinitionManager;
-import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.shape.factory.ShapeFactory;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
-import org.wirez.core.graph.Edge;
-import org.wirez.core.graph.Element;
-import org.wirez.core.graph.Node;
 import org.wirez.core.client.ShapeSet;
+import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.shape.EdgeShape;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.view.animation.HasAnimations;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.definition.Definition;
-import org.wirez.core.graph.content.view.View;
 
 import java.util.Collection;
 
 public class ShapeUtils {
 
-    public static String getModuleAbsPath( final String path ) {
+    public static String getModuleAbsolutePath( final String path ) {
         return GWT.getModuleBaseURL() + path;
     }
 

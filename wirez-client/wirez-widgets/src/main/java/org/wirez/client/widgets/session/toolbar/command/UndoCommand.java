@@ -1,6 +1,7 @@
 package org.wirez.client.widgets.session.toolbar.command;
 
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
 import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
@@ -43,9 +44,10 @@ public class UndoCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
     }
 
     @Override
-    public void initialize(final DefaultCanvasFullSession session) {
+    public ToolbarCommand<DefaultCanvasFullSession> initialize( final DefaultCanvasFullSession session) {
         super.initialize(session);
         checkState();
+        return this;
     }
 
     @Override

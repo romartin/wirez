@@ -1,12 +1,12 @@
 package org.wirez.client.widgets.notification.canvas;
 
-public final class CanvasNotificationSource {
+public final class CanvasCommandNotificationSource {
     
     private final String commandRaw;
     private final String resultRaw;
 
-    CanvasNotificationSource(final String commandRaw,
-                                    final String resultRaw) {
+    CanvasCommandNotificationSource( final String commandRaw,
+                                     final String resultRaw) {
         this.commandRaw = commandRaw;
         this.resultRaw = resultRaw;
     }

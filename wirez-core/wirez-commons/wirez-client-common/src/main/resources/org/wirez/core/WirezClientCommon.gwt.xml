@@ -25,5 +25,6 @@
 	<inherits name="org.wirez.core.WirezCommon"/>
 	
 	<source path="client"/>
+	<source path="validation/canvas"/>
 
 </module>

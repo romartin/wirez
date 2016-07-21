@@ -17,8 +17,10 @@
 package org.wirez.core.client.util;
 
 import com.google.gwt.logging.client.LogConfiguration;
-import com.google.gwt.user.client.Timer;
 import org.uberfire.mvp.Command;
+import org.wirez.core.client.animation.ShapeAnimation;
+import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.shape.Shape;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
@@ -26,12 +28,6 @@ import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.FullContentTraverseProcessorImpl;
 import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.ShapeState;
-import org.wirez.core.client.shape.Shape;
-import org.wirez.core.client.shape.view.HasCanvasState;
-import org.wirez.core.client.shape.view.HasDecorators;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -44,79 +40,57 @@ import java.util.logging.Logger;
 public class CanvasHighlightVisitor {
 
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.util.CanvasHighlightVisitor");
-    private static final long DURATION = 500;
 
     private CanvasHandler canvasHandler;
     private final List<Shape> shapes = new LinkedList<Shape>();
-    private ShapeAnimation highlightAnimation;
+    private ShapeStateUtils shapeStateUtils;
 
     public CanvasHighlightVisitor(  ) {
     }
 
     public void run(final CanvasHandler canvasHandler,
-                    final ShapeAnimation highlightAnimation,
+                    final ShapeStateUtils shapeStateUtils,
                     final Command callback) {
 
         this.canvasHandler = canvasHandler;
-        this.highlightAnimation = highlightAnimation;
+        this.shapeStateUtils = shapeStateUtils;
       
         prepareSimulation(() -> animate(0, () -> {
             CanvasHighlightVisitor.this.log(Level.FINE, "CanvasHighlightVisitor - FINISHED");
             if ( null != callback ) {
                 callback.execute();
                 CanvasHighlightVisitor.this.canvasHandler = null;
-                CanvasHighlightVisitor.this.highlightAnimation = null;
+                CanvasHighlightVisitor.this.shapeStateUtils = null;
                 CanvasHighlightVisitor.this.shapes.clear();
             }
         }));
     }
     
     private void animate(final int index, final Command callback) {
+
         if (index < shapes.size()) {
-            final Shape shape = shapes.get(index);
 
-            if (shape.getShapeView() instanceof HasCanvasState) {
-                
-                final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
+            final Shape shape = shapes.get( index );
 
-                Timer t = new Timer() {
-                    @Override
-                    public void run() {
-                        canvasStateMutation.applyState(ShapeState.UNHIGHLIGHT);
-                        animate(index + 1, callback);
-                    }
-                };
+            shapeStateUtils.highlight( canvasHandler.getCanvas(), shape, new ShapeAnimation.AnimationCallback() {
 
-                canvasStateMutation.applyState(ShapeState.HIGHLIGHT);
-                t.schedule( (int) DURATION );
-                
-            } else if (shape.getShapeView() instanceof HasDecorators) {
+                @Override
+                public void onStart() {
 
-                
-                highlightAnimation.forShape( shape )
-                        .forCanvas( canvasHandler.getCanvas() )
-                        .setCallback( new ShapeAnimation.AnimationCallback() {
-                            @Override
-                            public void onStart() {
+                }
 
-                            }
+                @Override
+                public void onFrame() {
 
-                            @Override
-                            public void onFrame() {
+                }
 
-                            }
+                @Override
+                public void onComplete() {
+                    animate(index + 1, callback);
+                }
 
-                            @Override
-                            public void onComplete() {
-                                animate(index + 1, callback);
-                            }
+            } );
 
-                        } )
-                        .setDuration( DURATION )
-                        .run();
-                
-            }
-            
         } else {
             
             callback.execute();

@@ -24,7 +24,7 @@ import java.util.Collection;
 
 import static com.ait.lienzo.client.core.animation.AnimationProperty.Properties.STROKE_ALPHA;
 
-public abstract class AbstractSelectionAnimation extends AbstractShapeAnimation {
+abstract class AbstractSelectionAnimation extends AbstractShapeAnimation {
 
     protected double strokeWidth = 4;
     protected String color = ColorName.RED.getColorString();

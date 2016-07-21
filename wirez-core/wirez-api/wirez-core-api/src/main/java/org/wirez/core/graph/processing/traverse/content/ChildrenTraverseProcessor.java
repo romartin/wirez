@@ -9,6 +9,8 @@ import org.wirez.core.graph.content.view.View;
  * <p>Traverses over the graph by moving to adjacent child nodes.</p>
  */
 public interface ChildrenTraverseProcessor 
-        extends ContentTraverseProcessor<Child, Node<View, Edge>, Edge<Child, Node>, ContentTraverseCallback<Child, Node<View, Edge>, Edge<Child, Node>>> {
+        extends ContentTraverseProcessor<Child, Node<View, Edge>, Edge<Child, Node>, ChildrenTraverseCallback<Node<View, Edge>, Edge<Child, Node>>> {
+
+    ChildrenTraverseProcessor setRootUUID( String rootUUID );
 
 }

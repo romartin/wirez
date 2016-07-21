@@ -6,7 +6,7 @@ public final class CanvasNotificationContext {
     private final String diagramUUID;
     private final String diagramTitle;
 
-    CanvasNotificationContext(final String canvasUUID, 
+    public CanvasNotificationContext(final String canvasUUID,
                                      final String diagramUUID, 
                                      final String diagramTitle) {
         this.canvasUUID = canvasUUID;

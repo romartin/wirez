@@ -30,6 +30,7 @@
 	<source path="lookup"/>
 	<source path="registry"/>
 	<source path="rule"/>
+	<source path="validation"/>
 	<source path="util"/>
 
 </module>

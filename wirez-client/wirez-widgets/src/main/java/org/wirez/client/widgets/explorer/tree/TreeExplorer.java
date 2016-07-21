@@ -14,6 +14,8 @@ import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.relationship.Child;
+import org.wirez.core.graph.content.view.View;
+import org.wirez.core.graph.processing.traverse.content.AbstractChildrenTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.AbstractContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.ChildrenTraverseProcessor;
 import org.wirez.core.client.canvas.AbstractCanvas;
@@ -28,6 +30,7 @@ import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -93,7 +96,7 @@ public class TreeExplorer implements IsWidget {
 
         clear();
 
-        childrenTraverseProcessor.traverse(graph, new AbstractContentTraverseCallback<Child, Node<org.wirez.core.graph.content.view.View, Edge>, Edge<Child, Node>>() {
+        childrenTraverseProcessor.traverse(graph, new AbstractChildrenTraverseCallback<Node<org.wirez.core.graph.content.view.View, Edge>, Edge<Child, Node>>() {
 
             Node parent = null;
             int level = 0;
@@ -133,11 +136,24 @@ public class TreeExplorer implements IsWidget {
             }
 
             @Override
+            public boolean startNodeTraversal( final Iterator<Node<org.wirez.core.graph.content.view.View, Edge>> parents,
+                                               final Node<org.wirez.core.graph.content.view.View, Edge> node ) {
+                super.startNodeTraversal( parents, node );
+                onStartNodeTraversal( node );
+                return true;
+            }
+
+            @Override
             public void startNodeTraversal(final Node<org.wirez.core.graph.content.view.View, Edge> node) {
+                super.startNodeTraversal(node);
+                onStartNodeTraversal( node );
+            }
+
+            private void onStartNodeTraversal(final Node<org.wirez.core.graph.content.view.View, Edge> node) {
                 super.startNodeTraversal(node);
 
                 inc(levelIdx, level);
-                
+
                 if ( null == parent ) {
 
                     final TreeExplorerItem item = treeExplorerItemInstances.get();
@@ -145,12 +161,12 @@ public class TreeExplorer implements IsWidget {
                     item.show(node);
 
                 } else {
-                    
+
                     int[] parentsIdx = getParentsIdx(levelIdx, level);
                     final TreeExplorerItem item = treeExplorerItemInstances.get();
                     view.addItem(node.getUUID(), item.asWidget(), expand, parentsIdx);
                     item.show(node);
-                    
+
                 }
 
             }

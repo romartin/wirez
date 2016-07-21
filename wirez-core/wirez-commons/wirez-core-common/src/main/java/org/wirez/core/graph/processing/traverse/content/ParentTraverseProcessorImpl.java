@@ -10,7 +10,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public final class ParentTraverseProcessorImpl extends AbstractContentTraverseProcessor<Parent, Node<View, Edge>, Edge<Parent, Node>>
+public final class ParentTraverseProcessorImpl extends AbstractContentTraverseProcessor<Parent, Node<View, Edge>, Edge<Parent, Node>, ContentTraverseCallback<Parent, Node<View, Edge>, Edge<Parent, Node>>>
         implements ParentTraverseProcessor {
 
     @Inject
@@ -24,13 +24,8 @@ public final class ParentTraverseProcessorImpl extends AbstractContentTraversePr
     }
 
     @Override
-    protected boolean doStartEdgeTraversal(final Edge edge) {
-        return edge.getContent() instanceof Parent;
-    }
-
-    @Override
-    protected boolean doEndEdgeTraversal(final Edge edge) {
-        return edge.getContent() instanceof Parent;
+    protected boolean accepts( final Edge edge ) {
+        return edge.getContent() instanceof Parent ;
     }
 
 }

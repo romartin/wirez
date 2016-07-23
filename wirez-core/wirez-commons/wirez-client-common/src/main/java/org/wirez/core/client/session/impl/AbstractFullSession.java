@@ -3,11 +3,13 @@ package org.wirez.core.client.session.impl;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
+import org.wirez.core.client.canvas.controls.actions.CanvasNameEditionControl;
 import org.wirez.core.client.canvas.controls.builder.ElementBuilderControl;
 import org.wirez.core.client.canvas.controls.connection.ConnectionAcceptorControl;
 import org.wirez.core.client.canvas.controls.containment.ContainmentAcceptorControl;
 import org.wirez.core.client.canvas.controls.docking.DockingAcceptorControl;
 import org.wirez.core.client.canvas.controls.drag.DragControl;
+import org.wirez.core.client.canvas.controls.palette.CanvasPaletteControl;
 import org.wirez.core.client.canvas.controls.pan.PanControl;
 import org.wirez.core.client.canvas.controls.select.SelectionControl;
 import org.wirez.core.client.canvas.controls.toolbox.ToolboxControl;
@@ -19,10 +21,12 @@ import org.wirez.core.graph.Element;
 public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl 
         implements DefaultCanvasFullSession {
 
+    CanvasPaletteControl<AbstractCanvasHandler> canvasPaletteControl;
     CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
     ConnectionAcceptorControl<AbstractCanvasHandler> connectionAcceptorControl;
     ContainmentAcceptorControl<AbstractCanvasHandler> containmentAcceptorControl;
     DockingAcceptorControl<AbstractCanvasHandler> dockingAcceptorControl;
+    CanvasNameEditionControl<AbstractCanvasHandler, Element> canvasNameEditionControl;
     DragControl<AbstractCanvasHandler, Element> dragControl;
     ToolboxControl<AbstractCanvasHandler, Element> toolboxControl;
     ElementBuilderControl<AbstractCanvasHandler> builderControl;
@@ -30,6 +34,7 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
     
     public AbstractFullSession(final AbstractCanvas canvas,
                                final AbstractCanvasHandler canvasHandler,
+                               final CanvasPaletteControl<AbstractCanvasHandler> canvasPaletteControl,
                                final SelectionControl<AbstractCanvasHandler, Element> selectionControl,
                                final ZoomControl<AbstractCanvas> zoomControl,
                                final PanControl<AbstractCanvas> panControl,
@@ -37,20 +42,27 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
                                final ConnectionAcceptorControl<AbstractCanvasHandler> connectionAcceptorControl,
                                final ContainmentAcceptorControl<AbstractCanvasHandler> containmentAcceptorControl,
                                final DockingAcceptorControl<AbstractCanvasHandler> dockingAcceptorControl,
+                               final CanvasNameEditionControl<AbstractCanvasHandler, Element> canvasNameEditionControl,
                                final DragControl<AbstractCanvasHandler, Element> dragControl,
                                final ToolboxControl<AbstractCanvasHandler, Element> toolboxControl,
                                final ElementBuilderControl<AbstractCanvasHandler> builderControl ) {
         super(canvas, canvasHandler, selectionControl, zoomControl, panControl);
+        this.canvasPaletteControl = canvasPaletteControl;
         this.canvasCommandManager = canvasCommandManager;
         this.connectionAcceptorControl = connectionAcceptorControl;
         this.containmentAcceptorControl = containmentAcceptorControl;
         this.dockingAcceptorControl = dockingAcceptorControl;
+        this.canvasNameEditionControl = canvasNameEditionControl;
         this.dragControl = dragControl;
         this.toolboxControl = toolboxControl;
         this.builderControl = builderControl;
 
     }
 
+    @Override
+    public CanvasPaletteControl<AbstractCanvasHandler> getCanvasPaletteControl() {
+        return canvasPaletteControl;
+    }
 
     @Override
     public CanvasCommandManager<AbstractCanvasHandler> getCanvasCommandManager() {
@@ -70,6 +82,11 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
     @Override
     public DockingAcceptorControl<AbstractCanvasHandler> getDockingAcceptorControl() {
         return dockingAcceptorControl;
+    }
+
+    @Override
+    public CanvasNameEditionControl<AbstractCanvasHandler, Element> getCanvasNameEditionControl() {
+        return canvasNameEditionControl;
     }
 
     @Override
@@ -99,7 +116,13 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
 
     @Override
     public void doDispose() {
-        
+
+        if ( null != canvasPaletteControl ) {
+
+            canvasPaletteControl.disable();
+            canvasPaletteControl = null;
+        }
+
         if ( null != canvasCommandManager ) {
             
             if ( canvasCommandManager instanceof  StackCommandManager ) {
@@ -124,6 +147,12 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
         if ( null != dockingAcceptorControl ) {
             dockingAcceptorControl.disable();
             dockingAcceptorControl = null;
+        }
+
+        if ( null != canvasNameEditionControl ) {
+
+            canvasNameEditionControl.disable();
+            canvasNameEditionControl = null;
         }
         
         if ( null != dragControl ) {

@@ -93,7 +93,7 @@ public class BS3PaletteScreen {
 
             this.paletteWidget = paletteFactory
                     .forCanvasHandler( canvasHandler )
-                    .newPalette( shapeSetId );
+                    .newPalette( shapeSetId, null );
 
             sessionScreenView.showScreenView( paletteWidget.getView() );
             sessionScreenView.setScreenViewBgColor( BS3PaletteWidgetImpl.BG_COLOR );

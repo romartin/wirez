@@ -11,7 +11,11 @@ public interface HasEventHandlers<T, S> {
     T addHandler(ViewEventType type, ViewHandler<? extends ViewEvent> eventHandler);
     
     T removeHandler(ViewHandler<? extends ViewEvent> eventHandler);
-    
+
+    T enableHandlers();
+
+    T disableHandlers();
+
     S getAttachableShape();
     
 }

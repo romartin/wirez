@@ -6,6 +6,7 @@ import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.controls.builder.BuilderControl;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequest;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequestImpl;
@@ -179,11 +180,25 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
 
                                         final NodeBuildRequest request = new NodeBuildRequestImpl( x, y , node, edge, sourceMagnet, targetMagnet );
 
-                                        nodeBuilderControl.build( request );
+                                        nodeBuilderControl.build( request, new BuilderControl.BuildCallback() {
 
-                                        nodeBuilderControl.disable();
+                                            @Override
+                                            public void onSuccess( final String uuid ) {
 
-                                        canvasHighlight.unhighLight();
+                                                nodeBuilderControl.disable();
+
+                                                canvasHighlight.unhighLight();
+
+                                            }
+
+                                            @Override
+                                            public void onError( final ClientRuntimeError error ) {
+
+                                                log( Level.SEVERE, error.toString() );
+                                                
+                                            }
+
+                                        } );
 
                                     }
 

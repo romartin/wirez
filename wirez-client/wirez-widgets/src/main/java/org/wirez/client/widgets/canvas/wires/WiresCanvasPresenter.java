@@ -25,6 +25,7 @@ import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
 import org.wirez.core.client.canvas.event.CanvasDrawnEvent;
+import org.wirez.core.client.canvas.event.CanvasFocusedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasShapeAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
 
@@ -45,11 +46,12 @@ public class WiresCanvasPresenter extends WiresCanvas implements IsWidget {
                                 final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
                                 final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
                                 final Event<CanvasDrawnEvent> canvasDrawnEvent,
+                                final Event<CanvasFocusedEvent> canvasFocusedEvent,
                                 final @Lienzo Layer layer,
                                 final WiresCanvas.View view,
                                 final org.wirez.client.widgets.canvas.LienzoPanel lienzoPanel) {
         super( canvasClearEvent, canvasShapeAddedEvent, canvasShapeRemovedEvent, 
-                canvasDrawnEvent, layer, view );
+                canvasDrawnEvent, canvasFocusedEvent, layer, view );
         this.lienzoPanel = lienzoPanel;
     }
 
@@ -61,7 +63,7 @@ public class WiresCanvasPresenter extends WiresCanvas implements IsWidget {
     @Override
     public org.wirez.core.client.canvas.Canvas initialize(final int width, final int height) {
         lienzoPanel.show( width, height, PADDING );
-        view.show( ( LienzoPanel ) lienzoPanel.asWidget(), layer );
+        show( lienzoPanel.asWidget(), layer );
         layer.onAfterDraw(() -> WiresCanvasPresenter.this.afterDrawCanvas());
         return this;
     }

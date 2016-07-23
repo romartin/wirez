@@ -12,7 +12,6 @@ public final class TouchEventImpl extends AbstractViewEvent implements TouchEven
                           final double touchX,
                           final double touchY) {
         
-        super( false );
         this.touchX = touchX;
         this.touchY = touchY;
         this.x = x;

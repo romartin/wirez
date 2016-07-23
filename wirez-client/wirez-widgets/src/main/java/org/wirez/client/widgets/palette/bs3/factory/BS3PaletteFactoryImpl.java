@@ -6,10 +6,9 @@ import org.wirez.client.widgets.palette.AbstractPaletteWidgetFactory;
 import org.wirez.client.widgets.palette.bs3.BS3PaletteWidget;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.controls.event.BuildCanvasShapeEvent;
-import org.wirez.core.client.components.palette.factory.DefSetPaletteDefinitionFactory;
 import org.wirez.core.client.components.palette.factory.DefaultDefSetPaletteDefinitionFactory;
-import org.wirez.core.client.components.palette.factory.PaletteDefinitionFactory;
 import org.wirez.core.client.components.palette.model.definition.DefinitionSetPalette;
+import org.wirez.core.client.components.palette.view.PaletteGrid;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -24,11 +23,7 @@ import java.util.List;
 public class BS3PaletteFactoryImpl extends AbstractPaletteWidgetFactory<DefinitionSetPalette, BS3PaletteWidget>
         implements BS3PaletteFactory {
 
-    SyncBeanManager beanManager;
-    Instance<DefaultDefSetPaletteDefinitionFactory> defaultPaletteDefinitionFactoryInstance;
-
     private final List<BS3PaletteViewFactory> viewFactories = new LinkedList<>(  );
-    private final List<DefSetPaletteDefinitionFactory> paletteDefinitionFactories = new LinkedList<>(  );
 
     @Inject
     public BS3PaletteFactoryImpl( final ShapeManager shapeManager,
@@ -36,14 +31,14 @@ public class BS3PaletteFactoryImpl extends AbstractPaletteWidgetFactory<Definiti
                                   final Instance<DefaultDefSetPaletteDefinitionFactory> defaultPaletteDefinitionFactoryInstance,
                                   final BS3PaletteWidget palette,
                                   final Event<BuildCanvasShapeEvent> buildCanvasShapeEvent ) {
-        super( shapeManager, palette, buildCanvasShapeEvent );
-        this.beanManager = beanManager;
-        this.defaultPaletteDefinitionFactoryInstance = defaultPaletteDefinitionFactoryInstance;
+        super( shapeManager, beanManager, defaultPaletteDefinitionFactoryInstance, palette, buildCanvasShapeEvent );
     }
 
     @PostConstruct
     @SuppressWarnings( "unchecked" )
     public void init() {
+
+        super.init();
 
         Collection<SyncBeanDef<BS3PaletteViewFactory>> beanDefSets = beanManager.lookupBeans( BS3PaletteViewFactory.class );
         for ( SyncBeanDef<BS3PaletteViewFactory> defSet : beanDefSets ) {
@@ -51,23 +46,13 @@ public class BS3PaletteFactoryImpl extends AbstractPaletteWidgetFactory<Definiti
             viewFactories.add( factory );
         }
 
-        Collection<SyncBeanDef<DefSetPaletteDefinitionFactory>> factorySets = beanManager.lookupBeans( DefSetPaletteDefinitionFactory.class );
-        for ( SyncBeanDef<DefSetPaletteDefinitionFactory> defSet : factorySets ) {
-            DefSetPaletteDefinitionFactory factory = defSet.getInstance();
-            paletteDefinitionFactories.add( factory );
-        }
-
     }
 
     @Override
-    protected PaletteDefinitionFactory getPaletteDefinitionFactory( final String defSetId ) {
-        for ( final DefSetPaletteDefinitionFactory factory : paletteDefinitionFactories ) {
-            if ( factory.accepts( defSetId ) ) {
-                return factory;
-            }
-        }
-        return defaultPaletteDefinitionFactoryInstance.get();
+    protected void applyGrid( final PaletteGrid grid ) {
+        // TODO: Currently grid is harcoded on the widget itself, refactor pending.
     }
+
 
     @Override
     protected void beforeBindPalette( final DefinitionSetPalette paletteDefinition ) {

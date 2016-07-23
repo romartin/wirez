@@ -7,12 +7,12 @@ import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.shared.core.types.ArrowType;
 import com.ait.lienzo.shared.core.types.ColorName;
-import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import org.wirez.client.lienzo.components.palette.AbstractLienzoPalette;
 import org.wirez.client.lienzo.components.palette.view.element.LienzoGlyphPaletteItemView;
 import org.wirez.client.lienzo.components.palette.view.element.LienzoPaletteElementView;
 import org.wirez.core.client.components.palette.view.AbstractPaletteView;
 import org.wirez.core.client.components.palette.view.PaletteGrid;
+import org.wirez.core.client.shape.view.event.HandlerRegistrationImpl;
 import org.wirez.lienzo.palette.AbstractPalette;
 import org.wirez.lienzo.palette.HoverPalette;
 
@@ -21,11 +21,10 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
         implements LienzoPaletteView<V, LienzoPaletteElementView> {
 
     protected double animationDuration = 500;
-    protected PaletteGrid grid;
     protected AbstractLienzoPalette presenter;
     protected AbstractPalette<? extends AbstractPalette> palette;
     protected IPrimitive<?> colExpButton;
-    protected final HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
+    protected final HandlerRegistrationImpl handlerRegistrationManager = new HandlerRegistrationImpl();
 
     protected abstract AbstractPalette<? extends AbstractPalette> buildPalette();
 
@@ -43,11 +42,6 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
     public void setPresenter( final AbstractLienzoPalette presenter ) {
         this.presenter = presenter;
-    }
-
-    @Override
-    public void setGrid( final PaletteGrid grid) {
-        this.grid = grid;
     }
 
     @Override
@@ -85,6 +79,12 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
     }
 
+    public Layer getLayer() {
+
+        return getPalette().getLayer();
+
+    }
+
     public void draw() {
 
         getPalette().redraw();
@@ -118,10 +118,10 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
             if ( null != colExpButton && isExpandable() ) {
 
-                colExpButton.setX( x + grid.getPadding() );
+                colExpButton.setX( x + getGrid().getPadding() );
                 colExpButton.setY( y );
 
-                paletteStartY = colExpButton.getBoundingBox().getHeight() + grid.getPadding();
+                paletteStartY = colExpButton.getBoundingBox().getHeight() + getGrid().getPadding();
 
             }
 
@@ -129,10 +129,10 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
             getPalette().setY( paletteStartY + y );
 
-            getPalette().setRows( grid.getRows() );
-            getPalette().setColumns( grid.getColumns() );
-            getPalette().setIconSize( grid.getIconSize() );
-            getPalette().setPadding( grid.getPadding() );
+            getPalette().setRows( getGrid().getRows() );
+            getPalette().setColumns( getGrid().getColumns() );
+            getPalette().setIconSize( getGrid().getIconSize() );
+            getPalette().setPadding( getGrid().getPadding() );
             getPalette().build( primitives );
             getPalette().setAlpha( 0 );
             getPalette().animate(   AnimationTweener.LINEAR,
@@ -149,6 +149,16 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
         return (V) this;
 
+    }
+
+    @Override
+    public V hide() {
+
+        getPalette().clearItems();
+
+        getLayer().batch();
+
+        return (V) this;
     }
 
     protected AbstractPalette.Item buildLienzoPaletteItem( final LienzoPaletteElementView paletteItemView ) {
@@ -209,8 +219,8 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
 
         final boolean isExpanded = presenter.isExpanded();
 
-        final double w = grid.getIconSize();
-        final double h = grid.getIconSize() / 1.5;
+        final double w = getGrid().getIconSize();
+        final double h = getGrid().getIconSize() / 1.5;
 
         final Rectangle rectangle = new Rectangle( w, h )
                 .setFillAlpha( 0.01 )
@@ -425,5 +435,10 @@ public abstract class AbstractLienzoPaletteView<V extends LienzoPaletteView>
     protected String getArrowOutColor() {
         return ColorName.LIGHTBLUE.getColorString();
     }
+
+    protected PaletteGrid getGrid() {
+        return presenter.getGrid();
+    }
+
 
 }

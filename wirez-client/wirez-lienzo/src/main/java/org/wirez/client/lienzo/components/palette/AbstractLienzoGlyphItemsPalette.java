@@ -18,11 +18,11 @@ import org.wirez.core.client.shape.view.ShapeGlyph;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AbstractLienzoGlyphItemsPalette<V extends LienzoPaletteView>
-        extends AbstractLienzoPalette<HasPaletteItems<? extends GlyphPaletteItem>, V>
-        implements LienzoGlyphItemsPalette<V> {
+public abstract class AbstractLienzoGlyphItemsPalette<I extends HasPaletteItems<? extends GlyphPaletteItem>,V extends LienzoPaletteView>
+        extends AbstractLienzoPalette<I, V>
+        implements LienzoGlyphItemsPalette<I, V> {
 
-    protected DefinitionGlyphTooltip definitionGlyphTooltip;
+    protected DefinitionGlyphTooltip<Group> definitionGlyphTooltip;
     protected GlyphTooltipCallback glyphTooltipCallback;
     protected final List<LienzoPaletteElementView> itemViews = new LinkedList<LienzoPaletteElementView>();
 
@@ -38,7 +38,7 @@ public abstract class AbstractLienzoGlyphItemsPalette<V extends LienzoPaletteVie
     }
 
     @Override
-    public LienzoGlyphItemsPalette<V> onShowGlyTooltip( final GlyphTooltipCallback callback ) {
+    public LienzoGlyphItemsPalette<I, V> onShowGlyTooltip( final GlyphTooltipCallback callback ) {
         this.glyphTooltipCallback = callback;
         return this;
     }
@@ -48,15 +48,10 @@ public abstract class AbstractLienzoGlyphItemsPalette<V extends LienzoPaletteVie
     }
 
     @Override
-    protected void doInit() {
-
-        super.doInit();
-
-        onClose( () -> {
-            AbstractLienzoGlyphItemsPalette.this.getView().clear();
-            return true;
-        } );
-
+    protected void doClose() {
+        super.doClose();
+        AbstractLienzoGlyphItemsPalette.this.getView().hide();
+        this.definitionGlyphTooltip.hide();
     }
 
     @Override

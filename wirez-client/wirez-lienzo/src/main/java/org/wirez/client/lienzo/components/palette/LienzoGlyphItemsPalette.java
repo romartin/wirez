@@ -7,8 +7,8 @@ import org.wirez.core.client.components.palette.model.HasPaletteItems;
 
 import java.util.List;
 
-public interface LienzoGlyphItemsPalette<V extends LienzoPaletteView>
-        extends LienzoPalette<HasPaletteItems<? extends GlyphPaletteItem>, V> {
+public interface LienzoGlyphItemsPalette<I extends HasPaletteItems<? extends GlyphPaletteItem>, V extends LienzoPaletteView>
+        extends LienzoPalette<I, V> {
 
     interface GlyphTooltipCallback {
 
@@ -25,7 +25,7 @@ public interface LienzoGlyphItemsPalette<V extends LienzoPaletteView>
 
     GlyphPaletteItem getItem( int pos );
 
-    LienzoGlyphItemsPalette<V> onShowGlyTooltip( GlyphTooltipCallback callback );
+    LienzoGlyphItemsPalette<I, V> onShowGlyTooltip( GlyphTooltipCallback callback );
 
 
 }

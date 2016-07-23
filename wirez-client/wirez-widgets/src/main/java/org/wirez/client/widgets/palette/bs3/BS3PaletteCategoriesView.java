@@ -76,7 +76,7 @@ public class BS3PaletteCategoriesView extends Composite implements BS3PaletteCat
             if ( view instanceof Icon ) {
 
                 final Icon icon = ( Icon ) view;
-                item.setIconSize( IconSize.TIMES4 );
+                item.setIconSize( IconSize.TIMES3 );
 
                 final IconType type = icon.getType();
                 item.setIcon( type );

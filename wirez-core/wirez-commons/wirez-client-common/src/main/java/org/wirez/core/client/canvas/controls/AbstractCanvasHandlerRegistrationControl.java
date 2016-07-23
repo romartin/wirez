@@ -3,17 +3,11 @@ package org.wirez.core.client.canvas.controls;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.event.AbstractCanvasHandlerEvent;
-import org.wirez.core.client.canvas.event.CanvasClearEvent;
-import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
-import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
-import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
-import org.wirez.core.client.canvas.event.registration.CanvasElementsClearEvent;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.event.ViewHandler;
 import org.wirez.core.graph.Element;
 
-import javax.enterprise.event.Observes;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,39 +54,15 @@ public abstract class AbstractCanvasHandlerRegistrationControl extends AbstractC
 
     }
 
-    protected void deregisterAll() {
+    public void deregisterAll() {
 
         handlers.clear();
 
     }
 
-    void onCanvasElementAddedEvent(@Observes CanvasElementAddedEvent canvasElementAddedEvent) {
-        if ( checkEventContext(canvasElementAddedEvent) ) {
-            this.register( canvasElementAddedEvent.getElement() );
-        }
-    }
-
-    void onCanvasElementRemovedEvent(@Observes CanvasElementRemovedEvent elementRemovedEvent) {
-        if ( checkEventContext(elementRemovedEvent) ) {
-            this.deregister( elementRemovedEvent.getElement() );
-        }
-    }
-
-    void onCanvasElementUpdatedEvent(@Observes CanvasElementUpdatedEvent elementUpdatedEvent) {
-        if ( checkEventContext(elementUpdatedEvent) ) {
-            this.update( elementUpdatedEvent.getElement() );
-        }
-    }
-
-    void onCanvasElementsClearEvent( @Observes CanvasElementsClearEvent canvasClearEvent ) {
-        if ( checkEventContext( canvasClearEvent ) ) {
-            this.deregisterAll();
-        }
-    }
-    
     protected boolean checkEventContext(final AbstractCanvasHandlerEvent canvasHandlerEvent) {
         final CanvasHandler _canvasHandler = canvasHandlerEvent.getCanvasHandler();
         return canvasHandler != null && canvasHandler.equals(_canvasHandler);
     }
-    
+
 }

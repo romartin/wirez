@@ -2,7 +2,6 @@ package org.wirez.core.client.canvas.controls.toolbox;
 
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.toolbox.command.ToolboxCommand;
-import org.wirez.core.client.canvas.controls.toolbox.command.actions.NameToolboxCommand;
 import org.wirez.core.client.canvas.controls.toolbox.command.actions.RemoveToolboxCommand;
 import org.wirez.core.client.components.toolbox.ToolboxButtonGrid;
 import org.wirez.core.client.components.toolbox.ToolboxFactory;
@@ -18,19 +17,16 @@ import java.util.List;
 @Dependent
 public class ActionsToolboxControlProvider extends AbstractToolboxControlProvider {
 
-    NameToolboxCommand nameToolboxCommand;
     RemoveToolboxCommand removeToolboxCommand;
 
     protected ActionsToolboxControlProvider() {
-        this ( null, null, null );
+        this ( null, null );
     }
 
     @Inject
     public ActionsToolboxControlProvider( final ToolboxFactory toolboxFactory,
-                                          final NameToolboxCommand nameToolboxCommand,
                                           final RemoveToolboxCommand removeToolboxCommand ) {
         super( toolboxFactory );
-        this.nameToolboxCommand = nameToolboxCommand;
         this.removeToolboxCommand = removeToolboxCommand;
     }
 
@@ -67,7 +63,6 @@ public class ActionsToolboxControlProvider extends AbstractToolboxControlProvide
 
         return new LinkedList<ToolboxCommand<?, ?>>() {{
 
-            add( nameToolboxCommand );
             add( removeToolboxCommand );
 
         }};

@@ -2,8 +2,8 @@ package org.wirez.client.lienzo.shape.view;
 
 import com.ait.lienzo.client.core.event.*;
 import com.ait.lienzo.client.core.shape.Node;
-import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Timer;
 import org.wirez.core.client.shape.view.event.*;
 
 import java.util.HashMap;
@@ -11,52 +11,74 @@ import java.util.Map;
 
 public class ViewEventHandlerManager {
 
-    protected final HandlerRegistrationManager registrationManager = new HandlerRegistrationManager();
+    private static final int CLICK_HANDLER_TIMER_DURATION = 150;
+
+    protected final HandlerRegistrationImpl registrationManager = new HandlerRegistrationImpl();
     protected final Map<ViewEventType, HandlerRegistration[]> registrationMap = new HashMap<>();
 
     private final Node<?> node;
     private final ViewEventType[] supportedTypes;
+    private Timer clickHandlerTimer;
+    private boolean enabled;
 
-    public ViewEventHandlerManager(final Node<?> node, 
-                                   final ViewEventType... supportedTypes) {
+    public ViewEventHandlerManager( final Node<?> node,
+                                    final ViewEventType... supportedTypes ) {
         this.node = node;
         this.supportedTypes = supportedTypes;
+        this.clickHandlerTimer = null;
+        enable();
     }
 
-    public boolean supports(final ViewEventType type) {
-        
+    public void enable() {
+
+        this.enabled = true;
+
+    }
+
+    public void disable() {
+
+        this.enabled = false;
+
+    }
+
+    private boolean isEnabled() {
+        return this.enabled;
+    }
+
+    public boolean supports( final ViewEventType type ) {
+
         if ( null != supportedTypes ) {
-            
-            for ( final ViewEventType type1 : supportedTypes )  {
-                
+
+            for ( final ViewEventType type1 : supportedTypes ) {
+
                 if ( type.equals( type1 ) ) {
                     return true;
                 }
             }
-            
+
         }
-        
+
         return false;
-        
+
     }
-    
-    @SuppressWarnings("unchecked")
-    public void addHandler( final ViewEventType type, 
-                         final ViewHandler<? extends ViewEvent> eventHandler ) {
+
+    @SuppressWarnings( "unchecked" )
+    public void addHandler( final ViewEventType type,
+                            final ViewHandler<? extends ViewEvent> eventHandler ) {
 
         if ( supports( type ) ) {
 
             final HandlerRegistration[] registrations = doAddHandler( type, eventHandler );
 
             addHandlersRegistration( type, registrations );
-            
+
         }
-        
+
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public void addHandlersRegistration( final ViewEventType type,
-                                      final HandlerRegistration... registrations ) {
+                                         final HandlerRegistration... registrations ) {
 
         if ( null != registrations && registrations.length > 0 ) {
 
@@ -69,32 +91,36 @@ public class ViewEventHandlerManager {
             }
 
         }
-        
+
     }
 
-    @SuppressWarnings("unchecked")
-    protected HandlerRegistration[] doAddHandler(final ViewEventType type,
-                                                 final ViewHandler<? extends ViewEvent> eventHandler) {
+    @SuppressWarnings( "unchecked" )
+    protected HandlerRegistration[] doAddHandler( final ViewEventType type,
+                                                  final ViewHandler<? extends ViewEvent> eventHandler ) {
 
-        if ( ViewEventType.MOUSE_CLICK.equals(type) ) {
-            return registerClickHandler( (ViewHandler<ViewEvent>) eventHandler );
+        if ( ViewEventType.MOUSE_CLICK.equals( type ) ) {
+            return registerClickHandler( ( ViewHandler<ViewEvent> ) eventHandler );
         }
 
-        if ( ViewEventType.TOUCH.equals(type) ) {
-            return registerTouchHandler( (org.wirez.core.client.shape.view.event.TouchHandler) eventHandler );
+        if ( ViewEventType.MOUSE_DBL_CLICK.equals( type ) ) {
+            return registerDoubleClickHandler( ( ViewHandler<ViewEvent> ) eventHandler );
         }
 
-        if ( ViewEventType.GESTURE.equals(type) ) {
-            return registerGestureHandler( (org.wirez.core.client.shape.view.event.GestureHandler) eventHandler );
+        if ( ViewEventType.TOUCH.equals( type ) ) {
+            return registerTouchHandler( ( org.wirez.core.client.shape.view.event.TouchHandler ) eventHandler );
+        }
+
+        if ( ViewEventType.GESTURE.equals( type ) ) {
+            return registerGestureHandler( ( org.wirez.core.client.shape.view.event.GestureHandler ) eventHandler );
         }
 
         return null;
 
     }
 
-    @SuppressWarnings("unchecked")
-    public void removeHandler(final ViewHandler<? extends ViewEvent> eventHandler) {
-        
+    @SuppressWarnings( "unchecked" )
+    public void removeHandler( final ViewHandler<? extends ViewEvent> eventHandler ) {
+
         final ViewEventType type = eventHandler.getType();
 
         if ( registrationMap.containsKey( type ) ) {
@@ -105,175 +131,322 @@ public class ViewEventHandlerManager {
 
                 for ( final HandlerRegistration registration : registrations ) {
 
-                    registrationManager.deregister(registration);
+                    registrationManager.deregister( registration );
 
                 }
 
             }
 
         }
-        
+
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public void destroy() {
-        
+
+        clearClickHandlerTimer();
+
         registrationManager.removeHandler();
-        
+
         registrationMap.clear();
-        
+
     }
 
 
     protected HandlerRegistration[] registerGestureHandler( final GestureHandler gestureHandler ) {
 
 
-        HandlerRegistration gestureStartReg = node.addNodeGestureStartHandler(new NodeGestureStartHandler() {
+        HandlerRegistration gestureStartReg = node.addNodeGestureStartHandler( new NodeGestureStartHandler() {
             @Override
             public void onNodeGestureStart( final NodeGestureStartEvent event ) {
-                
-                final GestureEvent event1 = buildGestureEvent( event );
-                
-                if ( null != event1 ) {
-                    
-                    gestureHandler.start( event1 );
-                    
+
+                if ( isEnabled() ) {
+
+                    final GestureEvent event1 = buildGestureEvent( event );
+
+                    if ( null != event1 ) {
+
+                        gestureHandler.start( event1 );
+
+                    }
+
                 }
-                
+
             }
         } );
 
-        HandlerRegistration gestureChangeReg = node.addNodeGestureChangeHandler(new NodeGestureChangeHandler() {
+        HandlerRegistration gestureChangeReg = node.addNodeGestureChangeHandler( new NodeGestureChangeHandler() {
             @Override
-            public void onNodeGestureChange(final NodeGestureChangeEvent event) {
+            public void onNodeGestureChange( final NodeGestureChangeEvent event ) {
 
-                final GestureEvent event1 = buildGestureEvent( event );
+                if ( isEnabled() ) {
 
-                if ( null != event1 ) {
+                    final GestureEvent event1 = buildGestureEvent( event );
 
-                    gestureHandler.change( event1 );
+                    if ( null != event1 ) {
+
+                        gestureHandler.change( event1 );
+
+                    }
 
                 }
-                
+
             }
+
         } );
 
-        HandlerRegistration gestureEndReg = node.addNodeGestureEndHandler(new NodeGestureEndHandler() {
+        HandlerRegistration gestureEndReg = node.addNodeGestureEndHandler( new NodeGestureEndHandler() {
             @Override
-            public void onNodeGestureEnd(final NodeGestureEndEvent event) {
+            public void onNodeGestureEnd( final NodeGestureEndEvent event ) {
 
-                final GestureEvent event1 = buildGestureEvent( event );
+                if ( isEnabled() ) {
 
-                if ( null != event1 ) {
+                    final GestureEvent event1 = buildGestureEvent( event );
 
-                    gestureHandler.end( event1 );
+                    if ( null != event1 ) {
+
+                        gestureHandler.end( event1 );
+
+                    }
 
                 }
-                
+
             }
+
         } );
 
-        return new HandlerRegistration[] {
+        return new HandlerRegistration[]{
                 gestureStartReg, gestureChangeReg, gestureEndReg
         };
 
     }
 
-    protected GestureEventImpl buildGestureEvent(final AbstractNodeGestureEvent event ) {
+    protected GestureEventImpl buildGestureEvent( final AbstractNodeGestureEvent event ) {
 
         return new GestureEventImpl( event.getScale(), event.getRotation() );
-        
+
     }
 
     protected HandlerRegistration[] registerClickHandler( final ViewHandler<ViewEvent> eventHandler ) {
-        
-        return new HandlerRegistration[] {
-                
-                node.addNodeMouseClickHandler(nodeMouseClickEvent -> {
-                    
-                    final MouseClickEvent event = new MouseClickEvent(nodeMouseClickEvent.getX(), nodeMouseClickEvent.getY());
-                    
-                    eventHandler.handle( event );
-                    
-                })
-                
+
+        return new HandlerRegistration[]{
+
+                node.addNodeMouseClickHandler( nodeMouseClickEvent -> {
+
+                    if ( ViewEventHandlerManager.this.isEnabled() ) {
+
+                        final int x = nodeMouseClickEvent.getX();
+                        final int y = nodeMouseClickEvent.getY();
+                        final int clientX = nodeMouseClickEvent.getMouseEvent().getClientX();
+                        final int clientY = nodeMouseClickEvent.getMouseEvent().getClientY();
+                        final int screenX = nodeMouseClickEvent.getMouseEvent().getScreenX();
+                        final int screenY = nodeMouseClickEvent.getMouseEvent().getScreenY();
+                        final boolean isShiftKeyDown = nodeMouseClickEvent.isShiftKeyDown();
+                        final boolean isAltKeyDown = nodeMouseClickEvent.isAltKeyDown();
+                        final boolean isMetaKeyDown = nodeMouseClickEvent.isMetaKeyDown();
+                        final boolean isButtonLeft = nodeMouseClickEvent.isButtonLeft();
+                        final boolean isButtonMiddle = nodeMouseClickEvent.isButtonMiddle();
+                        final boolean isButtonRight = nodeMouseClickEvent.isButtonRight();
+
+                        if ( null == ViewEventHandlerManager.this.clickHandlerTimer ) {
+
+                            ViewEventHandlerManager.this.clickHandlerTimer = new Timer() {
+
+                                @Override
+                                public void run() {
+
+                                    ViewEventHandlerManager.this.onMouseClick( eventHandler,
+                                            x,
+                                            y,
+                                            clientX,
+                                            clientY,
+                                            screenX,
+                                            screenY,
+                                            isShiftKeyDown,
+                                            isAltKeyDown,
+                                            isMetaKeyDown,
+                                            isButtonLeft,
+                                            isButtonMiddle,
+                                            isButtonRight );
+
+                                    ViewEventHandlerManager.this.clickHandlerTimer = null;
+
+                                }
+
+                            };
+
+                            ViewEventHandlerManager.this.clickHandlerTimer.schedule( CLICK_HANDLER_TIMER_DURATION );
+
+                        }
+
+                    }
+
+                } )
+
         };
-        
+
+    }
+
+    protected HandlerRegistration[] registerDoubleClickHandler( final ViewHandler<ViewEvent> eventHandler ) {
+
+        return new HandlerRegistration[]{
+
+                node.addNodeMouseDoubleClickHandler( nodeMouseDoubleClickEvent -> {
+
+                    if ( isEnabled() ) {
+
+                        clearClickHandlerTimer();
+
+                        final MouseDoubleClickEvent event = new MouseDoubleClickEvent(
+                                nodeMouseDoubleClickEvent.getX(),
+                                nodeMouseDoubleClickEvent.getY(),
+                                nodeMouseDoubleClickEvent.getMouseEvent().getClientX(),
+                                nodeMouseDoubleClickEvent.getMouseEvent().getClientY(),
+                                nodeMouseDoubleClickEvent.getMouseEvent().getScreenX(),
+                                nodeMouseDoubleClickEvent.getMouseEvent().getScreenY() );
+                        event.setShiftKeyDown( nodeMouseDoubleClickEvent.isShiftKeyDown() );
+                        event.setAltKeyDown( nodeMouseDoubleClickEvent.isAltKeyDown() );
+                        event.setMetaKeyDown( nodeMouseDoubleClickEvent.isMetaKeyDown() );
+                        event.setButtonLeft( nodeMouseDoubleClickEvent.isButtonLeft() );
+                        event.setButtonMiddle( nodeMouseDoubleClickEvent.isButtonMiddle() );
+                        event.setButtonRight( nodeMouseDoubleClickEvent.isButtonRight() );
+                        eventHandler.handle( event );
+
+                    }
+
+                } )
+
+        };
+
+    }
+
+    private void onMouseClick( final ViewHandler<ViewEvent> eventHandler,
+                               final int x,
+                               final int y,
+                               final int clientX,
+                               final int clientY,
+                               final int screenX,
+                               final int screenY,
+                               final boolean isShiftKeyDown,
+                               final boolean isAltKeyDown,
+                               final boolean isMetaKeyDown,
+                               final boolean isButtonLeft,
+                               final boolean isButtonMiddle,
+                               final boolean isButtonRight ) {
+
+        final MouseClickEvent event = new MouseClickEvent( x, y, clientX, clientY, screenX, screenY );
+        event.setShiftKeyDown( isShiftKeyDown );
+        event.setAltKeyDown( isAltKeyDown );
+        event.setMetaKeyDown( isMetaKeyDown );
+        event.setButtonLeft( isButtonLeft );
+        event.setButtonMiddle( isButtonMiddle );
+        event.setButtonRight( isButtonRight );
+        eventHandler.handle( event );
+
     }
 
     protected HandlerRegistration[] registerTouchHandler( final TouchHandler touchHandler ) {
 
 
-        HandlerRegistration touchStartReg = node.addNodeTouchStartHandler(event -> {
+        HandlerRegistration touchStartReg = node.addNodeTouchStartHandler( event -> {
 
-            final TouchEventImpl event1 = buildTouchEvent( event );
+            if ( isEnabled() ) {
 
-            if ( null != event1 ) {
+                final TouchEventImpl event1 = buildTouchEvent( event );
 
-                touchHandler.start( event1 );
+                if ( null != event1 ) {
 
-            }
+                    touchHandler.start( event1 );
 
-        });
-
-
-        HandlerRegistration touchMoveReg = node.addNodeTouchMoveHandler(event -> {
-
-            final TouchEventImpl event1 = buildTouchEvent( event );
-
-            if ( null != event1 ) {
-
-                touchHandler.move( event1 );
+                }
 
             }
 
-        });
+        } );
 
-        HandlerRegistration touchEndReg = node.addNodeTouchEndHandler(event -> {
 
-            final TouchEventImpl event1 = buildTouchEvent( event );
+        HandlerRegistration touchMoveReg = node.addNodeTouchMoveHandler( event -> {
 
-            if ( null != event1 ) {
+            if ( isEnabled() ) {
 
-                touchHandler.end( event1 );
+                final TouchEventImpl event1 = buildTouchEvent( event );
 
-            }
+                if ( null != event1 ) {
 
-        });
+                    touchHandler.move( event1 );
 
-        HandlerRegistration touchCancelReg = node.addNodeTouchCancelHandler(event -> {
-
-            final TouchEventImpl event1 = buildTouchEvent( event );
-
-            if ( null != event1 ) {
-
-                touchHandler.cancel( event1 );
+                }
 
             }
 
-        });
+        } );
 
-        return new HandlerRegistration[] {
+        HandlerRegistration touchEndReg = node.addNodeTouchEndHandler( event -> {
+
+            if ( isEnabled() ) {
+
+                final TouchEventImpl event1 = buildTouchEvent( event );
+
+                if ( null != event1 ) {
+
+                    touchHandler.end( event1 );
+
+                }
+
+            }
+
+        } );
+
+        HandlerRegistration touchCancelReg = node.addNodeTouchCancelHandler( event -> {
+
+            if ( isEnabled() ) {
+
+                final TouchEventImpl event1 = buildTouchEvent( event );
+
+                if ( null != event1 ) {
+
+                    touchHandler.cancel( event1 );
+
+                }
+
+            }
+
+
+        } );
+
+        return new HandlerRegistration[]{
                 touchStartReg, touchMoveReg, touchEndReg, touchCancelReg
         };
 
     }
 
-    private TouchEventImpl buildTouchEvent(final AbstractNodeTouchEvent event ) {
+    private TouchEventImpl buildTouchEvent( final AbstractNodeTouchEvent event ) {
 
         final TouchPoint touchPoint = null != event.getTouches() && !event.getTouches().isEmpty() ?
-                (TouchPoint) event.getTouches().get(0) : null;
+                ( TouchPoint ) event.getTouches().get( 0 ) : null;
 
         if ( null != touchPoint ) {
 
             final int tx = touchPoint.getX();
             final int ty = touchPoint.getY();
 
-
             return new TouchEventImpl( event.getX(), event.getY(), tx, ty );
         }
 
         return null;
+    }
+
+    private void clearClickHandlerTimer() {
+
+        if ( null != this.clickHandlerTimer ) {
+
+            if ( this.clickHandlerTimer.isRunning() ) {
+                this.clickHandlerTimer.cancel();
+            }
+
+            this.clickHandlerTimer = null;
+        }
+
     }
 
 }

@@ -3,23 +3,29 @@ package org.wirez.client.widgets.palette.bs3;
 import com.ait.lienzo.client.core.shape.Group;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
-import org.wirez.client.widgets.WidgetFloatingView;
 import org.wirez.client.widgets.palette.AbstractPaletteWidget;
 import org.wirez.client.widgets.palette.bs3.factory.BS3PaletteViewFactory;
 import org.wirez.core.client.ShapeManager;
+import org.wirez.core.client.canvas.event.CanvasFocusedEvent;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.components.glyph.ShapeGlyphDragHandler;
 import org.wirez.core.client.components.palette.AbstractPalette;
 import org.wirez.core.client.components.palette.ClientPaletteUtils;
 import org.wirez.core.client.components.palette.model.GlyphPaletteItem;
 import org.wirez.core.client.components.palette.model.definition.DefinitionPaletteCategory;
 import org.wirez.core.client.components.palette.model.definition.DefinitionSetPalette;
+import org.wirez.core.client.components.views.FloatingWidgetView;
 import org.wirez.core.client.service.ClientFactoryServices;
+import org.wirez.core.client.session.event.SessionResumedEvent;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.logging.Logger;
+
+import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @Dependent
 public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPalette, BS3PaletteWidgetView>
@@ -34,12 +40,12 @@ public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPal
     private static final int CATEGORY_ICON_SIZE = 100;
     private static final int CATEGORY_VIEW_WIDTH = 300;
     private static final int CATEGORY_VIEW_HEIGHT = 600;
-    private static final int PADDING = 80;
-    private static final int FLOATING_VIEW_TIMEOUT = 2500;
+    private static final int PADDING = 30;
+    private static final int FLOATING_VIEW_TIMEOUT = 1500;
 
     BS3PaletteCategories paletteCategories;
     BS3PaletteCategory paletteCategory;
-    WidgetFloatingView floatingView;
+    FloatingWidgetView floatingView;
     ShapeGlyphDragHandler<Group> shapeGlyphDragHandler;
 
     private BS3PaletteViewFactory viewFactory;
@@ -50,7 +56,7 @@ public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPal
                                  final BS3PaletteWidgetView view,
                                  final BS3PaletteCategories paletteCategories,
                                  final BS3PaletteCategory paletteCategory,
-                                 final WidgetFloatingView floatingView,
+                                 final FloatingWidgetView floatingView,
                                  final ShapeGlyphDragHandler<Group> shapeGlyphDragHandler ) {
         super( shapeManager, clientFactoryServices, view );
         this.paletteCategories = paletteCategories;
@@ -277,7 +283,15 @@ public class BS3PaletteWidgetImpl extends AbstractPaletteWidget<DefinitionSetPal
 
     }
 
+    void onCanvasFocusedEvent(@Observes CanvasFocusedEvent canvasFocusedEvent ) {
+        checkNotNull("canvasFocusedEvent", canvasFocusedEvent);
+        hideFloatingPalette();
+    }
 
+    void onCanvasElementSelectedEvent(@Observes CanvasElementSelectedEvent canvasElementSelectedEvent ) {
+        checkNotNull("canvasElementSelectedEvent", canvasElementSelectedEvent);
+        hideFloatingPalette();
+    }
 
     IsWidget getCategoryView( final String id ) {
         return viewFactory.getCategoryView( id, CATEGORY_ICON_SIZE, CATEGORY_ICON_SIZE );

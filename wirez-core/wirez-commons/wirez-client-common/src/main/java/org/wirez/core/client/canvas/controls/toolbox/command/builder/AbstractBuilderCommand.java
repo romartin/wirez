@@ -58,7 +58,7 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
 
     protected abstract DragProxyFactory getDragProxyFactory();
 
-    protected abstract DragProxyCallback getDragProxyCallback( Element element, Element newElement );
+    protected abstract DragProxyCallback getDragProxyCallback( Context<AbstractCanvasHandler> context, Element element, Element newElement );
 
     protected abstract BuilderControl getBuilderControl();
 
@@ -103,7 +103,7 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
 
                     graphBoundsIndexer.build( canvasHandler.getDiagram().getGraph() );
 
-                    DragProxyCallback proxyCallback = getDragProxyCallback( element, item );
+                    DragProxyCallback proxyCallback = getDragProxyCallback( context, element, item );
 
                     getDragProxyFactory()
                             .proxyFor( canvasHandler )
@@ -120,7 +120,7 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
 
             @Override
             public void onError(final ClientRuntimeError error) {
-                LOGGER.log(Level.SEVERE, error.toString() );
+                AbstractBuilderCommand.this.onError( context, error );
             }
             
         });
@@ -128,7 +128,8 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
     }
 
     @SuppressWarnings( "unchecked" )
-    protected void onStart( final Element element,
+    protected void onStart( final Context<AbstractCanvasHandler> context,
+                            final Element element,
                          final Element item,
                          final int x1,
                          final int y1 ) {
@@ -136,7 +137,8 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
     }
 
     @SuppressWarnings( "unchecked" )
-    protected void onMove( final Element element,
+    protected void onMove( final Context<AbstractCanvasHandler> context,
+                           final Element element,
                          final Element item,
                          final int x1,
                          final int y1 ) {
@@ -160,7 +162,8 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
     }
 
     @SuppressWarnings( "unchecked" )
-    protected void onComplete( final Element element,
+    protected void onComplete( final Context<AbstractCanvasHandler> context,
+                               final Element element,
                          final Element item,
                          final int x1,
                          final int y1 ) {
@@ -171,10 +174,38 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
 
             final BuildRequest buildRequest = createBuildRequest(x1, y1, element, item, targetNode );
 
-            getBuilderControl().build( buildRequest );
+            getBuilderControl().build( buildRequest, new BuilderControl.BuildCallback() {
+
+                @Override
+                public void onSuccess( final String uuid ) {
+
+                    onItemBuilt( context, uuid );
+
+                }
+
+                @Override
+                public void onError( final ClientRuntimeError error ) {
+
+                    AbstractBuilderCommand.this.onError( context, error );
+
+                }
+
+            } );
 
 
         }
+
+    }
+
+    protected void onError( final Context<AbstractCanvasHandler> context,
+                            final ClientRuntimeError error ) {
+
+        LOGGER.log( Level.SEVERE, error.toString() );
+
+    }
+
+    protected void onItemBuilt( final Context<AbstractCanvasHandler> context,
+                                final String uuid ) {
 
         canvasHighlight.unhighLight();
 

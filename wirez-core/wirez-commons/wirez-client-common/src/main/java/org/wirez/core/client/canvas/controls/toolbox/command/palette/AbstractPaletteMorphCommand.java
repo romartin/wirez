@@ -9,6 +9,7 @@ import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.components.drag.NodeDragProxyFactory;
 import org.wirez.core.client.components.palette.Palette;
 import org.wirez.core.client.components.palette.model.GlyphPaletteItem;
@@ -23,6 +24,7 @@ import org.wirez.core.graph.Node;
 import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.lookup.util.CommonLookups;
 
+import javax.enterprise.event.Event;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,6 +35,7 @@ public abstract class AbstractPaletteMorphCommand<I> extends AbstractPaletteComm
     DefinitionUtils definitionUtils;
     CanvasCommandFactory commandFactory;
     CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
+    Event<CanvasElementSelectedEvent> elementSelectedEvent;
 
     protected final Map<String, MorphDefinition> morphDefinitions = new HashMap<>();
 
@@ -48,7 +51,8 @@ public abstract class AbstractPaletteMorphCommand<I> extends AbstractPaletteComm
                                        final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                        final GraphBoundsIndexer graphBoundsIndexer,
                                        final AnimationFactory animationFactory,
-                                       final I icon) {
+                                       final I icon,
+                                       final Event<CanvasElementSelectedEvent> elementSelectedEvent ) {
         
         super( clientFactoryServices, commonLookups, shapeManager, definitionsPaletteBuilder, palette,
                 nodeDragProxyFactory, nodeBuilderControl, graphBoundsIndexer, 
@@ -57,7 +61,8 @@ public abstract class AbstractPaletteMorphCommand<I> extends AbstractPaletteComm
         this.definitionUtils = definitionUtils;
         this.commandFactory = commandFactory;
         this.canvasCommandManager = canvasCommandManager;
-        
+        this.elementSelectedEvent = elementSelectedEvent;
+
     }
 
     @Override
@@ -117,12 +122,16 @@ public abstract class AbstractPaletteMorphCommand<I> extends AbstractPaletteComm
 
         final MorphDefinition morphDefinition = morphDefinitions.get( definitionId );
 
+        final Node node = (Node) sourceNode;
+
         canvasCommandManager.execute( canvasHandler, 
-                commandFactory.MORPH_NODE( (Node) sourceNode, morphDefinition, definitionId, factory ) );
+                commandFactory.MORPH_NODE( node, morphDefinition, definitionId, factory ) );
 
         this.morphDefinitions.clear();
         clear();
-        
+
+        fireElementSelectedEvent( elementSelectedEvent, canvasHandler, node.getUUID()  );
+
     }
 
     protected DefinitionManager getDefinitionManager() {

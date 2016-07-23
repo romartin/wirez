@@ -1,13 +1,20 @@
 package org.wirez.core.client.components.palette.factory;
 
 import com.google.gwt.logging.client.LogConfiguration;
+import org.jboss.errai.ioc.client.container.SyncBeanDef;
+import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.components.palette.Palette;
 import org.wirez.core.client.components.palette.model.HasPaletteItems;
 import org.wirez.core.client.components.palette.model.PaletteDefinitionBuilder;
+import org.wirez.core.client.components.palette.view.PaletteGrid;
 import org.wirez.core.client.service.ClientRuntimeError;
 
+import javax.enterprise.inject.Instance;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,21 +23,48 @@ public abstract class AbstractPaletteFactory<I  extends HasPaletteItems, P exten
 
     private static Logger LOGGER = Logger.getLogger( AbstractPaletteFactory.class.getName() );
 
+    protected SyncBeanManager beanManager;
+    protected Instance<DefaultDefSetPaletteDefinitionFactory> defaultPaletteDefinitionFactoryInstance;
     protected ShapeManager shapeManager;
 
+    protected final List<DefSetPaletteDefinitionFactory> paletteDefinitionFactories = new LinkedList<>(  );
     protected P palette;
 
+
     public AbstractPaletteFactory( final ShapeManager shapeManager,
+                                   final SyncBeanManager beanManager,
+                                   final  Instance<DefaultDefSetPaletteDefinitionFactory> defaultPaletteDefinitionFactoryInstance,
                                    final P palette ) {
         this.shapeManager = shapeManager;
+        this.beanManager = beanManager;
+        this.defaultPaletteDefinitionFactoryInstance = defaultPaletteDefinitionFactoryInstance;
         this.palette = palette;
     }
 
-    protected abstract PaletteDefinitionFactory<PaletteDefinitionBuilder<Object, I, ClientRuntimeError>> getPaletteDefinitionFactory( final String defSetId );
+    protected abstract void applyGrid( final PaletteGrid grid );
+
+    public void init() {
+
+        Collection<SyncBeanDef<DefSetPaletteDefinitionFactory>> factorySets = beanManager.lookupBeans( DefSetPaletteDefinitionFactory.class );
+        for ( SyncBeanDef<DefSetPaletteDefinitionFactory> defSet : factorySets ) {
+            DefSetPaletteDefinitionFactory factory = defSet.getInstance();
+            paletteDefinitionFactories.add( factory );
+        }
+
+    }
+
+    protected PaletteDefinitionFactory getPaletteDefinitionFactory( final String defSetId ) {
+        for ( final DefSetPaletteDefinitionFactory factory : paletteDefinitionFactories ) {
+            if ( factory.accepts( defSetId ) ) {
+                return factory;
+            }
+        }
+        return defaultPaletteDefinitionFactoryInstance.get();
+    }
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public P newPalette( final String shapeSetId ) {
+    public P newPalette( final String shapeSetId, final PaletteGrid grid ) {
 
         final String defSetId = getShapeSet( shapeSetId ).getDefinitionSetId();
 
@@ -42,6 +76,8 @@ public abstract class AbstractPaletteFactory<I  extends HasPaletteItems, P exten
 
             @Override
             public void onSuccess( final I paletteDefinition ) {
+
+                applyGrid( grid );
 
                 beforeBindPalette( paletteDefinition );
 

@@ -41,6 +41,26 @@ public class LienzoHoverPaletteView
 
     }
 
+    public void startTimeOut() {
+
+        if ( null != getHoverPalette() ) {
+
+            getHoverPalette().startTimeout();
+
+        }
+
+    }
+
+    public void clearTimeOut() {
+
+        if ( null != getHoverPalette() ) {
+
+            getHoverPalette().stopTimeout();
+
+        }
+
+    }
+
     private HoverPalette getHoverPalette() {
         return null != getPalette() ? (HoverPalette) getPalette() : null;
     }

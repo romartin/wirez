@@ -1,5 +1,6 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
+import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.command.Command;
 import org.wirez.core.command.CommandUtils;
 import org.wirez.core.command.batch.BatchCommandResult;
@@ -98,7 +99,8 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
 
     @Override
     @SuppressWarnings( "unchecked" )
-    public void build(final NodeBuildRequest request) {
+    public void build( final NodeBuildRequest request,
+                       final BuildCallback buildCallback ) {
 
         final double x = request.getX();
         final double y = request.getY();
@@ -122,7 +124,8 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
             final List<Command<AbstractCanvasHandler, CanvasViolation>> commandList = new LinkedList<>();
             ebc.getElementCommands(node, parent, nodeShapeFactory, childCoordinates[0], childCoordinates[1], new AbstractElementBuilderControl.CommandsCallback() {
                 @Override
-                public void onComplete(final List<Command<AbstractCanvasHandler, CanvasViolation>> commands) {
+                public void onComplete( final String uuid,
+                                        final List<Command<AbstractCanvasHandler, CanvasViolation>> commands) {
                     
                     commandList.addAll( commands );
 
@@ -154,9 +157,21 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
                         
                     }
 
+                    buildCallback.onSuccess( uuid );
+
                     fireProcessingCompleted();
 
                 }
+
+                @Override
+                public void onError( final ClientRuntimeError error ) {
+
+                    buildCallback.onError( error );
+
+                    fireProcessingCompleted();
+
+                }
+
             });
 
         }

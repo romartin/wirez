@@ -189,9 +189,15 @@ public abstract class AbstractPalette<T> extends Group {
         };
     }
 
-    public T clear() {
+    public T clearItems() {
         this.handlerRegistrationManager.removeHandler();
         this.itemsGroup.removeAll();
+
+        return (T) this;
+    }
+
+    public T clear() {
+        clearItems();
         this.removeAll();
 
         return (T) this;

@@ -116,7 +116,8 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
     }
 
     @Override
-    protected DragProxyCallback getDragProxyCallback( final Element element,
+    protected DragProxyCallback getDragProxyCallback( final Context<AbstractCanvasHandler> context,
+                                                      final Element element,
                                                       final Element item ) {
         return new DragProxyCallback() {
 
@@ -124,7 +125,7 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
             public void onStart(final int x1,
                                 final int y1) {
 
-                AbstractElementBuilderCommand.this.onStart(  element, item, x1, y1 );
+                AbstractElementBuilderCommand.this.onStart(  context, element, item, x1, y1 );
 
             }
 
@@ -132,7 +133,7 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
             public void onMove(final int x1,
                                final int y1) {
 
-                AbstractElementBuilderCommand.this.onMove(  element, item, x1, y1 );
+                AbstractElementBuilderCommand.this.onMove(  context, element, item, x1, y1 );
 
             }
 
@@ -140,7 +141,7 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
             public void onComplete(final int x1,
                                    final int y1) {
 
-                AbstractElementBuilderCommand.this.onComplete(  element, item, x1, y1 );
+                AbstractElementBuilderCommand.this.onComplete(  context, element, item, x1, y1 );
 
             }
         };

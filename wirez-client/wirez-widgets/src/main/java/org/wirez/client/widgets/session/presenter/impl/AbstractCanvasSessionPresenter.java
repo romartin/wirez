@@ -5,13 +5,16 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.wirez.client.widgets.session.presenter.CanvasSessionPresenter;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerRegistrationControl;
 import org.wirez.core.client.canvas.controls.CanvasControl;
+import org.wirez.core.client.canvas.controls.CanvasRegistationControl;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.session.CanvasSession;
 import org.wirez.core.client.session.event.SessionDisposedEvent;
 import org.wirez.core.client.session.event.SessionPausedEvent;
+import org.wirez.core.client.shape.Shape;
+import org.wirez.core.graph.Element;
 
-import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
@@ -32,6 +35,7 @@ public abstract class AbstractCanvasSessionPresenter<S extends CanvasSession<Abs
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public void initialize(final S session, 
                            final int width, 
                            final int height) {
@@ -70,6 +74,80 @@ public abstract class AbstractCanvasSessionPresenter<S extends CanvasSession<Abs
         }
 
     }
+
+    protected void fireRegistrationListeners( final CanvasControl<AbstractCanvasHandler> control,
+                                              final Element element,
+                                              final boolean add ) {
+
+        if ( null!= control && null != element && control instanceof CanvasRegistationControl ) {
+
+            final CanvasRegistationControl<AbstractCanvasHandler, Element> registationControl =
+                    ( CanvasRegistationControl<AbstractCanvasHandler, Element> ) control;
+
+            if ( add ) {
+
+                registationControl.register( element );
+
+            } else {
+
+                registationControl.deregister( element );
+
+            }
+
+        }
+
+    }
+
+    protected void fireRegistrationListeners( final CanvasControl<AbstractCanvas> control,
+                                              final Shape shape,
+                                              final boolean add ) {
+
+        if ( null!= control && null != shape && control instanceof CanvasRegistationControl ) {
+
+            final CanvasRegistationControl<AbstractCanvas, Shape> registationControl =
+                    ( CanvasRegistationControl<AbstractCanvas, Shape> ) control;
+
+            if ( add ) {
+
+                registationControl.register( shape );
+
+            } else {
+
+                registationControl.deregister( shape );
+
+            }
+
+        }
+
+    }
+
+    protected void fireRegistrationUpdateListeners( final CanvasControl<AbstractCanvasHandler> control,
+                                              final Element element ) {
+
+        if ( null!= control && null != element && control instanceof AbstractCanvasHandlerRegistrationControl ) {
+
+            final AbstractCanvasHandlerRegistrationControl  registationControl =
+                    ( AbstractCanvasHandlerRegistrationControl ) control;
+
+            registationControl.update( element );
+
+        }
+
+    }
+
+    protected void fireRegistrationClearListeners( final CanvasControl<AbstractCanvasHandler> control ) {
+
+        if ( null!= control && control instanceof AbstractCanvasHandlerRegistrationControl ) {
+
+            final AbstractCanvasHandlerRegistrationControl  registationControl =
+                    ( AbstractCanvasHandlerRegistrationControl ) control;
+
+            registationControl.deregisterAll();
+
+        }
+
+    }
+
 
     protected void doInitialize(final S session,
                            final int width,

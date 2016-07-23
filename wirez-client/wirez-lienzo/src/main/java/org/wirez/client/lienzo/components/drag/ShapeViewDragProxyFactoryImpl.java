@@ -41,6 +41,7 @@ public class ShapeViewDragProxyFactoryImpl implements ShapeViewDragProxyFactory<
             @Override
             public void onStart(final int x, 
                                 final int y) {
+
                 callback.onStart( x, y );
             }
 
@@ -51,22 +52,25 @@ public class ShapeViewDragProxyFactoryImpl implements ShapeViewDragProxyFactory<
 
             @Override
             public void onComplete(final int x, final int y) {
+
                 callback.onComplete( x, y );
+
             }
+
         };
         
         if ( item instanceof WiresShape ) {
 
             final WiresShape wiresShape = (WiresShape) item;
             
-            new WiresShapeDragProxy( layer.getLienzoLayer(), wiresShape, x, y, 100, c );
+            new WiresShapeDragProxy( getLayer().getLienzoLayer(), wiresShape, x, y, 100, c );
             
             
         } else if ( item instanceof WiresConnector) {
             
             final WiresConnector wiresConnector = (WiresConnector) item;
             
-            new WiresConnectorDragProxy(layer.getLienzoLayer(), wiresConnector, x, y, 100, c);
+            new WiresConnectorDragProxy( getLayer().getLienzoLayer(), wiresConnector, x, y, 100, c );
 
         }
         
@@ -76,6 +80,10 @@ public class ShapeViewDragProxyFactoryImpl implements ShapeViewDragProxyFactory<
     @Override
     public void destroy() {
         this.layer = null;
+    }
+
+    private LienzoLayer getLayer() {
+        return layer;
     }
 
 }

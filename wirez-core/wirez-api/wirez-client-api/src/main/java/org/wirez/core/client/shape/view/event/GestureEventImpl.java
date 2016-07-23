@@ -8,7 +8,6 @@ public final class GestureEventImpl extends AbstractViewEvent
     
     public GestureEventImpl(final double scale,
                             final double rotation ) {
-        super( false );
         this.scale = scale;
         this.rotation = rotation;
         

@@ -10,16 +10,20 @@ import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.command.ClearSelectionCommand;
 import org.wirez.client.widgets.session.toolbar.command.SwitchGridCommand;
 import org.wirez.client.widgets.session.toolbar.command.VisitGraphCommand;
-import org.wirez.core.diagram.Diagram;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
 import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
+import org.wirez.core.client.canvas.listener.CanvasElementListener;
+import org.wirez.core.client.canvas.listener.CanvasShapeListener;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.session.CanvasReadOnlySession;
 import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
+import org.wirez.core.client.shape.Shape;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.graph.Element;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -67,6 +71,65 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
     public void doInitialize(S session, int width, int height) {
         super.doInitialize(session, width, height);
 
+        final AbstractCanvas canvas = getCanvasHandler().getCanvas();
+        canvas.addRegistrationListener( new CanvasShapeListener() {
+
+            @Override
+            public void register( final Shape item ) {
+
+                onRegisterShape( item );
+
+            }
+
+            @Override
+            public void deregister( final Shape item ) {
+
+                onDeregisterShape( item );
+
+            }
+
+            @Override
+            public void clear() {
+
+
+                onClear();
+
+            }
+
+        } );
+
+        getCanvasHandler().addRegistrationListener( new CanvasElementListener() {
+
+            @Override
+            public void update( final Element item ) {
+
+                onUpdateElement( item );
+
+            }
+
+            @Override
+            public void register( final Element item ) {
+
+                onRegisterElement( item );
+
+            }
+
+            @Override
+            public void deregister( final Element item ) {
+
+                onDeregisterElement( item );
+
+            }
+
+            @Override
+            public void clear() {
+
+                onClear();
+
+            }
+
+        } );
+
         // Enable canvas controls.
         enableControl( session.getShapeSelectionControl(), session.getCanvasHandler() );
         enableControl( session.getZoomControl(), session.getCanvas() );
@@ -75,6 +138,57 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
         // Toolbar read-only commands.
         setToolbarCommands();
         
+    }
+
+    protected void onClear() {
+
+        fireRegistrationClearListeners( session.getShapeSelectionControl() );
+
+    }
+
+    protected void onRegisterShape( final Shape shape ) {
+
+        onShapeRegistration( shape, true );
+
+    }
+
+    protected void onDeregisterShape( final Shape shape ) {
+
+        onShapeRegistration( shape, false );
+
+    }
+
+    protected void onShapeRegistration( final Shape shape,
+                                        final boolean add ) {
+
+        fireRegistrationListeners( session.getZoomControl(), shape, add );
+        fireRegistrationListeners( session.getPanControl(), shape, add );
+
+    }
+
+    protected void onRegisterElement( final Element element ) {
+
+        onElementRegistration( element, true );
+
+    }
+
+    protected void onDeregisterElement( final Element element ) {
+
+        onElementRegistration( element, false );
+
+    }
+
+    protected void onElementRegistration( final Element element,
+                                          final boolean add ) {
+
+        fireRegistrationListeners( session.getShapeSelectionControl(), element, add );
+
+    }
+
+    protected void onUpdateElement( final Element element ) {
+
+        fireRegistrationUpdateListeners( session.getShapeSelectionControl(), element );
+
     }
     
     protected void setToolbarCommands() {

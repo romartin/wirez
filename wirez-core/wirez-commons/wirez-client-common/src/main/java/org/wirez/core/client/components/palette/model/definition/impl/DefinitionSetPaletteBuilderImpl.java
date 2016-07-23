@@ -114,11 +114,6 @@ public class DefinitionSetPaletteBuilderImpl
 
                                 if ( null == morphGroupBuilder ) {
 
-                                    // TODO
-                                    final int cIndex = morphBase.lastIndexOf(".");
-                                    final String morphTitle = cIndex > -1 ?
-                                            morphBase.substring( cIndex + 1, morphBase.length() ) : morphBase;
-
                                     morphGroupBuilder =
                                             new DefinitionPaletteGroupImpl.DefinitionPaletteGroupBuilder( morphBaseId )
                                                     .definitionId( morphDefault )

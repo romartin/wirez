@@ -29,6 +29,7 @@ public abstract class AbstractLienzoPalette<D extends HasPaletteItems, V extends
         this.iconSize = 50;
         this.padding = 10;
         this.isExpandable = true;
+        this.layout = Layout.VERTICAL;
     }
 
     protected abstract void doBind();
@@ -44,10 +45,6 @@ public abstract class AbstractLienzoPalette<D extends HasPaletteItems, V extends
     @Override
     @SuppressWarnings("unchecked")
     public AbstractLienzoPalette bind() {
-
-        final PaletteGrid grid = getGrid();
-
-        view.setGrid( grid );
 
         view.clear();
 
@@ -130,7 +127,7 @@ public abstract class AbstractLienzoPalette<D extends HasPaletteItems, V extends
         getView().destroy();
     }
 
-    protected PaletteGrid getGrid() {
+    public PaletteGrid getGrid() {
         final PaletteGridLayoutBuilder gridLayoutBuilder = isHorizontalLayout() ?
                 PaletteGridLayoutBuilder.HORIZONTAL :
                 PaletteGridLayoutBuilder.VERTICAL;

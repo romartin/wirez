@@ -27,6 +27,7 @@ import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.event.CanvasClearEvent;
 import org.wirez.core.client.canvas.event.CanvasDrawnEvent;
+import org.wirez.core.client.canvas.event.CanvasFocusedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasShapeAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
 
@@ -61,10 +62,11 @@ public abstract class WiresCanvas extends AbstractCanvas<WiresCanvas.View> {
                        final Event<CanvasShapeAddedEvent> canvasShapeAddedEvent,
                        final Event<CanvasShapeRemovedEvent> canvasShapeRemovedEvent,
                        final Event<CanvasDrawnEvent> canvasDrawnEvent,
+                       final Event<CanvasFocusedEvent> canvasFocusedEvent,
                        final @Lienzo Layer layer,
                        final View view) {
         super( canvasClearEvent, canvasShapeAddedEvent, canvasShapeRemovedEvent, 
-                canvasDrawnEvent, layer, view );
+                canvasDrawnEvent, canvasFocusedEvent, layer, view );
     }
 
     public WiresManager getWiresManager() {

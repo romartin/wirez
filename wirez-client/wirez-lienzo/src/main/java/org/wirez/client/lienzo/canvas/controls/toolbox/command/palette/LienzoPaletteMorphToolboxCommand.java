@@ -15,6 +15,7 @@ import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.toolbox.command.palette.AbstractPaletteMorphCommand;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.components.drag.NodeDragProxyFactory;
 import org.wirez.core.client.components.palette.model.definition.DefinitionsPaletteBuilder;
 import org.wirez.core.client.components.palette.view.PaletteView;
@@ -26,6 +27,7 @@ import org.wirez.core.lookup.util.CommonLookups;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 @Dependent
@@ -43,12 +45,13 @@ public class LienzoPaletteMorphToolboxCommand extends AbstractPaletteMorphComman
                                             final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
                                             final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                             final GraphBoundsIndexer graphBoundsIndexer,
-                                            final AnimationFactory animationFactory ) {
+                                            final AnimationFactory animationFactory,
+                                            final Event<CanvasElementSelectedEvent> elementSelectedEvent ) {
         
         super( definitionUtils, commandFactory, canvasCommandManager, clientFactoryServices,
                 commonLookups,shapeManager, definitionsPaletteBuilder, palette, nodeDragProxyFactory,
                 nodeBuilderControl, graphBoundsIndexer, animationFactory,
-                SVGUtils.createSVGIcon( SVGUtils.getGearIcon() ) );
+                SVGUtils.createSVGIcon( SVGUtils.getGearIcon() ), elementSelectedEvent );
         
     }
 

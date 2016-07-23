@@ -2,9 +2,6 @@ package org.wirez.core.client.components.palette;
 
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.components.palette.model.HasPaletteItems;
-import org.wirez.core.client.components.palette.model.PaletteDefinition;
-import org.wirez.core.client.components.palette.view.PaletteGrid;
-import org.wirez.core.client.components.palette.view.PaletteView;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 
 public abstract class AbstractPalette<D extends HasPaletteItems> implements Palette<D> {
@@ -91,6 +88,7 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
 
     public boolean onClose() {
 
+        doClose();
 
         if ( null != closeCallback ) {
 
@@ -102,11 +100,18 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
 
     }
 
+    protected void doClose() {
+    }
+
     public boolean onItemHover(final int index,
                                final double mouseX,
                                final double mouseY,
                                final double itemX,
                                final double itemY) {
+
+        final String id = getPaletteItemId( index );
+
+        doItemHover( id, mouseX, mouseY, itemX, itemY );
 
         if (null != itemHoverCallback) {
 
@@ -115,6 +120,13 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
         }
 
         return true;
+    }
+
+    protected void doItemHover( final String id,
+                                final double mouseX,
+                                final double mouseY,
+                                final double itemX,
+                                final double itemY ) {
     }
 
     public boolean onItemOut(final int index) {
@@ -136,7 +148,24 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
 
         if ( null != itemMouseDownCallback ) {
 
-            return itemMouseDownCallback.onItemMouseDown( getPaletteItemId( index ), mouseX, mouseY, itemX, itemY );
+            final String id = getPaletteItemId( index );
+
+            return this.onItemMouseDown( id, mouseX, mouseY, itemX, itemY );
+
+        }
+
+        return true;
+    }
+
+    public boolean onItemMouseDown(final String id,
+                                   final double mouseX,
+                                   final double mouseY,
+                                   final double itemX,
+                                   final double itemY) {
+
+        if ( null != itemMouseDownCallback ) {
+
+            return itemMouseDownCallback.onItemMouseDown( id, mouseX, mouseY, itemX, itemY );
 
         }
 
@@ -151,7 +180,24 @@ public abstract class AbstractPalette<D extends HasPaletteItems> implements Pale
 
         if ( null != itemClickCallback ) {
 
-            return itemClickCallback.onItemClick( getPaletteItemId( index ), mouseX, mouseY, itemX, itemY );
+            final String id = getPaletteItemId( index );
+
+            return itemClickCallback.onItemClick( id , mouseX, mouseY, itemX, itemY );
+
+        }
+
+        return true;
+    }
+
+    public boolean onItemClick(final String id,
+                               final double mouseX,
+                               final double mouseY,
+                               final double itemX,
+                               final double itemY) {
+
+        if ( null != itemClickCallback ) {
+
+            return itemClickCallback.onItemClick( id, mouseX, mouseY, itemX, itemY );
 
         }
 

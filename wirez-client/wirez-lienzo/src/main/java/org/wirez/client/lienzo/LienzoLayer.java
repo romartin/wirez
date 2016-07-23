@@ -19,7 +19,7 @@ import javax.enterprise.context.Dependent;
 public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>, Shape<?>> {
 
     private static final ViewEventType[] SUPPORTED_EVENT_TYPES = new ViewEventType[] {
-            ViewEventType.MOUSE_CLICK, ViewEventType.MOUSE_MOVE
+            ViewEventType.MOUSE_CLICK, ViewEventType.MOUSE_DBL_CLICK, ViewEventType.MOUSE_MOVE
     };
     
     protected ViewEventHandlerManager eventHandlerManager;
@@ -79,6 +79,7 @@ public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>, Shape<?>> {
 
             eventHandlerManager.destroy();
             eventHandlerManager = null;
+
         }
         
         // Remove the layer stuff.
@@ -111,6 +112,18 @@ public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>, Shape<?>> {
     }
 
     @Override
+    public LienzoLayer enableHandlers() {
+        eventHandlerManager.enable();
+        return this;
+    }
+
+    @Override
+    public LienzoLayer disableHandlers() {
+        eventHandlerManager.disable();
+        return this;
+    }
+
+    @Override
     public Shape<?> getAttachableShape() {
         return null;
     }
@@ -118,4 +131,5 @@ public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>, Shape<?>> {
     public com.ait.lienzo.client.core.shape.Layer getLienzoLayer() {
         return this.layer;
     }
+
 }

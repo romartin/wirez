@@ -72,7 +72,11 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
             @Override
             public void handle( final MouseClickEvent event ) {
 
-                handleLayerClick( !event.isShiftKeyDown() );
+                if ( event.isButtonLeft() ) {
+
+                    handleLayerClick( !event.isShiftKeyDown() );
+
+                }
 
             }
 
@@ -148,7 +152,7 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
     }
 
     @Override
-    protected void deregisterAll() {
+    public void deregisterAll() {
         super.deregisterAll();
         selectedElements.clear();
     }

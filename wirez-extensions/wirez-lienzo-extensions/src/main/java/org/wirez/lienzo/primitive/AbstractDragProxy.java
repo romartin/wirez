@@ -1,10 +1,7 @@
 package org.wirez.lienzo.primitive;
 
 import com.ait.lienzo.client.core.shape.Layer;
-import com.google.gwt.event.dom.client.MouseMoveEvent;
-import com.google.gwt.event.dom.client.MouseMoveHandler;
-import com.google.gwt.event.dom.client.MouseUpEvent;
-import com.google.gwt.event.dom.client.MouseUpHandler;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -79,7 +76,7 @@ public abstract class AbstractDragProxy<T> {
         }
 
 
-        final HandlerRegistration[] handlerRegs = new HandlerRegistration[ 2 ];
+        final HandlerRegistration[] handlerRegs = new HandlerRegistration[ 3 ];
 
         handlerRegs[ 0 ] = RootPanel.get().addDomHandler(new MouseMoveHandler() {
 
@@ -118,12 +115,25 @@ public abstract class AbstractDragProxy<T> {
             
         }, MouseMoveEvent.getType() );
 
-        handlerRegs[ 1 ] = RootPanel.get().addDomHandler(new MouseUpHandler() {
+        handlerRegs[ 1 ] = RootPanel.get().addDomHandler( new MouseDownHandler() {
+
+            @Override
+            public void onMouseDown( final MouseDownEvent mouseDownEvent ) {
+
+                mouseDownEvent.stopPropagation();
+                mouseDownEvent.preventDefault();
+
+            }
+
+        }, MouseDownEvent.getType() );
+
+        handlerRegs[ 2 ] = RootPanel.get().addDomHandler(new MouseUpHandler() {
 
             @Override
             public void onMouseUp( final MouseUpEvent mouseUpEvent ) {
                 handlerRegs[ 0 ].removeHandler();
                 handlerRegs[ 1 ].removeHandler();
+                handlerRegs[ 2 ].removeHandler();
 
                 if ( attached ) {
 

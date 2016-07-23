@@ -108,9 +108,11 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
     }
     
     @Override
-    public void build(final ElementBuildRequest<AbstractCanvasHandler> request) {
+    public void build(final ElementBuildRequest<AbstractCanvasHandler> request,
+                        final BuildCallback buildCallback ) {
 
         if ( null == canvasHandler ) {
+            buildCallback.onSuccess( null );
             return;
         }
 
@@ -141,7 +143,8 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         getCommands(definition, factory, parent, childCoordinates[0], childCoordinates[1], new CommandsCallback() {
 
             @Override
-            public void onComplete( final List<Command<AbstractCanvasHandler, CanvasViolation>> commands ) {
+            public void onComplete( final String uuid,
+                                    final List<Command<AbstractCanvasHandler, CanvasViolation>> commands ) {
 
                 for ( final Command<AbstractCanvasHandler, CanvasViolation> command : commands ) {
                     canvasCommandManager.batch( command);
@@ -149,13 +152,23 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
 
                 canvasCommandManager.executeBatch( canvasHandler );
 
+                buildCallback.onSuccess( uuid );
+
+                // Notify processing ends.
+                fireProcessingCompleted();
+            }
+
+            @Override
+            public void onError( final ClientRuntimeError error ) {
+
+                buildCallback.onError( error );
+
+                // Notify processing ends.
+                fireProcessingCompleted();
             }
 
         });
 
-        // Notify processing ends.
-        fireProcessingCompleted();
-        
     }
 
     @Override
@@ -175,7 +188,9 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
 
     public interface CommandsCallback {
 
-        void onComplete(List<Command<AbstractCanvasHandler, CanvasViolation>> commands);
+        void onComplete( String uuid, List<Command<AbstractCanvasHandler, CanvasViolation>> commands );
+
+        void onError( ClientRuntimeError error );
 
     }
 
@@ -188,25 +203,34 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
 
         final DefinitionAdapter definitionAdapter = clientDefinitionManager.getDefinitionAdapter( definition. getClass() );
         final String defId = definitionAdapter.getId( definition );
+        final String uuid = UUID.uuid();
 
-        clientFactoryServices.newElement(UUID.uuid(), defId, new ServiceCallback<Element>() {
+        clientFactoryServices.newElement( uuid, defId, new ServiceCallback<Element>() {
             @Override
             public void onSuccess(final Element element) {
 
                 getElementCommands(element, parent, factory, x, y, new CommandsCallback() {
                     @Override
-                    public void onComplete(final List<Command<AbstractCanvasHandler, CanvasViolation>> commands) {
-                        commandsCallback.onComplete( commands );
+                    public void onComplete( final String uuid,
+                                            final List<Command<AbstractCanvasHandler, CanvasViolation>> commands ) {
+                        commandsCallback.onComplete( uuid, commands );
                     }
+
+                    @Override
+                    public void onError( final ClientRuntimeError error ) {
+                        commandsCallback.onError( error );
+                    }
+
                 });;
 
             }
 
             @Override
             public void onError(final ClientRuntimeError error) {
-                LOGGER.log(Level.SEVERE, error.toString() );
-            }
-        });
+                commandsCallback.onError( error );
+        };
+
+        } );
 
     }
 
@@ -250,7 +274,7 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         commandList.add( command );
         commandList.add( moveCanvasElementCommand );
 
-        commandsCallback.onComplete( commandList );
+        commandsCallback.onComplete( element.getUUID(), commandList );
 
     }
 

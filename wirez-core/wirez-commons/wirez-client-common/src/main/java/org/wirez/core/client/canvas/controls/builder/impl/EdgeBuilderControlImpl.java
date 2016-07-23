@@ -93,7 +93,8 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
 
     @Override
     @SuppressWarnings("unchecked")
-    public void build(final EdgeBuildRequest request) {
+    public void build( final EdgeBuildRequest request,
+                       final BuildCallback buildCallback ) {
 
         final double x = request.getX();
         final double y = request.getY();
@@ -146,6 +147,8 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
         }
 
         canvasHandler.applyElementMutation( edge, MutationContext.STATIC );
+
+        buildCallback.onSuccess( edge.getUUID() );
 
         fireProcessingCompleted();
         

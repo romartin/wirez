@@ -9,6 +9,7 @@ import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.toolbox.command.builder.NewNodeCommand;
+import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.components.drag.NodeDragProxyFactory;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.service.ClientFactoryServices;
@@ -17,13 +18,14 @@ import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 @Dependent
 public class LienzoNewNodeToolboxCommand extends NewNodeCommand<IPrimitive<?>> {
 
     protected LienzoNewNodeToolboxCommand() {
-        this( null, null, null, null, null, null, null, null, null );
+        this( null, null, null, null, null, null, null, null, null, null );
     }
 
     @Inject
@@ -35,10 +37,11 @@ public class LienzoNewNodeToolboxCommand extends NewNodeCommand<IPrimitive<?>> {
                                        final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
                                        final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                        final AnimationFactory animationFactory,
-                                       final DefinitionUtils definitionUtils) {
+                                       final DefinitionUtils definitionUtils,
+                                       final Event<CanvasElementSelectedEvent> elementSelectedEvent ) {
         super( clientDefinitionManager, clientFactoryServices, shapeManager, glyphTooltip, graphBoundsIndexer,
                 nodeDragProxyFactory, nodeBuilderControl, animationFactory,
-                definitionUtils );
+                definitionUtils, elementSelectedEvent );
     }
 
     @PostConstruct

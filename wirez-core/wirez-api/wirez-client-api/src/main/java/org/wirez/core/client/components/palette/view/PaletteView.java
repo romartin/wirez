@@ -24,6 +24,8 @@ public interface PaletteView<T, L, I extends PaletteElementView> {
 
     T show();
 
+    T hide();
+
     T clear();
 
     void destroy();

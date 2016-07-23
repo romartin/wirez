@@ -1,5 +1,7 @@
 package org.wirez.core.client.session;
 
+import org.wirez.core.client.canvas.controls.actions.CanvasNameEditionControl;
+import org.wirez.core.client.canvas.controls.palette.CanvasPaletteControl;
 import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -14,6 +16,8 @@ import org.wirez.core.client.canvas.controls.toolbox.ToolboxControl;
 public interface CanvasFullSession<C extends Canvas, H extends CanvasHandler> 
     extends CanvasReadOnlySession<C, H> {
 
+    CanvasPaletteControl<H> getCanvasPaletteControl();
+
     CanvasCommandManager<H> getCanvasCommandManager();
     
     ConnectionAcceptorControl<H> getConnectionAcceptorControl();
@@ -21,6 +25,8 @@ public interface CanvasFullSession<C extends Canvas, H extends CanvasHandler>
     ContainmentAcceptorControl<H> getContainmentAcceptorControl();
     
     DockingAcceptorControl<H> getDockingAcceptorControl();
+
+    CanvasNameEditionControl<H, Element> getCanvasNameEditionControl();
 
     DragControl<H, Element> getDragControl();
     

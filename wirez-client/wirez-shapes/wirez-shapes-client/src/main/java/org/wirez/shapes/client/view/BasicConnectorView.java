@@ -25,7 +25,7 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
         HasState {
     
     private static final ViewEventType[] SUPPORTED_EVENT_TYPES = new ViewEventType[] {
-            ViewEventType.MOUSE_CLICK, ViewEventType.TOUCH
+            ViewEventType.MOUSE_CLICK, ViewEventType.MOUSE_DBL_CLICK, ViewEventType.TOUCH
     };
 
     protected ViewEventHandlerManager eventHandlerManager;
@@ -150,6 +150,20 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
 
         return (T) this;
         
+    }
+
+    @Override
+    public T disableHandlers() {
+        eventHandlerManager.disable();
+        return ( T ) this;
+
+    }
+
+    @Override
+    public T enableHandlers() {
+        eventHandlerManager.enable();
+        return ( T ) this;
+
     }
 
     @Override

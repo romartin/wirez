@@ -5,6 +5,8 @@ import org.wirez.client.lienzo.components.palette.LienzoGlyphsHoverPalette;
 import org.wirez.client.lienzo.components.palette.view.LienzoHoverPaletteView;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
+import org.wirez.core.client.components.palette.model.GlyphPaletteItem;
+import org.wirez.core.client.components.palette.model.HasPaletteItems;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -12,7 +14,7 @@ import javax.inject.Inject;
 
 @Dependent
 public class LienzoGlyphsHoverPaletteImpl
-        extends AbstractLienzoGlyphItemsPalette<LienzoHoverPaletteView>
+        extends AbstractLienzoGlyphItemsPalette<HasPaletteItems<? extends GlyphPaletteItem>, LienzoHoverPaletteView>
         implements LienzoGlyphsHoverPalette {
 
     protected LienzoGlyphsHoverPaletteImpl() {

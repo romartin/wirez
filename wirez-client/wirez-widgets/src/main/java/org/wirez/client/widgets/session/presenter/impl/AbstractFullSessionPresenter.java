@@ -9,12 +9,6 @@ import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.command.*;
-import org.wirez.core.diagram.Diagram;
-import org.wirez.core.diagram.Settings;
-import org.wirez.core.diagram.SettingsImpl;
-import org.wirez.core.graph.Graph;
-import org.wirez.core.util.UUID;
-import org.wirez.core.util.WirezLogger;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -27,6 +21,13 @@ import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.session.CanvasFullSession;
 import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.diagram.Settings;
+import org.wirez.core.diagram.SettingsImpl;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Graph;
+import org.wirez.core.util.UUID;
+import org.wirez.core.util.WirezLogger;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -67,8 +68,10 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
                                         final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
                                         final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                         final View view) {
+
         super(canvasSessionManager, clientDiagramServices, toolbar, clearSelectionCommand, visitGraphCommand, switchGridCommand,
                 errorPopupPresenter, canvasProcessingStartedEvent, canvasProcessingCompletedEvent, view);
+
         this.commandFactory = commandFactory;
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
@@ -77,12 +80,14 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         this.saveCommand = saveCommand;
         this.undoCommand = undoCommand;
         this.validateCommand = validateCommand;
+
     }
 
     @Override
     public void doInitialize(final S session, 
                            final int width, 
                            final int height) {
+
         super.doInitialize(session, width, height);
 
         // Enable canvas controls.
@@ -93,11 +98,14 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         enableControl( session.getDragControl(), canvasHandler );
         enableControl( session.getToolboxControl(), canvasHandler );
         enableControl( session.getBuilderControl(), canvasHandler );
-        
+        enableControl( session.getCanvasPaletteControl(), canvasHandler );
+        enableControl( session.getCanvasNameEditionControl(), canvasHandler );
+
     }
     
     @Override
     protected void setToolbarCommands() {
+
         super.setToolbarCommands();
 
         // Toolbar commands for canvas controls.
@@ -106,6 +114,55 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         super.addToolbarCommand( (ToolbarCommand<S>) validateCommand );
         super.addToolbarCommand( (ToolbarCommand<S>) saveCommand );
         super.addToolbarCommand( (ToolbarCommand<S>) undoCommand );
+
+    }
+
+    @Override
+    protected void onUpdateElement( final Element element ) {
+
+        super.onUpdateElement( element );
+
+        fireRegistrationUpdateListeners( session.getConnectionAcceptorControl(), element );
+        fireRegistrationUpdateListeners( session.getContainmentAcceptorControl(), element );
+        fireRegistrationUpdateListeners( session.getDockingAcceptorControl(), element );
+        fireRegistrationUpdateListeners( session.getDragControl(), element );
+        fireRegistrationUpdateListeners( session.getToolboxControl(), element );
+        fireRegistrationUpdateListeners( session.getBuilderControl(), element );
+        fireRegistrationUpdateListeners( session.getCanvasPaletteControl(), element );
+        fireRegistrationUpdateListeners( session.getCanvasNameEditionControl(), element );
+
+    }
+
+    @Override
+    protected void onClear() {
+
+        super.onClear();
+
+        fireRegistrationClearListeners( session.getConnectionAcceptorControl() );
+        fireRegistrationClearListeners( session.getContainmentAcceptorControl() );
+        fireRegistrationClearListeners( session.getDockingAcceptorControl() );
+        fireRegistrationClearListeners( session.getDragControl() );
+        fireRegistrationClearListeners( session.getToolboxControl() );
+        fireRegistrationClearListeners( session.getBuilderControl() );
+        fireRegistrationClearListeners( session.getCanvasPaletteControl() );
+        fireRegistrationClearListeners( session.getCanvasNameEditionControl() );
+
+    }
+
+    protected void onElementRegistration( final Element element,
+                                          final boolean add ) {
+
+        super.onElementRegistration( element, add );
+
+        fireRegistrationListeners( session.getConnectionAcceptorControl(), element, add );
+        fireRegistrationListeners( session.getContainmentAcceptorControl(), element, add );
+        fireRegistrationListeners( session.getDockingAcceptorControl(), element, add );
+        fireRegistrationListeners( session.getDragControl(), element, add );
+        fireRegistrationListeners( session.getToolboxControl(), element, add );
+        fireRegistrationListeners( session.getBuilderControl(), element, add );
+        fireRegistrationListeners( session.getCanvasPaletteControl(), element, add );
+        fireRegistrationListeners( session.getCanvasNameEditionControl(), element, add );
+
     }
 
     @Override
@@ -176,6 +233,9 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
 
     @Override
     protected void disposeSession() {
+
+        getCanvasHandler().clearRegistrationListeners();
+
         super.disposeSession();
       
         if ( null != clearCommand ) {

@@ -27,7 +27,6 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.palette.lienzo.LienzoDefinitionSetPaletteWidget;
-import org.wirez.client.workbench.perspectives.WirezPerspective;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;

@@ -47,6 +47,7 @@ public class HoverPalette extends AbstractPalette<HoverPalette> {
     @Override
     public HoverPalette build(final Item... items) {
         HoverPalette result = super.build( items );
+        drawPaletteDecorator();
         startTimeout();
         return result;
     }
@@ -58,11 +59,15 @@ public class HoverPalette extends AbstractPalette<HoverPalette> {
 
     @Override
     public HoverPalette clear() {
-        stopTimeout();
-        this.decorator.removeFromParent();
-        this.decorator = null;
         HoverPalette result = super.clear();
         return result;
+    }
+
+    @Override
+    public HoverPalette clearItems() {
+        super.clearItems();
+        removePaletteDecorator();
+        return this;
     }
 
     @Override
@@ -99,6 +104,21 @@ public class HoverPalette extends AbstractPalette<HoverPalette> {
 
     }
 
+    private void removePaletteDecorator() {
+
+        stopTimeout();
+
+        this.handlerRegistrationManager.removeHandler();
+
+        if ( null != decorator ) {
+
+            this.decorator.removeFromParent();
+            this.decorator = null;
+
+        }
+
+    }
+
     private void drawPaletteDecorator() {
 
         if ( null == decorator ) {
@@ -119,7 +139,7 @@ public class HoverPalette extends AbstractPalette<HoverPalette> {
             decorator
                     .setWidth( w )
                     .setHeight( h )
-                    .setX( x + halfOfPadding )
+                    .setX( x + ( halfOfPadding / 2 ) )
                     .setY( y + halfOfPadding );
 
         }

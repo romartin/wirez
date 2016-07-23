@@ -1,5 +1,6 @@
 package org.wirez.core.client.components.drag;
 
+import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
@@ -46,6 +47,8 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
                                                                                         final NodeDragProxyCallback callback) {
 
         final AbstractCanvas canvas = canvasHandler.getCanvas();
+
+        final Layer layer = canvas.getLayer();
 
         final Node<View<?>, Edge> node = item.getNode();
 
@@ -107,7 +110,6 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
                 canvas.deleteTransientShape( edgeShape );
 
                 canvas.draw();
-
 
             }
             

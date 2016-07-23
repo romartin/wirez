@@ -27,17 +27,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BasicShapeView<T> extends AbstractShapeView<T>
-        implements 
+        implements
         HasTitle<T>,
         HasEventHandlers<T, Shape<?>>,
         HasFillGradient<T>,
         HasChildren<BasicShapeView<T>> {
 
-    private static final ViewEventType[] SUPPORTED_EVENT_TYPES = new ViewEventType[] {
-            ViewEventType.MOUSE_CLICK, ViewEventType.DRAG, 
+    private static final ViewEventType[] SUPPORTED_EVENT_TYPES = new ViewEventType[]{
+            ViewEventType.MOUSE_CLICK, ViewEventType.MOUSE_DBL_CLICK, ViewEventType.DRAG,
             ViewEventType.TOUCH, ViewEventType.GESTURE
     };
-    
+
     protected ViewEventHandlerManager eventHandlerManager;
     protected final List<BasicShapeView<T>> children = new ArrayList<>();
     protected Text text;
@@ -45,10 +45,10 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     protected Type fillGradientType = null;
     protected String fillGradientStartColor = null;
     protected String fillGradientEndColor = null;
-    
-    public BasicShapeView(final MultiPath path,
-                          final WiresManager manager) {
-        super(path, manager);
+
+    public BasicShapeView( final MultiPath path,
+                           final WiresManager manager ) {
+        super( path, manager );
         this.textPosition = WiresLayoutContainer.Layout.BOTTOM;
         createEventHandlerManager( getShape() );
     }
@@ -58,28 +58,28 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         if ( null != node ) {
 
             this.eventHandlerManager = new ViewEventHandlerManager( node, SUPPORTED_EVENT_TYPES );
-            
+
         }
-        
+
     }
 
     @Override
-    public void addChild(final BasicShapeView<T> child, 
-                         final Layout layout) {
-        
+    public void addChild( final BasicShapeView<T> child,
+                          final Layout layout ) {
+
         children.add( child );
-        
-        super.addChild( (IPrimitive<?>) child.getContainer(), BasicShapesUtils.getWiresLayout( layout ) );
-        
+
+        super.addChild( ( IPrimitive<?> ) child.getContainer(), BasicShapesUtils.getWiresLayout( layout ) );
+
     }
 
     @Override
     public void removeChild( final BasicShapeView<T> child ) {
-        
+
         children.remove( child );
-        
-        super.removeChild( (IPrimitive<?>) child.getContainer() );
-        
+
+        super.removeChild( ( IPrimitive<?> ) child.getContainer() );
+
     }
 
     @Override
@@ -88,7 +88,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     }
 
     @Override
-    public boolean supports(final ViewEventType type) {
+    public boolean supports( final ViewEventType type ) {
         return eventHandlerManager.supports( type );
     }
 
@@ -97,81 +97,82 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         return getShape();
     }
 
-    @Override@SuppressWarnings("unchecked")
-    public T setTitle(final String title) {
-        
-        if ( null == text) {
-            text = buildText(title);
-            this.addChild(text, getTextPosition());
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public T setTitle( final String title ) {
+
+        if ( null == text ) {
+            text = buildText( title );
+            this.addChild( text, getTextPosition() );
         } else {
-            text.setText(title);
+            text.setText( title );
         }
         text.moveToTop();
 
-        return (T) this;
+        return ( T ) this;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T setTitlePosition(final Position position) {
-        if ( Position.BOTTOM.equals(position) ) {
+    @SuppressWarnings( "unchecked" )
+    public T setTitlePosition( final Position position ) {
+        if ( Position.BOTTOM.equals( position ) ) {
             this.textPosition = LayoutContainer.Layout.BOTTOM;
-        } else if ( Position.TOP.equals(position) ) {
+        } else if ( Position.TOP.equals( position ) ) {
             this.textPosition = LayoutContainer.Layout.TOP;
-        } else if ( Position.LEFT.equals(position) ) {
+        } else if ( Position.LEFT.equals( position ) ) {
             this.textPosition = LayoutContainer.Layout.LEFT;
-        } else if ( Position.RIGHT.equals(position) ) {
+        } else if ( Position.RIGHT.equals( position ) ) {
             this.textPosition = LayoutContainer.Layout.RIGHT;
-        } else if ( Position.CENTER.equals(position) ) {
+        } else if ( Position.CENTER.equals( position ) ) {
             this.textPosition = LayoutContainer.Layout.CENTER;
         }
-        return (T) this;
+        return ( T ) this;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T setTitleStrokeColor(final String color) {
-        text.setStrokeColor(color);
-        return (T) this;
+    @SuppressWarnings( "unchecked" )
+    public T setTitleStrokeColor( final String color ) {
+        text.setStrokeColor( color );
+        return ( T ) this;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T setTitleFontFamily(final String fontFamily) {
-        text.setFontFamily(fontFamily);
-        return (T) this;
-    }
-    
-    @Override
-    @SuppressWarnings("unchecked")
-    public T setTitleFontSize(final double fontSize) {
-        text.setFontSize(fontSize);
-        return (T) this;
+    @SuppressWarnings( "unchecked" )
+    public T setTitleFontFamily( final String fontFamily ) {
+        text.setFontFamily( fontFamily );
+        return ( T ) this;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
+    public T setTitleFontSize( final double fontSize ) {
+        text.setFontSize( fontSize );
+        return ( T ) this;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
     public T setTitleAlpha( final double alpha ) {
         text.setAlpha( alpha );
-        return (T) this;
+        return ( T ) this;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T setTitleStrokeWidth(final double strokeWidth) {
-        text.setStrokeWidth(strokeWidth);
-        return (T) this;
+    @SuppressWarnings( "unchecked" )
+    public T setTitleStrokeWidth( final double strokeWidth ) {
+        text.setStrokeWidth( strokeWidth );
+        return ( T ) this;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public T moveTitleToTop() {
         text.moveToTop();
-        return (T) this;
+        return ( T ) this;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public T refreshTitle() {
 
         // Center the text on the parent using the bb calculation.
@@ -179,71 +180,71 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
             final BoundingBox bb = text.getBoundingBox();
             final double bbw = bb.getWidth();
             final double bbh = bb.getHeight();
-            this.moveChild(text, - ( bbw / 2 ), 0 );
+            this.moveChild( text, -( bbw / 2 ), 0 );
             text.moveToTop();
         }
 
-        return (T) this;
+        return ( T ) this;
     }
 
-    protected Text buildText(String _text) {
-        Text text = new Text(_text).setFontSize(14).setFillColor(ColorName.BLACK).setStrokeWidth(1);
-        return text.moveToTop().setDraggable(false).setAlpha( 0 );
+    protected Text buildText( String _text ) {
+        Text text = new Text( _text ).setFontSize( 14 ).setFillColor( ColorName.BLACK ).setStrokeWidth( 1 );
+        return text.moveToTop().setDraggable( false ).setAlpha( 0 );
     }
-    
+
     private WiresLayoutContainer.Layout getTextPosition() {
         return textPosition;
     }
-    
+
     @Override
-    @SuppressWarnings("unchecked")
-    public T setFillGradient(final Type type, 
-                             final String startColor, 
-                             final String endColor) {
-        
-        this.fillGradientType  = type;
+    @SuppressWarnings( "unchecked" )
+    public T setFillGradient( final Type type,
+                              final String startColor,
+                              final String endColor ) {
+
+        this.fillGradientType = type;
         this.fillGradientStartColor = startColor;
         this.fillGradientEndColor = endColor;
-        
+
         if ( null != getShape() ) {
             final BoundingBox bb = getShape().getBoundingBox();
             final double width = bb.getWidth();
             final double height = bb.getHeight();
             updateFillGradient( width, height );
         }
-        
-        return (T) this;
+
+        return ( T ) this;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     protected T updateFillGradient( final double width,
                                     final double height ) {
-        
-        if ( this.fillGradientType != null 
-                && this.fillGradientStartColor != null 
+
+        if ( this.fillGradientType != null
+                && this.fillGradientStartColor != null
                 && this.fillGradientEndColor != null ) {
 
             final LinearGradient gradient = LienzoShapeUtils.getLinearGradient( fillGradientStartColor,
-                    fillGradientEndColor, width, height);
-            
-            getShape().setFillGradient(gradient);
-            
+                    fillGradientEndColor, width, height );
+
+            getShape().setFillGradient( gradient );
+
         }
-        
-        return (T) this;   
+
+        return ( T ) this;
     }
 
     @Override
     protected void doDestroy() {
-        
+
         if ( null != eventHandlerManager ) {
 
             // Remove all registered handlers.
             eventHandlerManager.destroy();
             eventHandlerManager = null;
-            
+
         }
-        
+
     }
 
     @Override
@@ -256,24 +257,24 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         this.fillGradientEndColor = null;
         this.fillGradientStartColor = null;
         this.fillGradientType = null;
-        
+
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T addHandler(final ViewEventType type,
-                        final ViewHandler<? extends ViewEvent> eventHandler) {
+    @SuppressWarnings( "unchecked" )
+    public T addHandler( final ViewEventType type,
+                         final ViewHandler<? extends ViewEvent> eventHandler ) {
 
 
-        if ( supports(type) ) {
+        if ( supports( type ) ) {
 
             if ( ViewEventType.DRAG.equals( type ) ) {
 
-                final HandlerRegistration[] registrations = 
-                        registerDragHandler( (org.wirez.core.client.shape.view.event.DragHandler) eventHandler );
-                
+                final HandlerRegistration[] registrations =
+                        registerDragHandler( ( org.wirez.core.client.shape.view.event.DragHandler ) eventHandler );
+
                 eventHandlerManager.addHandlersRegistration( type, registrations );
-                
+
             } else {
 
                 eventHandlerManager.addHandler( type, eventHandler );
@@ -282,50 +283,62 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
         }
 
-        return (T) this;
+        return ( T ) this;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public T removeHandler(final ViewHandler<? extends ViewEvent> eventHandler) {
-        
+    @SuppressWarnings( "unchecked" )
+    public T removeHandler( final ViewHandler<? extends ViewEvent> eventHandler ) {
+
         eventHandlerManager.removeHandler( eventHandler );
-        
-        return (T) this;
-        
+
+        return ( T ) this;
+
+    }
+
+    @Override
+    public T enableHandlers() {
+        eventHandlerManager.enable();
+        return ( T ) this;
+    }
+
+    @Override
+    public T disableHandlers() {
+        eventHandlerManager.disable();
+        return ( T ) this;
     }
 
     protected HandlerRegistration[] registerDragHandler( final ViewHandler<org.wirez.core.client.shape.view.event.DragEvent> eventHandler ) {
 
-        return new HandlerRegistration[] {
+        return new HandlerRegistration[]{
 
-                setDraggable(true).addWiresHandler(AbstractWiresEvent.DRAG, new DragHandler() {
+                setDraggable( true ).addWiresHandler( AbstractWiresEvent.DRAG, new DragHandler() {
                     @Override
-                    public void onDragStart(final DragEvent dragEvent) {
-                        getDragHandler().start(buildEvent( dragEvent.getX(), dragEvent.getY()) );
+                    public void onDragStart( final DragEvent dragEvent ) {
+                        getDragHandler().start( buildEvent( dragEvent.getX(), dragEvent.getY() ) );
                     }
 
                     @Override
-                    public void onDragMove(final DragEvent dragEvent) {
-                        getDragHandler().handle(buildEvent( dragEvent.getX(), dragEvent.getY()) );
+                    public void onDragMove( final DragEvent dragEvent ) {
+                        getDragHandler().handle( buildEvent( dragEvent.getX(), dragEvent.getY() ) );
                     }
 
                     @Override
-                    public void onDragEnd(final DragEvent dragEvent) {
-                        getDragHandler().end(buildEvent( dragEvent.getX(), dragEvent.getY()) );
+                    public void onDragEnd( final DragEvent dragEvent ) {
+                        getDragHandler().end( buildEvent( dragEvent.getX(), dragEvent.getY() ) );
                     }
 
                     private org.wirez.core.client.shape.view.event.DragHandler getDragHandler() {
-                        return (org.wirez.core.client.shape.view.event.DragHandler) eventHandler;
+                        return ( org.wirez.core.client.shape.view.event.DragHandler ) eventHandler;
                     }
 
-                    private org.wirez.core.client.shape.view.event.DragEvent buildEvent(final double x, 
-                                                                                        final double y) {
-                        return new org.wirez.core.client.shape.view.event.DragEvent(x, y);
+                    private org.wirez.core.client.shape.view.event.DragEvent buildEvent( final double x,
+                                                                                         final double y ) {
+                        return new org.wirez.core.client.shape.view.event.DragEvent( x, y, x, y, x, y );
                     }
-                })
+                } )
 
         };
     }
-    
+
 }

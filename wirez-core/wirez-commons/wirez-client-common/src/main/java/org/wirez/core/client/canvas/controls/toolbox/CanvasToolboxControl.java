@@ -238,7 +238,7 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
     }
 
     @Override
-    protected void deregisterAll() {
+    public void deregisterAll() {
 
         super.deregisterAll();
 

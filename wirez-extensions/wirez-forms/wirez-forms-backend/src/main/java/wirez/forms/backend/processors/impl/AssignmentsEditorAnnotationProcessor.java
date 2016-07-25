@@ -16,41 +16,31 @@
 
 package wirez.forms.backend.processors.impl;
 
-import java.lang.annotation.Annotation;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.livespark.formmodeler.renderer.backend.service.impl.FieldSetting;
+import org.drools.workbench.models.datamodel.oracle.Annotation;
 import org.livespark.formmodeler.renderer.backend.service.impl.processors.AbstractFieldAnnotationProcessor;
-import org.livespark.formmodeler.service.FieldManager;
+import org.livespark.formmodeler.renderer.service.TransformerContext;
 import org.wirez.forms.meta.definition.AssignmentsEditor;
 import org.wirez.forms.model.AssignmentsEditorFieldDefinition;
+import org.wirez.forms.service.fieldProviders.AssignmentsEditorFieldProvider;
 
 @Dependent
-public class AssignmentsEditorAnnotationProcessor extends AbstractFieldAnnotationProcessor<AssignmentsEditorFieldDefinition> {
+public class AssignmentsEditorAnnotationProcessor extends AbstractFieldAnnotationProcessor<AssignmentsEditorFieldDefinition, AssignmentsEditorFieldProvider> {
 
     @Inject
-    public AssignmentsEditorAnnotationProcessor( FieldManager fieldManager ) {
-        super( fieldManager );
+    public AssignmentsEditorAnnotationProcessor(AssignmentsEditorFieldProvider fieldProvider) {
+        super(fieldProvider);
     }
 
     @Override
-    protected AssignmentsEditorFieldDefinition buildFieldDefinition( Annotation annotation, FieldSetting setting ) {
-        AssignmentsEditorFieldDefinition field = new AssignmentsEditorFieldDefinition();
-
-        if ( !supportsAnnotation( annotation )) {
-            return null;
-        }
-
-        AssignmentsEditor assignmentsEditorDef = (AssignmentsEditor) annotation;
-
-        field.setDefaultValue( assignmentsEditorDef.defaultValue() );
-
-        return field;
+    protected void initField(AssignmentsEditorFieldDefinition field, Annotation annotation, TransformerContext context) {
     }
 
     @Override
-    public boolean supportsAnnotation( Annotation annotation ) {
-        return annotation instanceof AssignmentsEditor;
+    protected Class<AssignmentsEditor> getSupportedAnnotation() {
+        return AssignmentsEditor.class;
     }
+
 }

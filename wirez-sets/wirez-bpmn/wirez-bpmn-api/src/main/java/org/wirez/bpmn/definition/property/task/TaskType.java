@@ -31,30 +31,18 @@ import java.util.ArrayList;
 @Property
 public class TaskType implements BPMNProperty {
 
-    public enum TaskTypes {
-    
-        NONE,
-        
-        USER,
-        
-        SCRIPT, 
-        
-        BUSINESS_RULE;
-        
-    }
-    
     @Caption
     public static final transient String caption = "Task Type";
-    
+
     @Description
     public static final transient String description = "The task type";
 
     @Type
     public static final PropertyType type = new EnumType();
-    
+
     @ReadOnly
     public static final Boolean readOnly = true;
-    
+
     @Optional
     public static final Boolean optional = false;
 
@@ -73,7 +61,7 @@ public class TaskType implements BPMNProperty {
     private TaskTypes value = defaultValue;
 
     public TaskType() {
-        
+
     }
 
     public TaskType( final TaskTypes value ) {
@@ -99,7 +87,7 @@ public class TaskType implements BPMNProperty {
     public PropertyType getType() {
         return type;
     }
-    
+
     public TaskTypes getDefaultValue() {
         return defaultValue;
     }
@@ -115,5 +103,5 @@ public class TaskType implements BPMNProperty {
     public void setValue(TaskTypes value) {
         this.value = value;
     }
-    
+
 }

@@ -16,41 +16,33 @@
 
 package wirez.forms.backend.processors.impl;
 
-import java.lang.annotation.Annotation;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.livespark.formmodeler.renderer.backend.service.impl.FieldSetting;
+import org.drools.workbench.models.datamodel.oracle.Annotation;
 import org.livespark.formmodeler.renderer.backend.service.impl.processors.AbstractFieldAnnotationProcessor;
-import org.livespark.formmodeler.service.FieldManager;
+import org.livespark.formmodeler.renderer.service.TransformerContext;
 import org.wirez.forms.meta.definition.VariablesEditor;
 import org.wirez.forms.model.VariablesEditorFieldDefinition;
+import org.wirez.forms.service.fieldProviders.VariablesEditorFieldProvider;
 
 @Dependent
-public class VariablesEditorAnnotationProcessor extends AbstractFieldAnnotationProcessor<VariablesEditorFieldDefinition> {
+public class VariablesEditorAnnotationProcessor extends AbstractFieldAnnotationProcessor<VariablesEditorFieldDefinition, VariablesEditorFieldProvider> {
 
     @Inject
-    public VariablesEditorAnnotationProcessor( FieldManager fieldManager ) {
-        super( fieldManager );
+    public VariablesEditorAnnotationProcessor( VariablesEditorFieldProvider fieldProvider ) {
+        super( fieldProvider );
     }
 
     @Override
-    protected VariablesEditorFieldDefinition buildFieldDefinition( Annotation annotation, FieldSetting setting ) {
-        VariablesEditorFieldDefinition field = new VariablesEditorFieldDefinition();
-
-        if ( !supportsAnnotation( annotation )) {
-            return null;
-        }
-
-        VariablesEditor variablesEditorDef = (VariablesEditor) annotation;
-
-        field.setDefaultValue( variablesEditorDef.defaultValue() );
-
-        return field;
+    protected void initField( VariablesEditorFieldDefinition field,
+                              Annotation annotation,
+                              TransformerContext context ) {
+        field.setDefaultValue( (String) annotation.getParameters().get( "defaultValue" ) );
     }
 
     @Override
-    public boolean supportsAnnotation( Annotation annotation ) {
-        return annotation instanceof VariablesEditor;
+    protected Class<VariablesEditor> getSupportedAnnotation() {
+        return VariablesEditor.class;
     }
 }

@@ -16,46 +16,34 @@
 
 package wirez.forms.backend.processors.impl;
 
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.livespark.formmodeler.renderer.backend.service.impl.FieldSetting;
+import org.drools.workbench.models.datamodel.oracle.Annotation;
 import org.livespark.formmodeler.renderer.backend.service.impl.processors.AbstractFieldAnnotationProcessor;
-import org.livespark.formmodeler.service.FieldManager;
+import org.livespark.formmodeler.renderer.service.TransformerContext;
 import org.wirez.forms.meta.definition.ColorPicker;
 import org.wirez.forms.model.ColorPickerFieldDefinition;
+import org.wirez.forms.service.fieldProviders.ColorPickerFieldProvider;
 
 /**
  * @author Pere Fernandez <pefernan@redhat.com>
  */
 @Dependent
-public class ColorPickerAnnotationProcessor extends AbstractFieldAnnotationProcessor<ColorPickerFieldDefinition> {
+public class ColorPickerAnnotationProcessor extends AbstractFieldAnnotationProcessor<ColorPickerFieldDefinition, ColorPickerFieldProvider> {
 
     @Inject
-    public ColorPickerAnnotationProcessor( FieldManager fieldManager ) {
-        super( fieldManager );
+    public ColorPickerAnnotationProcessor( ColorPickerFieldProvider fieldProvider ) {
+        super( fieldProvider );
     }
 
     @Override
-    protected ColorPickerFieldDefinition buildFieldDefinition( Annotation annotation, FieldSetting setting ) {
-        ColorPickerFieldDefinition field = new ColorPickerFieldDefinition();
-
-        if ( !supportsAnnotation( annotation )) {
-            return null;
-        }
-
-        ColorPicker colorPickerDef = (ColorPicker) annotation;
-
-        field.setDefaultValue( colorPickerDef.defaultValue() );
-
-        return field;
+    protected Class<ColorPicker> getSupportedAnnotation() {
+        return ColorPicker.class;
     }
 
     @Override
-    public boolean supportsAnnotation( Annotation annotation ) {
-        return annotation instanceof ColorPicker;
+    protected void initField( ColorPickerFieldDefinition field, Annotation annotation, TransformerContext context ) {
+        field.setDefaultValue( (String) annotation.getParameters().get( "defaultValue") );
     }
 }

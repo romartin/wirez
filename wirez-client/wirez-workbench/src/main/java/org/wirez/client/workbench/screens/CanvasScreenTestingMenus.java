@@ -1,5 +1,6 @@
 package org.wirez.client.workbench.screens;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Window;
@@ -82,14 +83,18 @@ public class CanvasScreenTestingMenus {
                 .newTopLevelMenu("Log Client Platform")
                 .respondsWith(getLogCurrentClientPlatform())
                 .endMenu()
+                newTopLevelMenu("Log Canvas Image Data")
+                .respondsWith(getLogCanvasImageData())
+                .endMenu()
                 .build();*/
 
-        return MenuFactory
+        /*return MenuFactory
                 .newTopLevelMenu("Log Command History")
                 .respondsWith(getLogCommandStackCommand())
                 .endMenu()
-                .build();
+                .build();*/
 
+        return null;
     }
 
     public Menus getMenu() {
@@ -99,6 +104,17 @@ public class CanvasScreenTestingMenus {
     public void destroy() {
         this.canvasSessionPresenter = null;
         this.session = null;
+    }
+
+    private Command getLogCanvasImageData() {
+
+        return () -> {
+
+            final String dataURL = session.getCanvas().getLayer().toDataURL();
+            GWT.log("DATA URL = \"" + dataURL + "\"" );
+
+        };
+
     }
 
     private Command getLogCurrentClientPlatform() {

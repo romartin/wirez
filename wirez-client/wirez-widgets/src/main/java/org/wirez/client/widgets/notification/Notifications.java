@@ -40,9 +40,9 @@ import org.wirez.core.command.Command;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.util.UUID;
-import org.wirez.core.validation.canvas.CanvasValidationFailEvent;
-import org.wirez.core.validation.canvas.CanvasValidationSuccessEvent;
-import org.wirez.core.validation.canvas.CanvasValidationViolation;
+import org.wirez.core.client.validation.canvas.CanvasValidationFailEvent;
+import org.wirez.core.client.validation.canvas.CanvasValidationSuccessEvent;
+import org.wirez.core.client.validation.canvas.CanvasValidationViolation;
 import org.wirez.core.validation.event.AbstractValidationEvent;
 import org.wirez.core.validation.event.AbstractValidationFailEvent;
 

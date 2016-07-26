@@ -94,7 +94,7 @@ public class DeleteSelectionCommand extends AbstractSelectionToolbarCommand<Defa
                 }
 
                 if ( null != callback ) {
-                    callback.onSuccess( null );
+                    callback.onCommandExecuted( null );
                 }
 
             } );

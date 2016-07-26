@@ -28,8 +28,7 @@ import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.event.CreateEmptyDiagramEvent;
 import org.wirez.client.widgets.event.LoadDiagramEvent;
-import org.wirez.client.widgets.wizard.screens.CanvasWizard;
-import org.wirez.client.workbench.perspectives.WirezPerspective;
+import org.wirez.client.widgets.wizard.CanvasWizard;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
 
@@ -56,10 +55,7 @@ public class CanvasWizardScreen {
     
     @Inject
     PlaceManager placeManager;
-    
-    @Inject
-    WirezPerspective wirezPerspective;
-    
+
     @Inject
     ShapeManager wirezClientManager;
 

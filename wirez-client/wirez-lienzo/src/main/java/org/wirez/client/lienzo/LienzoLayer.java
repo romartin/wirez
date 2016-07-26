@@ -5,6 +5,7 @@ import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.shared.core.types.DataURLType;
 import com.google.gwt.core.client.GWT;
 import org.uberfire.mvp.Command;
+import org.wirez.client.lienzo.canvas.util.LienzoImageDataUtils;
 import org.wirez.client.lienzo.shape.view.ViewEventHandlerManager;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.shape.view.ShapeView;
@@ -64,6 +65,16 @@ public class LienzoLayer implements Layer<LienzoLayer, ShapeView<?>, Shape<?>> {
     @Override
     public String toDataURL() {
         return layer.toDataURL(DataURLType.PNG);
+    }
+
+    @Override
+    public String toDataURL( final int x,
+                             final int y,
+                             final int width,
+                             final int height ) {
+
+        return LienzoImageDataUtils.toImageData( getLienzoLayer(), x, y, width ,height );
+
     }
 
     @Override

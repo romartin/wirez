@@ -5,6 +5,8 @@ import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.controls.actions.CanvasNameEditionControl;
+import org.wirez.core.client.canvas.controls.actions.CanvasSaveControl;
+import org.wirez.core.client.canvas.controls.actions.CanvasValidationControl;
 import org.wirez.core.client.canvas.controls.builder.ElementBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.impl.Observer;
 import org.wirez.core.client.canvas.controls.connection.ConnectionAcceptorControl;
@@ -29,6 +31,8 @@ public class CanvasFullSessionImpl extends AbstractFullSession {
     @Inject
     public CanvasFullSessionImpl(final AbstractCanvas canvas,
                                  final AbstractCanvasHandler canvasHandler,
+                                 final CanvasValidationControl<AbstractCanvasHandler> canvasValidationControl,
+                                 final CanvasSaveControl<AbstractCanvasHandler> canvasSaveControl,
                                  final CanvasPaletteControl<AbstractCanvasHandler> canvasPaletteControl,
                                  final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
                                  final ConnectionAcceptorControl<AbstractCanvasHandler> connectionAcceptorControl,
@@ -42,9 +46,10 @@ public class CanvasFullSessionImpl extends AbstractFullSession {
                                  final @Wheel ZoomControl<AbstractCanvas> zoomControl,
                                  final PanControl<AbstractCanvas> panControl) {
         
-        super( canvas, canvasHandler, canvasPaletteControl, selectionControl, zoomControl, panControl,
-                canvasCommandManager, connectionAcceptorControl, containmentAcceptorControl, dockingAcceptorControl,
-                canvasNameEditionControl, dragControl, toolboxControl, builderControl );
+        super( canvas, canvasHandler, canvasValidationControl, canvasSaveControl, canvasPaletteControl,
+                selectionControl, zoomControl, panControl, canvasCommandManager, connectionAcceptorControl,
+                containmentAcceptorControl, dockingAcceptorControl, canvasNameEditionControl, dragControl,
+                toolboxControl, builderControl );
         
     }
 

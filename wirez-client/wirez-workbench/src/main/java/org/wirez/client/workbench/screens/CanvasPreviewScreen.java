@@ -18,14 +18,13 @@ package org.wirez.client.workbench.screens;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.uberfire.client.annotations.*;
-import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.lifecycle.OnClose;
 import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.canvas.preview.CanvasPreview;
-import org.wirez.client.workbench.perspectives.WirezPerspective;
+import org.wirez.client.workbench.perspectives.WirezSandboxPerspective;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.session.event.SessionDisposedEvent;
 import org.wirez.core.client.session.event.SessionOpenedEvent;
@@ -44,7 +43,7 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 public class CanvasPreviewScreen {
 
     public static final String SCREEN_ID = "CanvasPreviewScreen";
-    public static final int WIDTH = WirezPerspective.EAST_PANEL_WIDTH;
+    public static final int WIDTH = WirezSandboxPerspective.EAST_PANEL_WIDTH;
     public static final int HEIGHT = 200;
 
     @Inject

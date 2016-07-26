@@ -11,11 +11,12 @@ public final class SettingsImpl implements Settings {
     private final String shapeSetId;
     private String canvasRootUUID;
     private String path;
+    private String thumbData;
 
     public SettingsImpl(@MapsTo("title") String title,
                         @MapsTo("defSetId") String defSetId,
                         @MapsTo("shapeSetId") String shapeSetId,
-                        @MapsTo("canvasRootUUID") String canvasRootUUID) {
+                        @MapsTo("canvasRootUUID") String canvasRootUUID ) {
         this.title = title;
         this.defSetId = defSetId;
         this.shapeSetId = shapeSetId;
@@ -55,6 +56,16 @@ public final class SettingsImpl implements Settings {
     @Override
     public void setVFSPath(final String path) {
         this.path = path;
+    }
+
+    @Override
+    public String getThumbData() {
+        return thumbData;
+    }
+
+    @Override
+    public void setThumbData( final String data ) {
+        this.thumbData = data;
     }
 
 }

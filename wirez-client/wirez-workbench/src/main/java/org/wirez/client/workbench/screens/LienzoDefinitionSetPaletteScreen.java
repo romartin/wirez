@@ -190,7 +190,7 @@ public class LienzoDefinitionSetPaletteScreen {
         final String _shapeSetId = canvasHandler.getDiagram().getSettings().getShapeSetId();
         final ShapeSet shapeSet = getShapeSet(_shapeSetId);
 
-        changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, shapeSet.getName() + " Palette"));
+        // changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, shapeSet.getName() + " Palette"));
         this.shapeSetId = shapeSet.getId();
         open();
 
@@ -198,7 +198,7 @@ public class LienzoDefinitionSetPaletteScreen {
 
     private void doDisposeSession() {
         // Close the current palette.
-        changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Palette"));
+        // changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Palette"));
         this.shapeSetId = null;
         close();
     }

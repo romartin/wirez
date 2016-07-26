@@ -18,10 +18,9 @@
     <module>wirez-shapes</module>
     <module>wirez-lienzo</module>
     <module>wirez-widgets</module>
-    <module>wirez-lienzo-palette-widgets</module>
+    <module>wirez-widgets-sandbox</module>
     <module>wirez-workbench</module>
     <module>wirez-mobile</module>
   </modules>
-
 
 </project>

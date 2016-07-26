@@ -13,5 +13,7 @@ public interface DiagramRepresentation {
     String getShapeSetId();
 
     String getVFSPath();
+
+    String getThumbImageData();
     
 }

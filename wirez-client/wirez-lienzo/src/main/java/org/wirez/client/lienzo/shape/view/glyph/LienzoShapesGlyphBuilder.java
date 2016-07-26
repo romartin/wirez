@@ -6,6 +6,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.tooling.nativetools.client.collection.NFastArrayList;
+import org.wirez.client.lienzo.util.LienzoUtils;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.*;
@@ -67,11 +68,8 @@ public class LienzoShapesGlyphBuilder extends AbstractBindableShapeGlyphBuilder<
         group = group.copy();
         
         // Scale, if necessary, to the given glyph size.
-        final double w = bb.getWidth();
-        final double h = bb.getHeight();
-        final double sw = w > 0 ?  ( width / w) : 1;
-        final double sh = h > 0 ? ( height / h ) : 1;
-        group.setScale( sw, sh );
+        final double[] scale = LienzoUtils.getScaleFactor( bb.getWidth(), bb.getHeight(), width, height );
+        group.setScale( scale[0], scale[1] );
 
         // Apply positions.
         final double x = view instanceof HasRadius ? width / 2 : 0;

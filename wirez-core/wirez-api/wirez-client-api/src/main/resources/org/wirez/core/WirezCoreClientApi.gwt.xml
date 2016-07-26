@@ -24,6 +24,5 @@
 	
 	<source path="client"/>
 	<source path="definition"/>
-	<source path="validation/canvas"/>
 
 </module>

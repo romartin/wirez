@@ -15,5 +15,9 @@ public interface Settings {
     String getVFSPath();
     
     void setVFSPath(String path );
+
+    String getThumbData();
+
+    void setThumbData( String data );
     
 }

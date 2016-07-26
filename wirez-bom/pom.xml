@@ -257,13 +257,13 @@
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-lienzo-palette-widgets</artifactId>
+        <artifactId>wirez-widgets-sandbox</artifactId>
         <version>${project.version}</version>
       </dependency>
 
       <dependency>
         <groupId>org.wirez</groupId>
-        <artifactId>wirez-lienzo-palette-widgets</artifactId>
+        <artifactId>wirez-widgets-sandbox</artifactId>
         <version>${project.version}</version>
         <classifier>sources</classifier>
       </dependency>

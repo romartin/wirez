@@ -49,6 +49,12 @@ public class CanvasBoundsIndexerImpl implements CanvasBoundsIndexer<AbstractCanv
     }
 
     @Override
+    public double[] getTrimmedBounds() {
+        // TODO
+        return new double[0];
+    }
+
+    @Override
     public void destroy() {
         this.canvasHandler = null;
     }

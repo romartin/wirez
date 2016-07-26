@@ -42,7 +42,7 @@ public class ClearSelectionCommand extends AbstractSelectionToolbarCommand<Defau
             session.getShapeSelectionControl().clearSelection();
 
             if ( null != callback ) {
-                callback.onSuccess( null );
+                callback.onCommandExecuted( null );
             }
 
         }

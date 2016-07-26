@@ -235,8 +235,8 @@ public class FormsPropertiesScreen {
     }
 
     private void doClear() {
-        // TODO: formRenderer.clear();
-        changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));
+        // TODO formRenderer.unBind();
+        // changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));
     }
 
 

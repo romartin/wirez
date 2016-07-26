@@ -16,6 +16,8 @@ public interface Layer<T, S, A> extends HasEventHandlers<T, A> {
     void clear();
     
     String toDataURL();
+
+    String toDataURL( int x, int y, int width, int height );
     
     void onAfterDraw(Command callback);
     

@@ -4,6 +4,8 @@ import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.controls.actions.CanvasNameEditionControl;
+import org.wirez.core.client.canvas.controls.actions.CanvasSaveControl;
+import org.wirez.core.client.canvas.controls.actions.CanvasValidationControl;
 import org.wirez.core.client.canvas.controls.builder.ElementBuilderControl;
 import org.wirez.core.client.canvas.controls.connection.ConnectionAcceptorControl;
 import org.wirez.core.client.canvas.controls.containment.ContainmentAcceptorControl;
@@ -21,6 +23,8 @@ import org.wirez.core.graph.Element;
 public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl 
         implements DefaultCanvasFullSession {
 
+    CanvasValidationControl<AbstractCanvasHandler> canvasValidationControl;
+    CanvasSaveControl<AbstractCanvasHandler> canvasSaveControl;
     CanvasPaletteControl<AbstractCanvasHandler> canvasPaletteControl;
     CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
     ConnectionAcceptorControl<AbstractCanvasHandler> connectionAcceptorControl;
@@ -34,6 +38,8 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
     
     public AbstractFullSession(final AbstractCanvas canvas,
                                final AbstractCanvasHandler canvasHandler,
+                               final CanvasValidationControl<AbstractCanvasHandler> canvasValidationControl,
+                               final CanvasSaveControl<AbstractCanvasHandler> canvasSaveControl,
                                final CanvasPaletteControl<AbstractCanvasHandler> canvasPaletteControl,
                                final SelectionControl<AbstractCanvasHandler, Element> selectionControl,
                                final ZoomControl<AbstractCanvas> zoomControl,
@@ -47,6 +53,8 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
                                final ToolboxControl<AbstractCanvasHandler, Element> toolboxControl,
                                final ElementBuilderControl<AbstractCanvasHandler> builderControl ) {
         super(canvas, canvasHandler, selectionControl, zoomControl, panControl);
+        this.canvasValidationControl = canvasValidationControl;
+        this.canvasSaveControl = canvasSaveControl;
         this.canvasPaletteControl = canvasPaletteControl;
         this.canvasCommandManager = canvasCommandManager;
         this.connectionAcceptorControl = connectionAcceptorControl;
@@ -57,6 +65,16 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
         this.toolboxControl = toolboxControl;
         this.builderControl = builderControl;
 
+    }
+
+    @Override
+    public CanvasValidationControl<AbstractCanvasHandler> getCanvasValidationControl() {
+        return canvasValidationControl;
+    }
+
+    @Override
+    public CanvasSaveControl<AbstractCanvasHandler> getCanvasSaveControl() {
+        return canvasSaveControl;
     }
 
     @Override
@@ -116,6 +134,19 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
 
     @Override
     public void doDispose() {
+
+        if ( null != canvasValidationControl ) {
+
+            canvasValidationControl.disable();
+            canvasValidationControl = null;
+        }
+
+        if ( null != canvasSaveControl ) {
+
+            canvasSaveControl.disable();
+            canvasSaveControl = null;
+        }
+
 
         if ( null != canvasPaletteControl ) {
 

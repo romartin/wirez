@@ -27,13 +27,13 @@ import org.uberfire.client.mvp.ActivityManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.client.workbench.widgets.menu.WorkbenchMenuBarPresenter;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.client.workbench.perspectives.AuthoringPerspective;
+import org.wirez.client.workbench.perspectives.NavigationPerspective;
+import org.wirez.client.workbench.perspectives.WirezSandboxPerspective;
 
 import javax.inject.Inject;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +45,7 @@ import static org.uberfire.workbench.model.menu.MenuFactory.newTopLevelMenu;
 @EntryPoint
 public class ShowcaseEntryPoint {
 
-    private static Logger LOGGER = Logger.getLogger(ShowcaseEntryPoint.class.getName());
+    private static Logger LOGGER = Logger.getLogger( ShowcaseEntryPoint.class.getName() );
 
     @Inject
     private PlaceManager placeManager;
@@ -58,7 +58,7 @@ public class ShowcaseEntryPoint {
 
     @Inject
     private ErrorPopupPresenter errorPopupPresenter;
-    
+
     @AfterInitialization
     public void startApp() {
 
@@ -69,7 +69,7 @@ public class ShowcaseEntryPoint {
         hideLoadingPopup();
 
         // Default perspective.
-        placeManager.goTo( new DefaultPlaceRequest( "WirezPerspective" ) );
+        placeManager.goTo( new DefaultPlaceRequest( NavigationPerspective.PERSPECTIVE_ID ) );
     }
 
     private void setupGlobalErrorHandler() {
@@ -88,20 +88,11 @@ public class ShowcaseEntryPoint {
 
     private void setupMenu() {
         final Menus menus =
-                newTopLevelMenu("Wirez").respondsWith(new Command() {
-                    @Override
-                    public void execute() {
-                        placeManager.goTo(new DefaultPlaceRequest("WirezPerspective"));
-                    }
-                }).endMenu()
-            .newTopLevelMenu("Other widgets").respondsWith(new Command() {
-                @Override
-                public void execute() {
-                    placeManager.goTo(new DefaultPlaceRequest("WirezPerspective2"));
-                }
-            }).endMenu()
-                .build();
-        menubar.addMenus(menus);
+                newTopLevelMenu( "Home" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( NavigationPerspective.PERSPECTIVE_ID ) ) ).endMenu()
+                        .newTopLevelMenu( "Authoring" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( AuthoringPerspective.PERSPECTIVE_ID ) ) ).endMenu()
+                        .newTopLevelMenu( "Sandbox" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( WirezSandboxPerspective.PERSPECTIVE_ID ) ) ).endMenu()
+                        .build();
+        menubar.addMenus( menus );
     }
 
     // Fade out the "Loading application" pop-up
@@ -126,9 +117,9 @@ public class ShowcaseEntryPoint {
         $wnd.location = url;
     }-*/;
 
-    private void log( final Level level, final String message) {
+    private void log( final Level level, final String message ) {
         if ( LogConfiguration.loggingIsEnabled() ) {
-            LOGGER.log(level, message);
+            LOGGER.log( level, message );
         }
     }
 

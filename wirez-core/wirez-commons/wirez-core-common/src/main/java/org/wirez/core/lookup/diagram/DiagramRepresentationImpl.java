@@ -14,19 +14,22 @@ public final class DiagramRepresentationImpl implements DiagramRepresentation {
     private final String defSetId;
     private final String shapeSetId;
     private final String vfsPath;
+    private final String thumbImageData;
 
     public DiagramRepresentationImpl(@MapsTo("uuid")  String uuid,
                                      @MapsTo("graphUUID")  String graphUUID,
                                      @MapsTo("title")  String title,
                                      @MapsTo("defSetId")  String defSetId,
                                      @MapsTo("shapeSetId")  String shapeSetId,
-                                     @MapsTo("vfsPath")  String vfsPath) {
+                                     @MapsTo("vfsPath")  String vfsPath,
+                                     @MapsTo("thumbImageData")  String thumbImageData) {
         this.uuid = uuid;
         this.graphUUID = graphUUID;
         this.title = title;
         this.defSetId = defSetId;
         this.shapeSetId = shapeSetId;
         this.vfsPath = vfsPath;
+        this.thumbImageData = thumbImageData;
     }
 
     @Override
@@ -58,7 +61,12 @@ public final class DiagramRepresentationImpl implements DiagramRepresentation {
     public String getVFSPath() {
         return vfsPath;
     }
-    
+
+    @Override
+    public String getThumbImageData() {
+        return thumbImageData;
+    }
+
     @NonPortable
     public static final class DiagramRepresentationBuilder {
         
@@ -73,7 +81,8 @@ public final class DiagramRepresentationImpl implements DiagramRepresentation {
                     diagram.getGraph().getUUID(), diagram.getSettings().getTitle(),
                     diagram.getSettings().getDefinitionSetId(),
                     diagram.getSettings().getShapeSetId(),
-                    diagram.getSettings().getVFSPath());
+                    diagram.getSettings().getVFSPath(),
+                    diagram.getSettings().getThumbData());
         }
         
     }

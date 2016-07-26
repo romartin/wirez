@@ -3,6 +3,11 @@ Stunner Modelling Tool
 
 A multi-purpose modelling tool based on [JBoss Uberfire](http://www.uberfireframework.org/).                         
 
+Documentation
+-------------
+
+All Stunner documents are shared in a public Google Docs folder [here](https://drive.google.com/open?id=0B5LZ7oQ3Bza2Qk1GY1ZPeEN6Q0E).
+
 Building
 --------
 
@@ -80,8 +85,3 @@ Requirements
 * Java8+          
 * Maven 3.2.5+       
 * Git 1.8+        
-
-Documentation
--------------
-
-All Stunner documents are shared in a public Google Docs folder [here](https://drive.google.com/open?id=0B5LZ7oQ3Bza2Qk1GY1ZPeEN6Q0E).

@@ -98,6 +98,8 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         enableControl( session.getDragControl(), canvasHandler );
         enableControl( session.getToolboxControl(), canvasHandler );
         enableControl( session.getBuilderControl(), canvasHandler );
+        enableControl( session.getCanvasValidationControl(), canvasHandler );
+        enableControl( session.getCanvasSaveControl(), canvasHandler );
         enableControl( session.getCanvasPaletteControl(), canvasHandler );
         enableControl( session.getCanvasNameEditionControl(), canvasHandler );
 
@@ -144,6 +146,8 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         fireRegistrationClearListeners( session.getDragControl() );
         fireRegistrationClearListeners( session.getToolboxControl() );
         fireRegistrationClearListeners( session.getBuilderControl() );
+        fireRegistrationClearListeners( session.getCanvasValidationControl() );
+        fireRegistrationClearListeners( session.getCanvasSaveControl() );
         fireRegistrationClearListeners( session.getCanvasPaletteControl() );
         fireRegistrationClearListeners( session.getCanvasNameEditionControl() );
 
@@ -195,7 +199,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         saveCommand.execute( new ToolbarCommandCallback<Diagram>() {
             
             @Override
-            public void onSuccess(final Diagram result) {
+            public void onCommandExecuted( final Diagram result) {
                 Window.alert("Diagram saved successfully [UUID=" + result.getUUID() + "]");
                 callback.execute();
             }

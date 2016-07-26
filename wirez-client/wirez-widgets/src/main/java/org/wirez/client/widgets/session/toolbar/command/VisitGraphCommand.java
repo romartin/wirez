@@ -37,7 +37,7 @@ public class VisitGraphCommand extends AbstractToolbarCommand<DefaultCanvasReadO
 
     @Override
     public String getTooltip() {
-        return "Visit the graph";
+        return "Visit";
     }
 
     @Override
@@ -46,7 +46,7 @@ public class VisitGraphCommand extends AbstractToolbarCommand<DefaultCanvasReadO
         new CanvasHighlightVisitor()
                 .run(session.getCanvasHandler(), shapeStateUtils, () -> {
                     if (null != callback) {
-                        callback.onSuccess(null);
+                        callback.onCommandExecuted(null);
                     }
                 });
 

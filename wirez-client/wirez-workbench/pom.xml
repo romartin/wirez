@@ -84,7 +84,7 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-lienzo-palette-widgets</artifactId>
+      <artifactId>wirez-widgets-sandbox</artifactId>
       <scope>provided</scope>
     </dependency>
 

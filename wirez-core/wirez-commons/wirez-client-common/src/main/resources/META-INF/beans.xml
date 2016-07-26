@@ -18,6 +18,5 @@
 <beans xmlns="http://xmlns.jcp.org/xml/ns/javaee" bean-discovery-mode="none">
   <scan>
     <exclude name="org.wirez.core.client.**"/>
-    <exclude name="org.wirez.core.validation.canvas.**"/>
   </scan>
 </beans>

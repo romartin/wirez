@@ -219,7 +219,7 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
         
         toolbar.configure( session, new ToolbarCommandCallback<Object>() {
             @Override
-            public void onSuccess(final Object result) {
+            public void onCommandExecuted( final Object result) {
                 
             }
 
@@ -274,7 +274,7 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
     public void clearSelection() {
         clearSelectionCommand.execute( new ToolbarCommandCallback<Void>() {
             @Override
-            public void onSuccess(final Void result) {
+            public void onCommandExecuted( final Void result) {
                 
             }
 

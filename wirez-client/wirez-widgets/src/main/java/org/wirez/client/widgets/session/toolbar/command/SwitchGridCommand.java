@@ -43,7 +43,7 @@ public class SwitchGridCommand extends AbstractToolbarCommand<DefaultCanvasReadO
 
     @Override
     public String getTooltip() {
-        return "Switch canvas grid";
+        return "Switch grid";
     }
 
     @Override

@@ -40,7 +40,7 @@ public class UndoCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
 
     @Override
     public String getTooltip() {
-        return "Undo the latest successfully executed command";
+        return "Undo";
     }
 
     @Override
@@ -58,7 +58,7 @@ public class UndoCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
 
         if (null != callback) {
             
-            callback.onSuccess((T) result);
+            callback.onCommandExecuted((T) result);
             
         }
         

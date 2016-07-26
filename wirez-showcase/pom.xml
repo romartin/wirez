@@ -373,7 +373,8 @@
 
     <dependency>
       <groupId>org.wirez</groupId>
-      <artifactId>wirez-lienzo-palette-widgets</artifactId>
+      <artifactId>wirez-widgets-sandbox</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -608,60 +609,6 @@
 
   </dependencies>
 
-  <!-- These must be here in this order because of missing guava-gwt snapshots in the JBoss Public Repository. -->
-  <repositories>
-    <repository>
-      <id>jboss</id>
-      <name>JBoss Public Repo</name>
-      <url>https://repository.jboss.org/nexus/content/groups/public</url>
-    </repository>
-    <repository>
-      <id>google-snapshots</id>
-      <name>Google Snapshots Repo</name>
-      <url>https://oss.sonatype.org/content/repositories/google-snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>sonatype-public</id>
-      <name>Sonatype Public Snapshots Repo</name>
-      <url>https://oss.sonatype.org/content/repositories/public</url>
-    </repository>
-  </repositories>
-
-  <!-- This must be here for gwt-maven-plugin 2.8.0-SNAPSHOT -->
-  <pluginRepositories>
-    <pluginRepository>
-      <id>public-snapshots-repo</id>
-      <url>https://oss.sonatype.org/content/repositories/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>google-snapshots-repo</id>
-      <url>https://oss.sonatype.org/content/repositories/google-snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>jboss</id>
-      <name>JBoss Public Repo</name>
-      <url>https://repository.jboss.org/nexus/content/groups/public</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <build>
     <finalName>${project.artifactId}</finalName>
     <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
@@ -744,7 +691,7 @@
             <compileSourcesArtifact>org.wirez:wirez-shapes-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-lienzo-extensions</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-widgets</compileSourcesArtifact>
-            <compileSourcesArtifact>org.wirez:wirez-lienzo-palette-widgets</compileSourcesArtifact>
+            <compileSourcesArtifact>org.wirez:wirez-widgets-sandbox</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-workbench</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-mobile</compileSourcesArtifact>
             <compileSourcesArtifact>org.wirez:wirez-basicset-api</compileSourcesArtifact>

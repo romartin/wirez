@@ -48,7 +48,7 @@ public class ClearCommand extends AbstractToolbarCommand<DefaultCanvasFullSessio
 
     @Override
     public String getTooltip() {
-        return "Clear the diagram";
+        return "Clear diagram";
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ClearCommand extends AbstractToolbarCommand<DefaultCanvasFullSessio
                     canvasCommandFactory.CLEAR_CANVAS() );
 
             if ( null != callback ) {
-                callback.onSuccess((T) result);
+                callback.onCommandExecuted((T) result);
             }
 
         } );

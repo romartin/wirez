@@ -13,6 +13,7 @@ import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.*;
 import org.wirez.bpmn.definition.property.task.Actor;
 import org.wirez.bpmn.definition.property.task.TaskType;
+import org.wirez.bpmn.definition.property.task.TaskTypes;
 import org.wirez.core.definition.annotation.definition.Definition;
 import org.wirez.core.definition.annotation.definition.Property;
 import org.wirez.core.definition.annotation.definition.Title;
@@ -22,19 +23,19 @@ import org.wirez.core.rule.annotation.CanDock;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = UserTask.ScriptTaskBuilder.class )
+@Definition( type = Node.class, builder = UserTask.UserTaskBuilder.class )
 @CanDock( roles = { "IntermediateEventOnActivityBoundary" } )
 @Morph( base = BaseTask.class )
 public class UserTask extends BaseTask {
 
     @Title
     public static final transient String title = "User Task";
-    
+
     @Property
     protected Actor actor;
 
     @NonPortable
-    public static class ScriptTaskBuilder extends BaseTaskBuilder<UserTask> {
+    public static class UserTaskBuilder extends BaseTaskBuilder<UserTask> {
 
         @Override
         public UserTask build() {
@@ -54,14 +55,14 @@ public class UserTask extends BaseTask {
                     new WorkingHours(),
                     new UnitCost(),
                     new Currency(),
-                    new TaskType( TaskType.TaskTypes.USER ),
+                    new TaskType( TaskTypes.USER ),
                     new Actor());
         }
 
     }
 
     public UserTask() {
-        super( TaskType.TaskTypes.USER );
+        super( TaskTypes.USER );
     }
 
     public UserTask(@MapsTo("general") BPMNGeneral general,
@@ -82,11 +83,11 @@ public class UserTask extends BaseTask {
                     @MapsTo("currency") Currency currency,
                     @MapsTo("taskType") TaskType taskType,
                     @MapsTo("actor") Actor actor) {
-        
+
         super(general, dataIOSet, backgroundSet, fontSet, width, height, min, max, mean, timeUnit, standardDeviation,
                 distributionType, quantity, workingHours, unitCost, currency, taskType);
         this.actor = actor;
-        
+
     }
 
     public String getTitle() {

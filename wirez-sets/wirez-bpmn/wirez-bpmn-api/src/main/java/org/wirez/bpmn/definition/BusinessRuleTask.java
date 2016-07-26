@@ -13,6 +13,7 @@ import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.*;
 import org.wirez.bpmn.definition.property.task.Script;
 import org.wirez.bpmn.definition.property.task.TaskType;
+import org.wirez.bpmn.definition.property.task.TaskTypes;
 import org.wirez.core.definition.annotation.definition.Definition;
 import org.wirez.core.definition.annotation.definition.Property;
 import org.wirez.core.definition.annotation.definition.Title;
@@ -29,7 +30,7 @@ public class BusinessRuleTask extends BaseTask {
 
     @Title
     public static final transient String title = "Business Rule Task";
-    
+
     @Property
     protected Script script;
 
@@ -54,14 +55,14 @@ public class BusinessRuleTask extends BaseTask {
                     new WorkingHours(),
                     new UnitCost(),
                     new Currency(),
-                    new TaskType( TaskType.TaskTypes.BUSINESS_RULE ),
+                    new TaskType( TaskTypes.BUSINESS_RULE ),
                     new Script());
         }
 
     }
 
     public BusinessRuleTask() {
-        super( TaskType.TaskTypes.BUSINESS_RULE );
+        super( TaskTypes.BUSINESS_RULE );
     }
 
     public BusinessRuleTask(@MapsTo("general") BPMNGeneral general,
@@ -82,17 +83,17 @@ public class BusinessRuleTask extends BaseTask {
                             @MapsTo("currency") Currency currency,
                             @MapsTo("taskType") TaskType taskType,
                             @MapsTo("script") Script script) {
-        
+
         super(general, dataIOSet, backgroundSet, fontSet, width, height, min, max, mean, timeUnit, standardDeviation,
                 distributionType, quantity, workingHours, unitCost, currency, taskType);
         this.script = script;
-        
+
     }
 
     public String getTitle() {
         return title;
     }
-    
+
     public Script getScript() {
         return script;
     }

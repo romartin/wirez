@@ -40,6 +40,7 @@
     <!-- TODO: Remove when moving to latest parent IP BOM. -->
     <version.com.google.gwt.gwtmockito>1.1.6</version.com.google.gwt.gwtmockito>
     <version.com.ahome-it.lienzo-tests>1.0.0-RC1</version.com.ahome-it.lienzo-tests>
+    <version.org.kie>7.0.0-SNAPSHOT</version.org.kie>
 
   </properties>
 
@@ -70,6 +71,15 @@
         <artifactId>uberfire-bom</artifactId>
         <type>pom</type>
         <version>${version.org.uberfire}</version>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- KIE -->
+      <dependency>
+        <groupId>org.kie</groupId>
+        <artifactId>kie-parent-with-dependencies</artifactId>
+        <type>pom</type>
+        <version>${version.org.kie}</version>
         <scope>import</scope>
       </dependency>
 

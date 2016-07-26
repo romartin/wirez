@@ -12,6 +12,7 @@ import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.*;
 import org.wirez.bpmn.definition.property.task.TaskType;
+import org.wirez.bpmn.definition.property.task.TaskTypes;
 import org.wirez.core.definition.annotation.definition.Definition;
 import org.wirez.core.definition.annotation.definition.Title;
 import org.wirez.core.definition.annotation.morph.Morph;
@@ -49,36 +50,36 @@ public class NoneTask extends BaseTask {
                     new WorkingHours(),
                     new UnitCost(),
                     new Currency(),
-                    new TaskType( TaskType.TaskTypes.NONE ) );
+                    new TaskType( TaskTypes.NONE ) );
         }
 
     }
-    
+
     public NoneTask() {
-        super( TaskType.TaskTypes.NONE );
+        super( TaskTypes.NONE );
     }
 
     public NoneTask(@MapsTo("general") BPMNGeneral general,
                     @MapsTo("dataIOSet") DataIOSet dataIOSet,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                    @MapsTo("fontSet") FontSet fontSet, 
-                    @MapsTo("width") Width width, 
-                    @MapsTo("height") Height height, 
-                    @MapsTo("min") Min min, 
-                    @MapsTo("max") Max max, 
-                    @MapsTo("mean") Mean mean, 
-                    @MapsTo("timeUnit") TimeUnit timeUnit, 
-                    @MapsTo("standardDeviation") StandardDeviation standardDeviation, 
-                    @MapsTo("distributionType") DistributionType distributionType, 
-                    @MapsTo("quantity") Quantity quantity, 
-                    @MapsTo("workingHours") WorkingHours workingHours, 
-                    @MapsTo("unitCost") UnitCost unitCost, 
-                    @MapsTo("currency") Currency currency, 
+                    @MapsTo("fontSet") FontSet fontSet,
+                    @MapsTo("width") Width width,
+                    @MapsTo("height") Height height,
+                    @MapsTo("min") Min min,
+                    @MapsTo("max") Max max,
+                    @MapsTo("mean") Mean mean,
+                    @MapsTo("timeUnit") TimeUnit timeUnit,
+                    @MapsTo("standardDeviation") StandardDeviation standardDeviation,
+                    @MapsTo("distributionType") DistributionType distributionType,
+                    @MapsTo("quantity") Quantity quantity,
+                    @MapsTo("workingHours") WorkingHours workingHours,
+                    @MapsTo("unitCost") UnitCost unitCost,
+                    @MapsTo("currency") Currency currency,
                     @MapsTo("taskType") TaskType taskType) {
-        
+
         super(general, dataIOSet, backgroundSet, fontSet, width, height, min, max, mean, timeUnit, standardDeviation,
                 distributionType, quantity, workingHours, unitCost, currency, taskType);
-        
+
     }
 
     public String getTitle() {

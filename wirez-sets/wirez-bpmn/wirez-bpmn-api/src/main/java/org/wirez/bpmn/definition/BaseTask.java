@@ -28,6 +28,7 @@ import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.*;
 import org.wirez.bpmn.definition.property.task.TaskType;
+import org.wirez.bpmn.definition.property.task.TaskTypes;
 import org.wirez.bpmn.shape.proxy.TaskShapeProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
@@ -130,23 +131,23 @@ public abstract class BaseTask implements BPMNDefinition {
     @MorphProperty( binder = TaskTypeMorphPropertyBinding.class )
     protected TaskType taskType;
 
-    public static class TaskTypeMorphPropertyBinding implements MorphPropertyValueBinding<TaskType, TaskType.TaskTypes> {
+    public static class TaskTypeMorphPropertyBinding implements MorphPropertyValueBinding<TaskType, TaskTypes> {
 
-        private static final Map<TaskType.TaskTypes, Class<?>> MORPH_TARGETS =
-                new HashMap<TaskType.TaskTypes, Class<?>>( 4 ) {{
-                    put( TaskType.TaskTypes.NONE, NoneTask.class );
-                    put( TaskType.TaskTypes.USER, UserTask.class );
-                    put( TaskType.TaskTypes.SCRIPT, ScriptTask.class );
-                    put( TaskType.TaskTypes.BUSINESS_RULE, BusinessRuleTask.class );
+        private static final Map<TaskTypes, Class<?>> MORPH_TARGETS =
+                new HashMap<TaskTypes, Class<?>>( 4 ) {{
+                    put( TaskTypes.NONE, NoneTask.class );
+                    put( TaskTypes.USER, UserTask.class );
+                    put( TaskTypes.SCRIPT, ScriptTask.class );
+                    put( TaskTypes.BUSINESS_RULE, BusinessRuleTask.class );
                 }};
 
         @Override
-        public TaskType.TaskTypes getValue( final TaskType property ) {
+        public TaskTypes getValue( final TaskType property ) {
             return property.getValue();
         }
 
         @Override
-        public Map<TaskType.TaskTypes, Class<?>> getMorphTargets() {
+        public Map<TaskTypes, Class<?>> getMorphTargets() {
             return MORPH_TARGETS;
         }
 
@@ -177,7 +178,7 @@ public abstract class BaseTask implements BPMNDefinition {
 
     }
 
-    protected BaseTask( final TaskType.TaskTypes type ) {
+    protected BaseTask( final TaskTypes type ) {
         this.taskType = new TaskType( type );
     }
 

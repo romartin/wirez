@@ -37,7 +37,7 @@ import javax.inject.Inject;
 public class WirezPerspective {
 
     public static final int WEST_PANEL_WIDTH = BS3PaletteWidgetImpl.getDefaultWidth();
-    public static final int EAST_PANEL_WIDTH = 300;
+    public static final int EAST_PANEL_WIDTH = 450;
 
     PanelDefinition palettePanel;
     PanelDefinition notificationsPanel;

@@ -8,8 +8,29 @@ Documentation
 
 All Stunner documents are shared in a public Google Docs folder [here](https://drive.google.com/open?id=0B5LZ7oQ3Bza2Qk1GY1ZPeEN6Q0E).
 
+Showcase Docker Image
+---------------------
+
+For those not interested on building the application from sources, there exists a Docker image for the Stunner showcase available [here](https://hub.docker.com/r/romartin/stunner-showcase/).             
+
+1.- Pull the docker image to your local            
+
+    docker pull romartin/stunner-showcase
+    
+2.- Run the image                 
+
+    docker run -p 8080:8080 -p 8001:8001 -t -i romartin/stunner-showcase
+
+3.- Navigate into the showcase               
+
+    http://localhost:8080/wirez ( admin/ admin )
+
+NOTE: Please consider it's not being built for each daily snapshot, so do not expect it using always latest showcase version, will try to keep it updated.            
+
 Building
 --------
+
+Follow these instructions for building the application from sources.            
 
 **IMPORTANT**: The project currently depends on Livespark's Forms modules, so you must previously clone and build locally [Livespark](https://github.com/droolsjbpm/livespark) as:
 

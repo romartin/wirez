@@ -111,4 +111,7 @@ public class ShapeSetsNavigatorImpl implements ShapeSetsNavigator {
         return items;
     }
 
+    public NavigatorView<?> getView() {
+        return view;
+    }
 }

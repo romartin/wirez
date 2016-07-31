@@ -13,8 +13,6 @@ import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -34,7 +32,7 @@ import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<AbstractCanvas, AbstractCanvasHandler>> 
+public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<AbstractCanvas, AbstractCanvasHandler>>
         extends AbstractReadOnlySessionPresenter<S>
         implements FullSessionPresenter<AbstractCanvas, AbstractCanvasHandler, S> {
 
@@ -47,30 +45,28 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
     protected UndoCommand undoCommand;
     protected ValidateCommand validateCommand;
 
-    private static Logger LOGGER = Logger.getLogger(FullSessionPresenter.class.getName());
-    
-    @Inject
-    public AbstractFullSessionPresenter(final DefaultCanvasSessionManager canvasSessionManager,
-                                        final ClientDefinitionManager clientDefinitionManager,
-                                        final ClientFactoryServices clientFactoryServices,
-                                        final CanvasCommandFactory commandFactory,
-                                        final ClientDiagramServices clientDiagramServices,
-                                        final AbstractToolbar<S> toolbar,
-                                        final ClearSelectionCommand clearSelectionCommand,
-                                        final ClearCommand clearCommand,
-                                        final DeleteSelectionCommand deleteSelectionCommand,
-                                        final SaveCommand saveCommand,
-                                        final UndoCommand undoCommand,
-                                        final ValidateCommand validateCommand,
-                                        final VisitGraphCommand visitGraphCommand,
-                                        final SwitchGridCommand switchGridCommand,
-                                        final ErrorPopupPresenter errorPopupPresenter,
-                                        final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                        final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
-                                        final View view) {
+    private static Logger LOGGER = Logger.getLogger( FullSessionPresenter.class.getName() );
 
-        super(canvasSessionManager, clientDiagramServices, toolbar, clearSelectionCommand, visitGraphCommand, switchGridCommand,
-                errorPopupPresenter, canvasProcessingStartedEvent, canvasProcessingCompletedEvent, view);
+    @Inject
+    public AbstractFullSessionPresenter( final DefaultCanvasSessionManager canvasSessionManager,
+                                         final ClientDefinitionManager clientDefinitionManager,
+                                         final ClientFactoryServices clientFactoryServices,
+                                         final CanvasCommandFactory commandFactory,
+                                         final ClientDiagramServices clientDiagramServices,
+                                         final AbstractToolbar<S> toolbar,
+                                         final ClearSelectionCommand clearSelectionCommand,
+                                         final ClearCommand clearCommand,
+                                         final DeleteSelectionCommand deleteSelectionCommand,
+                                         final SaveCommand saveCommand,
+                                         final UndoCommand undoCommand,
+                                         final ValidateCommand validateCommand,
+                                         final VisitGraphCommand visitGraphCommand,
+                                         final SwitchGridCommand switchGridCommand,
+                                         final ErrorPopupPresenter errorPopupPresenter,
+                                         final View view ) {
+
+        super( canvasSessionManager, clientDiagramServices, toolbar, clearSelectionCommand, visitGraphCommand,
+                switchGridCommand, errorPopupPresenter, view );
 
         this.commandFactory = commandFactory;
         this.clientDefinitionManager = clientDefinitionManager;
@@ -84,11 +80,11 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
     }
 
     @Override
-    public void doInitialize(final S session, 
-                           final int width, 
-                           final int height) {
+    public void doInitialize( final S session,
+                              final int width,
+                              final int height ) {
 
-        super.doInitialize(session, width, height);
+        super.doInitialize( session, width, height );
 
         // Enable canvas controls.
         final AbstractCanvasHandler canvasHandler = getCanvasHandler();
@@ -104,18 +100,18 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         enableControl( session.getCanvasNameEditionControl(), canvasHandler );
 
     }
-    
+
     @Override
     protected void setToolbarCommands() {
 
         super.setToolbarCommands();
 
         // Toolbar commands for canvas controls.
-        super.addToolbarCommand( (ToolbarCommand<S>) clearCommand );
-        super.addToolbarCommand( (ToolbarCommand<S>) deleteSelectionCommand );
-        super.addToolbarCommand( (ToolbarCommand<S>) validateCommand );
-        super.addToolbarCommand( (ToolbarCommand<S>) saveCommand );
-        super.addToolbarCommand( (ToolbarCommand<S>) undoCommand );
+        super.addToolbarCommand( ( ToolbarCommand<S> ) clearCommand );
+        super.addToolbarCommand( ( ToolbarCommand<S> ) deleteSelectionCommand );
+        super.addToolbarCommand( ( ToolbarCommand<S> ) validateCommand );
+        super.addToolbarCommand( ( ToolbarCommand<S> ) saveCommand );
+        super.addToolbarCommand( ( ToolbarCommand<S> ) undoCommand );
 
     }
 
@@ -170,62 +166,62 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
     }
 
     @Override
-    public void newDiagram(final String uuid, 
-                           final String title, 
-                           final String definitionSetId, 
-                           final String shapeSetId, 
-                           final Command callback) {
+    public void newDiagram( final String uuid,
+                            final String title,
+                            final String definitionSetId,
+                            final String shapeSetId,
+                            final Command callback ) {
 
-        clientFactoryServices.newGraph(UUID.uuid(), definitionSetId, new ServiceCallback<Graph>() {
+        clientFactoryServices.newGraph( UUID.uuid(), definitionSetId, new ServiceCallback<Graph>() {
             @Override
-            public void onSuccess(final Graph graph) {
+            public void onSuccess( final Graph graph ) {
                 final Settings diagramSettings = new SettingsImpl( title, definitionSetId, shapeSetId, null );
                 Diagram<Graph, Settings> diagram = clientFactoryServices.newDiagram( UUID.uuid(), graph, diagramSettings );
-                open(diagram, callback);
+                open( diagram, callback );
             }
 
             @Override
-            public void onError(final ClientRuntimeError error) {
-                showError(error);
+            public void onError( final ClientRuntimeError error ) {
+                showError( error );
                 callback.execute();
             }
-        });
-        
+        } );
+
     }
 
     @Override
-    public void save(final Command callback) {
+    public void save( final Command callback ) {
 
         saveCommand.execute( new ToolbarCommandCallback<Diagram>() {
-            
+
             @Override
-            public void onCommandExecuted( final Diagram result) {
-                Window.alert("Diagram saved successfully [UUID=" + result.getUUID() + "]");
+            public void onCommandExecuted( final Diagram result ) {
+                Window.alert( "Diagram saved successfully [UUID=" + result.getUUID() + "]" );
                 callback.execute();
             }
 
             @Override
-            public void onError(final ClientRuntimeError error) {
-                showError(error);
+            public void onError( final ClientRuntimeError error ) {
+                showError( error );
                 callback.execute();
             }
-        });
-        
-        
+        } );
+
+
     }
 
     @Override
     public void clear() {
 
         clearCommand.execute();
-        
+
     }
 
     @Override
     public void undo() {
 
         undoCommand.execute();
-        
+
     }
 
     @Override
@@ -241,7 +237,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
         getCanvasHandler().clearRegistrationListeners();
 
         super.disposeSession();
-      
+
         if ( null != clearCommand ) {
             this.clearCommand.destroy();
         }
@@ -284,27 +280,27 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
     public void visitGraph() {
 
         visitGraphCommand.execute();
-        
+
     }
 
     public void resumeGraph() {
-        WirezLogger.resume( getCanvasHandler().getDiagram().getGraph());
+        WirezLogger.resume( getCanvasHandler().getDiagram().getGraph() );
     }
 
     public void logGraph() {
-        WirezLogger.log( getCanvasHandler().getDiagram().getGraph());
+        WirezLogger.log( getCanvasHandler().getDiagram().getGraph() );
     }
 
     @Override
-    protected void showError(String message) {
-        log( Level.SEVERE, message);
-        super.showError(message);
+    protected void showError( String message ) {
+        log( Level.SEVERE, message );
+        super.showError( message );
     }
 
-    private void log(final Level level, final String message) {
-        if (LogConfiguration.loggingIsEnabled()) {
-            LOGGER.log(level, message);
+    private void log( final Level level, final String message ) {
+        if ( LogConfiguration.loggingIsEnabled() ) {
+            LOGGER.log( level, message );
         }
     }
-    
+
 }

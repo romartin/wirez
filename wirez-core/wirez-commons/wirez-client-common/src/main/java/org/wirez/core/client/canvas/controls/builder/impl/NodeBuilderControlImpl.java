@@ -21,8 +21,6 @@ import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequest;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequestImpl;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequest;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.session.command.Session;
 import org.wirez.core.client.shape.EdgeShape;
 import org.wirez.core.client.shape.MutationContext;
@@ -44,8 +42,6 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
     CanvasCommandFactory commandFactory;
     CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
     ElementBuilderControl<AbstractCanvasHandler> elementBuilderControl;
-    Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
-    Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
     EdgeMagnetsHelper magnetsHelper;
 
     @Inject
@@ -54,16 +50,12 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
                                   final CanvasCommandFactory commandFactory, 
                                   final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager, 
                                   final @Element  ElementBuilderControl<AbstractCanvasHandler> elementBuilderControl, 
-                                  final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent, 
-                                  final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                   final EdgeMagnetsHelper magnetsHelper) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.shapeManager = shapeManager;
         this.commandFactory = commandFactory;
         this.canvasCommandManager = canvasCommandManager;
         this.elementBuilderControl = elementBuilderControl;
-        this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
-        this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
         this.magnetsHelper = magnetsHelper;
     }
 
@@ -111,8 +103,6 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
 
         if ( null != node ) {
             
-            fireProcessingStarted();
-            
             final Object nodeDef = node.getContent().getDefinition();
             final DefinitionAdapter<Object> nodeAdapter = clientDefinitionManager.getDefinitionAdapter( nodeDef.getClass() );
             final String nodeId = nodeAdapter.getId( nodeDef );
@@ -159,16 +149,12 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
 
                     buildCallback.onSuccess( uuid );
 
-                    fireProcessingCompleted();
-
                 }
 
                 @Override
                 public void onError( final ClientRuntimeError error ) {
 
                     buildCallback.onError( error );
-
-                    fireProcessingCompleted();
 
                 }
 
@@ -209,13 +195,5 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
         return (ElementBuilderControlImpl) elementBuilderControl;
     }
 
-    protected void fireProcessingStarted() {
-        canvasProcessingStartedEvent.fire( new CanvasProcessingStartedEvent( canvasHandler ) );
-    }
-
-    protected void fireProcessingCompleted() {
-        canvasProcessingCompletedEvent.fire( new CanvasProcessingCompletedEvent( canvasHandler ) );
-    }
-    
     
 }

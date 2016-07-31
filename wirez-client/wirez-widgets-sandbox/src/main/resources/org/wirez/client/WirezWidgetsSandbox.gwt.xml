@@ -21,6 +21,7 @@
 
 	<inherits name='com.google.gwt.user.User' />
 	<inherits name="org.wirez.client.WirezWidgets"/>
+	<inherits name="org.gwtbootstrap3.extras.card.Card"/>
 
 	<source path="widgets"/>
 

@@ -4,8 +4,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.Widget;
 import org.wirez.client.widgets.event.LoadDiagramEvent;
-import org.wirez.client.widgets.event.WidgetProcessingCompletedEvent;
-import org.wirez.client.widgets.event.WidgetProcessingStartedEvent;
 import org.wirez.client.widgets.navigation.navigator.Navigator;
 import org.wirez.client.widgets.navigation.navigator.NavigatorItem;
 import org.wirez.client.widgets.navigation.navigator.NavigatorView;
@@ -35,8 +33,6 @@ public class DiagramsNavigatorImpl implements DiagramsNavigator {
     ClientDiagramServices clientDiagramServices;
     Instance<DiagramNavigatorItem> navigatorItemInstances;
     Event<LoadDiagramEvent> loadDiagramEventEvent;
-    Event<WidgetProcessingStartedEvent> widgetProcessingStartedEvent;
-    Event<WidgetProcessingCompletedEvent> widgetProcessingCompletedEventEvent;
     NavigatorView<?> view;
 
     private final List<NavigatorItem<DiagramRepresentation>> items = new LinkedList<>();
@@ -48,14 +44,10 @@ public class DiagramsNavigatorImpl implements DiagramsNavigator {
     public DiagramsNavigatorImpl( final ClientDiagramServices clientDiagramServices,
                                   final Instance<DiagramNavigatorItem> navigatorItemInstances,
                                   final Event<LoadDiagramEvent> loadDiagramEventEvent,
-                                  final Event<WidgetProcessingStartedEvent> widgetProcessingStartedEvent,
-                                  final Event<WidgetProcessingCompletedEvent> widgetProcessingCompletedEventEvent,
                                   final NavigatorView<?> view ) {
         this.clientDiagramServices = clientDiagramServices;
         this.navigatorItemInstances = navigatorItemInstances;
         this.loadDiagramEventEvent = loadDiagramEventEvent;
-        this.widgetProcessingStartedEvent = widgetProcessingStartedEvent;
-        this.widgetProcessingCompletedEventEvent = widgetProcessingCompletedEventEvent;
         this.view = view;
         this.width = 140;
         this.height = 140;
@@ -124,7 +116,12 @@ public class DiagramsNavigatorImpl implements DiagramsNavigator {
 
     @Override
     public List<NavigatorItem<DiagramRepresentation>> getItems() {
-        return null;
+        return items;
+    }
+
+    @Override
+    public NavigatorView<?> getView() {
+        return view;
     }
 
     private void addEntry( final DiagramRepresentation diagramRepresentation ) {
@@ -146,11 +143,11 @@ public class DiagramsNavigatorImpl implements DiagramsNavigator {
     }
 
     private void fireProcessingStarted() {
-        widgetProcessingStartedEvent.fire( new WidgetProcessingStartedEvent() );
+        view.setLoading( true );
     }
 
     private void fireProcessingCompleted() {
-        widgetProcessingCompletedEventEvent.fire( new WidgetProcessingCompletedEvent() );
+        view.setLoading( false );
     }
 
     private void showError( final ClientRuntimeError error ) {

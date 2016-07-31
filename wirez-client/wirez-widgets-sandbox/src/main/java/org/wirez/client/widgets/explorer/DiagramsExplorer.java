@@ -6,8 +6,6 @@ import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.uberfire.client.mvp.UberView;
 import org.wirez.client.widgets.event.LoadDiagramEvent;
-import org.wirez.client.widgets.event.WidgetProcessingCompletedEvent;
-import org.wirez.client.widgets.event.WidgetProcessingStartedEvent;
 import org.wirez.client.widgets.explorer.item.DiagramLinkedGroupItem;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -26,8 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-// TODO: Refactor inheriting from AbstractDiagramNavigator and move to navigator package...
 
 @Dependent
 public class DiagramsExplorer implements IsWidget {
@@ -53,8 +49,6 @@ public class DiagramsExplorer implements IsWidget {
     ClientDiagramServices clientDiagramServices;
     SyncBeanManager beanManager;
     Event<LoadDiagramEvent> loadDiagramEventEvent;
-    Event<WidgetProcessingStartedEvent> widgetProcessingStartedEvent;
-    Event<WidgetProcessingCompletedEvent> widgetProcessingCompletedEventEvent;
     View view;
 
     private final List<DiagramExplorerItem> items = new LinkedList<>();
@@ -68,14 +62,10 @@ public class DiagramsExplorer implements IsWidget {
     public DiagramsExplorer(final ClientDiagramServices clientDiagramServices, 
                             final SyncBeanManager beanManager,
                             final Event<LoadDiagramEvent> loadDiagramEventEvent, 
-                            final Event<WidgetProcessingStartedEvent> widgetProcessingStartedEvent,
-                            final Event<WidgetProcessingCompletedEvent> widgetProcessingCompletedEventEvent,
                             final View view) {
         this.clientDiagramServices = clientDiagramServices;
         this.beanManager = beanManager;
         this.loadDiagramEventEvent = loadDiagramEventEvent;
-        this.widgetProcessingStartedEvent = widgetProcessingStartedEvent;
-        this.widgetProcessingCompletedEventEvent = widgetProcessingCompletedEventEvent;
         this.view = view;
     }
 
@@ -156,11 +146,11 @@ public class DiagramsExplorer implements IsWidget {
     }
 
     private void fireProcessingStarted() {
-        widgetProcessingStartedEvent.fire( new WidgetProcessingStartedEvent() );
+        // TODO
     }
 
     private void fireProcessingCompleted() {
-        widgetProcessingCompletedEventEvent.fire( new WidgetProcessingCompletedEvent() );
+        // TODO
     }
 
     private void showError( final ClientRuntimeError error ) {

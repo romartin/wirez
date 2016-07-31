@@ -16,19 +16,24 @@
 
 package org.wirez.client.widgets.loading;
 
-import org.uberfire.ext.widgets.common.client.common.BusyPopup;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
+import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 
 public class LoadingBoxView implements LoadingBox.View {
 
     @Override
     public LoadingBox.View show() {
-        BusyPopup.showMessage( "Loading" );
+        NotifySettings settings = NotifySettings.newSettings();
+        settings.setShowProgressbar( true );
+        settings.setPauseOnMouseOver( false );
+        Notify.notify( "Please wait", "Loading...", IconType.CLOCK_O, settings );
         return this;
     }
 
     @Override
     public LoadingBox.View hide() {
-        BusyPopup.close();
+        Notify.hideAll();
         return this;
     }
 

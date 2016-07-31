@@ -8,4 +8,6 @@ public interface NavigatorView<T extends NavigatorItem> extends IsWidget {
 
     NavigatorView<T> clear();
 
+    NavigatorView<T> setLoading( boolean loading );
+
 }

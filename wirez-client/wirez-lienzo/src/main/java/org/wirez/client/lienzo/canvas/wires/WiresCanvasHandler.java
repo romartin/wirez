@@ -16,9 +16,6 @@
 
 package org.wirez.client.lienzo.canvas.wires;
 
-import org.wirez.core.client.canvas.event.processing.CanvasInitializationCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
@@ -48,18 +45,14 @@ public class WiresCanvasHandler<D extends Diagram, C extends WiresCanvas> extend
                               final IncrementalIndexBuilder indexBuilder,
                               final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
                               final ShapeManager shapeManager,
-                              final Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent,
                               final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
                               final Event<CanvasElementRemovedEvent> canvasElementRemovedEvent,
                               final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent,
-                              final Event<CanvasElementsClearEvent> canvasElementsClearEvent,
-                              final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                              final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
+                              final Event<CanvasElementsClearEvent> canvasElementsClearEvent ) {
 
         super( clientDefinitionManager, clientFactoryServices, rulesManager, graphUtils,
-                indexBuilder, treeWalkTraverseProcessor, shapeManager, canvasInitializationCompletedEvent,
-                canvasElementAddedEvent, canvasElementRemovedEvent, canvasElementUpdatedEvent, canvasElementsClearEvent,
-                canvasProcessingStartedEvent, canvasProcessingCompletedEvent );
+                indexBuilder, treeWalkTraverseProcessor, shapeManager, canvasElementAddedEvent,
+                canvasElementRemovedEvent, canvasElementUpdatedEvent, canvasElementsClearEvent );
         
     }
 

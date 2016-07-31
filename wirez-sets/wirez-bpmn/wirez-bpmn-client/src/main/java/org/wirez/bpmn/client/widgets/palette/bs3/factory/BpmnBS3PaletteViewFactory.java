@@ -1,7 +1,6 @@
 package org.wirez.bpmn.client.widgets.palette.bs3.factory;
 
 import org.gwtbootstrap3.client.ui.Icon;
-import org.gwtbootstrap3.client.ui.constants.IconRotate;
 import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.bpmn.BPMNDefinitionSet;
@@ -20,12 +19,13 @@ public class BpmnBS3PaletteViewFactory extends BindableBS3PaletteGlyphViewFactor
     private final static Map<String, Icon> CATEGORY_VIEWS = new HashMap<String, Icon>() {{
         put( Categories.ACTIVITIES,  getIcon( IconType.SQUARE ) );
         put( Categories.LANES,  getIcon( IconType.COLUMNS ) );
-        put( Categories.GATEWAYS,  getGatewaysCategoryIcon() );
+        put( Categories.GATEWAYS,  getIcon( IconType.RANDOM ) );
         put( Categories.EVENTS,  getIcon( IconType.CIRCLE ) );
         put( Categories.CONNECTING_OBJECTS,  getIcon( IconType.LONG_ARROW_RIGHT ) );
     }};
 
-    private final static Map<Class<?>, Icon> DEFINITION_VIEWS = new HashMap<Class<?>, Icon>() {{
+    // Current not using the bootstrap icons for the palette items.
+    /*private final static Map<Class<?>, Icon> DEFINITION_VIEWS = new HashMap<Class<?>, Icon>() {{
         put( BPMNDiagram.class,  getIcon( IconType.FOLDER_O) );
         put( Lane.class,  getIcon( IconType.FOLDER_O ) );
         put( NoneTask.class,  getIcon( IconType.SQUARE_O ) );
@@ -40,7 +40,7 @@ public class BpmnBS3PaletteViewFactory extends BindableBS3PaletteGlyphViewFactor
         put( ExclusiveDatabasedGateway.class,  getIcon( IconType.CLOSE) );
         put( ReusableSubprocess.class,  getIcon( IconType.PLUS_SQUARE_O ) );
         put( SequenceFlow.class,  getIcon( IconType.ARROW_RIGHT ) );
-    }};
+    }};*/
 
     @Inject
     public BpmnBS3PaletteViewFactory( final ShapeManager shapeManager ) {
@@ -54,7 +54,8 @@ public class BpmnBS3PaletteViewFactory extends BindableBS3PaletteGlyphViewFactor
 
     @Override
     protected Map<Class<?>, Icon> getDefinitionViews() {
-        return DEFINITION_VIEWS;
+        // return DEFINITION_VIEWS; - Current not using the bootstrap icons for the palette items.
+        return null;
     }
 
     @Override
@@ -72,14 +73,6 @@ public class BpmnBS3PaletteViewFactory extends BindableBS3PaletteGlyphViewFactor
 
     private static Icon getIcon( final IconType iconType ) {
         return new Icon( iconType );
-    }
-
-    // TODO: Rotate by multiples of 45 degrees not possible?
-    private static Icon getGatewaysCategoryIcon() {
-        //final Icon icon = new Icon( IconType.SQUARE );
-        // icon.setRotate( IconRotate.ROTATE_270 );
-        final Icon icon = new Icon( IconType.RANDOM );
-        return icon;
     }
 
 }

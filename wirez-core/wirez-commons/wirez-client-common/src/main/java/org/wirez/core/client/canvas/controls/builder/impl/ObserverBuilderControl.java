@@ -9,8 +9,6 @@ import org.wirez.core.client.canvas.controls.builder.ElementBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequest;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequestImpl;
 import org.wirez.core.client.canvas.controls.event.BuildCanvasShapeEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.canvas.util.CanvasLayoutUtils;
 import org.wirez.core.client.service.ClientFactoryServices;
@@ -50,13 +48,11 @@ public class ObserverBuilderControl extends AbstractElementBuilderControl
                                    final ModelCardinalityRuleManager modelCardinalityRuleManager,
                                    final CanvasCommandFactory canvasCommandFactory,
                                    final GraphBoundsIndexer graphBoundsIndexer,
-                                   final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                   final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                    final CanvasLayoutUtils canvasLayoutUtils,
                                    final Event<CanvasElementSelectedEvent> elementSelectedEvent ) {
         super( clientDefinitionManager, clientFactoryServices, canvasCommandManager, graphUtils,
-                modelContainmentRuleManager, modelCardinalityRuleManager, canvasCommandFactory, graphBoundsIndexer,
-                canvasProcessingStartedEvent, canvasProcessingCompletedEvent, canvasLayoutUtils );
+                modelContainmentRuleManager, modelCardinalityRuleManager, canvasCommandFactory,
+                graphBoundsIndexer, canvasLayoutUtils );
         this.elementSelectedEvent = elementSelectedEvent;
     }
 

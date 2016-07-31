@@ -8,8 +8,6 @@ import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerControl;
 import org.wirez.core.client.canvas.controls.builder.ElementBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequest;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.canvas.util.CanvasLayoutUtils;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -49,8 +47,6 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
     GraphUtils graphUtils;
     ModelContainmentRuleManager modelContainmentRuleManager;
     ModelCardinalityRuleManager modelCardinalityRuleManager;
-    Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
-    Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
     GraphBoundsIndexer graphBoundsIndexer;
     CanvasLayoutUtils canvasLayoutUtils;
 
@@ -62,8 +58,6 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
                                          final ModelCardinalityRuleManager modelCardinalityRuleManager,
                                          final CanvasCommandFactory canvasCommandFactory,
                                          final GraphBoundsIndexer graphBoundsIndexer,
-                                         final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                         final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                          final CanvasLayoutUtils canvasLayoutUtils) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
@@ -73,8 +67,6 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         this.modelCardinalityRuleManager = modelCardinalityRuleManager;
         this.canvasCommandFactory = canvasCommandFactory;
         this.graphBoundsIndexer = graphBoundsIndexer;
-        this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
-        this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
         this.canvasLayoutUtils = canvasLayoutUtils;
     }
     
@@ -308,11 +300,11 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
     }
 
     protected void fireProcessingStarted() {
-        canvasProcessingStartedEvent.fire( new CanvasProcessingStartedEvent( canvasHandler ) );
+        // Nothing to for now.
     }
 
     protected void fireProcessingCompleted() {
-        canvasProcessingCompletedEvent.fire( new CanvasProcessingCompletedEvent( canvasHandler ) );
+        // Nothing to for now.
     }
 
     protected boolean isValid( final RuleViolations violations ) {

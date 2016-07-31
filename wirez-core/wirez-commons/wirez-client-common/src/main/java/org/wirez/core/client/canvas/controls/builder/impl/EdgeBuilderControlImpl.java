@@ -18,8 +18,6 @@ import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerControl;
 import org.wirez.core.client.canvas.controls.builder.EdgeBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.EdgeBuildRequest;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.session.command.Session;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
@@ -40,8 +38,6 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
     ShapeManager shapeManager;
     CanvasCommandFactory commandFactory;
     CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
-    Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
-    Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
     EdgeMagnetsHelper magnetsHelper;
 
     @Inject
@@ -49,15 +45,11 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
                                   final ShapeManager shapeManager, 
                                   final CanvasCommandFactory commandFactory, 
                                   final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager, 
-                                  final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent, 
-                                  final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                   final EdgeMagnetsHelper magnetsHelper) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.shapeManager = shapeManager;
         this.commandFactory = commandFactory;
         this.canvasCommandManager = canvasCommandManager;
-        this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
-        this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
         this.magnetsHelper = magnetsHelper;
     }
 
@@ -71,8 +63,6 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
         final Node<View<?>, Edge> inNode = request.getInNode();
         final Node<View<?>, Edge> outNode = request.getOutNode();
 
-        fireProcessingStarted();
-        
         boolean allowsSourceConn = true;
         if ( null != inNode ) {
             final CommandResult<CanvasViolation> cr1 = canvasCommandManager.allow( wch, commandFactory.SET_SOURCE_NODE((Node<? extends View<?>, Edge>) inNode, edge, 0) );
@@ -85,8 +75,6 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
             allowsTargetConn = isAllowed( cr2 );
         }
 
-        fireProcessingCompleted();
-        
         return allowsSourceConn & allowsTargetConn;
         
     }
@@ -110,8 +98,6 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
             
         }
 
-        fireProcessingStarted();
-        
         final Shape sourceShape = canvas.getShape(inNode.getUUID());
         final Shape targetShape = outNode != null ? canvas.getShape(outNode.getUUID()) : null;
 
@@ -150,8 +136,6 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
 
         buildCallback.onSuccess( edge.getUUID() );
 
-        fireProcessingCompleted();
-        
     }
 
     @Override
@@ -159,14 +143,6 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
         
     }
 
-    protected void fireProcessingStarted() {
-        canvasProcessingStartedEvent.fire( new CanvasProcessingStartedEvent( canvasHandler ) );
-    }
-
-    protected void fireProcessingCompleted() {
-        canvasProcessingCompletedEvent.fire( new CanvasProcessingCompletedEvent( canvasHandler ) );
-    }
-    
     private boolean isAllowed(CommandResult<CanvasViolation> result ) {
         return !CommandResult.Type.ERROR.equals( result.getType() );
     }

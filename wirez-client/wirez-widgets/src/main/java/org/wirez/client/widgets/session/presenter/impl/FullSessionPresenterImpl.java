@@ -5,8 +5,6 @@ import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.command.*;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
@@ -35,13 +33,11 @@ public class FullSessionPresenterImpl extends AbstractFullSessionPresenter<Defau
                                     final CanvasCommandFactory commandFactory,
                                     final ClientDiagramServices clientDiagramServices,
                                     final ErrorPopupPresenter errorPopupPresenter,
-                                    final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                    final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                     final View view) {
         super( canvasSessionManager, clientDefinitionManager, clientFactoryServices,
                 commandFactory, clientDiagramServices, toolbar, clearSelectionCommand, clearCommand, 
-                deleteSelectionCommand, saveCommand, undoCommand, validateCommand, visitGraphCommand, switchGridCommand,
-                errorPopupPresenter, canvasProcessingStartedEvent, canvasProcessingCompletedEvent, view );
+                deleteSelectionCommand, saveCommand, undoCommand, validateCommand, visitGraphCommand,
+                switchGridCommand, errorPopupPresenter, view );
     }
     
 }

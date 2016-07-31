@@ -16,4 +16,6 @@ public interface Navigator<T> extends IsWidget {
 
     List<NavigatorItem<T>> getItems();
 
+    NavigatorView<?> getView();
+
 }

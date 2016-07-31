@@ -12,8 +12,6 @@ import org.wirez.client.widgets.session.toolbar.command.SwitchGridCommand;
 import org.wirez.client.widgets.session.toolbar.command.VisitGraphCommand;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.canvas.listener.CanvasElementListener;
 import org.wirez.core.client.canvas.listener.CanvasShapeListener;
 import org.wirez.core.client.service.ClientDiagramServices;
@@ -42,8 +40,6 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
     protected ClearSelectionCommand clearSelectionCommand;
     protected VisitGraphCommand visitGraphCommand;
     protected SwitchGridCommand switchGridCommand;
-    protected Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
-    protected Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
 
     @Inject
     public AbstractReadOnlySessionPresenter(final DefaultCanvasSessionManager canvasSessionManager,
@@ -53,8 +49,6 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
                                             final VisitGraphCommand visitGraphCommand,
                                             final SwitchGridCommand switchGridCommand,
                                             final ErrorPopupPresenter errorPopupPresenter,
-                                            final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                            final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                             final View view) {
         super( errorPopupPresenter, view );
         this.canvasSessionManager = canvasSessionManager;
@@ -63,8 +57,6 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
         this.clearSelectionCommand = clearSelectionCommand;
         this.visitGraphCommand = visitGraphCommand;
         this.switchGridCommand = switchGridCommand;
-        this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
-        this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
     }
 
     @Override
@@ -314,11 +306,11 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
     }
 
     protected void fireProcessingStarted() {
-        canvasProcessingStartedEvent.fire( new CanvasProcessingStartedEvent( getCanvasHandler() ) );
+        view.setLoading( true );
     }
 
     protected void fireProcessingCompleted() {
-        canvasProcessingCompletedEvent.fire( new CanvasProcessingCompletedEvent( getCanvasHandler() ) );
+        view.setLoading( false );
     }
     
     @Override

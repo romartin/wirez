@@ -24,6 +24,11 @@
     .mainPanel {
       background-color: #e6e6e6;
     }
+    .loadingPanel {
+      width: 100%;
+      position: absolute;
+      margin: 5px;
+    }
     .toolbarPanel {
       margin: 5px;
     }
@@ -31,6 +36,12 @@
 
   <b:Container fluid="true"
                addStyleNames="{style.mainPanel}">
+
+    <g:FlowPanel ui:field="loadingPanel" addStyleNames="{style.loadingPanel}">
+
+      <b:Label text="Loading..." type="DANGER"/>
+
+    </g:FlowPanel>
 
     <b:Row>
 

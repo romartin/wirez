@@ -19,9 +19,6 @@ package org.wirez.core.client.canvas;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
-import org.wirez.core.client.canvas.event.processing.CanvasInitializationCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementUpdatedEvent;
@@ -78,13 +75,10 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     protected IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> indexBuilder;
     protected TreeWalkTraverseProcessor treeWalkTraverseProcessor;
     protected ShapeManager shapeManager;
-    protected Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent;
     protected Event<CanvasElementAddedEvent> canvasElementAddedEvent;
     protected Event<CanvasElementRemovedEvent> canvasElementRemovedEvent;
     protected Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent;
     protected Event<CanvasElementsClearEvent> canvasElementsClearEvent;
-    protected Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
-    protected Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
 
     private final String uuid;
     protected C canvas;
@@ -100,13 +94,10 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                                   final IncrementalIndexBuilder indexBuilder,
                                   final TreeWalkTraverseProcessor treeWalkTraverseProcessor,
                                   final ShapeManager shapeManager,
-                                  final Event<CanvasInitializationCompletedEvent> canvasInitializationCompletedEvent,
                                   final Event<CanvasElementAddedEvent> canvasElementAddedEvent,
                                   final Event<CanvasElementRemovedEvent> canvasElementRemovedEvent,
                                   final Event<CanvasElementUpdatedEvent> canvasElementUpdatedEvent,
-                                  final Event<CanvasElementsClearEvent> canvasElementsClearEvent,
-                                  final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                  final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent ) {
+                                  final Event<CanvasElementsClearEvent> canvasElementsClearEvent ) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
         this.rulesManager = rulesManager;
@@ -114,13 +105,10 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         this.indexBuilder = ( IndexBuilder<Graph<?, Node>, Node, Edge, Index<Node, Edge>> ) indexBuilder;
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
         this.shapeManager = shapeManager;
-        this.canvasInitializationCompletedEvent = canvasInitializationCompletedEvent;
         this.canvasElementAddedEvent = canvasElementAddedEvent;
         this.canvasElementRemovedEvent = canvasElementRemovedEvent;
         this.canvasElementUpdatedEvent = canvasElementUpdatedEvent;
         this.canvasElementsClearEvent = canvasElementsClearEvent;
-        this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
-        this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
         this.uuid = UUID.uuid();
     }
 
@@ -182,9 +170,6 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         // Draw it.
         canvas.draw();
 
-        // Fire initialization completed event.
-        canvasInitializationCompletedEvent.fire( new CanvasInitializationCompletedEvent( this ) );
-
     }
 
     @Override
@@ -199,9 +184,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
     protected void draw() {
 
-        // Start processing.
-        fireProcessingStarted();
-
+        // Walk throw the graph and register the shapes.
         treeWalkTraverseProcessor
                 .usePolicy( TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_AFTER_TARGET_NODE )
                 .traverse( diagram.getGraph(), new AbstractTreeTraverseCallback<Graph, Node, Edge>() {
@@ -294,11 +277,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
                     @Override
                     public void endGraphTraversal() {
-
-                        // Processing completed.
-                        fireProcessingCompleted();
-
                     }
+
                 } );
 
     }
@@ -594,8 +574,6 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
     public void clearCanvas() {
 
-        fireProcessingCompleted();
-
         fireCanvasClear();
 
         canvasElementsClearEvent.fire( new CanvasElementsClearEvent( this ) );
@@ -710,16 +688,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
     }
 
-    protected void fireProcessingStarted() {
-        canvasProcessingStartedEvent.fire( new CanvasProcessingStartedEvent( this ) );
-    }
-
-    protected void fireProcessingCompleted() {
-        canvasProcessingCompletedEvent.fire( new CanvasProcessingCompletedEvent( this ) );
-    }
-
     protected void showError( final ClientRuntimeError error ) {
-        fireProcessingCompleted();
         final String message = error.getThrowable() != null ?
                 error.getThrowable().getMessage() : error.getMessage();
         log( Level.SEVERE, message );

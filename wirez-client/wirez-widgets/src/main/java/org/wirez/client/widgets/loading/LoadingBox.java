@@ -2,18 +2,11 @@ package org.wirez.client.widgets.loading;
 
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.Timer;
-import org.wirez.client.widgets.event.WidgetProcessingCompletedEvent;
-import org.wirez.client.widgets.event.WidgetProcessingStartedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @ApplicationScoped
 public class LoadingBox {
@@ -90,7 +83,7 @@ public class LoadingBox {
         
     }
     
-    public void onCanvasProcessingStarted(@Observes CanvasProcessingStartedEvent canvasProcessingStartedEvent) {
+    /*public void onCanvasProcessingStarted(@Observes CanvasProcessingStartedEvent canvasProcessingStartedEvent) {
         checkNotNull("canvasProcessingStartedEvent", canvasProcessingStartedEvent);
         show();
     }
@@ -108,7 +101,7 @@ public class LoadingBox {
     public void onWidgetProcessingCompleted(@Observes WidgetProcessingCompletedEvent widgetProcessingCompletedEvent) {
         checkNotNull("widgetProcessingCompletedEvent", widgetProcessingCompletedEvent);
         hide();
-    }
+    }*/
 
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {

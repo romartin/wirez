@@ -5,8 +5,6 @@ import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.command.ClearSelectionCommand;
 import org.wirez.client.widgets.session.toolbar.command.SwitchGridCommand;
 import org.wirez.client.widgets.session.toolbar.command.VisitGraphCommand;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.session.impl.DefaultCanvasReadOnlySession;
 import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
@@ -25,11 +23,9 @@ public abstract class ReadOnlySessionPresenterImpl extends AbstractReadOnlySessi
                                         final VisitGraphCommand visitGraphCommand,
                                         final SwitchGridCommand switchGridCommand,
                                         final ErrorPopupPresenter errorPopupPresenter,
-                                        final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                        final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                         final View view) {
-        super( canvasSessionManager, clientDiagramServices, toolbar, clearSelectionCommand, visitGraphCommand, switchGridCommand,
-                errorPopupPresenter, canvasProcessingStartedEvent, canvasProcessingCompletedEvent, view );
+        super( canvasSessionManager, clientDiagramServices, toolbar, clearSelectionCommand, visitGraphCommand,
+                switchGridCommand, errorPopupPresenter, view );
     }
     
 }

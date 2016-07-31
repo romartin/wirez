@@ -9,8 +9,6 @@ import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingCompletedEvent;
-import org.wirez.core.client.canvas.event.processing.CanvasProcessingStartedEvent;
 import org.wirez.core.client.service.ClientFactoryServices;
 
 import javax.enterprise.context.Dependent;
@@ -36,12 +34,10 @@ public class ElementBuilderControlImpl extends AbstractElementBuilderControl {
                                       final ModelCardinalityRuleManager modelCardinalityRuleManager,
                                       final CanvasCommandFactory canvasCommandFactory,
                                       final GraphBoundsIndexer graphBoundsIndexer,
-                                      final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
-                                      final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent,
                                       final CanvasLayoutUtils canvasLayoutUtils ) {
         super( clientDefinitionManager, clientFactoryServices, canvasCommandManager, graphUtils,
-                modelContainmentRuleManager, modelCardinalityRuleManager, canvasCommandFactory, graphBoundsIndexer,
-                canvasProcessingStartedEvent, canvasProcessingCompletedEvent, canvasLayoutUtils );
+                modelContainmentRuleManager, modelCardinalityRuleManager, canvasCommandFactory,
+                graphBoundsIndexer, canvasLayoutUtils );
 
     }
 

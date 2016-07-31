@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.Column;
@@ -26,9 +27,15 @@ public class BootstrapNavigatorView
     }
 
     private static ViewBinder uiBinder = GWT.create( ViewBinder.class );
-    
+
     @UiField
-    Container mainPanel;
+    FlowPanel mainPanel;
+
+    @UiField
+    FlowPanel loadingPanel;
+
+    @UiField
+    Container container;
 
     private Row currentRow;
     private int itemCounter;
@@ -37,6 +44,7 @@ public class BootstrapNavigatorView
         initWidget( uiBinder.createAndBindUi( this ) );
         this.currentRow = null;
         this.itemCounter = 0;
+        setLoading( false );
     }
 
     @Override
@@ -47,8 +55,16 @@ public class BootstrapNavigatorView
 
     @Override
     public BootstrapNavigatorView clear() {
-        mainPanel.clear();
+        container.clear();
         this.itemCounter = 0;
+        return this;
+    }
+
+    @Override
+    public NavigatorView<NavigatorItem<?>> setLoading( final boolean loading ) {
+        container.setVisible( !loading );
+        loadingPanel.setVisible( loading );
+
         return this;
     }
 
@@ -56,7 +72,7 @@ public class BootstrapNavigatorView
 
         if ( null == currentRow || ( itemCounter == 4 ) ) {
             currentRow = new Row();
-            mainPanel.add( currentRow );
+            container.add( currentRow );
             itemCounter = 0;
         }
 

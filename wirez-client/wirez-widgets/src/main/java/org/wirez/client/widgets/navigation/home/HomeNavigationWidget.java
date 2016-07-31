@@ -87,6 +87,14 @@ public class HomeNavigationWidget implements IsWidget {
 
     }
 
+    public DiagramsNavigator getDiagramsNavigator() {
+        return diagramsNavigator;
+    }
+
+    public ShapeSetsNavigator getShapeSetsNavigator() {
+        return shapeSetsNavigator;
+    }
+
     private HomeNavigationItem newItem() {
         return navigationItemInstances.get();
     }

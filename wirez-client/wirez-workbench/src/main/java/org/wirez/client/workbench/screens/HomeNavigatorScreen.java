@@ -52,9 +52,6 @@ public class HomeNavigatorScreen {
     HomeNavigationWidget homeNavigationWidget;
 
     @Inject
-    ErrorPopupPresenter errorPopupPresenter;
-
-    @Inject
     PlaceManager placeManager;
 
     @Inject
@@ -89,10 +86,6 @@ public class HomeNavigatorScreen {
     @WorkbenchMenu
     public Menus getMenu() {
         return menu;
-    }
-
-    private void showError( final String message ) {
-        errorPopupPresenter.showMessage( message );
     }
 
     @WorkbenchPartTitle

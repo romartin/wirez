@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.livespark.formmodeler.metaModel.FieldDef;
+import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.wirez.bpmn.definition.BPMNPropertySet;
 import org.wirez.core.definition.annotation.Name;
 import org.wirez.core.definition.annotation.propertyset.Property;
@@ -35,7 +35,7 @@ public class VariablesSet implements BPMNPropertySet {
 
     @Name
     public static final transient String propertySetName = "Variables";
-    
+
     @Property
     @FieldDef(label = "Variables", property = "value")
     @VariablesEditor

@@ -50,7 +50,7 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 
 // ***************************************************************************************************************
 // This screen uses the "OLD" properties widget based on the UF properties editor - currently replaced
-// by FormsPropertiesScreen, which uses Livespark's forms.
+// by FormsPropertiesScreen, which uses Kie Workbench's forms.
 // ***************************************************************************************************************
 
 @Dependent
@@ -61,27 +61,27 @@ public class PropertiesScreen {
 
     @Inject
     ClientDefinitionManager clientDefinitionManager;
-    
+
     @Inject
     DefinitionUtils definitionUtils;
-    
+
     @Inject
     GraphUtils graphUtils;
-    
+
     @Inject
     PropertiesEditor propertiesEditor;
-    
+
     @Inject
     ErrorPopupPresenter errorPopupPresenter;
-    
+
     @Inject
     PlaceManager placeManager;
 
     @Inject
     Event<ChangeTitleWidgetEvent> changeTitleNotification;
-    
+
     private PlaceRequest placeRequest;
-    
+
     @PostConstruct
     @SuppressWarnings( "unchecked" )
     public void init() {
@@ -97,7 +97,7 @@ public class PropertiesScreen {
                         final DefinitionAdapter definitionAdapter = clientDefinitionManager.getDefinitionAdapter( def.getClass() );
                         name = definitionAdapter.getTitle( def );
                     }
-                    
+
                     // changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, name + " Properties"));
                 } else {
                     // changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));
@@ -110,7 +110,7 @@ public class PropertiesScreen {
     public void onStartup(final PlaceRequest placeRequest) {
         this.placeRequest = placeRequest;
     }
-    
+
     @OnOpen
     public void onOpen() {
 
@@ -140,7 +140,7 @@ public class PropertiesScreen {
     public IsWidget getWidget() {
         return propertiesEditor.asWidget();
     }
-    
+
     @WorkbenchContextId
     public String getMyContextRef() {
         return "wirezPropertiesScreenContext";
@@ -155,7 +155,7 @@ public class PropertiesScreen {
         checkNotNull("sessionResumedEvent", sessionResumedEvent);
         doOpenSession( sessionResumedEvent.getSession() );
     }
-    
+
     void onCanvasSessionDisposed(@Observes SessionDisposedEvent sessionDisposedEvent) {
         checkNotNull("sessionDisposedEvent", sessionDisposedEvent);
         doCloseSession();
@@ -165,7 +165,7 @@ public class PropertiesScreen {
         checkNotNull("sessionPausedEvent", sessionPausedEvent);
         doCloseSession();
     }
-    
+
     private void doOpenSession(final CanvasSession session) {
         final AbstractCanvasHandler canvasHandler = (AbstractCanvasHandler) session.getCanvasHandler();
         propertiesEditor.show( canvasHandler );
@@ -175,6 +175,6 @@ public class PropertiesScreen {
         propertiesEditor.clear();
         // changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, "Properties"));
     }
-    
-    
+
+
 }

@@ -18,22 +18,23 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCanvasHandler> {
+public class NodeDragProxyImpl implements NodeDragProxy<AbstractCanvasHandler> {
     
     private AbstractCanvasHandler canvasHandler;
 
-    ShapeDragProxyFactory<AbstractCanvas> shapeDragProxyFactory;
+    ShapeDragProxy<AbstractCanvas> shapeDragProxyFactory;
     EdgeMagnetsHelper magnetsHelper;
-    
+
+    private EdgeShape transientEdgeShape;
     @Inject
-    public NodeDragProxyFactoryImpl( final ShapeDragProxyFactory<AbstractCanvas> shapeDragProxyFactory,
-                                     final EdgeMagnetsHelper magnetsHelper ) {
+    public NodeDragProxyImpl( final ShapeDragProxy<AbstractCanvas> shapeDragProxyFactory,
+                              final EdgeMagnetsHelper magnetsHelper ) {
         this.shapeDragProxyFactory = shapeDragProxyFactory;
         this.magnetsHelper = magnetsHelper;
     }
 
     @Override
-    public DragProxyFactory<AbstractCanvasHandler, Item, NodeDragProxyCallback> proxyFor(final AbstractCanvasHandler context) {
+    public DragProxy<AbstractCanvasHandler, Item, NodeDragProxyCallback> proxyFor( final AbstractCanvasHandler context) {
         this.canvasHandler = context;
         this.shapeDragProxyFactory.proxyFor( context.getCanvas() );
         return this;
@@ -41,14 +42,12 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
 
     @Override
     @SuppressWarnings("unchecked")
-    public DragProxyFactory<AbstractCanvasHandler, Item, NodeDragProxyCallback> newInstance(final Item item,
-                                                                                        final int x, 
-                                                                                        final int y, 
-                                                                                        final NodeDragProxyCallback callback) {
+    public DragProxy<AbstractCanvasHandler, Item, NodeDragProxyCallback> show( final Item item,
+                                                                               final int x,
+                                                                               final int y,
+                                                                               final NodeDragProxyCallback callback) {
 
         final AbstractCanvas canvas = canvasHandler.getCanvas();
-
-        final Layer layer = canvas.getLayer();
 
         final Node<View<?>, Edge> node = item.getNode();
 
@@ -68,15 +67,14 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
             
         }
             
-        ;
-        final EdgeShape edgeShape = 
+        this.transientEdgeShape =
                 (EdgeShape) edgeShapeFactory.build( inEdge.getContent().getDefinition(), canvasHandler );
-        canvas.addTransientShape( edgeShape );
-        edgeShape.applyProperties( inEdge, MutationContext.STATIC );
+        canvas.addTransientShape( this.transientEdgeShape );
+        this.transientEdgeShape.applyProperties( inEdge, MutationContext.STATIC );
         
         final Shape<?> edgeSourceNodeShape = canvasHandler.getCanvas().getShape( inEdgeSourceNode.getUUID() );
 
-        shapeDragProxyFactory.newInstance( nodeShape, x, y, new DragProxyCallback() {
+        shapeDragProxyFactory.show( nodeShape, x, y, new DragProxyCallback() {
             
             @Override
             public void onStart(final int x, final int y) {
@@ -107,7 +105,7 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
 
                 callback.onComplete( x, y, magnets[0], magnets[1] );
                 
-                canvas.deleteTransientShape( edgeShape );
+                deleteTransientEdgeShape();
 
                 canvas.draw();
 
@@ -127,7 +125,7 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
 
                 }
 
-                edgeShape.applyConnections( inEdge, 
+                NodeDragProxyImpl.this.transientEdgeShape.applyConnections( inEdge,
                         edgeSourceNodeShape.getShapeView(), 
                         nodeShape.getShapeView(), 
                         MutationContext.STATIC );
@@ -149,13 +147,37 @@ public class NodeDragProxyFactoryImpl implements NodeDragProxyFactory<AbstractCa
     }
 
     @Override
+    public void clear() {
+        if ( null != shapeDragProxyFactory ) {
+            this.shapeDragProxyFactory.clear();
+        }
+        deleteTransientEdgeShape();
+    }
+
+    @Override
     public void destroy() {
-        
-        this.canvasHandler = null;
-        this.shapeDragProxyFactory.destroy();
+        if ( null != shapeDragProxyFactory ) {
+            clear();
+            this.shapeDragProxyFactory.destroy();
+        }
         this.shapeDragProxyFactory = null;
+        this.canvasHandler = null;
         this.magnetsHelper = null;
+        this.transientEdgeShape = null;
         
+    }
+
+    private AbstractCanvas getCanvas() {
+        return canvasHandler.getCanvas();
+    }
+
+    private void deleteTransientEdgeShape() {
+
+        if ( null != this.transientEdgeShape ) {
+            getCanvas().deleteTransientShape( this.transientEdgeShape );
+            getCanvas().draw();
+            this.transientEdgeShape = null;
+        }
     }
 
 }

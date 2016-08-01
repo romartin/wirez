@@ -31,7 +31,7 @@
 
             <b:Panel ui:field="panel" addStyleNames="{style.item}">
 
-                <b:PanelBody>
+                <b:PanelBody ui:field="body">
 
                     <b:ThumbnailLink ui:field="item">
 
@@ -41,7 +41,7 @@
 
                 </b:PanelBody>
 
-                <b:PanelFooter>
+                <b:PanelFooter ui:field="footer">
 
                     <b:Heading size="H5" ui:field="heading"/>
 

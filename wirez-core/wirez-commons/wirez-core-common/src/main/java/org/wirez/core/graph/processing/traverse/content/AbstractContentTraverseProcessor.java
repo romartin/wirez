@@ -19,7 +19,7 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
     }
 
-    protected abstract TreeWalkTraverseProcessor.TraversePolicy getPolicy();
+    protected abstract TreeWalkTraverseProcessor.EdgeVisitorPolicy getPolicy();
 
     @SuppressWarnings( "unchecked" )
     protected boolean doStartEdgeTraversal( final Edge edge,
@@ -29,9 +29,11 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
 
             callback.startEdgeTraversal( ( E ) edge );
 
+            return true;
+
         }
 
-        return true;
+        return false;
 
     }
 
@@ -43,9 +45,11 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
 
             callback.endEdgeTraversal( ( E ) edge );
 
+            return true;
+
         }
 
-        return true;
+        return false;
 
     }
 
@@ -104,7 +108,7 @@ public abstract class AbstractContentTraverseProcessor<C, N extends Node<View, E
                           final K callback ) {
 
         treeWalkTraverseProcessor
-                .usePolicy( getPolicy() )
+                .useEdgeVisitorPolicy( getPolicy() )
                 .traverse( graph, new TreeTraverseCallback<Graph, Node, Edge>() {
 
                     @Override

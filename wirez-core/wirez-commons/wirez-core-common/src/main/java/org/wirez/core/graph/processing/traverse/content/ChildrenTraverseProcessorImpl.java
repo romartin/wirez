@@ -25,9 +25,9 @@ public final class ChildrenTraverseProcessorImpl extends AbstractContentTraverse
     }
 
     @Override
-    protected TreeWalkTraverseProcessor.TraversePolicy getPolicy() {
+    protected TreeWalkTraverseProcessor.EdgeVisitorPolicy getPolicy() {
 
-        return TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_BEFORE_TARGET_NODE;
+        return TreeWalkTraverseProcessor.EdgeVisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE;
 
     }
 

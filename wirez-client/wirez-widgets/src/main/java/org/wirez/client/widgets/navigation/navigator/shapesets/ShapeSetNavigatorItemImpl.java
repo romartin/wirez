@@ -1,6 +1,5 @@
 package org.wirez.client.widgets.navigation.navigator.shapesets;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -50,9 +49,8 @@ public class ShapeSetNavigatorItemImpl implements IsWidget, ShapeSetNavigatorIte
     }
 
     public void show( final ShapeSet shapeSet,
-                      final int width,
-                      final int height,
-                      final Style.Unit unit,
+                      final int widthInPx,
+                      final int heightInPx,
                       final Command callback ) {
         this.callback = callback;
 
@@ -68,7 +66,7 @@ public class ShapeSetNavigatorItemImpl implements IsWidget, ShapeSetNavigatorIte
             .setItemTitle( description )
             .setThumbUri( thumbUri );
 
-        view.setSize( width, height, unit );
+        view.setItemPxSize( widthInPx, heightInPx );
 
     }
 

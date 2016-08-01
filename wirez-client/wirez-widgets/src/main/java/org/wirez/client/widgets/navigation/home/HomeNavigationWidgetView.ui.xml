@@ -25,11 +25,20 @@
       height: 100%;
       margin: 15px;
     }
+    .addIcon {
+      float: right;
+      cursor: pointer;
+    }
+    .groupPanel {
+      margin-right: 25px;
+    }
   </ui:style>
 
   <g:FlowPanel ui:field="rootPanel" addStyleNames="{style.rootPanel}">
 
-    <b:PanelGroup b:id="mainPanelGroup" ui:field="mainPanel"/>
+    <b:Icon ui:field="addIcon" type="PLUS_CIRCLE" size="TIMES3" addStyleNames="{style.addIcon}"/>
+
+    <b:PanelGroup b:id="mainPanelGroup" ui:field="mainPanel" addStyleNames="{style.groupPanel}"/>
 
   </g:FlowPanel>
 

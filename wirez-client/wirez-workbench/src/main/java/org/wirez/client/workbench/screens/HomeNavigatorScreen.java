@@ -90,7 +90,7 @@ public class HomeNavigatorScreen {
 
     @WorkbenchPartTitle
     public String getTitle() {
-        return "My Stunner";
+        return "My Stunner Home";
     }
 
     @WorkbenchPartView

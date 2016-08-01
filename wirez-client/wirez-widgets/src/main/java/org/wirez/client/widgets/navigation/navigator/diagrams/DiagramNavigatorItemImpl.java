@@ -1,6 +1,5 @@
 package org.wirez.client.widgets.navigation.navigator.diagrams;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -49,9 +48,8 @@ public class DiagramNavigatorItemImpl implements IsWidget, DiagramNavigatorItem 
     }
 
     public void show( final DiagramRepresentation diagramRepresentation,
-                      final int width,
-                      final int height,
-                      final Style.Unit unit,
+                      final int widthInPx,
+                      final int heightInPx,
                       final Command callback ) {
         this.callback = callback;
 
@@ -77,7 +75,7 @@ public class DiagramNavigatorItemImpl implements IsWidget, DiagramNavigatorItem 
             view.setThumbData( thumbData );
         }
 
-        view.setSize( width, height, unit );
+        view.setItemPxSize( widthInPx, heightInPx  );
 
     }
 

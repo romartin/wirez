@@ -2,10 +2,7 @@ package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 
 import org.uberfire.mvp.Command;
 import org.wirez.core.client.ClientDefinitionManager;
-import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.builder.BuildRequest;
 import org.wirez.core.client.canvas.controls.builder.BuilderControl;
@@ -13,16 +10,12 @@ import org.wirez.core.client.canvas.controls.toolbox.command.AbstractToolboxComm
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.util.CanvasHighlight;
 import org.wirez.core.client.components.drag.DragProxyCallback;
-import org.wirez.core.client.components.drag.DragProxyFactory;
-import org.wirez.core.client.components.drag.NodeDragProxyCallback;
-import org.wirez.core.client.components.drag.NodeDragProxyFactory;
+import org.wirez.core.client.components.drag.DragProxy;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
-import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
-import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.util.UUID;
 
@@ -56,7 +49,7 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
 
     protected abstract String getDefinitionIdentifier( Context<AbstractCanvasHandler> context );
 
-    protected abstract DragProxyFactory getDragProxyFactory();
+    protected abstract DragProxy getDragProxyFactory();
 
     protected abstract DragProxyCallback getDragProxyCallback( Context<AbstractCanvasHandler> context, Element element, Element newElement );
 
@@ -107,7 +100,7 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
 
                     getDragProxyFactory()
                             .proxyFor( canvasHandler )
-                            .newInstance(
+                            .show(
                                     createtBuilderControlItem( context, element, item ),
                                     (int) x,
                                     (int) y,

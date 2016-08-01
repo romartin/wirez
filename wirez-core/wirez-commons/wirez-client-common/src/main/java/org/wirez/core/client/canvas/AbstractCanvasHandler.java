@@ -186,7 +186,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
         // Walk throw the graph and register the shapes.
         treeWalkTraverseProcessor
-                .usePolicy( TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_AFTER_TARGET_NODE )
+                .useEdgeVisitorPolicy( TreeWalkTraverseProcessor.EdgeVisitorPolicy.VISIT_EDGE_AFTER_TARGET_NODE )
                 .traverse( diagram.getGraph(), new AbstractTreeTraverseCallback<Graph, Node, Edge>() {
                     @Override
                     public void startGraphTraversal( final Graph graph ) {

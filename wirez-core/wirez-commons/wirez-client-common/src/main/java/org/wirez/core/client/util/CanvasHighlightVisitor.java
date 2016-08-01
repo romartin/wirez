@@ -26,7 +26,10 @@ import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
+import org.wirez.core.graph.processing.traverse.content.ContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.FullContentTraverseProcessorImpl;
+import org.wirez.core.graph.processing.traverse.content.ViewTraverseProcessorImpl;
+import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
 
 import java.util.LinkedList;
@@ -39,36 +42,36 @@ import java.util.logging.Logger;
  */
 public class CanvasHighlightVisitor {
 
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.util.CanvasHighlightVisitor");
+    private static Logger LOGGER = Logger.getLogger( CanvasHighlightVisitor.class.getName() );
 
     private CanvasHandler canvasHandler;
     private final List<Shape> shapes = new LinkedList<Shape>();
     private ShapeStateUtils shapeStateUtils;
 
-    public CanvasHighlightVisitor(  ) {
+    public CanvasHighlightVisitor() {
     }
 
-    public void run(final CanvasHandler canvasHandler,
-                    final ShapeStateUtils shapeStateUtils,
-                    final Command callback) {
+    public void run( final CanvasHandler canvasHandler,
+                     final ShapeStateUtils shapeStateUtils,
+                     final Command callback ) {
 
         this.canvasHandler = canvasHandler;
         this.shapeStateUtils = shapeStateUtils;
-      
-        prepareSimulation(() -> animate(0, () -> {
-            CanvasHighlightVisitor.this.log(Level.FINE, "CanvasHighlightVisitor - FINISHED");
+
+        prepareVisit( () -> animate( 0, () -> {
+            CanvasHighlightVisitor.this.log( Level.FINE, "CanvasHighlightVisitor - FINISHED" );
             if ( null != callback ) {
                 callback.execute();
                 CanvasHighlightVisitor.this.canvasHandler = null;
                 CanvasHighlightVisitor.this.shapeStateUtils = null;
                 CanvasHighlightVisitor.this.shapes.clear();
             }
-        }));
+        } ) );
     }
-    
-    private void animate(final int index, final Command callback) {
 
-        if (index < shapes.size()) {
+    private void animate( final int index, final Command callback ) {
+
+        if ( index < shapes.size() ) {
 
             final Shape shape = shapes.get( index );
 
@@ -86,75 +89,74 @@ public class CanvasHighlightVisitor {
 
                 @Override
                 public void onComplete() {
-                    animate(index + 1, callback);
+                    animate( index + 1, callback );
                 }
 
             } );
 
         } else {
-            
+
             callback.execute();
-            
+
         }
-        
+
     }
-    
-    private void prepareSimulation(final Command command) {
+
+    @SuppressWarnings( "unchecked" )
+    private void prepareVisit( final Command command ) {
 
         final Graph graph = canvasHandler.getDiagram().getGraph();
 
-        new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl()).traverse(graph, new AbstractFullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>>() {
 
+        new ViewTraverseProcessorImpl( new TreeWalkTraverseProcessorImpl()
+                .useStartingNodesPolicy( TreeWalkTraverseProcessor.StartingNodesPolicy.NO_INCOMING_VIEW_EDGES )
+        ).traverse( graph, new ContentTraverseCallback<View<?>, Node<View, Edge>, Edge<View<?>, Node>>() {
             @Override
-            public void startViewEdgeTraversal(final Edge<Object, Node> edge) {
-                super.startViewEdgeTraversal(edge);
-                addShape(edge.getUUID());
+            public void startGraphTraversal( Graph<View, Node<View, Edge>> graph ) {
+
             }
 
             @Override
-            public void startChildEdgeTraversal(final Edge<Object, Node> edge) {
-                super.startChildEdgeTraversal(edge);
-                addShape(edge.getUUID());
+            public void startEdgeTraversal( Edge<View<?>, Node> edge ) {
+                addShape( edge.getUUID() );
             }
 
             @Override
-            public void startParentEdgeTraversal(final Edge<Object, Node> edge) {
-                super.startParentEdgeTraversal(edge);
-                addShape(edge.getUUID());
+            public void endEdgeTraversal( Edge<View<?>, Node> edge ) {
+
             }
 
             @Override
-            public void startEdgeTraversal(final Edge<Object, Node> edge) {
-                super.startEdgeTraversal(edge);
-                addShape(edge.getUUID());
+            public void startNodeTraversal( Node<View, Edge> node ) {
+                addShape( node.getUUID() );
             }
 
             @Override
-            public void startNodeTraversal(final Node<View, Edge> node) {
-                super.startNodeTraversal(node);
-                addShape(node.getUUID());
+            public void endNodeTraversal( Node<View, Edge> node ) {
+
             }
-            
+
             @Override
             public void endGraphTraversal() {
                 command.execute();
             }
 
-            private void addShape(String uuid) {
-                final Shape shape = canvasHandler.getCanvas().getShape(uuid);
+            private void addShape( String uuid ) {
+                final Shape shape = canvasHandler.getCanvas().getShape( uuid );
                 if ( null != shape ) {
-                    shapes.add(shape);
+                    shapes.add( shape );
                 }
             }
-            
-        });
-        
+
+        } );
+
+
     }
 
-    private void log(final Level level, final String message) {
+    private void log( final Level level, final String message ) {
         if ( LogConfiguration.loggingIsEnabled() ) {
-            LOGGER.log(level, message);
+            LOGGER.log( level, message );
         }
     }
-    
+
 }

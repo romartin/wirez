@@ -16,6 +16,8 @@
 package org.wirez.client.widgets.actions;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -58,6 +60,8 @@ public class NameEditBoxWidgetView extends Composite implements NameEditBoxWidge
         } );
 
         nameBox.addKeyPressHandler( keyPressEvent -> presenter.onKeyPress( keyPressEvent.getUnicodeCharCode(), nameBox.getValue() ) );
+
+        nameBox.addKeyDownHandler( keyDownEvent -> presenter.onKeyDown( keyDownEvent.getNativeKeyCode(), nameBox.getValue() ) );
 
         saveButton.addClickHandler( event -> presenter.onSave() );
 

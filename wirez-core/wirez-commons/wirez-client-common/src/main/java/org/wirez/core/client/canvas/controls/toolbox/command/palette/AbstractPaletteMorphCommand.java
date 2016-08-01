@@ -3,14 +3,12 @@ package org.wirez.core.client.canvas.controls.toolbox.command.palette;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
-import org.wirez.core.client.components.drag.NodeDragProxyFactory;
+import org.wirez.core.client.components.drag.NodeDragProxy;
 import org.wirez.core.client.components.palette.Palette;
 import org.wirez.core.client.components.palette.model.GlyphPaletteItem;
 import org.wirez.core.client.components.palette.model.HasPaletteItems;
@@ -47,7 +45,7 @@ public abstract class AbstractPaletteMorphCommand<I> extends AbstractPaletteComm
                                        final ShapeManager shapeManager,
                                        final DefinitionsPaletteBuilder definitionsPaletteBuilder,
                                        final Palette<HasPaletteItems<? extends GlyphPaletteItem>> palette,
-                                       final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
+                                       final NodeDragProxy<AbstractCanvasHandler> nodeDragProxyFactory,
                                        final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                        final GraphBoundsIndexer graphBoundsIndexer,
                                        final AnimationFactory animationFactory,

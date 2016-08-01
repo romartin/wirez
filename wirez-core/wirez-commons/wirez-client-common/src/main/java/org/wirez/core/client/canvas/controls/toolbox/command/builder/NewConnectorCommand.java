@@ -3,8 +3,6 @@ package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.builder.BuildRequest;
 import org.wirez.core.client.canvas.controls.builder.BuilderControl;
@@ -12,8 +10,8 @@ import org.wirez.core.client.canvas.controls.builder.EdgeBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.EdgeBuildRequest;
 import org.wirez.core.client.canvas.controls.builder.request.EdgeBuildRequestImpl;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
-import org.wirez.core.client.components.drag.ConnectorDragProxyFactory;
-import org.wirez.core.client.components.drag.DragProxyFactory;
+import org.wirez.core.client.components.drag.ConnectorDragProxy;
+import org.wirez.core.client.components.drag.DragProxy;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.shape.factory.ShapeFactory;
@@ -25,7 +23,7 @@ import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 
 public abstract class NewConnectorCommand<I> extends AbstractElementBuilderCommand<I> {
 
-    protected ConnectorDragProxyFactory<AbstractCanvasHandler> connectorDragProxyFactory;
+    protected ConnectorDragProxy<AbstractCanvasHandler> connectorDragProxyFactory;
     protected EdgeBuilderControl<AbstractCanvasHandler> edgeBuilderControl;
 
     private String edgeId;
@@ -39,7 +37,7 @@ public abstract class NewConnectorCommand<I> extends AbstractElementBuilderComma
                                 final ShapeManager shapeManager,
                                final DefinitionGlyphTooltip<?> glyphTooltip,
                                 final GraphBoundsIndexer graphBoundsIndexer,
-                                final ConnectorDragProxyFactory<AbstractCanvasHandler> connectorDragProxyFactory,
+                                final ConnectorDragProxy<AbstractCanvasHandler> connectorDragProxyFactory,
                                 final EdgeBuilderControl<AbstractCanvasHandler> edgeBuilderControl,
                                 final AnimationFactory animationFactory ) {
         super( clientDefinitionManager, clientFactoryServices, shapeManager, glyphTooltip, graphBoundsIndexer,
@@ -70,7 +68,7 @@ public abstract class NewConnectorCommand<I> extends AbstractElementBuilderComma
     }
 
     @Override
-    protected DragProxyFactory getDragProxyFactory() {
+    protected DragProxy getDragProxyFactory() {
         return connectorDragProxyFactory;
     }
 
@@ -89,7 +87,7 @@ public abstract class NewConnectorCommand<I> extends AbstractElementBuilderComma
         final Edge<View<?>, Node> edge = (Edge<View<?>, Node>) newElement;
         final ShapeFactory<? ,?, ?> edgeFactory = shapeManager.getFactory( edgeId );
 
-        return new ConnectorDragProxyFactory.Item() {
+        return new ConnectorDragProxy.Item() {
             @Override
             public Edge<View<?>, Node> getEdge() {
                 return edge;

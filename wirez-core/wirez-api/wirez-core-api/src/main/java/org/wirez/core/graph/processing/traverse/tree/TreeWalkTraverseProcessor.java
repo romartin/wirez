@@ -9,11 +9,18 @@ import org.wirez.core.graph.Node;
  */
 public interface TreeWalkTraverseProcessor extends TreeTraverseProcessor<Graph, Node, Edge> {
 
-    enum TraversePolicy {
+    enum EdgeVisitorPolicy {
         VISIT_EDGE_BEFORE_TARGET_NODE,
         VISIT_EDGE_AFTER_TARGET_NODE;
     }
 
-    TreeWalkTraverseProcessor usePolicy(TraversePolicy policy);
+    enum StartingNodesPolicy {
+        NO_INCOMING_EDGES,
+        NO_INCOMING_VIEW_EDGES
+    }
+
+    TreeWalkTraverseProcessor useEdgeVisitorPolicy( EdgeVisitorPolicy policy );
+
+    TreeWalkTraverseProcessor useStartingNodesPolicy( StartingNodesPolicy policy );
     
 }

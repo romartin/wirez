@@ -3,6 +3,6 @@ package org.wirez.core.client.components.drag;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.shape.view.ShapeView;
 
-public interface ShapeViewDragProxyFactory<C extends Canvas> extends DragProxyFactory<C, ShapeView<?>, DragProxyCallback> {
+public interface ShapeViewDragProxy<C extends Canvas> extends DragProxy<C, ShapeView<?>, DragProxyCallback> {
     
 }

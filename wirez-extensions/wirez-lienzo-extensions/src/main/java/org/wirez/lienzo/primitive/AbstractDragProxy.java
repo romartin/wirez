@@ -25,7 +25,8 @@ public abstract class AbstractDragProxy<T> {
     private Integer yDiff = null;
     private Layer layer = null;
     private T shapeProxy = null;
-    
+    private final HandlerRegistration[] handlerRegs = new HandlerRegistration[ 3 ];
+
     protected abstract void addToLayer( Layer layer, T shape );
 
     protected abstract void removeFromLayer( Layer layer, T shape );
@@ -74,9 +75,6 @@ public abstract class AbstractDragProxy<T> {
             attached = true;
             callback.onStart( initialX, initialY );
         }
-
-
-        final HandlerRegistration[] handlerRegs = new HandlerRegistration[ 3 ];
 
         handlerRegs[ 0 ] = RootPanel.get().addDomHandler(new MouseMoveHandler() {
 
@@ -131,9 +129,6 @@ public abstract class AbstractDragProxy<T> {
 
             @Override
             public void onMouseUp( final MouseUpEvent mouseUpEvent ) {
-                handlerRegs[ 0 ].removeHandler();
-                handlerRegs[ 1 ].removeHandler();
-                handlerRegs[ 2 ].removeHandler();
 
                 if ( attached ) {
 
@@ -142,7 +137,7 @@ public abstract class AbstractDragProxy<T> {
                     final int x = getXDiff() + mouseUpEvent.getX();
                     final int y = getYDiff() + mouseUpEvent.getY();
 
-                    AbstractDragProxy.this.destroy();
+                    AbstractDragProxy.this.clear();
 
                     callback.onComplete( x, y );
 
@@ -154,7 +149,17 @@ public abstract class AbstractDragProxy<T> {
         
     }
 
-    public void destroy() {
+    private void removeHandlers() {
+
+        handlerRegs[ 0 ].removeHandler();
+        handlerRegs[ 1 ].removeHandler();
+        handlerRegs[ 2 ].removeHandler();
+
+    }
+
+    public void clear() {
+
+        removeHandlers();
 
         removeFromLayer( layer, shapeProxy );
 
@@ -162,10 +167,17 @@ public abstract class AbstractDragProxy<T> {
             this.timer.cancel();
         }
 
-        this.timer = null;
         this.attached = false;
         this.xDiff = null;
         this.yDiff = null;
+
+    }
+
+    public void destroy() {
+
+        clear();
+
+        this.timer = null;
         this.layer = null;
         this.shapeProxy = null;
         

@@ -1,12 +1,9 @@
 package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 
-import com.google.gwt.user.client.Timer;
 import org.uberfire.mvp.Command;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.Layer;
 import org.wirez.core.client.canvas.controls.builder.BuildRequest;
@@ -17,13 +14,14 @@ import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequestImp
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.components.drag.DragProxyCallback;
-import org.wirez.core.client.components.drag.DragProxyFactory;
+import org.wirez.core.client.components.drag.DragProxy;
 import org.wirez.core.client.components.drag.NodeDragProxyCallback;
-import org.wirez.core.client.components.drag.NodeDragProxyFactory;
+import org.wirez.core.client.components.drag.NodeDragProxy;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.shape.factory.ShapeFactory;
+import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
@@ -37,7 +35,7 @@ import javax.enterprise.event.Event;
 
 public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I> {
 
-    NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory;
+    NodeDragProxy<AbstractCanvasHandler> nodeDragProxyFactory;
     NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl;
     Event<CanvasElementSelectedEvent> elementSelectedEvent;
     DefinitionUtils definitionUtils;
@@ -45,6 +43,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
     protected String definitionId;
     protected int sourceMagnet;
     protected int targetMagnet;
+    private HasEventHandlers<?, ?> layerEventHandlers;
 
     protected NewNodeCommand() {
         this( null, null, null, null, null, null, null, null, null, null );
@@ -55,7 +54,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
                           final ShapeManager shapeManager,
                           final DefinitionGlyphTooltip<?> glyphTooltip,
                           final GraphBoundsIndexer graphBoundsIndexer,
-                          final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
+                          final NodeDragProxy<AbstractCanvasHandler> nodeDragProxyFactory,
                           final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                           final AnimationFactory animationFactory,
                           final DefinitionUtils definitionUtils,
@@ -66,6 +65,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
         this.nodeBuilderControl = nodeBuilderControl;
         this.definitionUtils = definitionUtils;
         this.elementSelectedEvent = elementSelectedEvent;
+        this.layerEventHandlers = null;
     }
 
     public void setDefinitionIdentifier( final String definitionId ) {
@@ -98,7 +98,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
 
 
     @Override
-    protected DragProxyFactory getDragProxyFactory() {
+    protected DragProxy getDragProxyFactory() {
         return nodeDragProxyFactory;
     }
 
@@ -161,7 +161,8 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
         super.onStart( context, element, item, x1, y1 );
 
         // Disable layer events handlers in order to avoid layer events while using the drag proxy.
-        getLayer( context ).disableHandlers();
+        this.layerEventHandlers = getLayer( context );
+        disableHandlers();
 
     }
 
@@ -180,7 +181,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
         super.onError( context, error );
 
         // Enable layer events handlers again.
-        getLayer( context ).enableHandlers();
+        enableHandlers();
     }
 
     protected Layer getLayer( final Context<AbstractCanvasHandler> context ) {
@@ -223,7 +224,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
         final ShapeFactory<?, AbstractCanvasHandler, ?> nodeShapeFactory = shapeManager.getFactory( definitionId );
         final ShapeFactory<?, AbstractCanvasHandler, ?> edgeShapeFactory = shapeManager.getFactory( edgeId );
 
-        return new NodeDragProxyFactory.Item<AbstractCanvasHandler>() {
+        return new NodeDragProxy.Item<AbstractCanvasHandler>() {
             @Override
             public Node<View<?>, Edge> getNode() {
                 return edge.getTargetNode();
@@ -297,10 +298,32 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
     }
 
     @Override
+    protected void clearDragProxy() {
+        super.clearDragProxy();
+
+        // Enable layers' events handlers again.
+        enableHandlers();
+
+    }
+
+    private void disableHandlers() {
+        if ( null != this.layerEventHandlers ) {
+            this.layerEventHandlers.disableHandlers();
+        }
+    }
+
+    private void enableHandlers() {
+        if ( null != this.layerEventHandlers ) {
+            this.layerEventHandlers.enableHandlers();
+        }
+    }
+
+    @Override
     public void destroy() {
 
         super.destroy();
 
+        this.layerEventHandlers = null;
         this.nodeDragProxyFactory = null;
         this.nodeBuilderControl = null;
 

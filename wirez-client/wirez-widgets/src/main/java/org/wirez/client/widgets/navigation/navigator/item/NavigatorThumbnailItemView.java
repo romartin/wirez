@@ -18,20 +18,14 @@ package org.wirez.client.widgets.navigation.navigator.item;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
-import com.google.gwt.event.dom.client.MouseOverEvent;
-import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.gwtbootstrap3.client.shared.event.HideEvent;
-import org.gwtbootstrap3.client.shared.event.HideHandler;
-import org.gwtbootstrap3.client.shared.event.ShowEvent;
-import org.gwtbootstrap3.client.shared.event.ShowHandler;
 import org.gwtbootstrap3.client.ui.*;
 import org.wirez.client.widgets.navigation.navigator.NavigatorItem;
 import org.wirez.client.widgets.navigation.navigator.NavigatorItemView;
@@ -55,6 +49,9 @@ public class NavigatorThumbnailItemView
     Panel panel;
 
     @UiField
+    PanelBody body;
+
+    @UiField
     Heading heading;
 
     @UiField
@@ -66,6 +63,9 @@ public class NavigatorThumbnailItemView
     @UiField
     Image thumbImage;
 
+    @UiField
+    PanelFooter footer;
+
     NavigatorItem presenter;
 
     @Override
@@ -73,10 +73,21 @@ public class NavigatorThumbnailItemView
         this.presenter = presenter;
         initWidget( uiBinder.createAndBindUi( this ) );
         item.addClickHandler( clickEvent -> presenter.onItemSelected() );
-        popover.addShowHandler( showEvent -> panel.getElement().getStyle().setBorderWidth( 3, Style.Unit.PX ) );
-        popover.addHideHandler( hideEvent -> panel.getElement().getStyle().setBorderWidth( 1, Style.Unit.PX ) );
+        footer.addDomHandler( event -> presenter.onItemSelected(), ClickEvent.getType() );
+        footer.getElement().getStyle().setCursor( Style.Cursor.POINTER );
+        popover.addShowHandler( showEvent -> onGotFocus() );
+        popover.addHideHandler( hideEvent -> onLostFocus() );
     }
 
+    private void onGotFocus() {
+        panel.getElement().getStyle().setBorderColor( "#0000FF" );
+        heading.getElement().getStyle().setFontWeight( Style.FontWeight.BOLD );
+    }
+
+    private void onLostFocus() {
+        panel.getElement().getStyle().setBorderColor( "#000000" );
+        heading.getElement().getStyle().setFontWeight( Style.FontWeight.NORMAL );
+    }
 
     @Override
     public NavigatorThumbnailItemView setUUID( final String uuid ) {
@@ -105,26 +116,26 @@ public class NavigatorThumbnailItemView
     }
 
     @Override
-    public NavigatorThumbnailItemView setSize( final int width,
-                                              final int height,
-                                              final Style.Unit unit ) {
-        int p1 = 0;
-        int p2 = 0;
+    public NavigatorThumbnailItemView setItemPxSize( final int width,
+                                                     final int height ) {
+        final int imgWidth = thumbImage.getWidth();
+        final int imgHeight = thumbImage.getHeight();
 
-        if ( thumbImage.getWidth() >= thumbImage.getHeight() ) {
+        final float wfactor = imgWidth > width ? imgWidth / width : 1;
+        final float hfactor = imgHeight > height ? imgHeight / height : 1;
 
-            p1 = width;
-            p2 = thumbImage.getHeight() * width / thumbImage.getWidth();
+        final float factor = wfactor >= hfactor ? wfactor : hfactor;
 
-        } else {
+        if ( factor > 1 ) {
 
-            p1 = height;
-            p2 = thumbImage.getWidth() * height / thumbImage.getHeight();
+            final int w = ( int ) Math.ceil( imgWidth / factor );
+            final int h = ( int ) Math.ceil( imgHeight / factor );
+
+            thumbImage.setPixelSize( w, h );
 
         }
 
-        thumbImage.setPixelSize( p1, p2 );
-        // mainPanel.setHeight( height + unit.getType() );
+        body.setPixelSize( width , height );
 
         return this;
     }

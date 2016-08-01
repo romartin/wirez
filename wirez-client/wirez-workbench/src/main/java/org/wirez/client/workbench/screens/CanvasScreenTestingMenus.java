@@ -88,13 +88,18 @@ public class CanvasScreenTestingMenus {
                 .endMenu()
                 .build();*/
 
-        /*return MenuFactory
+        return MenuFactory
                 .newTopLevelMenu("Log Command History")
                 .respondsWith(getLogCommandStackCommand())
                 .endMenu()
-                .build();*/
+                .newTopLevelMenu("Resume Graph")
+                .respondsWith(getResumeGraphCommand())
+                .endMenu()
+                .newTopLevelMenu("Log Graph")
+                .respondsWith(getLogGraphCommand())
+                .endMenu()
+                .build();
 
-        return null;
     }
 
     public Menus getMenu() {
@@ -237,11 +242,19 @@ public class CanvasScreenTestingMenus {
 
     // While dev & testing.
     private Command getLogGraphCommand() {
-        return () -> ( (AbstractFullSessionPresenter) canvasSessionPresenter).logGraph();
+        return () -> {
+            Logger.getLogger("").setLevel( Level.FINE );
+            ( ( AbstractFullSessionPresenter ) canvasSessionPresenter ).logGraph();
+            Logger.getLogger("").setLevel( Level.SEVERE );
+        };
     }
 
     private Command getResumeGraphCommand() {
-        return () -> ( (AbstractFullSessionPresenter) canvasSessionPresenter).resumeGraph();
+        return () -> {
+            Logger.getLogger("").setLevel( Level.FINE );
+            ( ( AbstractFullSessionPresenter ) canvasSessionPresenter ).resumeGraph();
+            Logger.getLogger("").setLevel( Level.SEVERE );
+        };
     }
 
     private Command getVisitGraphCommand() {
@@ -281,7 +294,6 @@ public class CanvasScreenTestingMenus {
         return () -> {
             final Level level = Logger.getLogger("").getLevel();
             final Level newLevel = Level.SEVERE.equals(level) ? Level.FINE : Level.SEVERE;
-            LOGGER.log(Level.SEVERE, "Switching to log level [" + newLevel.getName() + "]");
             Logger.getLogger("").setLevel(newLevel);
         };
     }

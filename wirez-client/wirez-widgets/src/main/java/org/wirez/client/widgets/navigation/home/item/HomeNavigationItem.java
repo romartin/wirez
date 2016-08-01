@@ -17,8 +17,6 @@ public class HomeNavigationItem {
 
     public interface View extends UberView<HomeNavigationItem> {
 
-        View setCollapsible( boolean collapsible );
-
         View setCollapsed( boolean collapsed );
 
         View setPanelTitle( String title );
@@ -26,6 +24,12 @@ public class HomeNavigationItem {
         View setPanelIcon( IconType icon );
 
         View setTooltip( String tooltip );
+
+        View setPanelVisible( boolean visible );
+
+        boolean isPanelVisible();
+
+        boolean isPanelCollapsed();
 
         View add( IsWidget widget );
 
@@ -45,8 +49,13 @@ public class HomeNavigationItem {
         view.init(this);
     }
 
-    public HomeNavigationItem setCollapsible( final boolean collapsible ) {
-        view.setCollapsible( collapsible );
+    public HomeNavigationItem setVisible( final boolean visible ) {
+        view.setPanelVisible( visible );
+        return this;
+    }
+
+    public HomeNavigationItem setCollapsed( final boolean collapsed ) {
+        view.setCollapsed( collapsed );
         return this;
     }
 

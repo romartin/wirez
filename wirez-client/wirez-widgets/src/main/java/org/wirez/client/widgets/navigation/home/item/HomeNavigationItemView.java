@@ -56,23 +56,6 @@ public class HomeNavigationItemView extends Composite implements HomeNavigationI
     }
 
     @Override
-    public HomeNavigationItem.View setCollapsible( final boolean collapsible ) {
-
-        if ( collapsible ) {
-
-            headingAnchor.setVisible( true );
-            setCollapsed( true );
-
-        } else {
-
-            headingAnchor.setVisible( false );
-            setCollapsed( false );
-        }
-
-        return this;
-    }
-
-    @Override
     public HomeNavigationItem.View setCollapsed( boolean collapsed ) {
         collapsePanel.setIn( !collapsed );
         return this;
@@ -98,6 +81,22 @@ public class HomeNavigationItemView extends Composite implements HomeNavigationI
     public HomeNavigationItem.View setTooltip( final String tooltip ) {
         heading.setTitle( tooltip );
         return this;
+    }
+
+    @Override
+    public HomeNavigationItem.View setPanelVisible( final boolean visible ) {
+        panel.setVisible( visible );
+        return this;
+    }
+
+    @Override
+    public boolean isPanelVisible() {
+        return panel.isVisible();
+    }
+
+    @Override
+    public boolean isPanelCollapsed() {
+        return collapsePanel.isIn();
     }
 
     @Override

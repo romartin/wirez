@@ -1,6 +1,5 @@
 package org.wirez.client.widgets.navigation.navigator.diagrams;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.Widget;
 import org.wirez.client.widgets.event.LoadDiagramEvent;
@@ -38,7 +37,6 @@ public class DiagramsNavigatorImpl implements DiagramsNavigator {
     private final List<NavigatorItem<DiagramRepresentation>> items = new LinkedList<>();
     private int width;
     private int height;
-    private Style.Unit unit;
 
     @Inject
     public DiagramsNavigatorImpl( final ClientDiagramServices clientDiagramServices,
@@ -51,7 +49,6 @@ public class DiagramsNavigatorImpl implements DiagramsNavigator {
         this.view = view;
         this.width = 140;
         this.height = 140;
-        this.unit = Style.Unit.PX;
     }
 
     @Override
@@ -60,10 +57,9 @@ public class DiagramsNavigatorImpl implements DiagramsNavigator {
     }
 
     @Override
-    public Navigator<DiagramRepresentation> setItemSize( int width, int height, Style.Unit unit ) {
+    public Navigator<DiagramRepresentation> setItemPxSize( int width, int height ) {
         this.width = width;
         this.height = height;
-        this.unit = unit;
 
         return this;
     }
@@ -131,7 +127,6 @@ public class DiagramsNavigatorImpl implements DiagramsNavigator {
         item.show( diagramRepresentation,
                 width,
                 height,
-                unit,
                 () -> {
             final String itemUUID = diagramRepresentation.getUUID();
             fireLoadDiagram( itemUUID );

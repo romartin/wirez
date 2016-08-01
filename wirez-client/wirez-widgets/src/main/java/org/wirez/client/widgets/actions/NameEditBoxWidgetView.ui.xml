@@ -27,6 +27,7 @@
     }
     .button {
       margin-left: 5px;
+      cursor: pointer;
     }
   </ui:style>
 
@@ -34,8 +35,8 @@
 
     <g:HorizontalPanel>
       <b:TextBox ui:field="nameBox"/>
-      <b:Icon ui:field="saveButton" type="CHECK_SQUARE" size="LARGE" title="Save" addStyleNames="{style.button}"/>
-      <b:Icon ui:field="closeButton" type="TIMES_CIRCLE" size="LARGE" title="Close" addStyleNames="{style.button}"/>
+      <b:Icon ui:field="saveButton" type="CHECK" size="TIMES2" title="Save" addStyleNames="{style.button}"/>
+      <b:Icon ui:field="closeButton" type="TIMES" size="TIMES2" title="Close" addStyleNames="{style.button}"/>
     </g:HorizontalPanel>
 
   </g:FlowPanel>

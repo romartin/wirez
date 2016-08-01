@@ -6,7 +6,7 @@ import org.wirez.core.graph.content.view.View;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 
-public interface ConnectorDragProxyFactory<H extends CanvasHandler> extends DragProxyFactory<H, ConnectorDragProxyFactory.Item, DragProxyCallback> {
+public interface ConnectorDragProxy<H extends CanvasHandler> extends DragProxy<H, ConnectorDragProxy.Item, DragProxyCallback> {
     
     interface Item<H> {
 

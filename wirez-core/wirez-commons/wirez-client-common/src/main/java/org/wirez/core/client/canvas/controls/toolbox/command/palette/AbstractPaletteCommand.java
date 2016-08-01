@@ -3,15 +3,12 @@ package org.wirez.core.client.canvas.controls.toolbox.command.palette;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
-import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.toolbox.command.AbstractToolboxCommand;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.util.CanvasHighlight;
-import org.wirez.core.client.components.drag.NodeDragProxyFactory;
+import org.wirez.core.client.components.drag.NodeDragProxy;
 import org.wirez.core.client.components.palette.Palette;
 import org.wirez.core.client.components.palette.model.GlyphPaletteItem;
 import org.wirez.core.client.components.palette.model.HasPaletteItems;
@@ -45,7 +42,7 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
     protected ShapeManager shapeManager;
     protected DefinitionsPaletteBuilder definitionsPaletteBuilder;
     protected Palette<HasPaletteItems<? extends GlyphPaletteItem>> palette;
-    protected NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory;
+    protected NodeDragProxy<AbstractCanvasHandler> nodeDragProxyFactory;
     protected NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl;
     protected GraphBoundsIndexer graphBoundsIndexer;
     protected AnimationFactory animationFactory;
@@ -65,7 +62,7 @@ public abstract class AbstractPaletteCommand<I> extends AbstractToolboxCommand<I
                                   final ShapeManager shapeManager,
                                   final DefinitionsPaletteBuilder definitionsPaletteBuilder,
                                   final Palette<HasPaletteItems<? extends GlyphPaletteItem>> palette,
-                                  final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
+                                  final NodeDragProxy<AbstractCanvasHandler> nodeDragProxyFactory,
                                   final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                   final GraphBoundsIndexer graphBoundsIndexer,
                                   final AnimationFactory animationFactory,

@@ -12,10 +12,10 @@ import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.components.drag.ConnectorDragProxyFactory;
+import org.wirez.core.client.components.drag.ConnectorDragProxy;
 import org.wirez.core.client.components.drag.DragProxyCallback;
-import org.wirez.core.client.components.drag.DragProxyFactory;
-import org.wirez.core.client.components.drag.ShapeViewDragProxyFactory;
+import org.wirez.core.client.components.drag.DragProxy;
+import org.wirez.core.client.components.drag.ShapeViewDragProxy;
 import org.wirez.core.client.shape.EdgeShape;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.Shape;
@@ -26,22 +26,23 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<AbstractCanvasHandler> {
+public class ConnectorDragProxyImpl implements ConnectorDragProxy<AbstractCanvasHandler> {
 
-    private AbstractCanvasHandler canvasHandler;
-
-    ShapeViewDragProxyFactory<AbstractCanvas> shapeViewDragProxyFactory;
+    ShapeViewDragProxy<AbstractCanvas> shapeViewDragProxyFactory;
     GraphBoundsIndexer graphBoundsIndexer;
 
+    private AbstractCanvasHandler canvasHandler;
+    private WiresConnector wiresConnector;
+
     @Inject
-    public ConnectorDragProxyFactoryImpl(final ShapeViewDragProxyFactory<AbstractCanvas> shapeViewDragProxyFactory,
-                                         final GraphBoundsIndexer graphBoundsIndexer) {
+    public ConnectorDragProxyImpl( final ShapeViewDragProxy<AbstractCanvas> shapeViewDragProxyFactory,
+                                   final GraphBoundsIndexer graphBoundsIndexer) {
         this.shapeViewDragProxyFactory = shapeViewDragProxyFactory;
         this.graphBoundsIndexer = graphBoundsIndexer;
     }
 
     @Override
-    public DragProxyFactory<AbstractCanvasHandler, Item, DragProxyCallback> proxyFor(final AbstractCanvasHandler context) {
+    public DragProxy<AbstractCanvasHandler, Item, DragProxyCallback> proxyFor( final AbstractCanvasHandler context) {
         this.canvasHandler = context;
         this.shapeViewDragProxyFactory.proxyFor( context.getCanvas() );
         this.graphBoundsIndexer.setRootUUID( context.getDiagram().getSettings().getCanvasRootUUID() );
@@ -50,7 +51,7 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
 
     @Override
     @SuppressWarnings("unchecked")
-    public DragProxyFactory<AbstractCanvasHandler, Item, DragProxyCallback> newInstance(Item item, int x, int y, DragProxyCallback callback) {
+    public DragProxy<AbstractCanvasHandler, Item, DragProxyCallback> show( Item item, int x, int y, DragProxyCallback callback) {
         
         final Edge<View<?>, Node> edge = item.getEdge();
         final Node<View<?>, Edge> sourceNode = item.getSourceNode();
@@ -58,15 +59,13 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
         final ShapeFactory<Object, AbstractCanvasHandler, ?> factory =
                 (ShapeFactory<Object, AbstractCanvasHandler, ?>) item.getShapeFactory();
 
-        final AbstractCanvas<?> canvas = canvasHandler.getCanvas();
-        final LienzoLayer layer = (LienzoLayer) canvas.getLayer();
-        final WiresManager wiresManager = WiresManager.get( layer.getLienzoLayer() );
+        final WiresManager wiresManager = getWiresManager();
         
-        final Shape<?> sourceNodeShape = canvas.getShape( sourceNode.getUUID() );
+        final Shape<?> sourceNodeShape = getCanvas() .getShape( sourceNode.getUUID() );
         final Shape<?> shape = factory.build( edge.getContent().getDefinition(), canvasHandler );
         
         final EdgeShape connector = (EdgeShape) shape;
-        final WiresConnector wiresConnector = (WiresConnector) shape.getShapeView();
+        this.wiresConnector = (WiresConnector) shape.getShapeView();
         wiresManager.registerConnector( wiresConnector );
 
         final MultiPath dummyPath = new MultiPath().rect(0, 0, 1, 1).setFillAlpha(0).setStrokeAlpha(0);
@@ -74,7 +73,7 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
         
         graphBoundsIndexer.build( canvasHandler.getDiagram().getGraph() );
 
-        shapeViewDragProxyFactory.newInstance( dummyShapeView, x, y, new DragProxyCallback() {
+        shapeViewDragProxyFactory.show( dummyShapeView, x, y, new DragProxyCallback() {
             
             @Override
             public void onStart(final int x, 
@@ -102,9 +101,9 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
                 
                 callback.onComplete( x ,y );
 
-                wiresManager.deregisterConnector( wiresConnector );
+                deregisterTransientConnector();
 
-                canvas.draw();
+                getCanvas() .draw();
                 
             }
             
@@ -118,7 +117,7 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
                 final Node targetNode = null;
                 if ( null != targetNode ) {
                     
-                    final Shape<?> targetNodeShape = canvas.getShape( targetNode.getUUID() );
+                    final Shape<?> targetNodeShape = getCanvas() .getShape( targetNode.getUUID() );
                     if ( null != targetNodeShape ) {
                         targetShapeView = targetNodeShape.getShapeView();
                     }
@@ -130,8 +129,8 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
 
                 connector.applyConnections( edge, sourceNodeShape.getShapeView(), targetShapeView, MutationContext.STATIC );
                 connector.applyProperties( edge, MutationContext.STATIC );
-                
-                canvas.draw();
+
+                getCanvas() .draw();
             }
             
         });
@@ -140,16 +139,42 @@ public class ConnectorDragProxyFactoryImpl implements ConnectorDragProxyFactory<
         return this;
     }
 
-    public void destroy() {
+    @Override
+    public void clear() {
+        if ( null != this.shapeViewDragProxyFactory ) {
+            this.shapeViewDragProxyFactory.clear();
+        }
+        deregisterTransientConnector();
+    }
 
-        ConnectorDragProxyFactoryImpl.this.graphBoundsIndexer.destroy();
-        ConnectorDragProxyFactoryImpl.this.graphBoundsIndexer = null;
-        ConnectorDragProxyFactoryImpl.this.canvasHandler = null;
-        ConnectorDragProxyFactoryImpl.this.shapeViewDragProxyFactory.destroy();
-        ConnectorDragProxyFactoryImpl.this.shapeViewDragProxyFactory = null;
+    public void destroy() {
+        clear();
+        this.graphBoundsIndexer.destroy();
+        this.graphBoundsIndexer = null;
+        this.canvasHandler = null;
+        this.shapeViewDragProxyFactory.destroy();
+        this.shapeViewDragProxyFactory = null;
         
     }
-    
+
+    private WiresManager getWiresManager() {
+        final AbstractCanvas<?> canvas = canvasHandler.getCanvas();
+        final LienzoLayer layer = (LienzoLayer) canvas.getLayer();
+        return WiresManager.get( layer.getLienzoLayer() );
+    }
+
+    private void deregisterTransientConnector() {
+        if ( null != this.wiresConnector ) {
+            getWiresManager().deregisterConnector( wiresConnector );
+            getCanvas().draw();
+            this.wiresConnector = null;
+        }
+    }
+
+    private AbstractCanvas<?> getCanvas() {
+        return canvasHandler.getCanvas();
+    }
+
     private class DummyShapeView extends WiresShape implements ShapeView<DummyShapeView> {
 
         public DummyShapeView(MultiPath path, WiresManager manager) {

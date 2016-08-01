@@ -3,17 +3,14 @@ package org.wirez.core.client.canvas.controls.toolbox.command.palette;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.builder.BuilderControl;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequest;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequestImpl;
 import org.wirez.core.client.canvas.util.CanvasHighlight;
-import org.wirez.core.client.components.drag.DragProxyCallback;
 import org.wirez.core.client.components.drag.NodeDragProxyCallback;
-import org.wirez.core.client.components.drag.NodeDragProxyFactory;
+import org.wirez.core.client.components.drag.NodeDragProxy;
 import org.wirez.core.client.components.palette.Palette;
 import org.wirez.core.client.components.palette.model.GlyphPaletteItem;
 import org.wirez.core.client.components.palette.model.HasPaletteItems;
@@ -43,7 +40,7 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
                                  final ShapeManager shapeManager,
                                  final DefinitionsPaletteBuilder definitionsPaletteBuilder,
                                  final Palette<HasPaletteItems<? extends GlyphPaletteItem>> palette,
-                                 final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
+                                 final NodeDragProxy<AbstractCanvasHandler> nodeDragProxyFactory,
                                  final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                  final GraphBoundsIndexer graphBoundsIndexer,
                                  final AnimationFactory animationFactory,
@@ -97,7 +94,7 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
                         final ShapeFactory<?, AbstractCanvasHandler, ?> edgeShapeFactory = shapeManager.getFactory( getEdgeIdentifier() );
 
 
-                        final NodeDragProxyFactory.Item<AbstractCanvasHandler> item = new NodeDragProxyFactory.Item<AbstractCanvasHandler>() {
+                        final NodeDragProxy.Item<AbstractCanvasHandler> item = new NodeDragProxy.Item<AbstractCanvasHandler>() {
                             @Override
                             public Node<View<?>, Edge> getNode() {
                                 return node;
@@ -136,7 +133,7 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
 
                         nodeDragProxyFactory
                                 .proxyFor( canvasHandler )
-                                .newInstance(item, (int) x, (int) y, new NodeDragProxyCallback() {
+                                .show(item, (int) x, (int) y, new NodeDragProxyCallback() {
 
                                     @Override
                                     public void onStart(final int x,

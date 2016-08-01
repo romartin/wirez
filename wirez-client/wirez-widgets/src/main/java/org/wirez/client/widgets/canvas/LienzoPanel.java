@@ -8,7 +8,6 @@ import org.wirez.core.client.canvas.event.keyboard.KeyPressEvent;
 import org.wirez.core.client.canvas.event.keyboard.KeyUpEvent;
 import org.wirez.core.client.canvas.event.keyboard.KeyboardEvent;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -18,12 +17,16 @@ public class LienzoPanel implements IsWidget {
 
     public interface View extends UberView<LienzoPanel> {
 
+        void destroy();
+
     }
 
     Event<KeyPressEvent> keyPressEvent;
     Event<KeyDownEvent> keyDownEvent;
     Event<KeyUpEvent> keyUpEvent;
     View view;
+
+    private boolean listening;
 
     @Inject
     public LienzoPanel( final Event<KeyPressEvent> keyPressEvent,
@@ -32,10 +35,7 @@ public class LienzoPanel implements IsWidget {
         this.keyPressEvent = keyPressEvent;
         this.keyDownEvent = keyDownEvent;
         this.keyUpEvent = keyUpEvent;
-    }
-
-    @PostConstruct
-    public void init() {
+        this.listening = false;
     }
 
     @Override
@@ -53,17 +53,30 @@ public class LienzoPanel implements IsWidget {
 
     }
 
-    public void clear() {
+    public void destroy() {
+        this.listening = false;
+        view.destroy();
+    }
 
+    void onMouseOver() {
+        this.listening = true;
+    }
+
+    void onMouseOut() {
+        this.listening = false;
     }
 
     void onKeyPress( final int unicodeChar ) {
 
-        final KeyboardEvent.Key key = getKey( unicodeChar );
+        if ( listening ) {
 
-        if ( null != key ) {
+            final KeyboardEvent.Key key = getKey( unicodeChar );
 
-            keyPressEvent.fire( new KeyPressEvent( key ) );
+            if ( null != key ) {
+
+                keyPressEvent.fire( new KeyPressEvent( key ) );
+
+            }
 
         }
 
@@ -71,11 +84,15 @@ public class LienzoPanel implements IsWidget {
 
     void onKeyDown( final int unicodeChar ) {
 
-        final KeyboardEvent.Key key = getKey( unicodeChar );
+        if ( listening ) {
 
-        if ( null != key ) {
+            final KeyboardEvent.Key key = getKey( unicodeChar );
 
-            keyDownEvent.fire( new KeyDownEvent( key ) );
+            if ( null != key ) {
+
+                keyDownEvent.fire( new KeyDownEvent( key ) );
+
+            }
 
         }
 
@@ -83,19 +100,38 @@ public class LienzoPanel implements IsWidget {
 
     void onKeyUp( final int unicodeChar ) {
 
-        final KeyboardEvent.Key key = getKey( unicodeChar );
+        if ( listening ) {
 
-        if ( null != key ) {
+            final KeyboardEvent.Key key = getKey( unicodeChar );
 
-            keyUpEvent.fire( new KeyUpEvent( key ) );
+            if ( null != key ) {
+
+                keyUpEvent.fire( new KeyUpEvent( key ) );
+
+            }
 
         }
 
     }
 
     private KeyboardEvent.Key getKey( final int unicodeChar ) {
-        // TODO
+
+        final KeyboardEvent.Key[] keys = KeyboardEvent.Key.values();
+
+        for ( final KeyboardEvent.Key key : keys ) {
+
+            final int c = key.getUnicharCode();
+
+            if ( c == unicodeChar ) {
+
+                return key;
+
+            }
+
+        }
+
         return null;
+
     }
 
 }

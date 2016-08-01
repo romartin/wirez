@@ -80,9 +80,14 @@ public class WiresCanvasPresenter extends WiresCanvas implements IsWidget {
 
     public WiresCanvasPresenter clear() {
         super.clear();
-        lienzoPanel.clear();
         view.clear();
         return this;
     }
-    
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        lienzoPanel.destroy();
+        lienzoPanel = null;
+    }
 }

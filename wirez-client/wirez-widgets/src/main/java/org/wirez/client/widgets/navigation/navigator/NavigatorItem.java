@@ -1,11 +1,17 @@
 package org.wirez.client.widgets.navigation.navigator;
 
-import com.google.gwt.dom.client.Style;
 import org.uberfire.mvp.Command;
 
 public interface NavigatorItem<T> {
 
-    void show( T item, int width, int height, Style.Unit unit, Command callback );
+    /**
+     * Shows the item.
+     * @param item Item to show.
+     * @param width Width in PX.
+     * @param height Height in PX
+     * @param callback Callback when item selected ( usually on click or touch )
+     */
+    void show( T item, int width, int height, Command callback );
 
     String getUUID();
 

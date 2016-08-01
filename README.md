@@ -72,8 +72,8 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
   - *GWT Modules to load*: org.wirez.FastCompiledWirezShowcase             
   - *VM options*: 
         
-        -Xmx2048m
-        -Xms1024m
+        -Xmx4g
+        -Xms1g
         -Xss1M
         -XX:CompileThreshold=7000
         -Derrai.jboss.home=$PATH_OF_YOUR_CLONED_WIREZ_REPO/wirez-showcase/target/wildfly-10.0.0.Final

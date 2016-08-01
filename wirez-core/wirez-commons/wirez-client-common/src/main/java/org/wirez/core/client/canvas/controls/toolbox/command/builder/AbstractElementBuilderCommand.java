@@ -7,6 +7,7 @@ import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
+import org.wirez.core.client.canvas.event.keyboard.KeyDownEvent;
 import org.wirez.core.client.canvas.event.keyboard.KeyPressEvent;
 import org.wirez.core.client.canvas.event.keyboard.KeyboardEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
@@ -148,14 +149,20 @@ public abstract class AbstractElementBuilderCommand<I> extends AbstractBuilderCo
 
     }
 
-    void onkeyPressEvent( @Observes KeyPressEvent keyPressEvent) {
-        checkNotNull( "keyPressEvent", keyPressEvent );
+    protected void clearDragProxy() {
 
-        final KeyboardEvent.Key key = keyPressEvent.getKey();
+        getDragProxyFactory().clear();
+
+    }
+
+    void onKeyDownEvent( @Observes KeyDownEvent keyDownEvent ) {
+        checkNotNull( "keyDownEvent", keyDownEvent );
+
+        final KeyboardEvent.Key key = keyDownEvent.getKey();
 
         if ( null != key && KeyboardEvent.Key.ESC.equals( key ) ) {
 
-            getDragProxyFactory().destroy();
+            clearDragProxy();
 
         }
 

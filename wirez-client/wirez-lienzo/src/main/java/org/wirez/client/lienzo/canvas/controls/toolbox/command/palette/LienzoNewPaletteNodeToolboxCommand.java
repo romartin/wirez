@@ -8,12 +8,10 @@ import org.wirez.client.lienzo.components.palette.LienzoPalette;
 import org.wirez.client.lienzo.util.SVGUtils;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.toolbox.command.palette.NewPaletteNodeCommand;
-import org.wirez.core.client.components.drag.NodeDragProxyFactory;
+import org.wirez.core.client.components.drag.NodeDragProxy;
 import org.wirez.core.client.components.palette.model.definition.DefinitionsPaletteBuilder;
 import org.wirez.core.client.components.palette.view.PaletteView;
 import org.wirez.core.client.service.ClientFactoryServices;
@@ -30,7 +28,7 @@ public abstract class LienzoNewPaletteNodeToolboxCommand extends NewPaletteNodeC
                                               final ShapeManager shapeManager,
                                               final DefinitionsPaletteBuilder definitionsPaletteBuilder,
                                               final LienzoGlyphsHoverPalette palette,
-                                              final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
+                                              final NodeDragProxy<AbstractCanvasHandler> nodeDragProxyFactory,
                                               final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                               final GraphBoundsIndexer graphBoundsIndexer,
                                               final AnimationFactory animationFactory ) {

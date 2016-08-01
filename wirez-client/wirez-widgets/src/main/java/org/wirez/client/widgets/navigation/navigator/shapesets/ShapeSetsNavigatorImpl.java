@@ -1,6 +1,5 @@
 package org.wirez.client.widgets.navigation.navigator.shapesets;
 
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Widget;
 import org.wirez.client.widgets.event.CreateEmptyDiagramEvent;
 import org.wirez.client.widgets.navigation.navigator.NavigatorItem;
@@ -31,7 +30,6 @@ public class ShapeSetsNavigatorImpl implements ShapeSetsNavigator {
 
     private int width;
     private int height;
-    private Style.Unit unit;
 
     private List<NavigatorItem<ShapeSet>> items = new LinkedList<>();
 
@@ -48,7 +46,6 @@ public class ShapeSetsNavigatorImpl implements ShapeSetsNavigator {
         this.view = view;
         this.width = 140;
         this.height = 140;
-        this.unit = Style.Unit.PX;
     }
 
     @Override
@@ -56,12 +53,10 @@ public class ShapeSetsNavigatorImpl implements ShapeSetsNavigator {
         return view.asWidget();
     }
 
-    public ShapeSetsNavigatorImpl setItemSize( final int width,
-                             final int height,
-                             final Style.Unit unit ) {
+    public ShapeSetsNavigatorImpl setItemPxSize( final int width,
+                             final int height ) {
         this.width = width;
         this.height = height;
-        this.unit = unit;
 
         return this;
     }
@@ -86,7 +81,6 @@ public class ShapeSetsNavigatorImpl implements ShapeSetsNavigator {
                 item.show( shapeSet,
                         width,
                         height,
-                        unit,
                         () -> createEmptyDiagramEventEvent.fire( new CreateEmptyDiagramEvent( id ) ) );
 
             }

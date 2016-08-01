@@ -4,13 +4,11 @@ import com.ait.lienzo.client.core.shape.IPrimitive;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.toolbox.command.builder.NewNodeCommand;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
-import org.wirez.core.client.components.drag.NodeDragProxyFactory;
+import org.wirez.core.client.components.drag.NodeDragProxy;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.definition.util.DefinitionUtils;
@@ -34,7 +32,7 @@ public class LienzoNewNodeToolboxCommand extends NewNodeCommand<IPrimitive<?>> {
                                        final ShapeManager shapeManager,
                                        final DefinitionGlyphTooltip<?> glyphTooltip,
                                        final GraphBoundsIndexer graphBoundsIndexer,
-                                       final NodeDragProxyFactory<AbstractCanvasHandler> nodeDragProxyFactory,
+                                       final NodeDragProxy<AbstractCanvasHandler> nodeDragProxyFactory,
                                        final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                        final AnimationFactory animationFactory,
                                        final DefinitionUtils definitionUtils,

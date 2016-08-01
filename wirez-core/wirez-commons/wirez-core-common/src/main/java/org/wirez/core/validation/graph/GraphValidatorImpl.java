@@ -68,7 +68,7 @@ public class GraphValidatorImpl
         final Collection<GraphValidationViolation> result = new LinkedList<GraphValidationViolation>();
 
         treeWalkTraverseProcessor
-                .usePolicy( TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_BEFORE_TARGET_NODE )
+                .useEdgeVisitorPolicy( TreeWalkTraverseProcessor.EdgeVisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE )
                 .traverse( graph, new AbstractTreeTraverseCallback<Graph, Node, Edge>() {
 
                     private final Stack<Node> currentParents = new Stack<Node>();

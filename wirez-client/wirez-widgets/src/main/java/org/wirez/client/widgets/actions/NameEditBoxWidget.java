@@ -22,7 +22,6 @@ import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.command.impl.UpdateCanvasElementPropertyCommand;
-import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.components.actions.AbstractNameEditBox;
 import org.wirez.core.client.session.command.Session;
 import org.wirez.core.definition.util.DefinitionUtils;
@@ -32,7 +31,6 @@ import org.wirez.core.graph.util.GraphUtils;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 @Dependent
@@ -123,14 +121,14 @@ public class NameEditBoxWidget extends AbstractNameEditBox<Element> {
     void onKeyPress( final int keyCode,
                      final String value ) {
 
-        this.nameValue = value;
+        processKey( keyCode, value );
 
-        // Enter key produces save.
-        if ( 13 == keyCode ) {
+    }
 
-            onSave();
+    void onKeyDown( final int keyCode,
+                     final String value ) {
 
-        }
+        processKey( keyCode, value );
 
     }
 
@@ -139,6 +137,20 @@ public class NameEditBoxWidget extends AbstractNameEditBox<Element> {
         this.hide();
 
         fireCloseCallback();
+
+    }
+
+    private void processKey( final int keyCode,
+                             final String value ) {
+
+        this.nameValue = value;
+
+        // Enter key produces save.
+        if ( 13 == keyCode ) {
+
+            onSave();
+
+        }
 
     }
 

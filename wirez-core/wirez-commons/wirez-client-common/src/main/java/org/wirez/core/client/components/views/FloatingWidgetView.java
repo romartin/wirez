@@ -85,7 +85,7 @@ public class FloatingWidgetView extends FlowPanel implements FloatingView<IsWidg
             RootPanel.get().add( this );
             registerHoverEventHandlers();
             this.getElement().getStyle().setPosition( Style.Position.FIXED );
-            this.getElement().getStyle().setZIndex( 20 );
+            this.getElement().getStyle().setZIndex( Integer.MAX_VALUE );
             doHide();
             attached = true;
 

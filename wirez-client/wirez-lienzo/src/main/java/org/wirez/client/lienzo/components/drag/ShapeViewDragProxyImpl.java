@@ -5,8 +5,8 @@ import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import org.wirez.client.lienzo.LienzoLayer;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.components.drag.DragProxyCallback;
-import org.wirez.core.client.components.drag.DragProxyFactory;
-import org.wirez.core.client.components.drag.ShapeViewDragProxyFactory;
+import org.wirez.core.client.components.drag.DragProxy;
+import org.wirez.core.client.components.drag.ShapeViewDragProxy;
 import org.wirez.core.client.shape.view.ShapeView;
 import org.wirez.lienzo.primitive.AbstractDragProxy;
 import org.wirez.lienzo.primitive.WiresConnectorDragProxy;
@@ -16,25 +16,26 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class ShapeViewDragProxyFactoryImpl implements ShapeViewDragProxyFactory<AbstractCanvas> {
+public class ShapeViewDragProxyImpl implements ShapeViewDragProxy<AbstractCanvas> {
 
     private LienzoLayer layer;
-    
+    private AbstractDragProxy<?> proxy;
+
     @Inject
-    public ShapeViewDragProxyFactoryImpl() {
+    public ShapeViewDragProxyImpl() {
     }
 
     @Override
-    public DragProxyFactory<AbstractCanvas, ShapeView<?>, DragProxyCallback> proxyFor(final AbstractCanvas context) {
+    public DragProxy<AbstractCanvas, ShapeView<?>, DragProxyCallback> proxyFor( final AbstractCanvas context) {
         this.layer = (LienzoLayer) context.getLayer();
         return this;
     }
 
     @Override
-    public DragProxyFactory<AbstractCanvas, ShapeView<?>, DragProxyCallback> newInstance(final ShapeView<?> item,
-                                                                               final int x,
-                                                                               final int y,
-                                                                               final DragProxyCallback callback) {
+    public DragProxy<AbstractCanvas, ShapeView<?>, DragProxyCallback> show( final ShapeView<?> item,
+                                                                            final int x,
+                                                                            final int y,
+                                                                            final DragProxyCallback callback) {
         
         final AbstractDragProxy.Callback c = new AbstractDragProxy.Callback() {
             
@@ -62,15 +63,15 @@ public class ShapeViewDragProxyFactoryImpl implements ShapeViewDragProxyFactory<
         if ( item instanceof WiresShape ) {
 
             final WiresShape wiresShape = (WiresShape) item;
-            
-            new WiresShapeDragProxy( getLayer().getLienzoLayer(), wiresShape, x, y, 100, c );
+
+            this.proxy = new WiresShapeDragProxy( getLayer().getLienzoLayer(), wiresShape, x, y, 100, c );
             
             
         } else if ( item instanceof WiresConnector) {
             
             final WiresConnector wiresConnector = (WiresConnector) item;
-            
-            new WiresConnectorDragProxy( getLayer().getLienzoLayer(), wiresConnector, x, y, 100, c );
+
+            this.proxy = new WiresConnectorDragProxy( getLayer().getLienzoLayer(), wiresConnector, x, y, 100, c );
 
         }
         
@@ -78,7 +79,18 @@ public class ShapeViewDragProxyFactoryImpl implements ShapeViewDragProxyFactory<
     }
 
     @Override
+    public void clear() {
+        if ( null != this.proxy ) {
+            this.proxy.clear();
+        }
+    }
+
+    @Override
     public void destroy() {
+        if ( null != this.proxy ) {
+            this.proxy.destroy();
+            this.proxy = null;
+        }
         this.layer = null;
     }
 

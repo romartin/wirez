@@ -5,6 +5,9 @@ import org.uberfire.mvp.Command;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerRegistrationControl;
+import org.wirez.core.client.canvas.event.CanvasFocusedEvent;
+import org.wirez.core.client.canvas.event.keyboard.KeyDownEvent;
+import org.wirez.core.client.canvas.event.keyboard.KeyboardEvent;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.components.actions.NameEditBox;
 import org.wirez.core.client.components.views.FloatingView;
@@ -18,7 +21,10 @@ import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
+import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+
+import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull;
 
 @Dependent
 public class CanvasNameEditionControlImpl
@@ -140,5 +146,23 @@ public class CanvasNameEditionControlImpl
     private Canvas getCanvas() {
         return canvasHandler.getCanvas();
     }
+
+    void onKeyDownEvent( @Observes KeyDownEvent keyDownEvent ) {
+        checkNotNull( "keyDownEvent", keyDownEvent );
+
+        final KeyboardEvent.Key key = keyDownEvent.getKey();
+
+        if ( null != key && KeyboardEvent.Key.ESC.equals( key ) ) {
+
+            hide();
+
+        }
+
+    }
+    void onCanvasFocusedEvent(@Observes CanvasFocusedEvent canvasFocusedEvent ) {
+        checkNotNull("canvasFocusedEvent", canvasFocusedEvent);
+        hide();
+    }
+
 
 }

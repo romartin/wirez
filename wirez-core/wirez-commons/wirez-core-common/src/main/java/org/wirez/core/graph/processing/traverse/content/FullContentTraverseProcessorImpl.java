@@ -27,7 +27,7 @@ public final class FullContentTraverseProcessorImpl implements FullContentTraver
                          final FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>> callback) {
 
         treeWalkTraverseProcessor
-                .usePolicy(TreeWalkTraverseProcessor.TraversePolicy.VISIT_EDGE_BEFORE_TARGET_NODE)
+                .useEdgeVisitorPolicy( TreeWalkTraverseProcessor.EdgeVisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE)
                 .traverse(graph, new TreeTraverseCallback<Graph, Node, Edge>() {
 
                     @Override

@@ -1,50 +1,78 @@
 package org.wirez.client.widgets.canvas;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.user.client.ui.RootPanel;
+import org.wirez.core.client.shape.view.event.HandlerRegistrationImpl;
 
 public class LienzoPanelView extends FocusableLienzoPanelView implements LienzoPanel.View {
 
     private LienzoPanel presenter;
+    private final HandlerRegistrationImpl handlerRegistrationManager = new HandlerRegistrationImpl();
 
     public LienzoPanelView( final int width,
                             final int height ) {
         super( width,
                 height );
 
-        addKeyPressHandler( keyPressEvent -> {
 
-            final int unicodeChar = keyPressEvent.getUnicodeCharCode();
+        handlerRegistrationManager.register(
 
-            GWT.log( "PRESSED KEY = " + unicodeChar );
+                addMouseOverHandler( mouseOverEvent -> presenter.onMouseOver() )
 
-            presenter.onKeyPress( unicodeChar );
+        );
 
-        } );
+        handlerRegistrationManager.register(
 
-        addKeyDownHandler( keyDownEvent -> {
+                addMouseOutHandler( mouseOutEvent -> presenter.onMouseOut() )
 
-            final int unicodeChar = keyDownEvent.getNativeKeyCode();
+        );
 
-            GWT.log( "DOWN KEY = " + unicodeChar );
+        handlerRegistrationManager.register(
 
-            presenter.onKeyDown( unicodeChar );
+                RootPanel.get().addDomHandler( keyPressEvent -> {
 
-        } );
+                    final int unicodeChar = keyPressEvent.getUnicodeCharCode();
 
-        addKeyUpHandler( keyUpEvent -> {
+                    presenter.onKeyPress( unicodeChar );
 
-            final int unicodeChar = keyUpEvent.getNativeKeyCode();
+                }, KeyPressEvent.getType() )
 
-            GWT.log( "UP KEY = " + unicodeChar );
+        );
 
-            presenter.onKeyUp( unicodeChar );
-        } );
+        handlerRegistrationManager.register(
+                RootPanel.get().addDomHandler( keyDownEvent -> {
+
+                    final int unicodeChar = keyDownEvent.getNativeKeyCode();
+
+                    presenter.onKeyDown( unicodeChar );
+
+                }, KeyDownEvent.getType() )
+        );
+
+        handlerRegistrationManager.register(
+                RootPanel.get().addDomHandler( keyUpEvent -> {
+
+                    final int unicodeChar = keyUpEvent.getNativeKeyCode();
+
+                    presenter.onKeyUp( unicodeChar );
+
+                }, KeyUpEvent.getType() )
+        );
+
 
     }
 
     @Override
     public void init( final LienzoPanel presenter ) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void destroy() {
+        handlerRegistrationManager.removeHandler();
+        presenter = null;
     }
 
 }

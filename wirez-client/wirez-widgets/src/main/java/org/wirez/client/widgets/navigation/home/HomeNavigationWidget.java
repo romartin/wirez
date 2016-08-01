@@ -21,6 +21,10 @@ public class HomeNavigationWidget implements IsWidget {
 
     public interface View extends UberView<HomeNavigationWidget> {
 
+        View setIcon( IconType iconType );
+
+        View setIconTitle( String text );
+
         View add( HomeNavigationItem.View view );
 
         View clear();
@@ -32,6 +36,9 @@ public class HomeNavigationWidget implements IsWidget {
     Instance<HomeNavigationItem> navigationItemInstances;
     View view;
 
+    private HomeNavigationItem shapeSetsNavigatorItem;
+    private HomeNavigationItem diagramsNavigatorItem;
+
     @Inject
     public HomeNavigationWidget( final View view,
                                  final Instance<HomeNavigationItem> navigationItemInstances,
@@ -41,6 +48,8 @@ public class HomeNavigationWidget implements IsWidget {
         this.navigationItemInstances = navigationItemInstances;
         this.diagramsNavigator = diagramsNavigator;
         this.shapeSetsNavigator = shapeSetsNavigator;
+        this.shapeSetsNavigatorItem = null;
+        this.diagramsNavigatorItem = null;
     }
 
     @PostConstruct
@@ -57,26 +66,26 @@ public class HomeNavigationWidget implements IsWidget {
 
         clear();
 
-
         // A group for creating new diagrams using the Shape Sets navigator.
 
-        final HomeNavigationItem shapeSetsNavigatorItem = newItem();
+        this.shapeSetsNavigatorItem = newItem();
 
         view.add( shapeSetsNavigatorItem.getView() );
 
         shapeSetsNavigatorItem
-                .setCollapsible( true )
-                // .show( "Choose a type below to create a new diagram", "New diagram", shapeSetsNavigator );
-                .show( IconType.PLUS_CIRCLE, "Create a new diagram", shapeSetsNavigator );
+                .setCollapsed( true )
+                .setVisible( false )
+                .show( "Create a diagram", "Create a new diagram", shapeSetsNavigator );
 
         // A group that contains existing diagrams using the Diagrams navigator.
 
-        final HomeNavigationItem diagramsNavigatorItem = newItem();
+        this.diagramsNavigatorItem = newItem();
 
         view.add( diagramsNavigatorItem.getView() );
 
         diagramsNavigatorItem
-                .setCollapsible( false )
+                .setCollapsed( false )
+                .setVisible( true )
                 .show( "My diagrams", "Load a diagram", diagramsNavigator );
 
     }
@@ -84,6 +93,9 @@ public class HomeNavigationWidget implements IsWidget {
     public void clear() {
 
         view.clear();
+
+        this.diagramsNavigatorItem = null;
+        this.shapeSetsNavigatorItem = null;
 
     }
 
@@ -93,6 +105,46 @@ public class HomeNavigationWidget implements IsWidget {
 
     public ShapeSetsNavigator getShapeSetsNavigator() {
         return shapeSetsNavigator;
+    }
+
+    void onButtonClick() {
+
+        if ( shapeSetsNavigatorItem.getView().isPanelVisible() ) {
+
+            focusDiagramsNavigatorItem();
+
+        } else {
+
+            focusShapeSetsNavigatorItem();
+
+        }
+
+    }
+
+    private void focusShapeSetsNavigatorItem() {
+
+        shapeSetsNavigatorItem
+                .setVisible( true )
+                .setCollapsed( false );
+
+        diagramsNavigatorItem.setCollapsed( true );
+
+        view.setIcon( IconType.MINUS_CIRCLE);
+        view.setIconTitle( "Explore" );
+
+    }
+
+    private void focusDiagramsNavigatorItem() {
+
+        shapeSetsNavigatorItem
+                .setVisible( false )
+                .setCollapsed( true );
+
+        diagramsNavigatorItem.setCollapsed( false );
+
+        view.setIcon( IconType.PLUS_CIRCLE );
+        view.setIconTitle( "Create" );
+
     }
 
     private HomeNavigationItem newItem() {

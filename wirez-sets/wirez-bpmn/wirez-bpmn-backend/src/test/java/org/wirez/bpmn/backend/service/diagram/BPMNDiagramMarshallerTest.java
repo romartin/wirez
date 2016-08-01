@@ -346,7 +346,7 @@ public class BPMNDiagramMarshallerTest {
 
     @Test
     public void testMarshallProcessVariables() throws Exception  {
-        Diagram<Graph, Settings> diagram = unmarshall(BPMN_EVALUATION);
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_PROCESSVARIABLES);
         String result = tested.marshall(diagram);
         assertDiagram( result, 1, 7, 7);
 

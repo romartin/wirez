@@ -308,9 +308,9 @@ public class BPMNDiagramMarshallerTest {
     
     @Test
     public void testUnmarshallSeveralDiagrams() throws Exception  {
-        Diagram<Graph, Settings> diagram1 = unmarshall(BPMN_EVALUATION);
-        assertDiagram( diagram1, 8 );
-        assertEquals( "Evaluation", diagram1.getSettings().getTitle() );
+        Diagram<Graph, Settings> diagram1 = unmarshall(BPMN_LANES);
+        assertDiagram( diagram1, 7 );
+        assertEquals( "Lanes test", diagram1.getSettings().getTitle() );
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_LANES);
         assertDiagram( diagram, 7 );
         assertEquals( "Lanes test", diagram.getSettings().getTitle() );
@@ -346,7 +346,7 @@ public class BPMNDiagramMarshallerTest {
 
     @Test
     public void testMarshallProcessVariables() throws Exception  {
-        Diagram<Graph, Settings> diagram = unmarshall(BPMN_EVALUATION);
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_PROCESSVARIABLES);
         String result = tested.marshall(diagram);
         assertDiagram( result, 1, 7, 7);
 

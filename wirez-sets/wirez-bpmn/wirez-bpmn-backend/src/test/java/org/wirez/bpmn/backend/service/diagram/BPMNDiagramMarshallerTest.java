@@ -360,6 +360,15 @@ public class BPMNDiagramMarshallerTest {
 
     }
 
+    @Test
+    public void testMarshallEvaluationTwice() throws Exception {
+        Diagram diagram = unmarshall(BPMN_EVALUATION);
+        String result = tested.marshall(diagram);
+        assertDiagram( result, 1, 7, 7);
+        Diagram diagram2 = unmarshall(BPMN_EVALUATION);
+        String result2 = tested.marshall(diagram2);
+        assertDiagram( result2, 1, 7, 7);
+    }
 
     private void assertDiagram(String result, int diagramCount, int nodeCount, int edgeCount) {
         int d = count( result, "<bpmndi:BPMNDiagram" );

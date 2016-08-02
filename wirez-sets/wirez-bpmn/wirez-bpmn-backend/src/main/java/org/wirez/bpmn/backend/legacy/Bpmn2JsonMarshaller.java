@@ -17,6 +17,7 @@ package org.wirez.bpmn.backend.legacy;
 
 import bpsim.*;
 import bpsim.impl.BpsimPackageImpl;
+import org.eclipse.emf.common.util.EList;
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
@@ -980,6 +981,8 @@ public class Bpmn2JsonMarshaller {
     }
 
     protected void marshallStartEvent(StartEvent startEvent, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> properties) throws JsonGenerationException, IOException {
+        setSimulationProperties(startEvent.getId(), properties);
+
         List<EventDefinition> eventDefinitions = startEvent.getEventDefinitions();
         properties.put("isinterrupting", startEvent.isIsInterrupting());
     	if (eventDefinitions == null || eventDefinitions.size() == 0) {
@@ -1012,7 +1015,9 @@ public class Bpmn2JsonMarshaller {
     }
 
     protected void marshallEndEvent(EndEvent endEvent, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> properties) throws JsonGenerationException, IOException {
-    	List<EventDefinition> eventDefinitions = endEvent.getEventDefinitions();
+        setSimulationProperties(endEvent.getId(), properties);
+
+        List<EventDefinition> eventDefinitions = endEvent.getEventDefinitions();
     	if (eventDefinitions == null || eventDefinitions.size() == 0) {
     		marshallNode(endEvent, properties, "EndNoneEvent", plane, generator, xOffset, yOffset);
     	} else if (eventDefinitions.size() == 1) {
@@ -1040,46 +1045,9 @@ public class Bpmn2JsonMarshaller {
     }
 
     protected void marshallIntermediateCatchEvent(IntermediateCatchEvent catchEvent, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> properties) throws JsonGenerationException, IOException {
-    	List<EventDefinition> eventDefinitions = catchEvent.getEventDefinitions();
-        // simulation properties
-        if(_simulationScenario != null) {
-            for(ElementParameters eleType : _simulationScenario.getElementParameters()) {
-                if(eleType.getElementRef().equals(catchEvent.getId())) {
-                    TimeParameters timeParams = eleType.getTimeParameters();
-                    Parameter processingTime = timeParams.getProcessingTime();
-                    if (processingTime == null) {
-                        continue;
-                    }
-                    ParameterValue paramValue =  processingTime.getParameterValue().get(0);
-                    if(paramValue instanceof NormalDistributionType) {
-                        NormalDistributionType ndt = (NormalDistributionType) paramValue;
-                        properties.put("mean", ndt.getMean());
-                        properties.put("standarddeviation", ndt.getStandardDeviation());
-                        properties.put("distributiontype", "normal");
-                    } else if(paramValue instanceof UniformDistributionType) {
-                        UniformDistributionType udt = (UniformDistributionType) paramValue;
-                        properties.put("min", udt.getMin());
-                        properties.put("max", udt.getMax());
-                        properties.put("distributiontype", "uniform");
+        setSimulationProperties(catchEvent.getId(), properties);
 
-                        // bpsim 1.0 has not support for random distribution type
-//                    } else if(paramValue instanceof RandomDistributionType) {
-//                        RandomDistributionType rdt = (RandomDistributionType) paramValue;
-//                        properties.put("min", rdt.getMin());
-//                        properties.put("max", rdt.getMax());
-//                        properties.put("distributiontype", "random");
-                    } else if(paramValue instanceof PoissonDistributionType) {
-                        PoissonDistributionType pdt = (PoissonDistributionType) paramValue;
-                        properties.put("mean", pdt.getMean());
-                        properties.put("distributiontype", "poisson");
-                    }
-                    // bpsim 1.0 has no support for individual time unit
-//                    if(timeParams.getTimeUnit() != null) {
-//                        properties.put("timeunit", timeParams.getTimeUnit().getName());
-//                    }
-                }
-            }
-        }
+        List<EventDefinition> eventDefinitions = catchEvent.getEventDefinitions();
     	if (eventDefinitions.size() == 1) {
     		EventDefinition eventDefinition = eventDefinitions.get(0);
     		if (eventDefinition instanceof SignalEventDefinition) {
@@ -1106,55 +1074,14 @@ public class Bpmn2JsonMarshaller {
     }
 
     protected void marshallBoundaryEvent(BoundaryEvent boundaryEvent, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> catchEventProperties) throws JsonGenerationException, IOException {
-    	List<EventDefinition> eventDefinitions = boundaryEvent.getEventDefinitions();
+        setSimulationProperties(boundaryEvent.getId(), catchEventProperties);
+
+        List<EventDefinition> eventDefinitions = boundaryEvent.getEventDefinitions();
     	if(boundaryEvent.isCancelActivity()) {
     		catchEventProperties.put("boundarycancelactivity", "true");
     	} else {
     		catchEventProperties.put("boundarycancelactivity", "false");
     	}
-        // simulation properties
-        if(_simulationScenario != null) {
-            for(ElementParameters eleType : _simulationScenario.getElementParameters()) {
-                if(eleType.getElementRef().equals(boundaryEvent.getId())) {
-                    TimeParameters timeParams = eleType.getTimeParameters();
-                    Parameter processingTime = timeParams.getProcessingTime();
-                    if (processingTime == null) {
-                        continue;
-                    }
-                    ParameterValue paramValue =  processingTime.getParameterValue().get(0);
-                    if(paramValue instanceof NormalDistributionType) {
-                        NormalDistributionType ndt = (NormalDistributionType) paramValue;
-                        catchEventProperties.put("mean", ndt.getMean());
-                        catchEventProperties.put("standarddeviation", ndt.getStandardDeviation());
-                        catchEventProperties.put("distributiontype", "normal");
-                    } else if(paramValue instanceof UniformDistributionType) {
-                        UniformDistributionType udt = (UniformDistributionType) paramValue;
-                        catchEventProperties.put("min", udt.getMin());
-                        catchEventProperties.put("max", udt.getMax());
-                        catchEventProperties.put("distributiontype", "uniform");
-
-                        // bpsim 1.0 has not support for random distribution type
-//                    } else if(paramValue instanceof RandomDistributionType) {
-//                        RandomDistributionType rdt = (RandomDistributionType) paramValue;
-//                        properties.put("min", rdt.getMin());
-//                        properties.put("max", rdt.getMax());
-//                        properties.put("distributiontype", "random");
-                    } else if(paramValue instanceof PoissonDistributionType) {
-                        PoissonDistributionType pdt = (PoissonDistributionType) paramValue;
-                        catchEventProperties.put("mean", pdt.getMean());
-                        catchEventProperties.put("distributiontype", "poisson");
-                    }
-                    ControlParameters controlParams = eleType.getControlParameters();
-                    if(controlParams != null) {
-                        Parameter probabilityParam = controlParams.getProbability();
-                        if(probabilityParam != null && probabilityParam.getParameterValue() != null) {
-                            FloatingParameterType valType = (FloatingParameterType) probabilityParam.getParameterValue().get(0);
-                            catchEventProperties.put("probability", valType.getValue());
-                        }
-                    }
-                }
-            }
-        }
     	if (eventDefinitions.size() == 1) {
     		EventDefinition eventDefinition = eventDefinitions.get(0);
     		if (eventDefinition instanceof SignalEventDefinition) {
@@ -1180,48 +1107,9 @@ public class Bpmn2JsonMarshaller {
     }
 
     protected void marshallIntermediateThrowEvent(IntermediateThrowEvent throwEvent, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> properties) throws JsonGenerationException, IOException {
-    	List<EventDefinition> eventDefinitions = throwEvent.getEventDefinitions();
+        setSimulationProperties(throwEvent.getId(), properties);
 
-        // simulation properties
-        if(_simulationScenario != null) {
-            for(ElementParameters eleType : _simulationScenario.getElementParameters()) {
-                if(eleType.getElementRef().equals(throwEvent.getId())) {
-                    TimeParameters timeParams = eleType.getTimeParameters();
-                    Parameter processingTime = timeParams.getProcessingTime();
-                    if (processingTime == null) {
-                        continue;
-                    }
-                    ParameterValue paramValue =  processingTime.getParameterValue().get(0);
-                    if(paramValue instanceof NormalDistributionType) {
-                        NormalDistributionType ndt = (NormalDistributionType) paramValue;
-                        properties.put("mean", ndt.getMean());
-                        properties.put("standarddeviation", ndt.getStandardDeviation());
-                        properties.put("distributiontype", "normal");
-                    } else if(paramValue instanceof UniformDistributionType) {
-                        UniformDistributionType udt = (UniformDistributionType) paramValue;
-                        properties.put("min", udt.getMin());
-                        properties.put("max", udt.getMax());
-                        properties.put("distributiontype", "uniform");
-
-                        // bpsim 1.0 has not support for random distribution type
-//                    } else if(paramValue instanceof RandomDistributionType) {
-//                        RandomDistributionType rdt = (RandomDistributionType) paramValue;
-//                        properties.put("min", rdt.getMin());
-//                        properties.put("max", rdt.getMax());
-//                        properties.put("distributiontype", "random");
-                    } else if(paramValue instanceof PoissonDistributionType) {
-                        PoissonDistributionType pdt = (PoissonDistributionType) paramValue;
-                        properties.put("mean", pdt.getMean());
-                        properties.put("distributiontype", "poisson");
-                    }
-                    // bpsim 1.0 has no support for individual time unit
-//                    if(timeParams.getTimeUnit() != null) {
-//                        properties.put("timeunit", timeParams.getTimeUnit().getName());
-//                    }
-                }
-            }
-        }
-
+        List<EventDefinition> eventDefinitions = throwEvent.getEventDefinitions();
         if (eventDefinitions.size() == 0) {
 			marshallNode(throwEvent, properties, "IntermediateEvent", plane, generator, xOffset, yOffset);
     	} else if (eventDefinitions.size() == 1) {
@@ -1491,56 +1379,7 @@ public class Bpmn2JsonMarshaller {
             }
         }
 
-        // simulation properties
-        if(_simulationScenario != null) {
-            for(ElementParameters eleType : _simulationScenario.getElementParameters()) {
-                if(eleType.getElementRef().equals(callActivity.getId())) {
-                    TimeParameters timeParams = eleType.getTimeParameters();
-                    Parameter processingTime = timeParams.getProcessingTime();
-                    ParameterValue paramValue =  processingTime.getParameterValue().get(0);
-                    if(paramValue instanceof NormalDistributionType) {
-                        NormalDistributionType ndt = (NormalDistributionType) paramValue;
-                        properties.put("mean", ndt.getMean());
-                        properties.put("standarddeviation", ndt.getStandardDeviation());
-                        properties.put("distributiontype", "normal");
-                    } else if(paramValue instanceof UniformDistributionType) {
-                        UniformDistributionType udt = (UniformDistributionType) paramValue;
-                        properties.put("min", udt.getMin());
-                        properties.put("max", udt.getMax());
-                        properties.put("distributiontype", "uniform");
-
-                        // bpsim 1.0 does not support random distribution
-//        			} else if(paramValue instanceof RandomDistributionType) {
-//        				RandomDistributionType rdt = (RandomDistributionType) paramValue;
-//        				properties.put("min", rdt.getMin());
-//        				properties.put("max", rdt.getMax());
-//        				properties.put("distributiontype", "random");
-                    } else if(paramValue instanceof PoissonDistributionType) {
-                        PoissonDistributionType pdt = (PoissonDistributionType) paramValue;
-                        properties.put("mean", pdt.getMean());
-                        properties.put("distributiontype", "poisson");
-                    }
-                    // bpsim 1.0 has no support for individual time unit
-//        			if(timeParams.getTimeUnit() != null) {
-//        				properties.put("timeunit", timeParams.getTimeUnit().getName());
-//        			}
-                    if(timeParams.getWaitTime() != null) {
-                        FloatingParameterType waittimeType = (FloatingParameterType) timeParams.getWaitTime().getParameterValue().get(0);
-                        properties.put("waittime", waittimeType.getValue());
-                    }
-
-                    CostParameters costParams = eleType.getCostParameters();
-                    if(costParams != null) {
-                        if(costParams.getUnitCost() != null) {
-                            FloatingParameterType unitCostVal = (FloatingParameterType) costParams.getUnitCost().getParameterValue().get(0);
-                            properties.put("unitcost", unitCostVal.getValue());
-                        }
-                        // bpsim 1.0 does not support individual currency
-                        //properties.put("currency", costParams.getUnitCost() == null ? "" : costParams.getUnitCost());
-                    }
-                }
-            }
-        }
+        setSimulationProperties(callActivity.getId(), properties);
 
         marshallNode(callActivity, properties, "ReusableSubprocess", plane, generator, xOffset, yOffset);
     }
@@ -1617,24 +1456,6 @@ public class Bpmn2JsonMarshaller {
     		    sb.setLength(sb.length() - 1);
     		}
     		properties.put("actors", sb.toString());
-
-    		// simulation properties
-    		if(_simulationScenario != null) {
-    			for(ElementParameters eleType : _simulationScenario.getElementParameters()) {
-            		if(eleType.getElementRef().equals(task.getId())) {
-            			CostParameters costParams = eleType.getCostParameters();
-                        FloatingParameterType unitCostVal = (FloatingParameterType) costParams.getUnitCost().getParameterValue().get(0);
-            			properties.put("unitcost", unitCostVal.getValue());
-                        // bpsim does not support individual currency
-            			//properties.put("currency", costParams.getUnitCost() == null ? "" : costParams.getUnitCost());
-            			ResourceParameters resourceParams = eleType.getResourceParameters();
-            			FloatingParameterType quantityVal = (FloatingParameterType) resourceParams.getQuantity().getParameterValue().get(0);
-            			properties.put("quantity", quantityVal.getValue());
-            			FloatingParameterType workingHoursVal = (FloatingParameterType) resourceParams.getAvailability().getParameterValue().get(0);
-            			properties.put("workinghours", workingHoursVal.getValue());
-            		}
-    			}
-    		}
     	} else if (task instanceof SendTask) {
     		taskType = "Send";
     		SendTask st = (SendTask) task;
@@ -2204,56 +2025,7 @@ public class Bpmn2JsonMarshaller {
             }
         }
 
-        // simulation properties
-        if(_simulationScenario != null) {
-        	for(ElementParameters eleType : _simulationScenario.getElementParameters()) {
-        		if(eleType.getElementRef().equals(task.getId())) {
-        			TimeParameters timeParams = eleType.getTimeParameters();
-        			Parameter processingTime = timeParams.getProcessingTime();
-        			ParameterValue paramValue =  processingTime.getParameterValue().get(0);
-        			if(paramValue instanceof NormalDistributionType) {
-        				NormalDistributionType ndt = (NormalDistributionType) paramValue;
-        				properties.put("mean", ndt.getMean());
-        				properties.put("standarddeviation", ndt.getStandardDeviation());
-        				properties.put("distributiontype", "normal");
-        			} else if(paramValue instanceof UniformDistributionType) {
-        				UniformDistributionType udt = (UniformDistributionType) paramValue;
-        				properties.put("min", udt.getMin());
-        				properties.put("max", udt.getMax());
-        				properties.put("distributiontype", "uniform");
-
-                    // bpsim 1.0 does not support random distribution
-//        			} else if(paramValue instanceof RandomDistributionType) {
-//        				RandomDistributionType rdt = (RandomDistributionType) paramValue;
-//        				properties.put("min", rdt.getMin());
-//        				properties.put("max", rdt.getMax());
-//        				properties.put("distributiontype", "random");
-        			} else if(paramValue instanceof PoissonDistributionType) {
-        				PoissonDistributionType pdt = (PoissonDistributionType) paramValue;
-        				properties.put("mean", pdt.getMean());
-        				properties.put("distributiontype", "poisson");
-        			}
-                    // bpsim 1.0 has no support for individual time unit
-//        			if(timeParams.getTimeUnit() != null) {
-//        				properties.put("timeunit", timeParams.getTimeUnit().getName());
-//        			}
-                    if(timeParams.getWaitTime() != null) {
-                        FloatingParameterType waittimeType = (FloatingParameterType) timeParams.getWaitTime().getParameterValue().get(0);
-                        properties.put("waittime", waittimeType.getValue());
-                    }
-
-                    CostParameters costParams = eleType.getCostParameters();
-                    if(costParams != null) {
-                        if(costParams.getUnitCost() != null) {
-                            FloatingParameterType unitCostVal = (FloatingParameterType) costParams.getUnitCost().getParameterValue().get(0);
-                            properties.put("unitcost", unitCostVal.getValue());
-                        }
-                        // bpsim 1.0 does not support individual currency
-                        //properties.put("currency", costParams.getUnitCost() == null ? "" : costParams.getUnitCost());
-                    }
-        		}
-        	}
-        }
+        setSimulationProperties(task.getId(), properties);
 
         // marshall the node out
         if(isCustomElement((String) properties.get("taskname"), preProcessingData)) {
@@ -2952,56 +2724,7 @@ public class Bpmn2JsonMarshaller {
             properties.put("vardefs", propVal);
         }
 
-        // simulation properties
-        if(_simulationScenario != null) {
-            for(ElementParameters eleType : _simulationScenario.getElementParameters()) {
-                if(eleType.getElementRef().equals(subProcess.getId())) {
-                    TimeParameters timeParams = eleType.getTimeParameters();
-                    Parameter processingTime = timeParams.getProcessingTime();
-                    ParameterValue paramValue =  processingTime.getParameterValue().get(0);
-                    if(paramValue instanceof NormalDistributionType) {
-                        NormalDistributionType ndt = (NormalDistributionType) paramValue;
-                        properties.put("mean", ndt.getMean());
-                        properties.put("standarddeviation", ndt.getStandardDeviation());
-                        properties.put("distributiontype", "normal");
-                    } else if(paramValue instanceof UniformDistributionType) {
-                        UniformDistributionType udt = (UniformDistributionType) paramValue;
-                        properties.put("min", udt.getMin());
-                        properties.put("max", udt.getMax());
-                        properties.put("distributiontype", "uniform");
-
-                        // bpsim 1.0 does not support random distribution
-//        			} else if(paramValue instanceof RandomDistributionType) {
-//        				RandomDistributionType rdt = (RandomDistributionType) paramValue;
-//        				properties.put("min", rdt.getMin());
-//        				properties.put("max", rdt.getMax());
-//        				properties.put("distributiontype", "random");
-                    } else if(paramValue instanceof PoissonDistributionType) {
-                        PoissonDistributionType pdt = (PoissonDistributionType) paramValue;
-                        properties.put("mean", pdt.getMean());
-                        properties.put("distributiontype", "poisson");
-                    }
-                    // bpsim 1.0 has no support for individual time unit
-//        			if(timeParams.getTimeUnit() != null) {
-//        				properties.put("timeunit", timeParams.getTimeUnit().getName());
-//        			}
-                    if(timeParams.getWaitTime() != null) {
-                        FloatingParameterType waittimeType = (FloatingParameterType) timeParams.getWaitTime().getParameterValue().get(0);
-                        properties.put("waittime", waittimeType.getValue());
-                    }
-
-                    CostParameters costParams = eleType.getCostParameters();
-                    if(costParams != null) {
-                        if(costParams.getUnitCost() != null) {
-                            FloatingParameterType unitCostVal = (FloatingParameterType) costParams.getUnitCost().getParameterValue().get(0);
-                            properties.put("unitcost", unitCostVal.getValue());
-                        }
-                        // bpsim 1.0 does not support individual currency
-                        //properties.put("currency", costParams.getUnitCost() == null ? "" : costParams.getUnitCost());
-                    }
-                }
-            }
-        }
+        setSimulationProperties(subProcess.getId(), properties);
 
 	    marshallProperties(properties, generator);
 	    generator.writeObjectFieldStart("stencil");
@@ -3202,16 +2925,7 @@ public class Bpmn2JsonMarshaller {
         	properties.put("isselectable", "true");
         }
 
-        // simulation properties
-        if(_simulationScenario != null) {
-        	List<ElementParameters> elementParams = _simulationScenario.getElementParameters();
-        	for(ElementParameters eleType : elementParams) {
-        		if(eleType.getElementRef().equals(sequenceFlow.getId())) {
-        			FloatingParameterType valType = (FloatingParameterType) eleType.getControlParameters().getProbability().getParameterValue().get(0);
-        			properties.put("probability", valType.getValue());
-        		}
-        	}
-        }
+        setSimulationProperties(sequenceFlow.getId(), properties);
 
         marshallProperties(properties, generator);
         generator.writeObjectFieldStart("stencil");
@@ -3610,4 +3324,86 @@ public class Bpmn2JsonMarshaller {
         }
         return s.replaceAll("=", "||").replaceAll(",", "##");
     }
+
+    private void extractCostParamsToProperties(ElementParameters eleType, Map<String, Object> properties) {
+        CostParameters costParams = eleType.getCostParameters();
+        if(costParams != null) {
+            if (costParams.getUnitCost() != null) {
+                extractParamTypeToProperties("unitcost", costParams.getUnitCost().getParameterValue(), properties);
+            }
+        }
+    }
+
+    private void extractTimeParamsToProperties(ElementParameters eleType, Map<String, Object> properties) {
+        TimeParameters timeParams = eleType.getTimeParameters();
+        if(timeParams != null) {
+            Parameter processingTime = timeParams.getProcessingTime();
+            if(processingTime != null && processingTime.getParameterValue() != null && processingTime.getParameterValue().size() > 0) {
+                ParameterValue paramValue = processingTime.getParameterValue().get(0);
+                if (paramValue instanceof NormalDistributionType) {
+                    NormalDistributionType ndt = (NormalDistributionType) paramValue;
+                    properties.put("mean", ndt.getMean());
+                    properties.put("standarddeviation", ndt.getStandardDeviation());
+                    properties.put("distributiontype", "normal");
+                } else if (paramValue instanceof UniformDistributionType) {
+                    UniformDistributionType udt = (UniformDistributionType) paramValue;
+                    properties.put("min", udt.getMin());
+                    properties.put("max", udt.getMax());
+                    properties.put("distributiontype", "uniform");
+                } else if (paramValue instanceof PoissonDistributionType) {
+                    PoissonDistributionType pdt = (PoissonDistributionType) paramValue;
+                    properties.put("mean", pdt.getMean());
+                    properties.put("distributiontype", "poisson");
+                }
+
+                if (timeParams.getWaitTime() != null) {
+                    extractParamTypeToProperties("waittime", timeParams.getWaitTime().getParameterValue(), properties);
+                }
+            }
+        }
+    }
+
+    private void extractControlParamsToProperties(ElementParameters eleType, Map<String, Object> properties) {
+        ControlParameters controlParams = eleType.getControlParameters();
+        if(controlParams != null) {
+            if(controlParams.getProbability() != null) {
+                extractParamTypeToProperties("probability", controlParams.getProbability().getParameterValue(), properties);
+            }
+        }
+    }
+
+    private void extractResourceParamsToProperties(ElementParameters eleType, Map<String, Object> properties) {
+        ResourceParameters resourceParams = eleType.getResourceParameters();
+        if(resourceParams != null) {
+            if(resourceParams.getQuantity() != null) {
+                extractParamTypeToProperties("quantity", resourceParams.getQuantity().getParameterValue(), properties);
+            }
+            if(resourceParams.getAvailability() != null) {
+                extractParamTypeToProperties("workinghours", resourceParams.getAvailability().getParameterValue(), properties);
+            }
+        }
+    }
+
+    private void extractParamTypeToProperties(String paramName, EList<ParameterValue> parameterValues, Map<String, Object> properties) {
+        if(parameterValues != null && parameterValues.size() > 0) {
+            ParameterValue value = parameterValues.get(0);
+            if(value != null && (value instanceof FloatingParameterType)) {
+                properties.put(paramName, ((FloatingParameterType) value).getValue());
+            }
+        }
+    }
+
+    private void setSimulationProperties(String elementId, Map<String, Object> properties) {
+        if(_simulationScenario != null && _simulationScenario.getElementParameters() != null) {
+            for (ElementParameters eleType : _simulationScenario.getElementParameters()) {
+                if (eleType.getElementRef().equals(elementId)) {
+                    extractTimeParamsToProperties(eleType, properties);
+                    extractCostParamsToProperties(eleType, properties);
+                    extractControlParamsToProperties(eleType, properties);
+                    extractResourceParamsToProperties(eleType, properties);
+                }
+            }
+        }
+    }
+
 }

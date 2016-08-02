@@ -18,14 +18,7 @@ package org.wirez.core.client.util;
 
 import org.wirez.core.client.service.ClientRuntimeError;
 
-import java.util.logging.Logger;
-
-/**
- * Just for development use.
- */
 public class WirezClientLogger {
-
-    private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.util.WirezLogger");
 
     public static String getErrorMessage(final ClientRuntimeError error) {
         final String message = error.getMessage();
@@ -38,7 +31,7 @@ public class WirezClientLogger {
             return t1.getMessage();
         } 
         
-        return message;
+        return null != message ? message : " -- No message -- ";
     }
     
 }

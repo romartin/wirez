@@ -1,6 +1,6 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;

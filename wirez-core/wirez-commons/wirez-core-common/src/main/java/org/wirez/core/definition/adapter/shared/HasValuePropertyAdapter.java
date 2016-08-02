@@ -75,6 +75,11 @@ public class HasValuePropertyAdapter implements PropertyAdapter<PropertyImpl, Ob
     }
 
     @Override
+    public boolean isPojoModel() {
+        return false;
+    }
+
+    @Override
     public int getPriority() {
         return 1;
     }

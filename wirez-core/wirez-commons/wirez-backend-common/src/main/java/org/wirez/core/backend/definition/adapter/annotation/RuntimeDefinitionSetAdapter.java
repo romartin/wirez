@@ -6,6 +6,7 @@ import org.wirez.core.backend.definition.adapter.AbstractRuntimeDefinitionSetAda
 import org.wirez.core.definition.adapter.DefinitionSetAdapter;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.definitionset.DefinitionSet;
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Graph;
 
 import javax.enterprise.context.Dependent;
@@ -29,33 +30,19 @@ public class RuntimeDefinitionSetAdapter<T> extends AbstractRuntimeDefinitionSet
         return pojo.getAnnotation(DefinitionSet.class) != null;
     }
 
-
     @Override
-    public Class<? extends Graph> getGraph(T definitionSet) {
-        Class<? extends Graph> result = null;
+    public Class<? extends ElementFactory> getGraphFactoryType( final T definitionSet ) {
+        Class<? extends ElementFactory> result = null;
 
         if ( null != definitionSet ) {
             DefinitionSet annotation = definitionSet.getClass().getAnnotation(DefinitionSet.class);
             if ( null != annotation ) {
-                result = annotation.type();
+                result = annotation.graphFactory();
             }
         }
 
         return result;
-    }
 
-    @Override
-    public String getGraphFactory(T definitionSet) {
-        String result = null;
-
-        if ( null != definitionSet ) {
-            DefinitionSet annotation = definitionSet.getClass().getAnnotation(DefinitionSet.class);
-            if ( null != annotation ) {
-                result = annotation.factory();
-            }
-        }
-
-        return result;
     }
 
     @Override

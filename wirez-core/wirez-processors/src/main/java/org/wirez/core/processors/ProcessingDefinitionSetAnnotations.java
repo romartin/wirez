@@ -11,7 +11,6 @@ public class ProcessingDefinitionSetAnnotations {
     private final Set<String> definitionIds = new HashSet<>();
     private final Map<String, String> builderFieldNames = new HashMap<>();
     private final Map<String, String> graphTypes = new HashMap<>();
-    private final Map<String, String> graphFactories = new HashMap<>();
     private boolean hasShapeSet = false;
 
     public Map<String, String> getDescriptionFieldNames() {
@@ -26,12 +25,8 @@ public class ProcessingDefinitionSetAnnotations {
         return builderFieldNames;
     }
 
-    public Map<String, String> getGraphTypes() {
+    public Map<String, String> getGraphFactoryTypes() {
         return graphTypes;
-    }
-
-    public Map<String, String> getGraphFactories() {
-        return graphFactories;
     }
 
     public boolean hasShapeSet() {

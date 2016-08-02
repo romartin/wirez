@@ -5,14 +5,13 @@ import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.rule.model.ModelCardinalityRuleManager;
 import org.wirez.core.rule.model.ModelContainmentRuleManager;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.service.ClientFactoryServices;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.logging.Logger;
 

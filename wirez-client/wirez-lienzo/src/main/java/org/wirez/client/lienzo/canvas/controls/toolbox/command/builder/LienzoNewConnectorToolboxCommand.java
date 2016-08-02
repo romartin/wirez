@@ -1,7 +1,7 @@
 package org.wirez.client.lienzo.canvas.controls.toolbox.command.builder;
 
 import com.ait.lienzo.client.core.shape.Shape;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;

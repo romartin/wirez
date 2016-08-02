@@ -1,6 +1,6 @@
 package org.wirez.core.definition.adapter;
 
-import org.wirez.core.graph.Element;
+import org.wirez.core.factory.graph.ElementFactory;
 
 import java.util.Set;
 
@@ -57,13 +57,13 @@ public abstract class DefinitionAdapterWrapper<T, A extends DefinitionAdapter<T>
     }
 
     @Override
-    public Class<? extends Element> getGraphElement( final T pojo ) {
-        return adapter.getGraphElement( pojo );
+    public Class<? extends ElementFactory> getGraphFactoryType( final T pojo ) {
+        return adapter.getGraphFactoryType( pojo );
     }
 
     @Override
-    public String getElementFactory( final T pojo ) {
-        return adapter.getElementFactory( pojo );
+    public boolean isPojoModel() {
+        return adapter.isPojoModel();
     }
 
     @Override

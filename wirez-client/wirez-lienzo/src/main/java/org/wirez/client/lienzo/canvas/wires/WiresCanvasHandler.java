@@ -25,7 +25,7 @@ import org.wirez.core.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.rule.graph.GraphRulesManager;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.service.ClientFactoryServices;

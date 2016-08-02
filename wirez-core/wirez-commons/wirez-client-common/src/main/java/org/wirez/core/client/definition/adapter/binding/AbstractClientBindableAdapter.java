@@ -28,6 +28,11 @@ public abstract class AbstractClientBindableAdapter<T> implements PriorityAdapte
     }
 
     @Override
+    public boolean isPojoModel() {
+        return true;
+    }
+
+    @Override
     public int getPriority() {
         return 0;
     }

@@ -1,13 +1,14 @@
 package org.wirez.client.lienzo.canvas.controls.toolbox.command.builder;
 
 import com.ait.lienzo.client.core.shape.IPrimitive;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.builder.NodeBuilderControl;
 import org.wirez.core.client.canvas.controls.toolbox.command.builder.NewNodeCommand;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
+import org.wirez.core.client.canvas.util.CanvasLayoutUtils;
 import org.wirez.core.client.components.drag.NodeDragProxy;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.service.ClientFactoryServices;
@@ -23,7 +24,7 @@ import javax.inject.Inject;
 public class LienzoNewNodeToolboxCommand extends NewNodeCommand<IPrimitive<?>> {
 
     protected LienzoNewNodeToolboxCommand() {
-        this( null, null, null, null, null, null, null, null, null, null );
+        this( null, null, null, null, null, null, null, null, null, null, null );
     }
 
     @Inject
@@ -36,10 +37,11 @@ public class LienzoNewNodeToolboxCommand extends NewNodeCommand<IPrimitive<?>> {
                                        final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                                        final AnimationFactory animationFactory,
                                        final DefinitionUtils definitionUtils,
+                                       final CanvasLayoutUtils canvasLayoutUtils,
                                        final Event<CanvasElementSelectedEvent> elementSelectedEvent ) {
         super( clientDefinitionManager, clientFactoryServices, shapeManager, glyphTooltip, graphBoundsIndexer,
                 nodeDragProxyFactory, nodeBuilderControl, animationFactory,
-                definitionUtils, elementSelectedEvent );
+                definitionUtils, canvasLayoutUtils, elementSelectedEvent );
     }
 
     @PostConstruct

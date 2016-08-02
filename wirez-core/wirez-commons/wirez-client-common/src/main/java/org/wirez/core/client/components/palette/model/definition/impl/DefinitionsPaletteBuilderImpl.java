@@ -53,16 +53,16 @@ public class DefinitionsPaletteBuilderImpl
 
                 if ( !exclusions.contains( definitionId ) ) {
 
-                    clientFactoryServices.newDomainObject( definitionId, new ServiceCallback<Object>() {
+                    clientFactoryServices.newDefinition( definitionId, new ServiceCallback<Object>() {
 
                         @Override
                         public void onSuccess( final Object definition ) {
 
                             final String id = toValidId( definitionId );
 
-                            final String title = definitionUtils.getDefinitionTitle( definition );
+                            final String title = getDefinitionManager().adapters().forDefinition().getTitle( definition );
 
-                            final String description = definitionUtils.getDefinitionDescription( definition );
+                            final String description = getDefinitionManager().adapters().forDefinition().getDescription( definition );
 
                             final DefinitionPaletteItemImpl.DefinitionPaletteItemBuilder itemBuilder =
                                     new DefinitionPaletteItemImpl.DefinitionPaletteItemBuilder( id )
@@ -121,9 +121,8 @@ public class DefinitionsPaletteBuilderImpl
     public void buildFromDefinitionSet( final String defintionSetId,
                        final Callback<DefinitionsPalette, ClientRuntimeError> callback ) {
 
-        final Object defSet = getDefinitionManager().getDefinitionSet( defintionSetId );
-        final DefinitionSetAdapter<Object> adapter = getDefinitionManager().getDefinitionSetAdapter( defSet.getClass() );
-        final Set<String> definitions = adapter.getDefinitions( defSet );
+        final Object defSet = getDefinitionManager().definitionSets().getDefinitionSetById( defintionSetId );
+        final Set<String> definitions = getDefinitionManager().adapters().forDefinitionSet().getDefinitions( defSet );
 
         build( definitions, callback );
 

@@ -53,12 +53,11 @@ public class DefinitionSetPaletteBuilderImpl
                        final Callback<DefinitionSetPalette, ClientRuntimeError> callback ) {
 
         final Object definitionSetObject = definitionSet instanceof String ?
-                getDefinitionManager().getDefinitionSet( (String) definitionSet ) : definitionSet;
+                getDefinitionManager().definitionSets().getDefinitionSetById( (String) definitionSet ) : definitionSet;
 
-        final String defSetId = definitionUtils.getDefinitionSetId( definitionSetObject );
+        final String defSetId = getDefinitionManager().adapters().forDefinitionSet().getId( definitionSetObject );
 
-        final Collection<String> definitions =
-                getDefinitionManager().getDefinitionSetAdapter( definitionSetObject.getClass() ).getDefinitions( definitionSetObject );
+        final Collection<String> definitions = getDefinitionManager().adapters().forDefinitionSet().getDefinitions( definitionSetObject );
 
         if ( null != definitions ) {
 
@@ -68,14 +67,14 @@ public class DefinitionSetPaletteBuilderImpl
 
                 if ( !exclusions.contains( defId ) ) {
 
-                    clientFactoryServices.newDomainObject(defId, new ServiceCallback<Object>() {
+                    clientFactoryServices.newDefinition(defId, new ServiceCallback<Object>() {
 
                         @Override
                         public void onSuccess( final Object definition ) {
 
-                            final String id = definitionUtils.getDefinitionId( definition );
+                            final String id = getDefinitionManager().adapters().forDefinition().getId( definition );
 
-                            final String category = definitionUtils.getDefinitionCategory( definition );
+                            final String category = getDefinitionManager().adapters().forDefinition().getCategory( definition );
 
                             final String categoryId = toValidId( category );
 
@@ -127,8 +126,8 @@ public class DefinitionSetPaletteBuilderImpl
 
                             }
 
-                            final String title = definitionUtils.getDefinitionTitle( definition );
-                            final String description = definitionUtils.getDefinitionDescription( definition );
+                            final String title = getDefinitionManager().adapters().forDefinition().getTitle( definition );
+                            final String description = getDefinitionManager().adapters().forDefinition().getDescription( definition );
 
                             final DefinitionPaletteItemImpl.DefinitionPaletteItemBuilder itemBuilder =
                                     new DefinitionPaletteItemImpl.DefinitionPaletteItemBuilder( id )

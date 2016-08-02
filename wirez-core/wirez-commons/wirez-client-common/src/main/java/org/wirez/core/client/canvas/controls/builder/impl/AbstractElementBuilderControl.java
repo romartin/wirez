@@ -1,6 +1,6 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.CanvasViolation;
@@ -14,7 +14,6 @@ import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.command.Command;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
@@ -28,11 +27,9 @@ import org.wirez.core.rule.model.ModelCardinalityRuleManager;
 import org.wirez.core.rule.model.ModelContainmentRuleManager;
 import org.wirez.core.util.UUID;
 
-import javax.enterprise.event.Event;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class AbstractElementBuilderControl extends AbstractCanvasHandlerControl 
@@ -78,13 +75,11 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         final Object definition = request.getDefinition();
 
         final Node<View<?>, Edge> parent = getParent( x, y );
-        final DefinitionAdapter<Object> definitionAdapter = clientDefinitionManager.getDefinitionAdapter( definition. getClass() );
-        final Set<String> labels = definitionAdapter.getLabels( definition );
+        final Set<String> labels = clientDefinitionManager.adapters().forDefinition().getLabels( definition );
 
         if ( null != parent ) {
             final Object parentDef = parent.getContent().getDefinition();
-            final DefinitionAdapter<Object> parentAdapter = clientDefinitionManager.getDefinitionAdapter( parentDef.getClass() );
-            final String parentId = parentAdapter.getId( parentDef );
+            final String parentId = clientDefinitionManager.adapters().forDefinition().getId( parentDef );
             final RuleViolations containmentViolations = modelContainmentRuleManager.evaluate( parentId, labels );
 
             if ( !isValid( containmentViolations ) ) {
@@ -193,8 +188,7 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
                                final double y,
                                final CommandsCallback commandsCallback) {
 
-        final DefinitionAdapter definitionAdapter = clientDefinitionManager.getDefinitionAdapter( definition. getClass() );
-        final String defId = definitionAdapter.getId( definition );
+        final String defId = clientDefinitionManager.adapters().forDefinition().getId( definition );
         final String uuid = UUID.uuid();
 
         clientFactoryServices.newElement( uuid, defId, new ServiceCallback<Element>() {

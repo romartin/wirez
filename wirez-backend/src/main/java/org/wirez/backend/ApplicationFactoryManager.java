@@ -2,91 +2,69 @@ package org.wirez.backend;
 
 import org.wirez.core.api.AbstractFactoryManager;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.definition.factory.ModelFactory;
-import org.wirez.core.diagram.Diagram;
-import org.wirez.core.diagram.DiagramImpl;
-import org.wirez.core.diagram.Settings;
-import org.wirez.core.graph.Graph;
-import org.wirez.core.graph.factory.ElementFactory;
-import org.wirez.core.graph.factory.GraphFactory;
+import org.wirez.core.factory.definition.DefinitionFactory;
+import org.wirez.core.factory.graph.EdgeFactory;
+import org.wirez.core.factory.graph.GraphFactory;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.core.backend.annotation.Application;
+import org.wirez.core.registry.RegistryFactory;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
+@ApplicationScoped
 @Application
 public class ApplicationFactoryManager extends AbstractFactoryManager {
 
-    BeanManager beanManager;
-    Instance<ModelFactory<?>> modelBuilderInstances;
+    private Instance<DefinitionFactory<?>> definitionFactoryInstances;
+    private Instance<GraphFactory<?>> graphFactoryInstances;
+    private Instance<NodeFactory<?>> nodeFactoryInstances;
+    private Instance<EdgeFactory<?>> edgeFactoryInstances;
+
+    protected ApplicationFactoryManager() {
+        super();
+    }
 
     @Inject
-    public ApplicationFactoryManager(Instance<ModelFactory<?>> modelBuilderInstances,
-                                     DefinitionManager definitionManager,
-                                     BeanManager beanManager) {
-        super( definitionManager );
-        this.modelBuilderInstances = modelBuilderInstances;
-        this.beanManager = beanManager;
+    public ApplicationFactoryManager( final RegistryFactory registryFactory,
+                                      final DefinitionManager definitionManager,
+                                      final Instance<DefinitionFactory<?>> definitionFactoryInstances,
+                                      final Instance<GraphFactory<?>> graphFactoryInstances,
+                                      final Instance<NodeFactory<?>> nodeFactoryInstances,
+                                      final Instance<EdgeFactory<?>> edgeFactoryInstances ) {
+        super( registryFactory, definitionManager );
+        this.definitionFactoryInstances = definitionFactoryInstances;
+        this.graphFactoryInstances = graphFactoryInstances;
+        this.nodeFactoryInstances = nodeFactoryInstances;
+        this.edgeFactoryInstances = edgeFactoryInstances;
     }
 
     @PostConstruct
     public void init() {
-        initModelFactories();
+        initDefinitionFactories();
+        initGraphFactories();
     }
 
-
-    private void initModelFactories() {
-        for (ModelFactory<?> modelBuilder : modelBuilderInstances) {
-            modelFactories.add(modelBuilder);
+    @SuppressWarnings( "unchecked" )
+    private void initDefinitionFactories() {
+        for ( DefinitionFactory<?> factory : definitionFactoryInstances ) {
+            registry().register( factory );
         }
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    protected ElementFactory getElementFactory(Object definition,
-                                               Class<?> graphElementClass,
-                                               String factory) {
-        
-        Bean<?> bean = getFactoryBean( graphElementClass, factory );
-        
-        // Return the element's factory instance.
-        return getFactory( bean );
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    protected GraphFactory getGraphFactory(Object definition,
-                                             Class<?> graphElementClass,
-                                             String factory) {
-
-        Bean<?> bean = getFactoryBean( graphElementClass, factory );
-
-        // Return the element's factory instance.
-        return getFactory( bean );
-    }
-    
-    protected Bean<?> getFactoryBean(Class<?> graphElementClass,
-                                      String factory) {
-
-        String ref = getFactoryReference( graphElementClass, factory );
-
-        Bean<?> bean = beanManager.getBeans(ref).iterator().next();
-
-        if ( null == bean ) {
-            throw new RuntimeException( "No factory found for class " + ref );
+    @SuppressWarnings( "unchecked" )
+    private void initGraphFactories() {
+        for ( GraphFactory<?> factory : graphFactoryInstances ) {
+            registry().register( factory );
         }
-        
-        return bean;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected <T> T getFactory(Bean<?> bean) {
-        CreationalContext ctx = beanManager.createCreationalContext(bean);
-        return (T) beanManager.getReference(bean, bean.getBeanClass(), ctx);
+        for ( NodeFactory<?> factory : nodeFactoryInstances ) {
+            registry().register( factory );
+        }
+        for ( EdgeFactory<?> factory : edgeFactoryInstances ) {
+            registry().register( factory );
+        }
     }
 
 }

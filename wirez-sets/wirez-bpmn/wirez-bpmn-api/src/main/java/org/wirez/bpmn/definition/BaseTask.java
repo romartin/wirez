@@ -39,7 +39,7 @@ import org.wirez.core.definition.annotation.definition.PropertySet;
 import org.wirez.core.definition.annotation.morph.MorphBase;
 import org.wirez.core.definition.annotation.morph.MorphProperty;
 import org.wirez.core.definition.annotation.morph.MorphPropertyValueBinding;
-import org.wirez.core.definition.factory.Builder;
+import org.wirez.core.definition.builder.Builder;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashMap;

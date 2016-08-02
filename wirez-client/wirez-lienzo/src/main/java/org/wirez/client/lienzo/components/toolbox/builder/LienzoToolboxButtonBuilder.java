@@ -12,7 +12,7 @@ public class LienzoToolboxButtonBuilder implements ToolboxButtonBuilder<IPrimiti
     private IPrimitive<?> icon;
     private ToolboxButton.HoverAnimation animation;
     private ToolboxButtonEventHandler clickHandler;
-    private ToolboxButtonEventHandler dragEndHandler;
+    private ToolboxButtonEventHandler mouseDownHandler;
     private ToolboxButtonEventHandler mouseEnterHandler;
     private ToolboxButtonEventHandler mouseExitHandler;
 
@@ -35,8 +35,8 @@ public class LienzoToolboxButtonBuilder implements ToolboxButtonBuilder<IPrimiti
     }
 
     @Override
-    public ToolboxButtonBuilder<IPrimitive<?>> setDragEndHandler( final ToolboxButtonEventHandler handler ) {
-        this.dragEndHandler = handler;
+    public ToolboxButtonBuilder<IPrimitive<?>> setMouseDownHandler( final ToolboxButtonEventHandler handler ) {
+        this.mouseDownHandler = handler;
         return this;
     }
 
@@ -57,7 +57,7 @@ public class LienzoToolboxButtonBuilder implements ToolboxButtonBuilder<IPrimiti
         return new LienzoToolboxButton( icon )
                 .setAnimation( animation )
                 .setClickHandler( clickHandler )
-                .setDragHandler( dragEndHandler )
+                .setMouseDownHandler( mouseDownHandler )
                 .setMouseEnterHandler( mouseEnterHandler )
                 .setMouseExitHandler( mouseExitHandler );
     }

@@ -30,12 +30,12 @@ import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.Definition;
 import org.wirez.core.definition.annotation.definition.Title;
 import org.wirez.core.definition.annotation.morph.Morph;
-import org.wirez.core.graph.Node;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = ExclusiveDatabasedGateway.ExclusiveDatabasedGatewayBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = ExclusiveDatabasedGateway.ExclusiveDatabasedGatewayBuilder.class )
 @Shape( factory = BasicShapesFactory.class, proxy = ExclusiveDatabasedGatewayShapeProxy.class )
 @Morph( base = BaseGateway.class )
 public class ExclusiveDatabasedGateway extends BaseGateway {

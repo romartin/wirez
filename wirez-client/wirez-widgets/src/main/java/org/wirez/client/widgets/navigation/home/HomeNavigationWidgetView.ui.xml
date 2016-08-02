@@ -36,7 +36,7 @@
 
   <g:FlowPanel ui:field="rootPanel" addStyleNames="{style.rootPanel}">
 
-    <b:Icon ui:field="addIcon" type="PLUS_CIRCLE" size="TIMES3" addStyleNames="{style.addIcon}"/>
+    <b:Icon ui:field="addIcon" type="PLUS_CIRCLE" title="Create" size="TIMES3" addStyleNames="{style.addIcon}"/>
 
     <b:PanelGroup b:id="mainPanelGroup" ui:field="mainPanel" addStyleNames="{style.groupPanel}"/>
 

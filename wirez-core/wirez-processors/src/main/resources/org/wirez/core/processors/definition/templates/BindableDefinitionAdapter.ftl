@@ -64,15 +64,9 @@ public class ${className} extends ${parentAdapterClassName}<Object> {
         </#list>
     }};
     
-    private static final Map<Class, Class> graphElementFieldNames = new HashMap<Class, Class>(${graphElementFieldNamesSize}) {{
-        <#list graphElementFieldNames as graphElementFieldName>
-              put( ${graphElementFieldName.className}.class, ${graphElementFieldName.methodName}.class );
-        </#list>
-    }};
-    
-    private static final Map<Class, String> elementFactoryFieldNames = new HashMap<Class, String>(${elementFactoryFieldNamesSize}) {{
-        <#list elementFactoryFieldNames as elementFactoryFieldName>
-            put( ${elementFactoryFieldName.className}.class, "${elementFactoryFieldName.methodName}" );
+    private static final Map<Class, Class> graphFactoryFieldNames = new HashMap<Class, Class>(${graphFactoryFieldNamesSize}) {{
+        <#list graphFactoryFieldNames as graphFactoryFieldName>
+              put( ${graphFactoryFieldName.className}.class, ${graphFactoryFieldName.methodName}.class );
         </#list>
     }};
     
@@ -110,8 +104,7 @@ public class ${className} extends ${parentAdapterClassName}<Object> {
                 baseTypes,
                 propertySetsFieldNames,
                 propertiesFieldNames,
-                graphElementFieldNames,
-                elementFactoryFieldNames,
+                graphFactoryFieldNames,
                 labelsFieldNames,
                 titleFieldNames,
                 categoryFieldNames,

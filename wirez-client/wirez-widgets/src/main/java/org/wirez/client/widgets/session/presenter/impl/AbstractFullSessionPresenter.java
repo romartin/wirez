@@ -9,7 +9,7 @@ import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.command.*;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
@@ -27,7 +27,6 @@ import org.wirez.core.graph.Graph;
 import org.wirez.core.util.UUID;
 import org.wirez.core.util.WirezLogger;
 
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -166,17 +165,20 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public void newDiagram( final String uuid,
                             final String title,
                             final String definitionSetId,
                             final String shapeSetId,
                             final Command callback ) {
 
-        clientFactoryServices.newGraph( UUID.uuid(), definitionSetId, new ServiceCallback<Graph>() {
+
+        clientFactoryServices.newDiagram( uuid, definitionSetId, new ServiceCallback<Diagram>() {
             @Override
-            public void onSuccess( final Graph graph ) {
-                final Settings diagramSettings = new SettingsImpl( title, definitionSetId, shapeSetId, null );
-                Diagram<Graph, Settings> diagram = clientFactoryServices.newDiagram( UUID.uuid(), graph, diagramSettings );
+            public void onSuccess( final Diagram diagram ) {
+                final Settings settings = diagram.getSettings();
+                settings.setShapeSetId( shapeSetId );
+                settings.setTitle( title );
                 open( diagram, callback );
             }
 

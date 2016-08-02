@@ -171,7 +171,7 @@ public abstract class AbstractCanvasPaletteControl
                                  final double itemX,
                                  final double itemY) {
 
-        factoryServices.newDomainObject( id, new ServiceCallback<java.lang.Object>() {
+        factoryServices.newDefinition( id, new ServiceCallback<java.lang.Object>() {
 
             @Override
             public void onSuccess( final java.lang.Object def ) {

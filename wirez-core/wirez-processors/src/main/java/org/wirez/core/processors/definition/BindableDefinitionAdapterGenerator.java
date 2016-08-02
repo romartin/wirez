@@ -59,8 +59,7 @@ public class BindableDefinitionAdapterGenerator extends AbstractBindableAdapterG
         addFields("titleFieldNames", root, processingDefinitionAnnotations.getTitleFieldNames());
         addFields("descriptionFieldNames", root, processingDefinitionAnnotations.getDescriptionFieldNames());
         addFields("labelsFieldNames", root, processingDefinitionAnnotations.getLabelsFieldNames());
-        addFields("graphElementFieldNames", root, processingDefinitionAnnotations.getGraphElementFieldNames());
-        addFields("elementFactoryFieldNames", root, processingDefinitionAnnotations.getElementFactoryFieldNames());
+        addFields("graphFactoryFieldNames", root, processingDefinitionAnnotations.getGraphFactoryFieldNames());
         addMultipleFields("propertySetsFieldNames", root, processingDefinitionAnnotations.getPropertySetFieldNames());
         addMultipleFields("propertiesFieldNames", root, processingDefinitionAnnotations.getPropertyFieldNames());
 

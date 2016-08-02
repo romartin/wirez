@@ -2,6 +2,7 @@ package org.wirez.core.client.canvas.util;
 
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.relationship.Child;
@@ -16,8 +17,17 @@ import javax.enterprise.context.Dependent;
 import java.util.Iterator;
 
 // TODO: This has to be refactored by the use of a good canvas layout API.
+// TODO: Pending take into account the diagram/graph size, currently it's always using am horizontal layout.
 @Dependent
 public class CanvasLayoutUtils {
+
+    public double[] getNextLayoutPosition( final CanvasHandler canvasHandler, final Element<View<?>> source ) {
+
+        final Double[] pos = GraphUtils.getPosition( source.getContent() );
+        final Double[] size = GraphUtils.getSize( source.getContent() );
+
+        return new double[] { pos[0] + size[0] + 50, pos[1] };
+    }
 
     public double[] getNextLayoutPosition( final CanvasHandler canvasHandler ) {
         final String ruuid = canvasHandler.getDiagram().getSettings().getCanvasRootUUID();
@@ -25,7 +35,7 @@ public class CanvasLayoutUtils {
     }
 
     @SuppressWarnings( "unchecked" )
-    public double[] getNextLayoutPosition( final CanvasHandler canvasHandler, final String rootUUID ) {
+    private double[] getNextLayoutPosition( final CanvasHandler canvasHandler, final String rootUUID ) {
 
         final Graph graph = canvasHandler.getDiagram().getGraph();
 

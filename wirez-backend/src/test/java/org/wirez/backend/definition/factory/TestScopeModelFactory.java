@@ -2,16 +2,15 @@ package org.wirez.backend.definition.factory;
 
 import org.wirez.core.backend.definition.utils.BackendBindableDefinitionUtils;
 import org.wirez.core.definition.annotation.definition.Definition;
-import org.wirez.core.definition.factory.BindableModelFactory;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Element;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.definition.AbstractTypeDefinitionFactory;
 
 import java.util.Set;
 
 /**
  * Model factory for annotated modelsfor using  on test scope.
  */
-public class TestScopeModelFactory extends BindableModelFactory<Object> {
+public class TestScopeModelFactory extends AbstractTypeDefinitionFactory<Object> {
 
     private final Object definitionSet;
 
@@ -19,24 +18,24 @@ public class TestScopeModelFactory extends BindableModelFactory<Object> {
         this.definitionSet = definitionSet;
     }
    
-    private static Set<Class<?>> getDefinitions(Object defSet ) {
+    private static Set<Class<? extends Object>> getDefinitions(Object defSet ) {
         return BackendBindableDefinitionUtils.getDefinitions( defSet );
     }
 
     @Override
-    public Set<Class<?>> getAcceptedClasses() {
+    public Set<Class<? extends Object>> getAcceptedClasses() {
         return getDefinitions( this.definitionSet );
     }
 
     @Override
-    public Object build(Class<?> clazz) {
+    public Object build(Class<? extends Object> clazz) {
         
         Builder<?> builder = newDefinitionBuilder( clazz );
         
         return builder.build();
     }
 
-    private Builder<?> newDefinitionBuilder( Class<?> definitionClass ) {
+    private Builder<?> newDefinitionBuilder( Class<? extends Object> definitionClass ) {
 
         Class<? extends Builder<?>> builderClass = getDefinitionBuilderClass( definitionClass );
         
@@ -60,7 +59,7 @@ public class TestScopeModelFactory extends BindableModelFactory<Object> {
         throw new RuntimeException( "No annotated builder found for Definition [" + definitionClass.getName() + "]" );
     }
     
-    private Class<? extends Builder<?>> getDefinitionBuilderClass( Class<?> definitionClass ) {
+    private Class<? extends Builder<?>> getDefinitionBuilderClass( Class<? extends Object> definitionClass ) {
 
         if ( null != definitionClass ) {
 

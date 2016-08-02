@@ -24,14 +24,12 @@ import org.wirez.bpmn.definition.property.Radius;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
-import org.wirez.bpmn.definition.property.simulation.CatchEventAttributes;
 import org.wirez.bpmn.shape.proxy.IntermediateTimerEventShapeProxy;
-import org.wirez.bpmn.shape.proxy.StartNoneEventShapeProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Node;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
@@ -39,7 +37,7 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = IntermediateTimerEvent.IntermediateTimerEventBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = IntermediateTimerEvent.IntermediateTimerEventBuilder.class )
 @Shape( factory = BasicShapesFactory.class, proxy = IntermediateTimerEventShapeProxy.class )
 public class IntermediateTimerEvent implements BPMNDefinition {
 

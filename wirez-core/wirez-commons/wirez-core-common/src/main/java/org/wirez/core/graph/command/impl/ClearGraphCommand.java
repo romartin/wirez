@@ -42,8 +42,7 @@ public final class ClearGraphCommand extends AbstractGraphCommand {
                              @MapsTo("rootUUID") String rootUUID) {
         this.target = PortablePreconditions.checkNotNull( "target",
                 target );;
-        this.rootUUID = PortablePreconditions.checkNotNull( "rootUUID",
-                rootUUID );;
+        this.rootUUID = rootUUID;;
     }
 
     @Override

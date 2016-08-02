@@ -30,11 +30,9 @@ public class NodeImpl<C> extends ElementImpl<C> implements Node<C, Edge> {
 
     private List<Edge> inEdges = new ArrayList<Edge>();
     private List<Edge> outEdges = new ArrayList<Edge>();
-    
-    public NodeImpl(@MapsTo("uuid") String uuid,
-                    @MapsTo("labels") Set<String> labels,
-                    @MapsTo("content") C content) {
-        super(uuid, labels, content);
+
+    public NodeImpl( @MapsTo( "uuid" ) String uuid ) {
+        super( uuid );
     }
 
     @Override

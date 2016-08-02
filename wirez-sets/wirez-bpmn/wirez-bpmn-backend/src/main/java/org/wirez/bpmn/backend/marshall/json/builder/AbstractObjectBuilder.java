@@ -123,9 +123,7 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
         Bpmn2OryxPropertyManager propertyManager = context.getOryxManager().getPropertyManager();
         Bpmn2OryxIdMappings idMappings = context.getOryxManager().getMappingsManager();
 
-        DefinitionAdapter<BPMNDefinition> adapter = context.getDefinitionManager().getDefinitionAdapter( definition.getClass() );
-        
-        Set<?> defProperties = adapter.getProperties( definition );
+        Set<?> defProperties = context.getDefinitionManager().adapters().forDefinition().getProperties( definition );
         
         for (Map.Entry<String, String> entry : properties.entrySet()) {
             final String oryxId = entry.getKey();
@@ -144,17 +142,11 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
                         
                         try {
                             
-                            PropertyAdapter<Object, Object> propertyAdapter = 
-                                    (PropertyAdapter<Object, Object>) context.getDefinitionManager().getPropertyAdapter( property.getClass() );
-                            
-                            PropertyType propertyType = propertyAdapter.getType( property );
+                            PropertyType propertyType = context.getDefinitionManager().adapters().forProperty().getType( property );
                             
                             Object value = propertyManager.parse( property, propertyType, pValue );
 
-                            PropertyAdapter<Object, Object> propertyAdapter2 =
-                                    (PropertyAdapter<Object, Object>) context.getDefinitionManager().getPropertyAdapter(property.getClass());
-
-                            propertyAdapter2.setValue(property, value);
+                            context.getDefinitionManager().adapters().forProperty().setValue(property, value);
                             
                             found = true;
                             

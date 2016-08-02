@@ -27,13 +27,12 @@ import java.util.Set;
 
 @Portable
 public class GraphImpl<C> extends ElementImpl<C> implements Graph<C, Node> {
+
     private final GraphNodeStore<Node> nodeStore;
 
     public GraphImpl(@MapsTo("uuid") String uuid,
-                     @MapsTo("labels") Set<String> labels,
-                     @MapsTo("content") C content,
                      @MapsTo("nodeStore") GraphNodeStore<Node> nodeStore) {
-        super(uuid, labels, content);
+        super(uuid);
         this.nodeStore = PortablePreconditions.checkNotNull( "nodeStore",
                 nodeStore );
     }

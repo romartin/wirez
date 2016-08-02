@@ -35,13 +35,12 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
         
         // Properties array.
         Object def = element.getContent().getDefinition();
-        DefinitionAdapter<Object> adapter = context.getDefinitionManager().getDefinitionAdapter( def.getClass() );
-        Set<?> properties = adapter.getProperties( def );
+        Set<?> properties = context.getDefinitionManager().adapters().forDefinition().getProperties( def );
         ObjectParser propertiesParser = new ObjectParser("properties");
         super.addParser( propertiesParser );
         if ( null != properties && !properties.isEmpty() ) {
             for ( Object property : properties ) {
-                PropertyAdapter propertyAdapter = context.getDefinitionManager().getPropertyAdapter(property.getClass()); 
+                PropertyAdapter propertyAdapter = context.getDefinitionManager().adapters().registry().getPropertyAdapter(property.getClass());
                 PropertyType propertyType = propertyAdapter.getType( property );
                 String oryxPropId = 
                         context.getOryxManager().getMappingsManager().getOryxPropertyId( def.getClass(), property.getClass() );
@@ -75,8 +74,8 @@ public abstract class ElementParser<T extends Element<View>> extends ObjectParse
                 .addParser( new IntegerFieldParser( "y", lr.getY().intValue() ));
 
         ObjectParser boundsParser = new ObjectParser( "bounds" )
-                .addParser( ulBoundParser )
-                .addParser( lrBoundParser );
+                .addParser( lrBoundParser )
+                .addParser( ulBoundParser );
         
         super.addParser( boundsParser );
     }

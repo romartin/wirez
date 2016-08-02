@@ -5,7 +5,7 @@ import org.wirez.core.client.canvas.CanvasHandler;
 public interface Context<H extends CanvasHandler> {
 
     enum Event {
-        CLICK, DRAG, MOUSE_ENTER, MOUSE_EXIT;     
+        CLICK, MOUSE_ENTER, MOUSE_EXIT, MOUSE_DOWN;
     }
     
     H getCanvasHandler();

@@ -26,4 +26,9 @@ public abstract class BindableDefinitionAdapterProxy<T> extends DefinitionAdapte
         return adapter.getTypes( baseType );
     }
 
+    @Override
+    public boolean isPojoModel() {
+        return true;
+    }
+
 }

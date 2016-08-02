@@ -1,7 +1,7 @@
 package org.wirez.core.client.util;
 
 import com.google.gwt.core.client.GWT;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeSet;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.Canvas;
@@ -29,8 +29,7 @@ public class ShapeUtils {
                                             final Element<? extends Definition<?>> element ) {
         final ClientDefinitionManager manager = context.getClientDefinitionManager();
         final Object def = element.getContent().getDefinition();
-        final DefinitionAdapter<Object> adapter = manager.getDefinitionAdapter( def.getClass() );
-        final String id = adapter.getId( def );
+        final String id = manager.adapters().forDefinition().getId( def );
         return context.getShapeManager().getFactory( id );
     }
 

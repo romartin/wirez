@@ -56,11 +56,10 @@ public class ShapeSetNavigatorItemImpl implements IsWidget, ShapeSetNavigatorIte
 
         this.uuid = shapeSet.getId();
 
-        final String name = shapeSet.getName();
         final String defSetId = shapeSet.getDefinitionSetId();
         final SafeUri thumbUri = shapeManager.getThumbnail( defSetId );
-        final Object defSet = definitionManager.getDefinitionSet( defSetId );
-        final String description = definitionManager.getDefinitionSetAdapter( defSet.getClass() ).getDescription( defSet );
+        final Object defSet = definitionManager.definitionSets().getDefinitionSetById( defSetId );
+        final String description = definitionManager.adapters().forDefinitionSet().getDescription( defSet );
         view
             .setUUID( uuid )
             .setItemTitle( description )

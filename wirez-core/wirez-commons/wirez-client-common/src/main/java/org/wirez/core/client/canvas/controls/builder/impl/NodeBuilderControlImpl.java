@@ -9,7 +9,7 @@ import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.content.view.ViewConnector;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
@@ -29,7 +29,6 @@ import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.util.EdgeMagnetsHelper;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
@@ -104,8 +103,7 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
         if ( null != node ) {
             
             final Object nodeDef = node.getContent().getDefinition();
-            final DefinitionAdapter<Object> nodeAdapter = clientDefinitionManager.getDefinitionAdapter( nodeDef.getClass() );
-            final String nodeId = nodeAdapter.getId( nodeDef );
+            final String nodeId = clientDefinitionManager.adapters().forDefinition().getId( nodeDef );
             final ElementBuilderControlImpl ebc = getElementBuilderControl();
             final Node<View<?>, Edge> parent = ebc.getParent( x, y );
             final Double[] childCoordinates = ebc.getChildCoordinates( parent, x, y );
@@ -122,8 +120,7 @@ public class NodeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
                     if ( inEdge != null ) {
 
                         final Object edgeDef = inEdge.getContent().getDefinition();
-                        final DefinitionAdapter<Object> edgeAdapter = clientDefinitionManager.getDefinitionAdapter( edgeDef.getClass() );
-                        final String edgeId = edgeAdapter.getId( edgeDef );
+                        final String edgeId = clientDefinitionManager.adapters().forDefinition().getId( edgeDef );
                         final ShapeFactory<? ,?, ?> edgeFactory = shapeManager.getFactory( edgeId );
 
                         // The commands to batch for the edge that connects both nodes.

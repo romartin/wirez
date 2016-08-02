@@ -24,7 +24,6 @@ import java.util.Set;
 public class GraphUtils {
 
     DefinitionManager definitionManager;
-    DefinitionUtils definitionUtils;
 
     protected GraphUtils() {
 
@@ -32,10 +31,8 @@ public class GraphUtils {
 
     @Inject
     @SuppressWarnings("all")
-    public GraphUtils(final DefinitionManager definitionManager,
-                      final DefinitionUtils definitionUtils) {
+    public GraphUtils(final DefinitionManager definitionManager ) {
         this.definitionManager = definitionManager;
-        this.definitionUtils = definitionUtils;
     }
 
     public Object getProperty(final Element<? extends Definition> element, final String id) {
@@ -47,8 +44,7 @@ public class GraphUtils {
                                      final String id ) {
         if ( null != element ) {
             final Object def = element.getContent().getDefinition();
-            final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( def.getClass() );
-            final Set<?> properties = adapter.getProperties( def );
+            final Set<?> properties = definitionManager.adapters().forDefinition().getProperties( def );
             return getProperty(definitionManager, properties, id);
         }
 
@@ -64,8 +60,7 @@ public class GraphUtils {
                                      final String id ) {
         if ( null != id && null != properties ) {
             for (final Object property : properties) {
-                final PropertyAdapter<Object, ?> adapter = definitionManager.getPropertyAdapter( property.getClass() );
-                final String pId = adapter.getId( property );
+                final String pId = definitionManager.adapters().forProperty().getId( property );
                 if (pId.equals(id)) {
                     return property;
                 }
@@ -73,18 +68,6 @@ public class GraphUtils {
         }
 
         return null;
-    }
-
-    public static boolean isNode( final Class<?> graphElementClass) {
-
-        return DefinitionUtils.isNode( graphElementClass );
-
-    }
-
-    public static boolean isEdge( final Class<?> graphElementClass) {
-
-        return DefinitionUtils.isEdge( graphElementClass );
-
     }
 
     public <T> int countDefinitions(final Graph<?, ? extends Node> target,
@@ -122,13 +105,13 @@ public class GraphUtils {
 
     public  <T> String getDefinitionId( final T definition ) {
 
-        return definitionUtils.getDefinitionId( definition );
+        return definitionManager.adapters().forDefinition().getId( definition );
 
     }
 
     public  <T> Set<String> getDefinitionLabels( final T definition ) {
 
-        return definitionUtils.getDefinitionLabels( definition );
+        return definitionManager.adapters().forDefinition().getLabels( definition );
 
     }
 
@@ -143,14 +126,12 @@ public class GraphUtils {
             
         } else if ( element.getContent() instanceof DefinitionSet) {
             
-            targetId = ((DefinitionSet) element.getContent()).getId();
+            targetId = ((DefinitionSet) element.getContent()).getDefinition();
             
         }
 
         return targetId;
     }
-
-
 
     public static Double[] getPosition(final View element) {
         final Bounds.Bound ul = element.getBounds().getUpperLeft();

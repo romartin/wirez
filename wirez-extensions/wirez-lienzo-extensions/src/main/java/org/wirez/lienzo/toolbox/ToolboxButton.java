@@ -10,6 +10,7 @@ import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
+import com.google.gwt.user.client.Timer;
 import org.wirez.lienzo.primitive.PrimitiveDragProxy;
 import org.wirez.lienzo.toolbox.builder.Button;
 import org.wirez.lienzo.toolbox.event.ToolboxButtonEvent;
@@ -18,13 +19,16 @@ import org.wirez.lienzo.toolbox.event.ToolboxButtonEventHandler;
 import java.util.List;
 
 public class ToolboxButton {
+
+    private static final int CLICK_HANDLER_TIMER_DURATION = 100;
+
     private final WiresShape primitive;
 
     public static final double ANIMATION_DURATION = 200;
     private final Layer layer;
     private final HandlerRegistrationManager handlerRegistrationManager = new HandlerRegistrationManager();
     private ToolboxButtonEventHandler clickHandler;
-    private ToolboxButtonEventHandler dragEndHandler;
+    private ToolboxButtonEventHandler mouseDownHandler;
     private ToolboxButtonEventHandler mouseEnterHandler;
     private ToolboxButtonEventHandler mouseExitHandler;
     private double iScaleX;
@@ -35,6 +39,7 @@ public class ToolboxButton {
     private boolean isHoverComplete;
     private boolean isOutRequested;
     private HoverAnimation animation;
+    private Timer clickHandlerTimer;
 
     private MultiPath decorator;
 
@@ -48,13 +53,13 @@ public class ToolboxButton {
                          final IPrimitive<?> shape,
                          final List<Button.WhenReady> callbacks,
                          final ToolboxButtonEventHandler clickHandler,
-                         final ToolboxButtonEventHandler dragEndHandler,
+                         final ToolboxButtonEventHandler mouseDownHandler,
                          final ToolboxButtonEventHandler mouseEnterHandler,
                          final ToolboxButtonEventHandler mouseExitHandler,
                          final HoverAnimation animation) {
         this.layer = layer;
         this.clickHandler = clickHandler;
-        this.dragEndHandler = dragEndHandler;
+        this.mouseDownHandler = mouseDownHandler;
         this.mouseEnterHandler = mouseEnterHandler;
         this.mouseExitHandler = mouseExitHandler;
         this.primitive = build( shape );
@@ -62,6 +67,7 @@ public class ToolboxButton {
         this.isHoverComplete = false;
         this.isOutRequested = false;
         this.animation = animation;
+        this.clickHandlerTimer = null;
 
         for (Button.WhenReady callback : callbacks) {
             callback.whenReady(this);
@@ -78,6 +84,7 @@ public class ToolboxButton {
     }
 
     public void remove() {
+        clearClickHandlerTimer();
         handlerRegistrationManager.removeHandler();
         decorator.removeFromParent();
         primitive.removeFromParent();
@@ -163,48 +170,61 @@ public class ToolboxButton {
 
             handlerRegistrationManager.register(
 
-                    wiresShape.getGroup().addNodeMouseClickHandler(event ->
+                    wiresShape.getGroup().addNodeMouseClickHandler(event -> {
+
+                        ToolboxButton.this.clearClickHandlerTimer();
+
+                        final int x = event.getX();
+                        final int y = event.getY();
+                        final int clientX = event.getHumanInputEvent().getClientX();
+                        final int clientY = event.getHumanInputEvent().getClientY();
+
                         clickHandler.fire(
-                                buildEvent(
-                                        event.getX(),
-                                        event.getY(),
-                                        event.getHumanInputEvent().getClientX(),
-                                        event.getHumanInputEvent().getClientY() ) )
+                                buildEvent( x, y, clientX, clientY ) );
+
+
+
+                            }
                     )
 
             );
 
         }
         
-        if ( null != dragEndHandler ) {
+        if ( null != mouseDownHandler ) {
 
             handlerRegistrationManager.register(
 
-                wiresShape.getGroup().addNodeMouseDownHandler(event ->
-                    new PrimitiveDragProxy( layer,
-                            shape.copy(),
-                            event.getHumanInputEvent().getClientX(),
-                            event.getHumanInputEvent().getClientY(),
-                            200,
-                            new PrimitiveDragProxy.Callback() {
+                wiresShape.getGroup().addNodeMouseDownHandler(event -> {
 
-                    @Override
-                    public void onStart(final int x, final int y) {
+                    final int x = event.getX();
+                    final int y = event.getY();
+                    final int clientX = event.getHumanInputEvent().getClientX();
+                    final int clientY = event.getHumanInputEvent().getClientY();
+
+                    if ( null == ToolboxButton.this.clickHandlerTimer ) {
+
+                        ToolboxButton.this.clickHandlerTimer = new Timer() {
+
+                            @Override
+                            public void run() {
+
+                                mouseDownHandler.fire(
+                                        buildEvent( x, y, clientX, clientY ) );
+
+                                ToolboxButton.this.clickHandlerTimer = null;
+
+                            }
+
+                        };
+
+                        ToolboxButton.this.clickHandlerTimer.schedule( CLICK_HANDLER_TIMER_DURATION );
 
                     }
 
-                    @Override
-                    public void onMove(final int x, final int y) {
-                    }
+                }
 
-                    @Override
-                    public void onComplete(final int x, final int y) {
-                        dragEndHandler.fire( buildEvent( x, y, x , y ) );
-                    }
-
-                }))
-
-            );
+            ) );
             
         }
         
@@ -353,6 +373,19 @@ public class ToolboxButton {
 
             }
 
+        }
+
+    }
+
+    private void clearClickHandlerTimer() {
+
+        if ( null != this.clickHandlerTimer ) {
+
+            if ( this.clickHandlerTimer.isRunning() ) {
+                this.clickHandlerTimer.cancel();
+            }
+
+            this.clickHandlerTimer = null;
         }
 
     }

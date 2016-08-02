@@ -1,7 +1,7 @@
 package org.wirez.backend.service;
 
 import org.jboss.errai.bus.server.annotations.Service;
-import org.wirez.backend.diagram.lookup.ApplicationDiagramLookupManager;
+import org.wirez.backend.diagram.ApplicationDiagramLookupManager;
 import org.wirez.core.api.DiagramManager;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.backend.annotation.Application;

@@ -66,7 +66,7 @@ public class ClientDiagramServices {
                 callback.onSuccess( diagram );
             }
             
-        }, (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; }).get( uuid );
+        }, (message, throwable) -> { callback.onError( new ClientRuntimeError(throwable)); return false; }).getDiagramByUUID( uuid );
 
     }
     

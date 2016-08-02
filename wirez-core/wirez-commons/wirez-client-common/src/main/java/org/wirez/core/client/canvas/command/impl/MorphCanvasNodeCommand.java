@@ -48,7 +48,8 @@ public final class MorphCanvasNodeCommand extends AbstractCanvasGraphCommand {
         // Keep undo metadata.
         final Object definition = candidate.getContent().getDefinition();
         this.oldMorphTarget = context.getClientDefinitionManager()
-                .getDefinitionAdapter( definition.getClass() )
+                .adapters()
+                .forDefinition()
                 .getId( definition );
 
         // Deregister the existing shape.

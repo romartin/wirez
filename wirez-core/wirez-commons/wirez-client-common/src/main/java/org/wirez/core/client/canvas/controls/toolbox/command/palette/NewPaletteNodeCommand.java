@@ -90,6 +90,7 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
                     public void onSuccess(final Element nodeItem) {
 
                         final Node<View<?>, Edge> node = (Node<View<?>, Edge>) nodeItem;
+
                         final ShapeFactory<?, AbstractCanvasHandler, ?> nodeShapeFactory = shapeManager.getFactory( definitionId );
                         final ShapeFactory<?, AbstractCanvasHandler, ?> edgeShapeFactory = shapeManager.getFactory( getEdgeIdentifier() );
 

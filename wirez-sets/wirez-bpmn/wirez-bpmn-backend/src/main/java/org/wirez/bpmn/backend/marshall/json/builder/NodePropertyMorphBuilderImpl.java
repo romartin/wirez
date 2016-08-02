@@ -39,7 +39,7 @@ public class NodePropertyMorphBuilderImpl extends NodeBuilderImpl {
             mps.add( mps1.iterator().next() );
         }
 
-        DefinitionAdapter<Object> definitionAdapter = context.getDefinitionManager().getDefinitionAdapter( definitionClass );
+        DefinitionAdapter<Object> definitionAdapter = context.getDefinitionManager().adapters().registry().getDefinitionAdapter( definitionClass );
         String baseId = ( (HasInheritance) definitionAdapter).getBaseType( definitionClass );
         if ( null != baseId ) {
             final Iterable<MorphProperty> mps2 = propertyMorphDefinition.getMorphProperties( baseId );
@@ -50,15 +50,13 @@ public class NodePropertyMorphBuilderImpl extends NodeBuilderImpl {
 
         final MorphProperty morphProperty = mps.iterator().next();
         
-        final Object defaultDefinition = context.getFactoryManager().newDomainObject( defaultDefinitionId );
+        final Object defaultDefinition = context.getFactoryManager().newDefinition( defaultDefinitionId );
         
         final DefinitionUtils definitionUtils = new DefinitionUtils( context.getDefinitionManager(), context.getFactoryManager() );
 
         final Object mp = definitionUtils.getProperty( defaultDefinition, morphProperty.getProperty() );
 
-        final PropertyAdapter<Object, ?> propertyAdapter = context.getDefinitionManager().getPropertyAdapter( mp.getClass() );
-        
-        final PropertyType propertyType = propertyAdapter.getType( mp );
+        final PropertyType propertyType = context.getDefinitionManager().adapters().forProperty().getType( mp );
 
         final String oryxId = context.getOryxManager().getMappingsManager().getOryxPropertyId( mp.getClass() );
 

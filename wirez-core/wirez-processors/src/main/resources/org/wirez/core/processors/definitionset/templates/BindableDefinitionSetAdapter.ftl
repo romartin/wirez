@@ -46,15 +46,9 @@ public class ${className} extends ${parentAdapterClassName}<Object> {
         </#list>
     }};
 
-    private static final Map<Class, Class> graphTypes = new HashMap<Class, Class>(${graphTypesSize}) {{
-    <#list graphTypes as graphType>
-        put( ${graphType.className}.class, ${graphType.methodName}.class );
-    </#list>
-        }};
-    
-        private static final Map<Class, String> graphFactories = new HashMap<Class, String>(${graphFactoriesSize}) {{
-    <#list graphFactories as graphFactory>
-        put( ${graphFactory.className}.class, "${graphFactory.methodName}" );
+    private static final Map<Class, Class> graphFactoryTypes = new HashMap<Class, Class>(${graphFactoryTypesSize}) {{
+    <#list graphFactoryTypes as graphFactoryType>
+        put( ${graphFactoryType.className}.class, ${graphFactoryType.methodName}.class );
     </#list>
         }};
 
@@ -68,7 +62,7 @@ public class ${className} extends ${parentAdapterClassName}<Object> {
     
     @Override
     protected void setBindings(final BindableDefinitionSetAdapter<Object> adapter) {
-        adapter.setBindings( descriptionFieldNames, graphTypes, graphFactories, definitionIds );
+        adapter.setBindings( descriptionFieldNames, graphFactoryTypes, definitionIds );
     }
         
 }

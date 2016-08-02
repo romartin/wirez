@@ -88,7 +88,7 @@ public abstract class AbstractPaletteWidget<D extends PaletteDefinition, V exten
 
         if ( null != itemDropCallback ) {
 
-            final Object definition = clientFactoryServices.newDomainObject( definitionId );
+            final Object definition = clientFactoryServices.getClientFactoryManager().newDefinition( definitionId );
             final ShapeFactory<?, ?, ? extends Shape> factory = getFactory( definitionId );
 
             // Fire the callback as shape dropped onto the target canvas.

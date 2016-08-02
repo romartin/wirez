@@ -7,7 +7,6 @@ import org.wirez.bpmn.definition.property.Width;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.command.Command;
 import org.wirez.core.command.CommandResult;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.command.GraphCommandExecutionContext;
@@ -51,8 +50,9 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
 
         // Build the graph node for the definition.
         String definitionId = getDefinitionToBuild( context );
+
         T result = (T) factoryManager.newElement(this.nodeId, definitionId);
-        
+
         // Set the def properties.
         setProperties(context, (BPMNDefinition) result.getContent().getDefinition());
         
@@ -87,12 +87,11 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
     protected void setSize(BuilderContext context, T node, double width, double height) {
 
         Object definition = node.getContent().getDefinition();
-        DefinitionAdapter<Object> adapter = context.getDefinitionManager().getDefinitionAdapter( definition.getClass() );
-        
+
         Width w = null;
         Height h = null;
 
-        Set<?> properties = adapter.getProperties( definition );
+        Set<?> properties = context.getDefinitionManager().adapters().forDefinition().getProperties( definition );
         if ( null != properties ) {
             
             // Look for w/h or radius and set the values. 

@@ -2,146 +2,218 @@ package org.wirez.core.client.service;
 
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.jboss.errai.ioc.client.container.SyncBeanDef;
-import org.jboss.errai.ioc.client.container.SyncBeanManager;
-import org.wirez.core.api.AbstractFactoryManager;
-import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.definition.factory.ModelFactory;
+import org.wirez.core.client.api.ClientFactoryManager;
 import org.wirez.core.diagram.Diagram;
-import org.wirez.core.diagram.DiagramImpl;
-import org.wirez.core.diagram.Settings;
 import org.wirez.core.graph.Element;
-import org.wirez.core.graph.Graph;
-import org.wirez.core.graph.factory.ElementFactory;
-import org.wirez.core.graph.factory.GraphFactory;
 import org.wirez.core.remote.FactoryService;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Collection;
 
 /**
  * Provides the client side and remote caller for the factory manager and services.
  * If the requested factory is present on client side, it will create the object using it.
- * If the requested factory is not present on client side, whether it's not implemented or the object 
- * cannot be created on client, it performs the service calls to the factory service. 
+ * If the requested factory is not present on client side, whether it's not implemented or the object
+ * cannot be created on client, it performs the service calls to the factory service.
  */
 @ApplicationScoped
-public class ClientFactoryServices extends AbstractFactoryManager {
+public class ClientFactoryServices {
 
-    SyncBeanManager beanManager;
+    ClientFactoryManager clientFactoryManager;
     Caller<FactoryService> factoryServiceCaller;
 
     protected ClientFactoryServices() {
-        super(null);
+        super();
     }
 
     @Inject
-    public ClientFactoryServices(final SyncBeanManager beanManager,
-                                 final DefinitionManager definitionManager,
-                                 final Caller<FactoryService> factoryServiceCaller) {
-        super( definitionManager );
-        this.beanManager = beanManager;
+    public ClientFactoryServices( final ClientFactoryManager clientFactoryManager,
+                                  final Caller<FactoryService> factoryServiceCaller ) {
+        this.clientFactoryManager = clientFactoryManager;
         this.factoryServiceCaller = factoryServiceCaller;
     }
 
-    @PostConstruct
-    public void init() {
+    public <T> void newDefinition( final String definitionId,
+                                   final ServiceCallback<T> callback ) {
 
-        // Client side model builders.
-        Collection<SyncBeanDef<ModelFactory>> modelBuilderDefs = beanManager.lookupBeans(ModelFactory.class);
-        for (SyncBeanDef<ModelFactory> modelBuilder : modelBuilderDefs) {
-            ModelFactory modelBuilderObject = modelBuilder.getInstance();
-            modelFactories.add(modelBuilderObject);
-        }
+        final T def = clientFactoryManager.newDefinition( definitionId );
 
-    }
+        if ( null != def ) {
 
-    public <W> void newDomainObject(final String id, final ServiceCallback<W> callback ) {
+            callback.onSuccess( def );
 
-        W result = super.newDomainObject( id );
-        if ( null != result ) {
-            callback.onSuccess( result );
         } else {
-            factoryServiceCaller.call(new RemoteCallback<W>() {
+
+            factoryServiceCaller.call( new RemoteCallback<T>() {
+
                 @Override
-                public void callback(final W w) {
-                    callback.onSuccess(w);
+                public void callback( T t ) {
+
+                    callback.onSuccess( t );
                 }
-            }, (message, throwable) -> false).newDomainObject( id );
+
+            }, ( message, throwable ) -> {
+
+                callback.onError( new ClientRuntimeError( throwable ) );
+                return false;
+
+            } ).newDefinition( definitionId );
+
         }
-        
+
     }
 
-    public <W extends Graph> void newGraph(String uuid, String definitionSetId, final ServiceCallback<W> callback) {
+    public <T> void newDefinition( final Class<T> type,
+                                   final ServiceCallback<T> callback ) {
 
-        W result = super.newGraph( uuid, definitionSetId );
-        if ( null != result ) {
-            callback.onSuccess( result );
+        final T def = clientFactoryManager.newDefinition( type );
+
+        if ( null != def ) {
+
+            callback.onSuccess( def );
+
         } else {
-            factoryServiceCaller.call(new RemoteCallback<W>() {
+
+            factoryServiceCaller.call( new RemoteCallback<T>() {
+
                 @Override
-                public void callback(final W w) {
-                    callback.onSuccess(w);
+                public void callback( T t ) {
+
+                    callback.onSuccess( t );
                 }
-            }, (message, throwable) -> false).newGraph( uuid, definitionSetId );
+
+            }, ( message, throwable ) -> {
+
+                callback.onError( new ClientRuntimeError( throwable ) );
+                return false;
+
+            } ).newDefinition( type );
+
         }
 
     }
-    
-    public <W extends Element> void newElement(String uuid, String id, final ServiceCallback<W> callback) {
 
-        W result = super.newElement( uuid, id );
-        if ( null != result ) {
-            callback.onSuccess( result );
+    public <T> void newElement( final String uuid,
+                                final String definitionId,
+                                final ServiceCallback<Element> callback ) {
+
+        final Element element = clientFactoryManager.newElement( uuid, definitionId );
+
+        if ( null != element ) {
+
+            callback.onSuccess( element );
+
         } else {
-            factoryServiceCaller.call(new RemoteCallback<W>() {
+
+            factoryServiceCaller.call( new RemoteCallback<Element>() {
+
                 @Override
-                public void callback(final W w) {
-                    callback.onSuccess(w);
+                public void callback( final Element t ) {
+
+                    callback.onSuccess( t );
                 }
-            }, (message, throwable) -> false).newElement( uuid, id );
-        }
-        
-    }
 
-    @Override
-    protected ElementFactory getElementFactory(final Object definition,
-                                                   final Class<?> graphElementClass,
-                                                   final String factory) {
-        return getFactory( definition, graphElementClass, factory );
-    }
+            }, ( message, throwable ) -> {
 
-    @Override
-    protected GraphFactory getGraphFactory(final Object definition,
-                                             final Class<?> graphElementClass,
-                                             final String factory) {
-        return getFactory( definition, graphElementClass, factory );
-    }
+                callback.onError( new ClientRuntimeError( throwable ) );
+                return false;
 
-    @SuppressWarnings("unchecked")
-    protected <T> T getFactory(final Object definition,
-                                               final Class<?> graphElementClass,
-                                               final String factory) {
+            } ).newElement( uuid, definitionId );
 
-        String ref = getFactoryReference( graphElementClass, factory );
-
-        // DefinitionSet client adapters.
-        Collection<SyncBeanDef> graphFactories = beanManager.lookupBeans(ref);
-
-        // If no beans found, no problem, then try on backend.
-        if ( graphFactories.isEmpty() ) {
-            return null;
-        }
-        
-        // If more that one bean, throw error.
-        if ( graphFactories.size() > 1 ) {
-            throw new RuntimeException(" More than one bean matches for graph element factory with name [" + ref + "]");
         }
 
-
-        return (T) graphFactories.iterator().next().getInstance();
     }
-    
+
+    public <T> void newElement( final String uuid,
+                                final Class<T> type,
+                                final ServiceCallback<Element> callback ) {
+
+        final Element element = clientFactoryManager.newElement( uuid, type );
+
+        if ( null != element ) {
+
+            callback.onSuccess( element );
+
+        } else {
+
+            factoryServiceCaller.call( new RemoteCallback<Element>() {
+
+                @Override
+                public void callback( Element t ) {
+
+                    callback.onSuccess( t );
+                }
+
+            }, ( message, throwable ) -> {
+
+                callback.onError( new ClientRuntimeError( throwable ) );
+                return false;
+
+            } ).newElement( uuid, type );
+
+        }
+
+    }
+
+
+    public <D extends Diagram> void newDiagram( final String uuid,
+                                         final String id,
+                                         final ServiceCallback<D> callback ) {
+
+        final D diagram = clientFactoryManager.newDiagram( uuid, id );
+
+        if ( null != diagram ) {
+
+            callback.onSuccess( diagram );
+
+        } else {
+
+            factoryServiceCaller.call( new RemoteCallback<D>() {
+                @Override
+                public void callback( final D d ) {
+
+                    callback.onSuccess( d );
+
+                }
+            }, ( message, throwable ) -> {
+                callback.onError( new ClientRuntimeError( throwable ) );
+                return false;
+            } ).newDiagram( uuid, id );
+
+        }
+
+    }
+
+    public <D extends Diagram> void newDiagram( final String uuid,
+                                         final Class<?> type,
+                                         final ServiceCallback<D> callback ) {
+
+        final D diagram = clientFactoryManager.newDiagram( uuid, type );
+
+        if ( null != diagram ) {
+
+            callback.onSuccess( diagram );
+
+        } else {
+
+            factoryServiceCaller.call( new RemoteCallback<D>() {
+                @Override
+                public void callback( final D d ) {
+
+                    callback.onSuccess( d );
+
+                }
+            }, ( message, throwable ) -> {
+                callback.onError( new ClientRuntimeError( throwable ) );
+                return false;
+            } ).newDiagram( uuid, type );
+
+        }
+
+    }
+
+    public ClientFactoryManager getClientFactoryManager() {
+        return clientFactoryManager;
+    }
+
 }

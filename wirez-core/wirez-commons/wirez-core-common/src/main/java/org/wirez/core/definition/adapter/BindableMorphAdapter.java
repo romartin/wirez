@@ -36,14 +36,11 @@ public abstract class BindableMorphAdapter<S> extends AbstractMorphAdapter<S> {
 
         if ( definitionUtils.isDefaultPolicy( morphDefinition ) ) {
 
-            final Object nameProperty = getDefinitionManager().getDefinitionAdapter( source.getClass() ).getNameProperty( source );
-            final Object namePropertyValue = getDefinitionManager().getPropertyAdapter( nameProperty.getClass() ).getValue( nameProperty );
+            final Object nameProperty = getDefinitionManager().adapters().forDefinition().getNameProperty( source );
+            final Object namePropertyValue = getDefinitionManager().adapters().forProperty().getValue( nameProperty );
 
-            final Object targetNameProperty = getDefinitionManager().getDefinitionAdapter( result.getClass() ).getNameProperty( result );
-            final PropertyAdapter<Object, Object> propertyAdapter =
-                    (PropertyAdapter<Object, Object>) getDefinitionManager().getPropertyAdapter( targetNameProperty.getClass() );
-
-            propertyAdapter.setValue( targetNameProperty, namePropertyValue );;
+            final Object targetNameProperty = getDefinitionManager().adapters().forDefinition().getNameProperty( result );
+            getDefinitionManager().adapters().forProperty().setValue( targetNameProperty, namePropertyValue );;
 
             return result;
 
@@ -84,6 +81,11 @@ public abstract class BindableMorphAdapter<S> extends AbstractMorphAdapter<S> {
     }
 
     @Override
+    public boolean isPojoModel() {
+        return true;
+    }
+
+    @Override
     protected Iterable<String> getTargets( final Class<?> type,
                                            final String definitionId,
                                            final String baseId) {
@@ -118,7 +120,7 @@ public abstract class BindableMorphAdapter<S> extends AbstractMorphAdapter<S> {
     }
 
     protected String[] getTypes( final Class<?> adapterType, String baseType ) {
-        final DefinitionAdapter<Object> definitionAdapter = getDefinitionManager().getDefinitionAdapter( adapterType );
+        final DefinitionAdapter<Object> definitionAdapter = getDefinitionManager().adapters().registry().getDefinitionAdapter( adapterType );
         if ( definitionAdapter instanceof HasInheritance) {
             return ( (HasInheritance) definitionAdapter ).getTypes( baseType );
         }
@@ -128,7 +130,7 @@ public abstract class BindableMorphAdapter<S> extends AbstractMorphAdapter<S> {
 
     @SuppressWarnings("unchecked")
     protected String getBaseDefinitionId( final Class<?> type ) {
-        final DefinitionAdapter<Object> definitionAdapter = getDefinitionManager().getDefinitionAdapter( type );
+        final DefinitionAdapter<Object> definitionAdapter = getDefinitionManager().adapters().registry().getDefinitionAdapter( type );
         if ( definitionAdapter instanceof HasInheritance) {
             return ( (HasInheritance) definitionAdapter ).getBaseType( type );
         }

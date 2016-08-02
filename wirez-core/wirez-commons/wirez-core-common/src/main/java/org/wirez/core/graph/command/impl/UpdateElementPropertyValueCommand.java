@@ -63,7 +63,7 @@ public final class UpdateElementPropertyValueCommand extends AbstractGraphComman
     public CommandResult<RuleViolation> execute(final GraphCommandExecutionContext context) {
         final Object p = GraphUtils.getProperty( context.getDefinitionManager(), element, propertyId );
         final PropertyAdapter<Object, Object> adapter = 
-                (PropertyAdapter<Object, Object>) context.getDefinitionManager().getPropertyAdapter( p.getClass() ); 
+                (PropertyAdapter<Object, Object>) context.getDefinitionManager().adapters().registry().getPropertyAdapter( p.getClass() );
         oldValue = adapter.getValue(p);
         adapter.setValue(p, value);
         return GraphCommandResultBuilder.RESULT_OK;

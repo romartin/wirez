@@ -66,9 +66,8 @@ public final class AddChildEdgeCommand extends AbstractGraphCommand {
 
             // TODO: Create a ParentEdgeFactory iface extending EdgeFactory using as content generics type Relationship
             final String uuid = UUID.uuid();
-            final Set<String> labels = new HashSet<>(1);
-            final Edge<Child, Node> edge = new EdgeImpl<>(uuid, labels, new Child());
-
+            final Edge<Child, Node> edge = new EdgeImpl<>( uuid );
+            edge.setContent( new Child() );
             edge.setSourceNode(parent);
             edge.setTargetNode(candidate);
             parent.getOutEdges().add( edge );

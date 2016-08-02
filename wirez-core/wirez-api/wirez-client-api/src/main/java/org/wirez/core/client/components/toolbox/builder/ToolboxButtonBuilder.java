@@ -11,7 +11,7 @@ public interface ToolboxButtonBuilder<I> {
 
     ToolboxButtonBuilder<I> setClickHandler( ToolboxButtonEventHandler handler );
 
-    ToolboxButtonBuilder<I> setDragEndHandler( ToolboxButtonEventHandler handler );
+    ToolboxButtonBuilder<I> setMouseDownHandler( ToolboxButtonEventHandler handler );
 
     ToolboxButtonBuilder<I> setMouseEnterHandler( ToolboxButtonEventHandler handler );
 

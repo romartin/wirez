@@ -7,9 +7,9 @@ import org.wirez.core.definition.adapter.BindableMorphAdapter;
 import org.wirez.core.definition.adapter.MorphAdapter;
 import org.wirez.core.definition.morph.BindablePropertyMorphDefinition;
 import org.wirez.core.definition.morph.MorphDefinition;
-import org.wirez.core.graph.Edge;
-import org.wirez.core.graph.Element;
-import org.wirez.core.graph.Node;
+import org.wirez.core.factory.graph.EdgeFactory;
+import org.wirez.core.factory.graph.ElementFactory;
+import org.wirez.core.factory.graph.NodeFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -46,7 +46,7 @@ public class BPMNGraphObjectBuilderFactory {
 
         if ( null != defClass ) {
 
-            MorphAdapter<Object> morphAdapter = definitionManager.getMorphAdapter( defClass );
+            MorphAdapter<Object> morphAdapter = definitionManager.adapters().registry().getMorphAdapter( defClass );
 
             BindablePropertyMorphDefinition propertyMorphDefinition = null;
 
@@ -74,13 +74,14 @@ public class BPMNGraphObjectBuilderFactory {
                 
             } else {
 
-                Class<? extends Element> element = RuntimeDefinitionAdapter.getGraphElement( defClass );
+                Class<? extends ElementFactory> elementFactory = RuntimeDefinitionAdapter.getGraphFactory( defClass );
 
-                if ( element.isAssignableFrom( Node.class ) ) {
+
+                if ( isNodeFactory( elementFactory ) ) {
 
                     return new NodeBuilderImpl( defClass );
 
-                } else if ( element.isAssignableFrom( Edge.class ) ) {
+                } else if ( isEdgeFactory( elementFactory ) ) {
 
                     return new EdgeBuilderImpl( defClass );
 
@@ -95,6 +96,18 @@ public class BPMNGraphObjectBuilderFactory {
         } 
 
         throw new RuntimeException("No definition found for oryx stencil with id [" + oryxId + "]");
+
+    }
+
+    private static boolean isNodeFactory( Class<? extends ElementFactory> elementFactory ) {
+
+        return elementFactory.isAssignableFrom( NodeFactory.class );
+
+    }
+
+    private static boolean isEdgeFactory( Class<? extends ElementFactory> elementFactory ) {
+
+        return elementFactory.isAssignableFrom( EdgeFactory.class );
 
     }
 

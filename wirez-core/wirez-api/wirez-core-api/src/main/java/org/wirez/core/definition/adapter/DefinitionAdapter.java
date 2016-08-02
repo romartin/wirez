@@ -1,5 +1,6 @@
 package org.wirez.core.definition.adapter;
 
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Element;
 
 import java.util.Set;
@@ -55,13 +56,8 @@ public interface DefinitionAdapter<T> extends PriorityAdapter {
     Set<?> getProperties(T pojo);
 
     /**
-     * Returns the definition's graph element class for a given pojo.
+     * Returns the definition's graph element factory class for a given pojo.
      */
-    Class<? extends Element> getGraphElement(T pojo);
-
-    /**
-     * Returns the definition's graph element factory for a given pojo.
-     */
-    String getElementFactory(T pojo);
+    Class<? extends ElementFactory> getGraphFactoryType( T pojo);
 
 }

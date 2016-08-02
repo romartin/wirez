@@ -25,6 +25,7 @@
 	<inherits name="org.wirez.basicset.WirezBasicSetApi"/>
 
 	<source path="definition"/>
+	<source path="factory"/>
 	<source path="shape/proxy"/>
 	<source path="" includes="BPMNDefinitionSet.java"/>
 

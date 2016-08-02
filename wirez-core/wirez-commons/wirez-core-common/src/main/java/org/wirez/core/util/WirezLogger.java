@@ -22,6 +22,7 @@ import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.relationship.Child;
+import org.wirez.core.graph.content.view.Bounds;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.FullContentTraverseCallback;
@@ -146,8 +147,11 @@ public class WirezLogger {
 
                     
                     log(indent + "(View) Node UUID: " + node.getUUID());
-                    final String nId = getDefinitionId( node.getContent().getDefinition() );
+                    final View view = node.getContent();
+                    final String nId = getDefinitionId( view.getDefinition() );
+                    final Bounds bounds = view.getBounds();
                     log(indent + "(View) Node Id: " + nId );
+                    log(indent + "(View) Node Bounds: " + bounds );
 
                     final Node parent = getParent(node);
                     if ( null != parent ) {

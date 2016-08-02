@@ -2,13 +2,18 @@ package org.wirez.core.definition.util;
 
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
-import org.wirez.core.definition.adapter.*;
+import org.wirez.core.definition.adapter.DefinitionAdapter;
+import org.wirez.core.definition.adapter.MorphAdapter;
 import org.wirez.core.definition.adapter.binding.HasInheritance;
 import org.wirez.core.definition.morph.MorphDefinition;
 import org.wirez.core.definition.morph.MorphPolicy;
+import org.wirez.core.factory.graph.EdgeFactory;
+import org.wirez.core.factory.graph.ElementFactory;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
+import org.wirez.core.registry.factory.FactoryRegistry;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -34,66 +39,15 @@ public class DefinitionUtils {
         this.factoryManager = factoryManager;
     }
 
-    public <T> String getDefinitionSetId( final T definitionSet ) {
-
-        final DefinitionSetAdapter<Object> adapter = definitionManager.getDefinitionSetAdapter( definitionSet.getClass() );
-
-        return adapter.getId( definitionSet );
-
-    }
-
-    public <T> String getDefinitionId( final T definition ) {
-        
-        final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-        
-        return adapter.getId( definition );
-        
-    }
-
-    public <T> String getDefinitionTitle( final T definition ) {
-
-        final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-
-        return adapter.getTitle( definition );
-
-    }
-
-    public <T> String getDefinitionCategory( final T definition ) {
-
-        final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-
-        return adapter.getCategory( definition );
-
-    }
-
-    public <T> String getDefinitionDescription( final T definition ) {
-
-        final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-
-        return adapter.getDescription( definition );
-
-    }
-
-    public  <T> Set<String> getDefinitionLabels( final T definition ) {
-        
-        final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-        
-        return adapter.getLabels( definition );
-        
-    }
-
     public <T> Object getProperty( final T definition, final String propertyId ) {
 
-        final DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-        final Set<?> properties = definitionAdapter.getProperties( definition );
+        final Set<?> properties = definitionManager.adapters().forDefinition().getProperties( definition );
         
         if ( null != properties && !properties.isEmpty() ) {
             
             for ( final Object property : properties ) {
                 
-                final PropertyAdapter<Object, ?> propertyAdapter = definitionManager.getPropertyAdapter( property.getClass() );
-                
-                final String pId = propertyAdapter.getId( property );
+                final String pId = definitionManager.adapters().forProperty().getId( property );
                 
                 if ( pId.equals( propertyId ) ) {
                     
@@ -111,14 +65,11 @@ public class DefinitionUtils {
     
     public <T> String getName( final T definition ) {
 
-        final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-        
-        final Object name = adapter.getNameProperty( definition );
+        final Object name = definitionManager.adapters().forDefinition().getNameProperty( definition );
         
         if ( null != name ) {
             
-            final PropertyAdapter<Object, ?> propertyAdapter = definitionManager.getPropertyAdapter( name.getClass() );
-            return (String) propertyAdapter.getValue( name );
+            return (String) definitionManager.adapters().forProperty().getValue( name );
             
         }
         
@@ -127,14 +78,11 @@ public class DefinitionUtils {
 
     public <T> String getNameIdentifier( final T definition ) {
 
-        final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-
-        final Object name = adapter.getNameProperty( definition );
+        final Object name = definitionManager.adapters().forDefinition().getNameProperty( definition );
 
         if ( null != name ) {
 
-            final PropertyAdapter<Object, ?> propertyAdapter = definitionManager.getPropertyAdapter( name.getClass() );
-            return propertyAdapter.getId( name );
+            return definitionManager.adapters().forProperty().getId( name );
 
         }
 
@@ -143,7 +91,7 @@ public class DefinitionUtils {
 
     public <T> MorphDefinition getMorphDefinition( final T definition ) {
 
-        final MorphAdapter<Object> adapter = definitionManager.getMorphAdapter( definition.getClass() );
+        final MorphAdapter<Object> adapter = definitionManager.adapters().registry().getMorphAdapter( definition.getClass() );
 
         final Iterable<MorphDefinition> definitions = adapter.getMorphDefinitions( definition );
 
@@ -163,7 +111,7 @@ public class DefinitionUtils {
     public <T> String[] getDefinitionIds( final T definition ) {
 
         final Class<?> type = definition.getClass();
-        final DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( type );
+        final DefinitionAdapter<Object> definitionAdapter = definitionManager.adapters().registry().getDefinitionAdapter( type );
         final String definitionId = definitionAdapter.getId( definition );
 
         String baseId = null;
@@ -179,12 +127,11 @@ public class DefinitionUtils {
 
     public String getDefaultConnectorId( final String definitionSetId ) {
 
-        final Object defSet = getDefinitionManager().getDefinitionSet( definitionSetId );
+        final Object defSet = getDefinitionManager().definitionSets().getDefinitionSetById( definitionSetId );
 
         if ( null != defSet ) {
 
-            final DefinitionSetAdapter<Object> definitionSetAdapter = getDefinitionManager().getDefinitionSetAdapter( defSet.getClass() );
-            final Set<String> definitions = definitionSetAdapter.getDefinitions( defSet );
+            final Set<String> definitions = definitionManager.adapters().forDefinitionSet().getDefinitions( defSet );
 
             if ( null != definitions && !definitions.isEmpty() ) {
 
@@ -192,14 +139,13 @@ public class DefinitionUtils {
 
                     // TODO: Find a way to have a default connector for a DefSet or at least do not create objects here.
 
-                    final Object def = factoryManager.newDomainObject( defId );
+                    final Object def = factoryManager.newDefinition( defId );
 
                     if ( null != def ) {
 
-                        final DefinitionAdapter<Object> definitionAdapter = getDefinitionManager().getDefinitionAdapter( def.getClass() );
-                        final Class<? extends Element> graphElement = definitionAdapter.getGraphElement( def );
+                        final Class<? extends ElementFactory> graphElement = definitionManager.adapters().forDefinition().getGraphFactoryType( def );
 
-                        if ( isEdge( graphElement ) ) {
+                        if ( isEdgeFactory( graphElement, factoryManager.registry() ) ) {
 
                             return defId;
 
@@ -239,15 +185,13 @@ public class DefinitionUtils {
      */
     public Set<?> getPropertiesFromPropertySets( final Object definition ) {
 
-        final DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
         final Set<Object> properties = new HashSet<>();
 
         // And properties on each definition's annotated PropertySet.
-        final Set<?> propertySets = definitionAdapter.getPropertySets(definition);
+        final Set<?> propertySets = definitionManager.adapters().forDefinition().getPropertySets(definition);
         if ( null != propertySets && !propertySets.isEmpty() ) {
             for (Object propertySet : propertySets) {
-                final PropertySetAdapter<Object> propertySetAdapter = definitionManager.getPropertySetAdapter(propertySet.getClass());
-                final Set<?> setProperties = propertySetAdapter.getProperties(propertySet);
+                final Set<?> setProperties = definitionManager.adapters().forPropertySet().getProperties(propertySet);
                 if( null != setProperties ) {
                     properties.addAll(setProperties);
                 }
@@ -261,9 +205,7 @@ public class DefinitionUtils {
     public Object getPropertyAllowedValue( final Object property,
                                            final String value ) {
 
-        final PropertyAdapter propertyAdapter = definitionManager.getPropertyAdapter(property.getClass());
-
-        final Map<Object, String> allowedValues = propertyAdapter.getAllowedValues( property );
+        final Map<Object, String> allowedValues = definitionManager.adapters().forProperty().getAllowedValues( property );
 
         if ( null != value && null != allowedValues && !allowedValues.isEmpty() ) {
 
@@ -284,16 +226,36 @@ public class DefinitionUtils {
         return null;
     }
 
-    public static boolean isNode( final Class<?> graphElementClass) {
+    public static boolean isNodeFactory( final Class<? extends ElementFactory> graphFactoryClass,
+                                         final FactoryRegistry registry ) {
 
-        return graphElementClass.equals( Node.class );
+
+
+        if ( !graphFactoryClass.equals( NodeFactory.class ) ) {
+
+            ElementFactory factory = registry.getGraphFactory( graphFactoryClass );
+
+            return factory instanceof NodeFactory;
+
+        }
+
+        return true;
 
     }
 
-    public static boolean isEdge( final Class<?> graphElementClass) {
+    public static boolean isEdgeFactory( final Class<? extends ElementFactory> graphFactoryClass,
+                                         final FactoryRegistry registry ) {
 
-        return graphElementClass.equals( Edge.class );
+        if ( !graphFactoryClass.equals( EdgeFactory.class ) ) {
+
+            ElementFactory factory = registry.getGraphFactory( graphFactoryClass );
+
+            return factory instanceof EdgeFactory;
+
+        }
+
+        return true;
 
     }
-    
+
 }

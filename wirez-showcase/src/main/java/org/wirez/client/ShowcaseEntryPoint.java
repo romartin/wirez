@@ -30,7 +30,7 @@ import org.uberfire.client.workbench.widgets.menu.WorkbenchMenuBarPresenter;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.workbench.perspectives.AuthoringPerspective;
-import org.wirez.client.workbench.perspectives.NavigationPerspective;
+import org.wirez.client.workbench.perspectives.HomePerspective;
 import org.wirez.client.workbench.perspectives.WirezSandboxPerspective;
 
 import javax.inject.Inject;
@@ -69,7 +69,7 @@ public class ShowcaseEntryPoint {
         hideLoadingPopup();
 
         // Default perspective.
-        placeManager.goTo( new DefaultPlaceRequest( NavigationPerspective.PERSPECTIVE_ID ) );
+        placeManager.goTo( new DefaultPlaceRequest( HomePerspective.PERSPECTIVE_ID ) );
     }
 
     private void setupGlobalErrorHandler() {
@@ -88,7 +88,7 @@ public class ShowcaseEntryPoint {
 
     private void setupMenu() {
         final Menus menus =
-                newTopLevelMenu( "Home" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( NavigationPerspective.PERSPECTIVE_ID ) ) ).endMenu()
+                newTopLevelMenu( "Home" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( HomePerspective.PERSPECTIVE_ID ) ) ).endMenu()
                         .newTopLevelMenu( "Authoring" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( AuthoringPerspective.PERSPECTIVE_ID ) ) ).endMenu()
                         .newTopLevelMenu( "Sandbox" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( WirezSandboxPerspective.PERSPECTIVE_ID ) ) ).endMenu()
                         .build();

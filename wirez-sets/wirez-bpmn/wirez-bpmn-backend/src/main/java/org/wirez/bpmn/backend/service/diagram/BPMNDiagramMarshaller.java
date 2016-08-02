@@ -140,9 +140,13 @@ public class BPMNDiagramMarshaller implements DiagramMarshaller<Diagram, InputSt
             final String title = getTitle( diagram );
 
             final String defSetId = BindableAdapterUtils.getDefinitionSetId( BPMNDefinitionSet.class );
-            final Diagram<Graph, Settings> result = new DiagramImpl( UUID.uuid(), graph,
-                    new SettingsImpl( title, defSetId,
-                            BindableAdapterUtils.getShapeSetId( BPMNDefinitionSet.class ), rootUUID ));
+
+            final Settings settings = new SettingsImpl( defSetId );
+            settings.setShapeSetId( BindableAdapterUtils.getShapeSetId( BPMNDefinitionSet.class ) );
+            settings.setTitle( title );
+            settings.setCanvasRootUUID( rootUUID );
+
+            final Diagram<Graph, Settings> result = new DiagramImpl( UUID.uuid(), graph, settings );
 
             LOG.info("BPMN diagram loading finished successfully.");
 

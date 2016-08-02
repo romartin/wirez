@@ -69,7 +69,7 @@ public class CanvasCommandManagerImpl extends AbstractCanvasCommandManager<Abstr
     protected GraphCommandExecutionContext getGraphCommandExecutionContext(final AbstractCanvasHandler context) {
 
         return  new GraphCommandExecutionContextImpl( context.getClientDefinitionManager(),
-                context.getClientFactoryServices(), context.getRuleManager(), context.getGraphUtils());
+                context.getClientFactoryServices().getClientFactoryManager(), context.getRuleManager(), context.getGraphUtils());
         
     }
     

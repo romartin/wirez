@@ -27,8 +27,8 @@ import org.wirez.core.definition.annotation.definition.Category;
 import org.wirez.core.definition.annotation.definition.Definition;
 import org.wirez.core.definition.annotation.definition.Labels;
 import org.wirez.core.definition.annotation.definition.Title;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Node;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.shapes.factory.BasicShapesFactory;
 import org.wirez.shapes.proxy.icon.statics.Icons;
 
@@ -37,7 +37,7 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = TimerIcon.TimerIconBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = TimerIcon.TimerIconBuilder.class )
 @Shape( factory = BasicShapesFactory.class, proxy = StaticIconProxy.class )
 public class TimerIcon implements StaticIcon {
 

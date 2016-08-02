@@ -9,6 +9,7 @@ import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.definition.*;
 import org.wirez.core.definition.annotation.property.NameProperty;
 import org.wirez.core.definition.util.DefinitionUtils;
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.Dependent;
@@ -201,30 +202,22 @@ public class RuntimeDefinitionAdapter<T> extends AbstractRuntimeAdapter<T>
     }
 
     @Override
-    public Class<? extends Element> getGraphElement(T definition) {
-
-        if ( null != definition ) {
-            return getGraphElement( definition.getClass() );
-        }
-        
-        return null;
-    }
-
-    public static Class<? extends Element> getGraphElement( Class<?> definitionClass ) {
-
-        Definition annotation = getDefinitionAnnotation( definitionClass );
-
-        return null != annotation ? annotation.type() : null;
-    }
-
-    @Override
-    public String getElementFactory( T definition ) {
+    public Class<? extends ElementFactory> getGraphFactoryType( final T definition ) {
 
         Definition annotation = getDefinitionAnnotation( definition.getClass() );
 
-        return null != annotation ? annotation.factory() : null;
+        return null != annotation ? annotation.graphFactory() : null;
+
     }
-    
+
+    public static Class<? extends ElementFactory> getGraphFactory( final Class<?> type ) {
+
+        Definition annotation = getDefinitionAnnotation( type );
+
+        return null != annotation ? annotation.graphFactory() : null;
+
+    }
+
     protected static Definition getDefinitionAnnotation( Class<?> type ) {
         if ( null != type ) {
             Definition annotation = getClassAnnotation( type, Definition.class );

@@ -26,6 +26,7 @@
 	<source path="command"/>
 	<source path="definition"/>
 	<source path="diagram"/>
+	<source path="factory"/>
 	<source path="graph"/>
 	<source path="lookup"/>
 	<source path="registry"/>

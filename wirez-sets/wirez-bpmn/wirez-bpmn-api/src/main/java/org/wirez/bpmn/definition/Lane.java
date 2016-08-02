@@ -30,8 +30,8 @@ import org.wirez.bpmn.shape.proxy.LaneShapeProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Node;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.core.rule.annotation.CanContain;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
@@ -40,7 +40,7 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = Lane.LaneBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = Lane.LaneBuilder.class )
 @CanContain( roles = { "all" } )
 @Shape( factory = BasicShapesFactory.class, proxy = LaneShapeProxy.class )
 public class Lane implements BPMNDefinition {

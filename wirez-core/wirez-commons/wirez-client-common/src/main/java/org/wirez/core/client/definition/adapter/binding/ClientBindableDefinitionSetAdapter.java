@@ -2,6 +2,7 @@ package org.wirez.core.client.definition.adapter.binding;
 
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.definition.adapter.binding.BindableDefinitionSetAdapter;
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Graph;
 
 import java.util.Map;
@@ -10,18 +11,15 @@ import java.util.Set;
 class ClientBindableDefinitionSetAdapter extends AbstractClientBindableAdapter<Object> implements BindableDefinitionSetAdapter<Object> {
 
     private Map<Class, String> propertyDescriptionFieldNames;
-    private Map<Class, Class> graphTypes;
-    private Map<Class, String> graphFactory;
+    private Map<Class, Class> graphFactoryTypes;
     private Set<String> definitionIds;
 
     @Override
     public void setBindings( final Map<Class, String> propertyDescriptionFieldNames, 
-                             final Map<Class, Class> graphTypes, 
-                             final Map<Class, String> graphFactory, 
+                             final Map<Class, Class> graphFactoryTypes,
                              final Set<String> definitionIds) {
         this.propertyDescriptionFieldNames = propertyDescriptionFieldNames;
-        this.graphTypes = graphTypes;
-        this.graphFactory = graphFactory;
+        this.graphFactoryTypes = graphFactoryTypes;
         this.definitionIds = definitionIds;
     }
     
@@ -54,14 +52,9 @@ class ClientBindableDefinitionSetAdapter extends AbstractClientBindableAdapter<O
     }
 
     @Override
-    public String getGraphFactory(final Object pojo) {
-        return getGraphFactory().get( pojo.getClass() );
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Class<? extends Graph> getGraph(final Object pojo) {
-        return getGraphTypes().get( pojo.getClass() );
+    @SuppressWarnings( "unchecked" )
+    public Class<? extends ElementFactory> getGraphFactoryType( final Object pojo ) {
+        return getGraphFactoryTypes().get(pojo.getClass());
     }
 
     @Override
@@ -75,13 +68,9 @@ class ClientBindableDefinitionSetAdapter extends AbstractClientBindableAdapter<O
     private Map<Class, String> getPropertyDescriptionFieldNames() {
         return propertyDescriptionFieldNames;
     }
-    
-    private Map<Class, Class> getGraphTypes() {
-        return graphTypes;
-    }
-    
-    private Map<Class, String> getGraphFactory() {
-        return graphFactory;
+
+    private Map<Class, Class> getGraphFactoryTypes() {
+        return graphFactoryTypes;
     }
     
     private Set<String> getDefinitionIds() {

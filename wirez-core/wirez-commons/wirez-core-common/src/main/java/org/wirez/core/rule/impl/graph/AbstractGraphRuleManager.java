@@ -31,7 +31,7 @@ public abstract class AbstractGraphRuleManager<R extends Rule, M extends RuleMan
             Object definition = ((View) element.getContent()).getDefinition();
             targetId = getDefinitionId( definition );
         } else if ( element.getContent() instanceof DefinitionSet) {
-            targetId = ((DefinitionSet) element.getContent()).getId();
+            targetId = ((DefinitionSet) element.getContent()).getDefinition();
         } 
         return targetId;
     }

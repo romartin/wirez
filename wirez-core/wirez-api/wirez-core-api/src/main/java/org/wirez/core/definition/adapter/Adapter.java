@@ -6,8 +6,13 @@ package org.wirez.core.definition.adapter;
 public interface Adapter {
 
     /**
-     * Check if the adapter instance supports the pojo's type.
+     * Check if the adapter instance supports the pojo's given type.
      */
     boolean accepts ( Class<?> type );
+
+    /**
+     * Returns if the adapter targets Java POJO domain classes or targets other kind of soft models.
+     */
+    boolean isPojoModel();
 
 }

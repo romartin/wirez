@@ -8,7 +8,6 @@ import java.util.Set;
 public interface BindableDefinitionSetAdapter<T> extends DefinitionSetAdapter<T> {
     
     void setBindings(Map<Class, String> propertyDescriptionFieldNames,
-                     Map<Class, Class> graphTypes,
-                     Map<Class, String> graphFactory,
+                     Map<Class, Class> graphFactoryType,
                      Set<String> definitionIds);
 }

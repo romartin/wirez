@@ -64,9 +64,8 @@ public final class AddDockEdgeCommand extends AbstractGraphCommand {
 
             // TODO: Create a DockEdgeFactory iface extending EdgeFactory using as content generics type Relationship
             final String uuid = UUID.uuid();
-            final Set<String> labels = new HashSet<>(1);
-            final Edge<Dock, Node> edge = new EdgeImpl<>( uuid,labels, new Dock() );
-            
+            final Edge<Dock, Node> edge = new EdgeImpl<>( uuid );
+            edge.setContent( new Dock() );
             edge.setSourceNode(parent);
             edge.setTargetNode(candidate);
             parent.getOutEdges().add( edge );

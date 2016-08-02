@@ -20,6 +20,7 @@ import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.AbstractCompositeShape;
@@ -58,7 +59,7 @@ public class BasicShapesFactoryImpl
     protected static final double DEFAULT_SIZE = 50;
 
     protected ShapeViewFactory shapeViewFactory;
-    protected DefinitionUtils definitionUtils;
+    protected DefinitionManager definitionManager;
     protected ShapeGlyphBuilder<Group> glyphBuilder;
     
     protected BasicShapesFactoryImpl() {
@@ -67,11 +68,11 @@ public class BasicShapesFactoryImpl
     @Inject
     public BasicShapesFactoryImpl(final FactoryManager factoryManager,
                                   final org.wirez.shapes.client.view.ShapeViewFactory shapeViewFactory,
-                                  final DefinitionUtils definitionUtils,
+                                  final DefinitionManager definitionManager,
                                   final ShapeGlyphBuilder<Group> glyphBuilder) {
         super( factoryManager );
         this.shapeViewFactory = shapeViewFactory;
-        this.definitionUtils = definitionUtils;
+        this.definitionManager = definitionManager;
         this.glyphBuilder = glyphBuilder;
         
     }
@@ -81,7 +82,7 @@ public class BasicShapesFactoryImpl
     public MutableShape<Object, ShapeView> build( final Object definition, 
                      final AbstractCanvasHandler context) {
 
-        final String id = definitionUtils.getDefinitionId( definition );
+        final String id = definitionManager.adapters().forDefinition().getId( definition );
         final BasicShapeProxy<Object> proxy = getProxy( id );
 
         return build( definition, proxy, context );
@@ -223,7 +224,7 @@ public class BasicShapesFactoryImpl
             
         }
         
-        final String id = definitionUtils.getDefinitionId( definition );
+        final String id = definitionManager.adapters().forDefinition().getId( definition );
         throw new RuntimeException( "This factory supports [" + id + "] but cannot built a shape for it." );
 
     }

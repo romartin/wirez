@@ -50,7 +50,7 @@ public abstract class AbstractProxyShapeFactory<W, V extends ShapeView, S extend
     public String getDescription( final String definitionId ) {
         final P proxy = getProxy( definitionId );
         // TODO: Avoid creating domain object instance here.
-        final W tempObject = factoryManager.newDomainObject( definitionId );
+        final W tempObject = factoryManager.newDefinition( definitionId );
         return proxy.getGlyphDescription( tempObject );
     }
 

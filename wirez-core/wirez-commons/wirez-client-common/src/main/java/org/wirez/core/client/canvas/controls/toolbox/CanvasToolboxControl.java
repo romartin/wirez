@@ -153,7 +153,7 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
                                     .setClickHandler( event -> fireCommandExecution( element, command, event, Context.Event.CLICK ) )
                                     .setMouseEnterHandler( event -> fireCommandExecution( element, command, event, Context.Event.MOUSE_ENTER ) )
                                     .setMouseExitHandler( event -> fireCommandExecution( element, command, event, Context.Event.MOUSE_EXIT ) )
-                                    .setDragEndHandler( event -> fireCommandExecution( element, command, event, Context.Event.DRAG ) )
+                                    .setMouseDownHandler( event -> fireCommandExecution( element, command, event, Context.Event.MOUSE_DOWN ) )
                                     .setHoverAnimation( command.getButtonAnimation() )
                                     .build();
 

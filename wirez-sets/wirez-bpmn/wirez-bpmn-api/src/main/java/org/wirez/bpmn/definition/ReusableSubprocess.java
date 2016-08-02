@@ -30,8 +30,8 @@ import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
 import org.wirez.core.definition.annotation.morph.MorphBase;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Node;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 import java.util.HashSet;
@@ -39,7 +39,7 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = ReusableSubprocess.ReusableSubprocessBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = ReusableSubprocess.ReusableSubprocessBuilder.class )
 @Shape( factory = BasicShapesFactory.class, proxy = ReusableSubprocessShapeProxy.class )
 @MorphBase( defaultType = ReusableSubprocess.class, targets = { BaseTask.class } )
 public class ReusableSubprocess implements BPMNDefinition {

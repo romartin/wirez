@@ -193,7 +193,7 @@ public abstract class AbstractMorphAdapter<S> implements MorphAdapter<S>  {
 
         }
 
-        final T target = factoryManager.newDomainObject( targetId );
+        final T target = factoryManager.newDefinition( targetId );
 
         if ( null == target ) {
 

@@ -1,6 +1,5 @@
 package org.wirez.core.api;
 
-import org.wirez.core.api.DiagramManager;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.registry.diagram.DiagramRegistry;
 
@@ -25,8 +24,8 @@ public abstract class AbstractDiagramManager<D extends Diagram> implements Diagr
     }
 
     @Override
-    public void add( final D item ) {
-        registry.add( item );
+    public void register( final D item ) {
+        registry.register( item );
     }
 
     @Override
@@ -35,13 +34,13 @@ public abstract class AbstractDiagramManager<D extends Diagram> implements Diagr
     }
 
     @Override
-    public void remove( final D item ) {
-        registry.remove( item );
+    public boolean remove( final D item ) {
+        return registry.remove( item );
     }
 
     @Override
-    public D get( final String uuid ) {
-        return registry.get( uuid );
+    public D getDiagramByUUID( final String uuid ) {
+        return registry.getDiagramByUUID( uuid );
     }
 
     @Override

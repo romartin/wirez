@@ -1,12 +1,11 @@
 package org.wirez.backend.diagram;
 
-import org.wirez.backend.registry.SyncRegistry;
 import org.wirez.core.api.AbstractDiagramManager;
 import org.wirez.core.api.DiagramManager;
-import org.wirez.core.diagram.Diagram;
-import org.wirez.core.registry.diagram.DiagramRegistry;
 import org.wirez.core.backend.annotation.Application;
 import org.wirez.core.backend.annotation.VFS;
+import org.wirez.core.backend.registry.BackendRegistryFactory;
+import org.wirez.core.diagram.Diagram;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -26,9 +25,9 @@ public class ApplicationDiagramManager extends AbstractDiagramManager<Diagram> {
     }
     
     @Inject
-    public ApplicationDiagramManager(@SyncRegistry DiagramRegistry<Diagram> registry,
-                                     @VFS  DiagramManager<Diagram> vfsDiagramManager) {
-        super(registry);
+    public ApplicationDiagramManager( BackendRegistryFactory registryFactory,
+                                     @VFS DiagramManager<Diagram> vfsDiagramManager) {
+        super(registryFactory.newDiagramSynchronizedRegistry());
         this.vfsDiagramManager = vfsDiagramManager;
     }
     
@@ -39,7 +38,7 @@ public class ApplicationDiagramManager extends AbstractDiagramManager<Diagram> {
         final Collection<Diagram> diagrams = vfsDiagramManager.getItems();
         if ( null != diagrams && !diagrams.isEmpty() ) {
             for ( Diagram diagram : diagrams ) {
-                this.add( diagram );
+                this.register( diagram );
             }
         }
         
@@ -54,19 +53,19 @@ public class ApplicationDiagramManager extends AbstractDiagramManager<Diagram> {
     }
 
     @Override
-    public void add(Diagram diagram) {
-        super.add(diagram);
+    public void register(Diagram diagram) {
+        super.register(diagram);
 
         // Update the VFS storage.
-        vfsDiagramManager.add( diagram );
+        vfsDiagramManager.register( diagram );
     }
 
     @Override
-    public void remove(Diagram diagram) {
+    public boolean remove(Diagram diagram) {
         super.remove(diagram);
 
         // Update the VFS storage.
-        vfsDiagramManager.remove( diagram );
+        return vfsDiagramManager.remove( diagram );
     }
     
 }

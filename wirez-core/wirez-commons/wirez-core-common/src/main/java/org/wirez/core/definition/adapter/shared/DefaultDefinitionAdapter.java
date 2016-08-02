@@ -2,6 +2,7 @@ package org.wirez.core.definition.adapter.shared;
 
 import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.definition.impl.DefinitionImpl;
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -55,13 +56,7 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefinitionImp
     }
 
     @Override
-    public Class<? extends Element> getGraphElement(final DefinitionImpl pojo) {
-        // TODO
-        return null;
-    }
-
-    @Override
-    public String getElementFactory(DefinitionImpl pojo) {
+    public Class<? extends ElementFactory> getGraphFactoryType( DefinitionImpl pojo ) {
         // TODO
         return null;
     }
@@ -69,6 +64,11 @@ public class DefaultDefinitionAdapter implements DefinitionAdapter<DefinitionImp
     @Override
     public boolean accepts(final Class<?> pojo) {
         return pojo.getName().equals(DefinitionImpl.class.getName());
+    }
+
+    @Override
+    public boolean isPojoModel() {
+        return false;
     }
 
     @Override

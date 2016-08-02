@@ -13,8 +13,8 @@ import org.wirez.basicset.definition.icon.statics.UserIcon;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.ShapeSet;
 import org.wirez.core.definition.annotation.definitionset.DefinitionSet;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Graph;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.GraphFactory;
 import org.wirez.core.rule.annotation.CanContain;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -22,7 +22,7 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 @Bindable
 @DefinitionSet(
-        type = Graph.class,
+        graphFactory= GraphFactory.class,
         definitions = {
                 
                 // Basic shapes.

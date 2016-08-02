@@ -1,16 +1,12 @@
 package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
-import org.wirez.core.client.animation.ShapeAnimation;
-import org.wirez.core.client.animation.ShapeDeSelectionAnimation;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.event.keyboard.KeyDownEvent;
-import org.wirez.core.client.canvas.event.keyboard.KeyPressEvent;
 import org.wirez.core.client.canvas.event.keyboard.KeyboardEvent;
-import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
 import org.wirez.core.client.components.drag.DragProxyCallback;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.components.glyph.GlyphTooltip;

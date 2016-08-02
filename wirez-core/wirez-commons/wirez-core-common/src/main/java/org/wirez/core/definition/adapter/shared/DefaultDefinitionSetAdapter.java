@@ -2,6 +2,7 @@ package org.wirez.core.definition.adapter.shared;
 
 import org.wirez.core.definition.adapter.DefinitionSetAdapter;
 import org.wirez.core.definition.impl.DefinitionSetImpl;
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Graph;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,6 +18,11 @@ public class DefaultDefinitionSetAdapter implements DefinitionSetAdapter<Definit
     }
 
     @Override
+    public boolean isPojoModel() {
+        return false;
+    }
+
+    @Override
     public String getId(final DefinitionSetImpl pojo) {
         return null;
     }
@@ -27,22 +33,17 @@ public class DefaultDefinitionSetAdapter implements DefinitionSetAdapter<Definit
     }
 
     @Override
-    public Class<? extends Graph> getGraph(DefinitionSetImpl pojo) {
-        return null;
-    }
-
-    @Override
-    public String getGraphFactory(DefinitionSetImpl pojo) {
-        return null;
-    }
-
-    @Override
     public String getDescription(final DefinitionSetImpl pojo) {
         return null;
     }
 
     @Override
     public Set<String> getDefinitions(final DefinitionSetImpl pojo) {
+        return null;
+    }
+
+    @Override
+    public Class<? extends ElementFactory> getGraphFactoryType( DefinitionSetImpl pojo ) {
         return null;
     }
 

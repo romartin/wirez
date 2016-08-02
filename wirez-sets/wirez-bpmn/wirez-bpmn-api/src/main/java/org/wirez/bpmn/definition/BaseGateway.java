@@ -28,7 +28,7 @@ import org.wirez.core.definition.annotation.definition.Labels;
 import org.wirez.core.definition.annotation.definition.Property;
 import org.wirez.core.definition.annotation.definition.PropertySet;
 import org.wirez.core.definition.annotation.morph.MorphBase;
-import org.wirez.core.definition.factory.Builder;
+import org.wirez.core.definition.builder.Builder;
 
 import java.util.HashSet;
 import java.util.Set;

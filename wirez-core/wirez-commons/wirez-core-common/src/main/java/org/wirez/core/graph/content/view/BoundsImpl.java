@@ -48,4 +48,10 @@ public final class BoundsImpl implements Bounds {
     public void setUpperLeft(BoundImpl ul) {
         this.ul = ul;
     }
+
+    @Override
+    public String toString() {
+        return "UL=" + ul + " | LR=" + lr ;
+    }
+
 }

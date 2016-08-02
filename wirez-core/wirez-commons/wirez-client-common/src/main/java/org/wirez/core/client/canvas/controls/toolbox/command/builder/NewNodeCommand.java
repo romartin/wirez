@@ -1,7 +1,7 @@
 package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 
 import org.uberfire.mvp.Command;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -13,6 +13,7 @@ import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequest;
 import org.wirez.core.client.canvas.controls.builder.request.NodeBuildRequestImpl;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
+import org.wirez.core.client.canvas.util.CanvasLayoutUtils;
 import org.wirez.core.client.components.drag.DragProxyCallback;
 import org.wirez.core.client.components.drag.DragProxy;
 import org.wirez.core.client.components.drag.NodeDragProxyCallback;
@@ -20,6 +21,7 @@ import org.wirez.core.client.components.drag.NodeDragProxy;
 import org.wirez.core.client.components.glyph.DefinitionGlyphTooltip;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
+import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.definition.util.DefinitionUtils;
@@ -39,6 +41,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
     NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl;
     Event<CanvasElementSelectedEvent> elementSelectedEvent;
     DefinitionUtils definitionUtils;
+    CanvasLayoutUtils canvasLayoutUtils;
 
     protected String definitionId;
     protected int sourceMagnet;
@@ -46,7 +49,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
     private HasEventHandlers<?, ?> layerEventHandlers;
 
     protected NewNodeCommand() {
-        this( null, null, null, null, null, null, null, null, null, null );
+        this( null, null, null, null, null, null, null, null, null, null, null );
     }
 
     public NewNodeCommand(final ClientDefinitionManager clientDefinitionManager,
@@ -58,12 +61,14 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
                           final NodeBuilderControl<AbstractCanvasHandler> nodeBuilderControl,
                           final AnimationFactory animationFactory,
                           final DefinitionUtils definitionUtils,
+                          final CanvasLayoutUtils canvasLayoutUtils,
                           final Event<CanvasElementSelectedEvent> elementSelectedEvent ) {
         super( clientDefinitionManager, clientFactoryServices, shapeManager, glyphTooltip, graphBoundsIndexer,
                 animationFactory );
         this.nodeDragProxyFactory = nodeDragProxyFactory;
         this.nodeBuilderControl = nodeBuilderControl;
         this.definitionUtils = definitionUtils;
+        this.canvasLayoutUtils = canvasLayoutUtils;
         this.elementSelectedEvent = elementSelectedEvent;
         this.layerEventHandlers = null;
     }
@@ -96,6 +101,61 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
         return "Creates a new node";
     }
 
+
+    @Override
+    public void click( final Context<AbstractCanvasHandler> context,
+                       final Element element ) {
+        super.click( context, element );
+
+        addOnNextLayoutPosition( context, element );
+    }
+
+    // TODO: Move all these stuff to canvas builder controls?
+    @SuppressWarnings("unchecked")
+    private void addOnNextLayoutPosition( final Context<AbstractCanvasHandler> context,
+                                          final Element element ) {
+
+        final AbstractCanvasHandler canvasHandler = context.getCanvasHandler();
+
+        graphBoundsIndexer.setRootUUID( canvasHandler.getDiagram().getSettings().getCanvasRootUUID() );
+
+        graphBoundsIndexer.build( canvasHandler.getDiagram().getGraph() );
+
+        clientFactoryServices.newElement( UUID.uuid(), getDefinitionIdentifier( context ), new ServiceCallback<Element>() {
+
+            @Override
+            public void onSuccess( final Element newEdgeElement ) {
+
+                onDefinitionInstanceBuilt( context, element, newEdgeElement, new Command() {
+
+                    @Override
+                    public void execute() {
+
+                        getBuilderControl().enable( canvasHandler );
+
+                        graphBoundsIndexer.build( canvasHandler.getDiagram().getGraph() );
+
+                        // TODO: Use right magnets.
+                        NewNodeCommand.this.sourceMagnet = 0;
+                        NewNodeCommand.this.targetMagnet = 7;
+
+                        final double[] next = canvasLayoutUtils.getNextLayoutPosition( canvasHandler, element );
+                        NewNodeCommand.this.onComplete( context, element, newEdgeElement, (int) next[0], (int) next[1] );
+
+                    }
+
+                } );
+
+            }
+
+            @Override
+            public void onError(final ClientRuntimeError error) {
+                NewNodeCommand.this.onError( context, error );
+            }
+
+        });
+
+    }
 
     @Override
     protected DragProxy getDragProxyFactory() {
@@ -191,6 +251,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     protected void onDefinitionInstanceBuilt( final Context<AbstractCanvasHandler> context,
                                               final Element source,
                                               final Element newElement,
@@ -201,13 +262,28 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
         final Edge<View<?>, Node> edge = (Edge<View<?>, Node>) newElement;
 
         // Create the new node.
-        final Node<View<?>, Edge> node = clientFactoryServices.newElement( UUID.uuid(), definitionId );
+        clientFactoryServices.newElement( UUID.uuid(), definitionId,  new ServiceCallback<Element>() {
 
-        // Perform the temporal proxy connections.
-        edge.setSourceNode( sourceNode );
-        edge.setTargetNode( node );
+            @Override
+            public void onSuccess( Element item ) {
 
-        super.onDefinitionInstanceBuilt( context, source, newElement, callback );
+                final Node<View<?>, Edge> node = ( Node<View<?>, Edge> ) item.asNode();
+
+                // Perform the temporal proxy connections.
+                edge.setSourceNode( sourceNode );
+                edge.setTargetNode( node );
+
+                NewNodeCommand.super.onDefinitionInstanceBuilt( context, source, newElement, callback );
+            }
+
+            @Override
+            public void onError( final ClientRuntimeError error ) {
+                NewNodeCommand.this.onError( context, error );
+            }
+
+        } );
+
+
 
     }
 
@@ -326,11 +402,12 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
         this.layerEventHandlers = null;
         this.nodeDragProxyFactory = null;
         this.nodeBuilderControl = null;
+        this.definitionUtils = null;
 
     }
 
     protected String getDefinitionId( final Object def ) {
-        return definitionUtils.getDefinitionId( def );
+        return definitionUtils.getDefinitionManager().adapters().forDefinition().getId( def );
     }
 
 }

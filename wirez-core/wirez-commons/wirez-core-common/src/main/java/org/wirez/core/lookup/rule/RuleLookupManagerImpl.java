@@ -29,11 +29,10 @@ public class RuleLookupManagerImpl
     @Override
     protected List<Rule> getItems(final RuleLookupRequest request ) {
         final String defSetId = request.getDefinitionSetId();
-        final Object defSet = definitionManager.getDefinitionSet( defSetId );
+        final Object defSet = definitionManager.definitionSets().getDefinitionSetById( defSetId );
 
         if ( null != defSet ) {
-            final DefinitionSetRuleAdapter<Object> definitionSetRuleAdapter = definitionManager.getDefinitionSetRuleAdapter(defSet.getClass());
-            final Collection<Rule> rules = definitionSetRuleAdapter.getRules(defSet);
+            final Collection<Rule> rules = definitionManager.adapters().forRules().getRules(defSet);
             return new LinkedList<>( rules );
         }
         

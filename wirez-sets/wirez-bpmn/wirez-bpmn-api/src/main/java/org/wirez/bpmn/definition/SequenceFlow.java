@@ -26,8 +26,8 @@ import org.wirez.bpmn.shape.proxy.SequenceFlowConnectorProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Edge;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.EdgeFactory;
 import org.wirez.core.rule.annotation.CanConnect;
 import org.wirez.core.rule.annotation.EdgeOccurrences;
 import org.wirez.shapes.factory.BasicShapesFactory;
@@ -37,7 +37,7 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Edge.class, builder = SequenceFlow.SequenceFlowBuilder.class )
+@Definition( graphFactory = EdgeFactory.class, builder = SequenceFlow.SequenceFlowBuilder.class )
 
 // Connection rules.
 @CanConnect( startRole = "sequence_start", endRole = "sequence_end" )

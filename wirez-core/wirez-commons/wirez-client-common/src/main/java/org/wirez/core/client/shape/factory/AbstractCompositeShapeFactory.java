@@ -16,7 +16,7 @@
 
 package org.wirez.core.client.shape.factory;
 
-import org.wirez.core.definition.util.DefinitionUtils;
+import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.ShapeGlyph;
@@ -30,14 +30,14 @@ public abstract class AbstractCompositeShapeFactory<W, S extends Shape>
 
     protected final List<ShapeFactory<W, AbstractCanvasHandler, S>> factories = new LinkedList<>();
     
-    DefinitionUtils definitionUtils;
+    DefinitionManager definitionManager;
 
     private AbstractCompositeShapeFactory() {
         
     }
     
-    public AbstractCompositeShapeFactory(final DefinitionUtils definitionUtils ) {
-        this.definitionUtils = definitionUtils;
+    public AbstractCompositeShapeFactory(final DefinitionManager definitionManager ) {
+        this.definitionManager = definitionManager;
     }
 
     public void addFactory(final ShapeFactory<W, AbstractCanvasHandler, S> factory ) {
@@ -78,7 +78,7 @@ public abstract class AbstractCompositeShapeFactory<W, S extends Shape>
     public S build( final W definition, 
                     final AbstractCanvasHandler context ) {
 
-        final String id = definitionUtils.getDefinitionId( definition );
+        final String id = definitionManager.adapters().forDefinition().getId( definition );
         
         for ( final ShapeFactory<W, AbstractCanvasHandler, S> factory : factories ) {
 

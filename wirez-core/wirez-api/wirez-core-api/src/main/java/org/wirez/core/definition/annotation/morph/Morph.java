@@ -15,9 +15,6 @@
  */
 package org.wirez.core.definition.annotation.morph;
 
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.definition.factory.VoidBuilder;
-
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)

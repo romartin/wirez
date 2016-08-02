@@ -13,8 +13,13 @@ public class DefinitionSetImpl implements DefinitionSet {
     }
 
     @Override
-    public String getId() {
+    public String getDefinition() {
         return id;
+    }
+
+    @Override
+    public void setDefinition( final String definition ) {
+        this.id = definition;
     }
 
     @Override

@@ -1,7 +1,8 @@
 package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 
+import com.google.gwt.core.client.GWT;
 import org.uberfire.mvp.Command;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.animation.AnimationFactory;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.builder.BuildRequest;
@@ -71,9 +72,27 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    public void mouseDown( final Context<AbstractCanvasHandler> context,
+                           final Element element ) {
+        super.mouseDown( context, element );
+
+        GWT.log("TOOLBOX - MOUSE DOWN!");
+
+        showDragProxy( context, element );
+    }
+
+    @Override
     public void click(final Context<AbstractCanvasHandler> context,
                         final Element element) {
+        super.click( context, element );
+
+        GWT.log("TOOLBOX - CLICK!");
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void showDragProxy( final Context<AbstractCanvasHandler> context,
+                                final Element element ) {
 
         final AbstractCanvasHandler canvasHandler = context.getCanvasHandler();
         final double x = context.getX();
@@ -82,9 +101,9 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
         graphBoundsIndexer.setRootUUID( canvasHandler.getDiagram().getSettings().getCanvasRootUUID() );
 
         clientFactoryServices.newElement( UUID.uuid(), getDefinitionIdentifier( context ), new ServiceCallback<Element>() {
-            
+
             @Override
-            public void onSuccess( final Element item ) {
+            public void onSuccess( final Element  item ) {
 
                 onDefinitionInstanceBuilt( context, element, item, () -> {
 
@@ -115,9 +134,9 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
             public void onError(final ClientRuntimeError error) {
                 AbstractBuilderCommand.this.onError( context, error );
             }
-            
+
         });
-        
+
     }
 
     @SuppressWarnings( "unchecked" )
@@ -200,7 +219,11 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
     protected void onItemBuilt( final Context<AbstractCanvasHandler> context,
                                 final String uuid ) {
 
-        canvasHighlight.unhighLight();
+        if ( null != canvasHighlight ) {
+
+            canvasHighlight.unhighLight();
+
+        }
 
     }
 
@@ -210,14 +233,19 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
         this.getDragProxyFactory().destroy();
         this.getBuilderControl().disable();
         this.graphBoundsIndexer.destroy();
-        this.canvasHighlight.destroy();
-        
+
+        if ( null != canvasHighlight ) {
+
+            this.canvasHighlight.destroy();
+            this.canvasHighlight = null;
+
+        }
+
         this.clientDefinitionManager = null;
         this.clientFactoryServices = null;
         this.graphBoundsIndexer = null;
         this.animationFactory = null;
-        this.canvasHighlight = null;
-        
+
     }
     
 }

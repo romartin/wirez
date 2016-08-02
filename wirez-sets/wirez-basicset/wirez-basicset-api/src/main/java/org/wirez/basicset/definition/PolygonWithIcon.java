@@ -29,19 +29,18 @@ import org.wirez.basicset.definition.property.font.FontSet;
 import org.wirez.basicset.shape.proxy.PolygonWithIconProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Node;
+import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
-import org.wirez.core.definition.annotation.definition.*;
-
-import javax.validation.Valid;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = PolygonWithIcon.PolygonWithIconBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = PolygonWithIcon.PolygonWithIconBuilder.class )
 @Shape( factory = BasicShapesFactory.class, proxy = PolygonWithIconProxy.class )
 public class PolygonWithIcon {
 

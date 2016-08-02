@@ -16,7 +16,7 @@ public interface ToolboxButton<I> {
 
     ToolboxButtonEventHandler getClickHandler();
 
-    ToolboxButtonEventHandler getDragEndHandler();
+    ToolboxButtonEventHandler getMouseDownHandler();
 
     ToolboxButtonEventHandler getMouseEnterHandler();
 

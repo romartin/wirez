@@ -27,7 +27,7 @@ import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.widgets.property.PropertiesEditor;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.session.CanvasSession;
 import org.wirez.core.client.session.event.SessionDisposedEvent;
@@ -94,8 +94,7 @@ public class PropertiesScreen {
                     String name = definitionUtils.getName( def );
 
                     if ( null == name ) {
-                        final DefinitionAdapter definitionAdapter = clientDefinitionManager.getDefinitionAdapter( def.getClass() );
-                        name = definitionAdapter.getTitle( def );
+                        name = clientDefinitionManager.adapters().forDefinition().getTitle( def );
                     }
                     
                     // changeTitleNotification.fire(new ChangeTitleWidgetEvent(placeRequest, name + " Properties"));

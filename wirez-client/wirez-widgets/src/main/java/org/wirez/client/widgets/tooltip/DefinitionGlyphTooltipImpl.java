@@ -97,11 +97,11 @@ public class DefinitionGlyphTooltipImpl
 
         if ( null != id && id.trim().length() > 0 ) {
 
-            final Object def = factoryManager.newDomainObject( id );
+            final Object def = factoryManager.newDefinition( id );
 
             if ( null != def ) {
 
-                return definitionManager.getDefinitionAdapter( def.getClass() ).getTitle( def );
+                return definitionManager.adapters().forDefinition().getTitle( def );
 
             }
 

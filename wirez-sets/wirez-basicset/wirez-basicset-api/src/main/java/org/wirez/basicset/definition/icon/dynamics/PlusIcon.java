@@ -29,19 +29,18 @@ import org.wirez.basicset.definition.property.background.BackgroundAndBorderSet;
 import org.wirez.basicset.shape.proxy.icon.dynamics.PlusIconProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Node;
+import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
-import org.wirez.core.definition.annotation.definition.*;
-
-import javax.validation.Valid;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = PlusIcon.PlusIconBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = PlusIcon.PlusIconBuilder.class )
 @Shape( factory = BasicShapesFactory.class, proxy = PlusIconProxy.class )
 public class PlusIcon implements DynamicIcon {
 

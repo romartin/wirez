@@ -17,7 +17,7 @@
 package org.wirez.core.client.canvas;
 
 import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.event.registration.CanvasElementAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasElementRemovedEvent;
@@ -136,13 +136,11 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         // Load the rules that apply for the diagram.
         final String defSetId = getDiagram().getSettings().getDefinitionSetId();
 
-        clientFactoryServices.newDomainObject( defSetId, new ServiceCallback<Object>() {
+        clientFactoryServices.newDefinition( defSetId, new ServiceCallback<Object>() {
             @Override
             public void onSuccess( Object definitionSet ) {
 
-                DefinitionSetRuleAdapter adapter = clientDefinitionManager.getDefinitionSetRuleAdapter( definitionSet.getClass() );
-
-                final Collection<Rule> rules = adapter.getRules( definitionSet );
+                final Collection<Rule> rules = clientDefinitionManager.adapters().forRules().getRules( definitionSet );
                 if ( rules != null ) {
                     for ( final Rule rule : rules ) {
                         rulesManager.addRule( rule );
@@ -727,8 +725,7 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
     }
 
     protected String getDefinitionId( final Object definition ) {
-        final DefinitionAdapter<Object> adapter = clientDefinitionManager.getDefinitionAdapter( definition.getClass() );
-        return adapter.getId( definition );
+        return clientDefinitionManager.adapters().forDefinition().getId( definition );
     }
 
     @Override

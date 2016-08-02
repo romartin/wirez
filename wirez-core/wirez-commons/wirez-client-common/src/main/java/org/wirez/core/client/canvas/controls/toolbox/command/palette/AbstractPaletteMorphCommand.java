@@ -71,9 +71,9 @@ public abstract class AbstractPaletteMorphCommand<I> extends AbstractPaletteComm
 
         final Object source = this.sourceNode.getContent().getDefinition();
 
-        final String id = getDefinitionManager().getDefinitionAdapter( source.getClass() ).getId( source );
+        final String id = getDefinitionManager().adapters().forDefinition().getId( source );
 
-        final MorphAdapter<Object> morphAdapter =  getDefinitionManager().getMorphAdapter( source.getClass() );
+        final MorphAdapter<Object> morphAdapter =  getDefinitionManager().adapters().registry().getMorphAdapter( source.getClass() );
 
         final Iterable<MorphDefinition> morphDefinitions = morphAdapter.getMorphDefinitions( source );
 

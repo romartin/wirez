@@ -28,7 +28,7 @@ import org.wirez.core.definition.annotation.morph.Morph;
 import org.wirez.core.definition.annotation.morph.MorphBase;
 import org.wirez.core.definition.annotation.morph.MorphProperty;
 import org.wirez.core.definition.annotation.property.NameProperty;
-import org.wirez.core.definition.factory.VoidBuilder;
+import org.wirez.core.definition.builder.VoidBuilder;
 import org.wirez.core.processors.definition.BindableDefinitionAdapterGenerator;
 import org.wirez.core.processors.definitionset.BindableDefinitionSetAdapterGenerator;
 import org.wirez.core.processors.definitionset.DefinitionSetProxyGenerator;
@@ -333,22 +333,18 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             processDefinitionSetModelBuilder( e, propertyClassName,
                     processingContext.getDefSetAnnotations().getBuilderFieldNames() );
             
-            // Graph.
+            // Graph factory type.
             TypeMirror mirror = null;
             try {
-                Class<?> graphClass = definitionSetAnn.type();
+                Class<?> graphClass = definitionSetAnn.graphFactory();
             } catch( MirroredTypeException mte ) {
                 mirror =  mte.getTypeMirror();
             }
             if ( null == mirror ) {
-                throw new RuntimeException("No graph class class specifyed for the @DefinitionSet.");
+                throw new RuntimeException("No graph factory class specifyed for the @DefinitionSet.");
             }
             String fqcn = mirror.toString();
-            processingContext.getDefSetAnnotations().getGraphTypes().put( propertyClassName, fqcn );
-
-            // Graph factory.
-            String factory = definitionSetAnn.factory();
-            processingContext.getDefSetAnnotations().getGraphFactories().put( propertyClassName, factory );
+            processingContext.getDefSetAnnotations().getGraphFactoryTypes().put( propertyClassName, fqcn );
 
             ShapeSet shapeSetAnn = e.getAnnotation(ShapeSet.class);
             if ( null != shapeSetAnn ) {
@@ -416,19 +412,15 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             Definition definitionAnn = e.getAnnotation(Definition.class);
             TypeMirror mirror = null;
             try {
-                Class<?> graphClass = definitionAnn.type();
+                Class<?> graphClass = definitionAnn.graphFactory();
             } catch( MirroredTypeException mte ) {
                 mirror =  mte.getTypeMirror();
             }
             if ( null == mirror ) {
-                throw new RuntimeException("No graph class class specifyed for the @Definition.");
+                throw new RuntimeException("No graph factory class specified for the @Definition.");
             }
             String fqcn = mirror.toString();
-            processingContext.getDefinitionAnnotations().getGraphElementFieldNames().put( propertyClassName, fqcn );
-
-            // Element factory.
-            String factory = definitionAnn.factory();
-            processingContext.getDefinitionAnnotations().getElementFactoryFieldNames().put( propertyClassName, factory );
+            processingContext.getDefinitionAnnotations().getGraphFactoryFieldNames().put( propertyClassName, fqcn );
 
             // PropertySets fields.
             processFieldNames(classElement, propertyClassName, ANNOTATION_DEFINITION_PROPERTYSET, processingContext.getDefinitionAnnotations().getPropertySetFieldNames());

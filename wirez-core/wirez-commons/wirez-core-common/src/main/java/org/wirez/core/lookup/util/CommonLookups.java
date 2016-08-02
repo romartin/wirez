@@ -115,7 +115,7 @@ public class CommonLookups {
             for ( final String defId : allowedDefinitions ) {
 
                 // TODO: Avoid new instances here.
-                final Object definition = factoryManager.newDomainObject( defId );
+                final Object definition = factoryManager.newDefinition( defId );
 
                 final MorphDefinition morphDefinition = definitionUtils.getMorphDefinition( definition );
 

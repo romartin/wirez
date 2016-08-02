@@ -15,7 +15,12 @@ public class DefaultDefinitionSetRuleAdapter implements DefinitionSetRuleAdapter
     {
         return pojo.getName().equals(DefinitionSetImpl.class.getName());
     }
-    
+
+    @Override
+    public boolean isPojoModel() {
+        return false;
+    }
+
     @Override
     public Collection<Rule> getRules(final DefinitionSetImpl pojo) {
         return null;

@@ -17,7 +17,7 @@
 package org.wirez.core.processors.factory;
 
 import org.uberfire.annotations.processors.exceptions.GenerationException;
-import org.wirez.core.definition.factory.BindableModelFactory;
+import org.wirez.core.factory.definition.AbstractTypeDefinitionFactory;
 import org.wirez.core.processors.AbstractBindableAdapterGenerator;
 
 import javax.annotation.processing.Messager;
@@ -42,7 +42,7 @@ public class ModelFactoryGenerator extends AbstractBindableAdapterGenerator {
         root.put("className",
                 className);
         root.put("parentClassName",
-                BindableModelFactory.class.getName());
+                AbstractTypeDefinitionFactory.class.getName());
         root.put("generatedByClassName",
                 ModelFactoryGenerator.class.getName());
 

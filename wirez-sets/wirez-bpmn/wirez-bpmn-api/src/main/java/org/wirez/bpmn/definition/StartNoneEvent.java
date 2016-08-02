@@ -20,7 +20,6 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.livespark.formmodeler.metaModel.FieldDef;
 import org.wirez.bpmn.definition.property.Radius;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
@@ -32,12 +31,12 @@ import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.Definition;
 import org.wirez.core.definition.annotation.definition.Title;
 import org.wirez.core.definition.annotation.morph.Morph;
-import org.wirez.core.graph.Node;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = StartNoneEvent.StartNoneEventBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = StartNoneEvent.StartNoneEventBuilder.class )
 @Shape( factory = BasicShapesFactory.class, proxy = StartNoneEventShapeProxy.class )
 @Morph( base = BaseStartEvent.class )
 public class StartNoneEvent extends BaseStartEvent {

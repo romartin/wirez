@@ -15,6 +15,10 @@ public class DefaultPropertySetAdapter implements PropertySetAdapter<PropertySet
         return pojo.getName().equals(PropertySetImpl.class.getName());
     }
 
+    @Override
+    public boolean isPojoModel() {
+        return false;
+    }
 
     @Override
     public String getId(final PropertySetImpl pojo) {

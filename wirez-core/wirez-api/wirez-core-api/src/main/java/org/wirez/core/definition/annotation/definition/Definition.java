@@ -15,8 +15,9 @@
  */
 package org.wirez.core.definition.annotation.definition;
 
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.definition.factory.VoidBuilder;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.definition.builder.VoidBuilder;
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Element;
 
 import java.lang.annotation.*;
@@ -26,10 +27,8 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 public @interface Definition {
 
-    Class<? extends Element> type();
+    Class<? extends ElementFactory> graphFactory();
     
     Class<? extends Builder<?>> builder() default VoidBuilder.class;
-    
-    String factory() default "";
     
 }

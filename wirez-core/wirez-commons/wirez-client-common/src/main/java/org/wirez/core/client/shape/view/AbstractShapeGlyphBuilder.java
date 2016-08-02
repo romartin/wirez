@@ -57,7 +57,9 @@ public abstract class AbstractShapeGlyphBuilder<G> implements ShapeGlyphBuilder<
     @SuppressWarnings("unchecked")
     public ShapeGlyph<G> build() {
 
-        final Element<View<Object>> element = getFactoryManager().newElement(UUID.uuid(), id );
+        final Element<View<Object>> element =
+                ( Element<View<Object>> ) getFactoryManager().newElement(UUID.uuid(), id );
+
         final Object definition = element.getContent().getDefinition();
 
         Shape<?> shape = factory.build( definition, null );

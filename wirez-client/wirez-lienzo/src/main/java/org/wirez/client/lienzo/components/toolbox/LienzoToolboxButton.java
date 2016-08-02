@@ -9,7 +9,7 @@ public class LienzoToolboxButton implements ToolboxButton<IPrimitive<?>> {
     private final IPrimitive<?> icon;
 
     private ToolboxButtonEventHandler clickHandler;
-    private ToolboxButtonEventHandler dragHandler;
+    private ToolboxButtonEventHandler mouseDownHandler;
     private ToolboxButtonEventHandler mouseEnterHandler;
     private ToolboxButtonEventHandler mouseExitHandler;
     private HoverAnimation animation;
@@ -34,8 +34,8 @@ public class LienzoToolboxButton implements ToolboxButton<IPrimitive<?>> {
     }
 
     @Override
-    public ToolboxButtonEventHandler getDragEndHandler() {
-        return dragHandler;
+    public ToolboxButtonEventHandler getMouseDownHandler() {
+        return mouseDownHandler;
     }
 
     @Override
@@ -58,8 +58,8 @@ public class LienzoToolboxButton implements ToolboxButton<IPrimitive<?>> {
         return this;
     }
 
-    public LienzoToolboxButton setDragHandler( final ToolboxButtonEventHandler dragHandler ) {
-        this.dragHandler = dragHandler;
+    public LienzoToolboxButton setMouseDownHandler( final ToolboxButtonEventHandler mouseDownHandler ) {
+        this.mouseDownHandler = mouseDownHandler;
         return this;
     }
 

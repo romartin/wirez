@@ -33,5 +33,11 @@ public interface Element<C> {
     Set<String> getLabels();
     
     C getContent();
+
+    void setContent( C content );
+
+    Node<C, Edge> asNode();
+
+    Edge<C, Node> asEdge();
     
 }

@@ -74,9 +74,9 @@ public class LienzoToolboxBuilderImpl
 
         }
 
-        if ( null != button.getDragEndHandler() ) {
+        if ( null != button.getMouseDownHandler() ) {
 
-            b.setDragEndHandler( buildHandler( button.getDragEndHandler() ) );
+            b.setMouseDownHandler( buildHandler( button.getMouseDownHandler() ) );
 
         }
 

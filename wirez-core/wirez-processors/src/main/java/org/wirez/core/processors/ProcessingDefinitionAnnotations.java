@@ -9,8 +9,7 @@ public class ProcessingDefinitionAnnotations {
     private final Map<String, String> baseTypes = new HashMap<>();
     private final Map<String, Set<String>> propertySetFieldNames = new HashMap<>();
     private final Map<String, Set<String>> propertyFieldNames = new HashMap<>();
-    private final Map<String, String> graphElementFieldNames = new HashMap<>();
-    private final Map<String, String> elementFactoryFieldNames = new HashMap<>();
+    private final Map<String, String> graphFactoryFieldNames = new HashMap<>();
     private final Map<String, String> labelsFieldNames = new HashMap<>();
     private final Map<String, String> titleFieldNames = new HashMap<>();
     private final Map<String, String> categoryFieldNames = new HashMap<>();
@@ -30,12 +29,8 @@ public class ProcessingDefinitionAnnotations {
         return propertyFieldNames;
     }
 
-    public Map<String, String> getGraphElementFieldNames() {
-        return graphElementFieldNames;
-    }
-
-    public Map<String, String> getElementFactoryFieldNames() {
-        return elementFactoryFieldNames;
+    public Map<String, String> getGraphFactoryFieldNames() {
+        return graphFactoryFieldNames;
     }
 
     public Map<String, String> getLabelsFieldNames() {

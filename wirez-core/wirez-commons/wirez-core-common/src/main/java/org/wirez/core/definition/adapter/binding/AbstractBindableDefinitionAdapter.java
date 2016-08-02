@@ -1,6 +1,7 @@
 package org.wirez.core.definition.adapter.binding;
 
 import org.wirez.core.definition.util.DefinitionUtils;
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Element;
 
 import java.util.*;
@@ -13,8 +14,7 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
     protected Map<Class, Class> baseTypes;
     protected Map<Class, Set<String>> propertySetsFieldNames;
     protected Map<Class, Set<String>> propertiesFieldNames;
-    protected Map<Class, Class> propertyGraphElementFieldNames;
-    protected Map<Class, String> propertyElementFactoryFieldNames;
+    protected Map<Class, Class> propertyGraphFactoryFieldNames;
     protected Map<Class, String> propertyLabelsFieldNames;
     protected Map<Class, String> propertyTitleFieldNames;
     protected Map<Class, String> propertyCategoryFieldNames;
@@ -31,8 +31,7 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
                              final Map<Class, Class> baseTypes,
                             final Map<Class, Set<String>> propertySetsFieldNames,
                             final Map<Class, Set<String>> propertiesFieldNames,
-                            final Map<Class, Class> propertyGraphElementFieldNames,
-                            final Map<Class, String> propertyElementFactoryFieldNames,
+                            final Map<Class, Class> propertyGraphFactoryFieldNames,
                             final Map<Class, String> propertyLabelsFieldNames,
                             final Map<Class, String> propertyTitleFieldNames,
                             final Map<Class, String> propertyCategoryFieldNames,
@@ -41,8 +40,7 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
         this.baseTypes = baseTypes;
         this.propertySetsFieldNames = propertySetsFieldNames;
         this.propertiesFieldNames = propertiesFieldNames;
-        this.propertyGraphElementFieldNames = propertyGraphElementFieldNames;
-        this.propertyElementFactoryFieldNames = propertyElementFactoryFieldNames;
+        this.propertyGraphFactoryFieldNames = propertyGraphFactoryFieldNames;
         this.propertyLabelsFieldNames = propertyLabelsFieldNames;
         this.propertyTitleFieldNames = propertyTitleFieldNames;
         this.propertyCategoryFieldNames = propertyCategoryFieldNames;
@@ -125,24 +123,15 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
         return result;
     }
 
-    @SuppressWarnings("unchecked")
-    public Class<? extends Element> getGraphElement( final T pojo) {
-        return getGraphElement( pojo.getClass() );
-    }
-
-    public String getElementFactory(final T pojo) {
-        return getElementFactory( pojo.getClass() );
+    @Override
+    public Class<? extends ElementFactory> getGraphFactoryType( final T pojo ) {
+        return getGraphFactory( pojo.getClass() );
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public Class<? extends Element> getGraphElement( final Class<?> type ) {
-        return getPropertyGraphElementFieldNames().get( type );
-    }
-
-    @Override
-    public String getElementFactory( final Class<?> type ) {
-        return getPropertyElementFactoryFieldNames().get( type );
+    public Class<? extends ElementFactory> getGraphFactory( final Class<?> type ) {
+        return getPropertyGraphFactoryFieldNames().get( type );
     }
 
     public boolean accepts( final Class<?> type ) {
@@ -150,6 +139,11 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
 
         // If not types found, check if it's a super type.
         return hasType || baseTypes.values().contains( type );
+    }
+
+    @Override
+    public boolean isPojoModel() {
+        return true;
     }
 
     @Override
@@ -169,14 +163,10 @@ public abstract class AbstractBindableDefinitionAdapter<T> implements BindableDe
         return propertiesFieldNames;
     }
 
-    protected Map<Class, Class> getPropertyGraphElementFieldNames() {
-        return propertyGraphElementFieldNames;
+    protected Map<Class, Class> getPropertyGraphFactoryFieldNames() {
+        return propertyGraphFactoryFieldNames;
     }
-    
-    protected Map<Class, String> getPropertyElementFactoryFieldNames() {
-        return propertyElementFactoryFieldNames;
-    }
-    
+
     protected Map<Class, String> getPropertyLabelsFieldNames() {
         return propertyLabelsFieldNames;
     }

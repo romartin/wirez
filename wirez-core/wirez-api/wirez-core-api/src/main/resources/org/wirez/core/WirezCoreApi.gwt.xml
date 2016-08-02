@@ -30,6 +30,7 @@
 	<source path="definition"/>
 	<source path="diagram"/>
 	<source path="graph"/>
+	<source path="factory"/>
 	<source path="lookup"/>
 	<source path="registry"/>
 	<source path="remote"/>

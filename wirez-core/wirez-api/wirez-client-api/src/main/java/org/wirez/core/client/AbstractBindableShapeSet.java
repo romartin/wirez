@@ -24,9 +24,8 @@ public abstract class AbstractBindableShapeSet implements ShapeSet<ShapeFactory<
 
     public void doInit() {
         
-        final Object defSet = definitionManager.getDefinitionSet( getDefinitionSetId() );
-        final DefinitionSetAdapter<Object> definitionSetAdapter = definitionManager.getDefinitionSetAdapter( getDefinitionSetClass() );
-        this.description = definitionSetAdapter.getDescription( defSet );
+        final Object defSet = definitionManager.definitionSets().getDefinitionSetById( getDefinitionSetId() );
+        this.description = definitionManager.adapters().forDefinitionSet().getDescription( defSet );
         
     }
     

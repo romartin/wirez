@@ -19,26 +19,23 @@ package org.wirez.core.graph.impl;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.uberfire.commons.validation.PortablePreconditions;
+import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
+import org.wirez.core.graph.Node;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Portable
 public class ElementImpl<C> implements Element<C> {
 
-    protected String uuid;
-    protected Set<String> labels;
-    protected C content;
+    private final String uuid;
+    private final Set<String> labels = new LinkedHashSet<>();
+    private C content;
 
-    public ElementImpl(@MapsTo("uuid") String uuid,
-                       @MapsTo("labels") Set<String> labels,
-                       @MapsTo("content") C content) {
+    public ElementImpl( @MapsTo( "uuid" ) String uuid ) {
         this.uuid = PortablePreconditions.checkNotNull( "uuid",
                 uuid );
-        this.labels = PortablePreconditions.checkNotNull( "labels",
-                labels );
-        this.content = PortablePreconditions.checkNotNull( "content",
-                content );
     }
 
     @Override
@@ -56,12 +53,29 @@ public class ElementImpl<C> implements Element<C> {
         return content;
     }
 
+    @Override
+    public void setContent( final C content ) {
+        this.content = content;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public Node<C, Edge> asNode() {
+        return ( Node<C, Edge> ) this;
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public Edge<C, Node> asEdge() {
+        return ( Edge<C, Node> ) this;
+    }
+
 
     @Override
     public String toString() {
         return "ElementImpl{" +
                 "uuid=" + uuid +
-                ", labels=" + labels + 
+                ", labels=" + labels +
                 '}';
     }
 

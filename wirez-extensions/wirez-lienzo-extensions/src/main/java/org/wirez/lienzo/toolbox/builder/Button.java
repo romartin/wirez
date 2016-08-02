@@ -13,7 +13,7 @@ public interface Button {
 
     Button setClickHandler(ToolboxButtonEventHandler handler);
 
-    Button setDragEndHandler(ToolboxButtonEventHandler handler);
+    Button setMouseDownHandler(ToolboxButtonEventHandler handler);
 
     Button setMouseEnterHandler(ToolboxButtonEventHandler handler);
 

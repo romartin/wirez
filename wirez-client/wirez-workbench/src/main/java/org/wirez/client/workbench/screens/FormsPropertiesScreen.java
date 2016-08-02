@@ -32,7 +32,7 @@ import org.uberfire.lifecycle.OnOpen;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
@@ -200,7 +200,7 @@ public class FormsPropertiesScreen {
 
         Object property = model.get( fieldName );
 
-        return clientDefinitionManager.getPropertyAdapter( property.getClass() ).getId( property );
+        return clientDefinitionManager.adapters().forProperty().getId( property );
     }
 
 

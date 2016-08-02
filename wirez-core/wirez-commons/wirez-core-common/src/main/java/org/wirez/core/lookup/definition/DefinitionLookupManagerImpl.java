@@ -3,12 +3,11 @@ package org.wirez.core.lookup.definition;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.definition.adapter.DefinitionAdapter;
-import org.wirez.core.definition.adapter.DefinitionSetAdapter;
-import org.wirez.core.graph.Element;
-import org.wirez.core.graph.util.GraphUtils;
+import org.wirez.core.definition.util.DefinitionUtils;
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.lookup.criteria.AbstractCriteriaLookupManager;
 import org.wirez.core.lookup.criteria.Criteria;
-import org.wirez.core.registry.Map;
+import org.wirez.core.registry.RegistryFactory;
 import org.wirez.core.registry.definition.DefinitionRegistry;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -25,31 +24,27 @@ public class DefinitionLookupManagerImpl
     
     DefinitionManager definitionManager;
     FactoryManager factoryManager;
-    GraphUtils graphUtils;
     DefinitionRegistry<Object> registry;
 
     protected DefinitionLookupManagerImpl() {
     }
     
     @Inject
-    public DefinitionLookupManagerImpl(DefinitionManager definitionManager,
-                                       FactoryManager factoryManager,
-                                       GraphUtils graphUtils,
-                                       @Map DefinitionRegistry<Object> registry) {
+    public DefinitionLookupManagerImpl( DefinitionManager definitionManager,
+                                        FactoryManager factoryManager,
+                                        RegistryFactory registryFactory) {
         this.definitionManager = definitionManager;
         this.factoryManager = factoryManager;
-        this.graphUtils = graphUtils;
-        this.registry = registry;
+        this.registry = registryFactory.newDefinitionRegistry();
     }
 
     @Override
     protected List<String> getItems( DefinitionLookupRequest request ) {
         final String defSetId = request.getDefinitionSetId();
-        final Object defSet = definitionManager.getDefinitionSet( defSetId );
+        final Object defSet = definitionManager.definitionSets().getDefinitionSetById( defSetId );
 
         if ( null != defSet ) {
-            final DefinitionSetAdapter<Object> definitionSetAdapter = definitionManager.getDefinitionSetAdapter(defSet.getClass());
-            final Set<String> defs = definitionSetAdapter.getDefinitions(defSet);
+            final Set<String> defs = definitionManager.adapters().forDefinitionSet().getDefinitions(defSet);
             return new LinkedList<>( defs );
         }
         
@@ -65,7 +60,7 @@ public class DefinitionLookupManagerImpl
     @Override
     protected boolean matches(String key, String value, String defId) {
         final Object def = getDomainObject( defId );
-        final DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( def.getClass() );
+        final DefinitionAdapter<Object> definitionAdapter = definitionManager.adapters().registry().getDefinitionAdapter( def.getClass() );
         
         switch ( key ) {
 
@@ -73,8 +68,7 @@ public class DefinitionLookupManagerImpl
                 return defId.equals( value );
             
             case "type":
-                final Class<? extends Element> elemType = definitionAdapter.getGraphElement( def );
-                boolean isNode = graphUtils.isNode( elemType );
+                boolean isNode = isNode( def, definitionAdapter );
                 return "node".equals( value ) && isNode;
             
             case "labels":
@@ -94,24 +88,29 @@ public class DefinitionLookupManagerImpl
     
     private Object getDomainObject( String id ) {
         
-        Object definition = registry.get( id );
+        Object definition = registry.getDefinitionById( id );
         
         if ( null == definition ) {
 
-            definition = factoryManager.newDomainObject( id );
-            registry.add( definition );
+            definition = factoryManager.newDefinition( id );
+            registry.register( definition );
         }
         
         return definition;
     }
-    
+
+    @SuppressWarnings( "unchecked" )
     private DefinitionRepresentation buildRepresentation( String id, Object def ) {
-        final DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( def.getClass() );
+        final DefinitionAdapter<Object> definitionAdapter =
+                definitionManager.adapters().registry().getDefinitionAdapter( def.getClass() );
         final Set<String> labels = definitionAdapter.getLabels( def );
-        final Class<? extends Element> graphElement = definitionAdapter.getGraphElement( def );
-        boolean isNode = graphUtils.isNode( graphElement );
+        boolean isNode = isNode( def, definitionAdapter );
         return new DefinitionRepresentationImpl( id, isNode, labels );
     }
 
+    private boolean isNode( final Object def, final DefinitionAdapter<Object> definitionAdapter ) {
+        final Class<? extends ElementFactory> elemFactoryType = definitionAdapter.getGraphFactoryType( def );
+        return DefinitionUtils.isNodeFactory( elemFactoryType, factoryManager.registry() );
+    }
    
 }

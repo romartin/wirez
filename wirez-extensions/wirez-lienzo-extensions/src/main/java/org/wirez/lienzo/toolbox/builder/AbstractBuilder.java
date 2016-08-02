@@ -76,7 +76,7 @@ public abstract class AbstractBuilder implements On, Towards, ButtonsOrRegister,
         private final List<WhenReady> whenReadyCallbacks = new ArrayList<>();
         private final IPrimitive<?> shape;
         private ToolboxButtonEventHandler clickHandler;
-        private ToolboxButtonEventHandler dragEndHandler;
+        private ToolboxButtonEventHandler moveDownHandler;
         private ToolboxButtonEventHandler mouseEnterHandler;
         private ToolboxButtonEventHandler mouseExitHandler;
         private ToolboxButton.HoverAnimation animation;
@@ -103,8 +103,8 @@ public abstract class AbstractBuilder implements On, Towards, ButtonsOrRegister,
         }
 
         @Override
-        public Button setDragEndHandler(final ToolboxButtonEventHandler handler ) {
-            this.dragEndHandler = handler;
+        public Button setMouseDownHandler(final ToolboxButtonEventHandler handler ) {
+            this.moveDownHandler = handler;
             return this;
         }
 
@@ -128,7 +128,7 @@ public abstract class AbstractBuilder implements On, Towards, ButtonsOrRegister,
 
         @Override
         public ButtonsOrRegister end() {
-            builder.add( new ToolboxButton( layer, shape, this.whenReadyCallbacks, clickHandler, dragEndHandler,
+            builder.add( new ToolboxButton( layer, shape, this.whenReadyCallbacks, clickHandler, moveDownHandler,
                     mouseEnterHandler, mouseExitHandler, animation ) );
             return builder;
         }

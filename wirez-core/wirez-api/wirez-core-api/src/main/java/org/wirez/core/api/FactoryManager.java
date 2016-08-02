@@ -4,34 +4,78 @@ import org.wirez.core.diagram.Diagram;
 import org.wirez.core.diagram.Settings;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
+import org.wirez.core.graph.content.definition.Definition;
+import org.wirez.core.registry.factory.FactoryRegistry;
 
+/**
+ * Entry point that handles the different Factories and provides
+ * different high level operations for constructing types.
+ */
 public interface FactoryManager {
 
     /**
-     * Build an instance of the domain model with the given id.
-     * @param id The identifier for the model to build. Ex: "Task"
+     * Creates a new Definition by a given identifier.
+     *
+     * @param id The definition identifier ( Eg: "task" )
+     * @param <T> The definition instance type ( Eg. Task )
+     * @return A new definition instance.
      */
-    <W> W newDomainObject( String id );
+    <T> T newDefinition( String id );
 
     /**
-     * Build an instance of the graph for the given DefinitionSet.
-     * @param uuid The unique identifier for the generated graph.
+     * Creates a new Definition by a given type, if the domain model is based on java POJO classes.
+     *
+     * @param type The definition type ( Eg: Task.class )
+     * @param <T> The definition instance type ( Eg. Task )
+     * @return A new definition instance.
      */
-    <W extends Graph> W newGraph( String uuid, String definitionSetId );
-    
-    /**
-     * Build an instance of the graph element (node or edge) for the domain model with the given Definition id.
-     * @param uuid The unique identifier for the generated graph element.
-     * @param id The identifier of the graph element's Definition. Ex: "Task"
-     */
-    <W extends Element> W newElement( String uuid, String id );
+    <T> T newDefinition( Class<T> type );
 
     /**
-     * Build a new instance of a diagram.
-     * @param uuid The unique identifier for the diagram.
-     * @param graph The diagram's graph.
-     * @param settings The diagram's settings.
+     * Creates a new graph element for the given Definition identifier.
+     * TODO: Generics.
+     *
+     * @param uuid The element unique identifier.
+     * @param id The definition identifier.
+     * @return A new graph, node or edge which content is based on the a Definition.
      */
-    <G extends Graph, S extends Settings> Diagram<G, S> newDiagram( String uuid, G graph, S settings );
+    Element newElement( String uuid, String id );
+
+    /**
+     * Creates a new graph element for the given Definition type.
+     * TODO: Generics.
+     *
+     * @param uuid The element unique identifier.
+     * @param type The definition type.
+     * @return A new graph, node or edge which content is based on the a Definition.
+     */
+    Element newElement( String uuid, Class<?> type );
+
+    /**
+     * Creates a new diagram for the given Definition Set identifier.
+     *
+     * @param uuid The unique diagram's identifier.
+     * @param id The definition set identifier.
+     * @param <D> The diagram type.
+     * @return A new diagram instance.
+     */
+    <D extends Diagram> D newDiagram( String uuid, String id );
+
+    /**
+     * Creates a new diagram for the given Definition Set type.
+     *
+     * @param uuid The unique diagram's identifier.
+     * @param type The definition set type.
+     * @param <D> The diagram type.
+     * @return A new diagram instance.
+     */
+    <D extends Diagram> D newDiagram( String uuid, Class<?> type );
+
+    /**
+     * The registry that handles all different factories.
+     *
+     * @return The factory registry.
+     */
+    FactoryRegistry registry();
 
 }

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wirez.core.backend.definition.adapter.AbstractRuntimeDefinitionSetAdapter;
 import org.wirez.core.definition.adapter.binding.BindableDefinitionSetAdapter;
+import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Graph;
 
 import java.util.Map;
@@ -15,18 +16,15 @@ class RuntimeBindableDefinitionSetAdapter<T> extends AbstractRuntimeDefinitionSe
     private static final Logger LOG = LoggerFactory.getLogger(RuntimeBindableDefinitionSetAdapter.class);
 
     private Map<Class, String> propertyDescriptionFieldNames;
-    private Map<Class, Class> graphTypes;
-    private Map<Class, String> graphFactory;
+    private Map<Class, Class> graphFactoryTypes;
     private Set<String> definitionIds;
 
     @Override
     public void setBindings( final Map<Class, String> propertyDescriptionFieldNames,
-                             final Map<Class, Class> graphTypes,
-                             final Map<Class, String> graphFactory,
+                             final Map<Class, Class> graphFactoryTypes,
                              final Set<String> definitionIds) {
         this.propertyDescriptionFieldNames = propertyDescriptionFieldNames;
-        this.graphTypes = graphTypes;
-        this.graphFactory = graphFactory;
+        this.graphFactoryTypes = graphFactoryTypes;
         this.definitionIds = definitionIds;
     }
 
@@ -48,20 +46,15 @@ class RuntimeBindableDefinitionSetAdapter<T> extends AbstractRuntimeDefinitionSe
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Class<? extends Graph> getGraph(T definitionSet) {
+    @SuppressWarnings( "unchecked" )
+    public Class<? extends ElementFactory> getGraphFactoryType( final T definitionSet ) {
         Class<?> type = definitionSet.getClass();
-        return graphTypes.get( type );
+        return graphFactoryTypes.get( type );
     }
 
-    @Override
-    public String getGraphFactory(T definitionSet) {
-        Class<?> type = definitionSet.getClass();
-        return graphFactory.get( type );
-    }
 
     @Override
     public boolean accepts(Class<?> type) {
-        return null != graphTypes && graphTypes.containsKey( type );
+        return null != graphFactoryTypes && graphFactoryTypes.containsKey( type );
     }
 }

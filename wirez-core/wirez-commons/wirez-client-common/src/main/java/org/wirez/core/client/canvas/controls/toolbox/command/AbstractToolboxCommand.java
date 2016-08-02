@@ -14,8 +14,8 @@ public abstract class AbstractToolboxCommand<I> implements ToolboxCommand<Abstra
         
     }
 
-    public void drag( final Context<AbstractCanvasHandler> context, final Element element ) {
-        
+    public void mouseDown( final Context<AbstractCanvasHandler> context, final Element element ) {
+
     }
 
     public void mouseEnter( final Context<AbstractCanvasHandler> context, final Element element ) {
@@ -42,8 +42,8 @@ public abstract class AbstractToolboxCommand<I> implements ToolboxCommand<Abstra
                 click( context, element );
                 break;
 
-            case DRAG:
-                drag( context, element );
+            case MOUSE_DOWN:
+                mouseDown( context, element );
                 break;
 
             case MOUSE_ENTER:

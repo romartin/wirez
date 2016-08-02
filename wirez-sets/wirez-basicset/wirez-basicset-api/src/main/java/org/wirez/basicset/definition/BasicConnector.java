@@ -27,8 +27,8 @@ import org.wirez.basicset.shape.proxy.BasicConnectorProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Edge;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.EdgeFactory;
 import org.wirez.core.rule.annotation.CanConnect;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
@@ -38,7 +38,7 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Edge.class, builder = BasicConnector.BasicConnectorBuilder.class )
+@Definition( graphFactory = EdgeFactory.class, builder = BasicConnector.BasicConnectorBuilder.class )
 @CanConnect( startRole = "all", endRole = "all" )
 @Shape( factory = BasicShapesFactory.class, proxy = BasicConnectorProxy.class )
 public class BasicConnector  {

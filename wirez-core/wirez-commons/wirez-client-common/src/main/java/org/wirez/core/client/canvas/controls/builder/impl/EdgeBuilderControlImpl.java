@@ -8,7 +8,7 @@ import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
-import org.wirez.core.client.ClientDefinitionManager;
+import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.Canvas;
@@ -24,7 +24,6 @@ import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.util.EdgeMagnetsHelper;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,8 +109,7 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
         }
 
         final Object edgeDef = edge.getContent().getDefinition();
-        final DefinitionAdapter<Object> adapter = clientDefinitionManager.getDefinitionAdapter( edgeDef.getClass() );
-        final String edgeDefId = adapter.getId( edgeDef );
+        final String edgeDefId = clientDefinitionManager.adapters().forDefinition().getId( edgeDef );
         final ShapeFactory factory = shapeManager.getFactory( edgeDefId );
         
         canvasCommandManager

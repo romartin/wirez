@@ -28,10 +28,10 @@ import org.wirez.basicset.definition.property.font.FontSet;
 import org.wirez.basicset.shape.proxy.CircleProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
-import org.wirez.core.definition.factory.Builder;
-import org.wirez.core.graph.Node;
-import org.wirez.shapes.factory.BasicShapesFactory;
 import org.wirez.core.definition.annotation.definition.*;
+import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.factory.graph.NodeFactory;
+import org.wirez.shapes.factory.BasicShapesFactory;
 
 import javax.validation.Valid;
 import java.util.HashSet;
@@ -39,7 +39,7 @@ import java.util.Set;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = Circle.CircleBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = Circle.CircleBuilder.class )
 @Shape( factory = BasicShapesFactory.class, 
         proxy = CircleProxy.class )
 public class Circle {

@@ -2,11 +2,15 @@ package org.wirez.core.diagram;
 
 public interface Settings {
 
-    String getTitle();
-    
     String getDefinitionSetId();
-    
+
+    String getTitle();
+
+    void setTitle( String title );
+
     String getShapeSetId();
+
+    void setShapeSetId( String id );
 
     String getCanvasRootUUID();
 

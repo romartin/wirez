@@ -63,6 +63,11 @@ public abstract class AbstractRuntimeAdapter<T> implements PriorityAdapter {
     }
 
     @Override
+    public boolean isPojoModel() {
+        return true;
+    }
+
+    @Override
     public int getPriority() {
         return 100;
     }

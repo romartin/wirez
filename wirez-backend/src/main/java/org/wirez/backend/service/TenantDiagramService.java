@@ -28,7 +28,7 @@ public class TenantDiagramService implements DiagramService {
             
         } else {
 
-            add( diagram );
+            register( diagram );
             
         }
         
@@ -40,8 +40,8 @@ public class TenantDiagramService implements DiagramService {
     }
 
     @Override
-    public void add(Diagram diagram) {
-        tenantDiagramManager.add( diagram );
+    public void register(Diagram diagram) {
+        tenantDiagramManager.register( diagram );
     }
 
     @Override
@@ -50,13 +50,13 @@ public class TenantDiagramService implements DiagramService {
     }
 
     @Override
-    public void remove(Diagram diagram) {
-        tenantDiagramManager.remove( diagram );
+    public boolean remove(Diagram diagram) {
+        return tenantDiagramManager.remove( diagram );
     }
 
     @Override
-    public Diagram get(String criteria) {
-        return tenantDiagramManager.get( criteria );
+    public Diagram getDiagramByUUID(String criteria) {
+        return tenantDiagramManager.getDiagramByUUID( criteria );
     }
 
     @Override

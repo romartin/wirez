@@ -16,12 +16,12 @@ import org.wirez.bpmn.definition.property.task.TaskTypes;
 import org.wirez.core.definition.annotation.definition.Definition;
 import org.wirez.core.definition.annotation.definition.Title;
 import org.wirez.core.definition.annotation.morph.Morph;
-import org.wirez.core.graph.Node;
+import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.core.rule.annotation.CanDock;
 
 @Portable
 @Bindable
-@Definition( type = Node.class, builder = NoneTask.NoneTaskBuilder.class )
+@Definition( graphFactory = NodeFactory.class, builder = NoneTask.NoneTaskBuilder.class )
 @CanDock( roles = { "IntermediateEventOnActivityBoundary" } )
 @Morph( base = BaseTask.class )
 public class NoneTask extends BaseTask {

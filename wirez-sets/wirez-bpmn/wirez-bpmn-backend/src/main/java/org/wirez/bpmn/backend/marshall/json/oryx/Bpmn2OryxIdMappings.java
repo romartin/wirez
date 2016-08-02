@@ -109,9 +109,7 @@ public class Bpmn2OryxIdMappings {
             return clazz;
         }
         
-        DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( definition.getClass() );
-        
-        Set<Object> properties = (Set<Object>) definitionAdapter.getProperties( definition );
+        Set<Object> properties = (Set<Object>) definitionManager.adapters().forDefinition().getProperties( definition );
         
         if ( null != properties && !properties.isEmpty() ) {
             

@@ -16,50 +16,27 @@
 
 package org.wirez.core.api;
 
-import org.wirez.core.definition.adapter.*;
+import org.wirez.core.definition.adapter.AdapterManager;
+import org.wirez.core.registry.definition.TypeDefinitionSetRegistry;
 
-import java.util.Collection;
-
+/**
+ * Entry point for handling the different Definition Sets present on the context.
+ *
+ */
 public interface DefinitionManager {
 
     /**
-     * Returns all the definitions sets present.
+     * The registry that contains the Definition Sets present on the context.
+     *
+     * @return The definition set registry.
      */
-    <T> Collection<T> getDefinitionSets();
+    TypeDefinitionSetRegistry<?> definitionSets();
 
     /**
-     * Returns a definitions set for a given identifier.
+     * The manager for the different adapters present on the context.
+     *
+     * @return The adapter manager.
      */
-    <T> T getDefinitionSet(String id );
-
-    /**
-     * Returns the Definition Set adapter instance for the given type.
-     */
-    <T> DefinitionSetAdapter<T> getDefinitionSetAdapter( Class <?> type );
-
-    /**
-     * Returns the Definition Set rules adapter instance for the given type.
-     */
-    <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter( Class<?> type );
-
-    /**
-     * Returns the Definition adapter instance for the given type.
-     */
-    <T> DefinitionAdapter<T> getDefinitionAdapter( Class<?> type );
-
-    /**
-     * Returns the Property Set adapter instance for the given property set's type.
-     */
-    <T> PropertySetAdapter<T> getPropertySetAdapter( Class<?> type );
-
-    /**
-     * Returns the Property adapter instance for the given property's type.
-     */    
-    <T> PropertyAdapter<T, ?> getPropertyAdapter( Class<?> type );
-
-    /**
-     * Returns the Morphing adapter instance for a given Definition type.
-     */
-    <T> MorphAdapter<T> getMorphAdapter( Class<?> type );
+    AdapterManager adapters();
 
 }

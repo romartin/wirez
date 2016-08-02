@@ -16,135 +16,52 @@
 
 package org.wirez.core.api;
 
-import org.wirez.core.definition.adapter.*;
-import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
-
-import java.util.*;
-import java.util.logging.Logger;
+import org.wirez.core.definition.adapter.Adapter;
+import org.wirez.core.definition.adapter.AdapterManager;
+import org.wirez.core.registry.DynamicRegistry;
+import org.wirez.core.registry.RegistryFactory;
+import org.wirez.core.registry.definition.TypeDefinitionSetRegistry;
 
 public abstract class AbstractDefinitionManager implements DefinitionManager {
 
-    private static Logger LOGGER = Logger.getLogger(AbstractDefinitionManager.class.getName());
-    
-    protected final List definitionSets = new LinkedList<>();
-    protected final List<DefinitionSetAdapter> definitionSetAdapters = new LinkedList<>();
-    protected final List<DefinitionSetRuleAdapter> definitionSetRuleAdapters = new LinkedList<>();
-    protected final List<DefinitionAdapter> definitionAdapters = new LinkedList<>();
-    protected final List<PropertySetAdapter> propertySetAdapters = new ArrayList<PropertySetAdapter>();
-    protected final List<PropertyAdapter> propertyAdapters = new LinkedList<>();
-    protected final List<MorphAdapter> morphAdapters = new LinkedList<>();
+    private final TypeDefinitionSetRegistry<?> definitionSetRegistry;
+    private final AdapterManager adapterManager;
 
-    public AbstractDefinitionManager() {
+    protected AbstractDefinitionManager() {
+        this.definitionSetRegistry = null;
+        this.adapterManager = null;
+    }
+
+    public AbstractDefinitionManager( final RegistryFactory registryFactory,
+                                      final AdapterManager adapterManager ) {
+        this.definitionSetRegistry = registryFactory.newDefinitionSetRegistry();
+        this.definitionSetRegistry.setLazyInitializationCallback( () -> addDefinitionSetContextBeans() );
+        this.adapterManager = adapterManager;
+    }
+
+    protected abstract void addDefinitionSetContextBeans();
+
+    @Override
+    public TypeDefinitionSetRegistry<?> definitionSets() {
+        return definitionSetRegistry;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> Collection<T> getDefinitionSets() {
-        return Collections.unmodifiableCollection((Collection<? extends T>) definitionSets);
+    public AdapterManager adapters() {
+        return adapterManager;
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getDefinitionSet(final String id) {
-        if ( null != id && id.trim().length() > 0 ) {
-            for ( final Object definitionSet : definitionSets ) {
-                final DefinitionSetAdapter adapter = getDefinitionSetAdapter( definitionSet.getClass() );
-                final String defSetId = adapter.getId( definitionSet );
-                if ( defSetId.equals( id ) ) {
-                    return (T) definitionSet;
-                }
-            }
-        }
-        
-        return null;
+    @SuppressWarnings( "unchecked" )
+    protected void addDefinitionSet( final Object object ) {
+        ( ( DynamicRegistry) definitionSetRegistry).register( object );
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> DefinitionSetAdapter<T> getDefinitionSetAdapter(final Class<?> type) {
-        for (DefinitionSetAdapter adapter : definitionSetAdapters) {
-            if ( adapter.accepts( type ) ) {
-                return adapter;
-            }
-        }
-
-        return nullHandling("Definition Set", type);
+    @SuppressWarnings( "unchecked" )
+    protected void addAdapter( final Adapter adapter ) {
+        final DynamicRegistry<Adapter> adapterDynamicRegistry = ( DynamicRegistry<Adapter> ) adapterManager.registry();
+        adapterDynamicRegistry.register( adapter );
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> DefinitionSetRuleAdapter<T> getDefinitionSetRuleAdapter(final Class<?> type) {
-        for (DefinitionSetRuleAdapter adapter : definitionSetRuleAdapters) {
-            if ( adapter.accepts( type ) ) {
-                return adapter;
-            }
-        }
-
-        return nullHandling("Definition Set rules", type);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> DefinitionAdapter<T> getDefinitionAdapter(final Class<?> type) {
-        for (DefinitionAdapter adapter : definitionAdapters) {
-            if ( adapter.accepts( type ) ) {
-                return adapter;
-            }
-        }
-
-        return nullHandling("Definition", type);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public<T> PropertySetAdapter<T> getPropertySetAdapter(final Class<?> type) {
-        for (PropertySetAdapter adapter : propertySetAdapters) {
-            if ( adapter.accepts( type ) ) {
-                return adapter;
-            }
-        }
-
-        return nullHandling("Property Set", type);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public<T> PropertyAdapter<T, ?> getPropertyAdapter(final Class<?> type) {
-        for (PropertyAdapter adapter : propertyAdapters) {
-            if ( adapter.accepts( type ) ) {
-                return adapter;
-            }
-        }
-
-        return nullHandling("Property", type);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> MorphAdapter<T> getMorphAdapter( final Class<?> type ) {
-
-        for ( MorphAdapter adapter : morphAdapters ) {
-
-            if ( adapter.accepts( type ) ) {
-
-                return adapter;
-
-            }
-
-        }
-
-        return null;
-    }
-
-    public static <T extends PriorityAdapter> void sortAdapters(List<T> adapters) {
-        Collections.sort(adapters, (o1, o2) -> o1.getPriority() - o2.getPriority());
-    }
-    
-    private <T> T nullHandling(String domain, Class<?> type) {
-        final String message = "No " + domain + " adapter found for pojo with class [" + type.getName() + "]";
-        LOGGER.severe( message );
-        throw new NullPointerException( message );
-    }
 
 }
 

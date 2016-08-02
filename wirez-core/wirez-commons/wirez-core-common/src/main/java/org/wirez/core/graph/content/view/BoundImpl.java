@@ -48,4 +48,10 @@ public final class BoundImpl implements Bounds.Bound {
     public void setY(Double y) {
         this.y = y;
     }
+
+    @Override
+    public String toString() {
+        return "[" + x + ", " + y + "]" ;
+    }
+
 }

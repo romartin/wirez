@@ -19,63 +19,61 @@ import java.util.logging.Logger;
 
 @Dependent
 public class TreeExplorerItem implements IsWidget {
-    
+
     private static Logger LOGGER = Logger.getLogger( TreeExplorerItem.class.getName() );
 
     public interface View extends UberView<TreeExplorerItem> {
 
-        View setUUID(String uuid);
+        View setUUID( String uuid );
 
-        View setName(String name);
+        View setName( String name );
 
-        View setGlyph(ShapeGlyph<Group> glyph);
-        
+        View setGlyph( ShapeGlyph<Group> glyph );
+
     }
-    
+
     ShapeManager shapeManager;
     GraphUtils graphUtils;
-    DefinitionManager definitionManager;
     DefinitionUtils definitionUtils;
     View view;
 
     @Inject
-    public TreeExplorerItem(final ShapeManager shapeManager,
-                            final GraphUtils graphUtils,
-                            final DefinitionManager definitionManager, 
-                            final DefinitionUtils definitionUtils,
-                            final View view) {
+    public TreeExplorerItem( final ShapeManager shapeManager,
+                             final GraphUtils graphUtils,
+                             final DefinitionUtils definitionUtils,
+                             final View view ) {
         this.shapeManager = shapeManager;
         this.graphUtils = graphUtils;
-        this.definitionManager = definitionManager;
         this.definitionUtils = definitionUtils;
         this.view = view;
     }
 
     @PostConstruct
     public void init() {
-        view.init(this);
+        view.init( this );
     }
 
     @Override
     public Widget asWidget() {
         return view.asWidget();
     }
-    
-    public void show(final Element<org.wirez.core.graph.content.view.View> element) {
-        
+
+    @SuppressWarnings( "unchecked" )
+    public void show( final Element<org.wirez.core.graph.content.view.View> element ) {
+
         final Object definition = element.getContent().getDefinition();
-        final String defId = definitionUtils.getDefinitionId( definition );
+        final String defId = definitionUtils.getDefinitionManager().adapters().forDefinition().getId( definition );
         final ShapeFactory factory = shapeManager.getFactory( defId );
-        
+
         view.setUUID( element.getUUID() )
-            .setName( getItemText(element) )
-            .setGlyph( factory.glyph( defId, 25, 25 ) );
-        
+                .setName( getItemText( element ) )
+                .setGlyph( factory.glyph( defId, 25, 25 ) );
+
     }
 
-    private String getItemText(final Element<org.wirez.core.graph.content.view.View> item) {
-        final String name = definitionUtils.getName( item.getContent().getDefinition());
-        return   ( name != null ? name : "- No name -" );
+    private String getItemText( final Element<org.wirez.core.graph.content.view.View> item ) {
+        final String name = definitionUtils.getName( item.getContent().getDefinition() );
+        return ( name != null ? name : "- No name -" );
     }
-    
+
 }

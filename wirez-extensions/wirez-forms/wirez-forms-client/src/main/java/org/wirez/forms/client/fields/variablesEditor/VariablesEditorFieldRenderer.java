@@ -124,9 +124,6 @@ public class VariablesEditorFieldRenderer extends FieldRenderer<VariablesEditorF
             }
         }
 
-//        List<VariableRow> variableRows = new ArrayList<VariableRow>();
-//        variableRows.add(new VariableRow(Variable.VariableType.PROCESS, "s1", "String", null));
-//        variableRows.add(new VariableRow(Variable.VariableType.PROCESS, "i1", "Integer", null));
         return variableRows;
     }
 

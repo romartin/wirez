@@ -25,7 +25,7 @@ public class VariableRow {
 
     private String name;
 
-    private Variable.VariableType variableType;
+    private Variable.VariableType variableType = Variable.VariableType.PROCESS;
 
     private String dataType;
 

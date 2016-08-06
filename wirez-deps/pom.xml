@@ -26,7 +26,7 @@
     <version.com.ahomeit.lienzo.tooling.common>1.0.150-RELEASE</version.com.ahomeit.lienzo.tooling.common>
     <version.com.ahomeit.lienzo.charts>1.0.240-RC1</version.com.ahomeit.lienzo.charts>
     <version.com.allen-sauer.gwt.dnd>3.3.3</version.com.allen-sauer.gwt.dnd>
-    <version.com.google.gwt>2.8.0-beta1</version.com.google.gwt>
+    <version.com.google.gwt>2.8.0-rc1</version.com.google.gwt>
     <version.org.gwtbootstrap3>0.9.3</version.org.gwtbootstrap3>
     <version.org.owasp.encoder>1.1</version.org.owasp.encoder>
     <version.com.googlecode.jsonsimple>1.1.1</version.com.googlecode.jsonsimple>
@@ -122,6 +122,22 @@
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-user</artifactId>
         <version>${version.com.google.gwt}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-dev</artifactId>
+        <version>${version.com.google.gwt}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -250,6 +266,12 @@
         <groupId>com.google.gwt.gwtmockito</groupId>
         <artifactId>gwtmockito</artifactId>
         <version>${version.com.google.gwt.gwtmockito}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.mortbay.jasper</groupId>
+            <artifactId>apache-el</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>

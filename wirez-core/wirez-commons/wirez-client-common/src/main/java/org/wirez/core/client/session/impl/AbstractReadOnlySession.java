@@ -5,7 +5,6 @@ import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.pan.PanControl;
 import org.wirez.core.client.canvas.controls.select.SelectionControl;
 import org.wirez.core.client.canvas.controls.zoom.ZoomControl;
-import org.wirez.core.client.shape.Shape;
 import org.wirez.core.graph.Element;
 
 public abstract class AbstractReadOnlySession extends AbstractCanvasSession 

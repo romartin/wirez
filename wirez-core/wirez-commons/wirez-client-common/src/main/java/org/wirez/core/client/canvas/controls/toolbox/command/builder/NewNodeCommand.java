@@ -115,6 +115,8 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
     private void addOnNextLayoutPosition( final Context<AbstractCanvasHandler> context,
                                           final Element element ) {
 
+        fireLoadingStarted( context );
+
         final AbstractCanvasHandler canvasHandler = context.getCanvasHandler();
 
         graphBoundsIndexer.setRootUUID( canvasHandler.getDiagram().getSettings().getCanvasRootUUID() );

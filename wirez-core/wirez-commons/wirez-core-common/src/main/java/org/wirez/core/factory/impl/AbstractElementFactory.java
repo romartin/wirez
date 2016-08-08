@@ -3,7 +3,7 @@ package org.wirez.core.factory.impl;
 import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.content.view.BoundImpl;
-import org.wirez.core.graph.content.view.Bounds;
+import org.wirez.core.graph.content.Bounds;
 import org.wirez.core.graph.content.view.BoundsImpl;
 
 public abstract class AbstractElementFactory<C, T extends Element<C>>

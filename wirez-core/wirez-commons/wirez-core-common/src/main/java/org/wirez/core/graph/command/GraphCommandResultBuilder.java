@@ -2,8 +2,8 @@ package org.wirez.core.graph.command;
 
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.wirez.core.command.CommandResult;
-import org.wirez.core.command.CommandResultBuilder;
-import org.wirez.core.command.CommandResultImpl;
+import org.wirez.core.command.impl.CommandResultBuilder;
+import org.wirez.core.command.impl.CommandResultImpl;
 import org.wirez.core.rule.RuleViolation;
 
 import java.util.Collection;

@@ -1,41 +1,23 @@
 package org.wirez.client.widgets.session.toolbar;
 
-import com.google.gwt.logging.client.LogConfiguration;
-import org.wirez.client.widgets.session.toolbar.item.AbstractToolbarItem;
-import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
+import org.wirez.core.client.session.CanvasSession;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+public interface Toolbar<S extends CanvasSession> {
 
-// TODO: Drop-down & complex tree buttons support.
-@Dependent
-public class Toolbar extends AbstractToolbar<DefaultCanvasFullSession> {
+    void initialize( S session, ToolbarCommandCallback<?> callback  );
 
-    private static Logger LOGGER = Logger.getLogger(Toolbar.class.getName());
-    
-    public interface View extends AbstractToolbar.View<DefaultCanvasFullSession> {
-        
-    }
-    
-    @Inject
-    public Toolbar(final Instance<AbstractToolbarItem<DefaultCanvasFullSession>> toolbarItems,
-                   final View view) {
-        super( toolbarItems, view );
-    }
+    void addCommand( ToolbarCommand<S> command );
 
-    @PostConstruct
-    public void init() {
-        super.doInit();
-    }
+    void disable( final ToolbarCommand<S> command );
 
-    private void log(final Level level, final String message) {
-        if ( LogConfiguration.loggingIsEnabled() ) {
-            LOGGER.log(level, message);
-        }
-    }
+    void enable( final ToolbarCommand<S> command );
+
+    void show();
+
+    void hide();
+
+    void destroy();
+
+    ToolbarView<S> getView();
 
 }

@@ -25,14 +25,13 @@ import org.wirez.core.client.canvas.event.registration.CanvasShapeAddedEvent;
 import org.wirez.core.client.canvas.event.registration.CanvasShapeRemovedEvent;
 import org.wirez.core.client.canvas.listener.CanvasShapeListener;
 import org.wirez.core.client.canvas.listener.HasCanvasListeners;
+import org.wirez.core.client.canvas.util.CanvasLoadingObserver;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.ShapeView;
 import org.wirez.core.client.shape.view.event.MouseClickEvent;
 import org.wirez.core.client.shape.view.event.MouseClickHandler;
-import org.wirez.core.client.shape.view.event.ViewEventType;
 import org.wirez.core.util.UUID;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -73,6 +72,10 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View>
 
         double getAbsoluteY();
 
+        int getWidth();
+
+        int getHeight();
+
         View setGrid( CanvasGrid grid );
 
         Layer getLayer();
@@ -82,7 +85,6 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View>
         void destroy();
 
     }
-
 
     protected Layer layer;
     protected V view;
@@ -94,6 +96,7 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View>
 
     protected final List<Shape> shapes = new ArrayList<Shape>();
     protected final List<CanvasShapeListener> listeners = new LinkedList<>();
+    private final CanvasLoadingObserver loadingObserver = new CanvasLoadingObserver();
     private final String uuid;
 
     @Inject
@@ -370,6 +373,16 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View>
         return this;
     }
 
+    @Override
+    public int getWidth() {
+        return view.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return view.getHeight();
+    }
+
     public V getView() {
         return view;
     }
@@ -387,6 +400,18 @@ public abstract class AbstractCanvas<V extends AbstractCanvas.View>
 
         return uuid.equals( that.uuid );
 
+    }
+
+    public void setLoadingObserverCallback( final CanvasLoadingObserver.Callback loadingObserverCallback ) {
+        this.loadingObserver.setLoadingObserverCallback( loadingObserverCallback );
+    }
+
+    public void loadingStarted() {
+        this.loadingObserver.loadingStarted();
+    }
+
+    public void loadingCompleted() {
+        this.loadingObserver.loadingCompleted();
     }
 
     private void log( final Level level, final String message ) {

@@ -1,7 +1,7 @@
 package org.wirez.core.client.registry.impl;
 
-import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.client.registry.ClientRegistryFactory;
+import org.wirez.core.definition.adapter.AdapterManager;
 import org.wirez.core.registry.impl.AbstractRegistryFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,8 +14,8 @@ public class ClientRegistryFactoryImpl extends AbstractRegistryFactory implement
     }
 
     @Inject
-    public ClientRegistryFactoryImpl( final DefinitionManager definitionManager ) {
-        super( definitionManager );
+    public ClientRegistryFactoryImpl( final AdapterManager adapterManager ) {
+        super( adapterManager );
     }
 
 }

@@ -220,14 +220,14 @@ public class AdapterRegistryImpl implements AdapterRegistry, DynamicRegistry<Ada
 
     @Override
     public Collection<Adapter> getItems() {
-        final Collection<Adapter> result = new LinkedList<>();
-        result.addAll( definitionSetAdapters );
-        result.addAll( definitionSetRuleAdapters );
-        result.addAll( definitionAdapters );
-        result.addAll( propertySetAdapters );
-        result.addAll( propertyAdapters );
-        result.addAll( morphAdapters );
-        return result;
+        return new LinkedList<Adapter>() {{
+            addAll( definitionSetAdapters );
+            addAll( definitionSetRuleAdapters );
+            addAll( definitionAdapters );
+            addAll( propertySetAdapters );
+            addAll( propertyAdapters );
+            addAll( morphAdapters );
+        }};
     }
 
     @Override

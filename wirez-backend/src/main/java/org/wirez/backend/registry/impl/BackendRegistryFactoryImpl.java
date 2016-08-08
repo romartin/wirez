@@ -1,7 +1,7 @@
 package org.wirez.backend.registry.impl;
 
-import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.backend.registry.BackendRegistryFactory;
+import org.wirez.core.definition.adapter.AdapterManager;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.registry.diagram.DiagramRegistry;
 import org.wirez.core.registry.impl.AbstractRegistryFactory;
@@ -16,8 +16,8 @@ public class BackendRegistryFactoryImpl extends AbstractRegistryFactory implemen
     }
 
     @Inject
-    public BackendRegistryFactoryImpl( final DefinitionManager definitionManager ) {
-        super( definitionManager );
+    public BackendRegistryFactoryImpl( final AdapterManager adapterManager ) {
+        super( adapterManager );
     }
 
     @Override

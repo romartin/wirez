@@ -2,6 +2,7 @@ package org.wirez.core.definition.adapter.binding;
 
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.definition.adapter.exception.NotPojoTypeException;
+import org.wirez.core.registry.definition.AdapterRegistry;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -18,10 +19,10 @@ public class BindableAdapterUtils {
     }
 
     public static String getDefinitionId( final Class<?> type,
-                                          final DefinitionManager definitionManager ) {
+                                          final AdapterRegistry registry ) {
         
-        if ( null != definitionManager &&
-                !definitionManager.adapters().registry().getDefinitionAdapter( type ).isPojoModel() ) {
+        if ( null != registry &&
+                !registry.getDefinitionAdapter( type ).isPojoModel() ) {
 
             throw new NotPojoTypeException( type );
 
@@ -35,10 +36,10 @@ public class BindableAdapterUtils {
     }
 
     public static String getDefinitionSetId( final Class<?> type,
-                                             final DefinitionManager definitionManager ) {
+                                             final AdapterRegistry registry ) {
 
-        if ( null != definitionManager &&
-                !definitionManager.adapters().registry().getDefinitionSetAdapter( type ).isPojoModel() ) {
+        if ( null != registry &&
+                !registry.getDefinitionSetAdapter( type ).isPojoModel() ) {
 
             throw new NotPojoTypeException( type );
 

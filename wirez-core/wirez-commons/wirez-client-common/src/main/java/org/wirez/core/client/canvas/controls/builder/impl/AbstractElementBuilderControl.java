@@ -2,9 +2,9 @@ package org.wirez.core.client.canvas.controls.builder.impl;
 
 import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
-import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.command.CanvasCommandManager;
+import org.wirez.core.client.command.CanvasViolation;
+import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerControl;
 import org.wirez.core.client.canvas.controls.builder.ElementBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.ElementBuildRequest;

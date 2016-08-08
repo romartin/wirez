@@ -70,10 +70,6 @@ public class ApplicationDefinitionManager extends AbstractDefinitionManager {
     public void init() {
         initAdapters();
         initMorphAdapters();
-    }
-
-    @Override
-    protected void addDefinitionSetContextBeans() {
         // Once adapters present, add the Definition Sets found on current context.
         initDefSets();
     }

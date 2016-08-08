@@ -5,8 +5,9 @@ import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.relationship.Child;
-import org.wirez.core.graph.content.view.Bounds;
+import org.wirez.core.graph.content.Bounds;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.traverse.content.AbstractChildrenTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
@@ -17,21 +18,61 @@ import javax.enterprise.context.Dependent;
 import java.util.Iterator;
 
 // TODO: This has to be refactored by the use of a good canvas layout API.
-// TODO: Pending take into account the diagram/graph size, currently it's always using am horizontal layout.
 @Dependent
 public class CanvasLayoutUtils {
+
+    private static final int DISTANCE = 100;
+    private static final float MARGIN = 0.2f;
 
     public double[] getNextLayoutPosition( final CanvasHandler canvasHandler, final Element<View<?>> source ) {
 
         final Double[] pos = GraphUtils.getPosition( source.getContent() );
         final Double[] size = GraphUtils.getSize( source.getContent() );
+        final double[] next = new double[] { pos[0] + size[0] + DISTANCE, pos[1] };
 
-        return new double[] { pos[0] + size[0] + 50, pos[1] };
+        return checkNextLayoutPosition( next[0], next[1], canvasHandler );
     }
 
     public double[] getNextLayoutPosition( final CanvasHandler canvasHandler ) {
         final String ruuid = canvasHandler.getDiagram().getSettings().getCanvasRootUUID();
-        return getNextLayoutPosition( canvasHandler, ruuid );
+        final double[] next = getNextLayoutPosition( canvasHandler, ruuid );
+        return checkNextLayoutPosition( next[0], next[1], canvasHandler );
+    }
+
+    // Check that "next" cartesian coordinates are not bigger than current graph bounds.
+    @SuppressWarnings( "unchecked" )
+    private double[] checkNextLayoutPosition( final double x,
+                                              final double y,
+                                              final CanvasHandler canvasHandler ) {
+
+        final double[] result = { x , y };
+
+        final Graph<DefinitionSet, ?> graph = canvasHandler.getDiagram().getGraph();
+        final Bounds bounds = graph.getContent().getBounds();
+        final Bounds.Bound lr = bounds.getLowerRight();
+
+        if ( x >= getBound( lr.getX() ) ) {
+
+            result[0] = DISTANCE;
+            result[1] += DISTANCE;
+
+        }
+
+        if ( result[1] >= getBound( lr.getY() ) ) {
+
+            throw new RuntimeException( "Diagram bounds exceeded." );
+
+        }
+
+        return result;
+    }
+
+    private double getBound( final double bound ) {
+        return bound - getMargin( bound );
+    }
+
+    private double getMargin( final double size ) {
+        return size * MARGIN;
     }
 
     @SuppressWarnings( "unchecked" )
@@ -125,10 +166,7 @@ public class CanvasLayoutUtils {
 
         final View content = (View) node.getContent();
         final Bounds bounds = content.getBounds();
-        final Bounds.Bound ulBound = bounds.getUpperLeft();
         final Bounds.Bound lrBound = bounds.getLowerRight();
-        final double ulX = ulBound.getX() + parentX;
-        final double ulY = ulBound.getY() + parentY;
         final double lrX = lrBound.getX() + parentX;
         final double lrY = lrBound.getY() + parentY;
 

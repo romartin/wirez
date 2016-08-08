@@ -1,17 +1,15 @@
 package org.wirez.client.widgets.session.presenter.impl;
 
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
-import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.command.ClearSelectionCommand;
 import org.wirez.client.widgets.session.toolbar.command.SwitchGridCommand;
 import org.wirez.client.widgets.session.toolbar.command.VisitGraphCommand;
+import org.wirez.client.widgets.session.toolbar.impl.AbstractToolbar;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.session.impl.DefaultCanvasReadOnlySession;
 import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
 
-import javax.enterprise.event.Event;
-
- // TODO: @Dependent - As there is no bean injection for AbstractToolbar<DefaultCanvasReadOnlySession> yet, this class
+// TODO: @Dependent - As there is no bean injection for AbstractToolbar<DefaultCanvasReadOnlySession> yet, this class
 // is abstract and not eligible by the bean manager for now.
 public abstract class ReadOnlySessionPresenterImpl extends AbstractReadOnlySessionPresenter<DefaultCanvasReadOnlySession>
  implements DefaultReadOnlySessionPresenter {

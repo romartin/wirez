@@ -1,9 +1,11 @@
 package org.wirez.core.registry.impl;
 
-import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.command.Command;
+import org.wirez.core.definition.adapter.AdapterManager;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.factory.Factory;
 import org.wirez.core.registry.RegistryFactory;
+import org.wirez.core.registry.command.CommandRegistry;
 import org.wirez.core.registry.definition.AdapterRegistry;
 import org.wirez.core.registry.definition.TypeDefinitionRegistry;
 import org.wirez.core.registry.definition.TypeDefinitionSetRegistry;
@@ -15,13 +17,13 @@ import java.util.HashMap;
 
 public abstract class AbstractRegistryFactory implements RegistryFactory {
 
-    private DefinitionManager definitionManager;
+    private AdapterManager adapterManager;
 
     protected AbstractRegistryFactory() {
     }
 
-    public AbstractRegistryFactory( final DefinitionManager definitionManager ) {
-        this.definitionManager = definitionManager;
+    public AbstractRegistryFactory( final AdapterManager adapterManager ) {
+        this.adapterManager = adapterManager;
     }
 
     @Override
@@ -31,17 +33,22 @@ public abstract class AbstractRegistryFactory implements RegistryFactory {
 
     @Override
     public <T> TypeDefinitionSetRegistry<T> newDefinitionSetRegistry() {
-        return new DefinitionSetMapRegistry<T>( definitionManager );
+        return new DefinitionSetMapRegistry<T>( adapterManager );
     }
 
     @Override
     public <T> TypeDefinitionRegistry<T> newDefinitionRegistry() {
-        return new DefinitionMapRegistry<T>( definitionManager );
+        return new DefinitionMapRegistry<T>( adapterManager );
+    }
+
+    @Override
+    public <C extends Command> CommandRegistry<C> newCommandRegistry() {
+        return new CommandRegistryImpl<C>();
     }
 
     @Override
     public <T extends Factory<?, ?>> FactoryRegistry<T> newFactoryRegistry() {
-        return new FactoryRegistryImpl<T>( definitionManager );
+        return new FactoryRegistryImpl<T>( adapterManager );
     }
 
     @Override

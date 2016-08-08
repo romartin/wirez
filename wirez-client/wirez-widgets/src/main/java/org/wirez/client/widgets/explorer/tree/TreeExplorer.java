@@ -13,6 +13,7 @@ import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.traverse.content.AbstractChildrenTraverseCallback;
@@ -129,7 +130,7 @@ public class TreeExplorer implements IsWidget {
             }
 
             @Override
-            public void startGraphTraversal(final Graph<org.wirez.core.graph.content.view.View, Node<org.wirez.core.graph.content.view.View, Edge>> graph) {
+            public void startGraphTraversal(final Graph<DefinitionSet, Node<org.wirez.core.graph.content.view.View, Edge>> graph) {
                 super.startGraphTraversal(graph);
                 levelIdx.clear();
                 levelIdx.add(-1);

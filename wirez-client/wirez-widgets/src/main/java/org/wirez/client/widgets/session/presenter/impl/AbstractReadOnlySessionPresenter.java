@@ -4,16 +4,17 @@ import com.google.gwt.logging.client.LogConfiguration;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.session.presenter.ReadOnlySessionPresenter;
-import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.command.ClearSelectionCommand;
 import org.wirez.client.widgets.session.toolbar.command.SwitchGridCommand;
 import org.wirez.client.widgets.session.toolbar.command.VisitGraphCommand;
+import org.wirez.client.widgets.session.toolbar.impl.AbstractToolbar;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.listener.CanvasElementListener;
 import org.wirez.core.client.canvas.listener.CanvasShapeListener;
+import org.wirez.core.client.canvas.util.CanvasLoadingObserver;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
@@ -23,7 +24,6 @@ import org.wirez.core.client.shape.Shape;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.graph.Element;
 
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -129,7 +129,22 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
        
         // Toolbar read-only commands.
         setToolbarCommands();
-        
+
+        // Enable canvas loading callback.
+        session.getCanvas().setLoadingObserverCallback( new CanvasLoadingObserver.Callback() {
+
+            @Override
+            public void onLoadingStarted() {
+                fireProcessingStarted();
+            }
+
+            @Override
+            public void onLoadingCompleted() {
+                fireProcessingCompleted();
+            }
+
+        } );
+
     }
 
     protected void onClear() {
@@ -209,7 +224,7 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
     protected void afterInitialize(S session, int width, int height) {
         super.afterInitialize(session, width, height);
         
-        toolbar.configure( session, new ToolbarCommandCallback<Object>() {
+        toolbar.initialize( session, new ToolbarCommandCallback<Object>() {
             @Override
             public void onCommandExecuted( final Object result) {
                 
@@ -305,14 +320,14 @@ public abstract class AbstractReadOnlySessionPresenter<S extends CanvasReadOnlyS
 
     }
 
-    protected void fireProcessingStarted() {
+    private void fireProcessingStarted() {
         view.setLoading( true );
     }
 
-    protected void fireProcessingCompleted() {
+    private void fireProcessingCompleted() {
         view.setLoading( false );
     }
-    
+
     @Override
     protected void showError(String message) {
         fireProcessingCompleted();

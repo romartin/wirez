@@ -16,16 +16,13 @@
 
 package org.wirez.core.graph.content.view;
 
+import org.wirez.core.graph.content.HasBounds;
 import org.wirez.core.graph.content.definition.Definition;
 
 /**
  * Indicates that the content of a node/edge is given by a Definition of the graphical representation.
  * The nodes/edges with View content are represented in the canvas with shapes.
  */
-public interface View<T> extends Definition<T> {
+public interface View<T> extends Definition<T>, HasBounds {
 
-    Bounds getBounds();
-    
-    void setBounds(Bounds bounds);
-    
 }

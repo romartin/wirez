@@ -3,6 +3,7 @@ package org.wirez.core.graph.processing.traverse.content;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.graph.content.relationship.Parent;
 import org.wirez.core.graph.content.view.View;
@@ -18,28 +19,29 @@ public final class FullContentTraverseProcessorImpl implements FullContentTraver
     TreeWalkTraverseProcessor treeWalkTraverseProcessor;
 
     @Inject
-    public FullContentTraverseProcessorImpl(final TreeWalkTraverseProcessor treeWalkTraverseProcessor) {
+    public FullContentTraverseProcessorImpl( final TreeWalkTraverseProcessor treeWalkTraverseProcessor ) {
         this.treeWalkTraverseProcessor = treeWalkTraverseProcessor;
     }
-    
+
     @Override
-    public void traverse(final Graph<View, Node<View, Edge>> graph, 
-                         final FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>> callback) {
+    @SuppressWarnings( "unchecked" )
+    public void traverse( final Graph<View, Node<View, Edge>> graph,
+                          final FullContentTraverseCallback<Node<View, Edge>, Edge<Object, Node>> callback ) {
 
         treeWalkTraverseProcessor
-                .useEdgeVisitorPolicy( TreeWalkTraverseProcessor.EdgeVisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE)
-                .traverse(graph, new TreeTraverseCallback<Graph, Node, Edge>() {
+                .useEdgeVisitorPolicy( TreeWalkTraverseProcessor.EdgeVisitorPolicy.VISIT_EDGE_BEFORE_TARGET_NODE )
+                .traverse( graph, new TreeTraverseCallback<Graph, Node, Edge>() {
 
                     @Override
-                    public void startGraphTraversal(final Graph graph) {
-                        if (graph.getContent() instanceof View) {
+                    public void startGraphTraversal( final Graph graph ) {
+                        if ( graph.getContent() instanceof DefinitionSet ) {
                             callback.startGraphTraversal( graph );
                         }
                     }
 
                     @Override
-                    public boolean startNodeTraversal(final Node node) {
-                        if (node.getContent() instanceof View) {
+                    public boolean startNodeTraversal( final Node node ) {
+                        if ( node.getContent() instanceof View ) {
                             callback.startNodeTraversal( node );
                             return true;
                         }
@@ -47,7 +49,7 @@ public final class FullContentTraverseProcessorImpl implements FullContentTraver
                     }
 
                     @Override
-                    public boolean startEdgeTraversal(final Edge edge) {
+                    public boolean startEdgeTraversal( final Edge edge ) {
                         if ( edge.getContent() instanceof View ) {
                             callback.startViewEdgeTraversal( edge );
                         } else if ( edge.getContent() instanceof Child ) {
@@ -61,14 +63,14 @@ public final class FullContentTraverseProcessorImpl implements FullContentTraver
                     }
 
                     @Override
-                    public void endNodeTraversal(final Node node) {
-                        if (node.getContent() instanceof View) {
+                    public void endNodeTraversal( final Node node ) {
+                        if ( node.getContent() instanceof View ) {
                             callback.endNodeTraversal( node );
                         }
                     }
 
                     @Override
-                    public void endEdgeTraversal(final Edge edge) {
+                    public void endEdgeTraversal( final Edge edge ) {
                         if ( edge.getContent() instanceof View ) {
                             callback.endViewEdgeTraversal( edge );
                         } else if ( edge.getContent() instanceof Child ) {
@@ -84,7 +86,7 @@ public final class FullContentTraverseProcessorImpl implements FullContentTraver
                     public void endGraphTraversal() {
                         callback.endGraphTraversal();
                     }
-                });
-        
+                } );
+
     }
 }

@@ -2,8 +2,8 @@ package org.wirez.core.client.canvas.controls.toolbox.command.actions;
 
 import com.google.gwt.user.client.Window;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.command.CanvasCommandManager;
+import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.toolbox.command.AbstractToolboxCommand;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.graph.Element;

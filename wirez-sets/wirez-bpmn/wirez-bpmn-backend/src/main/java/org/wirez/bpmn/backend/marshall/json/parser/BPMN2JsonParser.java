@@ -7,6 +7,7 @@ import org.wirez.core.diagram.Settings;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.content.view.ViewConnector;
@@ -52,7 +53,7 @@ public class BPMN2JsonParser extends JsonParserMinimalBase {
                     NodeParser currentParser = null;
                     
                     @Override
-                    public void startGraphTraversal(Graph<View, Node<View, Edge>> graph) {
+                    public void startGraphTraversal(Graph<DefinitionSet, Node<View, Edge>> graph) {
                         super.startGraphTraversal(graph);
                     }
 

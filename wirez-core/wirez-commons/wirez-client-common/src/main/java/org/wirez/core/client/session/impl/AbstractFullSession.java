@@ -2,7 +2,6 @@ package org.wirez.core.client.session.impl;
 
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.controls.actions.CanvasNameEditionControl;
 import org.wirez.core.client.canvas.controls.actions.CanvasSaveControl;
 import org.wirez.core.client.canvas.controls.actions.CanvasValidationControl;
@@ -16,7 +15,7 @@ import org.wirez.core.client.canvas.controls.pan.PanControl;
 import org.wirez.core.client.canvas.controls.select.SelectionControl;
 import org.wirez.core.client.canvas.controls.toolbox.ToolboxControl;
 import org.wirez.core.client.canvas.controls.zoom.ZoomControl;
-import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.command.CanvasCommandManager;
 import org.wirez.core.command.stack.StackCommandManager;
 import org.wirez.core.graph.Element;
 
@@ -158,7 +157,7 @@ public abstract class AbstractFullSession extends CanvasReadOnlySessionImpl
             
             if ( canvasCommandManager instanceof  StackCommandManager ) {
 
-                ((StackCommandManager) canvasCommandManager).clearHistory();
+                ((StackCommandManager) canvasCommandManager).getRegistry().clear();
 
             }
             

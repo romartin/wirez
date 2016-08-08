@@ -20,10 +20,12 @@ package org.wirez.core.command.batch;
 import org.wirez.core.command.Command;
 import org.wirez.core.command.CommandManager;
 
+import java.util.Collection;
+
 /**
  * Manager to handle batched execution of commands.
  */
-public interface BatchCommandManager<T, V>  extends CommandManager<T, V> {
+public interface BatchCommandManager<T, V> extends CommandManager<T, V> {
 
     /**
      * Add a command to be executed within the current batch.
@@ -31,9 +33,18 @@ public interface BatchCommandManager<T, V>  extends CommandManager<T, V> {
     BatchCommandManager<T, V> batch( Command<T, V> command );
 
     /**
-     * Execute all commands in batch. 
+     * Execute all commands in batch.
      * If any of the command executions fails, no command must be applied.
      */
-    BatchCommandResult<V> executeBatch(T context);
-    
+    BatchCommandResult<V> executeBatch( T context );
+
+    /**
+     * Undo all commands in batch.
+     * If any of the command executions fails, no command must be applied.
+     */
+    BatchCommandResult<V> undoBatch( T context );
+
+
+    Collection<Command<T, V>> getBatchCommands();
+
 }

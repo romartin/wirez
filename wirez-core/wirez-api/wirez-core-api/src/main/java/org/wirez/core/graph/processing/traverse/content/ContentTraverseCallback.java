@@ -3,11 +3,12 @@ package org.wirez.core.graph.processing.traverse.content;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.view.View;
 
 public interface ContentTraverseCallback<C, N extends Node<View, Edge>, E extends Edge<C, Node>> {
 
-    void startGraphTraversal(Graph<View, N> graph);
+    void startGraphTraversal(Graph<DefinitionSet, N> graph);
 
     void startEdgeTraversal(E edge);
 

@@ -1,32 +1,30 @@
 package org.wirez.client.widgets.session.toolbar.command;
 
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.wirez.client.widgets.session.toolbar.Toolbar;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
-import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
-import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
 import org.wirez.core.client.canvas.CanvasGrid;
 import org.wirez.core.client.canvas.DefaultCanvasGrid;
 import org.wirez.core.client.session.impl.DefaultCanvasReadOnlySession;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
 
 @Dependent
 public class SwitchGridCommand extends AbstractToolbarCommand<DefaultCanvasReadOnlySession> {
 
     private CanvasGrid grid;
 
-    @Inject
-    public SwitchGridCommand( final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent,
-                              final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent ) {
-        super( enableToolbarCommandEvent, disableToolbarCommandEvent );
+    @Override
+    protected boolean getState() {
+        // Always active.
+        return true;
     }
 
     @Override
-    public ToolbarCommand<DefaultCanvasReadOnlySession> initialize( final DefaultCanvasReadOnlySession session ) {
-        super.initialize( session );
+    public ToolbarCommand<DefaultCanvasReadOnlySession> initialize( final Toolbar<DefaultCanvasReadOnlySession> toolbar,
+                                                                    final DefaultCanvasReadOnlySession session ) {
+        super.initialize( toolbar, session );
         showGrid();
         return this;
     }

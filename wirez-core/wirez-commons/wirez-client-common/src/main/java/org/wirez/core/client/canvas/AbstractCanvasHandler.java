@@ -37,15 +37,17 @@ import org.wirez.core.client.shape.view.ShapeView;
 import org.wirez.core.client.shape.view.animation.AnimationTweener;
 import org.wirez.core.client.shape.view.animation.HasAnimations;
 import org.wirez.core.client.util.ShapeUtils;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
-import org.wirez.core.definition.adapter.DefinitionSetRuleAdapter;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.relationship.Child;
 import org.wirez.core.graph.content.relationship.Dock;
+import org.wirez.core.graph.content.Bounds;
+import org.wirez.core.graph.content.view.BoundImpl;
+import org.wirez.core.graph.content.view.BoundsImpl;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.index.IncrementalIndexBuilder;
 import org.wirez.core.graph.processing.index.Index;
@@ -126,9 +128,24 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
 
         this.graphIndex = indexBuilder.build( diagram.getGraph() );
 
+        initializeGraphBounds( diagram );
+
         doLoadRules();
 
         return this;
+    }
+
+    // TODO: just temporal...
+    @SuppressWarnings( "unchecked" )
+    private void initializeGraphBounds( final D diagram ) {
+
+        final double w = getCanvas().getWidth();
+        final double h = getCanvas().getHeight();
+        final Bounds bounds = new BoundsImpl( new BoundImpl( 0d, 0d ), new BoundImpl( w, h ) );
+
+        final Graph<DefinitionSet, ?> graph = diagram.getGraph();
+        graph.getContent().setBounds( bounds );
+
     }
 
     protected void doLoadRules() {

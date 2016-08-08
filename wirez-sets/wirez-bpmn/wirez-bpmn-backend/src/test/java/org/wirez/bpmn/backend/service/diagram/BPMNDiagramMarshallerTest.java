@@ -21,6 +21,8 @@ import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionSet
 import org.wirez.core.backend.definition.adapter.annotation.RuntimePropertyAdapter;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimePropertySetAdapter;
 import org.wirez.core.backend.definition.adapter.binding.RuntimeBindableMorphAdapter;
+import org.wirez.core.command.CommandManagerFactory;
+import org.wirez.core.command.impl.CommandManagerFactoryImpl;
 import org.wirez.core.definition.adapter.AdapterManager;
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.definition.morph.MorphDefinition;
@@ -43,6 +45,7 @@ import org.wirez.core.graph.command.GraphCommandManager;
 import org.wirez.core.graph.command.GraphCommandManagerImpl;
 import org.wirez.core.graph.command.factory.GraphCommandFactory;
 import org.wirez.core.graph.command.factory.GraphCommandFactoryImpl;
+import org.wirez.core.graph.content.Bounds;
 import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.relationship.Dock;
 import org.wirez.core.graph.content.view.*;
@@ -131,8 +134,9 @@ public class BPMNDiagramMarshallerTest {
         when( adapterRegistry.getPropertySetAdapter( any( Class.class ) ) ).thenReturn( propertySetAdapter );
         when( adapterRegistry.getPropertyAdapter( any( Class.class ) ) ).thenReturn( propertyAdapter );
 
+        CommandManagerFactory commandManagerFactory = new CommandManagerFactoryImpl( null );
 
-        commandManager = new GraphCommandManagerImpl( null, null, null );
+        commandManager = new GraphCommandManagerImpl( commandManagerFactory, null, null, null );
         commandFactory = new GraphCommandFactoryImpl();
         connectionEdgeFactory = new EdgeFactoryImpl( definitionManager );
         viewNodeFactory = new NodeFactoryImpl( definitionManager );

@@ -25,10 +25,10 @@ public interface Canvas<S extends Shape> {
     /**
      * Initializes a canvas with the given size.
      */
-    Canvas initialize(int width, int height);
+    Canvas initialize( int width, int height );
 
     /**
-     * Draws or batches the updates on the canvas. 
+     * Draws or batches the updates on the canvas.
      */
     Canvas draw();
 
@@ -39,41 +39,47 @@ public interface Canvas<S extends Shape> {
 
     /**
      * Get a list of all Shapes on the Canvas
-     * @return
      */
     List<S> getShapes();
 
     /**
      * Returns the shape with the given identifier.
      */
-    S getShape(String id);
+    S getShape( String id );
 
     /**
      * Add a Shape to the Canvas
-     * @param shape
      */
-    Canvas addShape(S shape);
+    Canvas addShape( S shape );
 
     /**
      * Delete a Shape from the Canvas. Implementations may prompt the User for confirmation.
-     * @param shape
      */
-    Canvas deleteShape(S shape);
+    Canvas deleteShape( S shape );
 
     /**
-     * Clears the canvas. 
+     * Clears the canvas.
      */
     Canvas clear();
 
     /**
      * Returns the underlying layer.
-     * @return
      */
     Layer getLayer();
+
+    /**
+     * Returns the canvas width.
+     */
+    int getWidth();
+
+    /**
+     * Returns the canvas height.
+     */
+    int getHeight();
 
     /**
      * Destroy whatever canvas state present, it will be no longer used.
      */
     void destroy();
-    
+
 }

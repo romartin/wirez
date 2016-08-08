@@ -7,11 +7,12 @@ import org.wirez.client.lienzo.canvas.controls.AbstractContainmentBasedControl;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
 import org.wirez.client.lienzo.canvas.wires.WiresUtils;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
-import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.command.CanvasCommandManager;
+import org.wirez.core.client.command.CanvasViolation;
+import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.containment.ContainmentAcceptorControl;
-import org.wirez.core.client.session.command.Session;
+import org.wirez.core.client.command.Session;
+import org.wirez.core.client.command.SessionCommandManager;
 import org.wirez.core.command.Command;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
@@ -26,7 +27,7 @@ public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedCont
 
     @Inject
     public ContainmentAcceptorControlImpl(final CanvasCommandFactory canvasCommandFactory,
-                                           final @Session  CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
+                                           final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
         super( canvasCommandFactory, canvasCommandManager );
     }
 

@@ -1,14 +1,15 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
 import org.wirez.core.client.canvas.util.CanvasLayoutUtils;
+import org.wirez.core.client.command.Session;
 import org.wirez.core.graph.processing.index.bounds.GraphBoundsIndexer;
 import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.rule.model.ModelCardinalityRuleManager;
 import org.wirez.core.rule.model.ModelContainmentRuleManager;
 import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.command.CanvasCommandManager;
+import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.service.ClientFactoryServices;
 
 import javax.enterprise.context.Dependent;
@@ -27,7 +28,7 @@ public class ElementBuilderControlImpl extends AbstractElementBuilderControl {
     @Inject
     public ElementBuilderControlImpl( final ClientDefinitionManager clientDefinitionManager,
                                       final ClientFactoryServices clientFactoryServices,
-                                      final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
+                                      final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
                                       final GraphUtils graphUtils,
                                       final ModelContainmentRuleManager modelContainmentRuleManager,
                                       final ModelCardinalityRuleManager modelCardinalityRuleManager,

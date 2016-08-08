@@ -1,7 +1,9 @@
 package org.wirez.core.registry;
 
+import org.wirez.core.command.Command;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.factory.Factory;
+import org.wirez.core.registry.command.CommandRegistry;
 import org.wirez.core.registry.definition.AdapterRegistry;
 import org.wirez.core.registry.definition.TypeDefinitionRegistry;
 import org.wirez.core.registry.definition.TypeDefinitionSetRegistry;
@@ -15,6 +17,8 @@ public interface RegistryFactory {
     <T> TypeDefinitionSetRegistry<T> newDefinitionSetRegistry();
 
     <T> TypeDefinitionRegistry<T> newDefinitionRegistry();
+
+    <C extends Command>CommandRegistry<C> newCommandRegistry();
 
     <T extends Factory<?, ?>> FactoryRegistry<T> newFactoryRegistry();
 

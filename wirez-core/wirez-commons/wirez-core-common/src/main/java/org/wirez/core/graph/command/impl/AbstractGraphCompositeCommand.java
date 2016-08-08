@@ -1,6 +1,6 @@
 package org.wirez.core.graph.command.impl;
 
-import org.wirez.core.command.AbstractCompositeCommand;
+import org.wirez.core.command.impl.AbstractCompositeCommand;
 import org.wirez.core.command.Command;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.command.CommandUtils;

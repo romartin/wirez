@@ -1,6 +1,7 @@
 package org.wirez.core.client.canvas.controls.toolbox.command;
 
 import com.google.gwt.user.client.Timer;
+import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.event.selection.CanvasElementSelectedEvent;
 import org.wirez.core.client.components.toolbox.ToolboxButton;
@@ -83,5 +84,14 @@ public abstract class AbstractToolboxCommand<I> implements ToolboxCommand<Abstra
         t.schedule( 500 );
 
     }
+
+    protected void fireLoadingStarted( final Context<AbstractCanvasHandler> context ) {
+        context.getCanvasHandler().getCanvas().loadingStarted();
+    }
+
+    protected void fireLoadingCompleted( final Context<AbstractCanvasHandler> context ) {
+        context.getCanvasHandler().getCanvas().loadingCompleted();
+    }
+
     
 }

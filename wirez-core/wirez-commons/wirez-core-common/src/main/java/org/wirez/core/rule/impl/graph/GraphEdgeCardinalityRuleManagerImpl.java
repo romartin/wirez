@@ -20,14 +20,16 @@ public class GraphEdgeCardinalityRuleManagerImpl extends AbstractGraphRuleManage
 
     private static final String NAME = "Graph Edge Cardinality Rule Manager";
 
-    ModelEdgeCardinalityRuleManager modelEdgeCardinalityRuleManager;
+    private ModelEdgeCardinalityRuleManager modelEdgeCardinalityRuleManager;
+    private GraphUtils graphUtils;
 
     @Inject
     public GraphEdgeCardinalityRuleManagerImpl(final DefinitionManager definitionManager,
                                                final GraphUtils graphUtils,
                                                final ModelEdgeCardinalityRuleManager modelEdgeCardinalityRuleManager) {
-        super( definitionManager,graphUtils );
+        super( definitionManager );
         this.modelEdgeCardinalityRuleManager = modelEdgeCardinalityRuleManager;
+        this.graphUtils = graphUtils;
     }
 
     @Override

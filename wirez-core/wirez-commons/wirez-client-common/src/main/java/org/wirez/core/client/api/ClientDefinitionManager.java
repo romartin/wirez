@@ -77,11 +77,6 @@ public class ClientDefinitionManager extends AbstractDefinitionManager {
             addAdapter( instance );
         }
 
-    }
-
-    @Override
-    protected void addDefinitionSetContextBeans() {
-
         // Once adapters present, add the Definition Sets found on current context.
         Collection<SyncBeanDef<DefinitionSetProxy>> beanDefSets = beanManager.lookupBeans(DefinitionSetProxy.class);
         for (SyncBeanDef<DefinitionSetProxy> defSet : beanDefSets) {

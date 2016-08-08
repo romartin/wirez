@@ -1,10 +1,12 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
+import org.wirez.core.client.command.Session;
+import org.wirez.core.client.command.SessionCommandManager;
 import org.wirez.core.client.shape.MutationContext;
+import org.wirez.core.command.CommandManager;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.command.CommandUtils;
 import org.wirez.core.command.batch.BatchCommandResult;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
@@ -12,13 +14,12 @@ import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
-import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.command.CanvasCommandManager;
+import org.wirez.core.client.command.CanvasViolation;
+import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerControl;
 import org.wirez.core.client.canvas.controls.builder.EdgeBuilderControl;
 import org.wirez.core.client.canvas.controls.builder.request.EdgeBuildRequest;
-import org.wirez.core.client.session.command.Session;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.util.EdgeMagnetsHelper;
@@ -43,7 +44,7 @@ public class EdgeBuilderControlImpl extends AbstractCanvasHandlerControl impleme
     public EdgeBuilderControlImpl(final ClientDefinitionManager clientDefinitionManager, 
                                   final ShapeManager shapeManager, 
                                   final CanvasCommandFactory commandFactory, 
-                                  final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager, 
+                                  final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
                                   final EdgeMagnetsHelper magnetsHelper) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.shapeManager = shapeManager;

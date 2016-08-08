@@ -1,17 +1,18 @@
 package org.wirez.core.client.canvas.controls.drag;
 
-import org.wirez.core.command.CommandResult;
-import org.wirez.core.command.CommandUtils;
-import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
-import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.command.CanvasCommandManager;
+import org.wirez.core.client.command.CanvasViolation;
+import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerRegistrationControl;
-import org.wirez.core.client.session.command.Session;
+import org.wirez.core.client.command.Session;
+import org.wirez.core.client.command.SessionCommandManager;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.event.ViewEventType;
+import org.wirez.core.command.CommandResult;
+import org.wirez.core.command.CommandUtils;
+import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;

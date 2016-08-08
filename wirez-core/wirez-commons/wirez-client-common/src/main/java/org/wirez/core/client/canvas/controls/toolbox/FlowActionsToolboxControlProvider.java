@@ -88,39 +88,56 @@ public class FlowActionsToolboxControlProvider extends AbstractToolboxControlPro
 
         final String defSetId = diagram.getSettings().getDefinitionSetId();
 
-        final String defaultConnectorId = definitionUtils.getDefaultConnectorId( defSetId );
+        if ( item.getContent() instanceof Definition ) {
 
-        if ( null != defaultConnectorId ) {
+            final Definition definitionContent = ( Definition ) item.getContent();
 
             final List<ToolboxCommand<?, ?>> commands = new LinkedList<>();
 
-            final NewConnectorCommand<?> newConnectorCommand = defaultToolboxCommandFactory.newConnectorCommand();
-            newConnectorCommand.setEdgeIdentifier( defaultConnectorId );
+            // TODO: Handle all response pages.
+            final Set<String> allowedConnectorIds = commonLookups.getConnectionRulesAllowedEdges( defSetId, definitionContent.getDefinition(), 0, 10 );
 
-            commands.add( newConnectorCommand );
+            if ( null != allowedConnectorIds && !allowedConnectorIds.isEmpty() ) {
 
-            // TODO: Handle all response buckets/pages.
-            final Set<String> allowedMorphDefaultDefinitionIds =
-                    commonLookups.getAllowedMorphDefaultDefinitions(
-                            defSetId,
-                            diagram.getGraph(),
-                            (Node<? extends Definition<Object>, ? extends Edge>) item,
-                            defaultConnectorId,
-                            0,
-                            10
-                    );
+                for ( final String allowedConnectorId : allowedConnectorIds ) {
 
-            if ( null != allowedMorphDefaultDefinitionIds && !allowedMorphDefaultDefinitionIds.isEmpty() ) {
+                    final NewConnectorCommand<?> newConnectorCommand = defaultToolboxCommandFactory.newConnectorCommand();
+                    newConnectorCommand.setEdgeIdentifier( allowedConnectorId );
 
-                for ( final String allowedDefId : allowedMorphDefaultDefinitionIds ) {
-
-                    final NewNodeCommand newNodeCommand = defaultToolboxCommandFactory.newNodeCommand();
-                    newNodeCommand.setDefinitionIdentifier( allowedDefId );
-
-                    commands.add( newNodeCommand );
+                    commands.add( newConnectorCommand );
 
                 }
 
+            }
+
+            final String defaultConnectorId = definitionUtils.getDefaultConnectorId( defSetId );
+
+            if ( null != defaultConnectorId ) {
+
+                // TODO: Handle all response pages.
+                final Set<String> allowedMorphDefaultDefinitionIds =
+                        commonLookups.getAllowedMorphDefaultDefinitions(
+                                defSetId,
+                                diagram.getGraph(),
+                                (Node<? extends Definition<Object>, ? extends Edge>) item,
+                                defaultConnectorId,
+                                0,
+                                10
+                        );
+
+                if ( null != allowedMorphDefaultDefinitionIds && !allowedMorphDefaultDefinitionIds.isEmpty() ) {
+
+                    for ( final String allowedDefId : allowedMorphDefaultDefinitionIds ) {
+
+                        final NewNodeCommand newNodeCommand = defaultToolboxCommandFactory.newNodeCommand();
+                        newNodeCommand.setDefinitionIdentifier( allowedDefId );
+
+                        commands.add( newNodeCommand );
+
+                    }
+
+
+                }
 
             }
 

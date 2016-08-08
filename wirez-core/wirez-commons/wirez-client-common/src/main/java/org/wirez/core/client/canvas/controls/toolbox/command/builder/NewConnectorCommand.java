@@ -68,6 +68,13 @@ public abstract class NewConnectorCommand<I> extends AbstractElementBuilderComma
     }
 
     @Override
+    public void click( Context<AbstractCanvasHandler> context, Element element ) {
+        super.click( context, element );
+        // Same behavior as when mouse down, so use of the drag handler.
+        this.mouseDown( context, element );
+    }
+
+    @Override
     protected DragProxy getDragProxyFactory() {
         return connectorDragProxyFactory;
     }

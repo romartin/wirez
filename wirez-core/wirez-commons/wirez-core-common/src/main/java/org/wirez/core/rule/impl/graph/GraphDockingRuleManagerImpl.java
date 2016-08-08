@@ -3,7 +3,6 @@ package org.wirez.core.rule.impl.graph;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.content.definition.Definition;
-import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.rule.DockingRule;
 import org.wirez.core.rule.RuleViolations;
 import org.wirez.core.rule.graph.GraphDockingRuleManager;
@@ -22,9 +21,8 @@ public class GraphDockingRuleManagerImpl extends AbstractGraphRuleManager<Dockin
 
     @Inject
     public GraphDockingRuleManagerImpl(final DefinitionManager definitionManager,
-                                       final GraphUtils graphUtils,
                                        final ModelDockingRuleManager modelDockingRuleManager) {
-        super( definitionManager,graphUtils );
+        super( definitionManager );
         this.modelDockingRuleManager = modelDockingRuleManager;
     }
 

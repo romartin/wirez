@@ -9,19 +9,26 @@ import java.util.List;
 public class CommandUtils {
 
     public static boolean isError( final CommandResult<?> result ) {
+
+        if ( result instanceof BatchCommandResult ) {
+
+            final BatchCommandResult<?> batchCommandResult = ( BatchCommandResult<?> ) result;
+
+            return isBatchCommandResultError( batchCommandResult );
+
+        }
+
+        return isCommandResultError( result );
+    }
+
+
+    private static boolean isCommandResultError( final CommandResult<?> result ) {
         return result != null && CommandResult.Type.ERROR.equals( result.getType() );
     }
 
     @SuppressWarnings("unchecked")
-    public static boolean isError( final BatchCommandResult result ) {
-        final Iterator<CommandResult> it = result.iterator();
-        while ( it.hasNext() ) {
-            final CommandResult r = it.next();
-            if ( isError( r ) ) {
-                return true;
-            }
-        }
-        return false;
+    private static boolean isBatchCommandResultError( final BatchCommandResult result ) {
+        return result != null && CommandResult.Type.ERROR.equals( result.getType() );
     }
     
     public static <V> List<V> toList( final Iterable<V> iterable ) {

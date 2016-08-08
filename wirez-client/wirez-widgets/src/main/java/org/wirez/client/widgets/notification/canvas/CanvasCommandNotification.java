@@ -3,13 +3,14 @@ package org.wirez.client.widgets.notification.canvas;
 import org.wirez.client.widgets.notification.AbstractNotification;
 import org.wirez.client.widgets.notification.Notification;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.command.CanvasViolation;
 import org.wirez.core.command.Command;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.command.batch.BatchCommandResult;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.util.UUID;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 public final class CanvasCommandNotification 
@@ -22,17 +23,11 @@ public final class CanvasCommandNotification
         super(uuid, type, source, context);
     }
     
-    
-    
-    /*
-    private final Command<H, CanvasViolation> command;
-    private final CommandResult<CanvasViolation> result;
-     */
-    
     public static class CanvasCommandNotificationBuilder<H extends CanvasHandler> {
 
         H canvasHander;
         Command<H, CanvasViolation> command;
+        Collection<Command<H, CanvasViolation>> commands;
         CommandResult<CanvasViolation> result;
 
         public CanvasCommandNotificationBuilder<H> canvasHander(H canvasHander) {
@@ -45,6 +40,11 @@ public final class CanvasCommandNotification
             return this;
         }
 
+        public CanvasCommandNotificationBuilder<H> commands(final Collection<Command<H, CanvasViolation>> commands) {
+            this.commands = commands;
+            return this;
+        }
+
         public CanvasCommandNotificationBuilder<H> result(final CommandResult<CanvasViolation> result) {
             this.result = result;
             return this;
@@ -52,12 +52,34 @@ public final class CanvasCommandNotification
 
         public CanvasCommandNotification build() {
             
-            if ( null == command ) {
-                throw new IllegalArgumentException( "Missing notification's command." );
+            if ( null == command && null == commands ) {
+                throw new IllegalArgumentException( "Missing notification's command/s." );
             }
-            
+
+
+            final StringBuilder builder = new StringBuilder();
+
+            if ( null != commands ) {
+
+
+                int x = 0;
+
+                for ( final Command<H, CanvasViolation> command : commands ) {
+
+                    builder.append( "C" ).append( x ).append( " => { " ).append( command.toString() ).append( " }" );
+
+                    x++;
+
+                }
+
+            } else {
+
+                builder.append( command.toString() );
+
+            }
+
             final String resultMsg = getResultMessage( result );
-            final CanvasCommandNotificationSource source = new CanvasCommandNotificationSource( command.toString(),  resultMsg );
+            final CanvasCommandNotificationSource source = new CanvasCommandNotificationSource( builder.toString(),  resultMsg );
             
             final Diagram diagram = canvasHander.getDiagram();
             final String diagramUUID = diagram.getUUID();

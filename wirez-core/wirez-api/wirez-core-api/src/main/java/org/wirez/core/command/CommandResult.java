@@ -22,7 +22,19 @@ package org.wirez.core.command;
 public interface CommandResult<T> {
 
     enum Type {
-        ERROR, WARNING, INFO
+
+        ERROR(3), WARNING(2), INFO(1);
+
+        private final int severity;
+
+        Type( int severity ) {
+            this.severity = severity;
+        }
+
+        public int getSeverity() {
+            return severity;
+        }
+
     }
     
     /**

@@ -23,18 +23,18 @@ public interface CanvasHandler<D extends Diagram, C extends Canvas> {
     /**
      * Initializes the handler for a given canvas.
      */
-    CanvasHandler<D, C> initialize(C canvas);
+    CanvasHandler<D, C> initialize( C canvas );
 
     /**
      * Draws the given diagram..
      */
-    CanvasHandler<D, C> draw(D diagram);
+    CanvasHandler<D, C> draw( D diagram );
 
     /**
      * The managed diagram instance.
      */
     D getDiagram();
-    
+
     /**
      * The managed canvas instance.
      */
@@ -44,5 +44,5 @@ public interface CanvasHandler<D extends Diagram, C extends Canvas> {
      * Destroy whatever canvas handler state present, it will be no longer used.
      */
     void destroy();
-    
+
 }

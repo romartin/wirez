@@ -7,12 +7,18 @@ import org.wirez.core.command.event.AbstractGraphCommandEvent;
 import org.wirez.core.graph.command.GraphCommandExecutionContext;
 import org.wirez.core.rule.RuleViolation;
 
+import java.util.Collection;
+
 @NonPortable
 public final class CommandUndoExecutedEvent extends AbstractGraphCommandEvent {
-    
-    public CommandUndoExecutedEvent(Command<GraphCommandExecutionContext, RuleViolation> command,
-                                    CommandResult<RuleViolation> result) {
-        super(command, result);
+
+    public CommandUndoExecutedEvent( final Command<GraphCommandExecutionContext, RuleViolation> command,
+                                     final CommandResult<RuleViolation> result ) {
+        super( command, result );
     }
-    
+
+    public CommandUndoExecutedEvent( final Collection<Command<GraphCommandExecutionContext, RuleViolation>> commands,
+                                     final CommandResult<RuleViolation> result ) {
+        super( commands, result );
+    }
 }

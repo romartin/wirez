@@ -1,23 +1,22 @@
 package org.wirez.core.registry.impl;
 
-import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.definition.adapter.AdapterManager;
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
-import org.wirez.core.registry.definition.DefinitionRegistry;
 import org.wirez.core.registry.definition.TypeDefinitionRegistry;
 
 import java.util.HashMap;
 
 class DefinitionMapRegistry<T> extends AbstractDynamicRegistryWrapper<T, MapRegistry<T>> implements TypeDefinitionRegistry<T> {
 
-    private DefinitionManager definitionManager;
+    private AdapterManager adapterManager;
 
-    DefinitionMapRegistry( final DefinitionManager definitionManager ) {
+    DefinitionMapRegistry( final AdapterManager adapterManager ) {
         super(
                 new MapRegistry<T>(
-                    item -> null != item ? definitionManager.adapters().forDefinition().getId( item ) : null,
+                    item -> null != item ? adapterManager.forDefinition().getId( item ) : null,
                     new HashMap<String, T>() )
             );
-        this.definitionManager = definitionManager;
+        this.adapterManager = adapterManager;
     }
 
     @Override
@@ -28,7 +27,7 @@ class DefinitionMapRegistry<T> extends AbstractDynamicRegistryWrapper<T, MapRegi
     @Override
     public T getDefinitionByType( final Class<T> type ) {
 
-        final String id = BindableAdapterUtils.getDefinitionId( type, definitionManager );
+        final String id = BindableAdapterUtils.getDefinitionId( type, adapterManager.registry() );
 
         return getDefinitionById( id );
 

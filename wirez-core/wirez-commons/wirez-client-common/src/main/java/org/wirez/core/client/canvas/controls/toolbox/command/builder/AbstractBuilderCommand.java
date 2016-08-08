@@ -1,6 +1,5 @@
 package org.wirez.core.client.canvas.controls.toolbox.command.builder;
 
-import com.google.gwt.core.client.GWT;
 import org.uberfire.mvp.Command;
 import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.animation.AnimationFactory;
@@ -76,8 +75,6 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
                            final Element element ) {
         super.mouseDown( context, element );
 
-        GWT.log("TOOLBOX - MOUSE DOWN!");
-
         showDragProxy( context, element );
     }
 
@@ -85,8 +82,6 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
     public void click(final Context<AbstractCanvasHandler> context,
                         final Element element) {
         super.click( context, element );
-
-        GWT.log("TOOLBOX - CLICK!");
 
     }
 
@@ -180,6 +175,8 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
                          final int x1,
                          final int y1 ) {
 
+        fireLoadingStarted( context );
+
         final Node targetNode = graphBoundsIndexer.getAt(x1, y1);
 
         if ( null != targetNode ) {
@@ -212,12 +209,16 @@ public abstract class AbstractBuilderCommand<I> extends AbstractToolboxCommand<I
     protected void onError( final Context<AbstractCanvasHandler> context,
                             final ClientRuntimeError error ) {
 
+        fireLoadingCompleted( context );
+
         LOGGER.log( Level.SEVERE, error.toString() );
 
     }
 
     protected void onItemBuilt( final Context<AbstractCanvasHandler> context,
                                 final String uuid ) {
+
+        fireLoadingCompleted( context );
 
         if ( null != canvasHighlight ) {
 

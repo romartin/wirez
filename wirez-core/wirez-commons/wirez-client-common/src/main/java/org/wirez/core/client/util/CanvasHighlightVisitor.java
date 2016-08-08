@@ -24,6 +24,7 @@ import org.wirez.core.client.shape.Shape;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.ContentTraverseCallback;
@@ -112,7 +113,7 @@ public class CanvasHighlightVisitor {
                 .useStartingNodesPolicy( TreeWalkTraverseProcessor.StartingNodesPolicy.NO_INCOMING_VIEW_EDGES )
         ).traverse( graph, new ContentTraverseCallback<View<?>, Node<View, Edge>, Edge<View<?>, Node>>() {
             @Override
-            public void startGraphTraversal( Graph<View, Node<View, Edge>> graph ) {
+            public void startGraphTraversal( Graph<DefinitionSet, Node<View, Edge>> graph ) {
 
             }
 

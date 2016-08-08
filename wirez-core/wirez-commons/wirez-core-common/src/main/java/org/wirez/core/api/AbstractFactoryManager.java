@@ -43,7 +43,7 @@ public abstract class AbstractFactoryManager implements FactoryManager {
 
     @Override
     public <T> T newDefinition( final Class<T> type ) {
-        final String id = BindableAdapterUtils.getDefinitionId( type, definitionManager );
+        final String id = BindableAdapterUtils.getDefinitionId( type, definitionManager.adapters().registry() );
         return newDefinition( id );
     }
 
@@ -90,7 +90,7 @@ public abstract class AbstractFactoryManager implements FactoryManager {
     @Override
     public <D extends Diagram> D newDiagram( final String uuid,
                                              final Class<?> type ) {
-        final String id = BindableAdapterUtils.getDefinitionSetId( type, definitionManager );
+        final String id = BindableAdapterUtils.getDefinitionSetId( type, definitionManager.adapters().registry() );
 
         return newDiagram( uuid, id );
     }

@@ -33,7 +33,7 @@ import org.wirez.client.widgets.notification.canvas.CanvasNotificationContext;
 import org.wirez.client.widgets.notification.canvas.CanvasValidationFailNotification;
 import org.wirez.client.widgets.notification.canvas.CanvasValidationSuccessNotification;
 import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.command.CanvasViolation;
 import org.wirez.core.client.canvas.event.command.AbstractCanvasCommandEvent;
 import org.wirez.core.client.canvas.event.command.CanvasCommandExecutedEvent;
 import org.wirez.core.command.Command;
@@ -50,6 +50,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.List;
 
 @Dependent
@@ -260,11 +261,12 @@ public class Notifications implements IsWidget {
             final CanvasHandler canvasHandler = commandExecutedEvent.getCanvasHandler();
             final Command<CanvasHandler, CanvasViolation> command =
                     ( Command<CanvasHandler, CanvasViolation> ) commandExecutedEvent.getCommand();
+            final Collection<? extends Command<? extends CanvasHandler, CanvasViolation>> commands = commandExecutedEvent.getCommands();
             final CommandResult<CanvasViolation> result = commandExecutedEvent.getResult();
-
 
             return new CanvasCommandNotification.CanvasCommandNotificationBuilder<CanvasHandler>()
                     .canvasHander( canvasHandler )
+                    .commands( ( Collection<Command<CanvasHandler, CanvasViolation>> ) commands )
                     .command( command )
                     .result( result )
                     .build();

@@ -2,37 +2,49 @@ package org.wirez.client.widgets.session.toolbar.command;
 
 import org.uberfire.ext.widgets.common.client.common.popups.YesNoCancelPopup;
 import org.uberfire.mvp.Command;
+import org.wirez.client.widgets.session.toolbar.Toolbar;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
-import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
-import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
 import org.wirez.core.client.session.CanvasSession;
 import org.wirez.core.util.UUID;
 
-import javax.enterprise.event.Event;
-
 public abstract class AbstractToolbarCommand<S extends CanvasSession> implements ToolbarCommand<S> {
     
-    Event<EnableToolbarCommandEvent> enableToolbarCommandEvent;
-    Event<DisableToolbarCommandEvent> disableToolbarCommandEvent;
     String uuid;
     
+    protected Toolbar<S> toolbar;
     protected S session;
-    
-    public AbstractToolbarCommand(final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent, 
-                                  final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent) {
-        this.enableToolbarCommandEvent = enableToolbarCommandEvent;
-        this.disableToolbarCommandEvent = disableToolbarCommandEvent;
+
+    public AbstractToolbarCommand() {
         this.uuid = UUID.uuid();
     }
-    
+
+    protected abstract boolean getState();
+
     @Override
-    public ToolbarCommand<S> initialize( final S session ) {
+    public ToolbarCommand<S> initialize( final Toolbar<S> toolbar,
+                                         final S session ) {
+        this.toolbar = toolbar;
         this.session = session;
+        checkState();
         return this;
     }
 
-    public void afterDraw() {
+    protected void checkState() {
 
+        if ( getState() ) {
+
+            enable();
+
+        } else {
+
+            disable();
+
+        }
+
+    }
+
+    public void afterDraw() {
+        checkState();
     }
 
     @Override
@@ -86,11 +98,11 @@ public abstract class AbstractToolbarCommand<S extends CanvasSession> implements
     }
 
     protected void enable() {
-        enableToolbarCommandEvent.fire( new EnableToolbarCommandEvent( this ) );
+        toolbar.enable( this );
     }
     
     protected void disable() {
-        disableToolbarCommandEvent.fire( new DisableToolbarCommandEvent( this ) );
+        toolbar.disable( this );
     }
     
 }

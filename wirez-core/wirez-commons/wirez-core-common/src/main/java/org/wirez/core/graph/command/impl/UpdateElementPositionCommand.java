@@ -77,8 +77,8 @@ public final class UpdateElementPositionCommand extends AbstractGraphCommand {
         final double h = oldSize[1];
 
         final BoundsImpl newBounds = new BoundsImpl(
-                new BoundImpl(x + w, y + h),
-                new BoundImpl(x, y)
+                new BoundImpl(x, y),
+                new BoundImpl(x + w, y + h)
         );
 
         ((View) element.getContent()).setBounds(newBounds);

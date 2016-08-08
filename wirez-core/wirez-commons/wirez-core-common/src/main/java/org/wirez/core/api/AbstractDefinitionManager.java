@@ -35,11 +35,8 @@ public abstract class AbstractDefinitionManager implements DefinitionManager {
     public AbstractDefinitionManager( final RegistryFactory registryFactory,
                                       final AdapterManager adapterManager ) {
         this.definitionSetRegistry = registryFactory.newDefinitionSetRegistry();
-        this.definitionSetRegistry.setLazyInitializationCallback( () -> addDefinitionSetContextBeans() );
         this.adapterManager = adapterManager;
     }
-
-    protected abstract void addDefinitionSetContextBeans();
 
     @Override
     public TypeDefinitionSetRegistry<?> definitionSets() {

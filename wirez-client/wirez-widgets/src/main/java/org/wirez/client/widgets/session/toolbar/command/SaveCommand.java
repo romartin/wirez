@@ -2,8 +2,6 @@ package org.wirez.client.widgets.session.toolbar.command;
 
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
-import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
-import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.actions.CanvasSaveControl;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
@@ -12,17 +10,9 @@ import org.wirez.core.client.validation.canvas.CanvasValidatorCallback;
 import org.wirez.core.diagram.Diagram;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
 
 @Dependent
 public class SaveCommand extends AbstractToolbarCommand<DefaultCanvasFullSession> {
-
-    @Inject
-    public SaveCommand( final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent,
-                        final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent ) {
-        super( enableToolbarCommandEvent, disableToolbarCommandEvent );
-    }
 
     @Override
     public IconType getIcon() {
@@ -69,6 +59,12 @@ public class SaveCommand extends AbstractToolbarCommand<DefaultCanvasFullSession
 
         }
 
+    }
+
+    @Override
+    protected boolean getState() {
+        // Always active for now.
+        return true;
     }
 
 }

@@ -1,9 +1,6 @@
 package org.wirez.core.graph.util;
 
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
-import org.wirez.core.definition.adapter.PropertyAdapter;
-import org.wirez.core.definition.util.DefinitionUtils;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
@@ -11,7 +8,7 @@ import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.view.BoundImpl;
-import org.wirez.core.graph.content.view.Bounds;
+import org.wirez.core.graph.content.Bounds;
 import org.wirez.core.graph.content.view.BoundsImpl;
 import org.wirez.core.graph.content.view.View;
 
@@ -103,15 +100,9 @@ public class GraphUtils {
         return 0;
     }
 
-    public  <T> String getDefinitionId( final T definition ) {
+    private <T> String getDefinitionId( final T definition ) {
 
         return definitionManager.adapters().forDefinition().getId( definition );
-
-    }
-
-    public  <T> Set<String> getDefinitionLabels( final T definition ) {
-
-        return definitionManager.adapters().forDefinition().getLabels( definition );
 
     }
 
@@ -174,8 +165,8 @@ public class GraphUtils {
                                     final View element) {
 
         final Bounds bounds = new BoundsImpl(
-                new BoundImpl(x + width, y + height),
-                new BoundImpl(x, y)
+                new BoundImpl(x, y),
+                new BoundImpl(x + width, y + height)
         );
 
         element.setBounds(bounds);

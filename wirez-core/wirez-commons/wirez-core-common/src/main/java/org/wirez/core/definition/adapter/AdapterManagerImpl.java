@@ -5,10 +5,11 @@ import org.wirez.core.definition.adapter.bootstrap.BootstrapAdapterFactory;
 import org.wirez.core.registry.definition.AdapterRegistry;
 import org.wirez.core.registry.RegistryFactory;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-@Dependent
+@ApplicationScoped
 public class AdapterManagerImpl implements AdapterManager {
 
     private final AdapterRegistry registry;
@@ -18,6 +19,15 @@ public class AdapterManagerImpl implements AdapterManager {
     private final PropertySetAdapter<Object> propertySetAdapter;
     private final PropertyAdapter<Object, Object> propertyAdapter;
 
+    protected AdapterManagerImpl() {
+        this.registry = null;
+        this.definitionSetAdapter = null;
+        this.definitionSetRuleAdapter = null;
+        this.definitionAdapter = null;
+        this.propertySetAdapter = null;
+        this.propertyAdapter = null;
+    }
+
     @Inject
     public AdapterManagerImpl( final RegistryFactory registryFactory,
                         final BootstrapAdapterFactory bootstrapAdapterFactory ) {
@@ -25,8 +35,8 @@ public class AdapterManagerImpl implements AdapterManager {
 
     }
 
-    public AdapterManagerImpl( final AdapterRegistry registry,
-                               final BootstrapAdapterFactory bootstrapAdapterFactory ) {
+    AdapterManagerImpl( final AdapterRegistry registry,
+                        final BootstrapAdapterFactory bootstrapAdapterFactory ) {
         this.registry = registry;
         this.definitionSetAdapter = bootstrapAdapterFactory.newDefinitionSetAdapter( registry );
         this.definitionSetRuleAdapter = bootstrapAdapterFactory.newDefinitionSetRuleAdapter( registry );

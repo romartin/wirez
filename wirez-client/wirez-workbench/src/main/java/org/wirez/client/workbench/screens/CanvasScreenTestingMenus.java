@@ -12,13 +12,15 @@ import org.wirez.client.widgets.session.presenter.impl.DefaultFullSessionPresent
 import org.wirez.core.client.api.platform.ClientPlatform;
 import org.wirez.core.client.api.platform.PlatformManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManagerImpl;
-import org.wirez.core.client.canvas.command.CanvasViolation;
+import org.wirez.core.client.command.CanvasViolation;
 import org.wirez.core.client.canvas.controls.docking.DockingAcceptorControl;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
+import org.wirez.core.command.stack.StackCommandManager;
+import org.wirez.core.util.WirezLogger;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,9 +52,6 @@ public class CanvasScreenTestingMenus {
     private Menus makeMenuBar() {
         // All commands moved to the canvas toolbar.
         /*return MenuFactory
-                .newTopLevelMenu("Switch log level")
-                .respondsWith(getSwitchLogLevelCommand())
-                .endMenu()
                 .newTopLevelMenu("Mouse pointer coords")
                 .respondsWith(getMousePointerCoordsCommand())
                 .endMenu()
@@ -89,11 +88,14 @@ public class CanvasScreenTestingMenus {
                 .build();*/
 
         return MenuFactory
+                .newTopLevelMenu("Switch log level")
+                .respondsWith(getSwitchLogLevelCommand())
+                .endMenu()
                 .newTopLevelMenu("Log Command History")
                 .respondsWith(getLogCommandStackCommand())
                 .endMenu()
-                .newTopLevelMenu("Resume Graph")
-                .respondsWith(getResumeGraphCommand())
+                .newTopLevelMenu("Log Selected Node")
+                .respondsWith(getLogNodeCommand())
                 .endMenu()
                 .newTopLevelMenu("Log Graph")
                 .respondsWith(getLogGraphCommand())
@@ -131,13 +133,17 @@ public class CanvasScreenTestingMenus {
         };
 
     }
-    
+
+    @SuppressWarnings( "unchecked" )
     private Command getLogCommandStackCommand() {
 
         return () -> {
-            final CanvasCommandManagerImpl ccmi = (CanvasCommandManagerImpl) session.getCanvasCommandManager();
-            final Stack<Stack<org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation>>> history = ccmi.getHistory();
+
+            final Iterable<Iterable<org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation>>> history =
+                    ( ( StackCommandManager<AbstractCanvasHandler, CanvasViolation>) session.getCanvasCommandManager()).getRegistry().getCommandHistory();
+            Logger.getLogger("").setLevel( Level.FINE );
             logCommandHistory( history );
+            Logger.getLogger("").setLevel( Level.SEVERE );
         };
 
     }
@@ -160,7 +166,7 @@ public class CanvasScreenTestingMenus {
 
     }
 
-    private void logCommandHistory( final Stack<Stack<org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation>>> history ) {
+    private void logCommandHistory( final Iterable<Iterable<org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation>>> history ) {
         log( "**** COMMAND HISTORY START *********");
 
         if ( null == history ) {
@@ -169,13 +175,13 @@ public class CanvasScreenTestingMenus {
 
         } else {
 
-            log( " ( FOUND " + history.size() + " ENTRIES )");
 
-            for ( final Stack<org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation>> entry : history ) {
+            int x = 0;
+            for ( final Iterable<org.wirez.core.command.Command<AbstractCanvasHandler, CanvasViolation>> entry : history ) {
 
                 log( "--------------- History Entry Start ---------------");
 
-                if ( entry.isEmpty() ) {
+                if ( entry.iterator().hasNext() ) {
 
                     log( "No commands");
 
@@ -193,8 +199,12 @@ public class CanvasScreenTestingMenus {
 
                 log( "--------------- History Entry End ---------------");
 
+                x++;
 
             }
+
+            log( " ( FOUND " + x + " ENTRIES )");
+
 
         }
 
@@ -244,18 +254,37 @@ public class CanvasScreenTestingMenus {
     private Command getLogGraphCommand() {
         return () -> {
             Logger.getLogger("").setLevel( Level.FINE );
-            ( ( AbstractFullSessionPresenter ) canvasSessionPresenter ).logGraph();
+            logGraph();
             Logger.getLogger("").setLevel( Level.SEVERE );
         };
     }
 
-    private Command getResumeGraphCommand() {
+    private Command getLogNodeCommand() {
         return () -> {
             Logger.getLogger("").setLevel( Level.FINE );
-            ( ( AbstractFullSessionPresenter ) canvasSessionPresenter ).resumeGraph();
+
+            final Collection<String> selected = session.getShapeSelectionControl().getSelectedItems();
+
+            if ( null == selected || selected.isEmpty() ) {
+                throw new RuntimeException( "No selecte elements." );
+            }
+
+            final String uuid = selected.iterator().next();
+
+            logNode( uuid );
+
             Logger.getLogger("").setLevel( Level.SEVERE );
         };
     }
+
+    public void logGraph() {
+        WirezLogger.log( session.getCanvasHandler().getDiagram().getGraph() );
+    }
+
+    public void logNode( final String uuid ) {
+        WirezLogger.log( session.getCanvasHandler().getDiagram().getGraph().getNode( uuid ) );
+    }
+
 
     private Command getVisitGraphCommand() {
         return () -> ( (AbstractFullSessionPresenter) canvasSessionPresenter).visitGraph();
@@ -292,15 +321,16 @@ public class CanvasScreenTestingMenus {
     // For testing...
     private Command getSwitchLogLevelCommand() {
         return () -> {
-            final Level level = Logger.getLogger("").getLevel();
+            final Level level = Logger.getLogger("org.wirez").getLevel();
             final Level newLevel = Level.SEVERE.equals(level) ? Level.FINE : Level.SEVERE;
-            Logger.getLogger("").setLevel(newLevel);
+            GWT.log( "Switching to level " + newLevel.toString() );
+            Logger.getLogger("org.wirez").setLevel(newLevel);
         };
     }
 
     private void log(final String message) {
         if (LogConfiguration.loggingIsEnabled()) {
-            LOGGER.log(Level.SEVERE, message);
+            LOGGER.log(Level.INFO, message);
         }
     }
 

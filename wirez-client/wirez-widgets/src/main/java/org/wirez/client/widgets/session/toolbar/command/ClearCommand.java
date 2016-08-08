@@ -1,12 +1,11 @@
 package org.wirez.client.widgets.session.toolbar.command;
 
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.wirez.client.widgets.session.toolbar.Toolbar;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
-import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
-import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
-import org.wirez.core.client.canvas.command.CanvasViolation;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.command.CanvasViolation;
+import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.event.command.CanvasCommandExecutedEvent;
 import org.wirez.core.client.canvas.event.command.CanvasUndoCommandExecutedEvent;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
@@ -16,7 +15,6 @@ import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import java.util.Iterator;
@@ -29,10 +27,7 @@ public class ClearCommand extends AbstractToolbarCommand<DefaultCanvasFullSessio
     CanvasCommandFactory canvasCommandFactory;
 
     @Inject
-    public ClearCommand(final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent,
-                        final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent,
-                        final CanvasCommandFactory canvasCommandFactory) {
-        super( enableToolbarCommandEvent, disableToolbarCommandEvent );
+    public ClearCommand(final CanvasCommandFactory canvasCommandFactory) {
         this.canvasCommandFactory = canvasCommandFactory;
     }
 
@@ -69,8 +64,9 @@ public class ClearCommand extends AbstractToolbarCommand<DefaultCanvasFullSessio
     }
 
     @Override
-    public ToolbarCommand<DefaultCanvasFullSession> initialize( final DefaultCanvasFullSession session ) {
-        super.initialize( session );
+    public ToolbarCommand<DefaultCanvasFullSession> initialize( final Toolbar<DefaultCanvasFullSession> toolbar,
+                                                                final DefaultCanvasFullSession session ) {
+        super.initialize( toolbar, session );
         checkState();
         return this;
     }
@@ -82,7 +78,7 @@ public class ClearCommand extends AbstractToolbarCommand<DefaultCanvasFullSessio
     }
 
     @SuppressWarnings( "unchecked" )
-    protected void checkState() {
+    protected boolean getState() {
 
         boolean doEnable = false;
 
@@ -121,15 +117,7 @@ public class ClearCommand extends AbstractToolbarCommand<DefaultCanvasFullSessio
 
         }
 
-        if ( doEnable ) {
-
-            enable();
-
-        } else  {
-
-            disable();
-
-        }
+        return doEnable;
 
     }
 

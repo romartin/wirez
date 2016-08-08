@@ -5,14 +5,14 @@ import com.google.gwt.user.client.Window;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.uberfire.mvp.Command;
 import org.wirez.client.widgets.session.presenter.FullSessionPresenter;
-import org.wirez.client.widgets.session.toolbar.AbstractToolbar;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommand;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
 import org.wirez.client.widgets.session.toolbar.command.*;
+import org.wirez.client.widgets.session.toolbar.impl.AbstractToolbar;
 import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.service.ClientDiagramServices;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -21,11 +21,7 @@ import org.wirez.core.client.session.CanvasFullSession;
 import org.wirez.core.client.session.impl.DefaultCanvasSessionManager;
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.diagram.Settings;
-import org.wirez.core.diagram.SettingsImpl;
 import org.wirez.core.graph.Element;
-import org.wirez.core.graph.Graph;
-import org.wirez.core.util.UUID;
-import org.wirez.core.util.WirezLogger;
 
 import javax.inject.Inject;
 import java.util.logging.Level;
@@ -283,14 +279,6 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
 
         visitGraphCommand.execute();
 
-    }
-
-    public void resumeGraph() {
-        WirezLogger.resume( getCanvasHandler().getDiagram().getGraph() );
-    }
-
-    public void logGraph() {
-        WirezLogger.log( getCanvasHandler().getDiagram().getGraph() );
     }
 
     @Override

@@ -132,6 +132,16 @@ public class CanvasView extends Composite implements org.wirez.core.client.canva
     }
 
     @Override
+    public int getWidth() {
+        return panel.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return panel.getHeight();
+    }
+
+    @Override
     public AbstractCanvas.View setGrid( final CanvasGrid grid ) {
 
         if ( null != grid ) {

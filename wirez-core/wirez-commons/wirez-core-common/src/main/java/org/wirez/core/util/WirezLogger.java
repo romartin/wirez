@@ -21,8 +21,9 @@ import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
+import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.relationship.Child;
-import org.wirez.core.graph.content.view.Bounds;
+import org.wirez.core.graph.content.Bounds;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.FullContentTraverseCallback;
@@ -132,11 +133,14 @@ public class WirezLogger {
                 }
 
                 @Override
-                public void startGraphTraversal(final Graph<View, Node<View, Edge>> graph) {
+                public void startGraphTraversal(final Graph<DefinitionSet, Node<View, Edge>> graph) {
                     if (graph == null) {
                         error("Graph is null!");
                     } else {
+                        final DefinitionSet view = graph.getContent();
+                        final Bounds bounds = view.getBounds();
                         log(indent + "Graph UUID: " + graph.getUUID());
+                        log(indent + "Graph Bounds: " + bounds );
                         log(indent + "  Graph Starting nodes");
                         log(indent + "  ====================");
                     }
@@ -191,9 +195,63 @@ public class WirezLogger {
                 .traverse(graph, TREE_TRAVERSE_CALLBACK);
     }
 
-    public static void resume(final Graph graph) {
-        new FullContentTraverseProcessorImpl(new TreeWalkTraverseProcessorImpl())
-                .traverse(graph, TREE_TRAVERSE_CALLBACK);
+    public static void log( final Node<View, Edge> node ) {
+
+        if ( null == node ) {
+
+            log( "Node is null" );
+
+        } else {
+
+            log("(View) Node UUID: " + node.getUUID());
+            final View view = node.getContent();
+            final String nId = getDefinitionId( view.getDefinition() );
+            final Bounds bounds = view.getBounds();
+            log("(View) Node Id: " + nId );
+            log("(View) Node Bounds: " + bounds );
+
+            final Node parent = getParent(node);
+            if ( null != parent ) {
+                log("(View) Node Parent is: " + parent.getUUID());
+            }
+
+            List<Edge> outEdges = (List<Edge>) node.getOutEdges();
+            if (outEdges == null || outEdges.isEmpty()) {
+                log("No outgoing edges found");
+            } else {
+                log("Outgoing edges");
+                log("==============");
+                for ( final Edge edge : outEdges ) {
+                    log( edge );
+                }
+            }
+
+            List<Edge> inEdges = (List<Edge>) node.getInEdges();
+            if (inEdges == null || inEdges.isEmpty()) {
+                log("No incoming edges found");
+            } else {
+                log("incoming edges");
+                log("==============");
+                for ( final Edge edge : inEdges ) {
+                    log( edge );
+                }
+            }
+        }
+
+    }
+
+    public static void log( final Edge<?, Node> edge ) {
+
+        log("Edge UUID: " + edge.getUUID());
+
+        final Object content = edge.getContent();
+        log("  Edge Content: " + content.getClass().getName());
+
+        final Node inNode = edge.getSourceNode();
+        final Node outNode = edge.getTargetNode();
+
+        log("  Edge In Node: " + ( null != inNode ? inNode.getUUID() : "null" ) );
+        log("  Edge Out Node: " + ( null != outNode ? outNode.getUUID() : "null" ) );
     }
 
     private static void log(final String message) {

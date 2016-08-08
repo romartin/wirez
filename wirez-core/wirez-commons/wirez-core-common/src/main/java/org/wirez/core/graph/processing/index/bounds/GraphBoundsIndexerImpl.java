@@ -4,7 +4,7 @@ import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.relationship.Child;
-import org.wirez.core.graph.content.view.Bounds;
+import org.wirez.core.graph.content.Bounds;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.processing.traverse.content.AbstractChildrenTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.ChildrenTraverseProcessor;

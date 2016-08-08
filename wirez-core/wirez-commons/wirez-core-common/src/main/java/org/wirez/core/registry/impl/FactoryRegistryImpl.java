@@ -1,24 +1,23 @@
 package org.wirez.core.registry.impl;
 
-import org.wirez.core.api.DefinitionManager;
+import org.wirez.core.definition.adapter.AdapterManager;
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.factory.Factory;
 import org.wirez.core.factory.definition.DefinitionFactory;
 import org.wirez.core.factory.graph.ElementFactory;
-import org.wirez.core.registry.factory.FactoryRegistry;
 import org.wirez.core.registry.factory.TypeFactoryRegistry;
 
 import java.util.*;
 
 class FactoryRegistryImpl<T extends Factory<?, ?>> implements TypeFactoryRegistry<T> {
 
-    private final DefinitionManager definitionManager;
+    private final AdapterManager adapterManager;
     private final List<DefinitionFactory<?>> definitionFactories = new LinkedList<>();
     private final Map<Class<? extends ElementFactory>, ElementFactory<?, ?>> graphFactories =
             new HashMap<>();
 
-    FactoryRegistryImpl( final DefinitionManager definitionManager ) {
-        this.definitionManager = definitionManager;
+    FactoryRegistryImpl( final AdapterManager adapterManager ) {
+        this.adapterManager = adapterManager;
     }
 
     @Override
@@ -110,7 +109,7 @@ class FactoryRegistryImpl<T extends Factory<?, ?>> implements TypeFactoryRegistr
 
     @Override
     public DefinitionFactory<?> getDefinitionFactory( final Class<?> type ) {
-        final String id = BindableAdapterUtils.getDefinitionId( type, definitionManager );
+        final String id = BindableAdapterUtils.getDefinitionId( type, adapterManager.registry() );
         return getDefinitionFactory( id );
     }
 

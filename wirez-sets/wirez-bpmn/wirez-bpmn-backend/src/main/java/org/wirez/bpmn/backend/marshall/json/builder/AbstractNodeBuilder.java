@@ -10,6 +10,7 @@ import org.wirez.core.command.CommandResult;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.command.GraphCommandExecutionContext;
+import org.wirez.core.graph.content.Bounds;
 import org.wirez.core.graph.content.view.*;
 import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.rule.RuleViolation;
@@ -72,8 +73,8 @@ public abstract class AbstractNodeBuilder<W, T extends Node<View<W>, Edge>>
     protected void setBounds(BuilderContext context, T node) {
         if ( null != boundUL && null != boundLR ) {
             Bounds bounds = new BoundsImpl(
-                    new BoundImpl( boundLR[0], boundLR[1]),
-                    new BoundImpl( boundUL[0], boundUL[1]));
+                    new BoundImpl( boundUL[0], boundUL[1]),
+                    new BoundImpl( boundLR[0], boundLR[1]) );
             node.getContent().setBounds(bounds);
             setSize(context, node);
         }

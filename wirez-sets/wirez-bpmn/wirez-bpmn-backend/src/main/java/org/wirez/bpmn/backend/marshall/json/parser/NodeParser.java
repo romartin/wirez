@@ -8,7 +8,7 @@ import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.relationship.Dock;
 import org.wirez.core.graph.content.view.BoundImpl;
-import org.wirez.core.graph.content.view.Bounds;
+import org.wirez.core.graph.content.Bounds;
 import org.wirez.core.graph.content.view.View;
 import org.wirez.core.graph.content.view.ViewConnector;
 

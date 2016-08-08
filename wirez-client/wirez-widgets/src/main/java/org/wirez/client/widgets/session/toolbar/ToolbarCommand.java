@@ -11,7 +11,7 @@ public interface ToolbarCommand<S extends CanvasSession> {
     
     String getTooltip();
 
-    ToolbarCommand<S> initialize( S session );
+    ToolbarCommand<S> initialize( Toolbar<S> toolbar, S session );
 
     void execute( );
 

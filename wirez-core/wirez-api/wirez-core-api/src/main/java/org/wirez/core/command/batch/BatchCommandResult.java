@@ -19,6 +19,6 @@ package org.wirez.core.command.batch;
 import org.wirez.core.command.CommandResult;
 
 public interface BatchCommandResult<V> 
-        extends Iterable<CommandResult<V>> {
+        extends Iterable<CommandResult<V>>, CommandResult<V> {
 
 }

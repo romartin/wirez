@@ -304,7 +304,7 @@ public class CommonLookups {
                                                final Graph<?, ? extends Node> target,
                                                final T sourceDefinition ) {
 
-        final Set<String> defLabels = graphUtils.getDefinitionLabels( sourceDefinition );
+        final Set<String> defLabels = getDefinitionLabels( sourceDefinition );
 
         final RuleLookupRequest request =
                 new RuleLookupRequestImpl.Builder()
@@ -347,7 +347,7 @@ public class CommonLookups {
 
         if ( null != defSetId ) {
             
-            final Set<String> defLabels = graphUtils.getDefinitionLabels( sourceDefinition );
+            final Set<String> defLabels = getDefinitionLabels( sourceDefinition );
 
             final RuleLookupRequestImpl.Builder builder = new RuleLookupRequestImpl.Builder();
 
@@ -388,7 +388,7 @@ public class CommonLookups {
                                                        final String edgeId,
                                                        final int edgesCount) {
 
-        final Set<String> defLabels = graphUtils.getDefinitionLabels( sourceDefinition );
+        final Set<String> defLabels = getDefinitionLabels( sourceDefinition );
         
         return isEdgeCardinalityRuleAllowed( defSetId, defLabels, edgeId, 
                 RuleLookupRequestImpl.Builder.EdgeType.OUTGOING, edgesCount );
@@ -448,6 +448,12 @@ public class CommonLookups {
 
         final List<? extends Edge> edges = sourceNode.getOutEdges();
         return graphUtils.countEdges( edgeId, edges );
+
+    }
+
+    private <T> Set<String> getDefinitionLabels( final T definition ) {
+
+        return getDefinitionManager().adapters().forDefinition().getLabels( definition );
 
     }
 

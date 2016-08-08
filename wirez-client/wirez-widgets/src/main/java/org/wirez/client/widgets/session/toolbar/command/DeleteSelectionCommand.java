@@ -3,11 +3,9 @@ package org.wirez.client.widgets.session.toolbar.command;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.wirez.client.widgets.session.toolbar.ToolbarCommandCallback;
-import org.wirez.client.widgets.session.toolbar.event.DisableToolbarCommandEvent;
-import org.wirez.client.widgets.session.toolbar.event.EnableToolbarCommandEvent;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.command.CanvasCommandManager;
-import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
+import org.wirez.core.client.command.CanvasCommandManager;
+import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.canvas.controls.select.SelectionControl;
 import org.wirez.core.client.session.impl.DefaultCanvasFullSession;
 import org.wirez.core.graph.Edge;
@@ -15,7 +13,6 @@ import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Node;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -29,10 +26,7 @@ public class DeleteSelectionCommand extends AbstractSelectionToolbarCommand<Defa
     CanvasCommandFactory canvasCommandFactory;
 
     @Inject
-    public DeleteSelectionCommand( final Event<EnableToolbarCommandEvent> enableToolbarCommandEvent,
-                                   final Event<DisableToolbarCommandEvent> disableToolbarCommandEvent,
-                                   final CanvasCommandFactory canvasCommandFactory ) {
-        super( enableToolbarCommandEvent, disableToolbarCommandEvent );
+    public DeleteSelectionCommand( final CanvasCommandFactory canvasCommandFactory ) {
         this.canvasCommandFactory = canvasCommandFactory;
     }
 

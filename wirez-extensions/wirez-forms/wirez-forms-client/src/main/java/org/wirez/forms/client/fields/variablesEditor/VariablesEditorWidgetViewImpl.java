@@ -166,11 +166,6 @@ public class VariablesEditorWidgetViewImpl extends Composite implements Variable
             VariableListItemWidgetView widget = getVariableWidget(i);
             widget.setDataTypes(dataTypeListBoxValues);
             widget.setParentWidget(presenter);
-            widget.addValueChangeHandler(new ValueChangeHandler<String>() {
-                @Override public void onValueChange(ValueChangeEvent<String> valueChangeEvent) {
-                    doSave();
-                }
-            });
         }
     }
 

@@ -27,6 +27,8 @@ public interface VariablesEditorWidgetView {
 
         void doSave();
 
+        void notifyModelChanged();
+
         List<VariableRow> deserializeVariables(String s);
 
         String serializeVariables(List<VariableRow> variableRows);

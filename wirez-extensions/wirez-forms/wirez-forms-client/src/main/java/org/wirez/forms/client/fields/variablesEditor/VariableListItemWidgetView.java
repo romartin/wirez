@@ -16,13 +16,12 @@
 
 package org.wirez.forms.client.fields.variablesEditor;
 
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.wirez.forms.client.fields.model.Variable.VariableType;
 import org.wirez.forms.client.fields.model.VariableRow;
 import org.wirez.forms.client.fields.widgets.ListBoxValues;
 
-public interface VariableListItemWidgetView extends HasModel<VariableRow>, HasValueChangeHandlers<String> {
+public interface VariableListItemWidgetView extends HasModel<VariableRow> {
 
     String CUSTOM_PROMPT = "Custom" + ListBoxValues.EDIT_SUFFIX;
     String ENTER_TYPE_PROMPT = "Enter type" + ListBoxValues.EDIT_SUFFIX;

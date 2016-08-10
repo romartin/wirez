@@ -28,19 +28,18 @@ import org.wirez.core.definition.annotation.property.ReadOnly;
 import org.wirez.core.definition.annotation.property.Type;
 import org.wirez.core.definition.annotation.property.Value;
 import org.wirez.core.definition.property.PropertyType;
-import org.wirez.core.definition.property.type.StringType;
 import org.wirez.core.definition.property.type.VariablesType;
 
 @Portable
 @Bindable
 @Property
-public class Variables implements BPMNProperty {
+public class GlobalVariables implements BPMNProperty {
 
     @Caption
-    public static final transient String caption = "Variables";
+    public static final transient String caption = "Global Variables";
 
     @Description
-    public static final transient String description = "Variables for the Process";
+    public static final transient String description = "Global Variables";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -57,10 +56,10 @@ public class Variables implements BPMNProperty {
     @Value
     private String value = defaultValue;
 
-    public Variables() {
+    public GlobalVariables() {
     }
 
-    public Variables( final String value ) {
+    public GlobalVariables(final String value) {
         this.value = value;
     }
 

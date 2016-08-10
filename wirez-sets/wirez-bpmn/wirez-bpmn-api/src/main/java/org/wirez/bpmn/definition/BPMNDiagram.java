@@ -27,7 +27,7 @@ import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.diagram.DiagramSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
-import org.wirez.bpmn.definition.property.variables.VariablesSet;
+import org.wirez.bpmn.definition.property.variables.ProcessData;
 import org.wirez.bpmn.shape.proxy.BPMNDiagramShapeProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
@@ -68,9 +68,9 @@ public class BPMNDiagram implements BPMNDefinition {
     private DiagramSet diagramSet;
 
     @PropertySet
-    @FieldDef( label = "Process Variables", position = 2)
+    @FieldDef( label = "Data", position = 2)
     @Valid
-    protected VariablesSet variablesSet;
+    protected ProcessData processData;
 
     @PropertySet
     @FieldDef( label = "Background Settings", position = 3)
@@ -105,7 +105,7 @@ public class BPMNDiagram implements BPMNDefinition {
         public BPMNDiagram build() {
             return new BPMNDiagram(  new BPMNGeneral( "Diagram" ),
                     new DiagramSet(),
-                    new VariablesSet(),
+                    new ProcessData(),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
                     new Width( WIDTH ),
@@ -120,14 +120,14 @@ public class BPMNDiagram implements BPMNDefinition {
 
     public BPMNDiagram(@MapsTo("general") BPMNGeneral general,
             @MapsTo("diagramSet") DiagramSet diagramSet,
-            @MapsTo("variablesSet") VariablesSet variablesSet,
+            @MapsTo("processData") ProcessData processData,
             @MapsTo("backgroundSet") BackgroundSet backgroundSet,
             @MapsTo("fontSet") FontSet fontSet,
             @MapsTo("width") Width width,
             @MapsTo("height") Height height) {
         this.general = general;
         this.diagramSet = diagramSet;
-        this.variablesSet = variablesSet;
+        this.processData = processData;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.width = width;
@@ -166,8 +166,8 @@ public class BPMNDiagram implements BPMNDefinition {
         return width;
     }
 
-    public VariablesSet getVariablesSet() {
-        return variablesSet;
+    public ProcessData getProcessData() {
+        return processData;
     }
 
     public BackgroundSet getBackgroundSet() {
@@ -186,8 +186,8 @@ public class BPMNDiagram implements BPMNDefinition {
         this.diagramSet = diagramSet;
     }
 
-    public void setVariablesSet( VariablesSet variablesSet ) {
-        this.variablesSet = variablesSet;
+    public void setProcessData( ProcessData processData) {
+        this.processData = processData;
     }
 
     public void setBackgroundSet( BackgroundSet backgroundSet ) {

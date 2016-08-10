@@ -23,11 +23,7 @@
 <div id="widget" class="input-group">
     <div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <button type="button" id="addVarButton" class="btn btn-default pull-right" style="margin-top: 20px;"></button>
-            </div>
-        </div>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -40,9 +36,9 @@
                             <th style="min-width:6em" data-field="datatypeth">
                                 Data Type
                             </th>
-                            <th>
-
-                            </th>
+                            <td>
+                                    <button type="button" class="center-block" data-field="addVarButton"></button>
+                            </td>
                         </tr>
                         </thead>
                         <tbody id="variableRows">
@@ -58,7 +54,7 @@
                                 <input type="text" class="form-control" style="min-width:6em" data-field="customDataType"/>
                             </td>
                             <td>
-                                <button type="button" class="center-block btn btn-danger" data-field="deleteButton"></button>
+                                <button type="button" class="center-block" data-field="deleteButton"></button>
                             </td>
                         </tr>
                         </tbody>

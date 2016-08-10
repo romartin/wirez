@@ -31,39 +31,55 @@ import org.wirez.forms.meta.definition.VariablesEditor;
 @Portable
 @Bindable
 @PropertySet
-public class VariablesSet implements BPMNPropertySet {
+public class ProcessData implements BPMNPropertySet {
 
     @Name
-    public static final transient String propertySetName = "Variables";
-    
+    public static final transient String propertySetName = "Process Data";
+
     @Property
-    @FieldDef(label = "", property = "value")
+    @FieldDef(label = "Process Variables", property = "value")
     @VariablesEditor
     @Valid
-    private Variables variables;
+    private ProcessVariables processVariables;
 
-    public VariablesSet() {
-        this( new Variables());
+    @Property
+    @FieldDef(label = "Globals", property = "value")
+    @VariablesEditor
+    @Valid
+    private GlobalVariables globalVariables;
+
+    public ProcessData() {
+        this(new ProcessVariables(), new GlobalVariables());
     }
 
-    public VariablesSet(@MapsTo("variables") Variables variables ) {
-        this.variables = variables;
+    public ProcessData(@MapsTo("processVariables") ProcessVariables processVariables, @MapsTo("globalVariables") GlobalVariables globalVariables) {
+        this.processVariables = processVariables;
+        this.globalVariables = globalVariables;
     }
 
-    public VariablesSet( String variables) {
-        this.variables = new Variables( variables );
+    public ProcessData(String processVariables, String globalVariables) {
+        this.processVariables = new ProcessVariables(processVariables);
+        this.globalVariables = new GlobalVariables(globalVariables);
     }
 
     public String getPropertySetName() {
         return propertySetName;
     }
 
-    public Variables getVariables() {
-        return variables;
+    public ProcessVariables getProcessVariables() {
+        return processVariables;
     }
 
-    public void setVariables( Variables variables ) {
-        this.variables = variables;
+    public void setProcessVariables(ProcessVariables processVariables) {
+        this.processVariables = processVariables;
+    }
+
+    public GlobalVariables getGlobalVariables() {
+        return globalVariables;
+    }
+
+    public void setGlobalVariables(GlobalVariables globalVariables) {
+        this.globalVariables = globalVariables;
     }
 
 }

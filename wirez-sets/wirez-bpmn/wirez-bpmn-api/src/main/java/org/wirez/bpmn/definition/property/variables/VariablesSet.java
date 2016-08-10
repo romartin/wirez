@@ -37,7 +37,7 @@ public class VariablesSet implements BPMNPropertySet {
     public static final transient String propertySetName = "Variables";
     
     @Property
-    @FieldDef(label = "Variables", property = "value")
+    @FieldDef(label = "", property = "value")
     @VariablesEditor
     @Valid
     private Variables variables;

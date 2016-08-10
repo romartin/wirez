@@ -21,8 +21,6 @@ import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.livespark.formmodeler.renderer.client.rendering.FieldRenderer;
 import org.wirez.forms.client.fields.model.Variable;
@@ -89,12 +87,6 @@ public class VariablesEditorFieldRenderer extends FieldRenderer<VariablesEditorF
         VariableListItemWidgetView widget = view.getVariableWidget(view.getVariableRowsCount() - 1);
         widget.setDataTypes(dataTypeListBoxValues);
         widget.setParentWidget(this);
-        widget.addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override public void onValueChange(ValueChangeEvent<String> valueChangeEvent) {
-                doSave();
-            }
-        });
-
     }
 
     @Override
@@ -106,6 +98,11 @@ public class VariablesEditorFieldRenderer extends FieldRenderer<VariablesEditorF
         dataTypeListBoxValues.addValues(dataTypeDisplayNames);
 
         view.setVariablesDataTypes(dataTypeListBoxValues);
+    }
+
+    @Override
+    public void notifyModelChanged() {
+        doSave();
     }
 
     @Override
@@ -164,7 +161,7 @@ public class VariablesEditorFieldRenderer extends FieldRenderer<VariablesEditorF
 
     public void removeVariable(VariableRow variableRow) {
         view.getVariableRows().remove(variableRow);
-        view.doSave();
+        doSave();
     }
 
     @Override

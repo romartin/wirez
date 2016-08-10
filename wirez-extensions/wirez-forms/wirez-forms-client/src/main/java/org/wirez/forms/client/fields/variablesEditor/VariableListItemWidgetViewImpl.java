@@ -27,10 +27,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.text.shared.Renderer;
-import com.google.gwt.user.client.ui.Composite;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.ValueListBox;
@@ -58,7 +55,7 @@ import org.wirez.forms.client.fields.widgets.VariableNameTextBox;
  * to hold the values.
  */
 @Templated("VariablesEditorWidget.html#variableRow")
-public class VariableListItemWidgetViewImpl extends Composite implements VariableListItemWidgetView, ComboBoxView.ModelPresenter {
+public class VariableListItemWidgetViewImpl implements VariableListItemWidgetView, ComboBoxView.ModelPresenter {
 
     /**
      * Errai's data binding module will automatically bind the provided instance
@@ -255,15 +252,18 @@ public class VariableListItemWidgetViewImpl extends Composite implements Variabl
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
-        return addHandler(handler, ValueChangeEvent.getType());
-    }
-
-    @Override
     public void notifyModelChanged() {
         String oldValue = currentValue;
         currentValue = getModel().toString();
-        ValueChangeEvent.fireIfNotEqual(this, oldValue, currentValue);
+
+        if (oldValue == null) {
+            if (currentValue != null && currentValue.length() > 0) {
+                parentWidget.notifyModelChanged();
+            }
+        }
+        else if (!oldValue.equals(currentValue)) {
+            parentWidget.notifyModelChanged();
+        }
     }
 
 }

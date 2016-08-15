@@ -26,40 +26,35 @@ public class Variable {
         PROCESS
     }
 
-    private VariableType variableType;
+    private VariableType variableType = VariableType.PROCESS;
 
     private String name;
 
     private String dataType;
 
-    private boolean isCustomDataType = false;
+    private String customDataType;
 
     public Variable(VariableType variableType) {
         this.variableType = variableType;
     }
 
-    public Variable(VariableType variableType, String name) {
-        this.variableType = variableType;
+    public Variable(String name, VariableType variableType) {
         this.name = name;
+        this.variableType = variableType;
     }
 
-    public Variable(VariableType variableType, String name, String dataType, boolean isCustomDataType) {
+    public Variable(String name, VariableType variableType, String dataType, String customDataType) {
         this.name = name;
         this.variableType = variableType;
         this.dataType = dataType;
-        this.isCustomDataType = isCustomDataType;
+        this.customDataType = customDataType;
     }
 
-    public Variable(VariableRow variableRow) {
-        this.variableType = variableRow.getVariableType();
-        this.name = variableRow.getName();
-        if (variableRow.getCustomDataType() != null && variableRow.getCustomDataType().length() > 0) {
-            this.isCustomDataType = true;
-            this.dataType = variableRow.getCustomDataType();
-        } else {
-            this.isCustomDataType = false;
-            this.dataType = variableRow.getDataType();
-        }
+    public Variable(VariableRow row) {
+        this.name = row.getName();
+        this.variableType = row.getVariableType();
+        this.dataType = row.getDataType();
+        this.customDataType = row.getCustomDataType();
     }
 
     public VariableType getVariableType() {
@@ -86,27 +81,31 @@ public class Variable {
         this.dataType = dataType;
     }
 
-    public boolean isCustomDataType() {
-        return isCustomDataType;
+    public String getCustomDataType() {
+        return customDataType;
     }
 
-    public void setCustomDataType(boolean isCustomDataType) {
-        this.isCustomDataType = isCustomDataType;
+    public void setCustomDataType(String customDataType) {
+        this.customDataType = customDataType;
     }
 
     public String toString() {
         if (name != null && !name.isEmpty()) {
             StringBuilder sb = new StringBuilder().append(name);
-            if (dataType != null && !dataType.isEmpty()) {
+            if (customDataType != null && !customDataType.isEmpty()) {
+                sb.append(':').append(customDataType);
+            }
+            else if (dataType != null && !dataType.isEmpty()) {
                 sb.append(':').append(dataType);
             }
             return sb.toString();
         }
-        return "";
+        return null;
     }
 
     /**
      * Deserializes a variable, checking whether the datatype is custom or not
+     *
      * @param s
      * @param variableType
      * @param dataTypes
@@ -122,11 +121,10 @@ public class Variable {
                 if (varParts.length == 2) {
                     String dataType = varParts[1];
                     if (!dataType.isEmpty()) {
-                        var.setDataType(dataType);
-                        if (dataTypes == null || dataTypes.contains(dataType)) {
-                            var.setCustomDataType(false);
+                        if (dataTypes != null && dataTypes.contains(dataType)) {
+                            var.setDataType(dataType);
                         } else {
-                            var.setCustomDataType(true);
+                            var.setCustomDataType(dataType);
                         }
                     }
                 }
@@ -137,6 +135,7 @@ public class Variable {
 
     /**
      * Deserializes a variable, NOT checking whether the datatype is custom
+     *
      * @param s
      * @param variableType
      * @return
@@ -147,25 +146,16 @@ public class Variable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Variable)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof Variable)) return false;
 
         Variable variable = (Variable) o;
 
-        if (getVariableType() != variable.getVariableType()) {
+        if (getVariableType() != variable.getVariableType()) return false;
+        if (getName() != null ? !getName().equals(variable.getName()) : variable.getName() != null) return false;
+        if (getDataType() != null ? !getDataType().equals(variable.getDataType()) : variable.getDataType() != null)
             return false;
-        }
-        if (getName() != null ? !getName().equals(variable.getName()) : variable.getName() != null) {
-            return false;
-        }
-        if (getDataType() != null ? !getDataType().equals(variable.getDataType()) : variable.getDataType() != null) {
-            return false;
-        }
-        return (isCustomDataType() == variable.isCustomDataType());
+        return getCustomDataType() != null ? getCustomDataType().equals(variable.getCustomDataType()) : variable.getCustomDataType() == null;
 
     }
 
@@ -174,7 +164,7 @@ public class Variable {
         int result = getVariableType() != null ? getVariableType().hashCode() : 0;
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + (getDataType() != null ? getDataType().hashCode() : 0);
-        result = 31 * result + Boolean.hashCode(isCustomDataType());
+        result = 31 * result + (getCustomDataType() != null ? getCustomDataType().hashCode() : 0);
         return result;
     }
 }

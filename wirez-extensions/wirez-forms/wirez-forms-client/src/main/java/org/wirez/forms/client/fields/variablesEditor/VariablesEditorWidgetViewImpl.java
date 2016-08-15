@@ -97,13 +97,14 @@ public class VariablesEditorWidgetViewImpl extends Composite implements Variable
 
         sVariables = value;
 
-        initView();
         // TODO: get DataTypes from server
         if (dataTypes == null) {
             dataTypes = new ArrayList<String>(Arrays.asList("Boolean", "Float", "Integer", "Object", "String"));
             dataTypeDisplayNames = new ArrayList<String>(Arrays.asList("Boolean", "Float", "Integer", "Object", "String"));
             presenter.setDataTypes(dataTypes, dataTypeDisplayNames);
         }
+
+        initView();
 
         if (fireEvents) {
             ValueChangeEvent.fireIfNotEqual(this, oldValue, sVariables);

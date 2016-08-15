@@ -52,13 +52,9 @@ public class VariableRow {
         this.id = lastId++;
         this.variableType = variable.getVariableType();
         this.name = variable.getName();
-        if (variable.isCustomDataType()) {
-            this.customDataType = variable.getDataType();
-        } else {
-            this.dataType = variable.getDataType();
-            ;
-        }
-    }
+        this.dataType = variable.getDataType();
+        this.customDataType = variable.getCustomDataType();
+     }
 
     public long getId() {
         return id;

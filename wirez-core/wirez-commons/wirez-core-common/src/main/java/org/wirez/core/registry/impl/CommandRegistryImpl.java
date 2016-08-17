@@ -1,15 +1,15 @@
 package org.wirez.core.registry.impl;
 
-import org.wirez.core.command.Command;
-import org.wirez.core.registry.command.CommandRegistry;
-import org.wirez.core.registry.exception.RegistrySizeExceededException;
-
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 
+import org.wirez.core.command.Command;
+import org.wirez.core.registry.command.CommandRegistry;
+import org.wirez.core.registry.exception.RegistrySizeExceededException;
+
 /**
- * The Stack class behavior when using the iterator is not the expepcted one, so used
+ * The Stack class behavior when using the iterator is not the expected one, so used
  * ArrayDeque instead of an Stack to provide right iteration order.
  */
 public class CommandRegistryImpl<C extends Command> implements CommandRegistry<C> {
@@ -18,23 +18,23 @@ public class CommandRegistryImpl<C extends Command> implements CommandRegistry<C
     private int maxStackSize = 50;
 
     @Override
-    public void setMaxSize( final int size ) {
+    public void setMaxSize(final int size) {
         this.maxStackSize = size;
     }
 
     @Override
-    public void register( final Collection<C> commands ) {
-        addIntoStack( commands );
+    public void register(final Collection<C> commands) {
+        addIntoStack(commands);
     }
 
     @Override
-    public void register( final C command ) {
-        addIntoStack( command );
+    public void register(final C command) {
+        addIntoStack(command);
     }
 
     @Override
-    public boolean remove( final C command ) {
-        throw new UnsupportedOperationException( "Remove not implemented yet." );
+    public boolean remove(final C command) {
+        throw new UnsupportedOperationException("Remove not implemented yet.");
     }
 
     @Override
@@ -43,8 +43,8 @@ public class CommandRegistryImpl<C extends Command> implements CommandRegistry<C
     }
 
     @Override
-    public boolean contains( final C item ) {
-        throw new UnsupportedOperationException( "Contains not implemented yet." );
+    public boolean contains(final C item) {
+        throw new UnsupportedOperationException("Contains not implemented yet.");
     }
 
     @Override
@@ -69,35 +69,33 @@ public class CommandRegistryImpl<C extends Command> implements CommandRegistry<C
 
     @Override
     public Collection<C> getItems() {
-        throw new UnsupportedOperationException( "getItems not implemented yet. Use getCommandHistory() for now." );
+        throw new UnsupportedOperationException("getItems not implemented yet. Use getCommandHistory() for now.");
     }
 
-    private void addIntoStack( final C command ) {
-        if ( null != command ) {
-            if ( ( commands.size() + 1 )  > maxStackSize ) {
+    private void addIntoStack(final C command) {
+        if (null != command) {
+            if ((commands.size() + 1) > maxStackSize) {
                 stackSizeExceeded();
             }
             final Deque<C> s = new ArrayDeque<>();
-            s.push( command );
-            commands.push( s );
+            s.push(command);
+            commands.push(s);
         }
     }
 
-    private void addIntoStack( final Collection<C> _commands ) {
-        if ( null != _commands && !_commands.isEmpty() ) {
-            if ( ( commands.size() + _commands.size() ) > maxStackSize ) {
+    private void addIntoStack(final Collection<C> _commands) {
+        if (null != _commands && !_commands.isEmpty()) {
+            if ((commands.size() + _commands.size()) > maxStackSize) {
                 stackSizeExceeded();
             }
-            final Deque<C> s = new ArrayDeque<C>();
-            for ( final C c : _commands ) {
-                s.push( c );
-            }
-            commands.push( s );
+            final Deque<C> s = new ArrayDeque<>();
+            _commands.forEach(s::push);
+            commands.push(s);
         }
     }
 
     private void stackSizeExceeded() {
-        throw new RegistrySizeExceededException( maxStackSize );
+        throw new RegistrySizeExceededException(maxStackSize);
     }
 
 }

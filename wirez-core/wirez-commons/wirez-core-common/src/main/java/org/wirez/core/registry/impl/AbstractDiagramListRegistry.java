@@ -1,39 +1,39 @@
 package org.wirez.core.registry.impl;
 
+import java.util.List;
+
 import org.wirez.core.diagram.Diagram;
 import org.wirez.core.registry.diagram.DiagramRegistry;
-
-import java.util.List;
 
 public abstract class AbstractDiagramListRegistry<D extends Diagram>
         extends AbstractDynamicRegistryWrapper<D, ListRegistry<D>>
         implements DiagramRegistry<D> {
 
-    public AbstractDiagramListRegistry( final List<D> items ) {
-        super( new ListRegistry<D>( item -> item.getUUID(), items ) );
+    public AbstractDiagramListRegistry(final List<D> items) {
+        super(new ListRegistry<>(Diagram::getUUID, items));
     }
 
     @Override
-    public D getDiagramByUUID( final String uuid ) {
-        return getWrapped().getItemByKey( uuid );
+    public D getDiagramByUUID(final String uuid) {
+        return getWrapped().getItemByKey(uuid);
     }
 
     @Override
-    public void update( final D diagram ) {
+    public void update(final D diagram) {
 
-        final int index = getWrapped().indexOf( diagram );
+        final int index = getWrapped().indexOf(diagram);
 
-        if ( index != -1 ) {
+        if (index != -1) {
 
-            final boolean isRemoved = remove( diagram );
+            final boolean isRemoved = remove(diagram);
 
-            if ( isRemoved ) {
-                getWrapped().add( index, diagram );
+            if (isRemoved) {
+                getWrapped().add(index, diagram);
             }
 
         } else {
 
-            throw new RuntimeException( "Diagram with uuid [" + diagram.getUUID() + "] cannot be updated as it does not exist." );
+            throw new RuntimeException("Diagram with uuid [" + diagram.getUUID() + "] cannot be updated as it does not exist.");
 
         }
 

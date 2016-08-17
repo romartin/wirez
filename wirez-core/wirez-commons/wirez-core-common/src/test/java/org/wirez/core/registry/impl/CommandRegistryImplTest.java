@@ -1,5 +1,9 @@
 package org.wirez.core.registry.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,11 +11,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.wirez.core.command.Command;
 import org.wirez.core.registry.exception.RegistrySizeExceededException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Stack;
 
 import static org.junit.Assert.*;
 
@@ -29,8 +28,23 @@ public class CommandRegistryImplTest {
     @Before
     public void setup() throws Exception {
 
-        tested = new CommandRegistryImpl<Command>();
+        tested = new CommandRegistryImpl<>();
 
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testRemove() {
+        tested.remove(command);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testContains() {
+        tested.contains(command);
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetItems() {
+        tested.getItems();
     }
 
     @Test
@@ -75,7 +89,7 @@ public class CommandRegistryImplTest {
         }};
 
         tested.register( commands );
-        tested.clear();;
+        tested.clear();
 
         Iterable<Iterable<Command>> result = tested.getCommandHistory();
 
@@ -122,6 +136,24 @@ public class CommandRegistryImplTest {
         assertFalse( result2.iterator().hasNext() );
 
     }
+
+    @Test(expected = RegistrySizeExceededException.class)
+    public void testAddCommandStackExceeded() {
+        tested.setMaxSize(1);
+        tested.register( command );
+        tested.register( command1 );
+    }
+
+    @Test(expected = RegistrySizeExceededException.class)
+    public void testAddCollectionStackExceeded() {
+        Collection<Command> commands = new ArrayList<Command>( 2 ) {{
+            add( command );
+            add( command1 );
+        }};
+        tested.setMaxSize(1);
+        tested.register(commands);
+    }
+
 
     @Test
     public void testGetCommandSize() {

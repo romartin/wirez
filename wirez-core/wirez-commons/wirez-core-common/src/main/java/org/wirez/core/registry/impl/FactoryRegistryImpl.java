@@ -1,13 +1,17 @@
 package org.wirez.core.registry.impl;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.wirez.core.definition.adapter.AdapterManager;
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.factory.Factory;
 import org.wirez.core.factory.definition.DefinitionFactory;
 import org.wirez.core.factory.graph.ElementFactory;
 import org.wirez.core.registry.factory.TypeFactoryRegistry;
-
-import java.util.*;
 
 class FactoryRegistryImpl<T extends Factory<?, ?>> implements TypeFactoryRegistry<T> {
 
@@ -16,16 +20,16 @@ class FactoryRegistryImpl<T extends Factory<?, ?>> implements TypeFactoryRegistr
     private final Map<Class<? extends ElementFactory>, ElementFactory<?, ?>> graphFactories =
             new HashMap<>();
 
-    FactoryRegistryImpl( final AdapterManager adapterManager ) {
+    FactoryRegistryImpl(final AdapterManager adapterManager) {
         this.adapterManager = adapterManager;
     }
 
     @Override
-    public DefinitionFactory<?> getDefinitionFactory( final String id ) {
+    public DefinitionFactory<?> getDefinitionFactory(final String id) {
 
-        for ( final DefinitionFactory<?> factory : definitionFactories ) {
+        for (final DefinitionFactory<?> factory : definitionFactories) {
 
-            if ( factory.accepts( id ) ) {
+            if (factory.accepts(id)) {
 
                 return factory;
 
@@ -37,38 +41,38 @@ class FactoryRegistryImpl<T extends Factory<?, ?>> implements TypeFactoryRegistr
     }
 
     @Override
-    public ElementFactory<?, ?> getGraphFactory( final Class<? extends ElementFactory> type ) {
+    public ElementFactory<?, ?> getGraphFactory(final Class<? extends ElementFactory> type) {
 
-        return graphFactories.get( type );
+        return graphFactories.get(type);
 
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
-    public void register( final T item ) {
+    @SuppressWarnings("unchecked")
+    public void register(final T item) {
 
-        if ( item instanceof DefinitionFactory ) {
+        if (item instanceof DefinitionFactory) {
 
-            definitionFactories.add( ( DefinitionFactory<?> ) item );
+            definitionFactories.add((DefinitionFactory<?>) item);
 
-        } else if ( item instanceof ElementFactory ){
+        } else if (item instanceof ElementFactory) {
 
-            graphFactories.put( ( ( ElementFactory ) item ).getFactoryType(),  ( ElementFactory<?, ?> ) item );
+            graphFactories.put(((ElementFactory) item).getFactoryType(), (ElementFactory<?, ?>) item);
 
         }
 
     }
 
     @Override
-    public boolean remove( final T item ) {
+    public boolean remove(final T item) {
 
-        if ( item instanceof DefinitionFactory ) {
+        if (item instanceof DefinitionFactory) {
 
-            return definitionFactories.remove( item );
+            return definitionFactories.remove(item);
 
-        } else if ( item instanceof ElementFactory ) {
+        } else if (item instanceof ElementFactory) {
 
-            return null != graphFactories.remove( item.getClass() );
+            return null != graphFactories.remove(((ElementFactory) item).getFactoryType());
 
         }
 
@@ -82,15 +86,15 @@ class FactoryRegistryImpl<T extends Factory<?, ?>> implements TypeFactoryRegistr
     }
 
     @Override
-    public boolean contains( final T item ) {
+    public boolean contains(final T item) {
 
-        if ( item instanceof DefinitionFactory ) {
+        if (item instanceof DefinitionFactory) {
 
-            return definitionFactories.contains( item );
+            return definitionFactories.contains(item);
 
-        } else if ( item instanceof ElementFactory ) {
+        } else if (item instanceof ElementFactory) {
 
-            return graphFactories.containsValue( item );
+            return graphFactories.containsValue(item);
 
         }
 
@@ -99,18 +103,18 @@ class FactoryRegistryImpl<T extends Factory<?, ?>> implements TypeFactoryRegistr
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings("unchecked")
     public Collection<T> getItems() {
         return new LinkedList<T>() {{
-            addAll( ( Collection<? extends T> ) definitionFactories );
-            addAll( ( Collection<? extends T> ) graphFactories.values() );
+            addAll((Collection<? extends T>) definitionFactories);
+            addAll((Collection<? extends T>) graphFactories.values());
         }};
     }
 
     @Override
-    public DefinitionFactory<?> getDefinitionFactory( final Class<?> type ) {
-        final String id = BindableAdapterUtils.getDefinitionId( type, adapterManager.registry() );
-        return getDefinitionFactory( id );
+    public DefinitionFactory<?> getDefinitionFactory(final Class<?> type) {
+        final String id = BindableAdapterUtils.getDefinitionId(type, adapterManager.registry());
+        return getDefinitionFactory(id);
     }
 
 }

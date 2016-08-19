@@ -19,7 +19,7 @@ package org.wirez.forms.client.fields.variablesEditor;
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.wirez.forms.client.fields.model.Variable.VariableType;
 import org.wirez.forms.client.fields.model.VariableRow;
-import org.wirez.forms.client.fields.widgets.ListBoxValues;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 
 public interface VariableListItemWidgetView extends HasModel<VariableRow> {
 

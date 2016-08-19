@@ -40,9 +40,7 @@ public class AssignmentsEditorAnnotationProcessor extends AbstractFieldAnnotatio
                               Annotation annotation,
                               FieldSetting fieldSetting,
                               TransformerContext context ) {
-
         field.setDefaultValue( (String) annotation.getParameters().get( "defaultValue" ) );
-
     }
 
     @Override

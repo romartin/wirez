@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.ValueListBox;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 
 public interface ComboBoxView {
 

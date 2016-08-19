@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.forms.client.fields.variablesEditor;
+package org.wirez.forms.client.fields.assignmentsEditor;
 
 import java.io.IOException;
+import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.text.shared.Renderer;
+import com.google.gwt.user.client.ui.Composite;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.ValueListBox;
@@ -38,45 +40,45 @@ import org.jboss.errai.ui.shared.api.annotations.Bound;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.uberfire.workbench.events.NotificationEvent;
+import org.wirez.forms.client.fields.model.AssignmentRow;
 import org.wirez.forms.client.fields.model.Variable.VariableType;
-import org.wirez.forms.client.fields.model.VariableRow;
+import org.wirez.forms.client.fields.util.StringUtils;
+import org.wirez.forms.client.fields.resources.i18n.WirezFormsClientFieldsConstants;
 import org.wirez.forms.client.fields.widgets.ComboBox;
 import org.wirez.forms.client.fields.widgets.ComboBoxView;
-import org.wirez.forms.client.fields.util.ListBoxValues;
 import org.wirez.forms.client.fields.widgets.VariableNameTextBox;
+import org.wirez.forms.client.fields.util.ListBoxValues;
+import org.uberfire.workbench.events.NotificationEvent;
 
 /**
  * A templated widget that will be used to display a row in a table of
- * {@link VariableRow}s.
- * <p>
- * The Name field of VariableRow is Bound, but other fields are not bound because
+ * {@link AssignmentRow}s.
+ *
+ * The Name field of AssignmentRow is Bound, but other fields are not bound because
  * they use a combination of ListBox and TextBox to implement a drop-down combo
  * to hold the values.
  */
-@Templated("VariablesEditorWidget.html#variableRow")
-public class VariableListItemWidgetViewImpl implements VariableListItemWidgetView, ComboBoxView.ModelPresenter {
+@Templated("ActivityDataIOEditorWidget.html#assignment")
+public class AssignmentListItemWidgetViewImpl extends Composite implements AssignmentListItemWidgetView, ComboBoxView.ModelPresenter {
 
     /**
      * Errai's data binding module will automatically bind the provided instance
-     * of the model (see {@link #setModel(VariableRow)}) to all fields annotated
+     * of the model (see {@link #setModel(AssignmentRow)}) to all fields annotated
      * with {@link Bound}. If not specified otherwise, the bindings occur based on
-     * matching field names (e.g. variableRow.name will automatically be kept in
+     * matching field names (e.g. assignment.name will automatically be kept in
      * sync with the data-field "name")
      */
     @Inject
     @AutoBound
-    protected DataBinder<VariableRow> variableRow;
+    protected DataBinder<AssignmentRow> assignment;
 
     @Inject
     @Bound
     @DataField
     protected VariableNameTextBox name;
 
-    private boolean allowDuplicateNames = false;
-    private String duplicateNameErrorMessage = "A Variable with this name already exists";
-
-    private String currentValue;
+    private boolean allowDuplicateNames = true;
+    private String duplicateNameErrorMessage = "";
 
     @DataField
     protected ValueListBox<String> dataType = new ValueListBox<String>(new Renderer<String>() {
@@ -87,7 +89,6 @@ public class VariableListItemWidgetViewImpl implements VariableListItemWidgetVie
             }
             return s;
         }
-
         public void render(String object, Appendable appendable) throws IOException {
             String s = render(object);
             appendable.append(s);
@@ -98,54 +99,104 @@ public class VariableListItemWidgetViewImpl implements VariableListItemWidgetVie
     @DataField
     protected TextBox customDataType;
 
+    @DataField
+    protected ValueListBox<String> processVar = new ValueListBox<String>(new Renderer<String>() {
+        public String render(String object) {
+            String s = "";
+            if (object != null) {
+                s = object.toString();
+            }
+            return s;
+        }
+        public void render(String object, Appendable appendable) throws IOException {
+            String s = render(object);
+            appendable.append(s);
+        }
+    });
+
     @Inject
     protected ComboBox dataTypeComboBox;
+
+    @Inject
+    ComboBox processVarComboBox;
 
     @Inject
     protected Event<NotificationEvent> notification;
 
     @Inject
     @DataField
+    protected TextBox constant;
+
+    @Inject
+    @DataField
     protected Button deleteButton;
 
     /**
+     * Widget the current assignment is in.
      * Required for implementation of Delete button.
      */
-    private VariablesEditorWidgetView.Presenter parentWidget;
+    private ActivityDataIOEditorWidget parentWidget;
 
-    public void setParentWidget(VariablesEditorWidgetView.Presenter parentWidget) {
+    public void setParentWidget(ActivityDataIOEditorWidget parentWidget) {
         this.parentWidget = parentWidget;
     }
 
     @Override
     public void setTextBoxModelValue(final TextBox textBox, String value) {
-        setCustomDataType(value);
+        if (textBox == customDataType) {
+            setCustomDataType(value);
+        }
+        else if (textBox == constant) {
+            setConstant(value);
+        }
     }
 
     @Override
     public void setListBoxModelValue(final ValueListBox<String> listBox, String value) {
-        setDataType(value);
+        if (listBox == dataType) {
+            setDataType(value);
+        }
+        else if (listBox == processVar) {
+            setProcessVar(value);
+        }
     }
 
     @Override
     public String getModelValue(final ValueListBox<String> listBox) {
-        String value = getCustomDataType();
-        if (value == null || value.isEmpty()) {
-            value = getDataType();
+        if (listBox == dataType) {
+            String value = getCustomDataType();
+            if (value == null || value.isEmpty()) {
+                value = getDataType();
+            }
+            return value;
         }
-        return value;
+        else if (listBox == processVar) {
+            String value = getConstant();
+            if (value == null || value.isEmpty()) {
+                value = getProcessVar();
+            }
+            return value;
+        }
+        else {
+            return "";
+        }
     }
 
     @PostConstruct
     public void init() {
         // Configure dataType and customDataType controls
         dataTypeComboBox.init(this, dataType, customDataType, false,
-                VariableListItemWidgetView.CUSTOM_PROMPT,
-                VariableListItemWidgetView.ENTER_TYPE_PROMPT);
+                AssignmentListItemWidgetView.CUSTOM_PROMPT,
+                AssignmentListItemWidgetView.ENTER_TYPE_PROMPT);
+
+        // Configure processVar and constant controls
+        processVarComboBox.init(this, processVar, constant, true,
+                AssignmentListItemWidgetView.CONSTANT_PROMPT,
+                AssignmentListItemWidgetView.ENTER_CONSTANT_PROMPT);
 
         name.setRegExp("^[a-zA-Z0-9\\-\\.\\_]*$",
-                "Removed invalid characters from name",
-                "Invalid character in name");
+                WirezFormsClientFieldsConstants.INSTANCE.Removed_invalid_characters_from_name(),
+                WirezFormsClientFieldsConstants.INSTANCE.Invalid_character_in_name());
 
         customDataType.addKeyDownHandler(new KeyDownHandler() {
             @Override public void onKeyDown(KeyDownEvent event) {
@@ -167,22 +218,20 @@ public class VariableListItemWidgetViewImpl implements VariableListItemWidgetVie
                         ValueChangeEvent.fire(name, "");
                     }
                 }
-                notifyModelChanged();
             }
         });
 
     }
 
     @Override
-    public VariableRow getModel() {
-        return variableRow.getModel();
+    public AssignmentRow getModel() {
+        return assignment.getModel();
     }
 
     @Override
-    public void setModel(VariableRow model) {
-        variableRow.setModel(model);
-        initVariableControls();
-        currentValue = getModel().toString();
+    public void setModel(AssignmentRow model) {
+        assignment.setModel(model);
+        initAssignmentControls();
     }
 
     @Override
@@ -198,10 +247,6 @@ public class VariableListItemWidgetViewImpl implements VariableListItemWidgetVie
     @Override
     public void setDataType(String dataType) {
         getModel().setDataType(dataType);
-
-        if (dataType != null && dataType.length() > 0) {
-            notifyModelChanged();
-        }
     }
 
     @Override
@@ -212,6 +257,26 @@ public class VariableListItemWidgetViewImpl implements VariableListItemWidgetVie
     @Override
     public void setCustomDataType(String customDataType) {
         getModel().setCustomDataType(customDataType);
+    }
+
+    @Override
+    public String getProcessVar() {
+        return getModel().getProcessVar();
+    }
+
+    @Override
+    public void setProcessVar(String processVar) {
+        getModel().setProcessVar(processVar);
+    }
+
+    @Override
+    public String getConstant() {
+        return getModel().getConstant();
+    }
+
+    @Override
+    public void setConstant(String constant) {
+        getModel().setConstant(constant);
     }
 
     @Override
@@ -226,44 +291,71 @@ public class VariableListItemWidgetViewImpl implements VariableListItemWidgetVie
     }
 
     @Override
+    public void setProcessVariables(ListBoxValues processVarListBoxValues) {
+        processVarComboBox.setCurrentTextValue("");
+        processVarComboBox.setListBoxValues(processVarListBoxValues);
+        String con = getConstant();
+        if (con != null && !con.isEmpty()) {
+            processVarComboBox.addCustomValueToListBoxValues(con, "");
+        }
+    }
+
+    @Override
+    public void setShowConstants(boolean showConstants) {
+        processVarComboBox.setShowCustomValues(showConstants);
+    }
+
+    @Override
+    public void setDisallowedNames(Set<String> disallowedNames, String disallowedNameErrorMessage) {
+        name.setInvalidValues(disallowedNames, false, disallowedNameErrorMessage);
+    }
+
+    @Override
+    public void setAllowDuplicateNames(boolean allowDuplicateNames, String duplicateNameErrorMessage) {
+        this.allowDuplicateNames = allowDuplicateNames;
+        this.duplicateNameErrorMessage = duplicateNameErrorMessage;
+    }
+
+    @Override
     public boolean isDuplicateName(String name) {
         return parentWidget.isDuplicateName(name);
     }
 
     @EventHandler("deleteButton")
     public void handleDeleteButton(ClickEvent e) {
-        parentWidget.removeVariable(getModel());
+        parentWidget.removeAssignment(getModel());
     }
 
     /**
      * Updates the display of this row according to the state of the
-     * corresponding {@link VariableRow}.
+     * corresponding {@link AssignmentRow}.
      */
-    private void initVariableControls() {
-        deleteButton.setIcon(IconType.TRASH);
+    private void initAssignmentControls() {
+        deleteButton.setIcon( IconType.TRASH );
+
+        if (getVariableType() == VariableType.OUTPUT) {
+            constant.setVisible(false);
+        }
 
         String cdt = getCustomDataType();
         if (cdt != null && !cdt.isEmpty()) {
             customDataType.setValue(cdt);
             dataType.setValue(cdt);
-        } else if (getDataType() != null) {
+        }
+        else if (getDataType() != null){
             dataType.setValue(getDataType());
         }
-    }
 
-    @Override
-    public void notifyModelChanged() {
-        String oldValue = currentValue;
-        currentValue = getModel().toString();
-
-        if (oldValue == null) {
-            if (currentValue != null && currentValue.length() > 0) {
-                parentWidget.notifyModelChanged();
-            }
+        String con = getConstant();
+        if (con != null && !con.isEmpty()) {
+            con = StringUtils.createQuotedConstant(con);
+            constant.setValue(con);
+            processVar.setValue(con);
         }
-        else if (!oldValue.equals(currentValue)) {
-            parentWidget.notifyModelChanged();
+        else if (getProcessVar() != null){
+            processVar.setValue(getProcessVar());
         }
     }
+
 
 }

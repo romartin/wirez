@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 import org.wirez.forms.client.fields.util.StringUtils;
 
 import static org.mockito.Mockito.*;

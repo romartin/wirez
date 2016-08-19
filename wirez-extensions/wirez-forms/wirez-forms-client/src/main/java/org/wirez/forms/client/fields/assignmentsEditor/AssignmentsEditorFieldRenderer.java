@@ -40,7 +40,6 @@ public class AssignmentsEditorFieldRenderer extends FieldRenderer<AssignmentsEdi
 
     @Override
     public void initInputWidget() {
-
     }
 
     @Override

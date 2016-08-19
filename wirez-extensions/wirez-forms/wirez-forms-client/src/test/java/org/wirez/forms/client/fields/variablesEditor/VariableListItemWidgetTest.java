@@ -37,7 +37,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.wirez.forms.client.fields.model.Variable;
 import org.wirez.forms.client.fields.model.VariableRow;
 import org.wirez.forms.client.fields.widgets.ComboBox;
-import org.wirez.forms.client.fields.widgets.ListBoxValues;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 import org.wirez.forms.client.fields.widgets.VariableNameTextBox;
 
 import static org.junit.Assert.*;

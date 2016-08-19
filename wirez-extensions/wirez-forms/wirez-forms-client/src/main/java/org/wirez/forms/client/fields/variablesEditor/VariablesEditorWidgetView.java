@@ -19,7 +19,7 @@ package org.wirez.forms.client.fields.variablesEditor;
 import java.util.List;
 
 import org.wirez.forms.client.fields.model.VariableRow;
-import org.wirez.forms.client.fields.widgets.ListBoxValues;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 
 public interface VariablesEditorWidgetView {
 

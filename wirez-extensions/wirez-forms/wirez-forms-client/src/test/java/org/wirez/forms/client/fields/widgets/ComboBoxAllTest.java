@@ -28,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 import org.wirez.forms.client.fields.util.StringUtils;
 
 import static org.junit.Assert.*;

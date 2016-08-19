@@ -26,7 +26,7 @@ import org.kie.workbench.common.forms.dynamic.client.rendering.FieldRenderer;
 import org.wirez.forms.client.fields.model.Variable;
 import org.wirez.forms.client.fields.model.VariableRow;
 import org.wirez.forms.client.fields.util.StringUtils;
-import org.wirez.forms.client.fields.widgets.ListBoxValues;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 import org.wirez.forms.model.VariablesEditorFieldDefinition;
 
 @Dependent

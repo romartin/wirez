@@ -42,7 +42,7 @@ import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.wirez.forms.client.fields.model.VariableRow;
-import org.wirez.forms.client.fields.widgets.ListBoxValues;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 
 @Dependent
 @Templated("VariablesEditorWidget.html#widget")

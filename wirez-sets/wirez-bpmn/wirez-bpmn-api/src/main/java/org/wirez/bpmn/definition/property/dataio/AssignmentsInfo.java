@@ -28,23 +28,12 @@ import org.wirez.core.definition.annotation.property.ReadOnly;
 import org.wirez.core.definition.annotation.property.Type;
 import org.wirez.core.definition.annotation.property.Value;
 import org.wirez.core.definition.property.PropertyType;
-import org.wirez.core.definition.property.type.StringType;
-
-/*
-    TODO @Jeremy: 
-    - Renamed from Assignments to TAssignments due to this property produces marshalling exceptions.
-    - If this class is named Assignments, by default the BPMN marshallers assign the oryx id "assigments" for this property, wich
-        is fine, but then it produces getting into current jbpm marshaller code that is not working here.
-    - To reproduce the error rename this class and references to Assignments again and run
-        the test BPMNDiagramMarshallerTest#testMarshallEvaluation -> it produces a null pointer exception.
-        Note: When debugging I can see the problem is due to there is not IOSpecification for the task instance, which seems
-         a must when the task contains assignments.
-*/
+import org.wirez.core.definition.property.type.AssignmentsType;
 
 @Portable
 @Bindable
 @Property
-public class TAssignments implements BPMNProperty {
+public class AssignmentsInfo implements BPMNProperty {
 
     @Caption
     public static final transient String caption = "Assignments";
@@ -59,7 +48,7 @@ public class TAssignments implements BPMNProperty {
     public static final Boolean optional = false;
 
     @Type
-    public static final PropertyType type = new StringType();
+    public static final PropertyType type = new AssignmentsType();
 
     @DefaultValue
     public static final String defaultValue = "";
@@ -67,10 +56,10 @@ public class TAssignments implements BPMNProperty {
     @Value
     private String value = defaultValue;
 
-    public TAssignments() {
+    public AssignmentsInfo() {
     }
 
-    public TAssignments( final String value ) {
+    public AssignmentsInfo( final String value ) {
         this.value = value;
     }
 

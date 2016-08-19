@@ -50,25 +50,26 @@ public class DataIOSet implements BPMNPropertySet {
 
     @Property
     @FieldDef(label = "Assignments", property = "value")
+    @AssignmentsEditor
     @Valid
-    private TAssignments assignments;
+    private AssignmentsInfo assignmentsinfo;
 
     public DataIOSet() {
-        this( new InputData(), new OutputData(), new TAssignments());
+        this( new InputData(), new OutputData(), new AssignmentsInfo());
     }
 
     public DataIOSet(@MapsTo("inputData") InputData inputData,
             @MapsTo("outputData") OutputData outputData,
-            @MapsTo("assignments") TAssignments assignments ) {
+            @MapsTo("assignmentsinfo") AssignmentsInfo assignmentsinfo) {
         this.inputData = inputData;
         this.outputData = outputData;
-        this.assignments = assignments;
+        this.assignmentsinfo = assignmentsinfo;
     }
 
-    public DataIOSet( String inputData, String outputData, String assignments) {
+    public DataIOSet( String inputData, String outputData, String assignmentsinfo) {
         this.inputData = new InputData( inputData );
         this.outputData = new OutputData( outputData );
-        this.assignments = new TAssignments( assignments );
+        this.assignmentsinfo = new AssignmentsInfo(assignmentsinfo);
     }
 
     public String getPropertySetName() {
@@ -83,8 +84,8 @@ public class DataIOSet implements BPMNPropertySet {
         return outputData;
     }
 
-    public TAssignments getAssignments() {
-        return assignments;
+    public AssignmentsInfo getAssignmentsinfo() {
+        return assignmentsinfo;
     }
 
     public void setInputData( InputData inputData ) {
@@ -95,8 +96,8 @@ public class DataIOSet implements BPMNPropertySet {
         this.outputData = outputData;
     }
 
-    public void setAssignments( TAssignments assignments ) {
-        this.assignments = assignments;
+    public void setAssignmentsinfo( AssignmentsInfo assignmentsinfo) {
+        this.assignmentsinfo = assignmentsinfo;
     }
 
 }

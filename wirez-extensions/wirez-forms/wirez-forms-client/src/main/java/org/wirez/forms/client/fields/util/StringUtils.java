@@ -18,6 +18,8 @@ package org.wirez.forms.client.fields.util;
 
 import java.util.List;
 
+import com.google.gwt.http.client.URL;
+
 /**
  * String utility functions
  */
@@ -58,6 +60,12 @@ public class StringUtils {
         return str;
     }
 
+    /**
+     * Creates a string for a list by concatenating each object's String separated by commas
+     *
+     * @param objects
+     * @return
+     */
     public static String getStringForList(List<? extends Object> objects) {
         StringBuilder sb = new StringBuilder();
         for (Object o : objects) {
@@ -67,6 +75,33 @@ public class StringUtils {
             sb.setLength(sb.length() - 1);
         }
         return sb.toString();
+    }
+
+    /**
+     * URLEncode a string
+     *
+     * @param s
+     * @return
+     */
+    public static String urlEncode(String s) {
+        if (s == null || s.isEmpty()) {
+            return s;
+        }
+
+        return URL.encodeQueryString(s);
+    }
+
+    /**
+     * URLDecode a string
+     *
+     * @param s
+     * @return
+     */
+    public static String urlDecode(String s) {
+        if (s == null || s.isEmpty()) {
+            return s;
+        }
+        return URL.decodeQueryString(s);
     }
 
 }

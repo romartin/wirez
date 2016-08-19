@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.ValueListBox;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 import org.wirez.forms.client.fields.util.StringUtils;
 
 public class ComboBox implements ComboBoxView.ComboBoxPresenter {

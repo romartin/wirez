@@ -16,8 +16,6 @@
 
 package org.wirez.forms.model;
 
-import javax.validation.constraints.Pattern;
-
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;

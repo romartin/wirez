@@ -2,6 +2,9 @@ package org.wirez.bpmn.backend.marshall.json.oryx;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wirez.bpmn.definition.*;
+import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
+import org.wirez.bpmn.definition.property.dataio.InputData;
+import org.wirez.bpmn.definition.property.dataio.OutputData;
 import org.wirez.bpmn.definition.property.general.Name;
 import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.bpmn.definition.property.variables.GlobalVariables;
@@ -54,6 +57,13 @@ public class Bpmn2OryxIdMappings {
         diagramPropertiesMap.put(ProcessVariables.class, "vardefs");
         // The global variables property in the diagram stencil is "globals".
         diagramPropertiesMap.put(GlobalVariables.class, "globals");
+
+
+        Map<Class<?>, String> userTaskPropertiesMap = new HashMap<Class<?>, String>();
+        put(UserTask.class, userTaskPropertiesMap);
+        userTaskPropertiesMap.put(AssignmentsInfo.class, "assignments");
+        userTaskPropertiesMap.put(InputData.class, "datainputset");
+        userTaskPropertiesMap.put(OutputData.class, "dataoutputset");
     }};
 
     protected Bpmn2OryxIdMappings() {

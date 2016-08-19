@@ -17,6 +17,7 @@
 package org.wirez.forms.client.fields.variablesEditor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -79,6 +80,9 @@ public class VariablesEditorFieldRendererTest {
 
     @Test
     public void testDeserializeVariables() {
+        List<String> dataTypes = new ArrayList<String>(Arrays.asList("Boolean", "Float", "Integer", "Object", "String"));
+        List<String> dataTypeDisplayNames = new ArrayList<String>(Arrays.asList("Boolean", "Float", "Integer", "Object", "String"));
+        variablesEditor.setDataTypes(dataTypes, dataTypeDisplayNames);
         List<VariableRow> variableRows = variablesEditor.deserializeVariables("var1:String,var2:Integer,var3:org.stuff.Potato");
 
         assertEquals(3, variableRows.size());
@@ -95,7 +99,7 @@ public class VariablesEditorFieldRendererTest {
 
         var = variableRows.get(2);
         assertEquals("var3", var.getName());
-        assertEquals("org.stuff.Potato", var.getDataType());
+        assertEquals("org.stuff.Potato", var.getCustomDataType());
         assertEquals(Variable.VariableType.PROCESS, var.getVariableType());
     }
 

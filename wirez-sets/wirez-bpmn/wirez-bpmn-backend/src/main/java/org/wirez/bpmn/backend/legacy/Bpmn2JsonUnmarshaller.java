@@ -3620,6 +3620,8 @@ public class Bpmn2JsonUnmarshaller {
             sp.setIoSpecification(iospec);
         }
 
+        parseAssignmentsInfo(properties);
+
         // data input set
         applyDataInputProperties(sp, properties, new HashMap<String, DataInput>());
 
@@ -4246,6 +4248,8 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     protected void applyCatchEventProperties(CatchEvent event, Map<String, String> properties) {
+        parseAssignmentsInfo(properties);
+
         if (properties.get("dataoutput") != null && !"".equals(properties.get("dataoutput"))) {
             String[] allDataOutputs = properties.get("dataoutput").split(",\\s*");
             OutputSet outSet = Bpmn2Factory.eINSTANCE.createOutputSet();
@@ -4477,6 +4481,8 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     protected void applyThrowEventProperties(ThrowEvent event, Map<String, String> properties) {
+        parseAssignmentsInfo(properties);
+
         if (properties.get("datainput") != null && properties.get("datainput").trim().length() > 0) {
             String[] allDataInputs = properties.get("datainput").split(",\\s*");
             InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
@@ -5089,6 +5095,8 @@ public class Bpmn2JsonUnmarshaller {
             Utils.setMetaDataExtensionValue(callActivity, "customAsync", wrapInCDATABlock(properties.get("isasync")));
         }
 
+        parseAssignmentsInfo(properties);
+
         //callActivity data input set
         applyDataInputProperties(callActivity, properties, new HashMap<String, DataInput>());
 
@@ -5419,6 +5427,8 @@ public class Bpmn2JsonUnmarshaller {
         if (properties.get("isasync") != null && properties.get("isasync").length() > 0 && properties.get("isasync").equals("true")) {
             Utils.setMetaDataExtensionValue(task, "customAsync", wrapInCDATABlock(properties.get("isasync")));
         }
+
+        parseAssignmentsInfo(properties);
 
         //process data input set
         Map<String, DataInput> alreadyProcessedInputs = new HashMap<String, DataInput>();
@@ -6881,6 +6891,37 @@ public class Bpmn2JsonUnmarshaller {
             return URLDecoder.decode(s, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return s;
+        }
+    }
+
+    private void parseAssignmentsInfo(Map<String, String> properties) {
+        if (properties != null && properties.get("assignmentsinfo") != null) {
+            String assignmentsinfo = properties.get("assignmentsinfo");
+            String[] parts = assignmentsinfo.split("\\|");
+            if (parts.length > 0 && parts[0] != null && parts[0].length() > 0) {
+                properties.put("datainput", parts[0]);
+                if (parts.length > 4 && parts[4] != null && parts[4].length() > 0) {
+                    properties.put("datainputassociations", parts[4]);
+                }
+            }
+            if (parts.length > 1 && parts[1] != null && parts[1].length() > 0) {
+                properties.put("datainputset", parts[1]);
+                if (parts.length > 4 && parts[4] != null && parts[4].length() > 0) {
+                    properties.put("assignments", parts[4]);
+                }
+            }
+            if (parts.length > 2 && parts[2] != null && parts[2].length() > 0) {
+                properties.put("dataoutput", parts[2]);
+                if (parts.length > 4 && parts[4] != null && parts[4].length() > 0) {
+                    properties.put("dataoutputassociations", parts[4]);
+                }
+            }
+            if (parts.length > 3 && parts[3] != null && parts[3].length() > 0) {
+                properties.put("dataoutputset", parts[3]);
+                if (parts.length > 4 && parts[4] != null && parts[4].length() > 0) {
+                    properties.put("assignments", parts[4]);
+                }
+            }
         }
     }
 

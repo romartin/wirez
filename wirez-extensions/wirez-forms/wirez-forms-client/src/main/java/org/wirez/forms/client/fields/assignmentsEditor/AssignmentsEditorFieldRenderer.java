@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.kie.workbench.common.forms.dynamic.client.rendering.FieldRenderer;
+import org.wirez.bpmn.definition.UserTask;
 import org.wirez.forms.model.AssignmentsEditorFieldDefinition;
 
 @Dependent
@@ -29,7 +30,7 @@ public class AssignmentsEditorFieldRenderer extends FieldRenderer<AssignmentsEdi
     private AssignmentsEditorWidget assignmentsEditor;
 
     @Inject
-    public AssignmentsEditorFieldRenderer( AssignmentsEditorWidget assignmentsEditor ) {
+    public AssignmentsEditorFieldRenderer(AssignmentsEditorWidget assignmentsEditor) {
         this.assignmentsEditor = assignmentsEditor;
     }
 
@@ -40,6 +41,18 @@ public class AssignmentsEditorFieldRenderer extends FieldRenderer<AssignmentsEdi
 
     @Override
     public void initInputWidget() {
+        assignmentsEditor.setUserTask(null);
+        Object model = null;
+        if (renderingContext != null) {
+            if (renderingContext.getModel() != null) {
+                model = renderingContext.getModel();
+            } else if (renderingContext.getParentContext() != null) {
+                model = renderingContext.getParentContext().getModel();
+            }
+        }
+        if (model instanceof UserTask) {
+            assignmentsEditor.setUserTask((UserTask) model);
+        }
     }
 
     @Override
@@ -51,4 +64,5 @@ public class AssignmentsEditorFieldRenderer extends FieldRenderer<AssignmentsEdi
     public String getSupportedCode() {
         return AssignmentsEditorFieldDefinition.CODE;
     }
+
 }

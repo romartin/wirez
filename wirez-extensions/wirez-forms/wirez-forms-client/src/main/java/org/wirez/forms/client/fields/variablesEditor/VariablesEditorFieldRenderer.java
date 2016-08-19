@@ -113,7 +113,7 @@ public class VariablesEditorFieldRenderer extends FieldRenderer<VariablesEditorF
             String[] vs = s.split(",");
             for (String v : vs) {
                 if (!v.isEmpty()) {
-                    Variable var = Variable.deserialize(v, Variable.VariableType.PROCESS);
+                    Variable var = Variable.deserialize(v, Variable.VariableType.PROCESS, dataTypes);
                     if (var != null && var.getName() != null && !var.getName().isEmpty()) {
                         variableRows.add(new VariableRow(var));
                     }

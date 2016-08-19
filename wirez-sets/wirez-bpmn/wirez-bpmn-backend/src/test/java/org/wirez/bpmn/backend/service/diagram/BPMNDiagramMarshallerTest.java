@@ -13,6 +13,10 @@ import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
 import org.wirez.bpmn.definition.*;
+import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
+import org.wirez.bpmn.definition.property.dataio.DataIOSet;
+import org.wirez.bpmn.definition.property.dataio.InputData;
+import org.wirez.bpmn.definition.property.dataio.OutputData;
 import org.wirez.bpmn.definition.property.variables.GlobalVariables;
 import org.wirez.bpmn.definition.property.variables.ProcessVariables;
 import org.wirez.core.api.DefinitionManager;
@@ -39,6 +43,7 @@ import org.wirez.core.factory.impl.EdgeFactoryImpl;
 import org.wirez.core.factory.impl.GraphFactoryImpl;
 import org.wirez.core.factory.impl.NodeFactoryImpl;
 import org.wirez.core.graph.Edge;
+import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.command.GraphCommandManager;
@@ -72,6 +77,7 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_NOT_BOUNDARY_EVENTS = "org/wirez/bpmn/backend/service/diagram/notBoundaryIntmEvent.bpmn";
     protected static final String BPMN_PROCESSVARIABLES = "org/wirez/bpmn/backend/service/diagram/processVariables.bpmn";
     protected static final String BPMN_GLOBALVARIABLES = "org/wirez/bpmn/backend/service/diagram/globalVariables.bpmn";
+    protected static final String BPMN_USERTASKASSIGNMENTS = "org/wirez/bpmn/backend/service/diagram/userTaskAssignments.bpmn";
 
     @Mock
     DefinitionManager definitionManager;
@@ -289,13 +295,51 @@ public class BPMNDiagramMarshallerTest {
         Diagram<Graph, Settings> diagram = unmarshall( BPMN_PROCESSVARIABLES );
         assertDiagram( diagram, 8 );
         assertEquals( "ProcessVariables", diagram.getSettings().getTitle() );
+
+        ProcessVariables variables = null;
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while(it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof BPMNDiagram) {
+                    BPMNDiagram bpmnDiagram = (BPMNDiagram) oDefinition;
+                    variables = bpmnDiagram.getProcessData().getProcessVariables();
+                    break;
+                }
+            }
+        }
+        assertEquals( variables.getValue(), "employee:java.lang.String,reason:java.lang.String,performance:java.lang.String" );
+
         Node<? extends Definition, ?> diagramNode = diagram.getGraph().getNode( "_luRBMdEjEeWXpsZ1tNStKQ" );
         assertTrue( diagramNode.getContent().getDefinition() instanceof BPMNDiagram );
         BPMNDiagram bpmnDiagram = ( BPMNDiagram ) diagramNode.getContent().getDefinition();
         assertTrue( bpmnDiagram.getProcessData() != null );
         assertTrue( bpmnDiagram.getProcessData().getProcessVariables() != null );
-        ProcessVariables variables = bpmnDiagram.getProcessData().getProcessVariables();
+        variables = bpmnDiagram.getProcessData().getProcessVariables();
         assertEquals( variables.getValue(), "employee:java.lang.String,reason:java.lang.String,performance:java.lang.String" );
+
+    }
+
+    @Test
+    @SuppressWarnings( "unchecked" )
+    public void testUnmarshallUserTaskAssignments() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall( BPMN_USERTASKASSIGNMENTS );
+        assertDiagram( diagram, 8 );
+        assertEquals( "UserTaskAssignments", diagram.getSettings().getTitle() );
+
+        Node<? extends Definition, ?> selfEvaluationNode = diagram.getGraph().getNode( "_6063D302-9D81-4C86-920B-E808A45377C2");
+        UserTask selfEvaluationTask = (UserTask) selfEvaluationNode.getContent().getDefinition();
+        DataIOSet dataIOSet = selfEvaluationTask.getDataIOSet();
+
+        InputData inputData = dataIOSet.getInputData();
+        assertEquals(inputData.getValue(), "reason:com.test.Reason,Comment:Object,Skippable:Object");
+
+        OutputData outputData = dataIOSet.getOutputData();
+        assertEquals(outputData.getValue(), "performance:Object");
+
+        AssignmentsInfo assignmentsinfo = dataIOSet.getAssignmentsinfo();
+        assertEquals(assignmentsinfo.getValue(), "[din]reason->reason,[dout]performance->performance");
     }
 
     @Test
@@ -424,6 +468,22 @@ public class BPMNDiagramMarshallerTest {
         assertTrue( result.contains( "<bpmn2:property id=\"reason\" itemSubjectRef=\"_reasonItem\"/>" ) );
         assertTrue( result.contains( "<bpmn2:property id=\"performance\" itemSubjectRef=\"_performanceItem\"/>" ) );
 
+    }
+
+    @Test
+    public void testMarshallUserTaskAssignments() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall( BPMN_USERTASKASSIGNMENTS );
+        String result = tested.marshall( diagram );
+        assertDiagram( result, 1, 7, 7 );
+
+        assertTrue( result.contains( "<bpmn2:dataInput id=\"_6063D302-9D81-4C86-920B-E808A45377C2_reasonInputX\" drools:dtype=\"com.test.Reason\" itemSubjectRef=\"__6063D302-9D81-4C86-920B-E808A45377C2_reasonInputXItem\" name=\"reason\"/>" ) );
+        assertTrue( result.contains( "<bpmn2:dataOutput id=\"_6063D302-9D81-4C86-920B-E808A45377C2_performanceOutputX\" drools:dtype=\"Object\" itemSubjectRef=\"__6063D302-9D81-4C86-920B-E808A45377C2_performanceOutputXItem\" name=\"performance\"/>" ) );
+        assertTrue( result.contains( "<bpmn2:dataOutput id=\"_6063D302-9D81-4C86-920B-E808A45377C2_performanceOutputX\" drools:dtype=\"Object\" itemSubjectRef=\"__6063D302-9D81-4C86-920B-E808A45377C2_performanceOutputXItem\" name=\"performance\"/>" ) );
+
+        assertTrue( result.contains("<bpmn2:sourceRef>reason</bpmn2:sourceRef>"));
+        assertTrue( result.contains("<bpmn2:targetRef>_6063D302-9D81-4C86-920B-E808A45377C2_reasonInputX</bpmn2:targetRef>"));
+        assertTrue( result.contains("<bpmn2:sourceRef>_6063D302-9D81-4C86-920B-E808A45377C2_performanceOutputX</bpmn2:sourceRef>"));
+        assertTrue( result.contains("<bpmn2:targetRef>performance</bpmn2:targetRef>"));
     }
 
     @Test

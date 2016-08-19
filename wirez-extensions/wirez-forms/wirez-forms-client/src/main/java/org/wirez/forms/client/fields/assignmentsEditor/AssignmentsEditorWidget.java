@@ -16,6 +16,7 @@
 
 package org.wirez.forms.client.fields.assignmentsEditor;
 
+import java.util.Iterator;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -23,16 +24,22 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.UIObject;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.jboss.errai.marshalling.client.Marshalling;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-import org.uberfire.ext.widgets.common.client.colorpicker.ColorPickerDialog;
+import org.wirez.bpmn.definition.BPMNDiagram;
+import org.wirez.bpmn.definition.UserTask;
+import org.wirez.bpmn.definition.property.dataio.DataIOSet;
+import org.wirez.bpmn.definition.property.variables.ProcessVariables;
+import org.wirez.core.client.session.CanvasSessionManager;
+import org.wirez.core.diagram.Diagram;
+import org.wirez.core.graph.Element;
+import org.wirez.core.graph.content.view.View;
 import org.wirez.forms.client.fields.model.AssignmentData;
 import org.wirez.forms.client.fields.model.Variable;
 
@@ -51,48 +58,25 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
     @Inject
     private ActivityDataIOEditor activityDataIOEditor;
 
-    private String assignments;
+    @Inject CanvasSessionManager canvasSessionManager;
+
+    private UserTask userTask;
+
+    private String assignmentsInfo;
 
     @EventHandler( "assignmentsButton" )
     public void onClickAssignmentsButton( ClickEvent clickEvent ) {
-        testDataIOEditor();
+        showAssignmentsDialog();
     }
 
     @EventHandler( "assignmentsTextBox" )
     public void onClickAssignmentsTextBox( ClickEvent clickEvent ) {
-        testDataIOEditor();
-    }
-
-
-    protected void showAssignmentsDialog( final UIObject owner ) {
-        final ColorPickerDialog dlg = new ColorPickerDialog();
-
-        dlg.getElement().getStyle().setZIndex(9999);
-
-        dlg.addDialogClosedHandler( event -> {
-            if ( !event.isCanceled() ) {
-                setValue( "#" + dlg.getColor(), true );
-            }
-        } );
-
-        String assignments = getValue();
-
-        if (assignments == null || assignments.length() == 0) {
-            assignments = "f62843";
-        }
-
-        if (assignments.startsWith("#")) {
-            assignments = assignments.substring(1, assignments.length());
-        }
-
-        dlg.setColor( assignments );
-
-        dlg.showRelativeTo( owner );
+        showAssignmentsDialog();
     }
 
     @Override
     public String getValue() {
-        return assignments;
+        return assignmentsInfo;
     }
 
     @Override
@@ -102,19 +86,23 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
 
     @Override
     public void setValue( String value, boolean fireEvents ) {
-        String oldValue = assignments;
+        String oldValue = assignmentsInfo;
 
-        assignments = value;
+        assignmentsInfo = value;
 
         initTextBox();
 
         if (fireEvents) {
-            ValueChangeEvent.fireIfNotEqual(this, oldValue, assignments);
+            ValueChangeEvent.fireIfNotEqual(this, oldValue, assignmentsInfo);
         }
     }
 
+    protected void setUserTask(UserTask userTask) {
+        this.userTask = userTask;
+    }
+
     protected void initTextBox() {
-        assignmentsTextBox.getElement().getStyle().setBackgroundColor( assignments );
+        assignmentsTextBox.setText(assignmentsInfo);
     }
 
     @Override
@@ -122,30 +110,51 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
         return addHandler( handler, ValueChangeEvent.getType() );
     }
 
-    public void testDataIOEditor() {
-        //    AssignmentData _assignmentData = new AssignmentData("inStr:String,inInt1:Integer,inCustom1:org.jdl.Custom,inStrConst:String,Skippable",
-//            "outStr1:String,outInt1:Integer,outCustom1:org.jdl.Custom",
-//            "str1:String,int1:Integer,custom1:org.jdl.Custom",
-//            "[din]str1->inStr,[din]int1->inInt1,[din]custom1->inCustom1,[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1",
-//            "String:String, Integer:Integer, Boolean:Boolean, Float:Float, Object:Object");
-        String taskName = "Task1";
-        String datainput = null;
-        String datainputset = "inStr:String,inInt1:Integer,inCustom1:org.jdl.Custom,inStrConst:String,Skippable";
-        String dataoutput = null;
-        String dataoutputset = "outStr1:String,outInt1:Integer,outCustom1:org.jdl.Custom";
-        String processvars = "str1:String,int1:Integer,custom1:org.jdl.Custom";
-        String assignments = "[din]str1->inStr,[din]int1->inInt1,[din]custom1->inCustom1,[din]inStrConst=TheString,[dout]outStr1->str1,[dout]outInt1->int1,[dout]outCustom1->custom1";
+    public void showAssignmentsDialog() {
+        String taskName = "Task";
+        String datainputset = "";
+        String dataoutputset = "";
+        if (userTask != null) {
+            if(userTask.getGeneral() != null && userTask.getGeneral().getName() != null &&
+                userTask.getGeneral().getName().getValue() != null && userTask.getGeneral().getName().getValue().length() > 0) {
+                taskName = userTask.getGeneral().getName().getValue();
+            }
+            if (userTask.getDataIOSet() != null) {
+                DataIOSet dataIOSet = userTask.getDataIOSet();
+                if (dataIOSet.getInputData() != null && dataIOSet.getInputData().getValue() != null) {
+                    datainputset = dataIOSet.getInputData().getValue();
+                }
+                if (dataIOSet.getInputData() != null && dataIOSet.getInputData().getValue() != null) {
+                    dataoutputset = dataIOSet.getOutputData().getValue();
+                }
+            }
+        }
+
+//        Window.alert("assignmentsInfo = " + assignmentsInfo + "\ndatainputset = " + datainputset + "\ndataoutputset = " + dataoutputset);
+        String processvars = getProcessVariables();
+        // TODO: also get dataTypes from server
         String datatypes = "String:String, Integer:Integer, Boolean:Boolean, Float:Float, Object:Object";
+        // TODO: use full set of disallowedpropertynames
         String disallowedpropertynames = "Skippable";
 
         ActivityDataIOEditor.GetDataCallback callback = new ActivityDataIOEditor.GetDataCallback() {
             @Override
-            public void getData( String assignmentData ) {
-                Window.alert(assignmentData);
+            public void getData( String assignmentDataJson ) {
+//                Window.alert("assignmentData = " + assignmentDataJson);
+                AssignmentData assignmentData = Marshalling.fromJSON(assignmentDataJson, AssignmentData.class);
+
+                String inputVariablesString = assignmentData.getInputVariablesString();
+                userTask.getDataIOSet().getInputData().setValue(inputVariablesString);
+                String outputVariablesString = assignmentData.getOutputVariablesString();
+                userTask.getDataIOSet().getOutputData().setValue(outputVariablesString);
+
+                String assignmentsString = assignmentData.getAssignmentsString();
+                setValue(assignmentsString, true);
             }
         };
 
-        showDataIOEditor(taskName, datainput, datainputset, dataoutput, dataoutputset, processvars, assignments, datatypes, disallowedpropertynames, callback);
+        showDataIOEditor(taskName, null, datainputset, null, dataoutputset,
+                processvars, assignmentsInfo, datatypes, disallowedpropertynames, callback);
     }
 
     public void showDataIOEditor( final String taskName,
@@ -203,4 +212,23 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
         activityDataIOEditor.show();
     }
 
+    protected String getProcessVariables() {
+        Diagram diagram = canvasSessionManager.getCurrentSession().getCanvasHandler().getDiagram();
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while (it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof BPMNDiagram) {
+                    BPMNDiagram bpmnDiagram = (BPMNDiagram) oDefinition;
+                    ProcessVariables variables = bpmnDiagram.getProcessData().getProcessVariables();
+                    if (variables != null) {
+                        return variables.getValue();
+                    }
+                    break;
+                }
+            }
+        }
+        return null;
+    }
 }

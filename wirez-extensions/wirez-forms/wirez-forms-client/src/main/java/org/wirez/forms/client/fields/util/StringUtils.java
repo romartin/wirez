@@ -61,6 +61,19 @@ public class StringUtils {
     }
 
     /**
+     * Returns true if string starts and ends with double-quote
+     *
+     * @param str
+     * @return
+     */
+    public static boolean isQuotedConstant(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        return (str.startsWith("\"") && str.endsWith("\""));
+    }
+
+    /**
      * Creates a string for a list by concatenating each object's String separated by commas
      *
      * @param objects

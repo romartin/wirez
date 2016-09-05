@@ -54,8 +54,8 @@
 
         <!-- Form modeler API. -->
         <dependency>
-            <groupId>org.livespark</groupId>
-            <artifactId>livespark-form-modeler-api</artifactId>
+            <groupId>org.kie.workbench.forms</groupId>
+            <artifactId>kie-wb-common-forms-api</artifactId>
         </dependency>
 
         <dependency>

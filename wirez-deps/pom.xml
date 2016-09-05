@@ -164,12 +164,6 @@
 
       <dependency>
         <groupId>org.livespark</groupId>
-        <artifactId>livespark-form-modeler-api</artifactId>
-        <version>${version.org.livespark}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.livespark</groupId>
         <artifactId>livespark-form-modeler-processing-engine</artifactId>
         <version>${version.org.livespark}</version>
       </dependency>

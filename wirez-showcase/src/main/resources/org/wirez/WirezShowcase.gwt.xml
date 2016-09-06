@@ -25,6 +25,7 @@
   <inherits name="org.uberfire.client.views.PatternFlyTheme"/>
   <inherits name="org.uberfire.ext.plugin.RuntimePluginClient"/>
   <inherits name="org.uberfire.ext.apps.UberfireAppsClient"/>
+  <inherits name="org.uberfire.ext.security.management.UberfireSecurityManagementWorkbench"/>
   <inherits name="org.wirez.client.WirezWorkbench"/>
   <inherits name="org.wirez.client.WirezMobile"/>
   <inherits name="org.wirez.basicset.WirezBasicSetClient"/>

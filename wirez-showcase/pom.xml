@@ -136,13 +136,13 @@
 
     <dependency>
       <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-servlet-security</artifactId>
+      <artifactId>uberfire-security-client</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-security-client</artifactId>
-      <scope>provided</scope>
+      <artifactId>uberfire-servlet-security</artifactId>
     </dependency>
 
     <dependency>
@@ -231,8 +231,42 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Errai. -->
+    <!-- Uberfire Security Management -->
 
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-security-management-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-security-management-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-security-management-wildfly</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-security-management-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-widgets-security-management</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-security-management-client-wb</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Errai. -->
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-ioc</artifactId>
@@ -666,7 +700,6 @@
             <compileSourcesArtifact>org.uberfire:uberfire-security-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-client-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-workbench-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-backend</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-views-patternfly</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-simple-docks-client</compileSourcesArtifact>
@@ -685,6 +718,12 @@
             <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-widgets-service-api</compileSourcesArtifact>
+
+            <!-- UberFire Security Management -->
+            <compileSourcesArtifact>org.uberfire:uberfire-security-management-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-security-management-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-security-management-client-wb</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:uberfire-widgets-security-management</compileSourcesArtifact>
 
             <!-- Form modeler. -->
             <compileSourcesArtifact>org.livespark:livespark-crud-component</compileSourcesArtifact>

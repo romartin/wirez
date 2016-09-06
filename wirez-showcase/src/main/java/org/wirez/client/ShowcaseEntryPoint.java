@@ -21,19 +21,30 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.logging.client.LogConfiguration;
 import com.google.gwt.user.client.ui.RootPanel;
+import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.api.AfterInitialization;
 import org.jboss.errai.ioc.client.api.EntryPoint;
+import org.jboss.errai.security.shared.api.Role;
+import org.jboss.errai.security.shared.api.identity.User;
+import org.jboss.errai.security.shared.service.AuthenticationService;
 import org.uberfire.client.mvp.ActivityManager;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.client.views.pfly.menu.UserMenu;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
+import org.uberfire.client.workbench.widgets.menu.UtilityMenuBar;
 import org.uberfire.client.workbench.widgets.menu.WorkbenchMenuBarPresenter;
-import org.uberfire.mvp.impl.DefaultPlaceRequest;
+import org.uberfire.ext.security.management.client.ClientUserSystemManager;
+import org.uberfire.mvp.Command;
+import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.Menus;
 import org.wirez.client.workbench.perspectives.AuthoringPerspective;
 import org.wirez.client.workbench.perspectives.HomePerspective;
 import org.wirez.client.workbench.perspectives.WirezSandboxPerspective;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,7 +65,22 @@ public class ShowcaseEntryPoint {
     private WorkbenchMenuBarPresenter menubar;
 
     @Inject
+    private UserMenu userMenu;
+
+    @Inject
+    private UtilityMenuBar utilityMenuBar;
+
+    @Inject
+    public User identity;
+
+    @Inject
     private ActivityManager activityManager;
+
+    @Inject
+    private Caller<AuthenticationService> authService;
+
+    @Inject
+    private ClientUserSystemManager userSystemManager;
 
     @Inject
     private ErrorPopupPresenter errorPopupPresenter;
@@ -62,14 +88,19 @@ public class ShowcaseEntryPoint {
     @AfterInitialization
     public void startApp() {
 
-        setupGlobalErrorHandler();
+        userSystemManager.waitForInitialization( new Command() {
+            @Override
+            public void execute() {
 
-        setupMenu();
+                setupGlobalErrorHandler();
 
-        hideLoadingPopup();
+                setupMenus();
 
-        // Default perspective.
-        placeManager.goTo( new DefaultPlaceRequest( HomePerspective.PERSPECTIVE_ID ) );
+                hideLoadingPopup();
+
+            }
+        } );
+
     }
 
     private void setupGlobalErrorHandler() {
@@ -86,13 +117,49 @@ public class ShowcaseEntryPoint {
 
     }
 
-    private void setupMenu() {
-        final Menus menus =
-                newTopLevelMenu( "Home" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( HomePerspective.PERSPECTIVE_ID ) ) ).endMenu()
-                        .newTopLevelMenu( "Authoring" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( AuthoringPerspective.PERSPECTIVE_ID ) ) ).endMenu()
-                        .newTopLevelMenu( "Sandbox" ).respondsWith( () -> placeManager.goTo( new DefaultPlaceRequest( WirezSandboxPerspective.PERSPECTIVE_ID ) ) ).endMenu()
+
+
+    private void setupMenus() {
+        for (Menus roleMenus : getRoles()) {
+            userMenu.addMenus(roleMenus);
+        }
+        refreshMenus();
+    }
+
+    private void refreshMenus() {
+        menubar.clear();
+        menubar.addMenus(createMenuBar());
+
+        final Menus utilityMenus =
+                MenuFactory.newTopLevelCustomMenu(userMenu)
+                        .endMenu()
                         .build();
-        menubar.addMenus( menus );
+
+        utilityMenuBar.addMenus(utilityMenus);
+    }
+
+    private Menus createMenuBar() {
+        return newTopLevelMenu( "Home" )
+                .perspective( HomePerspective.PERSPECTIVE_ID )
+                .endMenu()
+                .newTopLevelMenu( "Authoring" )
+                .perspective( AuthoringPerspective.PERSPECTIVE_ID )
+                .endMenu()
+                .newTopLevelMenu( "Sandbox" )
+                .perspective( WirezSandboxPerspective.PERSPECTIVE_ID )
+                .endMenu()
+                .build();
+    }
+
+    private List<Menus> getRoles() {
+        final List<Menus> result = new ArrayList<Menus>(identity.getRoles().size());
+        result.add(MenuFactory.newSimpleItem( "Logout" ).respondsWith(new LogoutCommand()).endMenu().build());
+        for (Role role : identity.getRoles()) {
+            if (!role.getName().equals( "IS_REMEMBER_ME")) {
+                result.add(MenuFactory.newSimpleItem( "Role: " + role.getName() ).endMenu().build());
+            }
+        }
+        return result;
     }
 
     // Fade out the "Loading application" pop-up
@@ -111,6 +178,20 @@ public class ShowcaseEntryPoint {
                 e.getStyle().setVisibility( Style.Visibility.HIDDEN );
             }
         }.run( 500 );
+    }
+
+    private class LogoutCommand implements Command {
+
+        @Override
+        public void execute() {
+            authService.call(new RemoteCallback<Void>() {
+                @Override
+                public void callback(Void response) {
+                    final String location = GWT.getModuleBaseURL().replaceFirst( "/" + GWT.getModuleName() + "/", "/logout.jsp" );
+                    redirect( location );
+                }
+            }).logout();
+        }
     }
 
     public static native void redirect( String url )/*-{

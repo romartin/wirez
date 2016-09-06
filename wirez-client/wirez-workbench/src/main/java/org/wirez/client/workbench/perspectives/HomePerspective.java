@@ -30,7 +30,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-@WorkbenchPerspective( identifier = "HomePerspective", isTransient = false )
+@WorkbenchPerspective( identifier = "HomePerspective", isTransient = false, isDefault = true )
 public class HomePerspective {
 
     public static final String PERSPECTIVE_ID = "HomePerspective";

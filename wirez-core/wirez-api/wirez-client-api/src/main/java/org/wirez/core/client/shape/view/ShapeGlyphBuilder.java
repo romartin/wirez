@@ -1,6 +1,5 @@
 package org.wirez.core.client.shape.view;
 
-import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.definition.shape.GlyphProxy;
 

@@ -1,6 +1,7 @@
 package org.wirez.core.client.canvas.util;
 
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.diagram.Diagram;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Element;
 import org.wirez.core.graph.Graph;
@@ -21,14 +22,24 @@ import java.util.Iterator;
 @Dependent
 public class CanvasLayoutUtils {
 
-    private static final int DISTANCE = 100;
+    private static final int PADDING = 50;
     private static final float MARGIN = 0.2f;
+
+    public static boolean isCanvasRoot( final Diagram diagram,
+                                    final Element parent ) {
+        return null != parent && isCanvasRoot( diagram, parent.getUUID() );
+    }
+
+    public static boolean isCanvasRoot( final Diagram diagram,
+                                    final String pUUID ) {
+        final String canvasRoot = diagram.getSettings().getCanvasRootUUID();
+        return ( null != canvasRoot && null != pUUID && canvasRoot.equals( pUUID ) );
+    }
 
     public double[] getNextLayoutPosition( final CanvasHandler canvasHandler, final Element<View<?>> source ) {
 
         final Double[] pos = GraphUtils.getPosition( source.getContent() );
-        final Double[] size = GraphUtils.getSize( source.getContent() );
-        final double[] next = new double[] { pos[0] + size[0] + DISTANCE, pos[1] };
+        final double[] next = new double[] { pos[0], pos[1] };
 
         return checkNextLayoutPosition( next[0], next[1], canvasHandler );
     }
@@ -53,8 +64,8 @@ public class CanvasLayoutUtils {
 
         if ( x >= getBound( lr.getX() ) ) {
 
-            result[0] = DISTANCE;
-            result[1] += DISTANCE;
+            result[0] = PADDING;
+            result[1] += PADDING;
 
         }
 
@@ -108,10 +119,10 @@ public class CanvasLayoutUtils {
             private void onStartNodeTraversal( final Iterator<Node<View, Edge>> parents,
                                                final Node<View, Edge> node ) {
 
-                double parentX = 0;
-                double parentY = 0;
-
                 if ( null != parents && parents.hasNext() ) {
+
+                    double parentX = 0;
+                    double parentY = 0;
 
                     while ( parents.hasNext() ) {
 
@@ -141,9 +152,24 @@ public class CanvasLayoutUtils {
 
                     }
 
+                } else if ( null != node ) {
+
+                    final Double[] nodeCoords = GraphUtils.getPosition( node.getContent() );
+                    final Double[] nodeSize = GraphUtils.getSize( node.getContent() );
+
+                    if ( nodeCoords[0] > getCurrentMaxX() ) {
+
+                        result[0] = nodeCoords[0] + nodeSize[0] + PADDING;
+
+                    }
+
+                    if ( nodeCoords[1] > getCurrentMaxY() ) {
+
+                        result[1] = nodeCoords[1] + nodeSize[1] + PADDING;
+
+                    }
+
                 }
-
-
 
             }
 

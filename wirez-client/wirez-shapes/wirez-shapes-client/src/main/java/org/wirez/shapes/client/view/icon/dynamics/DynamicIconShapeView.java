@@ -5,11 +5,11 @@ import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.core.client.shape.view.HasSize;
-import org.wirez.shapes.client.view.AbstractDecoratableShapeView;
+import org.wirez.shapes.client.view.BasicShapeView;
 import org.wirez.shapes.proxy.icon.dynamics.Icons;
 
 public class DynamicIconShapeView<T extends DynamicIconShapeView> 
-        extends AbstractDecoratableShapeView<T>
+        extends BasicShapeView<T>
         implements HasSize<T>  {
 
     private final static String BLACK = "#000000";
@@ -21,16 +21,14 @@ public class DynamicIconShapeView<T extends DynamicIconShapeView>
     
     public DynamicIconShapeView(final Icons icon,
                                 final double width,
-                                final double height,
-                                final WiresManager manager ) {
+                                final double height ) {
         super( buildIcon( new MultiPath(),
                 icon, 
                 width, 
                 height,
                 BLACK,
                 BLACK,
-                STROKE_WIDTH ), 
-                manager );
+                STROKE_WIDTH ) );
         this.icon = icon;
         this.width = width;
         this.height = height;
@@ -43,13 +41,6 @@ public class DynamicIconShapeView<T extends DynamicIconShapeView>
         icon = null;
         width = 0;
         height = 0;
-    }
-
-    @Override
-    protected Rectangle createDecorator() {
-        final Rectangle r = new Rectangle( width, height );
-        this.addChild( r, WiresLayoutContainer.Layout.CENTER );
-        return r;
     }
 
     public T setIcon( final Icons icon ) {
@@ -81,11 +72,6 @@ public class DynamicIconShapeView<T extends DynamicIconShapeView>
                 getStrokeColor(),
                 getStrokeWidth() );
         
-        // Force to redraw the decorator.
-        super.createDecorators();
-
-        this.moveChild( decorator, - ( width / 2) , - ( height / 2 ) );
-
     }
 
     private static MultiPath buildIcon(final MultiPath path, 

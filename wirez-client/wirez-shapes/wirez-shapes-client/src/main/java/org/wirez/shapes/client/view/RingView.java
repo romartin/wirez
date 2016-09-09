@@ -3,77 +3,115 @@ package org.wirez.shapes.client.view;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Ring;
 import com.ait.lienzo.client.core.shape.Shape;
-import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
+import com.ait.lienzo.client.core.shape.wires.event.*;
 import org.wirez.core.client.shape.view.HasRadius;
+import org.wirez.core.client.shape.view.event.HandlerRegistrationImpl;
 
-public class RingView<T extends RingView> extends org.wirez.shapes.client.view.animatiion.AnimatedWiresShapeView<T>
-    implements HasRadius<T> {
+public class RingView extends BasicShapeView<RingView>
+    implements HasRadius<RingView> {
 
-    protected Ring ring;
+    private static final int INNER_RADIUS_FACTOR = 2;
 
-    public RingView(final double outer,
-                    final WiresManager manager) {
-        super(new MultiPath().rect(0,0, outer * 2, outer * 2), manager);
+    private Ring ring;
+    private final HandlerRegistrationImpl registrations = new HandlerRegistrationImpl();
+
+    public RingView( final double radius ) {
+        super( initPath( new MultiPath(), radius ) );
+        ring = new Ring( getInnerRadius( radius ), getOuterRadius( radius ) );
+        addChild( ring, LayoutContainer.Layout.CENTER );
+        initResizeHandlers();
     }
 
     @Override
-    protected Shape getPrimitive() {
+    public Shape<?> getShape() {
         return ring;
     }
 
     @Override
-    protected Shape<?> createChildren() {
-        
-        ring = new Ring( 1, 1 );
-        this.addChild( ring, WiresLayoutContainer.Layout.CENTER );
-        
-        final Ring decorator = new Ring( 1, 1 );
-        this.addChild( decorator, WiresLayoutContainer.Layout.CENTER );
-        
-        return decorator;
-    }
+    public RingView setRadius( final double radius ) {
 
-    @Override
-    public T setRadius( final double radius ) {
-        final double o = radius;
-        final double i = radius - ( radius / 4 );
-        setOuterRadius( o );
-        setInnerRadius( i );
-        return (T) this;
+        initPath( getPath().clear(), radius );
+
+        updateFillGradient( radius * 2, radius * 2);
+
+        final double o = getOuterRadius( radius );
+        final double i = getInnerRadius( radius );
+        ring.setOuterRadius( o );
+        ring.setInnerRadius( i );
+
+        refresh();
+
+        return this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setOuterRadius(final double radius) {
+    public RingView setOuterRadius(final double radius ) {
 
-        final double size = radius * 2;
-        
-        updatePath( size, size );
-        
-        getShape().getAttributes().setOuterRadius( radius );
-        decorator.getAttributes().setOuterRadius( radius );
+        return setRadius( radius );
 
-        super.updateFillGradient( size, size );
-        
-        return (T) this;
-        
     }
 
     @SuppressWarnings("unchecked")
-    public T setInnerRadius(final double radius) {
+    public RingView setInnerRadius(final double inner) {
 
-        getShape().getAttributes().setInnerRadius( radius );
-        decorator.getAttributes().setInnerRadius( radius );
-        
-        return (T) this;
+        return setOuterRadius( inner * INNER_RADIUS_FACTOR  );
 
     }
 
     @Override
     protected void doDestroy() {
         super.doDestroy();
-        
-        ring = null;
+        registrations.removeHandler();
+        ring.removeFromParent();
+
     }
-    
+
+    private void initResizeHandlers() {
+        registrations.register(
+                this.addWiresResizeStartHandler( new WiresResizeStartHandler() {
+                    @Override
+                    public void onShapeResizeStart( WiresResizeStartEvent wiresResizeStartEvent ) {
+                        resize( wiresResizeStartEvent.getWidth(), wiresResizeStartEvent.getHeight() );
+                    }
+                } )
+        );
+
+        registrations.register(
+                this.addWiresResizeStepHandler( new WiresResizeStepHandler() {
+                    @Override
+                    public void onShapeResizeStep( WiresResizeStepEvent wiresResizeStepEvent ) {
+                        resize( wiresResizeStepEvent.getWidth(), wiresResizeStepEvent.getHeight() );
+                    }
+                } )
+        );
+
+        registrations.register(
+                this.addWiresResizeEndHandler( new WiresResizeEndHandler() {
+                    @Override
+                    public void onShapeResizeEnd( WiresResizeEndEvent wiresResizeEndEvent ) {
+                        resize( wiresResizeEndEvent.getWidth(), wiresResizeEndEvent.getHeight() );
+                    }
+                } )
+        );
+    }
+
+    private void resize( final double width, final double height ) {
+        this.setRadius( width >= height ? height : width );
+    }
+
+    private static MultiPath initPath( final MultiPath path, final double radius ) {
+        return path.rect( 0, 0, radius * 2, radius * 2 )
+                .setStrokeWidth( 0 )
+                .setStrokeAlpha( 0 );
+    }
+
+    private static double getOuterRadius( final double radius ) {
+        return radius;
+    }
+
+    private static double getInnerRadius( final double radius ) {
+        return radius / INNER_RADIUS_FACTOR;
+    }
+
 }

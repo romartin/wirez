@@ -25,10 +25,13 @@ import javax.inject.Inject;
 public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedControl<AbstractCanvasHandler> 
         implements ContainmentAcceptorControl<AbstractCanvasHandler> {
 
+    private CanvasCommandFactory canvasCommandFactory;
+
     @Inject
-    public ContainmentAcceptorControlImpl(final CanvasCommandFactory canvasCommandFactory,
-                                           final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
-        super( canvasCommandFactory, canvasCommandManager );
+    public ContainmentAcceptorControlImpl( final CanvasCommandFactory canvasCommandFactory,
+                                           final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager ) {
+        super( canvasCommandManager );
+        this.canvasCommandFactory = canvasCommandFactory;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedCont
 
     @Override
     protected void doDisable(final WiresCanvas.View view) {
-        view.setContainmentAcceptor(CONTAINMENT_EMPTY_ACCEPTOR);
+        view.setContainmentAcceptor(IContainmentAcceptor.NONE);
     }
 
     @Override
@@ -56,22 +59,6 @@ public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedCont
         return canvasCommandFactory.DELETE_CHILD_EDGE( parent, child );
     }
 
-    private final IContainmentAcceptor CONTAINMENT_EMPTY_ACCEPTOR = new IContainmentAcceptor() {
-
-        @Override
-        public boolean containmentAllowed( final WiresContainer wiresContainer,
-                                           final WiresShape wiresShape ) {
-            return false;
-        }
-
-        @Override
-        public boolean acceptContainment( final WiresContainer wiresContainer,
-                                          final WiresShape wiresShape ) {
-            return false;
-        }
-
-    };
-
     private final IContainmentAcceptor CONTAINMENT_ACCEPTOR = new IContainmentAcceptor() {
         @Override
         public boolean containmentAllowed(final WiresContainer wiresContainer,
@@ -81,8 +68,8 @@ public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedCont
                 return false;
             }
             
-            final Node childNode = WiresUtils.getNode( canvasHandler, wiresShape );
-            final Node parentNode = WiresUtils.getNode( canvasHandler, wiresContainer );
+            final Node childNode = WiresUtils.getNode( getCanvasHandler(), wiresShape );
+            final Node parentNode = WiresUtils.getNode( getCanvasHandler(), wiresContainer );
 
             return allow(parentNode, childNode);
         }
@@ -95,8 +82,8 @@ public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedCont
                 return false;
             }
             
-            final Node childNode = WiresUtils.getNode( canvasHandler, wiresShape );
-            final Node parentNode = WiresUtils.getNode( canvasHandler, wiresContainer );
+            final Node childNode = WiresUtils.getNode( getCanvasHandler(), wiresShape );
+            final Node parentNode = WiresUtils.getNode( getCanvasHandler(), wiresContainer );
 
             return accept(parentNode, childNode);
         }

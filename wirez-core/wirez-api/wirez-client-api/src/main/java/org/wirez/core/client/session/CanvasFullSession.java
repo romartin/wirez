@@ -4,6 +4,7 @@ import org.wirez.core.client.canvas.controls.actions.CanvasNameEditionControl;
 import org.wirez.core.client.canvas.controls.actions.CanvasSaveControl;
 import org.wirez.core.client.canvas.controls.actions.CanvasValidationControl;
 import org.wirez.core.client.canvas.controls.palette.CanvasPaletteControl;
+import org.wirez.core.client.canvas.controls.resize.ResizeControl;
 import org.wirez.core.graph.Element;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.CanvasHandler;
@@ -17,6 +18,8 @@ import org.wirez.core.client.canvas.controls.toolbox.ToolboxControl;
 
 public interface CanvasFullSession<C extends Canvas, H extends CanvasHandler> 
     extends CanvasReadOnlySession<C, H> {
+
+    ResizeControl<H, Element> getResizeControl();
 
     CanvasValidationControl<H> getCanvasValidationControl();
 

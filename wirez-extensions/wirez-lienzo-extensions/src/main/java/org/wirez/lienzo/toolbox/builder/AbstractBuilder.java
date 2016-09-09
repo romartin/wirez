@@ -64,7 +64,7 @@ public abstract class AbstractBuilder implements On, Towards, ButtonsOrRegister,
 
     @Override
     public Button add(IPrimitive<?> iconShape) {
-        return new ButtonBuilder(this.shape.getWiresLayer().getLayer(), this, iconShape);
+        return new ButtonBuilder(this.shape.getGroup().getLayer(), this, iconShape);
     }
 
     @Override

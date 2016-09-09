@@ -30,42 +30,42 @@ public class WiresCanvasView extends CanvasView implements WiresCanvas.View {
 
     public void init() {
         super.init();
-        wiresManager = WiresManager.get(canvasLayer);
+        wiresManager = WiresManager.get( canvasLayer );
     }
 
     @Override
-    public WiresCanvas.View addShape(final ShapeView<?> shapeView) {
+    public WiresCanvas.View addShape( final ShapeView<?> shapeView ) {
 
-        if (  isWiresShape( shapeView ) ) {
+        if ( isWiresShape( shapeView ) ) {
 
-            WiresShape wiresShape = (WiresShape) shapeView;
-            wiresManager.createMagnets(wiresShape);
-            wiresManager.registerShape(wiresShape);
+            WiresShape wiresShape = ( WiresShape ) shapeView;
+            wiresManager.register( wiresShape );
+            wiresManager.getMagnetManager().createMagnets( wiresShape );
             wiresShape.getContainer().setUserData( WiresCanvas.WIRES_CANVAS_GROUP_ID );
 
         } else if ( isConnector( shapeView ) ) {
-            
-            WiresConnector wiresConnector = (WiresConnector) shapeView;
-            wiresManager.registerConnector(wiresConnector);
+
+            WiresConnector wiresConnector = ( WiresConnector ) shapeView;
+            wiresManager.register( wiresConnector );
             wiresConnector.getGroup().setUserData( WiresCanvas.WIRES_CANVAS_GROUP_ID );
 
-        }  else {
-            
+        } else {
+
             super.addShape( shapeView );
-            
+
         }
-        
+
         return this;
     }
 
     @Override
-    public WiresCanvas.View removeShape(final ShapeView<?> shapeView) {
-        if (  isWiresShape( shapeView ) ) {
-            WiresShape wiresShape = (WiresShape) shapeView;
-            wiresManager.deregisterShape(wiresShape);
+    public WiresCanvas.View removeShape( final ShapeView<?> shapeView ) {
+        if ( isWiresShape( shapeView ) ) {
+            WiresShape wiresShape = ( WiresShape ) shapeView;
+            wiresManager.deregister( wiresShape );
         } else if ( isConnector( shapeView ) ) {
-            WiresConnector wiresConnector = (WiresConnector) shapeView;
-            wiresManager.deregisterConnector(wiresConnector);
+            WiresConnector wiresConnector = ( WiresConnector ) shapeView;
+            wiresManager.deregister( wiresConnector );
         } else {
             super.removeShape( shapeView );
         }
@@ -73,22 +73,22 @@ public class WiresCanvasView extends CanvasView implements WiresCanvas.View {
     }
 
     @Override
-    public WiresCanvas.View setConnectionAcceptor(final IConnectionAcceptor connectionAcceptor) {
-        wiresManager.setConnectionAcceptor(connectionAcceptor);
+    public WiresCanvas.View setConnectionAcceptor( final IConnectionAcceptor connectionAcceptor ) {
+        wiresManager.setConnectionAcceptor( connectionAcceptor );
         return this;
     }
 
     @Override
-    public WiresCanvas.View setContainmentAcceptor(final IContainmentAcceptor containmentAcceptor) {
-        wiresManager.setContainmentAcceptor(containmentAcceptor);
-        wiresManager.getLayer().setContainmentAcceptor(containmentAcceptor);
+    public WiresCanvas.View setContainmentAcceptor( final IContainmentAcceptor containmentAcceptor ) {
+        wiresManager.setContainmentAcceptor( containmentAcceptor );
+        wiresManager.getLayer().setContainmentAcceptor( containmentAcceptor );
         return this;
     }
 
     @Override
-    public WiresCanvas.View setDockingAcceptor(final IDockingAcceptor dockingAcceptor) {
-        wiresManager.setDockingAcceptor(dockingAcceptor);
-        wiresManager.getLayer().setDockingAcceptor(dockingAcceptor);
+    public WiresCanvas.View setDockingAcceptor( final IDockingAcceptor dockingAcceptor ) {
+        wiresManager.setDockingAcceptor( dockingAcceptor );
+        wiresManager.getLayer().setDockingAcceptor( dockingAcceptor );
         return this;
     }
 
@@ -98,15 +98,15 @@ public class WiresCanvasView extends CanvasView implements WiresCanvas.View {
     }
 
     private boolean isConnector( final ShapeView<?> shapeView ) {
-        
+
         return shapeView instanceof IsConnector;
-        
+
     }
 
     private boolean isWiresShape( final ShapeView<?> shapeView ) {
 
         return shapeView instanceof WiresShape;
-        
+
     }
-    
+
 }

@@ -1,5 +1,6 @@
 package org.wirez.core.client.canvas.controls.builder.impl;
 
+import com.google.gwt.core.client.GWT;
 import org.wirez.core.client.api.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.command.CanvasCommandManager;
@@ -125,6 +126,7 @@ public abstract class AbstractElementBuilderControl extends AbstractCanvasHandle
         fireProcessingStarted();
 
         final Node<View<?>, Edge> parent = getParent( x, y );
+
         final Double[] childCoordinates = getChildCoordinates( parent, x, y );
 
         getCommands(definition, factory, parent, childCoordinates[0], childCoordinates[1], new CommandsCallback() {

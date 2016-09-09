@@ -17,18 +17,17 @@
 package org.wirez.core.client.util;
 
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Timer;
 import org.uberfire.mvp.Command;
-import org.wirez.core.client.animation.ShapeAnimation;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.ShapeState;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Graph;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.definition.DefinitionSet;
 import org.wirez.core.graph.content.view.View;
-import org.wirez.core.graph.processing.traverse.content.AbstractFullContentTraverseCallback;
 import org.wirez.core.graph.processing.traverse.content.ContentTraverseCallback;
-import org.wirez.core.graph.processing.traverse.content.FullContentTraverseProcessorImpl;
 import org.wirez.core.graph.processing.traverse.content.ViewTraverseProcessorImpl;
 import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessor;
 import org.wirez.core.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
@@ -44,27 +43,24 @@ import java.util.logging.Logger;
 public class CanvasHighlightVisitor {
 
     private static Logger LOGGER = Logger.getLogger( CanvasHighlightVisitor.class.getName() );
+    private static final int TIMER_DELAY = 500;
 
     private CanvasHandler canvasHandler;
     private final List<Shape> shapes = new LinkedList<Shape>();
-    private ShapeStateUtils shapeStateUtils;
 
     public CanvasHighlightVisitor() {
     }
 
     public void run( final CanvasHandler canvasHandler,
-                     final ShapeStateUtils shapeStateUtils,
                      final Command callback ) {
 
         this.canvasHandler = canvasHandler;
-        this.shapeStateUtils = shapeStateUtils;
 
         prepareVisit( () -> animate( 0, () -> {
             CanvasHighlightVisitor.this.log( Level.FINE, "CanvasHighlightVisitor - FINISHED" );
             if ( null != callback ) {
                 callback.execute();
                 CanvasHighlightVisitor.this.canvasHandler = null;
-                CanvasHighlightVisitor.this.shapeStateUtils = null;
                 CanvasHighlightVisitor.this.shapes.clear();
             }
         } ) );
@@ -76,24 +72,20 @@ public class CanvasHighlightVisitor {
 
             final Shape shape = shapes.get( index );
 
-            shapeStateUtils.highlight( canvasHandler.getCanvas(), shape, new ShapeAnimation.AnimationCallback() {
+            shape.applyState( ShapeState.HIGHLIGHT );
+
+            final Timer t = new Timer() {
 
                 @Override
-                public void onStart() {
+                public void run() {
 
-                }
-
-                @Override
-                public void onFrame() {
-
-                }
-
-                @Override
-                public void onComplete() {
                     animate( index + 1, callback );
+
                 }
 
-            } );
+            };
+
+            t.schedule( TIMER_DELAY );
 
         } else {
 

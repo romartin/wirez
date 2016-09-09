@@ -11,17 +11,16 @@ public abstract class AbstractShapeView<T> extends WiresShape
         implements 
         ShapeView<T> {
 
-    protected String uuid;
+    private String uuid;
     private int zindex;
     
-    public AbstractShapeView(final MultiPath path,
-                             final WiresManager manager) {
-        super(path, new WiresLayoutContainer(), manager);
+    public AbstractShapeView(final MultiPath path ) {
+        super( path );
     }
     
     protected abstract void doDestroy();
     
-    protected Shape<?> getShape() {
+    public Shape<?> getShape() {
         return getPath();
     }
     

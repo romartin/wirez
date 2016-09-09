@@ -1,54 +1,62 @@
 package org.wirez.shapes.client.view;
 
 import com.ait.lienzo.client.core.shape.MultiPath;
-import com.ait.lienzo.client.core.shape.RegularPolygon;
-import com.ait.lienzo.client.core.shape.Shape;
-import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
+import com.ait.lienzo.client.core.types.Point2DArray;
+import com.ait.lienzo.client.core.util.Geometry;
 import org.wirez.core.client.shape.view.HasRadius;
-import org.wirez.shapes.client.view.animatiion.AnimatedWiresShapeView;
 
-public class PolygonView<T extends PolygonView> extends AnimatedWiresShapeView<T>
-        implements HasRadius<T> {
+public class PolygonView extends BasicShapeView<PolygonView>
+        implements HasRadius<PolygonView> {
 
-    protected RegularPolygon polygon;
+    private static final int SIDES = 4;
+    private static final double CORNER= 0;
 
     public PolygonView(final double radius,
-                       final String fillColor,
-                       final WiresManager manager) {
-        super(new MultiPath()
-                        .M(0 ,radius)
-                        .L(radius, 0)
-                        .L(radius * 2, radius)
-                        .L(radius, ( radius * 2) )
-                        .Z(),
-                manager);
+                       final String fillColor ) {
+        super( create( new MultiPath(), SIDES, radius, CORNER ) );
     }
 
     @Override
-    protected Shape<?> createChildren() {
-        polygon = new RegularPolygon(4, 1);
-        this.addChild(polygon, WiresLayoutContainer.Layout.CENTER);
-        final RegularPolygon decorator = new RegularPolygon(4, 1);
-        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
-        return decorator;
+    public PolygonView setRadius(final double radius) {
+        create( getPath().clear(), SIDES, radius, CORNER );
+        return this;
     }
 
-    @Override
-    protected Shape getPrimitive() {
-        return polygon;
+    // TODO: If cornerRadius > 0 -> bug.
+    private static MultiPath create( final MultiPath result,
+                                     final int sides,
+                                     final double radius,
+                                     final double cornerRadius ) {
+
+        if ((sides > 2) && (radius > 0))
+        {
+            result.M(0, 0 - radius);
+
+            if (cornerRadius <= 0)
+            {
+                for (int n = 1; n < sides; n++)
+                {
+                    final double theta = (n * 2 * Math.PI / sides);
+
+                    result.L(radius * Math.sin(theta), -1 * radius * Math.cos(theta));
+                }
+                result.Z();
+            }
+            else
+            {
+                final Point2DArray list = new Point2DArray(0, 0 - radius);
+
+                for (int n = 1; n < sides; n++)
+                {
+                    final double theta = (n * 2 * Math.PI / sides);
+
+                    list.push(radius * Math.sin(theta), -1 * radius * Math.cos(theta));
+                }
+                Geometry.drawArcJoinedLines(result.getPathPartList(), list.push(0, 0 - radius), cornerRadius);
+            }
+        }
+
+        return result;
     }
 
-    @Override
-    public T setRadius(final double radius) {
-        return super.setRadius( radius );
-    }
-
-    @Override
-    protected void doDestroy() {
-        super.doDestroy();
-
-        polygon = null;
-    }
-    
 }

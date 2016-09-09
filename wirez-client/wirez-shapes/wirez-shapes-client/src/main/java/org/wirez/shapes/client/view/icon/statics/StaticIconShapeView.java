@@ -3,28 +3,25 @@ package org.wirez.shapes.client.view.icon.statics;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.Rectangle;
-import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.BoundingBox;
-import org.wirez.shapes.client.view.AbstractDecoratableShapeView;
+import org.wirez.shapes.client.view.BasicShapeView;
 import org.wirez.shapes.proxy.icon.statics.Icons;
 
 public class StaticIconShapeView<T extends StaticIconShapeView> 
-        extends AbstractDecoratableShapeView<T>  {
+        extends BasicShapeView<T> {
 
     private Icons icon;
     private double width;
     private double height;
     private Group iconGroup;
     
-    public StaticIconShapeView( final Icons icon,
-                                final WiresManager manager ) {
+    public StaticIconShapeView( final Icons icon ) {
         
         super( new MultiPath()
                 .setStrokeWidth( 0 )
-                .setStrokeAlpha( 0 ), 
-                manager );
+                .setStrokeAlpha( 0 ) );
         
         this.setIcon( icon );
         
@@ -63,18 +60,12 @@ public class StaticIconShapeView<T extends StaticIconShapeView>
             
             this.addChild( iconGroup, WiresLayoutContainer.Layout.CENTER );
 
-            // Force to redraw the decorator.
-            super.createDecorators();
 
-            this.moveChild( decorator, - ( width / 2) , - ( height / 2 ) );
         }
+
+        refresh();
         
     }
-
-    /*@Override
-    protected Shape<?> getShape() {
-        return iconGroup.asShape();
-    }*/
 
     @Override
     protected void doDestroy() {
@@ -90,10 +81,4 @@ public class StaticIconShapeView<T extends StaticIconShapeView>
         
     }
 
-    @Override
-    protected Rectangle createDecorator() {
-        final Rectangle r = new Rectangle( width, height );
-        this.addChild( r, WiresLayoutContainer.Layout.CENTER );
-        return r;
-    }
 }

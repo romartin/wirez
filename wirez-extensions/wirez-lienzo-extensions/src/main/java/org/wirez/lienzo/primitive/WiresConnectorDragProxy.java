@@ -19,12 +19,12 @@ public class WiresConnectorDragProxy extends AbstractDragProxy<WiresConnector> {
     
     @Override
     protected void addToLayer(final Layer layer, final WiresConnector shape) {
-        getWiresManager( layer ).registerConnector( shape );
+        getWiresManager( layer ).register( shape );
     }
 
     @Override
     protected void removeFromLayer(final Layer layer, final WiresConnector shape) {
-        getWiresManager( layer ).deregisterConnector( shape );
+        getWiresManager( layer ).deregister( shape );
     }
 
     @Override

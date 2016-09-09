@@ -17,13 +17,14 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     protected String uuid;
     private int zindex;
 
-    public AbstractConnectorView(AbstractDirectionalMultiPointShape<?> line, MultiPathDecorator headDecorator, MultiPathDecorator tailDecorator, WiresManager manager) {
-        super(line, headDecorator, tailDecorator, manager);
+    public AbstractConnectorView(AbstractDirectionalMultiPointShape<?> line, MultiPathDecorator headDecorator, MultiPathDecorator tailDecorator ) {
+        super(line, headDecorator, tailDecorator );
         init();
     }
 
-    public AbstractConnectorView(WiresMagnet headMagnet, WiresMagnet tailMagnet, AbstractDirectionalMultiPointShape<?> line, MultiPathDecorator headDecorator, MultiPathDecorator tailDecorator, WiresManager manager) {
-        super(headMagnet, tailMagnet, line, headDecorator, tailDecorator, manager);
+    public AbstractConnectorView(WiresMagnet headMagnet, WiresMagnet tailMagnet, AbstractDirectionalMultiPointShape<?> line,
+                                 MultiPathDecorator headDecorator, MultiPathDecorator tailDecorator) {
+        super(headMagnet, tailMagnet, line, headDecorator, tailDecorator );
         init();
     }
 

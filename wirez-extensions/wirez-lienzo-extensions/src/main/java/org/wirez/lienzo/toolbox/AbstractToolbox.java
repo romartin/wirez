@@ -54,19 +54,19 @@ public abstract class AbstractToolbox implements GridToolbox {
             group.add( button.getShape().getGroup() );
         }
 
-        this.shape.getWiresLayer().getLayer().add( group );
+        this.shape.getGroup().getLayer().add( group );
 
         reposition();
-        initAttributesChangedHandler();
+        initHandlers();
 
-        this.shape.getWiresLayer().getLayer().batch();
+        batch();
     }
 
     protected void registerButton( final ToolboxButton button ) {
 
     }
 
-    protected void initAttributesChangedHandler()
+    protected void initHandlers()
     {
         shape.getGroup().setAttributesChangedBatcher(attributesChangedBatcher);
 
@@ -107,15 +107,36 @@ public abstract class AbstractToolbox implements GridToolbox {
 
         );
 
+        // Shape resize handlers.
+
+        handlerRegistrationManager.register(
+            shape.addWiresResizeStartHandler( event -> reposition( true ) )
+        );
+
+        handlerRegistrationManager.register(
+            shape.addWiresResizeStepHandler( event -> reposition( true ) )
+        );
+
+        handlerRegistrationManager.register(
+            shape.addWiresResizeEndHandler( event -> reposition( true ) )
+        );
+
     }
 
-    protected void reposition() {
+    private void reposition() {
+        reposition( false );
+    }
+
+    private void reposition( final boolean batch ) {
         final double gx = shape.getGroup().getAbsoluteLocation().getX();
         final double gy = shape.getGroup().getAbsoluteLocation().getY();
         final Point2D anchorPoint = Positioning.anchorFor(this.shape.getPath().getBoundingPoints().getBoundingBox(), this.anchor);
         final Grid.Point toolboxPosition = this.grid.findPosition(new Grid.Point((int) anchorPoint.getX(), (int) anchorPoint.getY()), this.towards);
         group.setX(gx + toolboxPosition.getX());
         group.setY(gy + toolboxPosition.getY());
+        if ( batch ) {
+            batch();
+        }
     }
 
     @Override
@@ -167,7 +188,7 @@ public abstract class AbstractToolbox implements GridToolbox {
     }
 
     Layer getLayer() {
-        return shape.getWiresLayer().getLayer();
+        return shape.getGroup().getLayer();
     }
 
     protected AbstractToolbox( final WiresShape shape,
@@ -195,6 +216,10 @@ public abstract class AbstractToolbox implements GridToolbox {
 
     protected void registerHandlers( final Node<?> node ) {
 
+    }
+
+    private void batch() {
+        this.shape.getGroup().getLayer().batch();
     }
 
 }

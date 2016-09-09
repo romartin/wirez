@@ -3,6 +3,7 @@ package org.wirez.client.mobile.session.impl;
 import org.wirez.client.mobile.api.platform.Mobile;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.controls.resize.ResizeControl;
 import org.wirez.core.client.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.controls.actions.CanvasNameEditionControl;
 import org.wirez.core.client.canvas.controls.actions.CanvasSaveControl;
@@ -31,6 +32,7 @@ public class MobileFullSession extends AbstractFullSession {
     @Inject
     public MobileFullSession(final AbstractCanvas canvas,
                              final AbstractCanvasHandler canvasHandler,
+                             final ResizeControl<AbstractCanvasHandler, Element> resizeControl,
                              final CanvasValidationControl<AbstractCanvasHandler> canvasValidationControl,
                              final CanvasSaveControl<AbstractCanvasHandler> canvasSaveControl,
                              final CanvasPaletteControl<AbstractCanvasHandler> canvasPaletteControl,
@@ -46,7 +48,7 @@ public class MobileFullSession extends AbstractFullSession {
                              final @Wheel ZoomControl<AbstractCanvas> zoomControl,
                              final PanControl<AbstractCanvas> panControl) {
         
-        super( canvas, canvasHandler, canvasValidationControl, canvasSaveControl, canvasPaletteControl,
+        super( canvas, canvasHandler, resizeControl, canvasValidationControl, canvasSaveControl, canvasPaletteControl,
                 selectionControl, zoomControl, panControl, canvasCommandManager, connectionAcceptorControl,
                 containmentAcceptorControl, dockingAcceptorControl, canvasNameEditionControl,  dragControl,
                 toolboxControl, builderControl );

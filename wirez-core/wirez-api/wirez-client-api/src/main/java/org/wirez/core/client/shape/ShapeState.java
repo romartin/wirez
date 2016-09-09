@@ -1,12 +1,13 @@
-package org.wirez.core.client.canvas;
+package org.wirez.core.client.shape;
 
 /**
- * The available shape's states on a canvas.
+ * The available shape view's states on the canvas.
  */
 public enum ShapeState {
 
-    SELECTED( "#0000FF" ), DESELECTED,
-    HIGHLIGHT( "#3366CC" ), UNHIGHLIGHT,
+    NONE,
+    SELECTED( "#0000FF" ),
+    HIGHLIGHT( "#3366CC" ),
     INVALID( "#FF0000" );
 
     private String color;

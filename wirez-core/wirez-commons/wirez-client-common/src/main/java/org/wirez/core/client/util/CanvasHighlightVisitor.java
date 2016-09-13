@@ -17,6 +17,7 @@
 package org.wirez.core.client.util;
 
 import com.google.gwt.logging.client.LogConfiguration;
+import com.google.gwt.user.client.Timer;
 import org.uberfire.mvp.Command;
 import org.wirez.core.client.canvas.CanvasHandler;
 import org.wirez.core.client.shape.Shape;
@@ -42,6 +43,7 @@ import java.util.logging.Logger;
 public class CanvasHighlightVisitor {
 
     private static Logger LOGGER = Logger.getLogger( CanvasHighlightVisitor.class.getName() );
+    private static final int TIMER_DELAY = 500;
 
     private CanvasHandler canvasHandler;
     private final List<Shape> shapes = new LinkedList<Shape>();
@@ -72,8 +74,18 @@ public class CanvasHighlightVisitor {
 
             shape.applyState( ShapeState.HIGHLIGHT );
 
-            // TODO: Animate on previous animation finished.
-            animate( index + 1, callback );
+            final Timer t = new Timer() {
+
+                @Override
+                public void run() {
+
+                    animate( index + 1, callback );
+
+                }
+
+            };
+
+            t.schedule( TIMER_DELAY );
 
         } else {
 

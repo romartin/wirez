@@ -478,41 +478,40 @@
 
     <!-- Form modeler. -->
     <dependency>
-      <groupId>org.livespark</groupId>
-      <artifactId>livespark-crud-component</artifactId>
+      <groupId>org.kie.workbench.forms</groupId>
+      <artifactId>kie-wb-common-forms-crud-component</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.livespark</groupId>
-      <artifactId>livespark-form-modeler-api</artifactId>
+      <groupId>org.kie.workbench.forms</groupId>
+      <artifactId>kie-wb-common-forms-api</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.livespark</groupId>
-      <artifactId>livespark-form-modeler-processing-engine</artifactId>
+      <groupId>org.kie.workbench.forms</groupId>
+      <artifactId>kie-wb-common-forms-processing-engine</artifactId>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.livespark</groupId>
-      <artifactId>livespark-form-modeler-dynamic-renderer-api</artifactId>
+      <groupId>org.kie.workbench.forms</groupId>
+      <artifactId>kie-wb-common-dynamic-forms-api</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.livespark</groupId>
-      <artifactId>livespark-form-modeler-dynamic-renderer-backend</artifactId>
+      <groupId>org.kie.workbench.forms</groupId>
+      <artifactId>kie-wb-common-dynamic-forms-backend</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.livespark</groupId>
-      <artifactId>livespark-form-modeler-dynamic-renderer-client</artifactId>
-      <scope>provided</scope>
+      <groupId>org.kie.workbench.forms</groupId>
+      <artifactId>kie-wb-common-dynamic-forms-client</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.livespark</groupId>
-      <artifactId>livespark-form-modeler-rendering-api</artifactId>
+      <groupId>org.kie.workbench.forms</groupId>
+      <artifactId>kie-wb-common-forms-common-widgets</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -595,6 +594,12 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-layout-editor-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.uberfire</groupId>
+      <artifactId>uberfire-layout-editor-client</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- UberFire Apps -->
@@ -725,14 +730,13 @@
             <compileSourcesArtifact>org.uberfire:uberfire-security-management-client-wb</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-widgets-security-management</compileSourcesArtifact>
 
-            <!-- Form modeler. -->
-            <compileSourcesArtifact>org.livespark:livespark-crud-component</compileSourcesArtifact>
-            <compileSourcesArtifact>org.livespark:livespark-form-modeler-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.livespark:livespark-form-modeler-processing-engine</compileSourcesArtifact>
-            <compileSourcesArtifact>org.livespark:livespark-form-modeler-rendering-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.livespark:livespark-form-modeler-rendering-api</compileSourcesArtifact>
+            <!-- Forms -->
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-processing-engine</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-common-widgets</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-forms-crud-component</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-dynamic-forms-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.forms:kie-wb-common-dynamic-forms-client</compileSourcesArtifact>
 
             <!-- Wirez -->
             <compileSourcesArtifact>org.wirez:wirez-core-api</compileSourcesArtifact>

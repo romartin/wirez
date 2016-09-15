@@ -32,14 +32,6 @@ Building
 
 Follow these instructions for building the application from sources.            
 
-**IMPORTANT**: The project currently depends on Livespark's Forms modules, so you must previously clone and build locally [Livespark](https://github.com/droolsjbpm/livespark) as:
-
-	git clone https://github.com/droolsjbpm/livespark.git
-	cd livespark/
-	mvn clean install -DskipTests -Dgwt.compiler.skip=true
-
-Once you have Livespark artifacts in you local Maven repository, you can clone and build Stunner as:
-
 	git clone https://github.com/romartin/wirez.git
 	cd wirez/
 	mvn clean install -DskipTests

@@ -50,7 +50,7 @@ import static org.uberfire.commons.validation.PortablePreconditions.checkNotNull
 
 // ***************************************************************************************************************
 // This screen uses the "OLD" properties widget based on the UF properties editor - currently replaced
-// by FormsPropertiesScreen, which uses Livespark's forms.
+// by FormsPropertiesScreen, which uses KIE forms.
 // ***************************************************************************************************************
 
 @Dependent

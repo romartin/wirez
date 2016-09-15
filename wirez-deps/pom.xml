@@ -36,7 +36,6 @@
     <version.de.benediktmeurer.gwt-slf4j>0.0.2</version.de.benediktmeurer.gwt-slf4j>
     <version.org.jbpm.jbpm-bpmn2-emfextmodel>6.3.0.Final</version.org.jbpm.jbpm-bpmn2-emfextmodel>
     <version.javax.el.api>2.2</version.javax.el.api>
-    <version.org.livespark>0.0.1-SNAPSHOT</version.org.livespark>
     <version.hibernate.validator>4.1.0.Final</version.hibernate.validator>
     <version.validation.api>1.0.0.GA</version.validation.api>
     <!-- TODO: Remove when moving to latest parent IP BOM. -->
@@ -154,43 +153,7 @@
         <version>${version.de.benediktmeurer.gwt-slf4j}</version>
       </dependency>
 
-      <!-- LiveSpark. -->
-
-      <dependency>
-        <groupId>org.livespark</groupId>
-        <artifactId>livespark-crud-component</artifactId>
-        <version>${version.org.livespark}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.livespark</groupId>
-        <artifactId>livespark-form-modeler-processing-engine</artifactId>
-        <version>${version.org.livespark}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.livespark</groupId>
-        <artifactId>livespark-form-modeler-dynamic-renderer-api</artifactId>
-        <version>${version.org.livespark}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.livespark</groupId>
-        <artifactId>livespark-form-modeler-dynamic-renderer-backend</artifactId>
-        <version>${version.org.livespark}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.livespark</groupId>
-        <artifactId>livespark-form-modeler-dynamic-renderer-client</artifactId>
-        <version>${version.org.livespark}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.livespark</groupId>
-        <artifactId>livespark-form-modeler-rendering-api</artifactId>
-        <version>${version.org.livespark}</version>
-      </dependency>
+      <!-- Validation API & hibernate impl. -->
 
       <dependency>
         <groupId>javax.validation</groupId>
@@ -210,6 +173,7 @@
         <artifactId>hibernate-validator</artifactId>
         <version>${version.hibernate.validator}</version>
       </dependency>
+
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-validator</artifactId>
@@ -218,6 +182,7 @@
       </dependency>
 
       <!-- JSON parsing. -->
+
       <dependency>
         <groupId>com.googlecode.json-simple</groupId>
         <artifactId>json-simple</artifactId>
@@ -226,6 +191,7 @@
       </dependency>
 
       <!-- jbpm-designer backend required deps. -->
+
       <dependency>
         <groupId>org.jbpm</groupId>
         <artifactId>jbpm-bpmn2-emfextmodel</artifactId>
@@ -233,6 +199,7 @@
       </dependency>
 
       <!-- Lienzo. -->
+
       <dependency>
         <groupId>com.ahome-it</groupId>
         <artifactId>lienzo-core</artifactId>
@@ -258,6 +225,7 @@
       </dependency>
 
       <!-- Testing. -->
+
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>

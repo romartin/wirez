@@ -16,7 +16,9 @@
 
 package org.wirez.forms.client.fields.assignmentsEditor;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -24,6 +26,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import org.gwtbootstrap3.client.ui.Button;
@@ -34,7 +37,6 @@ import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.wirez.bpmn.definition.BPMNDiagram;
 import org.wirez.bpmn.definition.UserTask;
-import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.variables.ProcessVariables;
 import org.wirez.core.client.session.CanvasSessionManager;
 import org.wirez.core.diagram.Diagram;
@@ -62,15 +64,15 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
 
     private UserTask userTask;
 
-    private String assignmentsInfo;
+    protected String assignmentsInfo;
 
-    @EventHandler( "assignmentsButton" )
-    public void onClickAssignmentsButton( ClickEvent clickEvent ) {
+    @EventHandler("assignmentsButton")
+    public void onClickAssignmentsButton(ClickEvent clickEvent) {
         showAssignmentsDialog();
     }
 
-    @EventHandler( "assignmentsTextBox" )
-    public void onClickAssignmentsTextBox( ClickEvent clickEvent ) {
+    @EventHandler("assignmentsTextBox")
+    public void onClickAssignmentsTextBox(ClickEvent clickEvent) {
         showAssignmentsDialog();
     }
 
@@ -80,12 +82,12 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
     }
 
     @Override
-    public void setValue( String value ) {
-        setValue( value, false );
+    public void setValue(String value) {
+        setValue(value, false);
     }
 
     @Override
-    public void setValue( String value, boolean fireEvents ) {
+    public void setValue(String value, boolean fireEvents) {
         String oldValue = assignmentsInfo;
 
         assignmentsInfo = value;
@@ -102,62 +104,47 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
     }
 
     protected void initTextBox() {
-        assignmentsTextBox.setText(assignmentsInfo);
+        Map<String, String> assignmentsProperties = parseAssignmentsInfo();
+        String variableCountsString = getVariableCountsString(null, assignmentsProperties.get("datainputset"), null, assignmentsProperties.get("dataoutputset"),
+                getProcessVariables(), assignmentsProperties.get("assignments"), getDisallowedPropertyNames());
+        assignmentsTextBox.setText(variableCountsString);
     }
 
     @Override
-    public HandlerRegistration addValueChangeHandler( ValueChangeHandler<String> handler ) {
-        return addHandler( handler, ValueChangeEvent.getType() );
+    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<String> handler) {
+        return addHandler(handler, ValueChangeEvent.getType());
     }
 
     public void showAssignmentsDialog() {
         String taskName = "Task";
-        String datainputset = "";
-        String dataoutputset = "";
+
         if (userTask != null) {
-            if(userTask.getGeneral() != null && userTask.getGeneral().getName() != null &&
-                userTask.getGeneral().getName().getValue() != null && userTask.getGeneral().getName().getValue().length() > 0) {
+            if (userTask.getGeneral() != null && userTask.getGeneral().getName() != null &&
+                    userTask.getGeneral().getName().getValue() != null && userTask.getGeneral().getName().getValue().length() > 0) {
                 taskName = userTask.getGeneral().getName().getValue();
             }
-            if (userTask.getDataIOSet() != null) {
-                DataIOSet dataIOSet = userTask.getDataIOSet();
-                if (dataIOSet.getInputData() != null && dataIOSet.getInputData().getValue() != null) {
-                    datainputset = dataIOSet.getInputData().getValue();
-                }
-                if (dataIOSet.getInputData() != null && dataIOSet.getInputData().getValue() != null) {
-                    dataoutputset = dataIOSet.getOutputData().getValue();
-                }
-            }
         }
+        Map<String, String> assignmentsProperties = parseAssignmentsInfo();
 
-//        Window.alert("assignmentsInfo = " + assignmentsInfo + "\ndatainputset = " + datainputset + "\ndataoutputset = " + dataoutputset);
-        String processvars = getProcessVariables();
-        // TODO: also get dataTypes from server
-        String datatypes = "String:String, Integer:Integer, Boolean:Boolean, Float:Float, Object:Object";
-        // TODO: use full set of disallowedpropertynames
-        String disallowedpropertynames = "Skippable";
+//        Window.alert("assignmentsInfo = " + assignmentsInfo + "\ndatainputset = " + assignmentsProperties.get("datainputset") +
+//                "\ndataoutputset = " + assignmentsProperties.get("dataoutputset")
+//                + "\nassignments = " + assignmentsProperties.get("assignments"));
 
         ActivityDataIOEditor.GetDataCallback callback = new ActivityDataIOEditor.GetDataCallback() {
             @Override
-            public void getData( String assignmentDataJson ) {
+            public void getData(String assignmentDataJson) {
 //                Window.alert("assignmentData = " + assignmentDataJson);
                 AssignmentData assignmentData = Marshalling.fromJSON(assignmentDataJson, AssignmentData.class);
-
-                String inputVariablesString = assignmentData.getInputVariablesString();
-                userTask.getDataIOSet().getInputData().setValue(inputVariablesString);
-                String outputVariablesString = assignmentData.getOutputVariablesString();
-                userTask.getDataIOSet().getOutputData().setValue(outputVariablesString);
-
-                String assignmentsString = assignmentData.getAssignmentsString();
-                setValue(assignmentsString, true);
+                String assignmentsInfoString = createAssignmentsInfoString(assignmentData);
+                setValue(assignmentsInfoString, true);
             }
         };
 
-        showDataIOEditor(taskName, null, datainputset, null, dataoutputset,
-                processvars, assignmentsInfo, datatypes, disallowedpropertynames, callback);
+        showDataIOEditor(taskName, null, assignmentsProperties.get("datainputset"), null, assignmentsProperties.get("dataoutputset"),
+                getProcessVariables(), assignmentsProperties.get("assignments"), getDataTypes(), getDisallowedPropertyNames(), callback);
     }
 
-    public void showDataIOEditor( final String taskName,
+    public void showDataIOEditor(final String taskName,
             final String datainput,
             final String datainputset,
             final String dataoutput,
@@ -166,20 +153,19 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
             final String assignments,
             final String datatypes,
             final String disallowedpropertynames,
-            final ActivityDataIOEditor.GetDataCallback callback ) {
-
+            final ActivityDataIOEditor.GetDataCallback callback) {
 
         activityDataIOEditor.setCallback(callback);
 
         String inputvars = null;
         boolean hasInputVars = false;
         boolean isSingleInputVar = false;
-        if ( datainput != null ) {
+        if (datainput != null) {
             inputvars = datainput;
             hasInputVars = true;
             isSingleInputVar = true;
         }
-        if ( datainputset != null ) {
+        if (datainputset != null) {
             inputvars = datainputset;
             hasInputVars = true;
             isSingleInputVar = false;
@@ -188,27 +174,27 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
         String outputvars = null;
         boolean hasOutputVars = false;
         boolean isSingleOutputVar = false;
-        if ( dataoutput != null ) {
+        if (dataoutput != null) {
             outputvars = dataoutput;
             hasOutputVars = true;
             isSingleOutputVar = true;
         }
-        if ( dataoutputset != null ) {
+        if (dataoutputset != null) {
             outputvars = dataoutputset;
             hasOutputVars = true;
             isSingleOutputVar = false;
         }
 
-        AssignmentData assignmentData = new AssignmentData( inputvars, outputvars, processvars, assignments, datatypes, disallowedpropertynames );
+        AssignmentData assignmentData = new AssignmentData(inputvars, outputvars, processvars, assignments, datatypes, disallowedpropertynames);
         assignmentData.setVariableCountsString(hasInputVars, isSingleInputVar, hasOutputVars, isSingleOutputVar);
-        activityDataIOEditor.setAssignmentData( assignmentData );
-        activityDataIOEditor.setDisallowedPropertyNames( assignmentData.getDisallowedPropertyNames() );
-        activityDataIOEditor.setInputAssignmentRows( assignmentData.getAssignmentRows( Variable.VariableType.INPUT ) );
-        activityDataIOEditor.setOutputAssignmentRows( assignmentData.getAssignmentRows( Variable.VariableType.OUTPUT ) );
-        activityDataIOEditor.setDataTypes( assignmentData.getDataTypes(), assignmentData.getDataTypeDisplayNames() );
-        activityDataIOEditor.setProcessVariables( assignmentData.getProcessVariableNames() );
+        activityDataIOEditor.setAssignmentData(assignmentData);
+        activityDataIOEditor.setDisallowedPropertyNames(assignmentData.getDisallowedPropertyNames());
+        activityDataIOEditor.setInputAssignmentRows(assignmentData.getAssignmentRows(Variable.VariableType.INPUT));
+        activityDataIOEditor.setOutputAssignmentRows(assignmentData.getAssignmentRows(Variable.VariableType.OUTPUT));
+        activityDataIOEditor.setDataTypes(assignmentData.getDataTypes(), assignmentData.getDataTypeDisplayNames());
+        activityDataIOEditor.setProcessVariables(assignmentData.getProcessVariableNames());
 
-        activityDataIOEditor.configureDialog( taskName, hasInputVars, isSingleInputVar, hasOutputVars, isSingleOutputVar );
+        activityDataIOEditor.configureDialog(taskName, hasInputVars, isSingleInputVar, hasOutputVars, isSingleOutputVar);
         activityDataIOEditor.show();
     }
 
@@ -230,5 +216,84 @@ public class AssignmentsEditorWidget extends Composite implements HasValue<Strin
             }
         }
         return null;
+    }
+
+    protected String getDataTypes() {
+        // TODO: get dataTypes from server to add to these simple types
+        return "String:String, Integer:Integer, Boolean:Boolean, Float:Float, Object:Object";
+    }
+
+    protected Map<String, String> parseAssignmentsInfo() {
+        Map<String, String> properties = new HashMap<String, String>();
+
+        if (assignmentsInfo != null) {
+            String[] parts = assignmentsInfo.split("\\|");
+            if (parts.length > 1 && parts[1] != null && parts[1].length() > 0) {
+                properties.put("datainputset", parts[1]);
+            } else {
+                properties.put("datainputset", "");
+            }
+            if (parts.length > 3 && parts[3] != null && parts[3].length() > 0) {
+                properties.put("dataoutputset", parts[3]);
+            } else {
+                properties.put("dataoutputset", "");
+            }
+            if (parts.length > 4 && parts[4] != null && parts[4].length() > 0) {
+                properties.put("assignments", parts[4]);
+            } else {
+                properties.put("assignments", "");
+            }
+        }
+        return properties;
+    }
+
+    protected String createAssignmentsInfoString(AssignmentData assignmentData) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('|').append(assignmentData.getInputVariablesString()).append('|').append('|').
+                append(assignmentData.getOutputVariablesString())
+                .append('|').append(assignmentData.getAssignmentsString());
+        return sb.toString();
+    }
+
+    protected String getVariableCountsString(String datainput, String datainputset, String dataoutput, String dataoutputset,
+            String processvars, String assignments, String disallowedpropertynames) {
+        String inputvars = null;
+        boolean hasInputVars = false;
+        boolean isSingleInputVar = false;
+        if (datainput != null) {
+            inputvars = datainput;
+            hasInputVars = true;
+            isSingleInputVar = true;
+        }
+        if (datainputset != null) {
+            inputvars = datainputset;
+            hasInputVars = true;
+            isSingleInputVar = false;
+        }
+
+        String outputvars = null;
+        boolean hasOutputVars = false;
+        boolean isSingleOutputVar = false;
+        if (dataoutput != null) {
+            outputvars = dataoutput;
+            hasOutputVars = true;
+            isSingleOutputVar = true;
+        }
+        if (dataoutputset != null) {
+            outputvars = dataoutputset;
+            hasOutputVars = true;
+            isSingleOutputVar = false;
+        }
+
+        AssignmentData assignmentData = new AssignmentData(inputvars, outputvars, processvars, assignments, disallowedpropertynames);
+        return assignmentData.getVariableCountsString(hasInputVars, isSingleInputVar, hasOutputVars, isSingleOutputVar);
+    }
+
+    protected String getDisallowedPropertyNames() {
+        if (userTask instanceof UserTask) {
+            return "GroupId,Skippable,Comment,Description,Priority,Content,TaskName,Locale,CreatedBy,NotCompletedReassign,NotStartedReassign,NotCompletedNotify,NotStartedNotify";
+        } else {
+            return "";
+        }
     }
 }

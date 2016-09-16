@@ -37,38 +37,20 @@ public class DataIOSet implements BPMNPropertySet {
     public static final transient String propertySetName = "Task Data";
 
     @Property
-    @FieldDef(label = "Send to Task", property = "value")
-    @AssignmentsEditor
-    @Valid
-    private InputData inputData;
-
-    @Property
-    @FieldDef(label = "Return from Task", property = "value")
-    @AssignmentsEditor
-    @Valid
-    private OutputData outputData;
-
-    @Property
     @FieldDef(label = "Assignments", property = "value")
     @AssignmentsEditor
     @Valid
     private AssignmentsInfo assignmentsinfo;
 
     public DataIOSet() {
-        this( new InputData(), new OutputData(), new AssignmentsInfo());
+        this( new AssignmentsInfo());
     }
 
-    public DataIOSet(@MapsTo("inputData") InputData inputData,
-            @MapsTo("outputData") OutputData outputData,
-            @MapsTo("assignmentsinfo") AssignmentsInfo assignmentsinfo) {
-        this.inputData = inputData;
-        this.outputData = outputData;
+    public DataIOSet(@MapsTo("assignmentsinfo") AssignmentsInfo assignmentsinfo) {
         this.assignmentsinfo = assignmentsinfo;
     }
 
     public DataIOSet( String inputData, String outputData, String assignmentsinfo) {
-        this.inputData = new InputData( inputData );
-        this.outputData = new OutputData( outputData );
         this.assignmentsinfo = new AssignmentsInfo(assignmentsinfo);
     }
 
@@ -76,24 +58,8 @@ public class DataIOSet implements BPMNPropertySet {
         return propertySetName;
     }
 
-    public InputData getInputData() {
-        return inputData;
-    }
-
-    public OutputData getOutputData() {
-        return outputData;
-    }
-
     public AssignmentsInfo getAssignmentsinfo() {
         return assignmentsinfo;
-    }
-
-    public void setInputData( InputData inputData ) {
-        this.inputData = inputData;
-    }
-
-    public void setOutputData( OutputData outputData ) {
-        this.outputData = outputData;
     }
 
     public void setAssignmentsinfo( AssignmentsInfo assignmentsinfo) {

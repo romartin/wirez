@@ -454,7 +454,8 @@ public class Bpmn2JsonMarshaller {
             if (doutbuff.length() > 0) {
                 doutbuff.setLength(doutbuff.length() - 1);
             }
-            properties.put("dataoutput", doutbuff.toString());
+            String dataoutput = doutbuff.toString();
+            properties.put("dataoutput", dataoutput);
 
             List<DataOutputAssociation> outputAssociations = event.getDataOutputAssociation();
             StringBuffer doutassociationbuff = new StringBuffer();
@@ -470,7 +471,9 @@ public class Bpmn2JsonMarshaller {
             if (doutassociationbuff.length() > 0) {
                 doutassociationbuff.setLength(doutassociationbuff.length() - 1);
             }
-            properties.put("dataoutputassociations", doutassociationbuff.toString());
+            String assignments = doutassociationbuff.toString();
+            properties.put("dataoutputassociations", assignments);
+            setAssignmentsInfoProperty(null, null, dataoutput, null, assignments, properties);
         }
         // event definitions
         List<EventDefinition> eventdefs = event.getEventDefinitions();
@@ -569,7 +572,8 @@ public class Bpmn2JsonMarshaller {
             if (dinbuff.length() > 0) {
                 dinbuff.setLength(dinbuff.length() - 1);
             }
-            properties.put("datainput", dinbuff.toString());
+            String datainput = dinbuff.toString();
+            properties.put("datainput", datainput);
 
             StringBuilder associationBuff = new StringBuilder();
             marshallDataInputAssociations(associationBuff, event.getDataInputAssociation());
@@ -579,6 +583,7 @@ public class Bpmn2JsonMarshaller {
                 assignmentString = assignmentString.substring(0, assignmentString.length() - 1);
             }
             properties.put("datainputassociations", assignmentString);
+            setAssignmentsInfoProperty(datainput, null, null, null, assignmentString, properties);
         }
 
         // signal scope
@@ -1084,10 +1089,10 @@ public class Bpmn2JsonMarshaller {
         properties.put("isasync", customAsync);
 
         // data inputs
-        marshallDataInputSet(callActivity, properties);
+        String datainputset = marshallDataInputSet(callActivity, properties);
 
         // data outputs
-        marshallDataOutputSet(callActivity, properties);
+        String dataoutputset = marshallDataOutputSet(callActivity, properties);
 
         // assignments
         StringBuilder associationBuff = new StringBuilder();
@@ -1102,6 +1107,7 @@ public class Bpmn2JsonMarshaller {
             assignmentString = assignmentString.substring(0, assignmentString.length() - 1);
         }
         properties.put("assignments", assignmentString);
+        setAssignmentsInfoProperty(null, datainputset, null, dataoutputset, assignmentString, properties);
 
         // on-entry and on-exit actions
         if (callActivity.getExtensionValues() != null && callActivity.getExtensionValues().size() > 0) {
@@ -1379,7 +1385,7 @@ public class Bpmn2JsonMarshaller {
         if ((task instanceof UserTask) || isCustomElement) {
             disallowedInputs.add("TaskName");
         }
-        marshallDataInputSet(task, properties, disallowedInputs);
+        String datainputset = marshallDataInputSet(task, properties, disallowedInputs);
 
         DataInput groupDataInput = null;
         DataInput skippableDataInput = null;
@@ -1444,7 +1450,7 @@ public class Bpmn2JsonMarshaller {
         }
 
         // data outputs
-        marshallDataOutputSet(task, properties, Arrays.asList("mioutputCollection"));
+        String dataoutputset = marshallDataOutputSet(task, properties, Arrays.asList("mioutputCollection"));
 
         // assignments
         StringBuilder associationBuff = new StringBuilder();
@@ -1677,6 +1683,7 @@ public class Bpmn2JsonMarshaller {
             assignmentString = assignmentString.substring(0, assignmentString.length() - 1);
         }
         properties.put("assignments", assignmentString);
+        setAssignmentsInfoProperty(null, datainputset, null, dataoutputset, assignmentString, properties);
 
         // on-entry and on-exit actions
         if (task.getExtensionValues() != null && task.getExtensionValues().size() > 0) {
@@ -1762,12 +1769,12 @@ public class Bpmn2JsonMarshaller {
         }
     }
 
-    private void marshallDataInputSet(Activity activity, Map<String, Object> properties) {
-        marshallDataInputSet(activity, properties, new ArrayList<String>());
+    private String marshallDataInputSet(Activity activity, Map<String, Object> properties) {
+        return marshallDataInputSet(activity, properties, new ArrayList<String>());
     }
 
-    private void marshallDataInputSet(Activity activity, Map<String, Object> properties, List<String> disallowedNames) {
-        if(activity.getIoSpecification() != null) {
+    private String marshallDataInputSet(Activity activity, Map<String, Object> properties, List<String> disallowedNames) {
+        if (activity.getIoSpecification() != null) {
             List<InputSet> inputSetList = activity.getIoSpecification().getInputSets();
             StringBuilder dataInBuffer = new StringBuilder();
             for (InputSet inset : inputSetList) {
@@ -1777,16 +1784,20 @@ public class Bpmn2JsonMarshaller {
             if (dataInBuffer.length() > 0) {
                 dataInBuffer.setLength(dataInBuffer.length() - 1);
             }
-            properties.put("datainputset", dataInBuffer.toString());
+            String datainputset = dataInBuffer.toString();
+            properties.put("datainputset", datainputset);
+            return datainputset;
+        } else {
+            return null;
         }
     }
 
-    private void marshallDataOutputSet(Activity activity, Map<String, Object> properties) {
-        marshallDataOutputSet(activity, properties, new ArrayList<String>());
+    private String marshallDataOutputSet(Activity activity, Map<String, Object> properties) {
+        return marshallDataOutputSet(activity, properties, new ArrayList<String>());
     }
 
-    private void marshallDataOutputSet(Activity activity, Map<String, Object> properties, List<String> disallowedNames) {
-        if(activity.getIoSpecification() != null) {
+    private String marshallDataOutputSet(Activity activity, Map<String, Object> properties, List<String> disallowedNames) {
+        if (activity.getIoSpecification() != null) {
             List<OutputSet> outputSetList = activity.getIoSpecification().getOutputSets();
             StringBuilder dataOutBuffer = new StringBuilder();
             for (OutputSet outset : outputSetList) {
@@ -1796,7 +1807,11 @@ public class Bpmn2JsonMarshaller {
             if (dataOutBuffer.length() > 0) {
                 dataOutBuffer.setLength(dataOutBuffer.length() - 1);
             }
-            properties.put("dataoutputset", dataOutBuffer.toString());
+            String dataoutputset = dataOutBuffer.toString();
+            properties.put("dataoutputset", dataoutputset);
+            return dataoutputset;
+        } else {
+            return null;
         }
     }
 
@@ -2135,11 +2150,11 @@ public class Bpmn2JsonMarshaller {
         String customAsync = (customAsyncMetaData != null && customAsyncMetaData.length() > 0) ? customAsyncMetaData : "false";
         properties.put("isasync", customAsync);
 
-		// data inputs
-        marshallDataInputSet(subProcess, properties);
+        // data inputs
+        String datainputset = marshallDataInputSet(subProcess, properties);
 
         // data outputs
-        marshallDataOutputSet(subProcess, properties);
+        String dataoutputset = marshallDataOutputSet(subProcess, properties);
 
         // assignments
         StringBuilder associationBuff = new StringBuilder();
@@ -2154,6 +2169,7 @@ public class Bpmn2JsonMarshaller {
             assignmentString = assignmentString.substring(0, assignmentString.length() - 1);
         }
         properties.put("assignments", assignmentString);
+        setAssignmentsInfoProperty(null, datainputset, null, dataoutputset, assignmentString, properties);
 
         // on-entry and on-exit actions
         if (subProcess.getExtensionValues() != null && subProcess.getExtensionValues().size() > 0) {
@@ -3066,5 +3082,32 @@ public class Bpmn2JsonMarshaller {
                 }
             }
         }
+    }
+
+    private void setAssignmentsInfoProperty(final String datainput, final String datainputset,
+            final String dataoutput, final String dataoutputset,
+            final String assignments, Map<String, Object> properties)
+    {
+        StringBuilder sb = new StringBuilder();
+        if (datainput != null) {
+            sb.append(datainput);
+        }
+        sb.append('|');
+        if (datainputset != null) {
+            sb.append(datainputset);
+        }
+        sb.append('|');
+        if (dataoutput != null) {
+            sb.append(dataoutput);
+        }
+        sb.append('|');
+        if (dataoutputset != null) {
+            sb.append(dataoutputset);
+        }
+        sb.append('|');
+        if (assignments != null) {
+            sb.append(assignments);
+        }
+        properties.put("assignmentsinfo", sb.toString());
     }
 }

@@ -3,14 +3,11 @@ package org.wirez.bpmn.backend.marshall.json.oryx;
 import org.apache.commons.lang3.StringUtils;
 import org.wirez.bpmn.definition.*;
 import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
-import org.wirez.bpmn.definition.property.dataio.InputData;
-import org.wirez.bpmn.definition.property.dataio.OutputData;
 import org.wirez.bpmn.definition.property.general.Name;
 import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.bpmn.definition.property.variables.GlobalVariables;
 import org.wirez.bpmn.definition.property.variables.ProcessVariables;
 import org.wirez.core.api.DefinitionManager;
-import org.wirez.core.definition.adapter.DefinitionAdapter;
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
 
 import javax.enterprise.context.Dependent;
@@ -61,9 +58,7 @@ public class Bpmn2OryxIdMappings {
 
         Map<Class<?>, String> userTaskPropertiesMap = new HashMap<Class<?>, String>();
         put(UserTask.class, userTaskPropertiesMap);
-        userTaskPropertiesMap.put(AssignmentsInfo.class, "assignments");
-        userTaskPropertiesMap.put(InputData.class, "datainputset");
-        userTaskPropertiesMap.put(OutputData.class, "dataoutputset");
+        userTaskPropertiesMap.put(AssignmentsInfo.class, "assignmentsinfo");
     }};
 
     protected Bpmn2OryxIdMappings() {

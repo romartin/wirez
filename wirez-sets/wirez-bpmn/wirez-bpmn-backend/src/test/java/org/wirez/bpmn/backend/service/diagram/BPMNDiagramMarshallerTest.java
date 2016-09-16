@@ -15,8 +15,6 @@ import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
 import org.wirez.bpmn.definition.*;
 import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.wirez.bpmn.definition.property.dataio.DataIOSet;
-import org.wirez.bpmn.definition.property.dataio.InputData;
-import org.wirez.bpmn.definition.property.dataio.OutputData;
 import org.wirez.bpmn.definition.property.variables.GlobalVariables;
 import org.wirez.bpmn.definition.property.variables.ProcessVariables;
 import org.wirez.core.api.DefinitionManager;
@@ -332,14 +330,8 @@ public class BPMNDiagramMarshallerTest {
         UserTask selfEvaluationTask = (UserTask) selfEvaluationNode.getContent().getDefinition();
         DataIOSet dataIOSet = selfEvaluationTask.getDataIOSet();
 
-        InputData inputData = dataIOSet.getInputData();
-        assertEquals(inputData.getValue(), "reason:com.test.Reason,Comment:Object,Skippable:Object");
-
-        OutputData outputData = dataIOSet.getOutputData();
-        assertEquals(outputData.getValue(), "performance:Object");
-
         AssignmentsInfo assignmentsinfo = dataIOSet.getAssignmentsinfo();
-        assertEquals(assignmentsinfo.getValue(), "[din]reason->reason,[dout]performance->performance");
+        assertEquals(assignmentsinfo.getValue(), "|reason:com.test.Reason,Comment:Object,Skippable:Object||performance:Object|[din]reason->reason,[dout]performance->performance");
     }
 
     @Test

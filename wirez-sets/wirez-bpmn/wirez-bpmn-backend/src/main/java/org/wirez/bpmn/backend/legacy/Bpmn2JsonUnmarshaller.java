@@ -108,6 +108,8 @@ public class Bpmn2JsonUnmarshaller {
     private Map<String, List<EObject>> _simulationElementParameters = new HashMap<String, List<EObject>>();
     private ScenarioParameters _simulationScenarioParameters = BpsimFactory.eINSTANCE.createScenarioParameters();
 
+    private boolean zOrderEnabled;
+
     private static final Logger _logger = LoggerFactory.getLogger(Bpmn2JsonUnmarshaller.class);
 
     public Bpmn2JsonUnmarshaller() {
@@ -137,6 +139,10 @@ public class Bpmn2JsonUnmarshaller {
 
     public Bpmn2Resource unmarshall(File file, String preProcessingData) throws JsonParseException, IOException {
         return unmarshall(new JsonFactory().createJsonParser(file), preProcessingData);
+    }
+
+    public void setZOrderEnabled(boolean zOrderEnabled) {
+        this.zOrderEnabled = zOrderEnabled;
     }
 
     /**
@@ -194,6 +200,7 @@ public class Bpmn2JsonUnmarshaller {
             revisitProcessDoc(def);
             revisitDI(def);
             revisitSignalRef(def);
+            orderDiagramElements(def);
 
             // return def;
             _currentResource.getContents().add(def);
@@ -209,6 +216,24 @@ public class Bpmn2JsonUnmarshaller {
             _sequenceFlowTargets.clear();
             _bounds.clear();
             _currentResource = null;
+        }
+    }
+
+    private void orderDiagramElements(Definitions def) {
+        if(zOrderEnabled) {
+            if(def.getDiagrams() != null) {
+                for(BPMNDiagram diagram : def.getDiagrams()) {
+                    if(diagram != null) {
+                        _logger.info("Sorting diagram elements using DIZorderComparator");
+                        BPMNPlane plane = diagram.getPlane();
+                        List<DiagramElement> unsortedElements = new ArrayList<DiagramElement>(plane.getPlaneElement());
+                        plane.getPlaneElement().clear();
+                        Collections.sort(unsortedElements, new DIZorderComparator());
+                        plane.getPlaneElement().addAll(unsortedElements);
+                        diagram.setPlane(plane);
+                    }
+                }
+            }
         }
     }
 
@@ -728,11 +753,11 @@ public class Bpmn2JsonUnmarshaller {
 
                                                     task.getIoSpecification().getDataOutputs().add(miCollectionOutputDI);
 
-                                                    if (task.getIoSpecification().getInputSets() == null || task.getIoSpecification().getInputSets().size() < 1) {
-                                                        InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
-                                                        task.getIoSpecification().getInputSets().add(inset);
-                                                    }
-                                                    task.getIoSpecification().getOutputSets().get(0).getDataOutputRefs().add(miCollectionOutputDI);
+                                                if(task.getIoSpecification().getOutputSets() == null || task.getIoSpecification().getOutputSets().size() < 1) {
+                                                    OutputSet outset = Bpmn2Factory.eINSTANCE.createOutputSet();
+                                                    task.getIoSpecification().getOutputSets().add(outset);
+                                                }
+                                                task.getIoSpecification().getOutputSets().get(0).getDataOutputRefs().add(miCollectionOutputDI);
 
                                                     loopCharacteristics.setLoopDataOutputRef(miCollectionOutputDI);
 
@@ -742,11 +767,10 @@ public class Bpmn2JsonUnmarshaller {
 
                                                     task.getDataOutputAssociations().add(miCollectionInputDataOutputAssociation);
 
-                                                    //loopCharacteristics.setLoopDataOutputRef(prop);
-                                                    break;
-                                                }
+                                                break;
                                             }
                                         }
+                                    }
 
                                         if (miDataInput != null && miDataInput.length() > 0) {
                                             List<DataInput> dins = task.getIoSpecification().getDataInputs();
@@ -841,23 +865,23 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     public void updateIDs(Definitions def) {
-        // data object id update
-        List<RootElement> rootElements = def.getRootElements();
-        for (RootElement root : rootElements) {
-            if (root instanceof Process) {
-                Process process = (Process) root;
-                List<FlowElement> flowElements = process.getFlowElements();
-                for (FlowElement fe : flowElements) {
-                    if (fe instanceof DataObject) {
-                        DataObject da = (DataObject) fe;
-                        if (da.getName() != null) {
-                            String daId = da.getName().trim();
-                            daId = daId.replaceAll("\\W", "");
-                            da.setId(daId);
-                        }
-                    }
-                }
-            }
+    	// data object id update
+    	List<RootElement> rootElements =  def.getRootElements();
+        for(RootElement root : rootElements) {
+        	if(root instanceof Process) {
+        		Process process = (Process) root;
+        		List<FlowElement> flowElements = process.getFlowElements();
+	            for(FlowElement fe : flowElements) {
+	            	if(fe instanceof DataObject) {
+	            		DataObject da = (DataObject) fe;
+	            		if(da.getName() != null) {
+	            			String daId = da.getName().trim();
+	            			daId = daId.replaceAll("\\W","");
+	                    	da.setId(daId);
+	                    }
+	            	}
+	            }
+        	}
         }
     }
 
@@ -873,29 +897,29 @@ public class Bpmn2JsonUnmarshaller {
         defaultScenario.setName("Simulationscenario"); // single scenario support
         defaultScenario.setScenarioParameters(_simulationScenarioParameters);
 
-        if (_simulationElementParameters.size() > 0) {
-            Iterator<String> iter = _simulationElementParameters.keySet().iterator();
-            while (iter.hasNext()) {
-                String key = iter.next();
-                ElementParameters etype = BpsimFactory.eINSTANCE.createElementParameters();
-                etype.setElementRef(key);
-                List<EObject> params = _simulationElementParameters.get(key);
-                for (EObject np : params) {
-                    if (np instanceof ControlParameters) {
-                        etype.setControlParameters((ControlParameters) np);
-                    } else if (np instanceof CostParameters) {
-                        etype.setCostParameters((CostParameters) np);
-                    } else if (np instanceof PriorityParameters) {
-                        etype.setPriorityParameters((PriorityParameters) np);
-                    } else if (np instanceof ResourceParameters) {
-                        etype.setResourceParameters((ResourceParameters) np);
-                    } else if (np instanceof TimeParameters) {
-                        etype.setTimeParameters((TimeParameters) np);
-                    }
-                }
-                defaultScenario.getElementParameters().add(etype);
-            }
-        }
+		if(_simulationElementParameters.size() > 0) {
+    		Iterator<String> iter = _simulationElementParameters.keySet().iterator();
+    		while(iter.hasNext()) {
+    			String key = iter.next();
+    			ElementParameters etype = BpsimFactory.eINSTANCE.createElementParameters();
+    			etype.setElementRef(key);
+    			List<EObject> params = _simulationElementParameters.get(key);
+    			for(EObject np : params) {
+    				if(np instanceof ControlParameters) {
+    					etype.setControlParameters((ControlParameters) np);
+    				} else if(np instanceof CostParameters) {
+    					etype.setCostParameters((CostParameters) np);
+    				} else if(np instanceof PriorityParameters) {
+    					etype.setPriorityParameters((PriorityParameters) np);
+    				} else if(np instanceof ResourceParameters) {
+    					etype.setResourceParameters((ResourceParameters) np);
+    				} else if(np instanceof TimeParameters) {
+    					etype.setTimeParameters((TimeParameters) np);
+    				}
+    			}
+    			defaultScenario.getElementParameters().add(etype);
+    		}
+		}
         simDataType.getScenario().add(defaultScenario);
         ExtensionAttributeValue extensionElement = Bpmn2Factory.eINSTANCE.createExtensionAttributeValue();
         relationship.getExtensionValues().add(extensionElement);
@@ -909,26 +933,26 @@ public class Bpmn2JsonUnmarshaller {
         List<RootElement> rootElements = def.getRootElements();
         List<ItemDefinition> itemDefinitionsToAddUnfiltered = new ArrayList<ItemDefinition>();
         List<ItemDefinition> itemDefinitionsToAddFiltered = new ArrayList<ItemDefinition>();
-        for (RootElement root : rootElements) {
-            if (root instanceof Process) {
-                Process process = (Process) root;
-                List<FlowElement> flowElements = process.getFlowElements();
-                for (FlowElement fe : flowElements) {
-                    if (fe instanceof DataObject) {
-                        DataObject da = (DataObject) fe;
-                        ItemDefinition itemdef = Bpmn2Factory.eINSTANCE.createItemDefinition();
-                        itemdef.setId("_" + da.getId() + "Item");
-                        Iterator<FeatureMap.Entry> iter = da.getAnyAttribute().iterator();
-                        while (iter.hasNext()) {
-                            FeatureMap.Entry entry = iter.next();
-                            if (entry.getEStructuralFeature().getName().equals("datype")) {
-                                String typeValue = (String) entry.getValue();
-                                if (typeValue != null && !typeValue.equals("None")) {
-                                    itemdef.setStructureRef((String) entry.getValue());
-                                }
-                            }
-                        }
-                        da.setItemSubjectRef(itemdef);
+        for(RootElement root : rootElements) {
+        	if(root instanceof Process) {
+        		Process process = (Process) root;
+        		List<FlowElement> flowElements = process.getFlowElements();
+	            for(FlowElement fe : flowElements) {
+	            	if(fe instanceof DataObject) {
+	            		DataObject da = (DataObject) fe;
+	            		ItemDefinition itemdef =  Bpmn2Factory.eINSTANCE.createItemDefinition();
+	            		itemdef.setId("_" + da.getId() + "Item");
+	            		Iterator<FeatureMap.Entry> iter = da.getAnyAttribute().iterator();
+	                    while(iter.hasNext()) {
+	                        FeatureMap.Entry entry = iter.next();
+	                        if(entry.getEStructuralFeature().getName().equals("datype")) {
+	                        	String typeValue = (String) entry.getValue();
+	                        	if(typeValue != null && !typeValue.equals("None")) {
+	                        		itemdef.setStructureRef((String) entry.getValue());
+	                        	}
+	                        }
+	                    }
+	                    da.setItemSubjectRef(itemdef);
                         itemDefinitionsToAddUnfiltered.add(itemdef);
                     }
                 }
@@ -954,130 +978,130 @@ public class Bpmn2JsonUnmarshaller {
             def.getRootElements().add(itemDefFil);
         }
 
-        for (RootElement root : rootElements) {
-            if (root instanceof Process) {
-                Process process = (Process) root;
-                List<Artifact> artifactElements = process.getArtifacts();
-                for (Artifact af : artifactElements) {
-                    if (af instanceof Association) {
-                        Association as = (Association) af;
-                        if (as.getSourceRef() != null && as.getSourceRef() instanceof DataObject
-                                && as.getTargetRef() != null && (as.getTargetRef() instanceof Task || as.getTargetRef() instanceof ThrowEvent)) {
-                            DataObject da = (DataObject) as.getSourceRef();
-                            if (as.getTargetRef() instanceof Task) {
-                                Task task = (Task) as.getTargetRef();
-                                if (task.getIoSpecification() == null) {
-                                    InputOutputSpecification iospec = Bpmn2Factory.eINSTANCE.createInputOutputSpecification();
-                                    task.setIoSpecification(iospec);
-                                }
-                                if (task.getIoSpecification().getInputSets() == null || task.getIoSpecification().getInputSets().size() < 1) {
-                                    InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
-                                    task.getIoSpecification().getInputSets().add(inset);
-                                }
-                                InputSet inSet = task.getIoSpecification().getInputSets().get(0);
-                                boolean foundDataInput = false;
-                                for (DataInput dataInput : inSet.getDataInputRefs()) {
-                                    if (dataInput.getId().equals(task.getId() + "_" + da.getId() + "InputX")) {
-                                        foundDataInput = true;
-                                    }
-                                }
-                                if (!foundDataInput) {
-                                    DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
-                                    d.setId(task.getId() + "_" + da.getId() + "InputX");
-                                    d.setName(da.getId() + "InputX");
-                                    task.getIoSpecification().getDataInputs().add(d);
-                                    task.getIoSpecification().getInputSets().get(0).getDataInputRefs().add(d);
+        for(RootElement root : rootElements) {
+        	if(root instanceof Process) {
+	        	Process process = (Process) root;
+	            List<Artifact> artifactElements = process.getArtifacts();
+	            for(Artifact af : artifactElements) {
+	            	if(af instanceof Association) {
+	            		Association as = (Association) af;
+	            		if(as.getSourceRef() != null && as.getSourceRef() instanceof DataObject
+	            				&& as.getTargetRef() != null && (as.getTargetRef() instanceof Task || as.getTargetRef() instanceof ThrowEvent)) {
+	            			DataObject da = (DataObject) as.getSourceRef();
+	            			if(as.getTargetRef() instanceof Task) {
+	            				Task task = (Task) as.getTargetRef();
+	            				if(task.getIoSpecification() == null) {
+	            	                InputOutputSpecification iospec = Bpmn2Factory.eINSTANCE.createInputOutputSpecification();
+	            	                task.setIoSpecification(iospec);
+	            	            }
+	            				if(task.getIoSpecification().getInputSets() == null || task.getIoSpecification().getInputSets().size() < 1) {
+	            	            	InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
+	            	                task.getIoSpecification().getInputSets().add(inset);
+	            	            }
+	            				InputSet inSet = task.getIoSpecification().getInputSets().get(0);
+	            				boolean foundDataInput = false;
+	            				for(DataInput dataInput : inSet.getDataInputRefs()) {
+	            					if(dataInput.getId().equals(task.getId() + "_" + da.getId() + "InputX")) {
+	            						foundDataInput = true;
+	            					}
+	            				}
+	            				if(!foundDataInput) {
+		            	        	DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
+		            	            d.setId(task.getId() + "_" + da.getId() + "InputX");
+		            	            d.setName(da.getId() + "InputX");
+		            	            task.getIoSpecification().getDataInputs().add(d);
+		            	            task.getIoSpecification().getInputSets().get(0).getDataInputRefs().add(d);
 
-                                    DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
-                                    dia.setTargetRef(d);
-                                    dia.getSourceRef().add(da);
-                                    task.getDataInputAssociations().add(dia);
-                                }
-                            } else if (as.getTargetRef() instanceof ThrowEvent) {
-                                ThrowEvent te = (ThrowEvent) as.getTargetRef();
-                                // update throw event data input and add data input association
-                                boolean foundDataInput = false;
-                                List<DataInput> dataInputs = te.getDataInputs();
-                                for (DataInput din : dataInputs) {
-                                    if (din.getId().equals(te.getId() + "_" + da.getId() + "InputX")) {
-                                        foundDataInput = true;
-                                    }
-                                }
-                                if (!foundDataInput) {
-                                    DataInput datain = Bpmn2Factory.eINSTANCE.createDataInput();
-                                    datain.setId(te.getId() + "_" + da.getId() + "InputX");
-                                    datain.setName(da.getId() + "InputX");
-                                    te.getDataInputs().add(datain);
+		            	        	DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
+		            	        	dia.setTargetRef(d);
+		            	        	dia.getSourceRef().add(da);
+		            	            task.getDataInputAssociations().add(dia);
+	            				}
+	            			} else if(as.getTargetRef() instanceof ThrowEvent) {
+	            				ThrowEvent te = (ThrowEvent) as.getTargetRef();
+	            				// update throw event data input and add data input association
+	            				boolean foundDataInput = false;
+	            				List<DataInput> dataInputs = te.getDataInputs();
+	            				for(DataInput din : dataInputs) {
+	            					if(din.getId().equals(te.getId() + "_" + da.getId() + "InputX")) {
+	            						foundDataInput = true;
+	            					}
+	            				}
+	            				if(!foundDataInput) {
+	            					DataInput datain = Bpmn2Factory.eINSTANCE.createDataInput();
+	            					datain.setId(te.getId() + "_" + da.getId() + "InputX");
+	            					datain.setName(da.getId() + "InputX");
+	            					te.getDataInputs().add(datain);
 
-                                    if (te.getInputSet() == null) {
-                                        InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
-                                        te.setInputSet(inset);
-                                    }
-                                    te.getInputSet().getDataInputRefs().add(datain);
+	            					if(te.getInputSet() == null) {
+		            	            	InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
+		            	            	te.setInputSet(inset);
+		            	            }
+	            					te.getInputSet().getDataInputRefs().add(datain);
 
-                                    DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
-                                    dia.setTargetRef(datain);
-                                    dia.getSourceRef().add(da);
-                                    te.getDataInputAssociation().add(dia);
-                                }
-                            }
-                        }
-                        if (as.getTargetRef() != null && as.getTargetRef() instanceof DataObject
-                                && as.getSourceRef() != null && (as.getSourceRef() instanceof Task || as.getSourceRef() instanceof CatchEvent)) {
-                            DataObject da = (DataObject) as.getTargetRef();
-                            if (as.getSourceRef() instanceof Task) {
-                                Task task = (Task) as.getSourceRef();
-                                if (task.getIoSpecification() == null) {
-                                    InputOutputSpecification iospec = Bpmn2Factory.eINSTANCE.createInputOutputSpecification();
-                                    task.setIoSpecification(iospec);
-                                }
+	            					DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
+	            					dia.setTargetRef(datain);
+	            					dia.getSourceRef().add(da);
+	            					te.getDataInputAssociation().add(dia);
+	            				}
+	            			}
+	            		}
+	            		if(as.getTargetRef() != null && as.getTargetRef() instanceof DataObject
+	            				&& as.getSourceRef() != null && (as.getSourceRef() instanceof Task || as.getSourceRef() instanceof CatchEvent)) {
+	            			DataObject da = (DataObject) as.getTargetRef();
+	            			if(as.getSourceRef() instanceof Task) {
+	            				Task task = (Task) as.getSourceRef();
+	            				if(task.getIoSpecification() == null) {
+	            	                InputOutputSpecification iospec = Bpmn2Factory.eINSTANCE.createInputOutputSpecification();
+	            	                task.setIoSpecification(iospec);
+	            	            }
 
-                                if (task.getIoSpecification().getOutputSets() == null || task.getIoSpecification().getOutputSets().size() < 1) {
-                                    OutputSet outSet = Bpmn2Factory.eINSTANCE.createOutputSet();
-                                    task.getIoSpecification().getOutputSets().add(outSet);
-                                }
+	            				if(task.getIoSpecification().getOutputSets() == null || task.getIoSpecification().getOutputSets().size() < 1) {
+	            	            	OutputSet outSet = Bpmn2Factory.eINSTANCE.createOutputSet();
+	            	                task.getIoSpecification().getOutputSets().add(outSet);
+	            	            }
 
-                                boolean foundDataOutput = false;
-                                OutputSet outSet = task.getIoSpecification().getOutputSets().get(0);
-                                for (DataOutput dataOut : outSet.getDataOutputRefs()) {
-                                    if (dataOut.getId().equals(task.getId() + "_" + da.getId() + "OutputX")) {
-                                        foundDataOutput = true;
-                                    }
-                                }
+	            				boolean foundDataOutput = false;
+	            				OutputSet outSet = task.getIoSpecification().getOutputSets().get(0);
+	            				for(DataOutput dataOut : outSet.getDataOutputRefs()) {
+	            					if(dataOut.getId().equals(task.getId() + "_" + da.getId() + "OutputX")) {
+	            						foundDataOutput = true;
+	            					}
+	            				}
 
-                                if (!foundDataOutput) {
-                                    DataOutput d = Bpmn2Factory.eINSTANCE.createDataOutput();
-                                    d.setId(task.getId() + "_" + da.getId() + "OutputX");
-                                    d.setName(da.getId() + "OutputX");
-                                    task.getIoSpecification().getDataOutputs().add(d);
-                                    task.getIoSpecification().getOutputSets().get(0).getDataOutputRefs().add(d);
+	            				if(!foundDataOutput) {
+		            	        	DataOutput d = Bpmn2Factory.eINSTANCE.createDataOutput();
+		            	            d.setId(task.getId() + "_" + da.getId() + "OutputX");
+		            	            d.setName(da.getId() + "OutputX");
+		            	            task.getIoSpecification().getDataOutputs().add(d);
+		            	            task.getIoSpecification().getOutputSets().get(0).getDataOutputRefs().add(d);
 
                                     DataOutputAssociation doa = Bpmn2Factory.eINSTANCE.createDataOutputAssociation();
                                     doa.getSourceRef().add(d);
                                     doa.setTargetRef(da);
                                     task.getDataOutputAssociations().add(doa);
-                                }
-                            } else if (as.getSourceRef() instanceof CatchEvent) {
-                                CatchEvent ce = (CatchEvent) as.getSourceRef();
-                                // update catch event data output and add data output association
-                                boolean foundDataOutput = false;
-                                List<DataOutput> dataOutputs = ce.getDataOutputs();
-                                for (DataOutput dout : dataOutputs) {
-                                    if (dout.getId().equals(ce.getId() + "_" + da.getId() + "OutputX")) {
-                                        foundDataOutput = true;
-                                    }
-                                }
-                                if (!foundDataOutput) {
-                                    DataOutput dataout = Bpmn2Factory.eINSTANCE.createDataOutput();
-                                    dataout.setId(ce.getId() + "_" + da.getId() + "OutputX");
-                                    dataout.setName(da.getId() + "OutputX");
-                                    ce.getDataOutputs().add(dataout);
+	            				}
+	            			} else if(as.getSourceRef() instanceof CatchEvent) {
+	            				CatchEvent ce = (CatchEvent) as.getSourceRef();
+	            				// update catch event data output and add data output association
+	            				boolean foundDataOutput = false;
+	            				List<DataOutput> dataOutputs = ce.getDataOutputs();
+	            				for(DataOutput dout : dataOutputs) {
+	            					if(dout.getId().equals(ce.getId() + "_" + da.getId() + "OutputX")) {
+	            						foundDataOutput = true;
+	            					}
+	            				}
+	            				if(!foundDataOutput) {
+	            					DataOutput dataout = Bpmn2Factory.eINSTANCE.createDataOutput();
+	            					dataout.setId(ce.getId() + "_" + da.getId() + "OutputX");
+	            					dataout.setName(da.getId() + "OutputX");
+	            					ce.getDataOutputs().add(dataout);
 
-                                    if (ce.getOutputSet() == null) {
-                                        OutputSet outset = Bpmn2Factory.eINSTANCE.createOutputSet();
-                                        ce.setOutputSet(outset);
-                                    }
-                                    ce.getOutputSet().getDataOutputRefs().add(dataout);
+	            					if(ce.getOutputSet() == null) {
+		            	            	OutputSet outset = Bpmn2Factory.eINSTANCE.createOutputSet();
+		            	            	ce.setOutputSet(outset);
+		            	            }
+	            					ce.getOutputSet().getDataOutputRefs().add(dataout);
 
                                     DataOutputAssociation dia = Bpmn2Factory.eINSTANCE.createDataOutputAssociation();
                                     dia.setTargetRef(da);
@@ -1167,36 +1191,36 @@ public class Bpmn2JsonUnmarshaller {
             if (root instanceof Process) {
                 Process process = (Process) root;
                 List<FlowElement> flowElements = process.getFlowElements();
-                for (FlowElement fe : flowElements) {
-                    if (fe instanceof Task) {
-                        Task t = (Task) fe;
-                        if (t.getDataInputAssociations() != null) {
-                            List<DataInputAssociation> inputList = t.getDataInputAssociations();
-                            if (inputList != null) {
-                                for (DataInputAssociation input : inputList) {
-                                    List<ItemAwareElement> sourceRef = input.getSourceRef();
-                                    if (sourceRef != null) {
-                                        for (ItemAwareElement iae : sourceRef) {
-                                            String[] iaeParts = iae.getId().split("\\.");
-                                            if (iaeParts.length > 1) {
+                for(FlowElement fe : flowElements) {
+                	if(fe instanceof Task) {
+                		Task t = (Task) fe;
+                		if(t.getDataInputAssociations() != null) {
+                			List<DataInputAssociation> inputList = t.getDataInputAssociations();
+                			if(inputList != null) {
+                				for(DataInputAssociation input : inputList) {
+                					List<ItemAwareElement> sourceRef = input.getSourceRef();
+                					if(sourceRef != null) {
+                						for(ItemAwareElement iae : sourceRef) {
+                							String[] iaeParts = iae.getId().split( "\\." );
+                							if(iaeParts.length > 1) {
 //                								FormalExpression dataInputTransformationExpression = Bpmn2Factory.eINSTANCE.createFormalExpression();
 //                								dataInputTransformationExpression.setBody(iae.getId());
 //                								input.setTransformation(dataInputTransformationExpression);
 //                    		                    iae.setId(iaeParts[0]);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (t.getDataOutputAssociations() != null) {
-                            List<DataOutputAssociation> outputList = t.getDataOutputAssociations();
-                            if (outputList != null) {
-                                for (DataOutputAssociation output : outputList) {
-                                    ItemAwareElement targetEle = output.getTargetRef();
-                                    if (targetEle != null) {
-                                        String[] targetEleParts = targetEle.getId().split("\\.");
-                                        if (targetEleParts.length > 1) {
+                							}
+                						}
+                					}
+                				}
+                			}
+                		}
+                		if(t.getDataOutputAssociations() != null) {
+                			List<DataOutputAssociation> outputList = t.getDataOutputAssociations();
+                			if(outputList != null) {
+                				for(DataOutputAssociation output : outputList) {
+                					ItemAwareElement targetEle = output.getTargetRef();
+                					if(targetEle != null) {
+                						String[] targetEleParts = targetEle.getId().split( "\\." );
+                						if(targetEleParts.length > 1) {
 //                							FormalExpression dataOutputTransformationExpression = Bpmn2Factory.eINSTANCE.createFormalExpression();
 //                							dataOutputTransformationExpression.setBody(targetEle.getId());
 //            								output.setTransformation(dataOutputTransformationExpression);
@@ -1207,21 +1231,21 @@ public class Bpmn2JsonUnmarshaller {
                             }
                         }
 
-                        if (t.getIoSpecification() != null) {
-                            InputOutputSpecification ios = t.getIoSpecification();
-                            if (ios.getInputSets() == null || ios.getInputSets().size() < 1) {
-                                InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
-                                ios.getInputSets().add(inset);
-                            }
+                		if(t.getIoSpecification() != null) {
+                			InputOutputSpecification ios = t.getIoSpecification();
+                			if(ios.getInputSets() == null || ios.getInputSets().size() < 1) {
+                				InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
+                				ios.getInputSets().add(inset);
+                			}
 
-                            if (ios.getOutputSets() == null) {
-                                if (ios.getOutputSets() == null || ios.getOutputSets().size() < 1) {
-                                    OutputSet outset = Bpmn2Factory.eINSTANCE.createOutputSet();
-                                    ios.getOutputSets().add(outset);
-                                }
-                            }
-                        }
-                    }
+                			if(ios.getOutputSets() == null) {
+                				if(ios.getOutputSets() == null || ios.getOutputSets().size() < 1) {
+                					OutputSet outset = Bpmn2Factory.eINSTANCE.createOutputSet();
+                					ios.getOutputSets().add(outset);
+                				}
+                			}
+                		}
+                	}
                 }
             }
         }
@@ -1302,16 +1326,16 @@ public class Bpmn2JsonUnmarshaller {
         for (RootElement root : rootElements) {
             if (root instanceof Process) {
                 Process process = (Process) root;
-                if ((process.getLaneSets() == null || process.getLaneSets().size() < 1) && _lanes.size() > 0) {
-                    LaneSet ls = Bpmn2Factory.eINSTANCE.createLaneSet();
-                    for (Lane lane : _lanes) {
-                        ls.getLanes().add(lane);
-                        List<FlowNode> laneFlowNodes = lane.getFlowNodeRefs();
-                        for (FlowNode fl : laneFlowNodes) {
-                            process.getFlowElements().add(fl);
-                        }
-                    }
-                    process.getLaneSets().add(ls);
+                if((process.getLaneSets() == null || process.getLaneSets().size() < 1) && _lanes.size() > 0) {
+                	LaneSet ls = Bpmn2Factory.eINSTANCE.createLaneSet();
+                	for(Lane lane : _lanes) {
+                		ls.getLanes().add(lane);
+                		List<FlowNode> laneFlowNodes = lane.getFlowNodeRefs();
+                		for(FlowNode fl : laneFlowNodes) {
+                			process.getFlowElements().add(fl);
+                		}
+                	}
+                	process.getLaneSets().add(ls);
                 }
             }
         }
@@ -1330,31 +1354,31 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     public void revisitGroups(Definitions def) {
-        List<RootElement> rootElements = def.getRootElements();
-        Category defaultCat = Bpmn2Factory.eINSTANCE.createCategory();
-        defaultCat.setName("default");
-        for (RootElement root : rootElements) {
-            if (root instanceof Process) {
-                Process process = (Process) root;
-                List<Artifact> processArtifacts = process.getArtifacts();
-                if (processArtifacts != null) {
-                    for (Artifact ar : processArtifacts) {
-                        if (ar instanceof Group) {
-                            Group group = (Group) ar;
-                            Iterator<FeatureMap.Entry> iter = group.getAnyAttribute().iterator();
-                            while (iter.hasNext()) {
-                                FeatureMap.Entry entry = iter.next();
-                                if (entry.getEStructuralFeature().getName().equals("categoryval")) {
-                                    CategoryValue catval = Bpmn2Factory.eINSTANCE.createCategoryValue();
-                                    catval.setValue((String) entry.getValue());
-                                    defaultCat.getCategoryValue().add(catval);
-                                    group.setCategoryValueRef(catval);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    	List<RootElement> rootElements =  def.getRootElements();
+    	Category defaultCat = Bpmn2Factory.eINSTANCE.createCategory();
+    	defaultCat.setName("default");
+        for(RootElement root : rootElements) {
+        	 if(root instanceof Process) {
+        		 Process process = (Process) root;
+        		 List<Artifact> processArtifacts = process.getArtifacts();
+        		 if(processArtifacts != null) {
+        			 for(Artifact ar : processArtifacts) {
+        				 if(ar instanceof Group) {
+        					 Group group = (Group) ar;
+        					 Iterator<FeatureMap.Entry> iter = group.getAnyAttribute().iterator();
+                             while(iter.hasNext()) {
+                                 FeatureMap.Entry entry = iter.next();
+                                 if(entry.getEStructuralFeature().getName().equals("categoryval")) {
+                                	 CategoryValue catval = Bpmn2Factory.eINSTANCE.createCategoryValue();
+                                	 catval.setValue((String) entry.getValue());
+                                	 defaultCat.getCategoryValue().add(catval);
+                                	 group.setCategoryValueRef(catval);
+                                 }
+                             }
+        				 }
+        			 }
+        		 }
+        	 }
         }
         // only add category if it includes at least one categoryvalue
         if (defaultCat.getCategoryValue() != null && defaultCat.getCategoryValue().size() > 0) {
@@ -1760,6 +1784,9 @@ public class Bpmn2JsonUnmarshaller {
         if (beEntry.getIncoming() != null) {
             be.getIncoming().addAll(beEntry.getIncoming());
         }
+        if(beEntry.getExtensionValues() != null) {
+            be.getExtensionValues().addAll(beEntry.getExtensionValues());
+        }
 
         be.getDocumentation().addAll(beEntry.getDocumentation());
         be.setName(beEntry.getName());
@@ -1881,59 +1908,59 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     public void revisitAssociationsIoSpec(Definitions def) {
-        List<RootElement> rootElements = def.getRootElements();
-        List<ItemDefinition> toAddItemDefinitions = new ArrayList<ItemDefinition>();
-        for (RootElement root : rootElements) {
-            if (root instanceof Process) {
-                setItemDefinitionsForActivitiesIoSpec((Process) root, def, toAddItemDefinitions);
+    	List<RootElement> rootElements =  def.getRootElements();
+    	List<ItemDefinition> toAddItemDefinitions = new ArrayList<ItemDefinition>();
+    	for(RootElement root : rootElements) {
+            if(root instanceof Process) {
+            	setItemDefinitionsForActivitiesIoSpec((Process) root, def, toAddItemDefinitions);
             }
         }
-        for (ItemDefinition itemDef : toAddItemDefinitions) {
-            def.getRootElements().add(itemDef);
+    	for(ItemDefinition itemDef : toAddItemDefinitions) {
+        	def.getRootElements().add(itemDef);
         }
     }
 
     public void setItemDefinitionsForActivitiesIoSpec(FlowElementsContainer container, Definitions def, List<ItemDefinition> toAddItemDefinitions) {
-        List<FlowElement> flowElements = container.getFlowElements();
-        for (FlowElement fe : flowElements) {
-            if (fe instanceof Activity) {
-                Activity ac = (Activity) fe;
-                if (ac.getIoSpecification() != null) {
-                    if (ac.getIoSpecification().getDataInputs() != null) {
-                        List<DataInput> dataInputs = ac.getIoSpecification().getDataInputs();
-                        for (DataInput din : dataInputs) {
-                            Iterator<FeatureMap.Entry> iter = din.getAnyAttribute().iterator();
-                            while (iter.hasNext()) {
+    	List<FlowElement> flowElements =  container.getFlowElements();
+    	for(FlowElement fe : flowElements) {
+    		if(fe instanceof Activity) {
+    			Activity ac = (Activity) fe;
+    			if(ac.getIoSpecification() != null) {
+    				if(ac.getIoSpecification().getDataInputs() != null) {
+    					List<DataInput> dataInputs = ac.getIoSpecification().getDataInputs();
+    					for(DataInput din: dataInputs) {
+    						Iterator<FeatureMap.Entry> iter = din.getAnyAttribute().iterator();
+                            while(iter.hasNext()) {
                                 FeatureMap.Entry entry = iter.next();
-                                if (entry.getEStructuralFeature().getName().equals("dtype")) {
-                                    String dinType = (String) entry.getValue();
-                                    if (dinType != null && dinType.length() > 0) {
-                                        ItemDefinition itemdef = Bpmn2Factory.eINSTANCE.createItemDefinition();
-                                        itemdef.setId("_" + din.getId() + "Item");
-                                        itemdef.setStructureRef(dinType);
-                                        toAddItemDefinitions.add(itemdef);
-                                        din.setItemSubjectRef(itemdef);
-                                    }
+                                if(entry.getEStructuralFeature().getName().equals("dtype")) {
+                                	String dinType = (String) entry.getValue();
+                               	 	if(dinType != null && dinType.length() > 0) {
+                               	 		ItemDefinition itemdef =  Bpmn2Factory.eINSTANCE.createItemDefinition();
+                               	 		itemdef.setId("_" + din.getId() + "Item");
+                               	 		itemdef.setStructureRef(dinType);
+                               	 		toAddItemDefinitions.add(itemdef);
+                               	 		din.setItemSubjectRef(itemdef);
+                               	 	}
                                 }
                             }
                         }
                     }
 
-                    if (ac.getIoSpecification().getDataOutputs() != null) {
-                        List<DataOutput> dataOutputs = ac.getIoSpecification().getDataOutputs();
-                        for (DataOutput dout : dataOutputs) {
-                            Iterator<FeatureMap.Entry> iter = dout.getAnyAttribute().iterator();
-                            while (iter.hasNext()) {
+    				if(ac.getIoSpecification().getDataOutputs() != null) {
+    					List<DataOutput> dataOutputs = ac.getIoSpecification().getDataOutputs();
+    					for(DataOutput dout: dataOutputs) {
+    						Iterator<FeatureMap.Entry> iter = dout.getAnyAttribute().iterator();
+                            while(iter.hasNext()) {
                                 FeatureMap.Entry entry = iter.next();
-                                if (entry.getEStructuralFeature().getName().equals("dtype")) {
-                                    String doutType = (String) entry.getValue();
-                                    if (doutType != null && doutType.length() > 0) {
-                                        ItemDefinition itemdef = Bpmn2Factory.eINSTANCE.createItemDefinition();
-                                        itemdef.setId("_" + dout.getId() + "Item");
-                                        itemdef.setStructureRef(doutType);
-                                        toAddItemDefinitions.add(itemdef);
-                                        dout.setItemSubjectRef(itemdef);
-                                    }
+                                if(entry.getEStructuralFeature().getName().equals("dtype")) {
+                                	String doutType = (String) entry.getValue();
+                               	 	if(doutType != null && doutType.length() > 0) {
+                               	 		ItemDefinition itemdef =  Bpmn2Factory.eINSTANCE.createItemDefinition();
+                               	 		itemdef.setId("_" + dout.getId() + "Item");
+                               	 		itemdef.setStructureRef(doutType);
+                               	 		toAddItemDefinitions.add(itemdef);
+                               	 		dout.setItemSubjectRef(itemdef);
+                               	 	}
                                 }
                             }
                         }
@@ -2374,7 +2401,7 @@ public class Bpmn2JsonUnmarshaller {
                     FeatureMap.Entry entry = iter.next();
                     if (entry.getEStructuralFeature().getName().equals("dg")) {
 
-                        for (SequenceFlow newFlow : sqList) {
+                    	for(SequenceFlow newFlow : sqList) {
                             String entryValue = (String) entry.getValue();
                             String entryName = null;
                             String entryValueId = "";
@@ -2385,11 +2412,11 @@ public class Bpmn2JsonUnmarshaller {
                                 entryName = entryValueParts[0];
                                 entryValueId = entryValueParts[1];
                             }
-                            if (newFlow.getId().equals(entryValueId) || (newFlow.getName() != null && entryName != null && newFlow.getName().equals(entryName))) {
+                    		if(newFlow.getId().equals(entryValueId) || ( newFlow.getName() != null && entryName != null && newFlow.getName().equals(entryName) )) {
                                 ig.setDefault(newFlow);
-                                if (newFlow.getConditionExpression() == null) {
-                                    FormalExpression expr = Bpmn2Factory.eINSTANCE.createFormalExpression();
-                                    expr.setBody("");
+                    			if(newFlow.getConditionExpression() == null) {
+                    				FormalExpression  expr = Bpmn2Factory.eINSTANCE.createFormalExpression();
+                    				expr.setBody("");
                                     newFlow.setConditionExpression(expr);
                                 }
                             }
@@ -2422,11 +2449,11 @@ public class Bpmn2JsonUnmarshaller {
                                 entryName = entryValueParts[0];
                                 entryValueId = entryValueParts[1];
                             }
-                            if (newFlow.getId().equals(entryValueId) || (newFlow.getName() != null && entryName != null && newFlow.getName().equals(entryName))) {
+                    		if(newFlow.getId().equals(entryValueId) || ( newFlow.getName() != null && entryName != null && newFlow.getName().equals(entryName) ) ) {
                                 eg.setDefault(newFlow);
-                                if (newFlow.getConditionExpression() == null) {
-                                    FormalExpression expr = Bpmn2Factory.eINSTANCE.createFormalExpression();
-                                    expr.setBody("");
+                    			if(newFlow.getConditionExpression() == null) {
+                    				FormalExpression  expr = Bpmn2Factory.eINSTANCE.createFormalExpression();
+                    				expr.setBody("");
                                     newFlow.setConditionExpression(expr);
                                 }
                             }
@@ -2722,14 +2749,14 @@ public class Bpmn2JsonUnmarshaller {
     private void revisitMessages(Definitions def) {
         List<RootElement> rootElements = def.getRootElements();
         List<ItemDefinition> toAddDefinitions = new ArrayList<ItemDefinition>();
-        for (RootElement root : rootElements) {
-            if (root instanceof Message) {
-                if (!existsMessageItemDefinition(rootElements, root.getId())) {
-                    ItemDefinition itemdef = Bpmn2Factory.eINSTANCE.createItemDefinition();
-                    itemdef.setId(root.getId() + "Type");
-                    toAddDefinitions.add(itemdef);
-                    ((Message) root).setItemRef(itemdef);
-                }
+        for(RootElement root : rootElements) {
+            if(root instanceof Message) {
+            	if(!existsMessageItemDefinition(rootElements, root.getId())) {
+            		ItemDefinition itemdef =  Bpmn2Factory.eINSTANCE.createItemDefinition();
+            		itemdef.setId(root.getId() + "Type");
+            		toAddDefinitions.add(itemdef);
+            		((Message) root).setItemRef(itemdef);
+            	}
             }
         }
         for (ItemDefinition id : toAddDefinitions) {
@@ -2785,66 +2812,18 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     private void createSubProcessDiagram(BPMNPlane plane, FlowElement flowElement, BpmnDiFactory factory) {
-        SubProcess sp = (SubProcess) flowElement;
-        for (FlowElement subProcessFlowElement : sp.getFlowElements()) {
-            if (subProcessFlowElement instanceof SubProcess) {
-                Bounds spb = _bounds.get(subProcessFlowElement.getId());
-                if (spb != null) {
-                    BPMNShape shape = factory.createBPMNShape();
-                    shape.setBpmnElement(subProcessFlowElement);
-                    shape.setBounds(spb);
-                    plane.getPlaneElement().add(shape);
-                }
+		SubProcess sp = (SubProcess) flowElement;
+		for(FlowElement subProcessFlowElement : sp.getFlowElements()) {
+            if(subProcessFlowElement instanceof SubProcess) {
+                createBpmnShapeForElement(factory, plane, subProcessFlowElement);
                 createSubProcessDiagram(plane, subProcessFlowElement, factory);
             } else if (subProcessFlowElement instanceof FlowNode) {
-
-                Bounds spb = _bounds.get(subProcessFlowElement.getId());
-                if (spb != null) {
-                    BPMNShape shape = factory.createBPMNShape();
-                    shape.setBpmnElement(subProcessFlowElement);
-                    shape.setBounds(spb);
-                    plane.getPlaneElement().add(shape);
-                }
-                if (subProcessFlowElement instanceof BoundaryEvent) {
-                    List<Point> dockers = _dockers.get(subProcessFlowElement.getId());
-                    StringBuffer dockerBuff = new StringBuffer();
-                    for (int i = 0; i < dockers.size(); i++) {
-                        dockerBuff.append(dockers.get(i).getX());
-                        dockerBuff.append("^");
-                        dockerBuff.append(dockers.get(i).getY());
-                        dockerBuff.append("|");
-                    }
-                    ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
-                    EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
-                            "http://www.jboss.org/drools", "dockerinfo", false, false);
-                    SimpleFeatureMapEntry extensionEntry = new SimpleFeatureMapEntry(extensionAttribute,
-                            dockerBuff.toString());
-                    subProcessFlowElement.getAnyAttribute().add(extensionEntry);
+                createBpmnShapeForElement(factory, plane, subProcessFlowElement);
+                if(subProcessFlowElement instanceof BoundaryEvent) {
+                    createDockersForBoundaryEvent((BoundaryEvent) subProcessFlowElement);
                 }
             } else if (subProcessFlowElement instanceof SequenceFlow) {
-                SequenceFlow sequenceFlow = (SequenceFlow) subProcessFlowElement;
-                BPMNEdge edge = factory.createBPMNEdge();
-                edge.setBpmnElement(subProcessFlowElement);
-                DcFactory dcFactory = DcFactory.eINSTANCE;
-                Point point = dcFactory.createPoint();
-                if (sequenceFlow.getSourceRef() != null) {
-                    Bounds sourceBounds = _bounds.get(sequenceFlow.getSourceRef().getId());
-                    point.setX(sourceBounds.getX() + (sourceBounds.getWidth() / 2));
-                    point.setY(sourceBounds.getY() + (sourceBounds.getHeight() / 2));
-                }
-                edge.getWaypoint().add(point);
-                List<Point> dockers = _dockers.get(sequenceFlow.getId());
-                for (int i = 1; i < dockers.size() - 1; i++) {
-                    edge.getWaypoint().add(dockers.get(i));
-                }
-                point = dcFactory.createPoint();
-                if (sequenceFlow.getTargetRef() != null) {
-                    Bounds targetBounds = _bounds.get(sequenceFlow.getTargetRef().getId());
-                    point.setX(targetBounds.getX() + (targetBounds.getWidth() / 2));
-                    point.setY(targetBounds.getY() + (targetBounds.getHeight() / 2));
-                }
-                edge.getWaypoint().add(point);
-                plane.getPlaneElement().add(edge);
+                createBpmnEdgeForSequenceFlow(factory, plane, (SequenceFlow) subProcessFlowElement);
             }
         }
         if (sp.getArtifacts() != null) {
@@ -2852,37 +2831,14 @@ public class Bpmn2JsonUnmarshaller {
             for (Artifact artifact : sp.getArtifacts()) {
                 //if (artifact instanceof TextAnnotation || artifact instanceof Group) {
                 if (artifact instanceof Group) {
-                    Bounds ba = _bounds.get(artifact.getId());
-                    if (ba != null) {
-                        BPMNShape shape = factory.createBPMNShape();
-                        shape.setBpmnElement(artifact);
-                        shape.setBounds(ba);
-                        plane.getPlaneElement().add(shape);
-                    }
+                    createBpmnShapeForElement(factory, plane, artifact);
                 }
                 if (artifact instanceof Association) {
                     Association association = (Association) artifact;
                     if (association.getSourceRef() != null && association.getTargetRef() != null) {
-
-                        BPMNEdge edge = factory.createBPMNEdge();
-                        edge.setBpmnElement(association);
-                        DcFactory dcFactory = DcFactory.eINSTANCE;
-                        Point point = dcFactory.createPoint();
-                        Bounds sourceBounds = _bounds.get(association.getSourceRef().getId());
-                        point.setX(sourceBounds.getX() + (sourceBounds.getWidth() / 2));
-                        point.setY(sourceBounds.getY() + (sourceBounds.getHeight() / 2));
-                        edge.getWaypoint().add(point);
-                        List<Point> dockers = _dockers.get(association.getId());
-                        for (int i = 1; i < dockers.size() - 1; i++) {
-                            edge.getWaypoint().add(dockers.get(i));
-                        }
-                        point = dcFactory.createPoint();
-                        Bounds targetBounds = _bounds.get(association.getTargetRef().getId());
-                        point.setX(targetBounds.getX() + (targetBounds.getWidth() / 2));
-                        point.setY(targetBounds.getY() + (targetBounds.getHeight() / 2));
-                        edge.getWaypoint().add(point);
-                        plane.getPlaneElement().add(edge);
-                    } else {
+                        createBpmnEdgeForAssociation(factory, plane, association);
+                    }
+                    else {
                         incompleteAssociations.add(association);
                     }
                 }
@@ -2905,138 +2861,135 @@ public class Bpmn2JsonUnmarshaller {
                 plane.setBpmnElement(process);
                 diagram.setPlane(plane);
                 // first process flowNodes
-                for (FlowElement flowElement : process.getFlowElements()) {
-                    if (flowElement instanceof FlowNode) {
-                        Bounds b = _bounds.get(flowElement.getId());
-                        if (b != null) {
-                            BPMNShape shape = factory.createBPMNShape();
-                            shape.setBpmnElement(flowElement);
-                            shape.setBounds(b);
-                            plane.getPlaneElement().add(shape);
-                            if (flowElement instanceof BoundaryEvent) {
-                                List<Point> dockers = _dockers.get(flowElement.getId());
-                                DcFactory dcFactory = DcFactory.eINSTANCE;
-                                StringBuffer dockerBuff = new StringBuffer();
-                                for (int i = 0; i < dockers.size(); i++) {
-                                    dockerBuff.append(dockers.get(i).getX());
-                                    dockerBuff.append("^");
-                                    dockerBuff.append(dockers.get(i).getY());
-                                    dockerBuff.append("|");
-                                }
-                                ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
-                                EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
-                                        "http://www.jboss.org/drools", "dockerinfo", false, false);
-                                SimpleFeatureMapEntry extensionEntry = new SimpleFeatureMapEntry(extensionAttribute,
-                                        dockerBuff.toString());
-                                flowElement.getAnyAttribute().add(extensionEntry);
-
-                            }
+        		for (FlowElement flowElement: process.getFlowElements()) {
+        			if (flowElement instanceof FlowNode) {
+        				createBpmnShapeForElement(factory, plane, flowElement);
+                        if(flowElement instanceof BoundaryEvent) {
+                            createDockersForBoundaryEvent((BoundaryEvent) flowElement);
                         }
-                        // check if its a subprocess
-                        if (flowElement instanceof SubProcess) {
-                            createSubProcessDiagram(plane, flowElement, factory);
-                        }
-                    } else if (flowElement instanceof DataObject) {
-                        Bounds b = _bounds.get(flowElement.getId());
-                        if (b != null) {
-                            BPMNShape shape = factory.createBPMNShape();
-                            shape.setBpmnElement(flowElement);
-                            shape.setBounds(b);
-                            plane.getPlaneElement().add(shape);
-                        }
-                    } else if (flowElement instanceof SequenceFlow) {
-                        SequenceFlow sequenceFlow = (SequenceFlow) flowElement;
-                        BPMNEdge edge = factory.createBPMNEdge();
-                        edge.setBpmnElement(flowElement);
-                        DcFactory dcFactory = DcFactory.eINSTANCE;
-                        Point point = dcFactory.createPoint();
-                        if (sequenceFlow.getSourceRef() != null) {
-                            Bounds sourceBounds = _bounds.get(sequenceFlow.getSourceRef().getId());
-                            point.setX(sourceBounds.getX() + (sourceBounds.getWidth() / 2));
-                            point.setY(sourceBounds.getY() + (sourceBounds.getHeight() / 2));
-                        }
-                        edge.getWaypoint().add(point);
-                        List<Point> dockers = _dockers.get(sequenceFlow.getId());
-                        for (int i = 1; i < dockers.size() - 1; i++) {
-                            edge.getWaypoint().add(dockers.get(i));
-                        }
-                        point = dcFactory.createPoint();
-                        if (sequenceFlow.getTargetRef() != null) {
-                            Bounds targetBounds = _bounds.get(sequenceFlow.getTargetRef().getId());
-                            point.setX(targetBounds.getX() + (targetBounds.getWidth() / 2));
-                            point.setY(targetBounds.getY() + (targetBounds.getHeight() / 2));
-                        }
-                        edge.getWaypoint().add(point);
-                        plane.getPlaneElement().add(edge);
-                    }
-                }
-                // artifacts
-                if (process.getArtifacts() != null) {
+        				// check if its a subprocess
+        				if(flowElement instanceof SubProcess) {
+        					createSubProcessDiagram(plane, flowElement, factory);
+        				}
+        			} else if(flowElement instanceof DataObject) {
+        				createBpmnShapeForElement(factory, plane, flowElement);
+        			}
+        			else if (flowElement instanceof SequenceFlow) {
+        				createBpmnEdgeForSequenceFlow(factory, plane, (SequenceFlow) flowElement);
+        			}
+        		}
+        		// then process artifacts
+                if (process.getArtifacts() != null){
                     List<Association> incompleteAssociations = new ArrayList<Association>();
                     for (Artifact artifact : process.getArtifacts()) {
                         //if (artifact instanceof TextAnnotation || artifact instanceof Group) {
                         if (artifact instanceof Group) {
-                            Bounds b = _bounds.get(artifact.getId());
-                            if (b != null) {
-                                BPMNShape shape = factory.createBPMNShape();
-                                shape.setBpmnElement(artifact);
-                                shape.setBounds(b);
-                                plane.getPlaneElement().add(shape);
-                            }
+                        	createBpmnShapeForElement(factory, plane, artifact);
                         }
-                        if (artifact instanceof Association) {
-                            Association association = (Association) artifact;
+                        if (artifact instanceof Association){
+                            Association association = (Association)artifact;
                             if (association.getSourceRef() != null && association.getTargetRef() != null) {
-                                BPMNEdge edge = factory.createBPMNEdge();
-                                edge.setBpmnElement(association);
-                                DcFactory dcFactory = DcFactory.eINSTANCE;
-                                Point point = dcFactory.createPoint();
-                                Bounds sourceBounds = _bounds.get(association.getSourceRef().getId());
-                                point.setX(sourceBounds.getX() + (sourceBounds.getWidth() / 2));
-                                point.setY(sourceBounds.getY() + (sourceBounds.getHeight() / 2));
-                                edge.getWaypoint().add(point);
-                                List<Point> dockers = _dockers.get(association.getId());
-                                for (int i = 1; i < dockers.size() - 1; i++) {
-                                    edge.getWaypoint().add(dockers.get(i));
-                                }
-                                point = dcFactory.createPoint();
-
-                                Bounds targetBounds = _bounds.get(association.getTargetRef().getId());
-                                point.setX(targetBounds.getX()); // TODO check
-                                point.setY(targetBounds.getY() + (targetBounds.getHeight() / 2));
-                                edge.getWaypoint().add(point);
-                                plane.getPlaneElement().add(edge);
-                            } else {
+                                createBpmnEdgeForAssociation(factory, plane, association);
+                            }
+                            else {
                                 incompleteAssociations.add(association);
                             }
                         }
                     }
                     if (!incompleteAssociations.isEmpty()) {
-                        for (Association incompleteAssociation : incompleteAssociations) {
+                        for (Association incompleteAssociation: incompleteAssociations) {
                             process.getArtifacts().remove(incompleteAssociation);
                         }
                     }
                 }
-                // lanes
-                if (process.getLaneSets() != null && process.getLaneSets().size() > 0) {
-                    for (LaneSet ls : process.getLaneSets()) {
-                        for (Lane lane : ls.getLanes()) {
-                            Bounds b = _bounds.get(lane.getId());
-                            if (b != null) {
-                                BPMNShape shape = factory.createBPMNShape();
-                                shape.setBpmnElement(lane);
-                                shape.setBounds(b);
-                                plane.getPlaneElement().add(shape);
-                            }
+                // finally process lanes
+                if(process.getLaneSets() != null && process.getLaneSets().size() > 0) {
+                    for(LaneSet ls : process.getLaneSets()) {
+                        for(Lane lane : ls.getLanes()) {
+                            createBpmnShapeForElement(factory, plane, lane);
                         }
                     }
                 }
-                def.getDiagrams().add(diagram);
-            }
+
+        		def.getDiagrams().add(diagram);
+    		}
+    	}
+    }
+
+    private void createBpmnShapeForElement(BpmnDiFactory factory, BPMNPlane plane, BaseElement element) {
+        Bounds bounds = _bounds.get(element.getId());
+        if (bounds != null) {
+            BPMNShape shape = factory.createBPMNShape();
+            shape.setBpmnElement(element);
+            shape.setBounds(bounds);
+            plane.getPlaneElement().add(shape);
         }
     }
 
-    protected BaseElement unmarshallItem(JsonParser parser, String preProcessingData) throws JsonParseException, IOException {
+    private void createDockersForBoundaryEvent(BoundaryEvent boundaryEvent) {
+        List<Point> dockers = _dockers.get(boundaryEvent.getId());
+        StringBuffer dockerBuff = new StringBuffer();
+        for (int i = 0; i < dockers.size(); i++) {
+            dockerBuff.append(dockers.get(i).getX());
+            dockerBuff.append("^");
+            dockerBuff.append(dockers.get(i).getY());
+            dockerBuff.append("|");
+        }
+        ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
+        EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
+                "http://www.jboss.org/drools", "dockerinfo", false, false);
+        SimpleFeatureMapEntry extensionEntry = new SimpleFeatureMapEntry(extensionAttribute,
+                dockerBuff.toString());
+        boundaryEvent.getAnyAttribute().add(extensionEntry);
+    }
+
+    private void createBpmnEdgeForSequenceFlow(BpmnDiFactory factory, BPMNPlane plane, SequenceFlow sequenceFlow) {
+        BPMNEdge edge = factory.createBPMNEdge();
+        edge.setBpmnElement(sequenceFlow);
+        DcFactory dcFactory = DcFactory.eINSTANCE;
+        Point point = dcFactory.createPoint();
+        if(sequenceFlow.getSourceRef() != null) {
+            Bounds sourceBounds = _bounds.get(sequenceFlow.getSourceRef().getId());
+            point.setX(sourceBounds.getX() + (sourceBounds.getWidth()/2));
+            point.setY(sourceBounds.getY() + (sourceBounds.getHeight()/2));
+        }
+        edge.getWaypoint().add(point);
+        List<Point> dockers = _dockers.get(sequenceFlow.getId());
+        for (int i = 1; i < dockers.size() - 1; i++) {
+            edge.getWaypoint().add(dockers.get(i));
+        }
+        point = dcFactory.createPoint();
+        if(sequenceFlow.getTargetRef() != null) {
+            Bounds targetBounds = _bounds.get(sequenceFlow.getTargetRef().getId());
+            point.setX(targetBounds.getX() + (targetBounds.getWidth()/2));
+            point.setY(targetBounds.getY() + (targetBounds.getHeight()/2));
+        }
+        edge.getWaypoint().add(point);
+        plane.getPlaneElement().add(edge);
+    }
+
+    private void createBpmnEdgeForAssociation(BpmnDiFactory factory, BPMNPlane plane, Association association) {
+        BPMNEdge edge = factory.createBPMNEdge();
+        edge.setBpmnElement(association);
+        DcFactory dcFactory = DcFactory.eINSTANCE;
+        Point point = dcFactory.createPoint();
+        Bounds sourceBounds = _bounds.get(association.getSourceRef().getId());
+        point.setX(sourceBounds.getX() + (sourceBounds.getWidth() / 2));
+        point.setY(sourceBounds.getY() + (sourceBounds.getHeight() / 2));
+        edge.getWaypoint().add(point);
+        List<Point> dockers = _dockers.get(association.getId());
+        for (int i = 1; i < dockers.size() - 1; i++) {
+            edge.getWaypoint().add(dockers.get(i));
+        }
+        point = dcFactory.createPoint();
+        Bounds targetBounds = _bounds.get(association.getTargetRef().getId());
+        point.setX(targetBounds.getX() + (targetBounds.getWidth() / 2));
+        point.setY(targetBounds.getY() + (targetBounds.getHeight() / 2));
+        edge.getWaypoint().add(point);
+        plane.getPlaneElement().add(edge);
+    }
+
+    public BaseElement unmarshallItem(JsonParser parser, String preProcessingData) throws JsonParseException, IOException {
         String resourceId = null;
         Map<String, String> properties = null;
         String stencil = null;
@@ -3147,9 +3100,9 @@ public class Bpmn2JsonUnmarshaller {
         // duplicate ids right now.
         applyProperties(baseElt, properties, preProcessingData);
         if (baseElt instanceof Definitions) {
-            Process rootLevelProcess = null;
-            if (childElements == null || childElements.size() < 1) {
-                if (rootLevelProcess == null) {
+        	Process rootLevelProcess = null;
+        	if(childElements == null || childElements.size() < 1) {
+        		if (rootLevelProcess == null) {
                     rootLevelProcess = Bpmn2Factory.eINSTANCE.createProcess();
                     // set the properties and item definitions first
                     if (properties.get("vardefs") != null && properties.get("vardefs").length() > 0) {
@@ -3552,52 +3505,27 @@ public class Bpmn2JsonUnmarshaller {
             sp.setName("");
         }
         // process on-entry and on-exit actions as custom elements
-        if (properties.get("onentryactions") != null && properties.get("onentryactions").length() > 0) {
-            String[] allActions = properties.get("onentryactions").split("\\|\\s*");
-            for (String action : allActions) {
-                OnEntryScriptType onEntryScript = DroolsFactory.eINSTANCE.createOnEntryScriptType();
-                onEntryScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(action)));
+        if(properties.get("onentryactions") != null && properties.get("onentryactions").length() > 0) {
+            OnEntryScriptType onEntryScript = DroolsFactory.eINSTANCE.createOnEntryScriptType();
+            onEntryScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(properties.get("onentryactions"))));
 
-                String scriptLanguage;
-                if (properties.get("script_language").equals("java")) {
-                    scriptLanguage = "http://www.java.com/java";
-                } else if (properties.get("script_language").equals("mvel")) {
-                    scriptLanguage = "http://www.mvel.org/2.0";
-                } else if (properties.get("script_language").equals("javascript")) {
-                    scriptLanguage = "http://www.javascript.com/javascript";
-                } else {
-                    // default to java
-                    scriptLanguage = "http://www.java.com/java";
-                }
-                onEntryScript.setScriptFormat(scriptLanguage);
+            String scriptLanguage = getScriptLanguageFormat(properties);
+            onEntryScript.setScriptFormat(scriptLanguage);
 
-                if (sp.getExtensionValues() == null || sp.getExtensionValues().size() < 1) {
-                    ExtensionAttributeValue extensionElement = Bpmn2Factory.eINSTANCE.createExtensionAttributeValue();
-                    sp.getExtensionValues().add(extensionElement);
-                }
-                FeatureMap.Entry extensionElementEntry = new SimpleFeatureMapEntry(
-                        (Internal) DroolsPackage.Literals.DOCUMENT_ROOT__ON_ENTRY_SCRIPT, onEntryScript);
-                sp.getExtensionValues().get(0).getValue().add(extensionElementEntry);
+            if(sp.getExtensionValues() == null || sp.getExtensionValues().size() < 1) {
+                ExtensionAttributeValue extensionElement = Bpmn2Factory.eINSTANCE.createExtensionAttributeValue();
+                sp.getExtensionValues().add(extensionElement);
             }
+            FeatureMap.Entry extensionElementEntry = new SimpleFeatureMapEntry(
+                    (Internal) DroolsPackage.Literals.DOCUMENT_ROOT__ON_ENTRY_SCRIPT, onEntryScript);
+            sp.getExtensionValues().get(0).getValue().add(extensionElementEntry);
         }
 
-        if (properties.get("onexitactions") != null && properties.get("onexitactions").length() > 0) {
-            String[] allActions = properties.get("onexitactions").split("\\|\\s*");
-            for (String action : allActions) {
+        if(properties.get("onexitactions") != null && properties.get("onexitactions").length() > 0) {
                 OnExitScriptType onExitScript = DroolsFactory.eINSTANCE.createOnExitScriptType();
-                onExitScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(action)));
+                onExitScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(properties.get("onexitactions"))));
 
-                String scriptLanguage;
-                if (properties.get("script_language").equals("java")) {
-                    scriptLanguage = "http://www.java.com/java";
-                } else if (properties.get("script_language").equals("mvel")) {
-                    scriptLanguage = "http://www.mvel.org/2.0";
-                } else if (properties.get("script_language").equals("javascript")) {
-                    scriptLanguage = "http://www.javascript.com/javascript";
-                } else {
-                    // default to java
-                    scriptLanguage = "http://www.java.com/java";
-                }
+                String scriptLanguage = getScriptLanguageFormat(properties);
                 onExitScript.setScriptFormat(scriptLanguage);
 
                 if (sp.getExtensionValues() == null || sp.getExtensionValues().size() < 1) {
@@ -3607,7 +3535,6 @@ public class Bpmn2JsonUnmarshaller {
                 FeatureMap.Entry extensionElementEntry = new SimpleFeatureMapEntry(
                         (Internal) DroolsPackage.Literals.DOCUMENT_ROOT__ON_EXIT_SCRIPT, onExitScript);
                 sp.getExtensionValues().get(0).getValue().add(extensionElementEntry);
-            }
         }
 
         // isAsync metadata
@@ -3619,8 +3546,6 @@ public class Bpmn2JsonUnmarshaller {
             InputOutputSpecification iospec = Bpmn2Factory.eINSTANCE.createInputOutputSpecification();
             sp.setIoSpecification(iospec);
         }
-
-        parseAssignmentsInfo(properties);
 
         // data input set
         applyDataInputProperties(sp, properties, new HashMap<String, DataInput>());
@@ -3640,16 +3565,16 @@ public class Bpmn2JsonUnmarshaller {
                     }
                     DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
 
-                    if (sp.getIoSpecification() != null && sp.getIoSpecification().getDataOutputs() != null) {
-                        List<DataInput> dataInputs = sp.getIoSpecification().getDataInputs();
-                        for (DataInput di : dataInputs) {
-                            if (di.getId().equals(sp.getId() + "_" + fromPart + "InputX")) {
-                                dia.setTargetRef(di);
-                                if (di.getName().equals("TaskName")) {
-                                    break;
-                                }
-                            }
-                        }
+                    if(sp.getIoSpecification() != null && sp.getIoSpecification().getDataOutputs() != null) {
+                    	List<DataInput> dataInputs = sp.getIoSpecification().getDataInputs();
+                    	for(DataInput di : dataInputs) {
+                    		if(di.getId().equals(sp.getId() + "_" + fromPart + "InputX")) {
+                    			dia.setTargetRef(di);
+                    			if(di.getName().equals("TaskName")) {
+                    				break;
+                    			}
+                    		}
+                    	}
                     }
 
                     Assignment a = Bpmn2Factory.eINSTANCE.createAssignment();
@@ -3953,6 +3878,23 @@ public class Bpmn2JsonUnmarshaller {
         }
     }
 
+    private String getScriptLanguageFormat(Map<String, String> properties) {
+        // default to java
+        String scriptLanguage = "http://www.java.com/java";
+
+        if(properties.get("script_language") != null && properties.get("script_language").length() > 0) {
+            if(properties.get("script_language").equals("java")) {
+                scriptLanguage = "http://www.java.com/java";
+            } else if(properties.get("script_language").equals("mvel")) {
+                scriptLanguage = "http://www.mvel.org/2.0";
+            } else if(properties.get("script_language").equals("javascript")) {
+                scriptLanguage = "http://www.javascript.com/javascript";
+            }
+        }
+
+        return scriptLanguage;
+    }
+
     private void applyDataOutputProperties(Activity activity, Map<String, String> properties) {
         if (properties.get("dataoutputset") != null && properties.get("dataoutputset").trim().length() > 0) {
             String[] allDataOutputs = properties.get("dataoutputset").split(",\\s*");
@@ -3962,13 +3904,13 @@ public class Bpmn2JsonUnmarshaller {
             }
 
             OutputSet outset = Bpmn2Factory.eINSTANCE.createOutputSet();
-            for (String dataOutput : allDataOutputs) {
-                if (dataOutput.trim().length() > 0) {
-                    DataOutput nextOut = Bpmn2Factory.eINSTANCE.createDataOutput();
-                    String[] dataOutputParts = dataOutput.split(":\\s*");
-                    if (dataOutputParts.length == 2) {
-                        nextOut.setId(activity.getId() + "_" + dataOutputParts[0] + (dataOutputParts[0].endsWith("OutputX") ? "" : "OutputX"));
-                        nextOut.setName(dataOutputParts[0]);
+            for(String dataOutput : allDataOutputs) {
+            	if(dataOutput.trim().length() > 0) {
+	                DataOutput nextOut = Bpmn2Factory.eINSTANCE.createDataOutput();
+	                String[] dataOutputParts = dataOutput.split( ":\\s*" );
+	                if(dataOutputParts.length == 2) {
+	                	nextOut.setId(activity.getId() + "_" + dataOutputParts[0] + (dataOutputParts[0].endsWith("OutputX") ? "" : "OutputX"));
+	                	nextOut.setName(dataOutputParts[0]);
 
                         ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
                         EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
@@ -4008,12 +3950,12 @@ public class Bpmn2JsonUnmarshaller {
                 activity.setIoSpecification(iospec);
             }
             InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
-            for (String dataInput : allDataInputs) {
-                if (dataInput.trim().length() > 0) {
-                    DataInput nextInput = Bpmn2Factory.eINSTANCE.createDataInput();
-                    String[] dataInputParts = dataInput.split(":\\s*");
-                    if (dataInputParts.length == 2) {
-                        for (String inputName : alreadyProcessedInputs.keySet()) {
+            for(String dataInput : allDataInputs) {
+            	if(dataInput.trim().length() > 0) {
+	                DataInput nextInput = Bpmn2Factory.eINSTANCE.createDataInput();
+	                String[] dataInputParts = dataInput.split( ":\\s*" );
+	                if(dataInputParts.length == 2) {
+                        for(String inputName : alreadyProcessedInputs.keySet()) {
                             if (inputName.equals(dataInputParts[0]) && alreadyProcessedInputs.get(inputName) != null) {
                                 break;
                             }
@@ -4057,18 +3999,18 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     protected void applyAdHocSubProcessProperties(AdHocSubProcess ahsp, Map<String, String> properties) {
-        if (properties.get("adhocordering") != null) {
-            if (properties.get("adhocordering").equals("Parallel")) {
-                ahsp.setOrdering(AdHocOrdering.PARALLEL);
-            } else {
-                ahsp.setOrdering(AdHocOrdering.SEQUENTIAL);
-            }
-        }
-        if (properties.get("adhoccompletioncondition") != null) {
-            FormalExpression completionConditionExpression = Bpmn2Factory.eINSTANCE.createFormalExpression();
-            completionConditionExpression.setBody(wrapInCDATABlock(properties.get("adhoccompletioncondition")));
-            ahsp.setCompletionCondition(completionConditionExpression);
-        }
+    	if(properties.get("adhocordering") != null) {
+    		if(properties.get("adhocordering").equals("Parallel")) {
+    			ahsp.setOrdering(AdHocOrdering.PARALLEL);
+    		} else {
+    			ahsp.setOrdering(AdHocOrdering.SEQUENTIAL);
+    		}
+    	}
+    	if(properties.get("adhoccompletioncondition") != null) {
+    		FormalExpression completionConditionExpression = Bpmn2Factory.eINSTANCE.createFormalExpression();
+    		completionConditionExpression.setBody(wrapInCDATABlock(properties.get("adhoccompletioncondition")));
+    		ahsp.setCompletionCondition(completionConditionExpression);
+    	}
     }
 
     protected void applyEndEventProperties(EndEvent ee, Map<String, String> properties) {
@@ -4092,16 +4034,16 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     protected void applyAssociationProperties(Association association, Map<String, String> properties) {
-        if (properties.get("type") != null) {
-            ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
+    	if(properties.get("type") != null) {
+    		ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
             EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
                     "http://www.jboss.org/drools", "type", false, false);
             SimpleFeatureMapEntry extensionEntry = new SimpleFeatureMapEntry(extensionAttribute,
                     properties.get("type"));
             association.getAnyAttribute().add(extensionEntry);
-        }
-        if (properties.get("bordercolor") != null && properties.get("bordercolor").length() > 0) {
-            if (!(_elementColors.containsKey(association.getId()))) {
+    	}
+    	if(properties.get("bordercolor") != null && properties.get("bordercolor").length() > 0) {
+            if(!(_elementColors.containsKey(association.getId()))) {
                 List<String> colorsList = new ArrayList<String>();
                 colorsList.add("bordercolor:" + properties.get("bordercolor"));
                 _elementColors.put(association.getId(), colorsList);
@@ -4215,8 +4157,8 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     protected void applyGroupProperties(Group group, Map<String, String> properties) {
-        if (properties.get("name") != null) {
-            ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
+    	if(properties.get("name") != null) {
+    		ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
             EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
                     "http://www.jboss.org/drools", "categoryval", false, false);
             SimpleFeatureMapEntry extensionEntry = new SimpleFeatureMapEntry(extensionAttribute,
@@ -4248,8 +4190,6 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     protected void applyCatchEventProperties(CatchEvent event, Map<String, String> properties) {
-        parseAssignmentsInfo(properties);
-
         if (properties.get("dataoutput") != null && !"".equals(properties.get("dataoutput"))) {
             String[] allDataOutputs = properties.get("dataoutput").split(",\\s*");
             OutputSet outSet = Bpmn2Factory.eINSTANCE.createOutputSet();
@@ -4481,10 +4421,8 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     protected void applyThrowEventProperties(ThrowEvent event, Map<String, String> properties) {
-        parseAssignmentsInfo(properties);
-
-        if (properties.get("datainput") != null && properties.get("datainput").trim().length() > 0) {
-            String[] allDataInputs = properties.get("datainput").split(",\\s*");
+        if(properties.get("datainput") != null && properties.get("datainput").trim().length() > 0) {
+            String[] allDataInputs = properties.get("datainput").split( ",\\s*" );
             InputSet inset = Bpmn2Factory.eINSTANCE.createInputSet();
             for (String dataInput : allDataInputs) {
                 if (dataInput.trim().length() > 0) {
@@ -4951,18 +4889,8 @@ public class Bpmn2JsonUnmarshaller {
             task.getAnyAttribute().add(extensionEntry);
         }
 
-        if (properties.get("script_language") != null && properties.get("script_language").length() > 0) {
-            String scriptLanguage;
-            if (properties.get("script_language").equals("java")) {
-                scriptLanguage = "http://www.java.com/java";
-            } else if (properties.get("script_language").equals("mvel")) {
-                scriptLanguage = "http://www.mvel.org/2.0";
-            } else if (properties.get("script_language").equals("javascript")) {
-                scriptLanguage = "http://www.javascript.com/javascript";
-            } else {
-                // default to java
-                scriptLanguage = "http://www.java.com/java";
-            }
+        if(properties.get("script_language") != null && properties.get("script_language").length() > 0) {
+            String scriptLanguage = getScriptLanguageFormat(properties);
             ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
             EAttributeImpl scriptLanguageElement = (EAttributeImpl) metadata.demandFeature(
                     "http://www.jboss.org/drools", "scriptFormat", false, false);
@@ -4979,18 +4907,8 @@ public class Bpmn2JsonUnmarshaller {
             scriptTask.setScript(wrapInCDATABlock(scriptStr));
         }
 
-        if (properties.get("script_language") != null && properties.get("script_language").length() > 0) {
-            String scriptLanguage;
-            if (properties.get("script_language").equals("java")) {
-                scriptLanguage = "http://www.java.com/java";
-            } else if (properties.get("script_language").equals("mvel")) {
-                scriptLanguage = "http://www.mvel.org/2.0";
-            } else if (properties.get("script_language").equals("javascript")) {
-                scriptLanguage = "http://www.javascript.com/javascript";
-            } else {
-                // default to java
-                scriptLanguage = "http://www.java.com/java";
-            }
+        if(properties.get("script_language") != null && properties.get("script_language").length() > 0) {
+            String scriptLanguage = getScriptLanguageFormat(properties);
             scriptTask.setScriptFormat(scriptLanguage);
         }
     }
@@ -5024,8 +4942,8 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     public void applyReceiveTaskProperties(ReceiveTask receiveTask, Map<String, String> properties) {
-        if (properties.get("messageref") != null && properties.get("messageref").length() > 0) {
-            ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
+    	if(properties.get("messageref") != null && properties.get("messageref").length() > 0) {
+    		ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
             EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
                     "http://www.jboss.org/drools", "msgref", false, false);
             SimpleFeatureMapEntry extensionEntry = new SimpleFeatureMapEntry(extensionAttribute,
@@ -5036,8 +4954,8 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     public void applySendTaskProperties(SendTask sendTask, Map<String, String> properties) {
-        if (properties.get("messageref") != null && properties.get("messageref").length() > 0) {
-            ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
+    	if(properties.get("messageref") != null && properties.get("messageref").length() > 0) {
+    		ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
             EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
                     "http://www.jboss.org/drools", "msgref", false, false);
             SimpleFeatureMapEntry extensionEntry = new SimpleFeatureMapEntry(extensionAttribute,
@@ -5059,8 +4977,8 @@ public class Bpmn2JsonUnmarshaller {
     }
 
     protected void applyCallActivityProperties(CallActivity callActivity, Map<String, String> properties) {
-        if (properties.get("name") != null) {
-            callActivity.setName(escapeXmlString(properties.get("name")).replaceAll("\\r\\n|\\r|\\n", " "));
+    	if(properties.get("name") != null) {
+    		callActivity.setName(escapeXmlString(properties.get("name")).replaceAll("\\r\\n|\\r|\\n", " "));
 
             // add unescaped and untouched name value as extension element as well
             Utils.setMetaDataExtensionValue(callActivity, "elementname", wrapInCDATABlock(properties.get("name").replaceAll("\\\\n", "\n")));
@@ -5068,8 +4986,8 @@ public class Bpmn2JsonUnmarshaller {
             callActivity.setName("");
         }
 
-        if (properties.get("independent") != null && properties.get("independent").length() > 0) {
-            ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
+    	if(properties.get("independent") != null && properties.get("independent").length() > 0) {
+    		ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
             EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
                     "http://www.jboss.org/drools", "independent", false, false);
             SimpleFeatureMapEntry extensionEntry = new SimpleFeatureMapEntry(extensionAttribute,
@@ -5077,8 +4995,8 @@ public class Bpmn2JsonUnmarshaller {
             callActivity.getAnyAttribute().add(extensionEntry);
         }
 
-        if (properties.get("waitforcompletion") != null && properties.get("waitforcompletion").length() > 0) {
-            ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
+    	if(properties.get("waitforcompletion") != null && properties.get("waitforcompletion").length() > 0) {
+    		ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
             EAttributeImpl extensionAttribute = (EAttributeImpl) metadata.demandFeature(
                     "http://www.jboss.org/drools", "waitForCompletion", false, false);
             SimpleFeatureMapEntry extensionEntry = new SimpleFeatureMapEntry(extensionAttribute,
@@ -5086,18 +5004,16 @@ public class Bpmn2JsonUnmarshaller {
             callActivity.getAnyAttribute().add(extensionEntry);
         }
 
-        if (properties.get("calledelement") != null && properties.get("calledelement").length() > 0) {
-            callActivity.setCalledElement(properties.get("calledelement"));
-        }
+    	if(properties.get("calledelement") != null && properties.get("calledelement").length() > 0) {
+    		callActivity.setCalledElement(properties.get("calledelement"));
+    	}
 
         // isAsync metadata
         if (properties.get("isasync") != null && properties.get("isasync").length() > 0 && properties.get("isasync").equals("true")) {
             Utils.setMetaDataExtensionValue(callActivity, "customAsync", wrapInCDATABlock(properties.get("isasync")));
         }
 
-        parseAssignmentsInfo(properties);
-
-        //callActivity data input set
+    	//callActivity data input set
         applyDataInputProperties(callActivity, properties, new HashMap<String, DataInput>());
 
         //callActivity data output set
@@ -5116,17 +5032,17 @@ public class Bpmn2JsonUnmarshaller {
                     }
 
                     boolean foundTaskName = false;
-                    if (callActivity.getIoSpecification() != null && callActivity.getIoSpecification().getDataOutputs() != null) {
-                        List<DataInput> dataInputs = callActivity.getIoSpecification().getDataInputs();
-                        for (DataInput di : dataInputs) {
-                            if (di.getId().equals(callActivity.getId() + "_" + fromPart + "InputX")) {
-                                dia.setTargetRef(di);
-                                if (di.getName().equals("TaskName")) {
-                                    foundTaskName = true;
-                                    break;
-                                }
-                            }
-                        }
+                    if(callActivity.getIoSpecification() != null && callActivity.getIoSpecification().getDataOutputs() != null) {
+                    	List<DataInput> dataInputs = callActivity.getIoSpecification().getDataInputs();
+                    	for(DataInput di : dataInputs) {
+                    		if(di.getId().equals(callActivity.getId() + "_" + fromPart + "InputX")) {
+                    			dia.setTargetRef(di);
+                    			if(di.getName().equals("TaskName")) {
+                    				foundTaskName = true;
+                    				break;
+                    			}
+                    		}
+                    	}
                     }
 
                     Assignment a = Bpmn2Factory.eINSTANCE.createAssignment();
@@ -5227,62 +5143,36 @@ public class Bpmn2JsonUnmarshaller {
         }
 
         // process on-entry and on-exit actions as custom elements
-        if (properties.get("onentryactions") != null && properties.get("onentryactions").length() > 0) {
-            String[] allActions = properties.get("onentryactions").split("\\|\\s*");
-            for (String action : allActions) {
-                OnEntryScriptType onEntryScript = DroolsFactory.eINSTANCE.createOnEntryScriptType();
-                onEntryScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(action)));
+        if(properties.get("onentryactions") != null && properties.get("onentryactions").length() > 0) {
+            OnEntryScriptType onEntryScript = DroolsFactory.eINSTANCE.createOnEntryScriptType();
+            onEntryScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(properties.get("onentryactions"))));
 
-                String scriptLanguage = "";
-                if (properties.get("script_language").equals("java")) {
-                    scriptLanguage = "http://www.java.com/java";
-                } else if (properties.get("script_language").equals("mvel")) {
-                    scriptLanguage = "http://www.mvel.org/2.0";
-                } else if (properties.get("script_language").equals("javascript")) {
-                    scriptLanguage = "http://www.javascript.com/javascript";
-                } else {
-                    // default to java
-                    scriptLanguage = "http://www.java.com/java";
-                }
-                onEntryScript.setScriptFormat(scriptLanguage);
+            String scriptLanguage = getScriptLanguageFormat(properties);
+            onEntryScript.setScriptFormat(scriptLanguage);
 
-                if (callActivity.getExtensionValues() == null || callActivity.getExtensionValues().size() < 1) {
-                    ExtensionAttributeValue extensionElement = Bpmn2Factory.eINSTANCE.createExtensionAttributeValue();
-                    callActivity.getExtensionValues().add(extensionElement);
-                }
-                FeatureMap.Entry extensionElementEntry = new SimpleFeatureMapEntry(
-                        (Internal) DroolsPackage.Literals.DOCUMENT_ROOT__ON_ENTRY_SCRIPT, onEntryScript);
-                callActivity.getExtensionValues().get(0).getValue().add(extensionElementEntry);
+            if(callActivity.getExtensionValues() == null || callActivity.getExtensionValues().size() < 1) {
+                ExtensionAttributeValue extensionElement = Bpmn2Factory.eINSTANCE.createExtensionAttributeValue();
+                callActivity.getExtensionValues().add(extensionElement);
             }
+            FeatureMap.Entry extensionElementEntry = new SimpleFeatureMapEntry(
+                    (Internal) DroolsPackage.Literals.DOCUMENT_ROOT__ON_ENTRY_SCRIPT, onEntryScript);
+            callActivity.getExtensionValues().get(0).getValue().add(extensionElementEntry);
         }
 
-        if (properties.get("onexitactions") != null && properties.get("onexitactions").length() > 0) {
-            String[] allActions = properties.get("onexitactions").split("\\|\\s*");
-            for (String action : allActions) {
-                OnExitScriptType onExitScript = DroolsFactory.eINSTANCE.createOnExitScriptType();
-                onExitScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(action)));
+        if(properties.get("onexitactions") != null && properties.get("onexitactions").length() > 0) {
+            OnExitScriptType onExitScript = DroolsFactory.eINSTANCE.createOnExitScriptType();
+            onExitScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(properties.get("onexitactions"))));
 
-                String scriptLanguage = "";
-                if (properties.get("script_language").equals("java")) {
-                    scriptLanguage = "http://www.java.com/java";
-                } else if (properties.get("script_language").equals("mvel")) {
-                    scriptLanguage = "http://www.mvel.org/2.0";
-                } else if (properties.get("script_language").equals("javascript")) {
-                    scriptLanguage = "http://www.javascript.com/javascript";
-                } else {
-                    // default to java
-                    scriptLanguage = "http://www.java.com/java";
-                }
-                onExitScript.setScriptFormat(scriptLanguage);
+            String scriptLanguage = getScriptLanguageFormat(properties);
+            onExitScript.setScriptFormat(scriptLanguage);
 
-                if (callActivity.getExtensionValues() == null || callActivity.getExtensionValues().size() < 1) {
-                    ExtensionAttributeValue extensionElement = Bpmn2Factory.eINSTANCE.createExtensionAttributeValue();
-                    callActivity.getExtensionValues().add(extensionElement);
-                }
-                FeatureMap.Entry extensionElementEntry = new SimpleFeatureMapEntry(
-                        (Internal) DroolsPackage.Literals.DOCUMENT_ROOT__ON_EXIT_SCRIPT, onExitScript);
-                callActivity.getExtensionValues().get(0).getValue().add(extensionElementEntry);
+            if(callActivity.getExtensionValues() == null || callActivity.getExtensionValues().size() < 1) {
+                ExtensionAttributeValue extensionElement = Bpmn2Factory.eINSTANCE.createExtensionAttributeValue();
+                callActivity.getExtensionValues().add(extensionElement);
             }
+            FeatureMap.Entry extensionElementEntry = new SimpleFeatureMapEntry(
+                    (Internal) DroolsPackage.Literals.DOCUMENT_ROOT__ON_EXIT_SCRIPT, onExitScript);
+            callActivity.getExtensionValues().get(0).getValue().add(extensionElementEntry);
         }
 
         // simulation
@@ -5428,8 +5318,6 @@ public class Bpmn2JsonUnmarshaller {
             Utils.setMetaDataExtensionValue(task, "customAsync", wrapInCDATABlock(properties.get("isasync")));
         }
 
-        parseAssignmentsInfo(properties);
-
         //process data input set
         Map<String, DataInput> alreadyProcessedInputs = new HashMap<String, DataInput>();
         alreadyProcessedInputs.put("TaskName", taskNameDataInput);
@@ -5456,17 +5344,17 @@ public class Bpmn2JsonUnmarshaller {
                     DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
 
                     boolean foundTaskName = false;
-                    if (task.getIoSpecification() != null && task.getIoSpecification().getDataOutputs() != null) {
-                        List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
-                        for (DataInput di : dataInputs) {
-                            if (di.getId().equals(task.getId() + "_" + fromPart + (fromPart.endsWith("InputX") ? "" : "InputX"))) {
-                                dia.setTargetRef(di);
-                                if (di.getName().equals("TaskName")) {
-                                    foundTaskName = true;
-                                    break;
-                                }
-                            }
-                        }
+                    if(task.getIoSpecification() != null && task.getIoSpecification().getDataOutputs() != null) {
+                    	List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
+                    	for(DataInput di : dataInputs) {
+                    		if(di.getId().equals(task.getId() + "_" + fromPart + (fromPart.endsWith("InputX") ? "" : "InputX"))) {
+                    			dia.setTargetRef(di);
+                    			if(di.getName().equals("TaskName")) {
+                    				foundTaskName = true;
+                    				break;
+                    			}
+                    		}
+                    	}
                     }
                     // if we are dealing with TaskName and none has been defined, add it
                     if (fromPart.equals("TaskName") && !foundTaskName) {
@@ -5584,7 +5472,8 @@ public class Bpmn2JsonUnmarshaller {
             // check if multiple taskname datainput associations exist and remove them
             List<DataInputAssociation> dataInputAssociations = task.getDataInputAssociations();
             boolean haveTaskNameInput = false;
-            for (Iterator<DataInputAssociation> itr = dataInputAssociations.iterator(); itr.hasNext(); ) {
+            for(Iterator<DataInputAssociation> itr = dataInputAssociations.iterator(); itr.hasNext();)
+            {
                 DataInputAssociation da = itr.next();
                 if (da.getAssignment() != null && da.getAssignment().size() > 0) {
                     Assignment a = da.getAssignment().get(0);
@@ -5600,23 +5489,11 @@ public class Bpmn2JsonUnmarshaller {
         }
 
         // process on-entry and on-exit actions as custom elements
-        if (properties.get("onentryactions") != null && properties.get("onentryactions").length() > 0) {
-            String[] allActions = properties.get("onentryactions").split("\\|\\s*");
-            for (String action : allActions) {
+        if(properties.get("onentryactions") != null && properties.get("onentryactions").length() > 0) {
                 OnEntryScriptType onEntryScript = DroolsFactory.eINSTANCE.createOnEntryScriptType();
-                onEntryScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(action)));
+                onEntryScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(properties.get("onentryactions"))));
 
-                String scriptLanguage = "";
-                if (properties.get("script_language").equals("java")) {
-                    scriptLanguage = "http://www.java.com/java";
-                } else if (properties.get("script_language").equals("mvel")) {
-                    scriptLanguage = "http://www.mvel.org/2.0";
-                } else if (properties.get("script_language").equals("javascript")) {
-                    scriptLanguage = "http://www.javascript.com/javascript";
-                } else {
-                    // default to java
-                    scriptLanguage = "http://www.java.com/java";
-                }
+                String scriptLanguage = getScriptLanguageFormat(properties);
                 onEntryScript.setScriptFormat(scriptLanguage);
 
                 if (task.getExtensionValues() == null || task.getExtensionValues().size() < 1) {
@@ -5626,26 +5503,13 @@ public class Bpmn2JsonUnmarshaller {
                 FeatureMap.Entry extensionElementEntry = new SimpleFeatureMapEntry(
                         (Internal) DroolsPackage.Literals.DOCUMENT_ROOT__ON_ENTRY_SCRIPT, onEntryScript);
                 task.getExtensionValues().get(0).getValue().add(extensionElementEntry);
-            }
         }
 
-        if (properties.get("onexitactions") != null && properties.get("onexitactions").length() > 0) {
-            String[] allActions = properties.get("onexitactions").split("\\|\\s*");
-            for (String action : allActions) {
+        if(properties.get("onexitactions") != null && properties.get("onexitactions").length() > 0) {
                 OnExitScriptType onExitScript = DroolsFactory.eINSTANCE.createOnExitScriptType();
-                onExitScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(action)));
+                onExitScript.setScript(wrapInCDATABlock(replaceScriptEscapeAndNewLines(properties.get("onexitactions"))));
 
-                String scriptLanguage;
-                if (properties.get("script_language").equals("java")) {
-                    scriptLanguage = "http://www.java.com/java";
-                } else if (properties.get("script_language").equals("mvel")) {
-                    scriptLanguage = "http://www.mvel.org/2.0";
-                } else if (properties.get("script_language").equals("javascript")) {
-                    scriptLanguage = "http://www.javascript.com/javascript";
-                } else {
-                    // default to java
-                    scriptLanguage = "http://www.java.com/java";
-                }
+                String scriptLanguage = getScriptLanguageFormat(properties);
                 onExitScript.setScriptFormat(scriptLanguage);
 
                 if (task.getExtensionValues() == null || task.getExtensionValues().size() < 1) {
@@ -5655,7 +5519,6 @@ public class Bpmn2JsonUnmarshaller {
                 FeatureMap.Entry extensionElementEntry = new SimpleFeatureMapEntry(
                         (Internal) DroolsPackage.Literals.DOCUMENT_ROOT__ON_EXIT_SCRIPT, onExitScript);
                 task.getExtensionValues().get(0).getValue().add(extensionElementEntry);
-            }
         }
 
         // multi instance
@@ -5681,19 +5544,19 @@ public class Bpmn2JsonUnmarshaller {
         }
 
         // simulation
-        if (properties.get("distributiontype") != null && properties.get("distributiontype").length() > 0) {
-            TimeParameters timeParams = BpsimFactory.eINSTANCE.createTimeParameters();
-            Parameter processingTimeParam = BpsimFactory.eINSTANCE.createParameter();
-            if (properties.get("distributiontype").equals("normal")) {
-                NormalDistributionType normalDistributionType = BpsimFactory.eINSTANCE.createNormalDistributionType();
-                normalDistributionType.setStandardDeviation(Double.valueOf(properties.get("standarddeviation")));
-                normalDistributionType.setMean(Double.valueOf(properties.get("mean")));
-                processingTimeParam.getParameterValue().add(normalDistributionType);
-            } else if (properties.get("distributiontype").equals("uniform")) {
-                UniformDistributionType uniformDistributionType = BpsimFactory.eINSTANCE.createUniformDistributionType();
-                uniformDistributionType.setMax(Double.valueOf(properties.get("max")));
-                uniformDistributionType.setMin(Double.valueOf(properties.get("min")));
-                processingTimeParam.getParameterValue().add(uniformDistributionType);
+        if(properties.get("distributiontype") != null && properties.get("distributiontype").length() > 0) {
+        	TimeParameters timeParams = BpsimFactory.eINSTANCE.createTimeParameters();
+        	Parameter processingTimeParam = BpsimFactory.eINSTANCE.createParameter();
+        	if(properties.get("distributiontype").equals("normal")) {
+        		NormalDistributionType normalDistributionType = BpsimFactory.eINSTANCE.createNormalDistributionType();
+        		normalDistributionType.setStandardDeviation(Double.valueOf(properties.get("standarddeviation")));
+        		normalDistributionType.setMean(Double.valueOf(properties.get("mean")));
+        		processingTimeParam.getParameterValue().add(normalDistributionType);
+        	} else if(properties.get("distributiontype").equals("uniform")) {
+        		UniformDistributionType uniformDistributionType = BpsimFactory.eINSTANCE.createUniformDistributionType();
+        		uniformDistributionType.setMax(Double.valueOf(properties.get("max")));
+        		uniformDistributionType.setMin(Double.valueOf(properties.get("min")));
+        		processingTimeParam.getParameterValue().add(uniformDistributionType);
 
                 // random distribution not supported in bpsim 1.0
 //        	} else if(properties.get("distributiontype").equals("random")) {
@@ -5719,9 +5582,9 @@ public class Bpmn2JsonUnmarshaller {
                 waittimeParam.getParameterValue().add(waittimeParamValue);
                 timeParams.setWaitTime(waittimeParam);
             }
-            timeParams.setProcessingTime(processingTimeParam);
-            if (_simulationElementParameters.containsKey(task.getId())) {
-                _simulationElementParameters.get(task.getId()).add(timeParams);
+        	timeParams.setProcessingTime(processingTimeParam);
+        	if(_simulationElementParameters.containsKey(task.getId())) {
+            	_simulationElementParameters.get(task.getId()).add(timeParams);
             } else {
                 List<EObject> values = new ArrayList<EObject>();
                 values.add(timeParams);
@@ -5766,18 +5629,8 @@ public class Bpmn2JsonUnmarshaller {
                 task.getResources().add(po);
             }
         }
-        if (properties.get("script_language") != null && properties.get("script_language").length() > 0) {
-            String scriptLanguage;
-            if (properties.get("script_language").equals("java")) {
-                scriptLanguage = "http://www.java.com/java";
-            } else if (properties.get("script_language").equals("mvel")) {
-                scriptLanguage = "http://www.mvel.org/2.0";
-            } else if (properties.get("script_language").equals("javascript")) {
-                scriptLanguage = "http://www.javascript.com/javascript";
-            } else {
-                // default to java
-                scriptLanguage = "http://www.java.com/java";
-            }
+        if(properties.get("script_language") != null && properties.get("script_language").length() > 0) {
+            String scriptLanguage = getScriptLanguageFormat(properties);
 
             ExtendedMetaData metadata = ExtendedMetaData.INSTANCE;
             EAttributeImpl scriptLanguageElement = (EAttributeImpl) metadata.demandFeature(
@@ -5787,24 +5640,24 @@ public class Bpmn2JsonUnmarshaller {
             task.getAnyAttribute().add(extensionEntry);
         }
 
-        if (properties.get("groupid") != null && properties.get("groupid").length() > 0) {
-            if (task.getIoSpecification() == null) {
+        if(properties.get("groupid") != null && properties.get("groupid").length() > 0) {
+        	if(task.getIoSpecification() == null) {
                 InputOutputSpecification iospec = Bpmn2Factory.eINSTANCE.createInputOutputSpecification();
                 task.setIoSpecification(iospec);
             }
-            List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
-            boolean foundGroupIdInput = false;
-            DataInput foundInput = null;
-            for (DataInput din : dataInputs) {
-                if (din.getName().equals("GroupId")) {
-                    foundGroupIdInput = true;
-                    foundInput = din;
-                    break;
-                }
-            }
+        	List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
+        	boolean foundGroupIdInput = false;
+        	DataInput foundInput = null;
+        	for(DataInput din : dataInputs) {
+        		if(din.getName().equals("GroupId")) {
+        			foundGroupIdInput = true;
+        			foundInput = din;
+        			break;
+        		}
+        	}
 
-            if (!foundGroupIdInput) {
-                DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
+        	if(!foundGroupIdInput) {
+        		DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
                 d.setId(task.getId() + "_" + "GroupId" + "InputX");
                 d.setName("GroupId");
                 task.getIoSpecification().getDataInputs().add(d);
@@ -5817,18 +5670,18 @@ public class Bpmn2JsonUnmarshaller {
                 task.getIoSpecification().getInputSets().get(0).getDataInputRefs().add(d);
             }
 
-            boolean foundGroupIdAssociation = false;
-            List<DataInputAssociation> inputAssociations = task.getDataInputAssociations();
-            for (DataInputAssociation da : inputAssociations) {
-                if (da.getTargetRef() != null && da.getTargetRef().getId().equals(foundInput.getId())) {
-                    foundGroupIdAssociation = true;
-                    ((FormalExpression) da.getAssignment().get(0).getFrom()).setBody(wrapInCDATABlock(properties.get("groupid")));
-                }
-            }
+        	boolean foundGroupIdAssociation = false;
+        	List<DataInputAssociation> inputAssociations = task.getDataInputAssociations();
+        	for(DataInputAssociation da : inputAssociations) {
+        		if(da.getTargetRef() != null && da.getTargetRef().getId().equals(foundInput.getId())) {
+        			foundGroupIdAssociation = true;
+        			((FormalExpression) da.getAssignment().get(0).getFrom()).setBody(wrapInCDATABlock(properties.get("groupid")));
+        		}
+        	}
 
-            if (!foundGroupIdAssociation) {
-                DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
-                dia.setTargetRef(foundInput);
+        	if(!foundGroupIdAssociation) {
+        		DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
+        		dia.setTargetRef(foundInput);
 
                 Assignment a = Bpmn2Factory.eINSTANCE.createAssignment();
                 FormalExpression groupFromExpression = Bpmn2Factory.eINSTANCE.createFormalExpression();
@@ -5846,24 +5699,24 @@ public class Bpmn2JsonUnmarshaller {
         }
 
         String skippableStr = (properties.get("skippable") == null ? "true" : properties.get("skippable"));   // default to true if not set
-        if (skippableStr.length() > 0) {
-            if (task.getIoSpecification() == null) {
+        if(skippableStr.length() > 0) {
+        	if(task.getIoSpecification() == null) {
                 InputOutputSpecification iospec = Bpmn2Factory.eINSTANCE.createInputOutputSpecification();
                 task.setIoSpecification(iospec);
             }
-            List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
-            boolean foundSkippableInput = false;
-            DataInput foundInput = null;
-            for (DataInput din : dataInputs) {
-                if (din.getName().equals("Skippable")) {
-                    foundSkippableInput = true;
-                    foundInput = din;
-                    break;
-                }
-            }
+        	List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
+        	boolean foundSkippableInput = false;
+        	DataInput foundInput = null;
+        	for(DataInput din : dataInputs) {
+        		if(din.getName().equals("Skippable")) {
+        			foundSkippableInput = true;
+        			foundInput = din;
+        			break;
+        		}
+        	}
 
-            if (!foundSkippableInput) {
-                DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
+        	if(!foundSkippableInput) {
+        		DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
                 d.setId(task.getId() + "_" + "Skippable" + "InputX");
                 d.setName("Skippable");
                 task.getIoSpecification().getDataInputs().add(d);
@@ -5876,18 +5729,18 @@ public class Bpmn2JsonUnmarshaller {
                 task.getIoSpecification().getInputSets().get(0).getDataInputRefs().add(d);
             }
 
-            boolean foundSkippableAssociation = false;
-            List<DataInputAssociation> inputAssociations = task.getDataInputAssociations();
-            for (DataInputAssociation da : inputAssociations) {
-                if (da.getTargetRef() != null && da.getTargetRef().getId().equals(foundInput.getId())) {
-                    foundSkippableAssociation = true;
-                    ((FormalExpression) da.getAssignment().get(0).getFrom()).setBody(skippableStr);
-                }
-            }
+        	boolean foundSkippableAssociation = false;
+        	List<DataInputAssociation> inputAssociations = task.getDataInputAssociations();
+        	for(DataInputAssociation da : inputAssociations) {
+        		if(da.getTargetRef() != null && da.getTargetRef().getId().equals(foundInput.getId())) {
+        			foundSkippableAssociation = true;
+        			((FormalExpression) da.getAssignment().get(0).getFrom()).setBody( skippableStr );
+        		}
+        	}
 
-            if (!foundSkippableAssociation) {
-                DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
-                dia.setTargetRef(foundInput);
+        	if(!foundSkippableAssociation) {
+        		DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
+        		dia.setTargetRef(foundInput);
 
                 Assignment a = Bpmn2Factory.eINSTANCE.createAssignment();
                 FormalExpression skippableFromExpression = Bpmn2Factory.eINSTANCE.createFormalExpression();
@@ -5904,24 +5757,24 @@ public class Bpmn2JsonUnmarshaller {
             }
         }
 
-        if (properties.get("subject") != null && properties.get("subject").length() > 0) {
-            if (task.getIoSpecification() == null) {
+        if(properties.get("subject") != null && properties.get("subject").length() > 0) {
+        	if(task.getIoSpecification() == null) {
                 InputOutputSpecification iospec = Bpmn2Factory.eINSTANCE.createInputOutputSpecification();
                 task.setIoSpecification(iospec);
             }
-            List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
-            boolean foundCommentInput = false;
-            DataInput foundInput = null;
-            for (DataInput din : dataInputs) {
-                if (din.getName().equals("Comment")) {
-                    foundCommentInput = true;
-                    foundInput = din;
-                    break;
-                }
-            }
+        	List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
+        	boolean foundCommentInput = false;
+        	DataInput foundInput = null;
+        	for(DataInput din : dataInputs) {
+        		if(din.getName().equals("Comment")) {
+        			foundCommentInput = true;
+        			foundInput = din;
+        			break;
+        		}
+        	}
 
-            if (!foundCommentInput) {
-                DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
+        	if(!foundCommentInput) {
+        		DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
                 d.setId(task.getId() + "_" + "Comment" + "InputX");
                 d.setName("Comment");
                 task.getIoSpecification().getDataInputs().add(d);
@@ -5934,18 +5787,18 @@ public class Bpmn2JsonUnmarshaller {
                 task.getIoSpecification().getInputSets().get(0).getDataInputRefs().add(d);
             }
 
-            boolean foundCommentAssociation = false;
-            List<DataInputAssociation> inputAssociations = task.getDataInputAssociations();
-            for (DataInputAssociation da : inputAssociations) {
-                if (da.getTargetRef() != null && da.getTargetRef().getId().equals(foundInput.getId())) {
-                    foundCommentAssociation = true;
-                    ((FormalExpression) da.getAssignment().get(0).getFrom()).setBody(wrapInCDATABlock(properties.get("subject")));
-                }
-            }
+        	boolean foundCommentAssociation = false;
+        	List<DataInputAssociation> inputAssociations = task.getDataInputAssociations();
+        	for(DataInputAssociation da : inputAssociations) {
+        		if(da.getTargetRef() != null && da.getTargetRef().getId().equals(foundInput.getId())) {
+        			foundCommentAssociation = true;
+        			((FormalExpression) da.getAssignment().get(0).getFrom()).setBody(wrapInCDATABlock(properties.get("subject")));
+        		}
+        	}
 
-            if (!foundCommentAssociation) {
-                DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
-                dia.setTargetRef(foundInput);
+        	if(!foundCommentAssociation) {
+        		DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
+        		dia.setTargetRef(foundInput);
 
                 Assignment a = Bpmn2Factory.eINSTANCE.createAssignment();
                 FormalExpression commentFromExpression = Bpmn2Factory.eINSTANCE.createFormalExpression();
@@ -6020,24 +5873,24 @@ public class Bpmn2JsonUnmarshaller {
             }
         }
 
-        if (properties.get("priority") != null && properties.get("priority").length() > 0) {
-            if (task.getIoSpecification() == null) {
+        if(properties.get("priority") != null && properties.get("priority").length() > 0) {
+        	if(task.getIoSpecification() == null) {
                 InputOutputSpecification iospec = Bpmn2Factory.eINSTANCE.createInputOutputSpecification();
                 task.setIoSpecification(iospec);
             }
-            List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
-            boolean foundPriorityInput = false;
-            DataInput foundInput = null;
-            for (DataInput din : dataInputs) {
-                if (din.getName().equals("Priority")) {
-                    foundPriorityInput = true;
-                    foundInput = din;
-                    break;
-                }
-            }
+        	List<DataInput> dataInputs = task.getIoSpecification().getDataInputs();
+        	boolean foundPriorityInput = false;
+        	DataInput foundInput = null;
+        	for(DataInput din : dataInputs) {
+        		if(din.getName().equals("Priority")) {
+        			foundPriorityInput = true;
+        			foundInput = din;
+        			break;
+        		}
+        	}
 
-            if (!foundPriorityInput) {
-                DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
+        	if(!foundPriorityInput) {
+        		DataInput d = Bpmn2Factory.eINSTANCE.createDataInput();
                 d.setId(task.getId() + "_" + "Priority" + "InputX");
                 d.setName("Priority");
                 task.getIoSpecification().getDataInputs().add(d);
@@ -6050,18 +5903,18 @@ public class Bpmn2JsonUnmarshaller {
                 task.getIoSpecification().getInputSets().get(0).getDataInputRefs().add(d);
             }
 
-            boolean foundPriorityAssociation = false;
-            List<DataInputAssociation> inputAssociations = task.getDataInputAssociations();
-            for (DataInputAssociation da : inputAssociations) {
-                if (da.getTargetRef() != null && da.getTargetRef().getId().equals(foundInput.getId())) {
-                    foundPriorityAssociation = true;
-                    ((FormalExpression) da.getAssignment().get(0).getFrom()).setBody(properties.get("priority"));
-                }
-            }
+        	boolean foundPriorityAssociation = false;
+        	List<DataInputAssociation> inputAssociations = task.getDataInputAssociations();
+        	for(DataInputAssociation da : inputAssociations) {
+        		if(da.getTargetRef() != null && da.getTargetRef().getId().equals(foundInput.getId())) {
+        			foundPriorityAssociation = true;
+        			((FormalExpression) da.getAssignment().get(0).getFrom()).setBody(properties.get("priority"));
+        		}
+        	}
 
-            if (!foundPriorityAssociation) {
-                DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
-                dia.setTargetRef(foundInput);
+        	if(!foundPriorityAssociation) {
+        		DataInputAssociation dia = Bpmn2Factory.eINSTANCE.createDataInputAssociation();
+        		dia.setTargetRef(foundInput);
 
                 Assignment a = Bpmn2Factory.eINSTANCE.createAssignment();
                 FormalExpression priorityFromExpression = Bpmn2Factory.eINSTANCE.createFormalExpression();
@@ -6463,19 +6316,19 @@ public class Bpmn2JsonUnmarshaller {
         // end notifications
 
         // revisit data assignments
-        if (task.getDataInputAssociations() != null) {
-            List<DataInputAssociation> dataInputAssociations = task.getDataInputAssociations();
-            List<DataInputAssociation> incompleteAssociations = new ArrayList<DataInputAssociation>();
-            for (DataInputAssociation dia : dataInputAssociations) {
-                DataInput targetInput = (DataInput) dia.getTargetRef();
-                if (targetInput != null && targetInput.getName() != null) {
-                    if (targetInput.getName().equals("GroupId") && (properties.get("groupid") == null || properties.get("groupid").length() == 0)) {
-                        incompleteAssociations.add(dia);
-                    } else if (targetInput.getName().equalsIgnoreCase("Skippable") && (skippableStr == null || skippableStr.length() == 0)) {
-                        incompleteAssociations.add(dia);
-                    } else if (targetInput.getName().equalsIgnoreCase("Comment") && (properties.get("subject") == null || properties.get("subject").length() == 0)) {
-                        incompleteAssociations.add(dia);
-                    } else if (targetInput.getName().equalsIgnoreCase("Description") && (properties.get("description") == null || properties.get("description").length() == 0)) {
+        if(task.getDataInputAssociations() != null) {
+        	List<DataInputAssociation> dataInputAssociations = task.getDataInputAssociations();
+        	List<DataInputAssociation> incompleteAssociations = new ArrayList<DataInputAssociation>();
+        	for(DataInputAssociation dia : dataInputAssociations) {
+        		DataInput targetInput = (DataInput) dia.getTargetRef();
+        		if(targetInput != null && targetInput.getName() != null) {
+        			if(targetInput.getName().equals("GroupId") && (properties.get("groupid") == null  || properties.get("groupid").length() == 0)) {
+        				incompleteAssociations.add(dia);
+        			} else if(targetInput.getName().equalsIgnoreCase("Skippable") && ( skippableStr == null || skippableStr.length() == 0) ) {
+        				incompleteAssociations.add(dia);
+        			} else if(targetInput.getName().equalsIgnoreCase("Comment") && (properties.get("subject") == null  || properties.get("subject").length() == 0)) {
+        				incompleteAssociations.add(dia);
+        			} else if(targetInput.getName().equalsIgnoreCase("Description") && (properties.get("description") == null  || properties.get("description").length() == 0)) {
                         incompleteAssociations.add(dia);
                     } else if (targetInput.getName().equalsIgnoreCase("Priority") && (properties.get("priority") == null || properties.get("priority").length() == 0)) {
                         incompleteAssociations.add(dia);
@@ -6497,24 +6350,23 @@ public class Bpmn2JsonUnmarshaller {
                 }
             }
 
-            for (DataInputAssociation tr : incompleteAssociations) {
-                if (task.getDataInputAssociations() != null) {
-                    task.getDataInputAssociations().remove(tr);
-                }
-            }
+        	for(DataInputAssociation tr : incompleteAssociations) {
+        		if(task.getDataInputAssociations() != null)
+        			task.getDataInputAssociations().remove(tr);
+        	}
         }
 
         List<DataInput> toRemoveDataInputs = new ArrayList<DataInput>();
-        if (task.getIoSpecification() != null && task.getIoSpecification().getDataInputs() != null) {
-            List<DataInput> taskDataInputs = task.getIoSpecification().getDataInputs();
-            for (DataInput din : taskDataInputs) {
-                if (din.getName().equals("GroupId") && (properties.get("groupid") == null || properties.get("groupid").length() == 0)) {
-                    toRemoveDataInputs.add(din);
-                } else if (din.getName().equalsIgnoreCase("Skippable") && (skippableStr == null || skippableStr.length() == 0)) {
-                    toRemoveDataInputs.add(din);
-                } else if (din.getName().equalsIgnoreCase("Comment") && (properties.get("subject") == null || properties.get("subject").length() == 0)) {
-                    toRemoveDataInputs.add(din);
-                } else if (din.getName().equalsIgnoreCase("Description") && (properties.get("description") == null || properties.get("description").length() == 0)) {
+        if(task.getIoSpecification() != null && task.getIoSpecification().getDataInputs() != null) {
+        	List<DataInput> taskDataInputs = task.getIoSpecification().getDataInputs();
+        	for(DataInput din : taskDataInputs) {
+        		if(din.getName().equals("GroupId") && (properties.get("groupid") == null  || properties.get("groupid").length() == 0)) {
+        			toRemoveDataInputs.add(din);
+    			} else if(din.getName().equalsIgnoreCase("Skippable") && (skippableStr == null  || skippableStr.length() == 0)) {
+    				toRemoveDataInputs.add(din);
+    			} else if(din.getName().equalsIgnoreCase("Comment") && (properties.get("subject") == null  || properties.get("subject").length() == 0)) {
+    				toRemoveDataInputs.add(din);
+    			} else if(din.getName().equalsIgnoreCase("Description") && (properties.get("description") == null  || properties.get("description").length() == 0)) {
                     toRemoveDataInputs.add(din);
                 } else if (din.getName().equalsIgnoreCase("Priority") && (properties.get("priority") == null || properties.get("priority").length() == 0)) {
                     toRemoveDataInputs.add(din);
@@ -6536,13 +6388,12 @@ public class Bpmn2JsonUnmarshaller {
             }
         }
 
-        for (DataInput trdin : toRemoveDataInputs) {
-            if (task.getIoSpecification() != null && task.getIoSpecification().getDataInputs() != null) {
-                if (task.getIoSpecification().getInputSets().size() > 0) {
-                    task.getIoSpecification().getInputSets().get(0).getDataInputRefs().remove(trdin);
-                }
-            }
-            task.getIoSpecification().getDataInputs().remove(trdin);
+        for(DataInput trdin : toRemoveDataInputs) {
+        	if(task.getIoSpecification() != null && task.getIoSpecification().getDataInputs() != null)
+        		if(task.getIoSpecification().getInputSets().size() > 0) {
+        			task.getIoSpecification().getInputSets().get(0).getDataInputRefs().remove(trdin);
+        		}
+        		task.getIoSpecification().getDataInputs().remove(trdin);
         }
 
         // simulation properties
@@ -6726,16 +6577,16 @@ public class Bpmn2JsonUnmarshaller {
         sequenceFlow.setIsImmediate(Boolean.parseBoolean(properties.get("isimmediate")));
 
         // simulation properties
-        if (properties.get("probability") != null && properties.get("probability").length() > 0) {
-            ControlParameters controlParams = BpsimFactory.eINSTANCE.createControlParameters();
-            Parameter probParam = BpsimFactory.eINSTANCE.createParameter();
-            FloatingParameterType probParamValueParam = BpsimFactory.eINSTANCE.createFloatingParameterType();
-            DecimalFormat twoDForm = new DecimalFormat("#.##");
-            probParamValueParam.setValue(Double.valueOf(twoDForm.format(Double.valueOf(properties.get("probability")))));
-            probParam.getParameterValue().add(probParamValueParam);
-            controlParams.setProbability(probParam);
-            if (_simulationElementParameters.containsKey(sequenceFlow.getId())) {
-                _simulationElementParameters.get(sequenceFlow.getId()).add(controlParams);
+        if(properties.get("probability") != null && properties.get("probability").length() > 0) {
+        	ControlParameters controlParams = BpsimFactory.eINSTANCE.createControlParameters();
+        	Parameter probParam = BpsimFactory.eINSTANCE.createParameter();
+        	FloatingParameterType probParamValueParam = BpsimFactory.eINSTANCE.createFloatingParameterType();
+        	DecimalFormat twoDForm = new DecimalFormat("#.##");
+        	probParamValueParam.setValue(Double.valueOf(twoDForm.format(Double.valueOf(properties.get("probability")))));
+        	probParam.getParameterValue().add(probParamValueParam);
+        	controlParams.setProbability(probParam);
+        	if(_simulationElementParameters.containsKey(sequenceFlow.getId())) {
+            	_simulationElementParameters.get(sequenceFlow.getId()).add(controlParams);
             } else {
                 List<EObject> values = new ArrayList<EObject>();
                 values.add(controlParams);
@@ -6788,54 +6639,53 @@ public class Bpmn2JsonUnmarshaller {
         int len = string.length();
         char c;
 
-        for (int i = 0; i < len; i++) {
-            c = string.charAt(i);
-            if (c == ' ') {
-                sb.append(' ');
-            } else {
-                lastWasBlankChar = false;
-                //
-                // HTML Special Chars
-                if (c == '"') {
-                    sb.append("&quot;");
-                } else if (c == '&') {
-                    sb.append("&amp;");
-                } else if (c == '<') {
-                    sb.append("&lt;");
-                } else if (c == '>') {
-                    sb.append("&gt;");
-                } else {
-                    int ci = 0xffff & c;
-                    if (ci < 160)
-                    // nothing special only 7 Bit
-                    {
-                        sb.append(c);
-                    } else {
-                        // Not 7 Bit use the unicode system
-                        sb.append("&#");
-                        sb.append(Integer.toString(ci));
-                        sb.append(';');
-                    }
-                }
-            }
-        }
-        return sb.toString();
-    }
+		for (int i = 0; i < len; i++) {
+			c = string.charAt(i);
+			if (c == ' ') {
+				sb.append(' ');
+			} else {
+				lastWasBlankChar = false;
+				//
+				// HTML Special Chars
+				if (c == '"')
+					sb.append("&quot;");
+				else if (c == '&')
+					sb.append("&amp;");
+				else if (c == '<')
+					sb.append("&lt;");
+				else if (c == '>')
+					sb.append("&gt;");
+				else {
+					int ci = 0xffff & c;
+					if (ci < 160)
+						// nothing special only 7 Bit
+						sb.append(c);
+					else {
+						// Not 7 Bit use the unicode system
+						sb.append("&#");
+						sb.append(Integer.toString(ci));
+						sb.append(';');
+					}
+				}
+			}
+		}
+		return sb.toString();
+	}
 
     private String getReassignmentsAndNotificationsForType(String inputStr, String type) {
         String[] parts = inputStr.split("\\^\\s*");
         String ret = "";
-        for (int i = 0; i < parts.length; i++) {
-            if (parts[i].endsWith("^")) {
-                parts[i] = parts[i].substring(0, parts[i].length() - 1);
+        for(int i=0;i<parts.length;i++) {
+            if(parts[i].endsWith("^")) {
+                parts[i] = parts[i].substring(0,parts[i].length()-1);
             }
-            if (parts[i].endsWith("@" + type)) {
-                ret += parts[i].substring(0, parts[i].length() - ("@" + type).length());
+            if(parts[i].endsWith("@"+type)) {
+                ret += parts[i].substring(0, parts[i].length() - ("@"+type).length());
                 ret += "^";
             }
         }
-        if (ret.endsWith("^")) {
-            ret = ret.substring(0, ret.length() - 1);
+        if(ret.endsWith("^")) {
+            ret = ret.substring(0,ret.length()-1);
         }
 
         return wrapInCDATABlock(ret);
@@ -6861,16 +6711,20 @@ public class Bpmn2JsonUnmarshaller {
                     // set c to '\0' so that prevC doesn't match '\\'
                     // the next time round
                     c = '\0';
-                } else {
+                }
+                else {
                     atEscape = true;
                 }
-            } else if (atEscape) {
+            }
+            else if (atEscape) {
                 if (c == 'n') {
                     result.append("\n");
-                } else {
+                }
+                else {
                     result.append(c);
                 }
-            } else {
+            }
+            else {
                 result.append(c);
             }
             // unset atEscape flag if required
@@ -6889,39 +6743,9 @@ public class Bpmn2JsonUnmarshaller {
         }
         try {
             return URLDecoder.decode(s, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return s;
         }
-    }
-
-    private void parseAssignmentsInfo(Map<String, String> properties) {
-        if (properties != null && properties.get("assignmentsinfo") != null) {
-            String assignmentsinfo = properties.get("assignmentsinfo");
-            String[] parts = assignmentsinfo.split("\\|");
-            if (parts.length > 0 && parts[0] != null && parts[0].length() > 0) {
-                properties.put("datainput", parts[0]);
-                if (parts.length > 4 && parts[4] != null && parts[4].length() > 0) {
-                    properties.put("datainputassociations", parts[4]);
-                }
-            }
-            if (parts.length > 1 && parts[1] != null && parts[1].length() > 0) {
-                properties.put("datainputset", parts[1]);
-                if (parts.length > 4 && parts[4] != null && parts[4].length() > 0) {
-                    properties.put("assignments", parts[4]);
-                }
-            }
-            if (parts.length > 2 && parts[2] != null && parts[2].length() > 0) {
-                properties.put("dataoutput", parts[2]);
-                if (parts.length > 4 && parts[4] != null && parts[4].length() > 0) {
-                    properties.put("dataoutputassociations", parts[4]);
-                }
-            }
-            if (parts.length > 3 && parts[3] != null && parts[3].length() > 0) {
-                properties.put("dataoutputset", parts[3]);
-                if (parts.length > 4 && parts[4] != null && parts[4].length() > 0) {
-                    properties.put("assignments", parts[4]);
-                }
-            }
+        catch (UnsupportedEncodingException e) {
+            return s;
         }
     }
 

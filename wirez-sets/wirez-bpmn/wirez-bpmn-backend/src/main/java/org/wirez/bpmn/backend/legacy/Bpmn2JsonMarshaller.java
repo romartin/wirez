@@ -111,9 +111,9 @@ public class Bpmn2JsonMarshaller {
                 List<BPSimDataType> bpsimExtensions = (List<BPSimDataType>) extensionElements.get(BpsimPackage.Literals.DOCUMENT_ROOT__BP_SIM_DATA, true);
                 if (bpsimExtensions != null && bpsimExtensions.size() > 0) {
                     BPSimDataType processAnalysis = bpsimExtensions.get(0);
-                    if (processAnalysis.getScenario() != null && processAnalysis.getScenario().size() > 0) {
-                        _simulationScenario = processAnalysis.getScenario().get(0);
-                    }
+                	if(processAnalysis.getScenario() != null && processAnalysis.getScenario().size() > 0) {
+                		_simulationScenario = processAnalysis.getScenario().get(0);
+                	}
                 }
             }
 
@@ -204,16 +204,16 @@ public class Bpmn2JsonMarshaller {
             props.put("id", def.getId());
             props.put("expressionlanguage", def.getExpressionLanguage());
             // backwards compat for BZ 1048191
-            if (def.getDocumentation() != null && def.getDocumentation().size() > 0) {
+            if( def.getDocumentation() != null && def.getDocumentation().size() > 0 ) {
                 props.put("documentation", def.getDocumentation().get(0).getText());
             }
 
-            for (RootElement rootElement : def.getRootElements()) {
-                if (rootElement instanceof Process) {
-                    // have to wait for process node to finish properties and stencil marshalling
-                    props.put("executable", ((Process) rootElement).isIsExecutable() + "");
-                    props.put("id", rootElement.getId());
-                    if (rootElement.getDocumentation() != null && rootElement.getDocumentation().size() > 0) {
+	        for (RootElement rootElement : def.getRootElements()) {
+	            if (rootElement instanceof Process) {
+	                // have to wait for process node to finish properties and stencil marshalling
+	                props.put("executable", ((Process) rootElement).isIsExecutable() + "");
+	                props.put("id", rootElement.getId());
+                    if( rootElement.getDocumentation() != null && rootElement.getDocumentation().size() > 0 ) {
                         props.put("documentation", rootElement.getDocumentation().get(0).getText());
                     }
                     Process pr = (Process) rootElement;
@@ -221,11 +221,11 @@ public class Bpmn2JsonMarshaller {
                         props.put("processn", unescapeXML(((Process) rootElement).getName()));
                     }
 
-                    List<Property> processProperties = ((Process) rootElement).getProperties();
-                    if (processProperties != null && processProperties.size() > 0) {
-                        String propVal = "";
-                        for (int i = 0; i < processProperties.size(); i++) {
-                            Property p = processProperties.get(i);
+	                List<Property> processProperties = ((Process) rootElement).getProperties();
+	                if(processProperties != null && processProperties.size() > 0) {
+	                    String propVal = "";
+	                    for(int i=0; i<processProperties.size(); i++) {
+	                        Property p = processProperties.get(i);
                             String pKPI = Utils.getMetaDataValue(p.getExtensionValues(), "customKPI");
                             propVal += p.getId();
                             // check the structureRef value
@@ -235,12 +235,12 @@ public class Bpmn2JsonMarshaller {
                             if (pKPI != null && pKPI.length() > 0) {
                                 propVal += ":" + pKPI;
                             }
-                            if (i != processProperties.size() - 1) {
-                                propVal += ",";
-                            }
-                        }
-                        props.put("vardefs", propVal);
-                    }
+	                        if(i != processProperties.size()-1) {
+	                            propVal += ",";
+	                        }
+	                    }
+	                    props.put("vardefs", propVal);
+	                }
 
                     // packageName and version and adHoc are jbpm-specific extension attribute
                     Iterator<FeatureMap.Entry> iter = ((Process) rootElement).getAnyAttribute().iterator();
@@ -355,30 +355,29 @@ public class Bpmn2JsonMarshaller {
         }
     }
 
-    /**
-     * protected void marshallMessage(Message message, Definitions def, JsonGenerator generator) throws JsonGenerationException, IOException {
-     * Map<String, Object> properties = new LinkedHashMap<String, Object>();
-     * <p>
-     * generator.writeStartObject();
-     * generator.writeObjectField("resourceId", message.getId());
-     * <p>
-     * properties.put("name", message.getName());
-     * if(message.getDocumentation() != null && message.getDocumentation().size() > 0) {
-     * properties.put("documentation", message.getDocumentation().get(0).getText());
-     * }
-     * <p>
-     * marshallProperties(properties, generator);
-     * generator.writeObjectFieldStart("stencil");
-     * generator.writeObjectField("id", "Message");
-     * generator.writeEndObject();
-     * generator.writeArrayFieldStart("childShapes");
-     * generator.writeEndArray();
-     * generator.writeArrayFieldStart("outgoing");
-     * generator.writeEndArray();
-     * <p>
-     * generator.writeEndObject();
-     * }
-     **/
+
+    /** protected void marshallMessage(Message message, Definitions def, JsonGenerator generator) throws JsonGenerationException, IOException {
+        Map<String, Object> properties = new LinkedHashMap<String, Object>();
+
+        generator.writeStartObject();
+        generator.writeObjectField("resourceId", message.getId());
+
+        properties.put("name", message.getName());
+        if(message.getDocumentation() != null && message.getDocumentation().size() > 0) {
+            properties.put("documentation", message.getDocumentation().get(0).getText());
+        }
+
+        marshallProperties(properties, generator);
+        generator.writeObjectFieldStart("stencil");
+        generator.writeObjectField("id", "Message");
+        generator.writeEndObject();
+        generator.writeArrayFieldStart("childShapes");
+        generator.writeEndArray();
+        generator.writeArrayFieldStart("outgoing");
+        generator.writeEndArray();
+
+        generator.writeEndObject();
+    } **/
 
     protected void marshallCallableElement(CallableElement callableElement, Definitions def, JsonGenerator generator) throws JsonGenerationException, IOException {
         generator.writeStartObject();
@@ -419,18 +418,18 @@ public class Bpmn2JsonMarshaller {
         generator.writeArrayFieldStart("childShapes");
 
         List<String> laneFlowElementsIds = new ArrayList<String>();
-        for (LaneSet laneSet : process.getLaneSets()) {
-            for (Lane lane : laneSet.getLanes()) {
-                // we only want to marshall lanes if we have the bpmndi info for them!
-                if (findDiagramElement(plane, lane) != null) {
-                    laneFlowElementsIds.addAll(marshallLanes(lane, plane, generator, 0, 0, preProcessingData, def));
-                }
-            }
+        for(LaneSet laneSet : process.getLaneSets()) {
+        	for(Lane lane : laneSet.getLanes()) {
+        		// we only want to marshall lanes if we have the bpmndi info for them!
+        		if(findDiagramElement(plane, lane) != null) {
+        			laneFlowElementsIds.addAll( marshallLanes(lane, plane, generator, 0, 0, preProcessingData, def) );
+        		}
+        	}
         }
-        for (FlowElement flowElement : process.getFlowElements()) {
-            if (!laneFlowElementsIds.contains(flowElement.getId())) {
-                marshallFlowElement(flowElement, plane, generator, 0, 0, preProcessingData, def);
-            }
+        for (FlowElement flowElement: process.getFlowElements()) {
+        	if( !laneFlowElementsIds.contains(flowElement.getId()) ) {
+        		marshallFlowElement(flowElement, plane, generator, 0, 0, preProcessingData, def);
+        	}
         }
 
         for (Artifact artifact : process.getArtifacts()) {
@@ -455,8 +454,7 @@ public class Bpmn2JsonMarshaller {
             if (doutbuff.length() > 0) {
                 doutbuff.setLength(doutbuff.length() - 1);
             }
-            String dataoutput = doutbuff.toString();
-            properties.put("dataoutput", dataoutput);
+            properties.put("dataoutput", doutbuff.toString());
 
             List<DataOutputAssociation> outputAssociations = event.getDataOutputAssociation();
             StringBuffer doutassociationbuff = new StringBuffer();
@@ -472,9 +470,7 @@ public class Bpmn2JsonMarshaller {
             if (doutassociationbuff.length() > 0) {
                 doutassociationbuff.setLength(doutassociationbuff.length() - 1);
             }
-            String assignments = doutassociationbuff.toString();
-            properties.put("dataoutputassociations", assignments);
-            setAssignmentsInfoProperty(null, null, dataoutput, null, assignments, properties);
+            properties.put("dataoutputassociations", doutassociationbuff.toString());
         }
         // event definitions
         List<EventDefinition> eventdefs = event.getEventDefinitions();
@@ -493,8 +489,8 @@ public class Bpmn2JsonMarshaller {
                         properties.put("timecyclelanguage", ((FormalExpression) ted.getTimeCycle()).getLanguage());
                     }
                 }
-            } else if (ed instanceof SignalEventDefinition) {
-                if (((SignalEventDefinition) ed).getSignalRef() != null) {
+            } else if( ed instanceof SignalEventDefinition) {
+                if(((SignalEventDefinition) ed).getSignalRef() != null) {
                     // find signal with the corresponding id
                     boolean foundSignalRef = false;
                     List<RootElement> rootElements = def.getRootElements();
@@ -512,13 +508,13 @@ public class Bpmn2JsonMarshaller {
                 } else {
                     properties.put("signalref", "");
                 }
-            } else if (ed instanceof ErrorEventDefinition) {
-                if (((ErrorEventDefinition) ed).getErrorRef() != null && ((ErrorEventDefinition) ed).getErrorRef().getErrorCode() != null) {
+            } else if( ed instanceof ErrorEventDefinition) {
+                if(((ErrorEventDefinition) ed).getErrorRef() != null && ((ErrorEventDefinition) ed).getErrorRef().getErrorCode() != null) {
                     properties.put("errorref", ((ErrorEventDefinition) ed).getErrorRef().getErrorCode());
                 } else {
                     properties.put("errorref", "");
                 }
-            } else if (ed instanceof ConditionalEventDefinition) {
+            } else if( ed instanceof ConditionalEventDefinition ) {
                 FormalExpression conditionalExp = (FormalExpression) ((ConditionalEventDefinition) ed).getCondition();
                 if (conditionalExp.getBody() != null) {
                     properties.put("conditionexpression", conditionalExp.getBody().replaceAll("\n", "\\\\n"));
@@ -534,8 +530,8 @@ public class Bpmn2JsonMarshaller {
                         properties.put("conditionlanguage", "drools");
                     }
                 }
-            } else if (ed instanceof EscalationEventDefinition) {
-                if (((EscalationEventDefinition) ed).getEscalationRef() != null) {
+            } else if( ed instanceof EscalationEventDefinition ) {
+                if(((EscalationEventDefinition) ed).getEscalationRef() != null) {
                     Escalation esc = ((EscalationEventDefinition) ed).getEscalationRef();
                     if (esc.getEscalationCode() != null && esc.getEscalationCode().length() > 0) {
                         properties.put("escalationcode", esc.getEscalationCode());
@@ -543,13 +539,13 @@ public class Bpmn2JsonMarshaller {
                         properties.put("escalationcode", "");
                     }
                 }
-            } else if (ed instanceof MessageEventDefinition) {
-                if (((MessageEventDefinition) ed).getMessageRef() != null) {
+            } else if( ed instanceof MessageEventDefinition) {
+                if(((MessageEventDefinition) ed).getMessageRef() != null) {
                     Message msg = ((MessageEventDefinition) ed).getMessageRef();
                     properties.put("messageref", msg.getId());
                 }
-            } else if (ed instanceof CompensateEventDefinition) {
-                if (((CompensateEventDefinition) ed).getActivityRef() != null) {
+            }  else if( ed instanceof CompensateEventDefinition) {
+                if(((CompensateEventDefinition) ed).getActivityRef() != null) {
                     Activity act = ((CompensateEventDefinition) ed).getActivityRef();
                     properties.put("activityref", act.getName());
                 }
@@ -573,8 +569,7 @@ public class Bpmn2JsonMarshaller {
             if (dinbuff.length() > 0) {
                 dinbuff.setLength(dinbuff.length() - 1);
             }
-            String datainput = dinbuff.toString();
-            properties.put("datainput", datainput);
+            properties.put("datainput", dinbuff.toString());
 
             StringBuilder associationBuff = new StringBuilder();
             marshallDataInputAssociations(associationBuff, event.getDataInputAssociation());
@@ -584,7 +579,6 @@ public class Bpmn2JsonMarshaller {
                 assignmentString = assignmentString.substring(0, assignmentString.length() - 1);
             }
             properties.put("datainputassociations", assignmentString);
-            setAssignmentsInfoProperty(datainput, null, null, null, assignmentString, properties);
         }
 
         // signal scope
@@ -610,8 +604,8 @@ public class Bpmn2JsonMarshaller {
                         properties.put("timecyclelanguage", ((FormalExpression) ted.getTimeCycle()).getLanguage());
                     }
                 }
-            } else if (ed instanceof SignalEventDefinition) {
-                if (((SignalEventDefinition) ed).getSignalRef() != null) {
+            } else if( ed instanceof SignalEventDefinition) {
+                if(((SignalEventDefinition) ed).getSignalRef() != null) {
                     // find signal with the corresponding id
                     boolean foundSignalRef = false;
                     List<RootElement> rootElements = def.getRootElements();
@@ -629,13 +623,13 @@ public class Bpmn2JsonMarshaller {
                 } else {
                     properties.put("signalref", "");
                 }
-            } else if (ed instanceof ErrorEventDefinition) {
-                if (((ErrorEventDefinition) ed).getErrorRef() != null && ((ErrorEventDefinition) ed).getErrorRef().getErrorCode() != null) {
+            } else if( ed instanceof ErrorEventDefinition) {
+                if(((ErrorEventDefinition) ed).getErrorRef() != null && ((ErrorEventDefinition) ed).getErrorRef().getErrorCode() != null) {
                     properties.put("errorref", ((ErrorEventDefinition) ed).getErrorRef().getErrorCode());
                 } else {
                     properties.put("errorref", "");
                 }
-            } else if (ed instanceof ConditionalEventDefinition) {
+            } else if( ed instanceof ConditionalEventDefinition ) {
                 FormalExpression conditionalExp = (FormalExpression) ((ConditionalEventDefinition) ed).getCondition();
                 if (conditionalExp.getBody() != null) {
                     properties.put("conditionexpression", conditionalExp.getBody());
@@ -651,8 +645,8 @@ public class Bpmn2JsonMarshaller {
                         properties.put("conditionlanguage", "drools");
                     }
                 }
-            } else if (ed instanceof EscalationEventDefinition) {
-                if (((EscalationEventDefinition) ed).getEscalationRef() != null) {
+            } else if( ed instanceof EscalationEventDefinition ) {
+                if(((EscalationEventDefinition) ed).getEscalationRef() != null) {
                     Escalation esc = ((EscalationEventDefinition) ed).getEscalationRef();
                     if (esc.getEscalationCode() != null && esc.getEscalationCode().length() > 0) {
                         properties.put("escalationcode", esc.getEscalationCode());
@@ -660,13 +654,13 @@ public class Bpmn2JsonMarshaller {
                         properties.put("escalationcode", "");
                     }
                 }
-            } else if (ed instanceof MessageEventDefinition) {
-                if (((MessageEventDefinition) ed).getMessageRef() != null) {
+            } else if( ed instanceof MessageEventDefinition) {
+                if(((MessageEventDefinition) ed).getMessageRef() != null) {
                     Message msg = ((MessageEventDefinition) ed).getMessageRef();
                     properties.put("messageref", msg.getId());
                 }
-            } else if (ed instanceof CompensateEventDefinition) {
-                if (((CompensateEventDefinition) ed).getActivityRef() != null) {
+            }  else if( ed instanceof CompensateEventDefinition) {
+                if(((CompensateEventDefinition) ed).getActivityRef() != null) {
                     Activity act = ((CompensateEventDefinition) ed).getActivityRef();
                     properties.put("activityref", act.getName());
                 }
@@ -675,17 +669,17 @@ public class Bpmn2JsonMarshaller {
     }
 
     private List<String> marshallLanes(Lane lane, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, String preProcessingData, Definitions def) throws JsonGenerationException, IOException {
-        Bounds bounds = ((BPMNShape) findDiagramElement(plane, lane)).getBounds();
-        List<String> nodeRefIds = new ArrayList<String>();
-        if (bounds != null) {
-            generator.writeStartObject();
-            generator.writeObjectField("resourceId", lane.getId());
-            Map<String, Object> laneProperties = new LinkedHashMap<String, Object>();
-            if (lane.getName() != null) {
-                laneProperties.put("name", unescapeXML(lane.getName()));
-            } else {
-                laneProperties.put("name", "");
-            }
+    	Bounds bounds = ((BPMNShape) findDiagramElement(plane, lane)).getBounds();
+    	List<String> nodeRefIds = new ArrayList<String>();
+    	if(bounds != null) {
+	    	generator.writeStartObject();
+	    	generator.writeObjectField("resourceId", lane.getId());
+	    	Map<String, Object> laneProperties = new LinkedHashMap<String, Object>();
+	    	if(lane.getName() != null) {
+	    		laneProperties.put("name", unescapeXML(lane.getName()));
+	    	} else {
+	    		laneProperties.put("name", "");
+	    	}
 
             // overwrite name if elementname extension element is present
             String elementName = Utils.getMetaDataValue(lane.getExtensionValues(), "elementname");
@@ -753,29 +747,31 @@ public class Bpmn2JsonMarshaller {
                 } else {
                     marshallFlowElement(flowElement, plane, generator, 0, 0, preProcessingData, def);
                 }
-            }
-            generator.writeEndArray();
-            generator.writeArrayFieldStart("outgoing");
-            generator.writeEndArray();
-            generator.writeObjectFieldStart("bounds");
-            generator.writeObjectFieldStart("lowerRight");
-            generator.writeObjectField("x", bounds.getX() + bounds.getWidth() - xOffset);
-            generator.writeObjectField("y", bounds.getY() + bounds.getHeight() - yOffset);
-            generator.writeEndObject();
-            generator.writeObjectFieldStart("upperLeft");
-            generator.writeObjectField("x", bounds.getX() - xOffset);
-            generator.writeObjectField("y", bounds.getY() - yOffset);
-            generator.writeEndObject();
-            generator.writeEndObject();
-            generator.writeEndObject();
-        } else {
-            // dont marshall the lane unless it has BPMNDI info (eclipse editor does not generate it for lanes currently.
-            for (FlowElement flowElement : lane.getFlowNodeRefs()) {
-                nodeRefIds.add(flowElement.getId());
-                // we dont want an offset here!
-                marshallFlowElement(flowElement, plane, generator, 0, 0, preProcessingData, def);
-            }
-        }
+		    }
+		    generator.writeEndArray();
+		    generator.writeArrayFieldStart("outgoing");
+            Process process = (Process) plane.getBpmnElement();
+			writeAssociations(process, lane.getId(), generator);
+			generator.writeEndArray();
+		    generator.writeObjectFieldStart("bounds");
+		    generator.writeObjectFieldStart("lowerRight");
+		    generator.writeObjectField("x", bounds.getX() + bounds.getWidth() - xOffset);
+		    generator.writeObjectField("y", bounds.getY() + bounds.getHeight() - yOffset);
+		    generator.writeEndObject();
+		    generator.writeObjectFieldStart("upperLeft");
+		    generator.writeObjectField("x", bounds.getX() - xOffset);
+		    generator.writeObjectField("y", bounds.getY() - yOffset);
+		    generator.writeEndObject();
+		    generator.writeEndObject();
+	    	generator.writeEndObject();
+    	} else {
+    		// dont marshall the lane unless it has BPMNDI info (eclipse editor does not generate it for lanes currently.
+    		for (FlowElement flowElement: lane.getFlowNodeRefs()) {
+		    	nodeRefIds.add(flowElement.getId());
+		    	// we dont want an offset here!
+		    	marshallFlowElement(flowElement, plane, generator, 0, 0, preProcessingData, def);
+		    }
+    	}
 
         return nodeRefIds;
     }
@@ -813,10 +809,10 @@ public class Bpmn2JsonMarshaller {
                 foundSelectable = true;
             }
         }
-        if (!foundBgColor) {
-            if (flowElement instanceof Activity || flowElement instanceof SubProcess) {
-                flowElementProperties.put("bgcolor", defaultBgColor_Activities);
-            } else if (flowElement instanceof StartEvent) {
+        if(!foundBgColor) {
+        	if(flowElement instanceof Activity || flowElement instanceof SubProcess ) {
+        		flowElementProperties.put("bgcolor", defaultBgColor_Activities);
+        	} else if(flowElement instanceof StartEvent) {
                 flowElementProperties.put("bgcolor", defaultBgColor_StartEvents);
             } else if (flowElement instanceof EndEvent) {
                 flowElementProperties.put("bgcolor", defaultBgColor_EndEvents);
@@ -856,58 +852,58 @@ public class Bpmn2JsonMarshaller {
         }
 
         Map<String, Object> catchEventProperties = new LinkedHashMap<String, Object>(flowElementProperties);
-        Map<String, Object> throwEventProperties = new LinkedHashMap<String, Object>(flowElementProperties);
-        if (flowElement instanceof CatchEvent) {
-            setCatchEventProperties((CatchEvent) flowElement, catchEventProperties, def);
-        }
-        if (flowElement instanceof ThrowEvent) {
-            setThrowEventProperties((ThrowEvent) flowElement, throwEventProperties, def);
-        }
-        if (flowElement instanceof StartEvent) {
-            marshallStartEvent((StartEvent) flowElement, plane, generator, xOffset, yOffset, catchEventProperties);
-        } else if (flowElement instanceof EndEvent) {
-            marshallEndEvent((EndEvent) flowElement, plane, generator, xOffset, yOffset, throwEventProperties);
-        } else if (flowElement instanceof IntermediateThrowEvent) {
-            marshallIntermediateThrowEvent((IntermediateThrowEvent) flowElement, plane, generator, xOffset, yOffset, throwEventProperties);
-        } else if (flowElement instanceof IntermediateCatchEvent) {
-            marshallIntermediateCatchEvent((IntermediateCatchEvent) flowElement, plane, generator, xOffset, yOffset, catchEventProperties);
-        } else if (flowElement instanceof BoundaryEvent) {
-            marshallBoundaryEvent((BoundaryEvent) flowElement, plane, generator, xOffset, yOffset, catchEventProperties);
-        } else if (flowElement instanceof Task) {
-            marshallTask((Task) flowElement, plane, generator, xOffset, yOffset, preProcessingData, def, flowElementProperties);
-        } else if (flowElement instanceof TextAnnotation) {
+    	Map<String, Object> throwEventProperties = new LinkedHashMap<String, Object>(flowElementProperties);
+    	if(flowElement instanceof CatchEvent) {
+    	    setCatchEventProperties((CatchEvent) flowElement, catchEventProperties, def);
+    	}
+    	if(flowElement instanceof ThrowEvent) {
+    	    setThrowEventProperties((ThrowEvent) flowElement, throwEventProperties, def);
+    	}
+    	if (flowElement instanceof StartEvent) {
+    		marshallStartEvent((StartEvent) flowElement, plane, generator, xOffset, yOffset, catchEventProperties);
+    	} else if (flowElement instanceof EndEvent) {
+    		marshallEndEvent((EndEvent) flowElement, plane, generator, xOffset, yOffset, throwEventProperties);
+    	} else if (flowElement instanceof IntermediateThrowEvent) {
+    		marshallIntermediateThrowEvent((IntermediateThrowEvent) flowElement, plane, generator, xOffset, yOffset, throwEventProperties);
+    	} else if (flowElement instanceof IntermediateCatchEvent) {
+    		marshallIntermediateCatchEvent((IntermediateCatchEvent) flowElement, plane, generator, xOffset, yOffset, catchEventProperties);
+    	} else if (flowElement instanceof BoundaryEvent) {
+    		marshallBoundaryEvent((BoundaryEvent) flowElement, plane, generator, xOffset, yOffset, catchEventProperties);
+    	} else if (flowElement instanceof Task) {
+    		marshallTask((Task) flowElement, plane, generator, xOffset, yOffset, preProcessingData, def, flowElementProperties);
+    	} else if (flowElement instanceof TextAnnotation) {
             marshallTextAnnotation((TextAnnotation) flowElement, plane, generator, xOffset, yOffset, preProcessingData, def, flowElementProperties);
         } else if (flowElement instanceof SequenceFlow) {
-            marshallSequenceFlow((SequenceFlow) flowElement, plane, generator, xOffset, yOffset);
-        } else if (flowElement instanceof ParallelGateway) {
-            marshallParallelGateway((ParallelGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
-        } else if (flowElement instanceof ExclusiveGateway) {
-            marshallExclusiveGateway((ExclusiveGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
-        } else if (flowElement instanceof InclusiveGateway) {
-            marshallInclusiveGateway((InclusiveGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
-        } else if (flowElement instanceof EventBasedGateway) {
-            marshallEventBasedGateway((EventBasedGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
-        } else if (flowElement instanceof ComplexGateway) {
-            marshallComplexGateway((ComplexGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
-        } else if (flowElement instanceof CallActivity) {
-            marshallCallActivity((CallActivity) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
-        } else if (flowElement instanceof SubProcess) {
-            if (flowElement instanceof AdHocSubProcess) {
-                marshallSubProcess((AdHocSubProcess) flowElement, plane, generator, xOffset, yOffset, preProcessingData, def, flowElementProperties);
-            } else {
-                marshallSubProcess((SubProcess) flowElement, plane, generator, xOffset, yOffset, preProcessingData, def, flowElementProperties);
-            }
-        } else if (flowElement instanceof DataObject) {
-            // only marshall if we can find DI info for it - BZ 800346
-            if (findDiagramElement(plane, (DataObject) flowElement) != null) {
-                marshallDataObject((DataObject) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
-            } else {
-                _logger.info("Could not marshall Data Object " + (DataObject) flowElement + " because no DI information could be found.");
-            }
-        } else {
-            throw new UnsupportedOperationException("Unknown flow element " + flowElement);
-        }
-        generator.writeEndObject();
+    		marshallSequenceFlow((SequenceFlow) flowElement, plane, generator, xOffset, yOffset);
+    	} else if (flowElement instanceof ParallelGateway) {
+    		marshallParallelGateway((ParallelGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
+    	} else if (flowElement instanceof ExclusiveGateway) {
+    		marshallExclusiveGateway((ExclusiveGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
+    	} else if (flowElement instanceof InclusiveGateway) {
+    		marshallInclusiveGateway((InclusiveGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
+    	} else if (flowElement instanceof EventBasedGateway) {
+    		marshallEventBasedGateway((EventBasedGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
+    	} else if (flowElement instanceof ComplexGateway) {
+    		marshallComplexGateway((ComplexGateway) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
+    	} else if (flowElement instanceof CallActivity) {
+    		marshallCallActivity((CallActivity) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
+    	} else if (flowElement instanceof SubProcess) {
+    	    if(flowElement instanceof AdHocSubProcess) {
+    	        marshallSubProcess((AdHocSubProcess) flowElement, plane, generator, xOffset, yOffset, preProcessingData, def, flowElementProperties);
+    	    } else {
+    	        marshallSubProcess((SubProcess) flowElement, plane, generator, xOffset, yOffset, preProcessingData, def, flowElementProperties);
+    	    }
+    	} else if (flowElement instanceof DataObject) {
+    		// only marshall if we can find DI info for it - BZ 800346
+    		if(findDiagramElement(plane, (DataObject) flowElement) != null) {
+    			marshallDataObject((DataObject) flowElement, plane, generator, xOffset, yOffset, flowElementProperties);
+    		} else {
+    			_logger.info("Could not marshall Data Object " + (DataObject) flowElement + " because no DI information could be found.");
+    		}
+    	} else {
+    		throw new UnsupportedOperationException("Unknown flow element " + flowElement);
+    	}
+    	generator.writeEndObject();
     }
 
     protected void marshallStartEvent(StartEvent startEvent, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> properties) throws JsonGenerationException, IOException {
@@ -935,12 +931,13 @@ public class Bpmn2JsonMarshaller {
                 marshallNode(startEvent, properties, "StartEscalationEvent", plane, generator, xOffset, yOffset);
             } else if (eventDefinition instanceof CompensateEventDefinition) {
                 marshallNode(startEvent, properties, "StartCompensationEvent", plane, generator, xOffset, yOffset);
-            } else {
-                throw new UnsupportedOperationException("Event definition not supported: " + eventDefinition);
             }
-        } else {
-            throw new UnsupportedOperationException("Multiple event definitions not supported for start event");
-        }
+    		else {
+    			throw new UnsupportedOperationException("Event definition not supported: " + eventDefinition);
+    		}
+    	} else {
+    		throw new UnsupportedOperationException("Multiple event definitions not supported for start event");
+    	}
     }
 
     protected void marshallEndEvent(EndEvent endEvent, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> properties) throws JsonGenerationException, IOException {
@@ -993,46 +990,47 @@ public class Bpmn2JsonMarshaller {
                 marshallNode(catchEvent, properties, "IntermediateEscalationEvent", plane, generator, xOffset, yOffset);
             } else if (eventDefinition instanceof CompensateEventDefinition) {
                 marshallNode(catchEvent, properties, "IntermediateCompensationEventCatching", plane, generator, xOffset, yOffset);
-            } else {
-                throw new UnsupportedOperationException("Event definition not supported: " + eventDefinition);
             }
-        } else {
-            throw new UnsupportedOperationException("Intermediate catch event does not have event definition.");
-        }
+    		else {
+    			throw new UnsupportedOperationException("Event definition not supported: " + eventDefinition);
+    		}
+    	} else {
+    		throw new UnsupportedOperationException("Intermediate catch event does not have event definition.");
+    	}
     }
 
     protected void marshallBoundaryEvent(BoundaryEvent boundaryEvent, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> catchEventProperties) throws JsonGenerationException, IOException {
-        List<EventDefinition> eventDefinitions = boundaryEvent.getEventDefinitions();
-        if (boundaryEvent.isCancelActivity()) {
-            catchEventProperties.put("boundarycancelactivity", "true");
-        } else {
-            catchEventProperties.put("boundarycancelactivity", "false");
-        }
+    	List<EventDefinition> eventDefinitions = boundaryEvent.getEventDefinitions();
+    	if(boundaryEvent.isCancelActivity()) {
+    		catchEventProperties.put("boundarycancelactivity", "true");
+    	} else {
+    		catchEventProperties.put("boundarycancelactivity", "false");
+    	}
         // simulation properties
         setSimulationProperties(boundaryEvent.getId(), catchEventProperties);
 
-        if (eventDefinitions.size() == 1) {
-            EventDefinition eventDefinition = eventDefinitions.get(0);
-            if (eventDefinition instanceof SignalEventDefinition) {
-                marshallNode(boundaryEvent, catchEventProperties, "IntermediateSignalEventCatching", plane, generator, xOffset, yOffset);
-            } else if (eventDefinition instanceof EscalationEventDefinition) {
-                marshallNode(boundaryEvent, catchEventProperties, "IntermediateEscalationEvent", plane, generator, xOffset, yOffset);
-            } else if (eventDefinition instanceof ErrorEventDefinition) {
-                marshallNode(boundaryEvent, catchEventProperties, "IntermediateErrorEvent", plane, generator, xOffset, yOffset);
-            } else if (eventDefinition instanceof TimerEventDefinition) {
-                marshallNode(boundaryEvent, catchEventProperties, "IntermediateTimerEvent", plane, generator, xOffset, yOffset);
-            } else if (eventDefinition instanceof CompensateEventDefinition) {
-                marshallNode(boundaryEvent, catchEventProperties, "IntermediateCompensationEventCatching", plane, generator, xOffset, yOffset);
-            } else if (eventDefinition instanceof ConditionalEventDefinition) {
-                marshallNode(boundaryEvent, catchEventProperties, "IntermediateConditionalEvent", plane, generator, xOffset, yOffset);
-            } else if (eventDefinition instanceof MessageEventDefinition) {
-                marshallNode(boundaryEvent, catchEventProperties, "IntermediateMessageEventCatching", plane, generator, xOffset, yOffset);
-            } else {
-                throw new UnsupportedOperationException("Event definition not supported: " + eventDefinition);
-            }
-        } else {
-            throw new UnsupportedOperationException("None or multiple event definitions not supported for boundary event");
-        }
+    	if (eventDefinitions.size() == 1) {
+    		EventDefinition eventDefinition = eventDefinitions.get(0);
+    		if (eventDefinition instanceof SignalEventDefinition) {
+    			marshallNode(boundaryEvent, catchEventProperties, "IntermediateSignalEventCatching", plane, generator, xOffset, yOffset);
+    		} else if (eventDefinition instanceof EscalationEventDefinition) {
+    			marshallNode(boundaryEvent, catchEventProperties, "IntermediateEscalationEvent", plane, generator, xOffset, yOffset);
+    		} else if (eventDefinition instanceof ErrorEventDefinition) {
+    			marshallNode(boundaryEvent, catchEventProperties, "IntermediateErrorEvent", plane, generator, xOffset, yOffset);
+    		} else if (eventDefinition instanceof TimerEventDefinition) {
+    			marshallNode(boundaryEvent, catchEventProperties, "IntermediateTimerEvent", plane, generator, xOffset, yOffset);
+    		} else if (eventDefinition instanceof CompensateEventDefinition) {
+    			marshallNode(boundaryEvent, catchEventProperties, "IntermediateCompensationEventCatching", plane, generator, xOffset, yOffset);
+    		} else if(eventDefinition instanceof ConditionalEventDefinition) {
+    		    marshallNode(boundaryEvent, catchEventProperties, "IntermediateConditionalEvent", plane, generator, xOffset, yOffset);
+    		} else if(eventDefinition instanceof MessageEventDefinition) {
+    		    marshallNode(boundaryEvent, catchEventProperties, "IntermediateMessageEventCatching", plane, generator, xOffset, yOffset);
+    		}else {
+    			throw new UnsupportedOperationException("Event definition not supported: " + eventDefinition);
+    		}
+    	} else {
+    		throw new UnsupportedOperationException("None or multiple event definitions not supported for boundary event");
+    	}
     }
 
     protected void marshallIntermediateThrowEvent(IntermediateThrowEvent throwEvent, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> properties) throws JsonGenerationException, IOException {
@@ -1086,10 +1084,10 @@ public class Bpmn2JsonMarshaller {
         properties.put("isasync", customAsync);
 
         // data inputs
-        String datainputset = marshallDataInputSet(callActivity, properties);
+        marshallDataInputSet(callActivity, properties);
 
         // data outputs
-        String dataoutputset = marshallDataOutputSet(callActivity, properties);
+        marshallDataOutputSet(callActivity, properties);
 
         // assignments
         StringBuilder associationBuff = new StringBuilder();
@@ -1104,7 +1102,6 @@ public class Bpmn2JsonMarshaller {
             assignmentString = assignmentString.substring(0, assignmentString.length() - 1);
         }
         properties.put("assignments", assignmentString);
-        setAssignmentsInfoProperty(null, datainputset, null, dataoutputset, assignmentString, properties);
 
         // on-entry and on-exit actions
         if (callActivity.getExtensionValues() != null && callActivity.getExtensionValues().size() > 0) {
@@ -1197,13 +1194,13 @@ public class Bpmn2JsonMarshaller {
                     properties.put("ruleflowgroup", entry.getValue());
                 }
             }
-        } else if (task instanceof ScriptTask) {
-            ScriptTask scriptTask = (ScriptTask) task;
-            properties.put("script", scriptTask.getScript() != null ? scriptTask.getScript().replace("\\", "\\\\").replace("\n", "\\n") : "");
-            String format = scriptTask.getScriptFormat();
-            if (format != null && format.length() > 0) {
-                String formatToWrite = "";
-                if (format.equals("http://www.java.com/java")) {
+    	} else if (task instanceof ScriptTask) {
+    		ScriptTask scriptTask = (ScriptTask) task;
+    		properties.put("script", scriptTask.getScript() != null ? scriptTask.getScript().replace("\\", "\\\\").replace("\n", "\\n") : "");
+    		String format = scriptTask.getScriptFormat();
+    		if(format != null && format.length() > 0) {
+    			String formatToWrite = "";
+                if(format.equals("http://www.java.com/java")) {
                     formatToWrite = "java";
                 } else if (format.equals("http://www.mvel.org/2.0")) {
                     formatToWrite = "mvel";
@@ -1214,62 +1211,62 @@ public class Bpmn2JsonMarshaller {
                     formatToWrite = "java";
                 }
                 properties.put("script_language", formatToWrite);
-            }
-            taskType = "Script";
-        } else if (task instanceof ServiceTask) {
-            taskType = "Service";
-            ServiceTask serviceTask = (ServiceTask) task;
-            if (serviceTask.getOperationRef() != null && serviceTask.getImplementation() != null) {
+    		}
+    		taskType = "Script";
+    	} else if (task instanceof ServiceTask) {
+    		taskType = "Service";
+    		ServiceTask serviceTask = (ServiceTask) task;
+    		if(serviceTask.getOperationRef() != null && serviceTask.getImplementation() != null) {
                 properties.put("serviceimplementation", serviceTask.getImplementation());
                 properties.put("serviceoperation", serviceTask.getOperationRef().getName() == null ? serviceTask.getOperationRef().getImplementationRef() : serviceTask.getOperationRef().getName());
-                if (def != null) {
-                    List<RootElement> roots = def.getRootElements();
-                    for (RootElement root : roots) {
-                        if (root instanceof Interface) {
-                            Interface inter = (Interface) root;
-                            List<Operation> interOperations = inter.getOperations();
-                            for (Operation interOper : interOperations) {
-                                if (interOper.getId().equals(serviceTask.getOperationRef().getId())) {
-                                    properties.put("serviceinterface", inter.getName() == null ? inter.getImplementationRef() : inter.getName());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } else if (task instanceof ManualTask) {
-            taskType = "Manual";
-        } else if (task instanceof UserTask) {
-            taskType = "User";
-            // get the user task actors
-            List<ResourceRole> roles = task.getResources();
-            StringBuilder sb = new StringBuilder();
-            for (ResourceRole role : roles) {
-                if (role instanceof PotentialOwner) {
-                    FormalExpression fe = (FormalExpression) ((PotentialOwner) role).getResourceAssignmentExpression().getExpression();
-                    if (fe.getBody() != null && fe.getBody().length() > 0) {
-                        sb.append(fe.getBody());
-                        sb.append(",");
-                    }
-                }
-            }
-            if (sb.length() > 0) {
-                sb.setLength(sb.length() - 1);
-            }
-            properties.put("actors", sb.toString());
-        } else if (task instanceof SendTask) {
-            taskType = "Send";
-            SendTask st = (SendTask) task;
-            if (st.getMessageRef() != null) {
-                properties.put("messageref", st.getMessageRef().getId());
-            }
-        } else if (task instanceof ReceiveTask) {
-            taskType = "Receive";
-            ReceiveTask rt = (ReceiveTask) task;
-            if (rt.getMessageRef() != null) {
-                properties.put("messageref", rt.getMessageRef().getId());
-            }
-        }
+    		    if(def != null) {
+    		        List<RootElement> roots = def.getRootElements();
+    		        for(RootElement root : roots) {
+    		            if(root instanceof Interface) {
+    		                Interface inter = (Interface) root;
+    		                List<Operation> interOperations = inter.getOperations();
+    		                for(Operation interOper : interOperations) {
+    		                    if(interOper.getId().equals(serviceTask.getOperationRef().getId())) {
+    		                        properties.put("serviceinterface", inter.getName() == null ? inter.getImplementationRef() : inter.getName());
+    		                    }
+    		                }
+    		            }
+    		        }
+    		    }
+    		}
+    	} else if (task instanceof ManualTask) {
+    		taskType = "Manual";
+    	} else if (task instanceof UserTask) {
+    		taskType = "User";
+    		// get the user task actors
+    		List<ResourceRole> roles = task.getResources();
+    		StringBuilder sb = new StringBuilder();
+    		for(ResourceRole role : roles) {
+    		    if(role instanceof PotentialOwner) {
+    		        FormalExpression fe = (FormalExpression) ( (PotentialOwner)role).getResourceAssignmentExpression().getExpression();
+    		        if(fe.getBody() != null && fe.getBody().length() > 0) {
+    		            sb.append(fe.getBody());
+    		            sb.append(",");
+    		        }
+    		    }
+    		}
+    		if(sb.length() > 0) {
+    		    sb.setLength(sb.length() - 1);
+    		}
+    		properties.put("actors", sb.toString());
+    	} else if (task instanceof SendTask) {
+    		taskType = "Send";
+    		SendTask st = (SendTask) task;
+    		if(st.getMessageRef() != null) {
+    			properties.put("messageref", st.getMessageRef().getId());
+    		}
+    	} else if (task instanceof ReceiveTask) {
+    		taskType = "Receive";
+    		ReceiveTask rt = (ReceiveTask) task;
+    		if(rt.getMessageRef() != null) {
+    			properties.put("messageref", rt.getMessageRef().getId());
+    		}
+    	}
 
         // custom async
         String customAsyncMetaData = Utils.getMetaDataValue(task.getExtensionValues(), "customAsync");
@@ -1382,7 +1379,7 @@ public class Bpmn2JsonMarshaller {
         if ((task instanceof UserTask) || isCustomElement) {
             disallowedInputs.add("TaskName");
         }
-        String datainputset = marshallDataInputSet(task, properties, disallowedInputs);
+        marshallDataInputSet(task, properties, disallowedInputs);
 
         DataInput groupDataInput = null;
         DataInput skippableDataInput = null;
@@ -1407,27 +1404,38 @@ public class Bpmn2JsonMarshaller {
                     if (task instanceof UserTask && dataInName != null) {
                         if (dataInName.equals("GroupId")) {
                             groupDataInput = dataIn;
-                        } else if (dataInName.equals("Skippable")) {
+                        }
+                        else if (dataInName.equals("Skippable")) {
                             skippableDataInput = dataIn;
-                        } else if (dataInName.equals("Comment")) {
+                        }
+                        else if (dataInName.equals("Comment")) {
                             commentDataInput = dataIn;
-                        } else if (dataInName.equals("Description")) {
+                        }
+                        else if (dataInName.equals("Description")) {
                             descriptionDataInput = dataIn;
-                        } else if (dataInName.equals("Content")) {
+                        }
+                        else if (dataInName.equals("Content")) {
                             contentDataInput = dataIn;
-                        } else if (dataInName.equals("Priority")) {
+                        }
+                        else if (dataInName.equals("Priority")) {
                             priorityDataInput = dataIn;
-                        } else if (dataInName.equals("Locale")) {
+                        }
+                        else if (dataInName.equals("Locale")) {
                             localeDataInput = dataIn;
-                        } else if (dataInName.equals("CreatedBy")) {
+                        }
+                        else if (dataInName.equals("CreatedBy")) {
                             createdByDataInput = dataIn;
-                        } else if (dataInName.equals("NotCompletedReassign")) {
+                        }
+                        else if (dataInName.equals("NotCompletedReassign")) {
                             notCompletedReassignInput = dataIn;
-                        } else if (dataInName.equals("NotStartedReassign")) {
+                        }
+                        else if (dataInName.equals("NotStartedReassign")) {
                             notStartedReassignInput = dataIn;
-                        } else if (dataInName.equals("NotCompletedNotify")) {
+                        }
+                        else if (dataInName.equals("NotCompletedNotify")) {
                             notCompletedNotificationInput = dataIn;
-                        } else if (dataInName.equals("NotStartedNotify")) {
+                        }
+                        else if (dataInName.equals("NotStartedNotify")) {
                             notStartedNotificationInput = dataIn;
                         }
                     }
@@ -1436,7 +1444,7 @@ public class Bpmn2JsonMarshaller {
         }
 
         // data outputs
-        String dataoutputset = marshallDataOutputSet(task, properties, Arrays.asList("mioutputCollection"));
+        marshallDataOutputSet(task, properties, Arrays.asList("mioutputCollection"));
 
         // assignments
         StringBuilder associationBuff = new StringBuilder();
@@ -1499,7 +1507,7 @@ public class Bpmn2JsonMarshaller {
 
                 if (isAssignment) {
                     // only know how to deal with formal expressions
-                    if (datain.getAssignment().get(0).getFrom() instanceof FormalExpression) {
+                    if( datain.getAssignment().get(0).getFrom() instanceof FormalExpression) {
                         String associationValue = ((FormalExpression) datain.getAssignment().get(0).getFrom()).getBody();
                         if (associationValue == null) {
                             associationValue = "";
@@ -1669,8 +1677,6 @@ public class Bpmn2JsonMarshaller {
             assignmentString = assignmentString.substring(0, assignmentString.length() - 1);
         }
         properties.put("assignments", assignmentString);
-        setAssignmentsInfoProperty(null, datainputset, null, dataoutputset, assignmentString, properties);
-
 
         // on-entry and on-exit actions
         if (task.getExtensionValues() != null && task.getExtensionValues().size() > 0) {
@@ -1756,12 +1762,12 @@ public class Bpmn2JsonMarshaller {
         }
     }
 
-    private String marshallDataInputSet(Activity activity, Map<String, Object> properties) {
-        return marshallDataInputSet(activity, properties, new ArrayList<String>());
+    private void marshallDataInputSet(Activity activity, Map<String, Object> properties) {
+        marshallDataInputSet(activity, properties, new ArrayList<String>());
     }
 
-    private String marshallDataInputSet(Activity activity, Map<String, Object> properties, List<String> disallowedNames) {
-        if (activity.getIoSpecification() != null) {
+    private void marshallDataInputSet(Activity activity, Map<String, Object> properties, List<String> disallowedNames) {
+        if(activity.getIoSpecification() != null) {
             List<InputSet> inputSetList = activity.getIoSpecification().getInputSets();
             StringBuilder dataInBuffer = new StringBuilder();
             for (InputSet inset : inputSetList) {
@@ -1771,20 +1777,16 @@ public class Bpmn2JsonMarshaller {
             if (dataInBuffer.length() > 0) {
                 dataInBuffer.setLength(dataInBuffer.length() - 1);
             }
-            String datainputset = dataInBuffer.toString();
-            properties.put("datainputset", datainputset);
-            return datainputset;
-        } else {
-            return null;
+            properties.put("datainputset", dataInBuffer.toString());
         }
     }
 
-    private String marshallDataOutputSet(Activity activity, Map<String, Object> properties) {
-        return marshallDataOutputSet(activity, properties, new ArrayList<String>());
+    private void marshallDataOutputSet(Activity activity, Map<String, Object> properties) {
+        marshallDataOutputSet(activity, properties, new ArrayList<String>());
     }
 
-    private String marshallDataOutputSet(Activity activity, Map<String, Object> properties, List<String> disallowedNames) {
-        if (activity.getIoSpecification() != null) {
+    private void marshallDataOutputSet(Activity activity, Map<String, Object> properties, List<String> disallowedNames) {
+        if(activity.getIoSpecification() != null) {
             List<OutputSet> outputSetList = activity.getIoSpecification().getOutputSets();
             StringBuilder dataOutBuffer = new StringBuilder();
             for (OutputSet outset : outputSetList) {
@@ -1794,11 +1796,7 @@ public class Bpmn2JsonMarshaller {
             if (dataOutBuffer.length() > 0) {
                 dataOutBuffer.setLength(dataOutBuffer.length() - 1);
             }
-            String dataoutputset = dataOutBuffer.toString();
-            properties.put("dataoutputset", dataoutputset);
-            return dataoutputset;
-        } else {
-            return null;
+            properties.put("dataoutputset", dataOutBuffer.toString());
         }
     }
 
@@ -1815,7 +1813,8 @@ public class Bpmn2JsonMarshaller {
                 buffer.append(name);
                 if (element.getItemSubjectRef() != null && element.getItemSubjectRef().getStructureRef() != null && !element.getItemSubjectRef().getStructureRef().isEmpty()) {
                     buffer.append(":").append(element.getItemSubjectRef().getStructureRef());
-                } else if (activity.eContainer() instanceof SubProcess) {
+                }
+                else if (activity.eContainer() instanceof SubProcess) {
                     // BZ1247105: for Outputs on Tasks inside sub-processes
                     String dtype = getAnyAttributeValue(element, "dtype");
                     if (dtype != null && !dtype.isEmpty()) {
@@ -1832,7 +1831,7 @@ public class Bpmn2JsonMarshaller {
     }
 
     protected void marshallExclusiveGateway(ExclusiveGateway gateway, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> flowElementProperties) throws JsonGenerationException, IOException {
-        if (gateway.getDefault() != null) {
+    	if(gateway.getDefault() != null) {
             SequenceFlow defsf = gateway.getDefault();
             String defGatewayStr = "";
             if (defsf.getName() != null && defsf.getName().length() > 0) {
@@ -1846,7 +1845,7 @@ public class Bpmn2JsonMarshaller {
     }
 
     protected void marshallInclusiveGateway(InclusiveGateway gateway, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> flowElementProperties) throws JsonGenerationException, IOException {
-        if (gateway.getDefault() != null) {
+    	if(gateway.getDefault() != null) {
             SequenceFlow defsf = gateway.getDefault();
             String defGatewayStr = "";
             if (defsf.getName() != null && defsf.getName().length() > 0) {
@@ -1877,8 +1876,8 @@ public class Bpmn2JsonMarshaller {
         if (node.getName() != null) {
             properties.put("name", unescapeXML(node.getName()));
         } else {
-            if (node instanceof TextAnnotation) {
-                if (((TextAnnotation) node).getText() != null) {
+            if(node instanceof TextAnnotation) {
+                if( ((TextAnnotation) node).getText() != null) {
                     properties.put("name", ((TextAnnotation) node).getText());
                 } else {
                     properties.put("name", "");
@@ -1907,16 +1906,7 @@ public class Bpmn2JsonMarshaller {
         }
         // we need to also add associations as outgoing elements
         Process process = (Process) plane.getBpmnElement();
-        for (Artifact artifact : process.getArtifacts()) {
-            if (artifact instanceof Association) {
-                Association association = (Association) artifact;
-                if (association.getSourceRef().getId().equals(node.getId())) {
-                    generator.writeStartObject();
-                    generator.writeObjectField("resourceId", association.getId());
-                    generator.writeEndObject();
-                }
-            }
-        }
+        writeAssociations(process, node.getId(), generator);
         // and boundary events for activities
         List<BoundaryEvent> boundaryEvents = new ArrayList<BoundaryEvent>();
         findBoundaryEvents(process, boundaryEvents);
@@ -2014,21 +2004,21 @@ public class Bpmn2JsonMarshaller {
 //				bounds.setX(x);
 //				bounds.setY(y);
 //			}
-        } else if (element instanceof Gateway) {
-            Bounds bounds = shape.getBounds();
-            float width = bounds.getWidth();
-            float height = bounds.getHeight();
-            if (width != 40 || height != 40) {
-                bounds.setWidth(40);
-                bounds.setHeight(40);
-                float x = bounds.getX();
-                float y = bounds.getY();
-                x = x - ((40 - width) / 2);
-                y = y - ((40 - height) / 2);
-                bounds.setX(x);
-                bounds.setY(y);
-            }
-        }
+		} else if (element instanceof Gateway) {
+			Bounds bounds = shape.getBounds();
+			float width = bounds.getWidth();
+			float height = bounds.getHeight();
+			if (width != 40 || height != 40) {
+				bounds.setWidth(40);
+				bounds.setHeight(40);
+				float x = bounds.getX();
+				float y = bounds.getY();
+    			x = x - ((40 - width)/2);
+    			y = y - ((40 - height)/2);
+				bounds.setX(x);
+				bounds.setY(y);
+			}
+    	}
     }
 
     protected void marshallDataObject(DataObject dataObject, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, Map<String, Object> flowElementProperties) throws JsonGenerationException, IOException {
@@ -2049,9 +2039,9 @@ public class Bpmn2JsonMarshaller {
             properties.put("name", elementName);
         }
 
-        if (dataObject.getItemSubjectRef().getStructureRef() != null && dataObject.getItemSubjectRef().getStructureRef().length() > 0) {
-            if (defaultTypesList.contains(dataObject.getItemSubjectRef().getStructureRef())) {
-                properties.put("standardtype", dataObject.getItemSubjectRef().getStructureRef());
+		if(dataObject.getItemSubjectRef().getStructureRef() != null && dataObject.getItemSubjectRef().getStructureRef().length() > 0) {
+            if(defaultTypesList.contains(dataObject.getItemSubjectRef().getStructureRef())) {
+			    properties.put("standardtype", dataObject.getItemSubjectRef().getStructureRef());
             } else {
                 properties.put("customtype", dataObject.getItemSubjectRef().getStructureRef());
             }
@@ -2112,12 +2102,12 @@ public class Bpmn2JsonMarshaller {
     }
 
     protected void marshallSubProcess(SubProcess subProcess, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, String preProcessingData, Definitions def, Map<String, Object> flowElementProperties) throws JsonGenerationException, IOException {
-        Map<String, Object> properties = new LinkedHashMap<String, Object>(flowElementProperties);
-        if (subProcess.getName() != null) {
-            properties.put("name", unescapeXML(subProcess.getName()));
-        } else {
-            properties.put("name", "");
-        }
+    	Map<String, Object> properties = new LinkedHashMap<String, Object>(flowElementProperties);
+		if(subProcess.getName() != null) {
+			properties.put("name", unescapeXML(subProcess.getName()));
+		} else {
+			properties.put("name", "");
+		}
 
         // overwrite name if elementname extension element is present
         String elementName = Utils.getMetaDataValue(subProcess.getExtensionValues(), "elementname");
@@ -2125,31 +2115,31 @@ public class Bpmn2JsonMarshaller {
             properties.put("name", elementName);
         }
 
-        if (subProcess instanceof AdHocSubProcess) {
-            AdHocSubProcess ahsp = (AdHocSubProcess) subProcess;
-            if (ahsp.getOrdering().equals(AdHocOrdering.PARALLEL)) {
-                properties.put("adhocordering", "Parallel");
-            } else if (ahsp.getOrdering().equals(AdHocOrdering.SEQUENTIAL)) {
-                properties.put("adhocordering", "Sequential");
-            } else {
-                // default to parallel
-                properties.put("adhocordering", "Parallel");
-            }
-            if (ahsp.getCompletionCondition() != null) {
-                properties.put("adhoccompletioncondition", ((FormalExpression) ahsp.getCompletionCondition()).getBody().replaceAll("\n", "\\\\n"));
-            }
-        }
+		if(subProcess instanceof AdHocSubProcess) {
+			AdHocSubProcess ahsp = (AdHocSubProcess) subProcess;
+			if(ahsp.getOrdering().equals(AdHocOrdering.PARALLEL)) {
+				properties.put("adhocordering", "Parallel");
+			} else if(ahsp.getOrdering().equals(AdHocOrdering.SEQUENTIAL)) {
+				properties.put("adhocordering", "Sequential");
+			} else {
+				// default to parallel
+				properties.put("adhocordering", "Parallel");
+			}
+			if(ahsp.getCompletionCondition() != null) {
+				properties.put("adhoccompletioncondition", ((FormalExpression) ahsp.getCompletionCondition()).getBody().replaceAll("\n", "\\\\n"));
+			}
+		}
 
         // custom async
         String customAsyncMetaData = Utils.getMetaDataValue(subProcess.getExtensionValues(), "customAsync");
         String customAsync = (customAsyncMetaData != null && customAsyncMetaData.length() > 0) ? customAsyncMetaData : "false";
         properties.put("isasync", customAsync);
 
-        // data inputs
-        String datainputset = marshallDataInputSet(subProcess, properties);
+		// data inputs
+        marshallDataInputSet(subProcess, properties);
 
         // data outputs
-        String dataoutputset = marshallDataOutputSet(subProcess, properties);
+        marshallDataOutputSet(subProcess, properties);
 
         // assignments
         StringBuilder associationBuff = new StringBuilder();
@@ -2164,7 +2154,6 @@ public class Bpmn2JsonMarshaller {
             assignmentString = assignmentString.substring(0, assignmentString.length() - 1);
         }
         properties.put("assignments", assignmentString);
-        setAssignmentsInfoProperty(null, datainputset, null, dataoutputset, assignmentString, properties);
 
         // on-entry and on-exit actions
         if (subProcess.getExtensionValues() != null && subProcess.getExtensionValues().size() > 0) {
@@ -2309,7 +2298,7 @@ public class Bpmn2JsonMarshaller {
         List<Property> processProperties = subProcess.getProperties();
         if (processProperties != null && processProperties.size() > 0) {
             String propVal = "";
-            for (int i = 0; i < processProperties.size(); i++) {
+            for(int i=0; i<processProperties.size(); i++) {
                 Property p = processProperties.get(i);
 
                 String pKPI = Utils.getMetaDataValue(p.getExtensionValues(), "customKPI");
@@ -2322,7 +2311,7 @@ public class Bpmn2JsonMarshaller {
                 if (pKPI != null && pKPI.length() > 0) {
                     propVal += ":" + pKPI;
                 }
-                if (i != processProperties.size() - 1) {
+                if(i != processProperties.size()-1) {
                     propVal += ",";
                 }
             }
@@ -2376,8 +2365,9 @@ public class Bpmn2JsonMarshaller {
             generator.writeObjectField("resourceId", outgoing.getId());
             generator.writeEndObject();
         }
-        // subprocess boundary events
         Process process = (Process) plane.getBpmnElement();
+		writeAssociations(process, subProcess.getId(), generator);
+		// subprocess boundary events
         List<BoundaryEvent> boundaryEvents = new ArrayList<BoundaryEvent>();
         findBoundaryEvents(process, boundaryEvents);
         for (BoundaryEvent be : boundaryEvents) {
@@ -2402,6 +2392,19 @@ public class Bpmn2JsonMarshaller {
         generator.writeEndObject();
 
     }
+
+    private void writeAssociations(Process process, String elementId, JsonGenerator generator) throws IOException {
+		for (Artifact artifact : process.getArtifacts()) {
+			if (artifact instanceof Association){
+				Association association = (Association) artifact;
+				if (association.getSourceRef().getId().equals(elementId)) {
+					generator.writeStartObject();
+					generator.writeObjectField("resourceId", association.getId());
+					generator.writeEndObject();
+				}
+			}
+		}
+	}
 
     private void marshallDataOutputAssociations(StringBuilder associationBuff, List<DataOutputAssociation> outputAssociations) {
         if (outputAssociations != null) {
@@ -2476,19 +2479,19 @@ public class Bpmn2JsonMarshaller {
         }
 
         Map<String, Object> properties = new LinkedHashMap<String, Object>();
-        // check null for sequence flow name
-        if (sequenceFlow.getName() != null && !"".equals(sequenceFlow.getName())) {
-            properties.put("name", unescapeXML(sequenceFlow.getName()));
-        } else {
-            properties.put("name", "");
-        }
+    	// check null for sequence flow name
+    	if(sequenceFlow.getName() != null && !"".equals(sequenceFlow.getName())) {
+    	    properties.put("name", unescapeXML(sequenceFlow.getName()));
+    	} else {
+    	    properties.put("name", "");
+    	}
         // overwrite name if elementname extension element is present
         String elementName = Utils.getMetaDataValue(sequenceFlow.getExtensionValues(), "elementname");
         if (elementName != null) {
             properties.put("name", elementName);
         }
 
-        if (sequenceFlow.getDocumentation() != null && sequenceFlow.getDocumentation().size() > 0) {
+    	if(sequenceFlow.getDocumentation() != null && sequenceFlow.getDocumentation().size() > 0) {
             properties.put("documentation", sequenceFlow.getDocumentation().get(0).getText());
         }
 
@@ -2784,11 +2787,11 @@ public class Bpmn2JsonMarshaller {
         marshallNode(textAnnotation, flowElementProperties, "TextAnnotation", plane, generator, xOffset, yOffset);
     }
 
-    protected void marshallGroup(Group group, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, String preProcessingData, Definitions def) throws JsonGenerationException, IOException {
-        Map<String, Object> properties = new LinkedHashMap<>();
-        if (group.getCategoryValueRef() != null && group.getCategoryValueRef().getValue() != null) {
-            properties.put("name", unescapeXML(group.getCategoryValueRef().getValue()));
-        }
+    protected void marshallGroup(Group group, BPMNPlane plane, JsonGenerator generator, float xOffset, float yOffset, String preProcessingData, Definitions def)  throws JsonGenerationException, IOException{
+    	Map<String, Object> properties = new LinkedHashMap<>();
+    	if(group.getCategoryValueRef() != null && group.getCategoryValueRef().getValue() != null) {
+    		properties.put("name", unescapeXML(group.getCategoryValueRef().getValue()));
+    	}
         Documentation doc = getDocumentation(group);
         if (doc != null) {
             properties.put("documentation", doc.getText());
@@ -2802,13 +2805,13 @@ public class Bpmn2JsonMarshaller {
         generator.writeArrayFieldStart("childShapes");
         generator.writeEndArray();
 
-        generator.writeArrayFieldStart("outgoing");
-        if (findOutgoingAssociation(plane, group) != null) {
-            generator.writeStartObject();
-            generator.writeObjectField("resourceId", findOutgoingAssociation(plane, group).getId());
-            generator.writeEndObject();
-        }
-        generator.writeEndArray();
+    	generator.writeArrayFieldStart("outgoing");
+    	if(findOutgoingAssociation(plane, group) != null) {
+    		generator.writeStartObject();
+    		generator.writeObjectField("resourceId", findOutgoingAssociation(plane, group).getId());
+    		generator.writeEndObject();
+    	}
+    	generator.writeEndArray();
 
         Bounds bounds = ((BPMNShape) findDiagramElement(plane, group)).getBounds();
         generator.writeObjectFieldStart("bounds");
@@ -2889,48 +2892,45 @@ public class Bpmn2JsonMarshaller {
         return false;
     }
 
-    private static String unescapeXML(String str) {
-        if (str == null || str.length() == 0) {
-            return "";
-        }
+	private static String unescapeXML(String str) {
+		if (str == null || str.length() == 0)
+			return "";
 
-        StringBuffer buf = new StringBuffer();
-        int len = str.length();
-        for (int i = 0; i < len; ++i) {
-            char c = str.charAt(i);
-            if (c == '&') {
-                int pos = str.indexOf(";", i);
-                if (pos == -1) { // Really evil
-                    buf.append('&');
-                } else if (str.charAt(i + 1) == '#') {
-                    int val = Integer.parseInt(str.substring(i + 2, pos), 16);
-                    buf.append((char) val);
-                    i = pos;
-                } else {
-                    String substr = str.substring(i, pos + 1);
-                    if (substr.equals("&amp;")) {
-                        buf.append('&');
-                    } else if (substr.equals("&lt;")) {
-                        buf.append('<');
-                    } else if (substr.equals("&gt;")) {
-                        buf.append('>');
-                    } else if (substr.equals("&quot;")) {
-                        buf.append('"');
-                    } else if (substr.equals("&apos;")) {
-                        buf.append('\'');
-                    } else
-                    // ????
-                    {
-                        buf.append(substr);
-                    }
-                    i = pos;
-                }
-            } else {
-                buf.append(c);
-            }
-        }
-        return buf.toString();
-    }
+		StringBuffer buf = new StringBuffer();
+		int len = str.length();
+		for (int i = 0; i < len; ++i) {
+			char c = str.charAt(i);
+			if (c == '&') {
+				int pos = str.indexOf(";", i);
+				if (pos == -1) { // Really evil
+					buf.append('&');
+				} else if (str.charAt(i + 1) == '#') {
+					int val = Integer.parseInt(str.substring(i + 2, pos), 16);
+					buf.append((char) val);
+					i = pos;
+				} else {
+					String substr = str.substring(i, pos + 1);
+					if (substr.equals("&amp;"))
+						buf.append('&');
+					else if (substr.equals("&lt;"))
+						buf.append('<');
+					else if (substr.equals("&gt;"))
+						buf.append('>');
+					else if (substr.equals("&quot;"))
+						buf.append('"');
+					else if (substr.equals("&apos;"))
+						buf.append('\'');
+					else
+						// ????
+						buf.append(substr);
+					i = pos;
+				}
+			} else {
+				buf.append(c);
+			}
+		}
+		return buf.toString();
+	}
 
     private String updateReassignmentAndNotificationInput(String inputStr, String type) {
         if (inputStr != null && inputStr.length() > 0) {
@@ -3066,32 +3066,5 @@ public class Bpmn2JsonMarshaller {
                 }
             }
         }
-    }
-
-    private void setAssignmentsInfoProperty(final String datainput, final String datainputset,
-            final String dataoutput, final String dataoutputset,
-            final String assignments, Map<String, Object> properties)
-    {
-        StringBuilder sb = new StringBuilder();
-        if (datainput != null) {
-            sb.append(datainput);
-        }
-        sb.append('|');
-        if (datainputset != null) {
-            sb.append(datainputset);
-        }
-        sb.append('|');
-        if (dataoutput != null) {
-            sb.append(dataoutput);
-        }
-        sb.append('|');
-        if (dataoutputset != null) {
-            sb.append(dataoutputset);
-        }
-        sb.append('|');
-        if (assignments != null) {
-            sb.append(assignments);
-        }
-        properties.put("assignmentsinfo", sb.toString());
     }
 }

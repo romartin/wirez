@@ -48,6 +48,7 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
 
 **SuperDevMove - Running from command line**                                          
 
+    cd wirez-showcase
     mvn clean gwt:run
 
 **SuperDevMove - Running from IntelliJ IDEA**                                          
@@ -73,6 +74,8 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
         -Djava.util.prefs.syncInterval=2000000
         -Dorg.uberfire.async.executor.safemode=true
         -Dgwt.watchFileChanges=false
+        -Dorg.uberfire.nio.git.dir=/tmp/dir
+
                       
   - *Dev mode parameters*: 
         
@@ -91,7 +94,7 @@ the most comfortable and easy way is to use the GWT plugin for IntelliJ IDEA, if
   
 Once done, you can run or debug the application using this recently created configuration.                   
   
-*TIP*: While coding it's a good practice to remove application's old artifacts the GWT idea plugin working's directory. It is usually present on your home directory as `$HOME/.IntelliJIdea15/system/gwt/`.                        
+*TIP*: While coding it's a good practice to remove application's old artifacts the GWT idea plugin working's directory. It is usually present on your home directory as `$HOME/.IntelliJIdea15/system/gwt/`. On Macs you can find this under ~//Library/Caches/IntelliJIdea15/gwt.
 
 Requirements
 ------------

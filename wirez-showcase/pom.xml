@@ -682,7 +682,7 @@
           <localWorkers>${gwt.compiler.localWorkers}</localWorkers>
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
           <draftCompile>true</draftCompile>
-          <extraJvmArgs>-Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.server.classOutput=${project.build.outputDirectory} -Djava.util.prefs.syncInterval=2000000 -Dorg.uberfire.async.executor.safemode=true -Dgwt.watchFileChanges=false</extraJvmArgs>
+          <extraJvmArgs>-Xmx2048m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.server.classOutput=${project.build.outputDirectory} -Djava.util.prefs.syncInterval=2000000 -Dorg.uberfire.async.executor.safemode=true -Dgwt.watchFileChanges=false -Dorg.uberfire.nio.git.dir=/tmp/dir</extraJvmArgs>
           <module>org.wirez.FastCompiledWirezShowcase</module>
           <logLevel>INFO</logLevel>
           <noServer>false</noServer>

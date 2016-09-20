@@ -20,13 +20,13 @@ public class BPMNGeneral implements BPMNPropertySet {
     public static final transient String propertySetName = "BPMN General";
 
     @Property
-    @FieldDef(label = "Name", property = "value")
+    @FieldDef(label = "Name", property = "value", position = 0)
     @Valid
     private Name name;
 
     @Property
-    @FieldDef( label = "Documentation", property = "value")
-    @TextArea( rows = 3, placeHolder = "Documentation" )
+    @FieldDef( label = "Documentation", property = "value", position = 1)
+    @TextArea( rows = 3)
     @Valid
     private Documentation documentation;
 

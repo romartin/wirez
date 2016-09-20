@@ -63,7 +63,7 @@ public class BPMNDiagram implements BPMNDefinition {
     private BPMNGeneral general;
 
     @PropertySet
-    @FieldDef( label = "Diagram Settings", position = 1)
+    @FieldDef( label = "Process Settings", position = 1)
     @Valid
     private DiagramSet diagramSet;
 

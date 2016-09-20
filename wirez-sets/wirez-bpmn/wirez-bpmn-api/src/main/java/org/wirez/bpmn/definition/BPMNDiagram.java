@@ -73,8 +73,6 @@ public class BPMNDiagram implements BPMNDefinition {
     protected ProcessData processData;
 
     @PropertySet
-    @FieldDef( label = "Background Settings", position = 3)
-    @Valid
     private BackgroundSet backgroundSet;
 
     @PropertySet

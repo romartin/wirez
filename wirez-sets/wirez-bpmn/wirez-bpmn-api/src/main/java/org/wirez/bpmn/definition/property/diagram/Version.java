@@ -1,12 +1,12 @@
 /*
- * Copyright 2016 Red Hat, Inc. and/or its affiliates.
- *  
+ * Copyright 2016  Red Hat, Inc. and/or its affiliates.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
- *    http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.definition.property.general;
+package org.wirez.bpmn.definition.property.diagram;
 
 import javax.validation.constraints.NotNull;
 
@@ -23,21 +23,26 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.BPMNProperty;
 import org.wirez.core.definition.annotation.Description;
-import org.wirez.core.definition.annotation.property.*;
+import org.wirez.core.definition.annotation.property.Caption;
+import org.wirez.core.definition.annotation.property.DefaultValue;
+import org.wirez.core.definition.annotation.property.Optional;
+import org.wirez.core.definition.annotation.property.Property;
+import org.wirez.core.definition.annotation.property.ReadOnly;
+import org.wirez.core.definition.annotation.property.Type;
+import org.wirez.core.definition.annotation.property.Value;
 import org.wirez.core.definition.property.PropertyType;
 import org.wirez.core.definition.property.type.StringType;
 
 @Portable
 @Bindable
 @Property
-public class Documentation implements BPMNProperty {
+public class Version implements BPMNProperty {
 
     @Caption
-    public static final transient String caption = "Documentation";
+    public static final transient String caption = "Version";
 
     @Description
-    public static final transient String description = "This attribute is used to annotate the BPMN element, " +
-            "such as descriptions and other documentation";
+    public static final transient String description = "The process version";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -49,16 +54,18 @@ public class Documentation implements BPMNProperty {
     public static final PropertyType type = new StringType();
 
     @DefaultValue
-    public static final transient String defaultValue = "";
+    public static final transient String defaultValue = "1.0";
 
     @Value
     @NotNull
+    @NotEmpty
     private String value = defaultValue;
 
-    public Documentation() {
+    public Version() {
+
     }
 
-    public Documentation( final String value ) {
+    public Version( final String value ) {
         this.value = value;
     }
 
@@ -85,7 +92,7 @@ public class Documentation implements BPMNProperty {
     public String getDefaultValue() {
         return defaultValue;
     }
-
+    
     public String getValue() {
         return value;
     }
@@ -93,5 +100,5 @@ public class Documentation implements BPMNProperty {
     public void setValue(String value) {
         this.value = value;
     }
-
+    
 }

@@ -15,6 +15,8 @@ import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
 import org.wirez.bpmn.definition.*;
 import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.wirez.bpmn.definition.property.dataio.DataIOSet;
+import org.wirez.bpmn.definition.property.diagram.DiagramSet;
+import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.variables.ProcessVariables;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionAdapter;
@@ -74,6 +76,7 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_NOT_BOUNDARY_EVENTS = "org/wirez/bpmn/backend/service/diagram/notBoundaryIntmEvent.bpmn";
     protected static final String BPMN_PROCESSVARIABLES = "org/wirez/bpmn/backend/service/diagram/processVariables.bpmn";
     protected static final String BPMN_USERTASKASSIGNMENTS = "org/wirez/bpmn/backend/service/diagram/userTaskAssignments.bpmn";
+    protected static final String BPMN_PROCESSPROPERTIES = "org/wirez/bpmn/backend/service/diagram/processProperties.bpmn";
 
     @Mock
     DefinitionManager definitionManager;
@@ -319,6 +322,37 @@ public class BPMNDiagramMarshallerTest {
 
     @Test
     @SuppressWarnings( "unchecked" )
+    public void testUnmarshallProcessProperties() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall( BPMN_PROCESSPROPERTIES );
+        assertDiagram( diagram, 4 );
+        assertEquals( "BPSimple", diagram.getSettings().getTitle() );
+
+        BPMNGeneral generalProperties = null;
+        DiagramSet diagramProperties = null;
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while(it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof BPMNDiagram) {
+                    BPMNDiagram bpmnDiagram = (BPMNDiagram) oDefinition;
+                    generalProperties = bpmnDiagram.getGeneral();
+                    diagramProperties = bpmnDiagram.getDiagramSet();
+                    break;
+                }
+            }
+        }
+        assertEquals( "BPSimple",  generalProperties.getName().getValue() );
+        assertEquals( "\n" +
+                "        This is a simple process\n" +
+                "    " , generalProperties.getDocumentation().getValue() );
+        assertEquals( "JDLProj.BPSimple", diagramProperties.getId().getValue());
+        assertEquals(  "org.jbpm", diagramProperties.getPackageProperty().getValue() );
+        assertEquals( Boolean.valueOf(true), diagramProperties.getExecutable().getValue());
+    }
+
+    @Test
+    @SuppressWarnings( "unchecked" )
     public void testUnmarshallUserTaskAssignments() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall( BPMN_USERTASKASSIGNMENTS );
         assertDiagram( diagram, 8 );
@@ -442,6 +476,15 @@ public class BPMNDiagramMarshallerTest {
         assertTrue( result.contains( "<bpmn2:property id=\"employee\" itemSubjectRef=\"_employeeItem\"/>" ) );
         assertTrue( result.contains( "<bpmn2:property id=\"reason\" itemSubjectRef=\"_reasonItem\"/>" ) );
         assertTrue( result.contains( "<bpmn2:property id=\"performance\" itemSubjectRef=\"_performanceItem\"/>" ) );
+
+    }
+
+    @Test
+    public void testMarshallProcessProperties() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall( BPMN_PROCESSPROPERTIES );
+        String result = tested.marshall( diagram );
+        assertDiagram( result, 1, 3, 2 );
+        assertTrue( result.contains( "bpmn2:process id=\"JDLProj.BPSimple\" drools:packageName=\"org.jbpm\" drools:version=\"1.0\" name=\"BPSimple\" isExecutable=\"true\"" ) );
 
     }
 

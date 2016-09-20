@@ -16,6 +16,9 @@
 
 package org.wirez.bpmn.definition.property.diagram;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.wirez.bpmn.definition.BPMNProperty;
@@ -33,7 +36,7 @@ public class Package implements BPMNProperty {
     public static final transient String caption = "Package";
 
     @Description
-    public static final transient String description = "The diagram's package";
+    public static final transient String description = "The process package";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -48,6 +51,8 @@ public class Package implements BPMNProperty {
     public static final transient String defaultValue = "/defaultPackage/defaultPackage";
 
     @Value
+    @NotNull
+    @NotEmpty
     private String value = defaultValue;
 
     public Package() {

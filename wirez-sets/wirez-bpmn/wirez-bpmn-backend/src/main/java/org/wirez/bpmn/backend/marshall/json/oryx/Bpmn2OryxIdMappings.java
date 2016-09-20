@@ -5,7 +5,6 @@ import org.wirez.bpmn.definition.*;
 import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.wirez.bpmn.definition.property.general.Name;
 import org.wirez.bpmn.definition.property.task.TaskType;
-import org.wirez.bpmn.definition.property.variables.GlobalVariables;
 import org.wirez.bpmn.definition.property.variables.ProcessVariables;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.definition.adapter.binding.BindableAdapterUtils;
@@ -52,9 +51,6 @@ public class Bpmn2OryxIdMappings {
         diagramPropertiesMap.put(Name.class, "processn");
         // The process variables property in the diagram stencil is "vardefs".
         diagramPropertiesMap.put(ProcessVariables.class, "vardefs");
-        // The global variables property in the diagram stencil is "globals".
-        diagramPropertiesMap.put(GlobalVariables.class, "globals");
-
 
         Map<Class<?>, String> userTaskPropertiesMap = new HashMap<Class<?>, String>();
         put(UserTask.class, userTaskPropertiesMap);

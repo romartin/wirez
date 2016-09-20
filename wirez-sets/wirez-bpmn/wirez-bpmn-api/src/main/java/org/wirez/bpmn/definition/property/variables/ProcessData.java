@@ -42,24 +42,16 @@ public class ProcessData implements BPMNPropertySet {
     @Valid
     private ProcessVariables processVariables;
 
-    @Property
-    @FieldDef(label = "Globals", property = "value")
-    @VariablesEditor
-    @Valid
-    private GlobalVariables globalVariables;
-
     public ProcessData() {
-        this(new ProcessVariables(), new GlobalVariables());
+        this(new ProcessVariables());
     }
 
-    public ProcessData(@MapsTo("processVariables") ProcessVariables processVariables, @MapsTo("globalVariables") GlobalVariables globalVariables) {
+    public ProcessData(@MapsTo("processVariables") ProcessVariables processVariables) {
         this.processVariables = processVariables;
-        this.globalVariables = globalVariables;
     }
 
-    public ProcessData(String processVariables, String globalVariables) {
+    public ProcessData(String processVariables) {
         this.processVariables = new ProcessVariables(processVariables);
-        this.globalVariables = new GlobalVariables(globalVariables);
     }
 
     public String getPropertySetName() {
@@ -72,14 +64,6 @@ public class ProcessData implements BPMNPropertySet {
 
     public void setProcessVariables(ProcessVariables processVariables) {
         this.processVariables = processVariables;
-    }
-
-    public GlobalVariables getGlobalVariables() {
-        return globalVariables;
-    }
-
-    public void setGlobalVariables(GlobalVariables globalVariables) {
-        this.globalVariables = globalVariables;
     }
 
 }

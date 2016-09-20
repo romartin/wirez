@@ -15,7 +15,6 @@ import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
 import org.wirez.bpmn.definition.*;
 import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.wirez.bpmn.definition.property.dataio.DataIOSet;
-import org.wirez.bpmn.definition.property.variables.GlobalVariables;
 import org.wirez.bpmn.definition.property.variables.ProcessVariables;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionAdapter;
@@ -74,7 +73,6 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_BOUNDARY_EVENTS = "org/wirez/bpmn/backend/service/diagram/boundaryIntmEvent.bpmn";
     protected static final String BPMN_NOT_BOUNDARY_EVENTS = "org/wirez/bpmn/backend/service/diagram/notBoundaryIntmEvent.bpmn";
     protected static final String BPMN_PROCESSVARIABLES = "org/wirez/bpmn/backend/service/diagram/processVariables.bpmn";
-    protected static final String BPMN_GLOBALVARIABLES = "org/wirez/bpmn/backend/service/diagram/globalVariables.bpmn";
     protected static final String BPMN_USERTASKASSIGNMENTS = "org/wirez/bpmn/backend/service/diagram/userTaskAssignments.bpmn";
 
     @Mock
@@ -336,21 +334,6 @@ public class BPMNDiagramMarshallerTest {
 
     @Test
     @SuppressWarnings( "unchecked" )
-    public void testUnmarshallGlobalVariables() throws Exception {
-        Diagram<Graph, Settings> diagram = unmarshall( BPMN_GLOBALVARIABLES );
-        assertDiagram( diagram, 4 );
-        assertEquals( "globalVariables", diagram.getSettings().getTitle() );
-        Node<? extends Definition, ?> diagramNode = diagram.getGraph().getNode( "_2assAF7uEeaNR8zxSwG7bA" );
-        assertTrue( diagramNode.getContent().getDefinition() instanceof BPMNDiagram );
-        BPMNDiagram bpmnDiagram = ( BPMNDiagram ) diagramNode.getContent().getDefinition();
-        assertTrue( bpmnDiagram.getProcessData() != null );
-        assertTrue( bpmnDiagram.getProcessData().getGlobalVariables() != null );
-        GlobalVariables variables = bpmnDiagram.getProcessData().getGlobalVariables();
-        assertEquals( variables.getValue(), "gVar1:Float,gVar2:java.lang.Character" );
-    }
-
-    @Test
-    @SuppressWarnings( "unchecked" )
     public void testUmarshallNotBoundaryEvents() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall( BPMN_NOT_BOUNDARY_EVENTS );
         assertEquals( "Not Boundary Event", diagram.getSettings().getTitle() );
@@ -476,16 +459,6 @@ public class BPMNDiagramMarshallerTest {
         assertTrue( result.contains("<bpmn2:targetRef>_6063D302-9D81-4C86-920B-E808A45377C2_reasonInputX</bpmn2:targetRef>"));
         assertTrue( result.contains("<bpmn2:sourceRef>_6063D302-9D81-4C86-920B-E808A45377C2_performanceOutputX</bpmn2:sourceRef>"));
         assertTrue( result.contains("<bpmn2:targetRef>performance</bpmn2:targetRef>"));
-    }
-
-    @Test
-    public void testMarshallGlobalVariables() throws Exception {
-        Diagram<Graph, Settings> diagram = unmarshall( BPMN_GLOBALVARIABLES );
-        String result = tested.marshall( diagram );
-        assertDiagram( result, 1, 3, 2 );
-
-        assertTrue( result.contains( "<drools:global identifier=\"gVar1\" type=\"Float\"/>" ) );
-        assertTrue( result.contains( "<drools:global identifier=\"gVar2\" type=\"java.lang.Character\"/>" ) );
     }
 
     @Test

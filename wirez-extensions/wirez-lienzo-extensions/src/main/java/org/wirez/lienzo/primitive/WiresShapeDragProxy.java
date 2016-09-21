@@ -20,12 +20,12 @@ public class WiresShapeDragProxy extends AbstractDragProxy<WiresShape> {
     @Override
     protected void addToLayer(final Layer layer, final WiresShape shape) {
         getWiresManager( layer ).createMagnets( shape );
-        getWiresManager( layer ).registerShape( shape );
+        getWiresManager( layer ).register( shape );
     }
 
     @Override
     protected void removeFromLayer(final Layer layer, final WiresShape shape) {
-        getWiresManager( layer ).deregisterShape( shape );
+        getWiresManager( layer ).deregister( shape );
     }
 
     @Override

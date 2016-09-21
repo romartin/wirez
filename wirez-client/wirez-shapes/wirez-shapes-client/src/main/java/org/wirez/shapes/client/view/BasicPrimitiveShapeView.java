@@ -13,9 +13,8 @@ import com.ait.lienzo.client.core.types.BoundingBox;
  */
 public abstract class BasicPrimitiveShapeView<T> extends org.wirez.shapes.client.view.BasicShapeView<T> {
     
-    public BasicPrimitiveShapeView( final MultiPath path,
-                                    final WiresManager manager) {
-        super( path, manager );
+    public BasicPrimitiveShapeView( final MultiPath path ) {
+        super( path );
     }
 
     protected abstract Shape<?> getPrimitive();
@@ -59,8 +58,6 @@ public abstract class BasicPrimitiveShapeView<T> extends org.wirez.shapes.client
             
             setDecoratorRadius( radius );
 
-            doMoveChildren( size, size );
-
             super.updateFillGradient( radius * 2, radius * 2 );
             
         }
@@ -92,8 +89,6 @@ public abstract class BasicPrimitiveShapeView<T> extends org.wirez.shapes.client
             
         }
 
-        doMoveChildren( width, height );
-        
         super.updateFillGradient( width, height );
         
         return (T) this;

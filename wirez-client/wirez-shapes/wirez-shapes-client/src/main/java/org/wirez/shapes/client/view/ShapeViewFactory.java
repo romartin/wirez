@@ -1,6 +1,5 @@
 package org.wirez.shapes.client.view;
 
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.shapes.client.view.icon.dynamics.DynamicIconShapeView;
 import org.wirez.shapes.client.view.icon.statics.StaticIconShapeView;
 
@@ -10,55 +9,48 @@ import javax.enterprise.context.ApplicationScoped;
 public class ShapeViewFactory {
 
     public RectangleView rectangle( final double width,
-                                    final double height,
-                                    final WiresManager wiresManager ) {
+                                    final double height ) {
         
-        return new RectangleView( width, height, wiresManager );
+        return new RectangleView( width, height );
         
     }
 
     public DynamicIconShapeView dynamicIcon( final org.wirez.shapes.proxy.icon.dynamics.Icons icon,
                                              final double width,
-                                             final double height,
-                                             final WiresManager manager ) {
+                                             final double height ) {
         
-        return new DynamicIconShapeView( icon, width, height, manager );
-        
-    }
-
-    public StaticIconShapeView staticIcon( final org.wirez.shapes.proxy.icon.statics.Icons icon,
-                                           final WiresManager manager ) {
-        
-        return new StaticIconShapeView( icon, manager );
+        return new DynamicIconShapeView( icon, width, height );
         
     }
 
-    public CircleView circle( final double radius,
-                              final WiresManager wiresManager ) {
+    public StaticIconShapeView staticIcon( final org.wirez.shapes.proxy.icon.statics.Icons icon ) {
         
-        return new CircleView( radius, wiresManager );
+        return new StaticIconShapeView( icon );
         
     }
 
-    public RingView ring( final double outer,
-                          final WiresManager wiresManager ) {
+    public CircleView circle( final double radius ) {
         
-        return new RingView( outer, wiresManager );
+        return new CircleView( radius );
+        
+    }
+
+    public RingView ring( final double outer ) {
+        
+        return new RingView( outer );
         
     }
 
     public PolygonView polygon( final double radius,
-                                final String fillColor,
-                                final WiresManager wiresManager ) {
+                                final String fillColor ) {
         
-        return new PolygonView( radius, fillColor, wiresManager );
+        return new PolygonView( radius, fillColor );
         
     }
 
-    public ConnectorView connector( final WiresManager manager,
-                                    final double... points ) {
+    public ConnectorView connector( final double... points ) {
         
-        return new ConnectorView( manager, points );
+        return new ConnectorView( points );
         
     }
 

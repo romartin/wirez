@@ -54,12 +54,12 @@ public abstract class AbstractToolbox implements GridToolbox {
             group.add( button.getShape().getGroup() );
         }
 
-        this.shape.getWiresLayer().getLayer().add( group );
+        this.shape.getGroup().getLayer().add( group );
 
         reposition();
         initAttributesChangedHandler();
 
-        this.shape.getWiresLayer().getLayer().batch();
+        this.shape.getGroup().getLayer().batch();
     }
 
     protected void registerButton( final ToolboxButton button ) {
@@ -167,7 +167,7 @@ public abstract class AbstractToolbox implements GridToolbox {
     }
 
     Layer getLayer() {
-        return shape.getWiresLayer().getLayer();
+        return shape.getGroup().getLayer();
     }
 
     protected AbstractToolbox( final WiresShape shape,

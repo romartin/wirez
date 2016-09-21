@@ -33,18 +33,16 @@ public abstract class BasicConnectorView<T> extends AbstractConnectorView<T>
 
     public BasicConnectorView( final AbstractDirectionalMultiPointShape<?> line, 
                                final MultiPathDecorator headDecorator, 
-                               final MultiPathDecorator tailDecorator, 
-                               final WiresManager manager) {
-        super(line, headDecorator, tailDecorator, manager);
+                               final MultiPathDecorator tailDecorator ) {
+        super(line, headDecorator, tailDecorator );
     }
 
     public BasicConnectorView( final WiresMagnet headMagnet, 
                                final WiresMagnet tailMagnet, 
                                final AbstractDirectionalMultiPointShape<?> line, 
                                final MultiPathDecorator headDecorator, 
-                               final MultiPathDecorator tailDecorator, 
-                               final WiresManager manager) {
-        super(headMagnet, tailMagnet, line, headDecorator, tailDecorator, manager);
+                               final MultiPathDecorator tailDecorator )  {
+        super(headMagnet, tailMagnet, line, headDecorator, tailDecorator );
     }
 
     protected void init() {

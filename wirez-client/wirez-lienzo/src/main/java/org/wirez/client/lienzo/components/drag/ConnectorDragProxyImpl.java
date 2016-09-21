@@ -66,10 +66,10 @@ public class ConnectorDragProxyImpl implements ConnectorDragProxy<AbstractCanvas
         
         final EdgeShape connector = (EdgeShape) shape;
         this.wiresConnector = (WiresConnector) shape.getShapeView();
-        wiresManager.registerConnector( wiresConnector );
+        wiresManager.register( wiresConnector );
 
         final MultiPath dummyPath = new MultiPath().rect(0, 0, 1, 1).setFillAlpha(0).setStrokeAlpha(0);
-        final DummyShapeView dummyShapeView = new DummyShapeView( dummyPath, wiresManager );
+        final DummyShapeView dummyShapeView = new DummyShapeView( dummyPath );
         
         graphBoundsIndexer.build( canvasHandler.getDiagram().getGraph() );
 
@@ -165,7 +165,7 @@ public class ConnectorDragProxyImpl implements ConnectorDragProxy<AbstractCanvas
 
     private void deregisterTransientConnector() {
         if ( null != this.wiresConnector ) {
-            getWiresManager().deregisterConnector( wiresConnector );
+            getWiresManager().deregister( wiresConnector );
             getCanvas().draw();
             this.wiresConnector = null;
         }
@@ -177,8 +177,8 @@ public class ConnectorDragProxyImpl implements ConnectorDragProxy<AbstractCanvas
 
     private class DummyShapeView extends WiresShape implements ShapeView<DummyShapeView> {
 
-        public DummyShapeView(MultiPath path, WiresManager manager) {
-            super(path, new WiresLayoutContainer(), manager);
+        public DummyShapeView(MultiPath path) {
+            super(path);
         }
 
         @Override

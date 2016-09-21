@@ -123,8 +123,8 @@ public class ToolboxButton {
         }
 
         WiresManager manager = WiresManager.get( layer );
-        // TODO: DO not add into Align&Distro index neither set the Docking acceptor.
-        WiresShape wiresShape = manager.createShape( decorator ).setDraggable( false );
+        WiresShape wiresShape = new WiresShape( decorator ).setDraggable( false );
+        manager.register( wiresShape, false );
 
         wiresShape.getContainer().add( shape.setDraggable( false ) );
         decorator.moveToTop();

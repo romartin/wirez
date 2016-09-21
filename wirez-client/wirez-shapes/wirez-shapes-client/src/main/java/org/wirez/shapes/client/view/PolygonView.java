@@ -13,15 +13,13 @@ public class PolygonView<T extends PolygonView> extends BasicPrimitiveShapeView<
     protected RegularPolygon polygon;
 
     public PolygonView(final double radius,
-                       final String fillColor,
-                       final WiresManager manager) {
+                       final String fillColor ) {
         super(new MultiPath()
                         .M(0 ,radius)
                         .L(radius, 0)
                         .L(radius * 2, radius)
                         .L(radius, ( radius * 2) )
-                        .Z(),
-                manager);
+                        .Z() );
     }
 
     @Override

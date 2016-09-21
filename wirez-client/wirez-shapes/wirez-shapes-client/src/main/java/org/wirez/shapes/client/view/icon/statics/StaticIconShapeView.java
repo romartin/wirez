@@ -17,13 +17,11 @@ public class StaticIconShapeView<T extends StaticIconShapeView>
     private double height;
     private Group iconGroup;
     
-    public StaticIconShapeView( final Icons icon,
-                                final WiresManager manager ) {
+    public StaticIconShapeView( final Icons icon ) {
         
         super( new MultiPath()
                 .setStrokeWidth( 0 )
-                .setStrokeAlpha( 0 ), 
-                manager );
+                .setStrokeAlpha( 0 ) );
         
         this.setIcon( icon );
         
@@ -65,7 +63,6 @@ public class StaticIconShapeView<T extends StaticIconShapeView>
             // Force to redraw the decorator.
             super.refreshDecorators();
 
-            this.moveChild( decorator, - ( width / 2) , - ( height / 2 ) );
         }
         
     }

@@ -21,16 +21,14 @@ public class DynamicIconShapeView<T extends DynamicIconShapeView>
     
     public DynamicIconShapeView(final Icons icon,
                                 final double width,
-                                final double height,
-                                final WiresManager manager ) {
+                                final double height ) {
         super( buildIcon( new MultiPath(),
                 icon, 
                 width, 
                 height,
                 BLACK,
                 BLACK,
-                STROKE_WIDTH ), 
-                manager );
+                STROKE_WIDTH ) );
         this.icon = icon;
         this.width = width;
         this.height = height;
@@ -83,8 +81,6 @@ public class DynamicIconShapeView<T extends DynamicIconShapeView>
         
         // Force to redraw the decorator.
         super.refreshDecorators();
-
-        this.moveChild( decorator, - ( width / 2) , - ( height / 2 ) );
 
     }
 

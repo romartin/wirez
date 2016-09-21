@@ -103,7 +103,6 @@ public class BasicShapeAnimation
                                 final Double h ) {
         if ( null != w && null != h ) {
             getView().updatePath( w, h);
-            getView().doMoveChildren( w, h );
             shapeAnimationProperties.add( AnimationProperty.Properties.WIDTH( w ) );
             decoratorAnimationProperties.add( AnimationProperty.Properties.WIDTH( w ) );
             shapeAnimationProperties.add( AnimationProperty.Properties.HEIGHT( h ) );
@@ -117,7 +116,6 @@ public class BasicShapeAnimation
         if ( null != value ) {
             final double size = value * 2;
             getView().updatePath( size, size );
-            getView().doMoveChildren( size, size );
             shapeAnimationProperties.add( AnimationProperty.Properties.RADIUS( value ) );
             decoratorAnimationProperties.add( AnimationProperty.Properties.RADIUS( value ) );
 

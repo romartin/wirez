@@ -12,9 +12,8 @@ public class RingView<T extends RingView> extends org.wirez.shapes.client.view.B
 
     protected Ring ring;
 
-    public RingView(final double outer,
-                    final WiresManager manager) {
-        super(new MultiPath().rect(0,0, outer * 2, outer * 2), manager);
+    public RingView(final double outer ) {
+        super(new MultiPath().rect(0,0, outer * 2, outer * 2) );
     }
 
     @Override

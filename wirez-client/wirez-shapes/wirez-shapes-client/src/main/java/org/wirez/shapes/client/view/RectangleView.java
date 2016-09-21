@@ -13,10 +13,9 @@ public class RectangleView<T extends RectangleView> extends BasicPrimitiveShapeV
     private Rectangle rectangle;
     
     public RectangleView( final double width,
-                          final double height,
-                          final WiresManager manager ) {
+                          final double height ) {
         
-        super(new MultiPath().rect(0, 0, width, height), manager);
+        super(new MultiPath().rect(0, 0, width, height) );
         
     }
 

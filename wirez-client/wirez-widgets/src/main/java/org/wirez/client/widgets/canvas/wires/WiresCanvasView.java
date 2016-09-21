@@ -39,14 +39,14 @@ public class WiresCanvasView extends CanvasView implements WiresCanvas.View {
         if (  isWiresShape( shapeView ) ) {
 
             WiresShape wiresShape = (WiresShape) shapeView;
+            wiresManager.register(wiresShape);
             wiresManager.createMagnets(wiresShape);
-            wiresManager.registerShape(wiresShape);
             wiresShape.getContainer().setUserData( WiresCanvas.WIRES_CANVAS_GROUP_ID );
 
         } else if ( isConnector( shapeView ) ) {
             
             WiresConnector wiresConnector = (WiresConnector) shapeView;
-            wiresManager.registerConnector(wiresConnector);
+            wiresManager.register(wiresConnector);
             wiresConnector.getGroup().setUserData( WiresCanvas.WIRES_CANVAS_GROUP_ID );
 
         }  else {
@@ -62,10 +62,10 @@ public class WiresCanvasView extends CanvasView implements WiresCanvas.View {
     public WiresCanvas.View removeShape(final ShapeView<?> shapeView) {
         if (  isWiresShape( shapeView ) ) {
             WiresShape wiresShape = (WiresShape) shapeView;
-            wiresManager.deregisterShape(wiresShape);
+            wiresManager.deregister(wiresShape);
         } else if ( isConnector( shapeView ) ) {
             WiresConnector wiresConnector = (WiresConnector) shapeView;
-            wiresManager.deregisterConnector(wiresConnector);
+            wiresManager.deregister(wiresConnector);
         } else {
             super.removeShape( shapeView );
         }

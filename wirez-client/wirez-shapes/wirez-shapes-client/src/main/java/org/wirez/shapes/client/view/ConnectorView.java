@@ -8,17 +8,14 @@ import com.ait.lienzo.client.core.types.Point2DArray;
 
 public class ConnectorView<T extends ConnectorView> extends org.wirez.shapes.client.view.BasicConnectorView<T> {
     
-    public ConnectorView(final WiresManager manager,
-                         final double... points) {
-        this( manager, createLine( points ) );
+    public ConnectorView(final double... points) {
+        this( createLine( points ) );
     }
     
-    private ConnectorView(final  WiresManager wiresManager,
-                         final Object[] line) {
+    private ConnectorView(final Object[] line) {
         super( (OrthogonalPolyLine) line[0],
                 (MultiPathDecorator) line[1],
-                (MultiPathDecorator) line[2],
-                wiresManager );
+                (MultiPathDecorator) line[2] );
     }
     
     private static Object[] createLine(final double... points) {

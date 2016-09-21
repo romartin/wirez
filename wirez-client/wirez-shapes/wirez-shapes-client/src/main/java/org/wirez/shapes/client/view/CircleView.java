@@ -12,9 +12,8 @@ public class CircleView<T extends CircleView> extends org.wirez.shapes.client.vi
 
     protected Circle circle;
 
-    public CircleView(final double radius,
-                      final WiresManager manager) {
-        super(new MultiPath().rect(0,0, radius * 2, radius * 2), manager);
+    public CircleView(final double radius ) {
+        super(new MultiPath().rect(0,0, radius * 2, radius * 2) );
     }
 
     @Override

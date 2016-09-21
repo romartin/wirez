@@ -91,9 +91,6 @@ public class BasicShapesFactoryImpl
                                                 final BasicShapeProxy<Object> proxy,
                                                 final AbstractCanvasHandler context) {
 
-        WiresManager wiresManager = context != null ?
-                ((WiresCanvas) context.getCanvas()).getWiresManager() : null;
-        
         MutableShape<Object, ShapeView> shape = null;
         
         if ( isCircle( proxy ) ) {
@@ -103,7 +100,7 @@ public class BasicShapesFactoryImpl
             final double radius = circleProxy.getRadius( definition );
 
             final org.wirez.shapes.client.view.CircleView view =
-                    shapeViewFactory.circle( radius, wiresManager );
+                    shapeViewFactory.circle( radius );
 
             shape = new org.wirez.shapes.client.proxy.CircleShape( view, circleProxy );
 
@@ -116,7 +113,7 @@ public class BasicShapesFactoryImpl
             final double oRadius = ringProxy.getOuterRadius( definition );
 
             final org.wirez.shapes.client.view.RingView view =
-                    shapeViewFactory.ring( oRadius, wiresManager );
+                    shapeViewFactory.ring( oRadius );
 
             shape = new org.wirez.shapes.client.proxy.RingShape( view, ringProxy );
 
@@ -130,7 +127,7 @@ public class BasicShapesFactoryImpl
             final double height = rectangleProxy.getHeight( definition );
 
             final RectangleView view =
-                    shapeViewFactory.rectangle( width, height, wiresManager );
+                    shapeViewFactory.rectangle( width, height );
 
             shape = new RectangleShape( view, rectangleProxy );
 
@@ -145,8 +142,7 @@ public class BasicShapesFactoryImpl
 
             final PolygonView view =
                     shapeViewFactory.polygon( radius,
-                            fillColor,
-                            wiresManager );
+                            fillColor );
 
             shape = new org.wirez.shapes.client.proxy.PolygonShape( view, polygonProxy );
 
@@ -156,7 +152,7 @@ public class BasicShapesFactoryImpl
 
             final ConnectorProxy<Object> polygonProxy = (ConnectorProxy<Object>) proxy;
 
-            final ConnectorView view = shapeViewFactory.connector( wiresManager, 0, 0, 100, 100 );
+            final ConnectorView view = shapeViewFactory.connector( 0, 0, 100, 100 );
 
             shape = new org.wirez.shapes.client.proxy.ConnectorShape( view, polygonProxy );
 
@@ -170,7 +166,7 @@ public class BasicShapesFactoryImpl
             final org.wirez.shapes.proxy.icon.statics.Icons icon = iconProxy.getIcon( definition );
 
             final StaticIconShapeView view =
-                    shapeViewFactory.staticIcon( icon, wiresManager );
+                    shapeViewFactory.staticIcon( icon );
 
             shape = new StaticIconShape( view, iconProxy );
 
@@ -186,7 +182,7 @@ public class BasicShapesFactoryImpl
             final double height = iconProxy.getHeight( definition );
 
             final DynamicIconShapeView view =
-                    shapeViewFactory.dynamicIcon( icon, width, height, wiresManager );
+                    shapeViewFactory.dynamicIcon( icon, width, height );
 
             shape = new DynamicIconShape( view, iconProxy );
 

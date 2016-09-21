@@ -71,6 +71,11 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
             return false;
         }
 
+        @Override
+        public int getHotspotSize() {
+            return IDockingAcceptor.HOTSPOT_SIZE;
+        }
+
     };
 
     private final IDockingAcceptor DOCKING_ACCEPTOR = new IDockingAcceptor() {
@@ -100,6 +105,11 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
             final Node parentNode = WiresUtils.getNode( canvasHandler, wiresContainer );
 
             return accept( parentNode, childNode );
+        }
+
+        @Override
+        public int getHotspotSize() {
+            return IDockingAcceptor.HOTSPOT_SIZE;
         }
     };
 

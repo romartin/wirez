@@ -3,10 +3,8 @@ package org.wirez.shapes.client.view;
 import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
-import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresEvent;
-import com.ait.lienzo.client.core.shape.wires.event.DragEvent;
-import com.ait.lienzo.client.core.shape.wires.event.DragHandler;
+import com.ait.lienzo.client.core.shape.wires.event.ShapeMovedEvent;
+import com.ait.lienzo.client.core.shape.wires.event.ShapeMovedHandler;
 import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import com.ait.lienzo.shared.core.types.ColorName;
@@ -48,9 +46,8 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     protected String fillGradientStartColor = null;
     protected String fillGradientEndColor = null;
 
-    public BasicShapeView( final MultiPath path,
-                           final WiresManager manager ) {
-        super( path, manager );
+    public BasicShapeView( final MultiPath path ) {
+        super( path );
         this.textPosition = WiresLayoutContainer.Layout.BOTTOM;
 
         initialize();
@@ -132,63 +129,6 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     @Override
     public Iterable<BasicShapeView<T>> getChildren() {
         return children;
-    }
-
-    public void doMoveChildren( final double width,
-                                final double height ) {
-
-        doMoveChild( getShape(), width, height );
-
-        if ( null != decorator ) {
-
-            doMoveChild( decorator, width, height );
-
-        }
-
-        if ( !children.isEmpty() ) {
-
-            for ( final BasicShapeView<T> child : children ) {
-
-                final IPrimitive<?> childPrimitive = (IPrimitive<?>) child.getContainer();
-                final BoundingBox bb = child.getPath().getBoundingBox();
-
-                doMoveChild( childPrimitive, bb.getWidth(), bb.getHeight() );
-
-            }
-
-        }
-
-    }
-
-    protected void doMoveChild( final IPrimitive<?> child,
-                                final double width,
-                                final double height ) {
-
-        final double sx = getChildCenterCoordinate( child, width );
-
-        final double sy = getChildCenterCoordinate( child, height );
-
-        if ( sx != 0 || sy != 0 ) {
-
-            this.moveChild( child, sx, sy );
-
-        }
-
-    }
-
-    protected double getChildCenterCoordinate( final IPrimitive<?> child,
-                                               final double delta ) {
-
-        if ( child.getAttributes().getRadius() == 0 ) {
-
-            return - ( delta / 2 );
-
-        } else {
-
-            return  0;
-
-        }
-
     }
 
     @Override
@@ -287,12 +227,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     @SuppressWarnings( "unchecked" )
     public T refreshTitle() {
 
-        // Center the text on the parent using the bb calculation.
         if ( null != text ) {
-            final BoundingBox bb = text.getBoundingBox();
-            final double bbw = bb.getWidth();
-            final double bbh = bb.getHeight();
-            this.moveChild( text, -( bbw / 2 ), 0 );
             text.moveToTop();
         }
 
@@ -433,20 +368,12 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
         return new HandlerRegistration[]{
 
-                setDraggable( true ).addWiresHandler( AbstractWiresEvent.DRAG, new DragHandler() {
-                    @Override
-                    public void onDragStart( final DragEvent dragEvent ) {
-                        getDragHandler().start( buildEvent( dragEvent.getX(), dragEvent.getY() ) );
-                    }
+                // TODO: call DragHandler#start & DragHandler#move?
+                setDraggable( true ).addShapeMovedHandler( new ShapeMovedHandler() {
 
                     @Override
-                    public void onDragMove( final DragEvent dragEvent ) {
-                        getDragHandler().handle( buildEvent( dragEvent.getX(), dragEvent.getY() ) );
-                    }
-
-                    @Override
-                    public void onDragEnd( final DragEvent dragEvent ) {
-                        getDragHandler().end( buildEvent( dragEvent.getX(), dragEvent.getY() ) );
+                    public void onShapeMoved( ShapeMovedEvent event ) {
+                        getDragHandler().end( buildEvent( event.getX(), event.getY() ) );
                     }
 
                     private org.wirez.core.client.shape.view.event.DragHandler getDragHandler() {
@@ -457,6 +384,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
                                                                                          final double y ) {
                         return new org.wirez.core.client.shape.view.event.DragEvent( x, y, x, y, x, y );
                     }
+
                 } )
 
         };

@@ -6,17 +6,16 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
+import org.wirez.bpmn.definition.property.assignee.AssigneeSet;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.*;
-import org.wirez.bpmn.definition.property.task.Actor;
 import org.wirez.bpmn.definition.property.task.EmptyTaskExecutionSet;
 import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.bpmn.definition.property.task.TaskTypes;
 import org.wirez.core.definition.annotation.definition.Definition;
-import org.wirez.core.definition.annotation.definition.Property;
 import org.wirez.core.definition.annotation.definition.PropertySet;
 import org.wirez.core.definition.annotation.definition.Title;
 import org.wirez.core.definition.annotation.morph.Morph;
@@ -40,8 +39,8 @@ public class UserTask extends BaseTask {
     @Valid
     protected EmptyTaskExecutionSet executionSet;
 
-    @Property
-    protected Actor actor;
+    @FieldDef( label = "Assigned to", position = 2)
+    protected AssigneeSet assigneeSet;
 
     @NonPortable
     public static class UserTaskBuilder extends BaseTaskBuilder<UserTask> {
@@ -50,13 +49,13 @@ public class UserTask extends BaseTask {
         public UserTask build() {
             return new UserTask(new BPMNGeneral("Task"),
                     new EmptyTaskExecutionSet(),
+                    new AssigneeSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
                     new SimulationSet(),
-                    new TaskType( TaskTypes.USER ),
-                    new Actor());
+                    new TaskType( TaskTypes.USER ));
         }
 
     }
@@ -67,29 +66,29 @@ public class UserTask extends BaseTask {
 
     public UserTask(@MapsTo("general") BPMNGeneral general,
                     @MapsTo("executionSet") EmptyTaskExecutionSet executionSet,
+                    @MapsTo("assigneeSet") AssigneeSet assigneeSet,
                     @MapsTo("dataIOSet") DataIOSet dataIOSet,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
                     @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                     @MapsTo("simulationSet") SimulationSet simulationSet,
-                    @MapsTo("taskType") TaskType taskType,
-                    @MapsTo("actor") Actor actor) {
+                    @MapsTo("taskType") TaskType taskType) {
 
         super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
-        this.actor = actor;
         this.executionSet = executionSet;
+        this.assigneeSet = assigneeSet;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Actor getActor() {
-        return actor;
+    public AssigneeSet getAssigneeSet() {
+        return assigneeSet;
     }
 
-    public void setActor(Actor actor) {
-        this.actor = actor;
+    public void setAssigneeSet(AssigneeSet assigneeSet) {
+        this.assigneeSet = assigneeSet;
     }
 
     public EmptyTaskExecutionSet getExecutionSet() {

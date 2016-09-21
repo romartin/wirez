@@ -1,9 +1,9 @@
 package org.wirez.bpmn.backend.marshall.json.builder;
 
 import org.wirez.bpmn.definition.BPMNDefinition;
-import org.wirez.bpmn.definition.property.Height;
-import org.wirez.bpmn.definition.property.Radius;
-import org.wirez.bpmn.definition.property.Width;
+import org.wirez.bpmn.definition.property.dimensions.Height;
+import org.wirez.bpmn.definition.property.dimensions.Radius;
+import org.wirez.bpmn.definition.property.dimensions.Width;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.command.Command;
 import org.wirez.core.command.CommandResult;

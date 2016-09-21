@@ -10,7 +10,7 @@ public final class StartNoneEventShapeProxy
     
     @Override
     public double getRadius( final StartNoneEvent element ) {
-        return element.getRadius().getValue();
+        return element.getDimensionsSet().getRadius().getValue();
     }
 
     @Override

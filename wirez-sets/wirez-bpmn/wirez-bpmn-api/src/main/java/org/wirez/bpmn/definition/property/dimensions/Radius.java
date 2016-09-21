@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.definition.property;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+package org.wirez.bpmn.definition.property.dimensions;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -30,16 +27,13 @@ import org.wirez.core.definition.property.type.DoubleType;
 @Portable
 @Bindable
 @Property
-public class Width implements BPMNProperty {
+public class Radius implements BPMNProperty {
 
     @Caption
-    public static final transient String caption = "width";
+    public static final transient String caption = "Radius";
 
     @Description
-    public static final transient String description = "The width";
-
-    @Type
-    public static final PropertyType type = new DoubleType();
+    public static final transient String description = "The radius";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -47,19 +41,20 @@ public class Width implements BPMNProperty {
     @Optional
     public static final Boolean optional = false;
 
+    @Type
+    public static final PropertyType type = new DoubleType();
+    
     @DefaultValue
-    public static final Double defaultValue = 50d;
+    public static final Double defaultValue = 25d;
 
     @Value
-    @Max( 300 )
-    @Min( 100 )
     private Double value = defaultValue;
 
-    public Width() {
-
+    public Radius() {
+        
     }
 
-    public Width( final Double value ) {
+    public Radius( final Double value ) {
         this.value = value;
     }
 
@@ -86,7 +81,7 @@ public class Width implements BPMNProperty {
     public Double getDefaultValue() {
         return defaultValue;
     }
-
+    
     public Double getValue() {
         return value;
     }
@@ -94,5 +89,5 @@ public class Width implements BPMNProperty {
     public void setValue(Double value) {
         this.value = value;
     }
-
+    
 }

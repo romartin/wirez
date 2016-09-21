@@ -18,7 +18,7 @@ public final class ParallelGatewayShapeProxy
     
     @Override
     public double getRadius( final ParallelGateway element ) {
-        return element.getRadius().getValue();
+        return element.getDimensionsSet().getRadius().getValue();
     }
 
     @Override
@@ -93,12 +93,12 @@ public final class ParallelGatewayShapeProxy
 
         @Override
         public double getWidth( final ParallelGateway element ) {
-            return element.getRadius().getValue() / 2;
+            return element.getDimensionsSet().getRadius().getValue() / 2;
         }
 
         @Override
         public double getHeight( final ParallelGateway element ) {
-            return element.getRadius().getValue() / 2;
+            return element.getDimensionsSet().getRadius().getValue() / 2;
         }
 
         @Override

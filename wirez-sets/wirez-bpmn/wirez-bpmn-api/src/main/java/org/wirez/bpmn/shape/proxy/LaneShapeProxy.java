@@ -59,12 +59,12 @@ public final class LaneShapeProxy
     }
     @Override
     public double getWidth( final Lane element ) {
-        return element.getWidth().getValue();
+        return element.getDimensionsSet().getWidth().getValue();
     }
 
     @Override
     public double getHeight( final Lane element ) {
-        return element.getHeight().getValue();
+        return element.getDimensionsSet().getHeight().getValue();
     }
 
 }

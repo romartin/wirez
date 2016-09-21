@@ -19,7 +19,8 @@ package org.wirez.bpmn.definition;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
-import org.wirez.bpmn.definition.property.Radius;
+import org.wirez.bpmn.definition.property.dimensions.CircleDimensionSet;
+import org.wirez.bpmn.definition.property.dimensions.Radius;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
@@ -49,14 +50,16 @@ public abstract class BaseStartEvent implements BPMNDefinition {
     protected BackgroundSet backgroundSet;
 
     @PropertySet
+    @FieldDef( label = "Font Settings")
     protected FontSet fontSet;
 
     @PropertySet
+    @FieldDef( label = "Catch Event Attributes")
     protected CatchEventAttributes catchEventAttributes;
 
-    @Property
-    @FieldDef(label = "Radius", property = "value")
-    protected Radius radius;
+    @PropertySet
+    @FieldDef( label = "Shape Dimensions", position = 5)
+    private CircleDimensionSet dimensionsSet;
 
     @Labels
     protected final Set<String> labels = new HashSet<String>() {{
@@ -88,12 +91,12 @@ public abstract class BaseStartEvent implements BPMNDefinition {
                           @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                           @MapsTo("fontSet") FontSet fontSet,
                           @MapsTo("catchEventAttributes") CatchEventAttributes catchEventAttributes,
-                          @MapsTo("radius") Radius radius) {
+                          @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet) {
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.catchEventAttributes = catchEventAttributes;
-        this.radius = radius;
+        this.dimensionsSet = dimensionsSet;
     }
 
     public String getCategory() {
@@ -102,10 +105,6 @@ public abstract class BaseStartEvent implements BPMNDefinition {
 
     public Set<String> getLabels() {
         return labels;
-    }
-
-    public Radius getRadius() {
-        return radius;
     }
 
     public BPMNGeneral getGeneral() {
@@ -140,7 +139,11 @@ public abstract class BaseStartEvent implements BPMNDefinition {
         this.catchEventAttributes = catchEventAttributes;
     }
 
-    public void setRadius( Radius radius ) {
-        this.radius = radius;
+    public CircleDimensionSet getDimensionsSet() {
+        return dimensionsSet;
+    }
+
+    public void setDimensionsSet(CircleDimensionSet dimensionsSet) {
+        this.dimensionsSet = dimensionsSet;
     }
 }

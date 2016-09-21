@@ -59,12 +59,12 @@ public final class BPMNDiagramShapeProxy
     }
     @Override
     public double getWidth( final BPMNDiagram element ) {
-        return element.getWidth().getValue();
+        return element.getDimensionsSet().getWidth().getValue();
     }
 
     @Override
     public double getHeight( final BPMNDiagram element ) {
-        return element.getHeight().getValue();
+        return element.getDimensionsSet().getHeight().getValue();
     }
 
 }

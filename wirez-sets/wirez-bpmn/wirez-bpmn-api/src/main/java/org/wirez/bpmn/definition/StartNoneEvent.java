@@ -20,7 +20,8 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.wirez.bpmn.definition.property.Radius;
+import org.wirez.bpmn.definition.property.dimensions.CircleDimensionSet;
+import org.wirez.bpmn.definition.property.dimensions.Radius;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
@@ -56,7 +57,7 @@ public class StartNoneEvent extends BaseStartEvent {
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
                     new CatchEventAttributes(),
-                    new Radius( RADIUS ) );
+                    new CircleDimensionSet( RADIUS ) );
         }
 
     }
@@ -66,12 +67,12 @@ public class StartNoneEvent extends BaseStartEvent {
     }
 
     public StartNoneEvent(@MapsTo("general") BPMNGeneral general,
-                   @MapsTo("backgroundSet") BackgroundSet backgroundSet,
-                   @MapsTo("fontSet") FontSet fontSet,
-                   @MapsTo("catchEventAttributes") CatchEventAttributes catchEventAttributes,
-                   @MapsTo("radius") Radius radius) {
+                          @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                          @MapsTo("fontSet") FontSet fontSet,
+                          @MapsTo("catchEventAttributes") CatchEventAttributes catchEventAttributes,
+                          @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet) {
 
-        super( general, backgroundSet, fontSet, catchEventAttributes, radius );
+        super( general, backgroundSet, fontSet, catchEventAttributes, dimensionsSet );
     }
 
     public String getTitle() {

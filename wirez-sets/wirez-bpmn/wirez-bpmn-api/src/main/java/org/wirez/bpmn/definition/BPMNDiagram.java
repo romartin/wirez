@@ -21,8 +21,9 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
-import org.wirez.bpmn.definition.property.Height;
-import org.wirez.bpmn.definition.property.Width;
+import org.wirez.bpmn.definition.property.dimensions.Height;
+import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
+import org.wirez.bpmn.definition.property.dimensions.Width;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.diagram.DiagramSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
@@ -78,11 +79,9 @@ public class BPMNDiagram implements BPMNDefinition {
     @PropertySet
     private FontSet fontSet;
 
-    @Property
-    private Width width;
-
-    @Property
-    private Height height;
+    @PropertySet
+    @FieldDef( label = "Shape Dimensions", position = 5)
+    protected RectangleDimensionsSet dimensionsSet;
 
     @Labels
     private final Set<String> labels = new HashSet<String>() {{
@@ -106,8 +105,7 @@ public class BPMNDiagram implements BPMNDefinition {
                     new ProcessData(),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
-                    new Width( WIDTH ),
-                    new Height( HEIGHT ) );
+                    new RectangleDimensionsSet(WIDTH, HEIGHT));
         }
 
     }
@@ -121,15 +119,13 @@ public class BPMNDiagram implements BPMNDefinition {
             @MapsTo("processData") ProcessData processData,
             @MapsTo("backgroundSet") BackgroundSet backgroundSet,
             @MapsTo("fontSet") FontSet fontSet,
-            @MapsTo("width") Width width,
-            @MapsTo("height") Height height) {
+            @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet) {
         this.general = general;
         this.diagramSet = diagramSet;
         this.processData = processData;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
-        this.width = width;
-        this.height = height;
+        this.dimensionsSet = dimensionsSet;
     }
 
     public String getCategory() {
@@ -156,12 +152,12 @@ public class BPMNDiagram implements BPMNDefinition {
         return general;
     }
 
-    public Height getHeight() {
-        return height;
+    public RectangleDimensionsSet getDimensionsSet() {
+        return dimensionsSet;
     }
 
-    public Width getWidth() {
-        return width;
+    public void setDimensionsSet(RectangleDimensionsSet dimensionsSet) {
+        this.dimensionsSet = dimensionsSet;
     }
 
     public ProcessData getProcessData() {
@@ -196,11 +192,4 @@ public class BPMNDiagram implements BPMNDefinition {
         this.fontSet = fontSet;
     }
 
-    public void setWidth( Width width ) {
-        this.width = width;
-    }
-
-    public void setHeight( Height height ) {
-        this.height = height;
-    }
 }

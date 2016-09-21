@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.definition.property;
+package org.wirez.bpmn.definition.property.dimensions;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -27,13 +30,13 @@ import org.wirez.core.definition.property.type.DoubleType;
 @Portable
 @Bindable
 @Property
-public class Radius implements BPMNProperty {
+public class Height implements BPMNProperty {
 
     @Caption
-    public static final transient String caption = "Radius";
+    public static final transient String caption = "Height";
 
     @Description
-    public static final transient String description = "The radius";
+    public static final transient String description = "The height";
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -43,18 +46,20 @@ public class Radius implements BPMNProperty {
 
     @Type
     public static final PropertyType type = new DoubleType();
-    
+
     @DefaultValue
-    public static final Double defaultValue = 25d;
+    public static final Double defaultValue = 50d;
 
     @Value
+    @Max( 100 )
+    @Min( 40 )
     private Double value = defaultValue;
 
-    public Radius() {
-        
+    public Height() {
+
     }
 
-    public Radius( final Double value ) {
+    public Height( final Double value ) {
         this.value = value;
     }
 
@@ -78,10 +83,11 @@ public class Radius implements BPMNProperty {
         return type;
     }
 
+
     public Double getDefaultValue() {
         return defaultValue;
     }
-    
+
     public Double getValue() {
         return value;
     }
@@ -89,5 +95,5 @@ public class Radius implements BPMNProperty {
     public void setValue(Double value) {
         this.value = value;
     }
-    
+
 }

@@ -21,8 +21,7 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
-import org.wirez.bpmn.definition.property.Height;
-import org.wirez.bpmn.definition.property.Width;
+import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
@@ -63,15 +62,12 @@ public class Lane implements BPMNDefinition {
     private BackgroundSet backgroundSet;
 
     @PropertySet
+    @FieldDef( label = "Font Settings")
     private FontSet fontSet;
 
-    @Property
-    @FieldDef(label = "Width", property = "value")
-    private Width width;
-
-    @Property
-    @FieldDef(label = "Height", property = "value")
-    private Height height;
+    @PropertySet
+    @FieldDef( label = "Shape Dimensions", position = 5)
+    protected RectangleDimensionsSet dimensionsSet;
 
     @Labels
     private final Set<String> labels = new HashSet<String>() {{
@@ -95,8 +91,7 @@ public class Lane implements BPMNDefinition {
             return new Lane(  new BPMNGeneral( "Lane" ),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
-                    new Width( WIDTH ),
-                    new Height( HEIGHT ) );
+                    new RectangleDimensionsSet(WIDTH, HEIGHT) );
         }
 
     }
@@ -108,13 +103,11 @@ public class Lane implements BPMNDefinition {
     public Lane(@MapsTo("general") BPMNGeneral general,
                 @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                 @MapsTo("fontSet") FontSet fontSet,
-                @MapsTo("width") Width width,
-                @MapsTo("height") Height height) {
+                @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet) {
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
-        this.width = width;
-        this.height = height;
+        this.dimensionsSet = dimensionsSet;
     }
 
     public String getCategory() {
@@ -145,22 +138,6 @@ public class Lane implements BPMNDefinition {
         return fontSet;
     }
 
-    public Width getWidth() {
-        return width;
-    }
-
-    public Height getHeight() {
-        return height;
-    }
-
-    public void setHeight( Height height ) {
-        this.height = height;
-    }
-
-    public void setWidth( Width width ) {
-        this.width = width;
-    }
-
     public void setFontSet( FontSet fontSet ) {
         this.fontSet = fontSet;
     }
@@ -171,5 +148,13 @@ public class Lane implements BPMNDefinition {
 
     public void setGeneral( BPMNGeneral general ) {
         this.general = general;
+    }
+
+    public RectangleDimensionsSet getDimensionsSet() {
+        return dimensionsSet;
+    }
+
+    public void setDimensionsSet(RectangleDimensionsSet dimensionsSet) {
+        this.dimensionsSet = dimensionsSet;
     }
 }

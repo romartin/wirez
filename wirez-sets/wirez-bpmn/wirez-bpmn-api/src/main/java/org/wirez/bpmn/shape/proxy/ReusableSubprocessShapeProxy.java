@@ -78,12 +78,12 @@ public final class ReusableSubprocessShapeProxy
 
     @Override
     public double getWidth( final ReusableSubprocess element ) {
-        return element.getWidth().getValue();
+        return element.getDimensionsSet().getWidth().getValue();
     }
 
     @Override
     public double getHeight( final ReusableSubprocess element ) {
-        return element.getHeight().getValue();
+        return element.getDimensionsSet().getHeight().getValue();
     }
 
     public final class ProcessIconProxy
@@ -105,12 +105,12 @@ public final class ReusableSubprocessShapeProxy
 
         @Override
         public double getWidth( final ReusableSubprocess element ) {
-            return element.getWidth().getValue() / 2;
+            return element.getDimensionsSet().getWidth().getValue() / 2;
         }
 
         @Override
         public double getHeight( final ReusableSubprocess element ) {
-            return element.getHeight().getValue() / 2;
+            return element.getDimensionsSet().getHeight().getValue() / 2;
         }
 
         @Override

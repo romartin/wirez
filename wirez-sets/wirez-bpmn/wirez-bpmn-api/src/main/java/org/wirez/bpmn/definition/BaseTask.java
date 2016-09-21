@@ -19,9 +19,7 @@ package org.wirez.bpmn.definition;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
-import org.kie.workbench.common.forms.metaModel.Slider;
-import org.wirez.bpmn.definition.property.Height;
-import org.wirez.bpmn.definition.property.Width;
+import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
@@ -74,57 +72,16 @@ public abstract class BaseTask implements BPMNDefinition {
     protected BackgroundSet backgroundSet;
 
     @PropertySet
+    @FieldDef( label = "Font Settings")
     protected FontSet fontSet;
 
-    @Property
-    @FieldDef(label = "Width", property = "value")
-    @Slider( min = 100.0, max = 300.0, step = 10.0, precision = 0.0 )
-    @Valid
-    protected Width width;
+    @PropertySet
+    @FieldDef( label = "Process Simulation", position = 4)
+    protected SimulationSet simulationSet;
 
-    @Property
-    @FieldDef(label = "Height", property = "value")
-    @Slider( min = 40.0, max = 100.0, step = 5.0, precision = 0.0 )
-    @Valid
-    protected Height height;
-
-    @Property
-    protected Min min;
-
-    @Property
-    protected Max max;
-
-    @Property
-    protected Mean mean;
-
-    @Property
-    @FieldDef(label = "TimeUnit", property = "value")
-    @Valid
-    protected TimeUnit timeUnit;
-
-    @Property
-    @FieldDef(label = "Standard Deviation", property = "value")
-    protected StandardDeviation standardDeviation;
-
-    @Property
-    @FieldDef(label = "Distribution Type", property = "value")
-    protected DistributionType distributionType;
-
-    @Property
-    @FieldDef(label = "Quantity", property = "value")
-    protected Quantity quantity;
-
-    @Property
-    @FieldDef(label = "WorkingHours", property = "value")
-    protected WorkingHours workingHours;
-
-    @Property
-    @FieldDef(label = "UnitCost", property = "value")
-    protected UnitCost unitCost;
-
-    @Property
-    @FieldDef(label = "Currency", property = "value")
-    protected Currency currency;
+    @PropertySet
+    @FieldDef( label = "Shape Dimensions", position = 5)
+    protected RectangleDimensionsSet dimensionsSet;
 
     @Property
     @FieldDef(label = "Task Type", property = "value")
@@ -186,35 +143,15 @@ public abstract class BaseTask implements BPMNDefinition {
                     @MapsTo("dataIOSet") DataIOSet dataIOSet,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
-                    @MapsTo("width") Width width,
-                    @MapsTo("height") Height height,
-                    @MapsTo("min") Min min,
-                    @MapsTo("max") Max max,
-                    @MapsTo("mean") Mean mean,
-                    @MapsTo("timeUnit") TimeUnit timeUnit,
-                    @MapsTo("standardDeviation") StandardDeviation standardDeviation,
-                    @MapsTo("distributionType") DistributionType distributionType,
-                    @MapsTo("quantity") Quantity quantity,
-                    @MapsTo("workingHours") WorkingHours workingHours,
-                    @MapsTo("unitCost") UnitCost unitCost,
-                    @MapsTo("currency") Currency currency,
+                    @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
+                    @MapsTo("simulationSet") SimulationSet simulationSet,
                     @MapsTo("taskType") TaskType taskType ) {
         this.general = general;
         this.dataIOSet = dataIOSet;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
-        this.width = width;
-        this.height = height;
-        this.min = min;
-        this.max = max;
-        this.mean = mean;
-        this.timeUnit = timeUnit;
-        this.standardDeviation = standardDeviation;
-        this.distributionType = distributionType;
-        this.quantity = quantity;
-        this.workingHours = workingHours;
-        this.unitCost = unitCost;
-        this.currency = currency;
+        this.dimensionsSet = dimensionsSet;
+        this.simulationSet = simulationSet;
         this.taskType = taskType;
 
     }
@@ -247,53 +184,6 @@ public abstract class BaseTask implements BPMNDefinition {
         return fontSet;
     }
 
-    public Width getWidth() {
-        return width;
-    }
-
-    public Height getHeight() {
-        return height;
-    }
-
-    public Min getMin() {
-        return min;
-    }
-
-    public Max getMax() {
-        return max;
-    }
-
-    public Mean getMean() {
-        return mean;
-    }
-
-    public TimeUnit getTimeUnit() {
-        return timeUnit;
-    }
-
-    public StandardDeviation getStandardDeviation() {
-        return standardDeviation;
-    }
-
-    public DistributionType getDistributionType() {
-        return distributionType;
-    }
-
-    public Quantity getQuantity() {
-        return quantity;
-    }
-
-    public WorkingHours getWorkingHours() {
-        return workingHours;
-    }
-
-    public UnitCost getUnitCost() {
-        return unitCost;
-    }
-
-    public Currency getCurrency() {
-        return currency;
-    }
 
     public void setGeneral( BPMNGeneral general ) {
         this.general = general;
@@ -311,59 +201,27 @@ public abstract class BaseTask implements BPMNDefinition {
         this.fontSet = fontSet;
     }
 
-    public void setWidth( Width width ) {
-        this.width = width;
-    }
-
-    public void setHeight( Height height ) {
-        this.height = height;
-    }
-
-    public void setMin( Min min ) {
-        this.min = min;
-    }
-
-    public void setMax( Max max ) {
-        this.max = max;
-    }
-
-    public void setMean( Mean mean ) {
-        this.mean = mean;
-    }
-
-    public void setTimeUnit( TimeUnit timeUnit ) {
-        this.timeUnit = timeUnit;
-    }
-
-    public void setStandardDeviation( StandardDeviation standardDeviation ) {
-        this.standardDeviation = standardDeviation;
-    }
-
-    public void setDistributionType( DistributionType distributionType ) {
-        this.distributionType = distributionType;
-    }
-
-    public void setQuantity( Quantity quantity ) {
-        this.quantity = quantity;
-    }
-
-    public void setWorkingHours( WorkingHours workingHours ) {
-        this.workingHours = workingHours;
-    }
-
-    public void setUnitCost( UnitCost unitCost ) {
-        this.unitCost = unitCost;
-    }
-
-    public void setCurrency( Currency currency ) {
-        this.currency = currency;
-    }
-
     public TaskType getTaskType() {
         return taskType;
     }
 
     public void setTaskType( TaskType taskType ) {
         this.taskType = taskType;
+    }
+
+    public SimulationSet getSimulationSet() {
+        return simulationSet;
+    }
+
+    public void setSimulationSet(SimulationSet simulationSet) {
+        this.simulationSet = simulationSet;
+    }
+
+    public RectangleDimensionsSet getDimensionsSet() {
+        return dimensionsSet;
+    }
+
+    public void setDimensionsSet(RectangleDimensionsSet dimensionsSet) {
+        this.dimensionsSet = dimensionsSet;
     }
 }

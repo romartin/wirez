@@ -19,8 +19,10 @@ package org.wirez.bpmn.definition;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.forms.metaModel.Slider;
-import org.wirez.bpmn.definition.property.Radius;
+import org.wirez.bpmn.definition.property.dimensions.CircleDimensionSet;
+import org.wirez.bpmn.definition.property.dimensions.Radius;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
+import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.ThrowEventAttributes;
@@ -31,6 +33,7 @@ import org.wirez.core.definition.annotation.definition.PropertySet;
 import org.wirez.core.definition.annotation.morph.MorphBase;
 import org.wirez.core.definition.builder.Builder;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,21 +44,25 @@ public abstract class BaseEndEvent implements BPMNDefinition {
     public static final transient String category = Categories.EVENTS;
 
     @PropertySet
+    @FieldDef( label = "General Settings", position = 0)
+    @Valid
     protected BPMNGeneral general;
 
     @PropertySet
+    @FieldDef( label = "Background Settings", position = 2)
+    @Valid
     protected BackgroundSet backgroundSet;
 
     @PropertySet
     protected ThrowEventAttributes throwEventAttributes;
 
     @PropertySet
+    @FieldDef( label = "Font Settings")
     protected FontSet fontSet;
 
-    @Property
-    @FieldDef(label = "Radius", property = "value")
-    @Slider( min = 25.0, max = 50.0, step = 1, precision = 0.0 )
-    protected Radius radius;
+    @PropertySet
+    @FieldDef( label = "Shape Dimensions", position = 5)
+    protected CircleDimensionSet dimensionsSet;
 
     @Labels
     protected final Set<String> labels = new HashSet<String>() {{
@@ -75,8 +82,6 @@ public abstract class BaseEndEvent implements BPMNDefinition {
         public static final Double BORDER_SIZE = 2d;
         public static final String BORDER_COLOR = "#000000";
         public static final Double RADIUS = 14d;
-
-
     }
 
     public BaseEndEvent()  {
@@ -87,12 +92,12 @@ public abstract class BaseEndEvent implements BPMNDefinition {
                         @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                         @MapsTo("fontSet") FontSet fontSet,
                         @MapsTo("throwEventAttributes") ThrowEventAttributes throwEventAttributes,
-                        @MapsTo("radius") Radius radius) {
+                        @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet) {
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.throwEventAttributes = throwEventAttributes;
-        this.radius = radius;
+        this.dimensionsSet = dimensionsSet;
     }
 
     public String getCategory() {
@@ -101,10 +106,6 @@ public abstract class BaseEndEvent implements BPMNDefinition {
 
     public Set<String> getLabels() {
         return labels;
-    }
-
-    public Radius getRadius() {
-        return radius;
     }
 
     public BPMNGeneral getGeneral() {
@@ -139,7 +140,11 @@ public abstract class BaseEndEvent implements BPMNDefinition {
         this.fontSet = fontSet;
     }
 
-    public void setRadius( Radius radius ) {
-        this.radius = radius;
+    public CircleDimensionSet getDimensionsSet() {
+        return dimensionsSet;
+    }
+
+    public void setDimensionsSet(CircleDimensionSet dimensionsSet) {
+        this.dimensionsSet = dimensionsSet;
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.definition.property;
+package org.wirez.bpmn.definition.property.dimensions;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -30,13 +30,16 @@ import org.wirez.core.definition.property.type.DoubleType;
 @Portable
 @Bindable
 @Property
-public class Height implements BPMNProperty {
+public class Width implements BPMNProperty {
 
     @Caption
-    public static final transient String caption = "Height";
+    public static final transient String caption = "width";
 
     @Description
-    public static final transient String description = "The height";
+    public static final transient String description = "The width";
+
+    @Type
+    public static final PropertyType type = new DoubleType();
 
     @ReadOnly
     public static final Boolean readOnly = false;
@@ -44,22 +47,19 @@ public class Height implements BPMNProperty {
     @Optional
     public static final Boolean optional = false;
 
-    @Type
-    public static final PropertyType type = new DoubleType();
-
     @DefaultValue
     public static final Double defaultValue = 50d;
 
     @Value
-    @Max( 100 )
-    @Min( 40 )
+    @Max( 300 )
+    @Min( 100 )
     private Double value = defaultValue;
 
-    public Height() {
+    public Width() {
 
     }
 
-    public Height( final Double value ) {
+    public Width( final Double value ) {
         this.value = value;
     }
 
@@ -82,7 +82,6 @@ public class Height implements BPMNProperty {
     public PropertyType getType() {
         return type;
     }
-
 
     public Double getDefaultValue() {
         return defaultValue;

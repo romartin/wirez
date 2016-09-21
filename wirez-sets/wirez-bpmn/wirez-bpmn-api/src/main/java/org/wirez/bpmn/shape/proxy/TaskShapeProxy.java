@@ -110,12 +110,12 @@ public final class TaskShapeProxy
 
     @Override
     public double getWidth( final BaseTask element ) {
-        return element.getWidth().getValue();
+        return element.getDimensionsSet().getWidth().getValue();
     }
 
     @Override
     public double getHeight( final BaseTask element ) {
-        return element.getHeight().getValue();
+        return element.getDimensionsSet().getHeight().getValue();
     }
 
     public final class TaskTypeProxy extends AbstractBasicGlyphProxy<BaseTask> implements IconProxy<BaseTask> {

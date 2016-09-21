@@ -20,7 +20,8 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.wirez.bpmn.definition.property.Radius;
+import org.kie.workbench.common.forms.metaModel.FieldDef;
+import org.wirez.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
@@ -32,6 +33,7 @@ import org.wirez.core.definition.builder.Builder;
 import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,16 +54,22 @@ public class IntermediateTimerEvent implements BPMNDefinition {
             "is reached or a particular duration is over.";
 
     @PropertySet
+    @FieldDef( label = "General Settings", position = 0)
+    @Valid
     private BPMNGeneral general;
 
     @PropertySet
+    @FieldDef( label = "Background Settings", position = 2)
+    @Valid
     private BackgroundSet backgroundSet;
 
     @PropertySet
+    @FieldDef( label = "Font Settings")
     private FontSet fontSet;
 
-    @Property
-    private Radius radius;
+    @PropertySet
+    @FieldDef( label = "Shape Dimensions", position = 5)
+    private CircleDimensionSet dimensionsSet;
 
     @Labels
     private final Set<String> labels = new HashSet<String>() {{
@@ -93,7 +101,7 @@ public class IntermediateTimerEvent implements BPMNDefinition {
             return new IntermediateTimerEvent(  new BPMNGeneral( "Timer" ),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
-                    new Radius( RADIUS ) );
+                    new CircleDimensionSet( RADIUS ) );
         }
 
     }
@@ -105,11 +113,11 @@ public class IntermediateTimerEvent implements BPMNDefinition {
     public IntermediateTimerEvent(@MapsTo("general") BPMNGeneral general,
                                   @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                                   @MapsTo("fontSet") FontSet fontSet,
-                                  @MapsTo("radius") Radius radius) {
+                                  @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet) {
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
-        this.radius = radius;
+        this.dimensionsSet = dimensionsSet;
     }
 
     public String getCategory() {
@@ -126,10 +134,6 @@ public class IntermediateTimerEvent implements BPMNDefinition {
 
     public Set<String> getLabels() {
         return labels;
-    }
-
-    public Radius getRadius() {
-        return radius;
     }
 
     public BPMNGeneral getGeneral() {
@@ -156,7 +160,11 @@ public class IntermediateTimerEvent implements BPMNDefinition {
         this.fontSet = fontSet;
     }
 
-    public void setRadius( Radius radius ) {
-        this.radius = radius;
+    public CircleDimensionSet getDimensionsSet() {
+        return dimensionsSet;
+    }
+
+    public void setDimensionsSet(CircleDimensionSet dimensionsSet) {
+        this.dimensionsSet = dimensionsSet;
     }
 }

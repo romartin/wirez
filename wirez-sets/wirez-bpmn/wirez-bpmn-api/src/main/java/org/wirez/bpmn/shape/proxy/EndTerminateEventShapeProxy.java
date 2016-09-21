@@ -14,7 +14,7 @@ public final class EndTerminateEventShapeProxy
     
     @Override
     public double getRadius( final EndTerminateEvent element ) {
-        return element.getRadius().getValue();
+        return element.getDimensionsSet().getRadius().getValue();
     }
 
     @Override

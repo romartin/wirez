@@ -20,7 +20,7 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.wirez.bpmn.definition.property.Radius;
+import org.wirez.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
@@ -54,7 +54,7 @@ public class ParallelGateway extends BaseGateway {
             return new ParallelGateway(  new BPMNGeneral( "gw" ),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
-                    new Radius( RADIUS ) );
+                    new CircleDimensionSet( RADIUS ) );
         }
 
     }
@@ -66,9 +66,9 @@ public class ParallelGateway extends BaseGateway {
     public ParallelGateway(@MapsTo("general") BPMNGeneral general,
                            @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                            @MapsTo("fontSet") FontSet fontSet,
-                           @MapsTo("radius") Radius radius) {
+                           @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet) {
 
-        super( general, backgroundSet, fontSet, radius );
+        super( general, backgroundSet, fontSet, dimensionsSet );
 
     }
 

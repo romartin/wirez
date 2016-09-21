@@ -18,7 +18,7 @@ public final class ExclusiveDatabasedGatewayShapeProxy
     
     @Override
     public double getRadius( final ExclusiveDatabasedGateway element ) {
-        return element.getRadius().getValue();
+        return element.getDimensionsSet().getRadius().getValue();
     }
 
     @Override
@@ -93,12 +93,12 @@ public final class ExclusiveDatabasedGatewayShapeProxy
 
         @Override
         public double getWidth( final ExclusiveDatabasedGateway element ) {
-            return element.getRadius().getValue() / 2;
+            return element.getDimensionsSet().getRadius().getValue() / 2;
         }
 
         @Override
         public double getHeight( final ExclusiveDatabasedGateway element ) {
-            return element.getRadius().getValue() / 2;
+            return element.getDimensionsSet().getRadius().getValue() / 2;
         }
 
         @Override

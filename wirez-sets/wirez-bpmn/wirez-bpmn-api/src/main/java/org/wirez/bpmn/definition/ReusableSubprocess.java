@@ -20,8 +20,8 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
-import org.wirez.bpmn.definition.property.Height;
-import org.wirez.bpmn.definition.property.Width;
+import org.kie.workbench.common.forms.metaModel.FieldDef;
+import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
@@ -34,6 +34,7 @@ import org.wirez.core.definition.builder.Builder;
 import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,19 +55,22 @@ public class ReusableSubprocess implements BPMNDefinition {
     public static final transient String description = "A reusable subprocess. It can be used to invoke another process.";
 
     @PropertySet
+    @FieldDef( label = "General Settings", position = 0)
+    @Valid
     protected BPMNGeneral general;
 
     @PropertySet
+    @FieldDef( label = "Background Settings", position = 2)
+    @Valid
     protected BackgroundSet backgroundSet;
 
     @PropertySet
+    @FieldDef( label = "Font Settings")
     protected FontSet fontSet;
 
-    @Property
-    protected Width width;
-
-    @Property
-    protected Height height;
+    @PropertySet
+    @FieldDef( label = "Shape Dimensions", position = 5)
+    protected RectangleDimensionsSet dimensionsSet;
 
     @Labels
     protected final Set<String> labels = new HashSet<String>() {{
@@ -95,8 +99,7 @@ public class ReusableSubprocess implements BPMNDefinition {
             return new ReusableSubprocess( new BPMNGeneral( "Subprocess" ),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
-                    new Width( WIDTH ),
-                    new Height( HEIGHT ) );
+                    new RectangleDimensionsSet(WIDTH, HEIGHT) );
         }
     }
     
@@ -106,13 +109,11 @@ public class ReusableSubprocess implements BPMNDefinition {
     public ReusableSubprocess(@MapsTo("general") BPMNGeneral general,
                               @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                               @MapsTo("fontSet") FontSet fontSet,
-                              @MapsTo("width") Width width,
-                              @MapsTo("height") Height height) {
+                              @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet) {
         this.general = general;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
-        this.width = width;
-        this.height = height;
+        this.dimensionsSet = dimensionsSet;
     }
 
     public String getCategory() {
@@ -143,14 +144,6 @@ public class ReusableSubprocess implements BPMNDefinition {
         return fontSet;
     }
 
-    public Width getWidth() {
-        return width;
-    }
-
-    public Height getHeight() {
-        return height;
-    }
-
     public void setGeneral( BPMNGeneral general ) {
         this.general = general;
     }
@@ -163,12 +156,11 @@ public class ReusableSubprocess implements BPMNDefinition {
         this.fontSet = fontSet;
     }
 
-    public void setWidth( Width width ) {
-        this.width = width;
+    public RectangleDimensionsSet getDimensionsSet() {
+        return dimensionsSet;
     }
 
-    public void setHeight( Height height ) {
-        this.height = height;
+    public void setDimensionsSet(RectangleDimensionsSet dimensionsSet) {
+        this.dimensionsSet = dimensionsSet;
     }
-
 }

@@ -13,11 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wirez.bpmn.definition;
+package org.wirez.bpmn.definition.property.task;
 
-/**
- * Marker interface for all BPMN property sets.
- */
-public interface BPMNPropertySet {
-    
+import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
+import org.wirez.bpmn.definition.BPMNPropertySet;
+import org.wirez.core.definition.annotation.Name;
+import org.wirez.core.definition.annotation.propertyset.PropertySet;
+
+@Portable
+@Bindable
+@PropertySet
+public class EmptyTaskExecutionSet implements BPMNPropertySet {
+    @Name
+    public static final transient String propertySetName = "Empty Implementation/Execution";
 }

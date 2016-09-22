@@ -26,6 +26,7 @@ import org.wirez.bpmn.definition.BPMNPropertySet;
 import org.wirez.core.definition.annotation.Name;
 import org.wirez.core.definition.annotation.propertyset.Property;
 import org.wirez.core.definition.annotation.propertyset.PropertySet;
+import org.wirez.forms.meta.definition.AssigneeEditor;
 
 @Portable
 @Bindable
@@ -36,11 +37,13 @@ public class AssigneeSet implements BPMNPropertySet {
 
     @Property
     @FieldDef(label = "Actors", property = "value")
+    @AssigneeEditor
     @Valid
     private Actors actors;
 
     @Property
     @FieldDef(label = "Groups", property = "value")
+    @AssigneeEditor
     @Valid
     private Groupid groupid;
 

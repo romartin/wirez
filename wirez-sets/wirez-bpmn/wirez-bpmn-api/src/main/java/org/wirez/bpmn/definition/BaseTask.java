@@ -62,12 +62,12 @@ public abstract class BaseTask implements BPMNDefinition {
     protected BPMNGeneral general;
 
     @PropertySet
-    @FieldDef( label = "Task Data", position = 1)
+    @FieldDef( label = "Task Data", position = 2)
     @Valid
     protected DataIOSet dataIOSet;
 
     @PropertySet
-    @FieldDef( label = "Background Settings", position = 2)
+    @FieldDef( label = "Background Settings", position = 3)
     @Valid
     protected BackgroundSet backgroundSet;
 
@@ -84,7 +84,7 @@ public abstract class BaseTask implements BPMNDefinition {
     protected RectangleDimensionsSet dimensionsSet;
 
     @Property
-    @FieldDef(label = "Task Type", property = "value")
+    @FieldDef(label = "Task Type", property = "value", position = 6)
     @MorphProperty( binder = TaskTypeMorphPropertyBinding.class )
     protected TaskType taskType;
 
@@ -153,7 +153,6 @@ public abstract class BaseTask implements BPMNDefinition {
         this.dimensionsSet = dimensionsSet;
         this.simulationSet = simulationSet;
         this.taskType = taskType;
-
     }
 
     public String getCategory() {
@@ -183,7 +182,6 @@ public abstract class BaseTask implements BPMNDefinition {
     public FontSet getFontSet() {
         return fontSet;
     }
-
 
     public void setGeneral( BPMNGeneral general ) {
         this.general = general;

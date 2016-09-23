@@ -10,7 +10,7 @@ import org.wirez.shapes.proxy.icon.dynamics.Icons;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class ReusableSubprocessShapeProxy
+public final class SubprocessShapeProxy
         extends AbstractBasicDynamicShapeProxy<ReusableSubprocess>
         implements
         RectangleProxy<ReusableSubprocess>,

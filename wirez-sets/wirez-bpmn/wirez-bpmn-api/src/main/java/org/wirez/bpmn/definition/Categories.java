@@ -6,6 +6,8 @@ public class Categories {
     
     public static final String ACTIVITIES = "Activities";
 
+    public static final String SUBPROCESSES = "Subprocesses";
+
     public static final String EVENTS = "Events";
     
     public static final String CONNECTING_OBJECTS = "Connecting Objects";

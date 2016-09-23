@@ -38,7 +38,7 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
 
     @Override
     protected void doDisable( final WiresCanvas.View view ) {
-        view.setDockingAcceptor( DOCKING_EMPTY_ACCEPTOR );
+        view.setDockingAcceptor( IDockingAcceptor.NONE );
     }
 
     @Override
@@ -55,28 +55,6 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
     protected Command<AbstractCanvasHandler, CanvasViolation> getDeleteEdgeCommand( final Node parent, final Node child ) {
         return canvasCommandFactory.DELETE_DOCK_EDGE( parent, child );
     }
-
-
-    private final IDockingAcceptor DOCKING_EMPTY_ACCEPTOR = new IDockingAcceptor() {
-
-        @Override
-        public boolean dockingAllowed( final WiresContainer wiresContainer,
-                                       final WiresShape wiresShape ) {
-            return false;
-        }
-
-        @Override
-        public boolean acceptDocking( final WiresContainer wiresContainer,
-                                      final WiresShape wiresShape ) {
-            return false;
-        }
-
-        @Override
-        public int getHotspotSize() {
-            return IDockingAcceptor.HOTSPOT_SIZE;
-        }
-
-    };
 
     private final IDockingAcceptor DOCKING_ACCEPTOR = new IDockingAcceptor() {
         @Override

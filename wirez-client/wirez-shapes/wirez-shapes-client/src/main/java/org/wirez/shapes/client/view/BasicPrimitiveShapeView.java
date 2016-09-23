@@ -90,7 +90,10 @@ public abstract class BasicPrimitiveShapeView<T> extends org.wirez.shapes.client
         }
 
         super.updateFillGradient( width, height );
-        
+
+        // Refresh the shape, its children container and the controls, if any.
+        refresh();
+
         return (T) this;
     }
     

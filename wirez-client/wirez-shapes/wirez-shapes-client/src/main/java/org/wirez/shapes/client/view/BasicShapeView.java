@@ -3,8 +3,7 @@ package org.wirez.shapes.client.view;
 import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.event.ShapeMovedEvent;
-import com.ait.lienzo.client.core.shape.wires.event.ShapeMovedHandler;
+import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresDragEvent;
 import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import com.ait.lienzo.shared.core.types.ColorName;
@@ -16,9 +15,7 @@ import org.wirez.core.client.shape.HasChildren;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.HasFillGradient;
 import org.wirez.core.client.shape.view.HasTitle;
-import org.wirez.core.client.shape.view.event.ViewEvent;
-import org.wirez.core.client.shape.view.event.ViewEventType;
-import org.wirez.core.client.shape.view.event.ViewHandler;
+import org.wirez.core.client.shape.view.event.*;
 import org.wirez.shapes.client.util.BasicShapesUtils;
 
 import java.util.ArrayList;
@@ -48,7 +45,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
     public BasicShapeView( final MultiPath path ) {
         super( path );
-        this.textPosition = WiresLayoutContainer.Layout.BOTTOM;
+        this.textPosition = WiresLayoutContainer.Layout.CENTER;
 
         initialize();
 
@@ -61,6 +58,8 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         refreshDecorators();
 
         postInitialize();
+
+        refresh();
 
     }
 
@@ -147,6 +146,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         final double x = getPath().getX();
         final double y = getPath().getY();
         getPath().clear().rect(x, y, width, height);
+        refresh();
     }
 
     @Override
@@ -364,30 +364,37 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         return ( T ) this;
     }
 
+    // TODO: listen for WiresMoveEvent's as well?
     protected HandlerRegistration[] registerDragHandler( final ViewHandler<org.wirez.core.client.shape.view.event.DragEvent> eventHandler ) {
 
-        return new HandlerRegistration[]{
+        final DragHandler dragHandler = ( DragHandler ) eventHandler;
 
-                // TODO: call DragHandler#start & DragHandler#move?
-                setDraggable( true ).addShapeMovedHandler( new ShapeMovedHandler() {
+        setDraggable( true );
 
-                    @Override
-                    public void onShapeMoved( ShapeMovedEvent event ) {
-                        getDragHandler().end( buildEvent( event.getX(), event.getY() ) );
-                    }
+        HandlerRegistration dragStartReg = addWiresDragStartHandler( wiresDragStartEvent -> {
+            final DragEvent e = buildDragEvent( wiresDragStartEvent );
+            dragHandler.start( e );
+        } );
 
-                    private org.wirez.core.client.shape.view.event.DragHandler getDragHandler() {
-                        return ( org.wirez.core.client.shape.view.event.DragHandler ) eventHandler;
-                    }
+        HandlerRegistration dragMoveReg = addWiresDragMoveHandler( wiresDragMoveEvent -> {
+            final DragEvent e = buildDragEvent( wiresDragMoveEvent );
+            dragHandler.handle( e );
+        } );
 
-                    private org.wirez.core.client.shape.view.event.DragEvent buildEvent( final double x,
-                                                                                         final double y ) {
-                        return new org.wirez.core.client.shape.view.event.DragEvent( x, y, x, y, x, y );
-                    }
 
-                } )
+        HandlerRegistration dragEndReg = addWiresDragEndHandler( wiresDragEndEvent -> {
+            final DragEvent e = buildDragEvent( wiresDragEndEvent );
+            dragHandler.end( e );
+        } );
 
-        };
+       return new HandlerRegistration[] { dragStartReg, dragMoveReg, dragEndReg };
+    }
+
+    // TODO: Client & absolute coords.
+    private DragEvent buildDragEvent( final AbstractWiresDragEvent sourceDragEvent ) {
+        final double x = sourceDragEvent.getX();
+        final double y = sourceDragEvent.getY();
+        return new DragEvent( x, y, x, y, x, y );
     }
 
 }

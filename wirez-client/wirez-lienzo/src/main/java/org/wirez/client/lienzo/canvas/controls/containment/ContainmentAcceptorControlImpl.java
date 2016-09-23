@@ -38,7 +38,7 @@ public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedCont
 
     @Override
     protected void doDisable(final WiresCanvas.View view) {
-        view.setContainmentAcceptor(CONTAINMENT_EMPTY_ACCEPTOR);
+        view.setContainmentAcceptor(IContainmentAcceptor.NONE);
     }
 
     @Override
@@ -55,22 +55,6 @@ public class ContainmentAcceptorControlImpl extends AbstractContainmentBasedCont
     protected Command<AbstractCanvasHandler, CanvasViolation> getDeleteEdgeCommand(final Node parent, final Node child) {
         return canvasCommandFactory.DELETE_CHILD_EDGE( parent, child );
     }
-
-    private final IContainmentAcceptor CONTAINMENT_EMPTY_ACCEPTOR = new IContainmentAcceptor() {
-
-        @Override
-        public boolean containmentAllowed( final WiresContainer wiresContainer,
-                                           final WiresShape wiresShape ) {
-            return false;
-        }
-
-        @Override
-        public boolean acceptContainment( final WiresContainer wiresContainer,
-                                          final WiresShape wiresShape ) {
-            return false;
-        }
-
-    };
 
     private final IContainmentAcceptor CONTAINMENT_ACCEPTOR = new IContainmentAcceptor() {
         @Override

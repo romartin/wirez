@@ -35,11 +35,7 @@ public class UserTask extends BaseTask {
     public static final transient String title = "User Task";
 
     @PropertySet
-    @FieldDef( label = "Implementation/Execution", position = 1)
-    @Valid
-    protected EmptyTaskExecutionSet executionSet;
-
-    @FieldDef( label = "Assigned to", position = 2)
+    @FieldDef( label = "Assigned to", position = 1)
     protected AssigneeSet assigneeSet;
 
     @NonPortable
@@ -48,7 +44,6 @@ public class UserTask extends BaseTask {
         @Override
         public UserTask build() {
             return new UserTask(new BPMNGeneral("Task"),
-                    new EmptyTaskExecutionSet(),
                     new AssigneeSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
@@ -65,7 +60,6 @@ public class UserTask extends BaseTask {
     }
 
     public UserTask(@MapsTo("general") BPMNGeneral general,
-                    @MapsTo("executionSet") EmptyTaskExecutionSet executionSet,
                     @MapsTo("assigneeSet") AssigneeSet assigneeSet,
                     @MapsTo("dataIOSet") DataIOSet dataIOSet,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
@@ -75,7 +69,6 @@ public class UserTask extends BaseTask {
                     @MapsTo("taskType") TaskType taskType) {
 
         super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
-        this.executionSet = executionSet;
         this.assigneeSet = assigneeSet;
     }
 
@@ -91,11 +84,4 @@ public class UserTask extends BaseTask {
         this.assigneeSet = assigneeSet;
     }
 
-    public EmptyTaskExecutionSet getExecutionSet() {
-        return executionSet;
-    }
-
-    public void setExecutionSet(EmptyTaskExecutionSet executionSet) {
-        this.executionSet = executionSet;
-    }
 }

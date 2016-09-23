@@ -41,16 +41,12 @@ public class RectangleView<T extends RectangleView> extends BasicPrimitiveShapeV
     @Override
     public T setSize( final double width,
                       final double height ) {
-
         return super.setSize( width ,height );
-
     }
 
     @Override
     protected void doDestroy() {
         super.doDestroy();
-
-        rectangle.removeFromParent();
         rectangle = null;
     }
     

@@ -64,17 +64,19 @@ public abstract class CommandResultBuilder<V> {
     public CommandResult<V> build() {
 
         if ( null != violations && !violations.isEmpty() ) {
+            StringBuilder messages = new StringBuilder();
             String message = null;
             int c = 0;
             for ( final V violation : violations ) {
                 if ( isError( violation ) ) {
                     message = getMessage( violation );
+                    messages.append( " {" ).append( message ).append( " } " );
                     c++;
                 }
             }
 
             if ( c > 1 ) {
-                message = c + " violations found";
+                message = "Found " + c + " violations - " + messages.toString();
             }
 
             if ( c > 0 ) {

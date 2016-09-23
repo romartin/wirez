@@ -1,11 +1,9 @@
 package org.wirez.client.lienzo.shape.view.glyph;
 
 import com.ait.lienzo.client.core.shape.Group;
-import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.wires.WiresConnector;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.types.BoundingBox;
-import com.ait.tooling.nativetools.client.collection.NFastArrayList;
 import org.wirez.client.lienzo.util.LienzoUtils;
 import org.wirez.core.api.FactoryManager;
 import org.wirez.core.client.shape.Shape;
@@ -71,46 +69,8 @@ public class LienzoShapesGlyphBuilder extends AbstractBindableShapeGlyphBuilder<
         final double[] scale = LienzoUtils.getScaleFactor( bb.getWidth(), bb.getHeight(), width, height );
         group.setScale( scale[0], scale[1] );
 
-        // Apply positions.
-        final double x = view instanceof HasRadius ? width / 2 : 0;
-        final double y = view instanceof HasRadius ? height / 2 : 0;
-        
-        return new LienzoShapeGlyph( translate( group, x, y ), width, height );
+        return new LienzoShapeGlyph( group, width, height );
         
     }
 
-    private Group translate( final Group group,
-                            final double x,
-                            final double y ) {
-
-        if ( x == 0 && y == 0 ) {
-
-            return group;
-
-        }
-
-        if ( null != group ) {
-
-
-            group.setX( x ).setY( y );
-
-            /*final NFastArrayList<IPrimitive<?>> children = group.getChildNodes();
-
-            if ( null != children && !children.isEmpty() ) {
-
-                for ( final IPrimitive<?> primitive : children ) {
-
-                    primitive.setX( primitive.getX() + x );
-                    primitive.setY( primitive.getY() + y );
-
-                }
-
-            }*/
-
-        }
-
-        return group;
-    }
-
-   
 }

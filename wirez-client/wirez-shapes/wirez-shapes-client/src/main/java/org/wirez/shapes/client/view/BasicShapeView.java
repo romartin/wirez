@@ -45,7 +45,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
     public BasicShapeView( final MultiPath path ) {
         super( path );
-        this.textPosition = WiresLayoutContainer.Layout.CENTER;
+        this.textPosition = WiresLayoutContainer.Layout.BOTTOM;
 
         initialize();
 

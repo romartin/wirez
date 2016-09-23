@@ -3,6 +3,7 @@ package org.wirez.shapes.client.view.animatiion;
 import com.ait.lienzo.client.core.shape.Shape;
 import org.wirez.shapes.client.BasicShape;
 import org.wirez.shapes.client.view.BasicPrimitiveShapeView;
+import org.wirez.shapes.client.view.BasicShapeView;
 
 public final class BasicShapeDecoratorAnimation extends BasicDecoratorAnimation<BasicShape> {
 
@@ -17,8 +18,8 @@ public final class BasicShapeDecoratorAnimation extends BasicDecoratorAnimation<
         return getView().getDecorator();
     }
 
-    private BasicPrimitiveShapeView<?> getView() {
-        return ( BasicPrimitiveShapeView<?> ) getSource().getShapeView();
+    private BasicShapeView<?> getView() {
+        return ( BasicShapeView<?> ) getSource().getShapeView();
     }
 
 }

@@ -16,6 +16,7 @@ public class BPMNPaletteDefinitionFactory extends BindableDefSetPaletteDefinitio
 
     private static final Map<String, String> CAT_TITLES = new HashMap<String, String>() {{
         put( Categories.ACTIVITIES, "Activities" );
+        put( Categories.SUBPROCESSES, "Subprocesses" );
         put( Categories.CONNECTING_OBJECTS, "Connecting objects" );
         put( Categories.EVENTS, "Events" );
         put( Categories.GATEWAYS, "Gateways" );
@@ -26,7 +27,7 @@ public class BPMNPaletteDefinitionFactory extends BindableDefSetPaletteDefinitio
         put( BaseTask.class.getName(), "Tasks" );
         put( BaseStartEvent.class.getName(), "Start Events" );
         put( BaseEndEvent.class.getName(), "End Events" );
-        put( ReusableSubprocess.class.getName(), "Subprocesses" );
+        put( BaseSubprocess.class.getName(), "Subprocesses" );
         put( BaseGateway.class.getName(), "Gateways" );
     }};
 

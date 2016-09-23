@@ -18,42 +18,33 @@ package org.wirez.bpmn.definition;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
-import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
-import org.wirez.bpmn.definition.property.dataio.DataIOSet;
+import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
-import org.wirez.bpmn.definition.property.simulation.*;
-import org.wirez.bpmn.definition.property.task.TaskType;
-import org.wirez.bpmn.definition.property.task.TaskTypes;
-import org.wirez.bpmn.shape.proxy.TaskShapeProxy;
+import org.wirez.bpmn.definition.property.simulation.SimulationSet;
+import org.wirez.bpmn.shape.proxy.SubprocessShapeProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
 import org.wirez.core.definition.annotation.definition.Category;
 import org.wirez.core.definition.annotation.definition.Labels;
-import org.wirez.core.definition.annotation.definition.Property;
 import org.wirez.core.definition.annotation.definition.PropertySet;
 import org.wirez.core.definition.annotation.morph.MorphBase;
-import org.wirez.core.definition.annotation.morph.MorphProperty;
-import org.wirez.core.definition.annotation.morph.MorphPropertyValueBinding;
 import org.wirez.core.definition.builder.Builder;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.Set;
 
-@Shape( factory = BasicShapesFactory.class, proxy = TaskShapeProxy.class )
-@MorphBase( defaultType = NoneTask.class, targets = { ReusableSubprocess.class } )
-public abstract class BaseTask implements BPMNDefinition {
-
+@Shape( factory = BasicShapesFactory.class, proxy = SubprocessShapeProxy.class )
+@MorphBase( defaultType = ReusableSubprocess.class, targets = { BaseTask.class } )
+public abstract class BaseSubprocess implements BPMNDefinition {
     @Category
     public static final transient String category = Categories.ACTIVITIES;
 
     @Description
-    public static final transient String description = "A task is a unit of work - the job to be performed";
+    public static final transient String description = "A subprocess is a decomposable activity.";
 
     @PropertySet
     @FieldDef( label = "General Settings", position = 0)
@@ -61,72 +52,39 @@ public abstract class BaseTask implements BPMNDefinition {
     protected BPMNGeneral general;
 
     @PropertySet
-    @FieldDef( label = "Task Data", position = 2)
-    @Valid
-    protected DataIOSet dataIOSet;
-
-    @PropertySet
-    @FieldDef( label = "Background Settings", position = 3)
+    @FieldDef( label = "Background Settings", position = 2)
     @Valid
     protected BackgroundSet backgroundSet;
 
     @PropertySet
-    @FieldDef( label = "Font Settings", position = 4)
+    @FieldDef( label = "Font Settings", position = 3)
     protected FontSet fontSet;
 
     @PropertySet
-    @FieldDef( label = "Process Simulation", position = 5)
+    @FieldDef( label = "Process Simulation", position = 4)
     protected SimulationSet simulationSet;
 
     @PropertySet
-    @FieldDef( label = "Shape Dimensions", position = 6)
+    @FieldDef( label = "Shape Dimensions", position = 5)
     protected RectangleDimensionsSet dimensionsSet;
-
-    @Property
-    @FieldDef(label = "Task Type", property = "value", position = 7)
-    @MorphProperty( binder = TaskTypeMorphPropertyBinding.class )
-    protected TaskType taskType;
-
-    public static class TaskTypeMorphPropertyBinding implements MorphPropertyValueBinding<TaskType, TaskTypes> {
-
-        private static final Map<TaskTypes, Class<?>> MORPH_TARGETS =
-                new HashMap<TaskTypes, Class<?>>( 4 ) {{
-                    put( TaskTypes.NONE, NoneTask.class );
-                    put( TaskTypes.USER, UserTask.class );
-                    put( TaskTypes.SCRIPT, ScriptTask.class );
-                    put( TaskTypes.BUSINESS_RULE, BusinessRuleTask.class );
-                }};
-
-        @Override
-        public TaskTypes getValue( final TaskType property ) {
-            return property.getValue();
-        }
-
-        @Override
-        public Map<TaskTypes, Class<?>> getMorphTargets() {
-            return MORPH_TARGETS;
-        }
-
-    }
 
     @Labels
     protected final Set<String> labels = new HashSet<String>() {{
         add( "all" );
         add( "sequence_start" );
         add( "sequence_end" );
-        add( "from_task_event" );
-        add( "to_task_event" );
-        add( "FromEventbasedGateway" );
         add( "messageflow_start" );
         add( "messageflow_end" );
+        add( "to_task_event" );
+        add( "from_task_event" );
         add( "fromtoall" );
         add( "ActivitiesMorph" );
     }};
 
     @NonPortable
-    static abstract class BaseTaskBuilder<T extends BaseTask> implements Builder<T> {
+    static abstract class BaseSubprocessBuilder<T extends BaseSubprocess> implements Builder<T> {
 
-        public static final String COLOR = "#f9fad2";
+        public static final String COLOR = "#fafad2";
         public static final Double WIDTH = 136d;
         public static final Double HEIGHT = 48d;
         public static final Double BORDER_SIZE = 1d;
@@ -134,24 +92,19 @@ public abstract class BaseTask implements BPMNDefinition {
 
     }
 
-    protected BaseTask( final TaskTypes type ) {
-        this.taskType = new TaskType( type );
+    protected BaseSubprocess( ) {
     }
 
-    public BaseTask(@MapsTo("general") BPMNGeneral general,
-                    @MapsTo("dataIOSet") DataIOSet dataIOSet,
+    public BaseSubprocess(@MapsTo("general") BPMNGeneral general,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
                     @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                    @MapsTo("simulationSet") SimulationSet simulationSet,
-                    @MapsTo("taskType") TaskType taskType ) {
+                    @MapsTo("simulationSet") SimulationSet simulationSet ) {
         this.general = general;
-        this.dataIOSet = dataIOSet;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.dimensionsSet = dimensionsSet;
         this.simulationSet = simulationSet;
-        this.taskType = taskType;
     }
 
     public String getCategory() {
@@ -162,48 +115,28 @@ public abstract class BaseTask implements BPMNDefinition {
         return description;
     }
 
-    public Set<String> getLabels() {
-        return labels;
-    }
-
     public BPMNGeneral getGeneral() {
         return general;
     }
 
-    public DataIOSet getDataIOSet() {
-        return dataIOSet;
+    public void setGeneral(BPMNGeneral general) {
+        this.general = general;
     }
 
     public BackgroundSet getBackgroundSet() {
         return backgroundSet;
     }
 
+    public void setBackgroundSet(BackgroundSet backgroundSet) {
+        this.backgroundSet = backgroundSet;
+    }
+
     public FontSet getFontSet() {
         return fontSet;
     }
 
-    public void setGeneral( BPMNGeneral general ) {
-        this.general = general;
-    }
-
-    public void setDataIOSet( DataIOSet dataIOSet ) {
-        this.dataIOSet = dataIOSet;
-    }
-
-    public void setBackgroundSet( BackgroundSet backgroundSet ) {
-        this.backgroundSet = backgroundSet;
-    }
-
-    public void setFontSet( FontSet fontSet ) {
+    public void setFontSet(FontSet fontSet) {
         this.fontSet = fontSet;
-    }
-
-    public TaskType getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType( TaskType taskType ) {
-        this.taskType = taskType;
     }
 
     public SimulationSet getSimulationSet() {
@@ -220,5 +153,9 @@ public abstract class BaseTask implements BPMNDefinition {
 
     public void setDimensionsSet(RectangleDimensionsSet dimensionsSet) {
         this.dimensionsSet = dimensionsSet;
+    }
+
+    public Set<String> getLabels() {
+        return labels;
     }
 }

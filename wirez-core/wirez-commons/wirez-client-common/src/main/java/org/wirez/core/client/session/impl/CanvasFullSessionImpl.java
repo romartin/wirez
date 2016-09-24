@@ -14,6 +14,7 @@ import org.wirez.core.client.canvas.controls.docking.DockingAcceptorControl;
 import org.wirez.core.client.canvas.controls.drag.DragControl;
 import org.wirez.core.client.canvas.controls.palette.CanvasPaletteControl;
 import org.wirez.core.client.canvas.controls.pan.PanControl;
+import org.wirez.core.client.canvas.controls.resize.ResizeControl;
 import org.wirez.core.client.canvas.controls.select.SelectionControl;
 import org.wirez.core.client.canvas.controls.toolbox.ToolboxControl;
 import org.wirez.core.client.canvas.controls.zoom.Wheel;
@@ -30,6 +31,7 @@ public class CanvasFullSessionImpl extends AbstractFullSession {
     @Inject
     public CanvasFullSessionImpl(final AbstractCanvas canvas,
                                  final AbstractCanvasHandler canvasHandler,
+                                 final ResizeControl<AbstractCanvasHandler, Element> resizeControl,
                                  final CanvasValidationControl<AbstractCanvasHandler> canvasValidationControl,
                                  final CanvasSaveControl<AbstractCanvasHandler> canvasSaveControl,
                                  final CanvasPaletteControl<AbstractCanvasHandler> canvasPaletteControl,
@@ -45,7 +47,7 @@ public class CanvasFullSessionImpl extends AbstractFullSession {
                                  final @Wheel ZoomControl<AbstractCanvas> zoomControl,
                                  final PanControl<AbstractCanvas> panControl) {
         
-        super( canvas, canvasHandler, canvasValidationControl, canvasSaveControl, canvasPaletteControl,
+        super( canvas, canvasHandler, resizeControl, canvasValidationControl, canvasSaveControl, canvasPaletteControl,
                 selectionControl, zoomControl, panControl, canvasCommandManager, connectionAcceptorControl,
                 containmentAcceptorControl, dockingAcceptorControl, canvasNameEditionControl, dragControl,
                 toolboxControl, builderControl );

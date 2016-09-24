@@ -83,6 +83,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
 
         // Enable canvas controls.
         final AbstractCanvasHandler canvasHandler = getCanvasHandler();
+        enableControl( session.getResizeControl(), canvasHandler );
         enableControl( session.getConnectionAcceptorControl(), canvasHandler );
         enableControl( session.getContainmentAcceptorControl(), canvasHandler );
         enableControl( session.getDockingAcceptorControl(), canvasHandler );
@@ -115,6 +116,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
 
         super.onUpdateElement( element );
 
+        fireRegistrationUpdateListeners( session.getResizeControl(), element );
         fireRegistrationUpdateListeners( session.getConnectionAcceptorControl(), element );
         fireRegistrationUpdateListeners( session.getContainmentAcceptorControl(), element );
         fireRegistrationUpdateListeners( session.getDockingAcceptorControl(), element );
@@ -131,6 +133,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
 
         super.onClear();
 
+        fireRegistrationClearListeners( session.getResizeControl() );
         fireRegistrationClearListeners( session.getConnectionAcceptorControl() );
         fireRegistrationClearListeners( session.getContainmentAcceptorControl() );
         fireRegistrationClearListeners( session.getDockingAcceptorControl() );
@@ -149,6 +152,7 @@ public abstract class AbstractFullSessionPresenter<S extends CanvasFullSession<A
 
         super.onElementRegistration( element, add );
 
+        fireRegistrationListeners( session.getResizeControl(), element, add );
         fireRegistrationListeners( session.getConnectionAcceptorControl(), element, add );
         fireRegistrationListeners( session.getContainmentAcceptorControl(), element, add );
         fireRegistrationListeners( session.getDockingAcceptorControl(), element, add );

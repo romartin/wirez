@@ -25,7 +25,7 @@ import org.wirez.shapes.proxy.CircleProxy;
 
 public class CircleShape<W> extends AbstractProxyTitledShape<W, CircleView, CircleProxy<W>> {
     
-    public CircleShape(final org.wirez.shapes.client.view.CircleView<?> view, 
+    public CircleShape(final org.wirez.shapes.client.view.CircleView view,
                        final CircleProxy<W> proxy) {
         super( view, proxy );
     }

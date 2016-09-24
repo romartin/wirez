@@ -3,10 +3,9 @@ package org.wirez.shapes.client.view;
 import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.MultiPathDecorator;
 import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import com.ait.lienzo.client.core.types.Point2DArray;
 
-public class ConnectorView<T extends ConnectorView> extends org.wirez.shapes.client.view.BasicConnectorView<T> {
+public class ConnectorView extends org.wirez.shapes.client.view.BasicConnectorView<ConnectorView> {
     
     public ConnectorView(final double... points) {
         this( createLine( points ) );

@@ -60,17 +60,10 @@ public class StaticIconShapeView<T extends StaticIconShapeView>
             
             this.addChild( iconGroup, WiresLayoutContainer.Layout.CENTER );
 
-            // Force to redraw the decorator.
-            super.refreshDecorators();
 
         }
         
     }
-
-    /*@Override
-    protected Shape<?> getShape() {
-        return iconGroup.asShape();
-    }*/
 
     @Override
     protected void doDestroy() {
@@ -84,13 +77,6 @@ public class StaticIconShapeView<T extends StaticIconShapeView>
         
         icon = null;
         
-    }
-
-    @Override
-    protected Rectangle createDecorator() {
-        final Rectangle r = new Rectangle( width, height );
-        this.addChild( r, WiresLayoutContainer.Layout.CENTER );
-        return r;
     }
 
 }

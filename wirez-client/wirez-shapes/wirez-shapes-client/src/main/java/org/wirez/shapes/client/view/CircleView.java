@@ -1,45 +1,31 @@
 package org.wirez.shapes.client.view;
 
-import com.ait.lienzo.client.core.shape.Circle;
 import com.ait.lienzo.client.core.shape.MultiPath;
-import com.ait.lienzo.client.core.shape.Shape;
-import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.core.client.shape.view.HasRadius;
 
-public class CircleView<T extends CircleView> extends org.wirez.shapes.client.view.BasicPrimitiveShapeView<T>
-        implements HasRadius<T> {
+public class CircleView extends BasicShapeView<CircleView>
+        implements HasRadius<CircleView> {
 
-    protected Circle circle;
-
-    public CircleView(final double radius ) {
-        super(new MultiPath().rect(0,0, radius * 2, radius * 2) );
+    public CircleView( final double radius ) {
+        super( create( new MultiPath(), radius ) );
     }
 
     @Override
-    protected Shape getPrimitive() {
-        return circle;
+    public CircleView setRadius( final double radius ) {
+
+        create( getPath().clear(), radius );
+
+        updateFillGradient( radius * 2, radius * 2 );
+
+        refresh();
+
+        return this;
+
     }
 
-    @Override
-    protected Shape<?> createChildren() {
-        circle = new Circle(1);
-        this.addChild(circle, WiresLayoutContainer.Layout.CENTER);
-        final Circle decorator = new Circle(1);
-        this.addChild(decorator, WiresLayoutContainer.Layout.CENTER);
-        return decorator;
+    private static MultiPath create( final MultiPath path,
+                                     final double radius ) {
+        return path.M( 0, -radius ).circle( radius );
     }
 
-    @Override
-    public T setRadius(final double radius) {
-        return super.setRadius( radius );
-    }
-
-    @Override
-    protected void doDestroy() {
-        super.doDestroy();
-        
-        circle = null;
-    }
-    
 }

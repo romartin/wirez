@@ -24,9 +24,10 @@ import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.shapes.client.view.RingView;
 import org.wirez.shapes.proxy.RingProxy;
 
+// TODO
 public class RingShape<W> extends AbstractProxyTitledShape<W, RingView, RingProxy<W>> {
     
-    public RingShape(final RingView<?> view,
+    public RingShape(final RingView view,
                      final RingProxy<W> proxy) {
         super( view, proxy );
     }

@@ -43,13 +43,6 @@ public class DynamicIconShapeView<T extends DynamicIconShapeView>
         height = 0;
     }
 
-    @Override
-    protected Rectangle createDecorator() {
-        final Rectangle r = new Rectangle( width, height );
-        this.addChild( r, WiresLayoutContainer.Layout.CENTER );
-        return r;
-    }
-
     public T setIcon( final Icons icon ) {
         this.icon = icon;
         updateIcon();
@@ -79,9 +72,6 @@ public class DynamicIconShapeView<T extends DynamicIconShapeView>
                 getStrokeColor(),
                 getStrokeWidth() );
         
-        // Force to redraw the decorator.
-        super.refreshDecorators();
-
     }
 
     private static MultiPath buildIcon(final MultiPath path, 

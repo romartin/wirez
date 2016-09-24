@@ -43,7 +43,7 @@ public class CanvasHighlight {
     public void unhighLight() {
         if ( null != this.shape ) {
 
-            this.shape.applyState( ShapeState.UNHIGHLIGHT );
+            this.shape.applyState( ShapeState.NONE );
 
             getCanvas().draw();
 

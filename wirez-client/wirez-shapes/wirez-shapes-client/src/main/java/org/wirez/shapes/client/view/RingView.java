@@ -1,78 +1,59 @@
 package org.wirez.shapes.client.view;
 
 import com.ait.lienzo.client.core.shape.MultiPath;
-import com.ait.lienzo.client.core.shape.Ring;
-import com.ait.lienzo.client.core.shape.Shape;
-import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.WiresManager;
 import org.wirez.core.client.shape.view.HasRadius;
 
-public class RingView<T extends RingView> extends org.wirez.shapes.client.view.BasicPrimitiveShapeView<T>
-    implements HasRadius<T> {
+public class RingView extends BasicShapeView<RingView>
+    implements HasRadius<RingView> {
 
-    protected Ring ring;
-
-    public RingView(final double outer ) {
-        super(new MultiPath().rect(0,0, outer * 2, outer * 2) );
+    public RingView( final double outer ) {
+        super( create( new MultiPath(), outer ) );
     }
 
     @Override
-    protected Shape getPrimitive() {
-        return ring;
-    }
-
-    @Override
-    protected Shape<?> createChildren() {
-        
-        ring = new Ring( 1, 1 );
-        this.addChild( ring, WiresLayoutContainer.Layout.CENTER );
-        
-        final Ring decorator = new Ring( 1, 1 );
-        this.addChild( decorator, WiresLayoutContainer.Layout.CENTER );
-        
-        return decorator;
-    }
-
-    @Override
-    public T setRadius( final double radius ) {
+    public RingView setRadius( final double radius ) {
         final double o = radius;
-        final double i = radius - ( radius / 4 );
+        final double i = getInnerRadius( radius );
         setOuterRadius( o );
         setInnerRadius( i );
-        return (T) this;
+        return this;
     }
 
     @SuppressWarnings("unchecked")
-    public T setOuterRadius(final double radius) {
+    public RingView setOuterRadius(final double radius) {
 
-        final double size = radius * 2;
+        create( getPath().clear(), radius );
         
-        updatePath( size, size );
+        super.updateFillGradient( radius * 2, radius * 2 );
         
-        getShape().getAttributes().setOuterRadius( radius );
-        decorator.getAttributes().setOuterRadius( radius );
-
-        super.updateFillGradient( size, size );
-        
-        return (T) this;
+        return this;
         
     }
 
     @SuppressWarnings("unchecked")
-    public T setInnerRadius(final double radius) {
+    public RingView setInnerRadius(final double radius) {
 
-        getShape().getAttributes().setInnerRadius( radius );
-        decorator.getAttributes().setInnerRadius( radius );
-        
-        return (T) this;
+        // TODO
+
+        return this;
 
     }
 
-    @Override
-    protected void doDestroy() {
-        super.doDestroy();
-        
-        ring = null;
+    private static MultiPath create( final MultiPath path,
+                                     final double outer ) {
+        return create( path, outer, getInnerRadius( outer ) );
     }
-    
+
+    // TODO: Create the inner circle as well.
+    private static MultiPath create( final MultiPath path,
+                                     final double outer,
+                                     final double inner ) {
+        return path.circle( outer );
+    }
+
+    private static double getInnerRadius( final double outer ) {
+        return outer - ( outer / 4 );
+    }
+
+
 }

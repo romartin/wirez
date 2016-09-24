@@ -36,7 +36,6 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     protected ViewEventHandlerManager eventHandlerManager;
     protected final List<BasicShapeView<T>> children = new ArrayList<>();
     protected Text text;
-    protected Shape<?> decorator = null;
 
     protected WiresLayoutContainer.Layout textPosition;
     protected Type fillGradientType = null;
@@ -53,9 +52,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
     private void initialize() {
 
-        createEventHandlerManager( getShape() );
-
-        refreshDecorators();
+        createEventHandlerManager( getGroup() );
 
         postInitialize();
 
@@ -65,35 +62,6 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
     protected void postInitialize() {
 
-    }
-
-    protected Shape<?> createDecorator() {
-        return null;
-    }
-
-    public void refreshDecorators() {
-
-        if ( null != decorator ) {
-
-            decorator.removeFromParent();
-
-        }
-
-        decorator = createDecorator();
-
-        if ( null != decorator ) {
-
-            decorator
-                    .setStrokeWidth(0)
-                    .setFillAlpha(0)
-                    .setStrokeAlpha(0);
-
-        }
-
-    }
-
-    public Shape getDecorator() {
-        return decorator;
     }
 
     protected void createEventHandlerManager( final Node<?> node ) {
@@ -138,15 +106,6 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     @Override
     public Shape<?> getAttachableShape() {
         return getShape();
-    }
-
-    public void updatePath( final double width,
-                               final double height ) {
-
-        final double x = getPath().getX();
-        final double y = getPath().getY();
-        getPath().clear().rect(x, y, width, height);
-        refresh();
     }
 
     @Override
@@ -294,11 +253,6 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
             eventHandlerManager.destroy();
             eventHandlerManager = null;
 
-        }
-
-        if ( null != decorator ) {
-            decorator.removeFromParent();
-            decorator = null;
         }
 
     }

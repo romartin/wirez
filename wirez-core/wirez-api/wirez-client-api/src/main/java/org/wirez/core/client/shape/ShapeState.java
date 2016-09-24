@@ -5,8 +5,9 @@ package org.wirez.core.client.shape;
  */
 public enum ShapeState {
 
-    SELECTED( "#0000FF" ), DESELECTED,
-    HIGHLIGHT( "#3366CC" ), UNHIGHLIGHT,
+    NONE,
+    SELECTED( "#0000FF" ),
+    HIGHLIGHT( "#3366CC" ),
     INVALID( "#FF0000" );
 
     private String color;

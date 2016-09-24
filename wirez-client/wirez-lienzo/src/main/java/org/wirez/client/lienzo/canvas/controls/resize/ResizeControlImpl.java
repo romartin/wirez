@@ -40,7 +40,7 @@ public class ResizeControlImpl extends AbstractCanvasHandlerControl implements R
 
         final Shape<?> shape = canvasHandler.getCanvas().getShape( element.getUUID() );
 
-        if ( null != shape ) {
+        if ( null != shape && ( shape  instanceof WiresShape ) ) {
 
             register( element, shape );
 

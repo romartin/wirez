@@ -206,7 +206,7 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
 
     protected void deselectShape( final Shape shape ) {
 
-        shape.applyState( ShapeState.DESELECTED );
+        shape.applyState( ShapeState.NONE );
 
         getCanvas().draw();
 

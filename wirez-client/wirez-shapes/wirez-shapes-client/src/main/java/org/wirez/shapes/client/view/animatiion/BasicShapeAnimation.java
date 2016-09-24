@@ -21,6 +21,8 @@ import com.ait.lienzo.client.core.animation.AnimationProperty;
 import com.ait.lienzo.client.core.animation.AnimationTweener;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.Text;
+import org.wirez.core.client.shape.view.HasRadius;
+import org.wirez.core.client.shape.view.HasSize;
 import org.wirez.shapes.client.BasicShape;
 import org.wirez.shapes.client.view.BasicShapeView;
 
@@ -53,7 +55,7 @@ public class BasicShapeAnimation
 
 
         // Decorator property animations.
-        final Shape decorator = view.getDecorator();
+        final Shape decorator = view.getPath();
         if ( null != decorator ) {
             final AnimationProperties _decoratorAnimationProperties  = translate( decoratorAnimationProperties );
             decorator.animate( tweener, _decoratorAnimationProperties, duration );
@@ -102,7 +104,7 @@ public class BasicShapeAnimation
     public void animateSize( final Double w,
                                 final Double h ) {
         if ( null != w && null != h ) {
-            getView().updatePath( w, h);
+            ( ( HasSize )getView()).setSize( w, h);
             shapeAnimationProperties.add( AnimationProperty.Properties.WIDTH( w ) );
             decoratorAnimationProperties.add( AnimationProperty.Properties.WIDTH( w ) );
             shapeAnimationProperties.add( AnimationProperty.Properties.HEIGHT( h ) );
@@ -114,11 +116,11 @@ public class BasicShapeAnimation
 
     public void animateRadius( final Double value ) {
         if ( null != value ) {
-            final double size = value * 2;
-            getView().updatePath( size, size );
+            ( ( HasRadius )getView()).setRadius( value );
             shapeAnimationProperties.add( AnimationProperty.Properties.RADIUS( value ) );
             decoratorAnimationProperties.add( AnimationProperty.Properties.RADIUS( value ) );
 
+            final double size = value * 2;
             getView().updateFillGradient( size, size );
         }
     }

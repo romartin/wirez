@@ -33,6 +33,7 @@ import org.wirez.shapes.client.view.animatiion.BasicShapeDecoratorAnimation;
 public abstract class BasicShape<W, V extends org.wirez.shapes.client.view.BasicShapeView>
     extends AbstractCompositeShape<W, Node<View<W>, Edge>, V> {
 
+    private ShapeState state = ShapeState.NONE;
     private BasicShapeAnimation animation = null;
     private Double _strokeWidth = null;
     private Double _strokeAlpha = null;
@@ -78,16 +79,21 @@ public abstract class BasicShape<W, V extends org.wirez.shapes.client.view.Basic
     @Override
     public void applyState( final ShapeState shapeState ) {
 
-        if ( ShapeState.SELECTED.equals(shapeState) ) {
-            applySelectedState();
-        } else if ( ShapeState.HIGHLIGHT.equals(shapeState) ) {
-            applyHighlightState();
-        } else if ( ShapeState.DESELECTED.equals(shapeState) ) {
-            applyUnSelectedState();
-        } else if ( ShapeState.UNHIGHLIGHT.equals(shapeState) ) {
-            applyUnHighlightState();
-        } else if ( ShapeState.INVALID.equals(shapeState) ) {
-            applyInvalidState();
+        if ( !this.state.equals( shapeState ) ) {
+
+            this.state = shapeState;
+
+            if ( ShapeState.SELECTED.equals(shapeState) ) {
+                applySelectedState();
+            } else if ( ShapeState.HIGHLIGHT.equals(shapeState) ) {
+                applyHighlightState();
+            } else if ( ShapeState.INVALID.equals(shapeState) ) {
+                applyInvalidState();
+            } else {
+                applyNoneState();
+            }
+
+
         }
 
     }
@@ -104,25 +110,17 @@ public abstract class BasicShape<W, V extends org.wirez.shapes.client.view.Basic
         applyActiveState(ShapeState.HIGHLIGHT.getColor());
     }
 
-    private void applyUnSelectedState() {
-        applyDeActiveState();
-    }
-
-    private void applyUnHighlightState() {
-        applyDeActiveState();
-    }
-
     private void applyActiveState( final String color ) {
         if ( null == this._strokeWidth ) {
-            this._strokeWidth = getShapeView().getDecorator().getStrokeWidth();
+            this._strokeWidth = getShapeView().getStrokeWidth();
         }
 
         if ( null == this._strokeColor) {
-            this._strokeColor = getShapeView().getDecorator().getStrokeColor();
+            this._strokeColor = getShapeView().getStrokeColor();
         }
 
         if ( null == this._strokeAlpha) {
-            this._strokeAlpha = getShapeView().getDecorator().getStrokeAlpha();
+            this._strokeAlpha = getShapeView().getStrokeAlpha();
         }
 
         /*getShapeView().getDecorator().setStrokeWidth( 5 );
@@ -133,7 +131,7 @@ public abstract class BasicShape<W, V extends org.wirez.shapes.client.view.Basic
 
     }
 
-    private void applyDeActiveState() {
+    private void applyNoneState() {
 
        /* if ( null != this._strokeWidth ) {
             getShapeView().getDecorator().setStrokeWidth( this._strokeWidth );

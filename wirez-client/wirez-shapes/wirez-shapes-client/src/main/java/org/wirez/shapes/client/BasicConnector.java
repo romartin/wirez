@@ -29,6 +29,7 @@ import org.wirez.shapes.client.view.animatiion.BasicConnectorAnimation;
 public abstract class BasicConnector<W, V extends BasicConnectorView>
         extends AbstractConnector<W, Edge<ViewConnector<W>, Node>, V> {
 
+    private ShapeState state = ShapeState.NONE;
     private BasicConnectorAnimation animation = null;
     private Double _strokeWidth = null;
     private Double _strokeAlpha = null;
@@ -96,16 +97,20 @@ public abstract class BasicConnector<W, V extends BasicConnectorView>
     @Override
     public void applyState( final ShapeState shapeState ) {
 
-        if ( ShapeState.SELECTED.equals(shapeState) ) {
-            applySelectedState();
-        } else if ( ShapeState.HIGHLIGHT.equals(shapeState) ) {
-            applyHighlightState();
-        } else if ( ShapeState.DESELECTED.equals(shapeState) ) {
-            applyUnSelectedState();
-        } else if ( ShapeState.UNHIGHLIGHT.equals(shapeState) ) {
-            applyUnHighlightState();
-        } else if ( ShapeState.INVALID.equals(shapeState) ) {
-            applyInvalidState();
+        if ( !this.state.equals( shapeState ) ) {
+
+            this.state = shapeState;
+
+            if ( ShapeState.SELECTED.equals(shapeState) ) {
+                applySelectedState();
+            } else if ( ShapeState.HIGHLIGHT.equals(shapeState) ) {
+                applyHighlightState();
+            } else if ( ShapeState.INVALID.equals(shapeState) ) {
+                applyInvalidState();
+            } else {
+                applyNoneState();
+            }
+
         }
 
     }
@@ -120,14 +125,6 @@ public abstract class BasicConnector<W, V extends BasicConnectorView>
 
     private void applyHighlightState() {
         applyActiveState(ShapeState.HIGHLIGHT.getColor());
-    }
-
-    private void applyUnSelectedState() {
-        applyDeActiveState();
-    }
-
-    private void applyUnHighlightState() {
-        applyDeActiveState();
     }
 
     // TODO Use of BasicShapeStateAnimation.
@@ -151,7 +148,7 @@ public abstract class BasicConnector<W, V extends BasicConnectorView>
     }
 
     // TODO Use of BasicShapeStateAnimation.
-    private void applyDeActiveState() {
+    private void applyNoneState() {
         if ( null != this._strokeWidth ) {
             getShapeView().getLine().setStrokeWidth( this._strokeWidth );
             this._strokeWidth = null;

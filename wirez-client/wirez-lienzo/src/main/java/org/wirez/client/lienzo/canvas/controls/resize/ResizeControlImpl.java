@@ -20,7 +20,7 @@ import org.wirez.core.graph.Element;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-// TODO: Handler registrations, etc
+// TODO: Handler registrations, update model, resize toolbox, etc
 
 @Dependent
 public class ResizeControlImpl extends AbstractCanvasHandlerControl implements ResizeControl<AbstractCanvasHandler, Element> {
@@ -40,7 +40,7 @@ public class ResizeControlImpl extends AbstractCanvasHandlerControl implements R
 
         final Shape<?> shape = canvasHandler.getCanvas().getShape( element.getUUID() );
 
-        if ( null != shape && ( shape  instanceof WiresShape ) ) {
+        if ( null != shape && ( shape.getShapeView()  instanceof WiresShape ) ) {
 
             register( element, shape );
 
@@ -53,8 +53,6 @@ public class ResizeControlImpl extends AbstractCanvasHandlerControl implements R
 
         final WiresShape wiresShape = ( WiresShape ) shape.getShapeView();
 
-        GWT.log( "Adding resize control for UUID=" + element.getUUID() );
-
         // Enable resize controls on chick + shift down.
         wiresShape
                 .setResizable( true )
@@ -63,9 +61,7 @@ public class ResizeControlImpl extends AbstractCanvasHandlerControl implements R
                     @Override
                     public void onNodeMouseClick( final NodeMouseClickEvent event ) {
 
-                        GWT.log( "Click on resize control for UUID=" + element.getUUID() );
-
-                        final IControlHandleList controlHandles = wiresShape.getControls( IControlHandle.ControlHandleStandardType.RESIZE );
+                        final IControlHandleList controlHandles = wiresShape.loadControls( IControlHandle.ControlHandleStandardType.RESIZE );
 
                         if ( null != controlHandles ) {
 

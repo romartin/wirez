@@ -1,6 +1,8 @@
 package org.wirez.shapes.client.view;
 
 import com.ait.lienzo.client.core.shape.*;
+import com.ait.lienzo.client.core.shape.wires.IControlHandle;
+import com.ait.lienzo.client.core.shape.wires.IControlHandleList;
 import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresDragEvent;
@@ -12,6 +14,7 @@ import org.wirez.client.lienzo.shape.view.AbstractShapeView;
 import org.wirez.client.lienzo.shape.view.ViewEventHandlerManager;
 import org.wirez.client.lienzo.util.LienzoShapeUtils;
 import org.wirez.core.client.shape.HasChildren;
+import org.wirez.core.client.shape.view.HasControlPoints;
 import org.wirez.core.client.shape.view.HasEventHandlers;
 import org.wirez.core.client.shape.view.HasFillGradient;
 import org.wirez.core.client.shape.view.HasTitle;
@@ -24,6 +27,7 @@ import java.util.List;
 public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         implements
         HasTitle<T>,
+        HasControlPoints<T>,
         HasEventHandlers<T, Shape<?>>,
         HasFillGradient<T>,
         HasChildren<BasicShapeView<T>> {
@@ -241,6 +245,31 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
         }
 
+        return ( T ) this;
+    }
+
+    @Override
+    public T showControlPoints( final ControlPointType type ) {
+        IControlHandleList ctrls = loadControls( translate( type ) );
+        if ( null != ctrls ) {
+            ctrls.show();
+        }
+        return ( T ) this;
+    }
+
+    private IControlHandle.ControlHandleType translate( final ControlPointType type ) {
+        if ( type.equals( ControlPointType.RESIZE ) ) {
+            return IControlHandle.ControlHandleStandardType.RESIZE;
+        }
+        return IControlHandle.ControlHandleStandardType.MAGNET;
+    }
+
+    @Override
+    public T hideControlPoints() {
+        IControlHandleList ctrls = getControls();
+        if ( null != ctrls ) {
+            ctrls.hide();
+        }
         return ( T ) this;
     }
 

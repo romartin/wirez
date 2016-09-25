@@ -20,10 +20,7 @@ import org.wirez.core.client.animation.Animation;
 import org.wirez.core.client.shape.AbstractCompositeShape;
 import org.wirez.core.client.shape.MutationContext;
 import org.wirez.core.client.shape.ShapeState;
-import org.wirez.core.client.shape.view.HasFillGradient;
-import org.wirez.core.client.shape.view.HasRadius;
-import org.wirez.core.client.shape.view.HasSize;
-import org.wirez.core.client.shape.view.HasTitle;
+import org.wirez.core.client.shape.view.*;
 import org.wirez.core.graph.Edge;
 import org.wirez.core.graph.Node;
 import org.wirez.core.graph.content.view.View;
@@ -104,6 +101,7 @@ public abstract class BasicShape<W, V extends org.wirez.shapes.client.view.Basic
 
     private void applyInvalidState() {
         applyActiveState(ShapeState.INVALID.getColor());
+        // TODO view.showControlPoints( HasControlPoints.ControlPointType.RESIZE );
     }
 
     private void applyHighlightState() {
@@ -132,6 +130,8 @@ public abstract class BasicShape<W, V extends org.wirez.shapes.client.view.Basic
     }
 
     private void applyNoneState() {
+
+        // TODO view.hideControlPoints();
 
        /* if ( null != this._strokeWidth ) {
             getShapeView().getDecorator().setStrokeWidth( this._strokeWidth );

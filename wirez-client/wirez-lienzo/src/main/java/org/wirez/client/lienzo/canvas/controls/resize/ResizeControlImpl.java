@@ -5,19 +5,16 @@ import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.wires.IControlHandle;
 import com.ait.lienzo.client.core.shape.wires.IControlHandleList;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
-import com.ait.lienzo.client.core.shape.wires.event.WiresResizeEvent;
-import com.ait.lienzo.client.core.shape.wires.event.WiresResizeHandler;
+import com.ait.lienzo.client.core.shape.wires.event.WiresResizeEndEvent;
+import com.ait.lienzo.client.core.shape.wires.event.WiresResizeEndHandler;
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerControl;
 import org.wirez.core.client.canvas.controls.resize.ResizeControl;
 import org.wirez.core.client.command.CanvasCommandManager;
-import org.wirez.core.client.command.CanvasViolation;
 import org.wirez.core.client.command.Session;
 import org.wirez.core.client.command.factory.CanvasCommandFactory;
 import org.wirez.core.client.shape.Shape;
-import org.wirez.core.command.CommandResult;
-import org.wirez.core.command.CommandUtils;
 import org.wirez.core.graph.Element;
 
 import javax.enterprise.context.Dependent;
@@ -68,7 +65,7 @@ public class ResizeControlImpl extends AbstractCanvasHandlerControl implements R
 
                         if ( null != controlHandles ) {
 
-                            if ( !controlHandles.isVisible() ) {
+                            if ( event.isShiftKeyDown() && !controlHandles.isVisible() ) {
                                 controlHandles.show();
                             } else {
                                 controlHandles.hide();
@@ -81,10 +78,10 @@ public class ResizeControlImpl extends AbstractCanvasHandlerControl implements R
                 } );
 
         // Update the model when resize event obesrved.
-        wiresShape.addWiresResizeHandler( new WiresResizeHandler() {
+        wiresShape.addWiresResizeEndHandler( new WiresResizeEndHandler() {
             @Override
-            public void onShapeResized( final WiresResizeEvent resizeEvent ) {
-                GWT.log("Shape resized TO {" + resizeEvent.getWidth() + ", " + resizeEvent.getHeight() + "]" );
+            public void onShapeResizeEnd( WiresResizeEndEvent event ) {
+                GWT.log("Shape resized TO {" + event.getWidth() + ", " + event.getHeight() + "]" );
                 /* TODO
                 CommandResult<CanvasViolation> result = canvasCommandManager.execute( canvasHandler, canvasCommandFactory.UPDATE_PROPERTY(element,  );
                 if ( CommandUtils.isError( result) ) {

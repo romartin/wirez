@@ -11,8 +11,6 @@ import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Node;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
-import com.ait.lienzo.client.core.shape.wires.event.WiresResizeEvent;
-import com.ait.lienzo.client.core.shape.wires.event.WiresResizeHandler;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.shared.core.types.Direction;
 import com.ait.tooling.common.api.flow.Flows;
@@ -61,7 +59,7 @@ public abstract class AbstractToolbox implements GridToolbox {
         reposition();
         initHandlers();
 
-        this.shape.getGroup().getLayer().batch();
+        batch();
     }
 
     protected void registerButton( final ToolboxButton button ) {
@@ -109,25 +107,36 @@ public abstract class AbstractToolbox implements GridToolbox {
 
         );
 
-        // Shape resize handler.
+        // Shape resize handlers.
+
         handlerRegistrationManager.register(
-                shape.addWiresResizeHandler( new WiresResizeHandler() {
-                    @Override
-                    public void onShapeResized( final WiresResizeEvent resizeEvent ) {
-                        reposition();
-                    }
-                } )
+            shape.addWiresResizeStartHandler( event -> reposition( true ) )
+        );
+
+        handlerRegistrationManager.register(
+            shape.addWiresResizeStepHandler( event -> reposition( true ) )
+        );
+
+        handlerRegistrationManager.register(
+            shape.addWiresResizeEndHandler( event -> reposition( true ) )
         );
 
     }
 
-    protected void reposition() {
+    private void reposition() {
+        reposition( false );
+    }
+
+    private void reposition( final boolean batch ) {
         final double gx = shape.getGroup().getAbsoluteLocation().getX();
         final double gy = shape.getGroup().getAbsoluteLocation().getY();
         final Point2D anchorPoint = Positioning.anchorFor(this.shape.getPath().getBoundingPoints().getBoundingBox(), this.anchor);
         final Grid.Point toolboxPosition = this.grid.findPosition(new Grid.Point((int) anchorPoint.getX(), (int) anchorPoint.getY()), this.towards);
         group.setX(gx + toolboxPosition.getX());
         group.setY(gy + toolboxPosition.getY());
+        if ( batch ) {
+            batch();
+        }
     }
 
     @Override
@@ -207,6 +216,10 @@ public abstract class AbstractToolbox implements GridToolbox {
 
     protected void registerHandlers( final Node<?> node ) {
 
+    }
+
+    private void batch() {
+        this.shape.getGroup().getLayer().batch();
     }
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.bpmn.definition.property.dataio;
+package org.wirez.bpmn.definition.property.assignee;
 
 import javax.validation.Valid;
 
@@ -26,44 +26,61 @@ import org.wirez.bpmn.definition.BPMNPropertySet;
 import org.wirez.core.definition.annotation.Name;
 import org.wirez.core.definition.annotation.propertyset.Property;
 import org.wirez.core.definition.annotation.propertyset.PropertySet;
-import org.wirez.forms.meta.definition.AssignmentsEditor;
+import org.wirez.forms.meta.definition.AssigneeEditor;
 
 @Portable
 @Bindable
 @PropertySet
-public class DataIOSet implements BPMNPropertySet {
-
+public class AssigneeSet implements BPMNPropertySet {
     @Name
-    public static final transient String propertySetName = "Task Data";
+    public static final transient String propertySetName = "Assigned to";
 
     @Property
-    @FieldDef(label = "Assignments", property = "value")
-    @AssignmentsEditor
+    @FieldDef(label = "Actors", property = "value")
+    @AssigneeEditor
     @Valid
-    private AssignmentsInfo assignmentsinfo;
+    private Actors actors;
 
-    public DataIOSet() {
-        this( new AssignmentsInfo());
+    @Property
+    @FieldDef(label = "Groups", property = "value")
+    @AssigneeEditor
+    @Valid
+    private Groupid groupid;
+
+    public AssigneeSet() {
+        this( new Actors(), new Groupid() );
     }
 
-    public DataIOSet(@MapsTo("assignmentsinfo") AssignmentsInfo assignmentsinfo) {
-        this.assignmentsinfo = assignmentsinfo;
+    public AssigneeSet(@MapsTo("actors") Actors actors,
+            @MapsTo("groupid") Groupid groupid) {
+        this.actors = actors;
+        this.groupid = groupid;
     }
 
-    public DataIOSet( String assignmentsinfo) {
-        this.assignmentsinfo = new AssignmentsInfo(assignmentsinfo);
+    public AssigneeSet(String actors,
+            String groupid) {
+        this.actors = new Actors( actors );
+        this.groupid = new Groupid( groupid );
     }
 
     public String getPropertySetName() {
         return propertySetName;
     }
 
-    public AssignmentsInfo getAssignmentsinfo() {
-        return assignmentsinfo;
+    public Actors getActors() {
+        return actors;
     }
 
-    public void setAssignmentsinfo( AssignmentsInfo assignmentsinfo) {
-        this.assignmentsinfo = assignmentsinfo;
+    public Groupid getGroupid() {
+        return groupid;
+    }
+
+    public void setActors( Actors actors ) {
+        this.actors = actors;
+    }
+
+    public void setGroupid( Groupid groupid ) {
+        this.groupid = groupid;
     }
 
 }

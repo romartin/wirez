@@ -62,6 +62,8 @@ public class StaticIconShapeView<T extends StaticIconShapeView>
 
 
         }
+
+        refresh();
         
     }
 

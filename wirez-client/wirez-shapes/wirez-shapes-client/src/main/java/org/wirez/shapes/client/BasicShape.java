@@ -217,7 +217,8 @@ public abstract class BasicShape<W, V extends org.wirez.shapes.client.view.Basic
                               final double height,
                               final MutationContext mutationContext ) {
 
-        if ( isAnimationMutation(mutationContext) ) {
+        // TODO: Shape (multipath) resize animations.
+        if ( false && isAnimationMutation(mutationContext) ) {
 
             getAnimation().animateSize( width, height  );
 
@@ -237,7 +238,8 @@ public abstract class BasicShape<W, V extends org.wirez.shapes.client.view.Basic
 
         if (radius > 0) {
 
-            if ( isAnimationMutation(mutationContext) ) {
+            // TODO: Shape (multipath) resize animations.
+            if ( false && isAnimationMutation(mutationContext) ) {
 
                 getAnimation().animateRadius( radius );
 

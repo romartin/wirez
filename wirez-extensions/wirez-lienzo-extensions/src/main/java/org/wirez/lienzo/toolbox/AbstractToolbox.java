@@ -11,6 +11,8 @@ import com.ait.lienzo.client.core.shape.Layer;
 import com.ait.lienzo.client.core.shape.Node;
 import com.ait.lienzo.client.core.shape.Shape;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
+import com.ait.lienzo.client.core.shape.wires.event.WiresResizeEvent;
+import com.ait.lienzo.client.core.shape.wires.event.WiresResizeHandler;
 import com.ait.lienzo.client.core.types.Point2D;
 import com.ait.lienzo.shared.core.types.Direction;
 import com.ait.tooling.common.api.flow.Flows;
@@ -57,7 +59,7 @@ public abstract class AbstractToolbox implements GridToolbox {
         this.shape.getGroup().getLayer().add( group );
 
         reposition();
-        initAttributesChangedHandler();
+        initHandlers();
 
         this.shape.getGroup().getLayer().batch();
     }
@@ -66,7 +68,7 @@ public abstract class AbstractToolbox implements GridToolbox {
 
     }
 
-    protected void initAttributesChangedHandler()
+    protected void initHandlers()
     {
         shape.getGroup().setAttributesChangedBatcher(attributesChangedBatcher);
 
@@ -105,6 +107,16 @@ public abstract class AbstractToolbox implements GridToolbox {
 
             shape.getPath().addAttributesChangedHandler(Attribute.HEIGHT, handler)
 
+        );
+
+        // Shape resize handler.
+        handlerRegistrationManager.register(
+                shape.addWiresResizeHandler( new WiresResizeHandler() {
+                    @Override
+                    public void onShapeResized( final WiresResizeEvent resizeEvent ) {
+                        reposition();
+                    }
+                } )
         );
 
     }

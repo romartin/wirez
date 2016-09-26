@@ -145,7 +145,7 @@ public final class StaticIconsBuilder {
                 "   M 11 7 L 12.5 10" +
                 "   M 18 9 L 16 16 L 20 16", null, 1, BLACK );
         
-        group.add( path1 ).setX( -6 ).setY( -6 );
+        group.add( path1.setX( -20 ).setY( -20 ) );
 
         return group;
     }

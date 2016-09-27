@@ -107,7 +107,6 @@ public class VariablesEditorFieldRenderer extends FieldRenderer<VariablesEditorF
 
     @Override
     public List<VariableRow> deserializeVariables(String s) {
-        // TODO: use DataTypes to check for custom datatypes
         List<VariableRow> variableRows = new ArrayList<VariableRow>();
         if (s != null && !s.isEmpty()) {
             String[] vs = s.split(",");

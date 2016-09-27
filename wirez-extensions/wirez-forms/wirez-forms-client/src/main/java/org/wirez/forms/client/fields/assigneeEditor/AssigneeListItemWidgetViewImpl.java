@@ -16,6 +16,7 @@
 
 package org.wirez.forms.client.fields.assigneeEditor;
 
+import java.io.IOException;
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -23,9 +24,13 @@ import javax.inject.Inject;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.text.shared.Renderer;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.client.ui.ValueListBox;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.jboss.errai.databinding.client.api.DataBinder;
 import org.jboss.errai.ui.shared.api.annotations.AutoBound;
@@ -35,6 +40,9 @@ import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.wirez.forms.client.fields.model.AssigneeRow;
+import org.wirez.forms.client.fields.util.ListBoxValues;
+import org.wirez.forms.client.fields.widgets.ComboBox;
+import org.wirez.forms.client.fields.widgets.ComboBoxView;
 
 /**
  * A templated widget that will be used to display a row in a table of
@@ -45,7 +53,7 @@ import org.wirez.forms.client.fields.model.AssigneeRow;
  * to hold the values.
  */
 @Templated("AssigneeEditorWidget.html#assigneeRow")
-public class AssigneeListItemWidgetViewImpl implements AssigneeListItemWidgetView {
+public class AssigneeListItemWidgetViewImpl implements AssigneeListItemWidgetView, ComboBoxView.ModelPresenter {
 
     /**
      * Errai's data binding module will automatically bind the provided instance
@@ -58,15 +66,34 @@ public class AssigneeListItemWidgetViewImpl implements AssigneeListItemWidgetVie
     @AutoBound
     protected DataBinder<AssigneeRow> assigneeRow;
 
-    @Inject
-    @Bound
-    @DataField
-    protected TextBox name;
-
     private boolean allowDuplicateNames = false;
     private String duplicateNameErrorMessage = "An assignee with this name already exists";
 
     private String currentValue;
+
+    @DataField
+    protected ValueListBox<String> name = new ValueListBox<String>(new Renderer<String>() {
+        public String render(String object) {
+            String s = "";
+            if (object != null) {
+                s = object.toString();
+            }
+            return s;
+        }
+
+        public void render(String object, Appendable appendable) throws IOException {
+            String s = render(object);
+            appendable.append(s);
+        }
+    });
+
+    @Inject
+    @DataField
+    protected TextBox customName;
+
+    @Inject
+    protected ComboBox nameComboBox;
+
 
     @Inject
     protected Event<NotificationEvent> notification;
@@ -84,23 +111,40 @@ public class AssigneeListItemWidgetViewImpl implements AssigneeListItemWidgetVie
         this.parentWidget = parentWidget;
     }
 
+    @Override
+    public void setTextBoxModelValue(final TextBox textBox, String value) {
+        setCustomName(value);
+    }
+
+    @Override
+    public void setListBoxModelValue(final ValueListBox<String> listBox, String value) {
+        setName(value);
+    }
+
+    @Override
+    public String getModelValue(final ValueListBox<String> listBox) {
+        String value = getCustomName();
+        if (value == null || value.isEmpty()) {
+            value = getName();
+        }
+        return value;
+    }
+
     @PostConstruct
     public void init() {
-        name.addBlurHandler(new BlurHandler() {
-            @Override
-            public void onBlur(BlurEvent event) {
-                if (!allowDuplicateNames) {
-                    String value = name.getText();
-                    if (isDuplicateName(value)) {
-                        notification.fire(new NotificationEvent(duplicateNameErrorMessage, NotificationEvent.NotificationType.ERROR));
-                        name.setValue("");
-                        ValueChangeEvent.fire(name, "");
-                    }
+        // Configure name and customName controls
+        nameComboBox.init(this, true, name, customName, false, false,
+                AssigneeListItemWidgetView.CUSTOM_PROMPT,
+                AssigneeListItemWidgetView.ENTER_TYPE_PROMPT);
+
+        customName.addKeyDownHandler(new KeyDownHandler() {
+            @Override public void onKeyDown(KeyDownEvent event) {
+                int iChar = event.getNativeKeyCode();
+                if (iChar == ' ') {
+                    event.preventDefault();
                 }
-                notifyModelChanged();
             }
         });
-
     }
 
     @Override
@@ -113,6 +157,37 @@ public class AssigneeListItemWidgetViewImpl implements AssigneeListItemWidgetVie
         assigneeRow.setModel(model);
         initAssigneeControls();
         currentValue = getModel().toString();
+    }
+
+    @Override
+    public String getName() {
+        return getModel().getName();
+    }
+
+    @Override
+    public void setName(String name) {
+        getModel().setName(name);
+    }
+
+    @Override
+    public String getCustomName() {
+        return getModel().getCustomName();
+    }
+
+    @Override
+    public void setCustomName(String customName) {
+        getModel().setCustomName(customName);
+    }
+
+    @Override
+    public void setNames(ListBoxValues nameListBoxValues) {
+        nameComboBox.setCurrentTextValue("");
+        nameComboBox.setListBoxValues(nameListBoxValues);
+        nameComboBox.setShowCustomValues(true);
+        String cn = getCustomName();
+        if (cn != null && !cn.isEmpty()) {
+            nameComboBox.addCustomValueToListBoxValues(cn, "");
+        }
     }
 
     @Override
@@ -131,6 +206,15 @@ public class AssigneeListItemWidgetViewImpl implements AssigneeListItemWidgetVie
      */
     private void initAssigneeControls() {
         deleteButton.setIcon(IconType.TRASH);
+
+        String cn = getCustomName();
+        if (cn != null && !cn.isEmpty()) {
+            customName.setValue(cn);
+            name.setValue(cn);
+        } else if (getName() != null) {
+            name.setValue(getName());
+        }
+
     }
 
     @Override

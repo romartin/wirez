@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.kie.workbench.common.forms.dynamic.client.rendering.FieldRenderer;
 import org.wirez.forms.client.fields.model.Assignee;
 import org.wirez.forms.client.fields.model.AssigneeRow;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 import org.wirez.forms.client.fields.util.StringUtils;
 import org.wirez.forms.model.AssigneeEditorFieldDefinition;
 
@@ -33,6 +34,11 @@ public class AssigneeEditorFieldRenderer extends FieldRenderer<AssigneeEditorFie
         implements AssigneeEditorWidgetView.Presenter {
 
     private AssigneeEditorWidgetView view;
+
+    private List<String> names = new ArrayList<String>();
+
+    ListBoxValues nameListBoxValues;
+
 
     @Inject
     public AssigneeEditorFieldRenderer(AssigneeEditorWidgetView assigneeEditor) {
@@ -75,7 +81,18 @@ public class AssigneeEditorFieldRenderer extends FieldRenderer<AssigneeEditorFie
         as.add(newAssignee);
 
         AssigneeListItemWidgetView widget = view.getAssigneeWidget(view.getAssigneeRowsCount() - 1);
+        widget.setNames(nameListBoxValues);
         widget.setParentWidget(this);
+    }
+
+    @Override
+    public void setNames(List<String> names) {
+        this.names = names;
+
+        nameListBoxValues = new ListBoxValues(AssigneeListItemWidgetView.CUSTOM_PROMPT, "Edit" + " ", namesTester());
+        nameListBoxValues.addValues(names);
+
+        view.setAssigneesNames(nameListBoxValues);
     }
 
     @Override
@@ -90,8 +107,8 @@ public class AssigneeEditorFieldRenderer extends FieldRenderer<AssigneeEditorFie
             String[] as = s.split(",");
             for (String a : as) {
                 if (!a.isEmpty()) {
-                    Assignee assignee = Assignee.deserialize(a);
-                    if (assignee != null && assignee.getName() != null && !assignee.getName().isEmpty()) {
+                    Assignee assignee = Assignee.deserialize(a, names);
+                    if (assignee != null) {
                         assigneeRows.add(new AssigneeRow(assignee));
                     }
                 }
@@ -105,7 +122,7 @@ public class AssigneeEditorFieldRenderer extends FieldRenderer<AssigneeEditorFie
     public String serializeAssignees(List<AssigneeRow> assigneeRows) {
         List<Assignee> assignees = new ArrayList<Assignee>();
         for (AssigneeRow row : assigneeRows) {
-            if (row.getName() != null && row.getName().length() > 0) {
+            if (!row.isEmpty()) {
                 assignees.add(new Assignee(row));
             }
         }
@@ -139,6 +156,15 @@ public class AssigneeEditorFieldRenderer extends FieldRenderer<AssigneeEditorFie
     public void removeAssignee(AssigneeRow assigneeRow) {
         view.getAssigneeRows().remove(assigneeRow);
         doSave();
+    }
+
+    @Override
+    public ListBoxValues.ValueTester namesTester() {
+        return new ListBoxValues.ValueTester() {
+            public String getNonCustomValueForUserString(String userValue) {
+                return null;
+            }
+        };
     }
 
 }

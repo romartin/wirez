@@ -25,6 +25,8 @@ public class AssigneeRow {
 
     private String name;
 
+    private String customName;
+
     // Field which is incremented for each row.
     // Required to implement equals function which needs a unique field
     private static long lastId = 0;
@@ -33,14 +35,16 @@ public class AssigneeRow {
         this.id = lastId++;
     }
 
-    public AssigneeRow(String name) {
+    public AssigneeRow(String name, String customName) {
         this.id = lastId++;
         this.name = name;
+        this.customName = customName;
     }
 
     public AssigneeRow(Assignee assignee) {
         this.id = lastId++;
         this.name = assignee.getName();
+        this.customName = assignee.getCustomName();
      }
 
     public long getId() {
@@ -59,6 +63,23 @@ public class AssigneeRow {
         this.name = name;
     }
 
+    public String getCustomName() {
+        return customName;
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
+    }
+
+    public boolean isEmpty() {
+        if (name != null && name.length() > 0) {
+            return false;
+        } else if (customName != null && customName.length() > 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -77,7 +98,7 @@ public class AssigneeRow {
 
     @Override
     public String toString() {
-        return "AssigneeRow [name=" + name + "]";
+        return "AssigneeRow [name=" + name + ",customName=" + customName + "]";
     }
 
 }

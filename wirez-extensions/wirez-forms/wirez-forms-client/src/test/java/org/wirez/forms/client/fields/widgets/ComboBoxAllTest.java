@@ -71,7 +71,9 @@ public class ComboBoxAllTest {
         return comboBox.getListBoxValues();
     }
 
+    private final boolean processVarNotifyModelChanges = false;
     private final boolean processVarQuoteStringValues = true;
+    private final boolean processVarAddCustomValues = true;
     private final String processVarConstantPrompt = "Constant ...";
     private final String processVarConstantPlaceholder = "Enter constant ...";
     private final String processVarEditPrefix = "Edit ";
@@ -80,7 +82,9 @@ public class ComboBoxAllTest {
             "** Variable Definitions **", "employee", "reason", "performance"
     );
 
+    private final boolean dataTypeNotifyModelChanges = false;
     private final boolean dataTypeQuoteStringValues = false;
+    private final boolean dataTypeAddCustomValues = true;
     private final String dataTypeCustomPrompt = "Custom ...";
     private final String dataTypeCustomPlaceholder = "Enter type ...";
     private final String dataTypeEditPrefix = "Edit ";
@@ -90,7 +94,8 @@ public class ComboBoxAllTest {
             "Organization [org.test.Organization]"
     );
 
-    private void initComboBoxTest(boolean quoteStringValues, String customPrompt,
+    private void initComboBoxTest(boolean notifyModelChanges, boolean quoteStringValues, boolean addCustomValues,
+            String customPrompt,
             String placeholder, String editPrefix, String editSuffix,
             List<String> listBoxStartValues) {
         initPresenter();
@@ -101,8 +106,8 @@ public class ComboBoxAllTest {
         listBoxValues.addValues(listBoxStartValues);
 
         comboBox.view = view;
-        comboBox.init(modelPresenter, listBox,
-                textBox, quoteStringValues, customPrompt, placeholder);
+        comboBox.init(modelPresenter, notifyModelChanges, listBox,
+                textBox, quoteStringValues, addCustomValues, customPrompt, placeholder);
         comboBox.setListBoxValues(listBoxValues);
         comboBox.setShowCustomValues(true);
 
@@ -201,7 +206,8 @@ public class ComboBoxAllTest {
 
     @Test
     public void testProcessVarComboBox() {
-        initComboBoxTest(processVarQuoteStringValues, processVarConstantPrompt, processVarConstantPlaceholder,
+        initComboBoxTest(processVarNotifyModelChanges, processVarQuoteStringValues, processVarAddCustomValues,
+                processVarConstantPrompt, processVarConstantPlaceholder,
                 processVarEditPrefix, processVarEditSuffix, processVarListBoxStartValues);
 
         setNonCustomValue(processVarListBoxStartValues.get(2), 1);
@@ -248,7 +254,8 @@ public class ComboBoxAllTest {
 
     @Test
     public void testDataTypeComboBox() {
-        initComboBoxTest(dataTypeQuoteStringValues, dataTypeCustomPrompt, dataTypeCustomPlaceholder,
+        initComboBoxTest(dataTypeNotifyModelChanges, dataTypeQuoteStringValues, dataTypeAddCustomValues,
+                dataTypeCustomPrompt, dataTypeCustomPlaceholder,
                 dataTypeEditPrefix, dataTypeEditSuffix, dataTypeListBoxStartValues);
 
         setNonCustomValue(dataTypeListBoxStartValues.get(2), 1);

@@ -139,7 +139,7 @@ public class VariableListItemWidgetViewImpl implements VariableListItemWidgetVie
     @PostConstruct
     public void init() {
         // Configure dataType and customDataType controls
-        dataTypeComboBox.init(this, dataType, customDataType, false,
+        dataTypeComboBox.init(this, true, dataType, customDataType, false, true,
                 VariableListItemWidgetView.CUSTOM_PROMPT,
                 VariableListItemWidgetView.ENTER_TYPE_PROMPT);
 
@@ -198,10 +198,6 @@ public class VariableListItemWidgetViewImpl implements VariableListItemWidgetVie
     @Override
     public void setDataType(String dataType) {
         getModel().setDataType(dataType);
-
-        if (dataType != null && dataType.length() > 0) {
-            notifyModelChanged();
-        }
     }
 
     @Override

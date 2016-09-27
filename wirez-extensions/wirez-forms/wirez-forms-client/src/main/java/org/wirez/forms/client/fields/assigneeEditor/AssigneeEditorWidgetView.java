@@ -19,6 +19,7 @@ package org.wirez.forms.client.fields.assigneeEditor;
 import java.util.List;
 
 import org.wirez.forms.client.fields.model.AssigneeRow;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 
 public interface AssigneeEditorWidgetView {
 
@@ -32,11 +33,16 @@ public interface AssigneeEditorWidgetView {
 
         String serializeAssignees(List<AssigneeRow> assigneeRows);
 
+        void setNames(List<String> names);
+
         void addAssignee();
 
         boolean isDuplicateName(String name);
 
         void removeAssignee(AssigneeRow assigneeRow);
+
+        ListBoxValues.ValueTester namesTester();
+
     }
 
     void init(Presenter presenter);
@@ -49,15 +55,14 @@ public interface AssigneeEditorWidgetView {
 
     void setNoneDisplayStyle();
 
+    void setAssigneesNames(ListBoxValues nameListBoxValues);
+
     void setAssigneeRows(List<AssigneeRow> rows);
 
     List<AssigneeRow> getAssigneeRows();
 
     AssigneeListItemWidgetView getAssigneeWidget(int index);
 
-    void setVisible(boolean visible);
-
     boolean isDuplicateName(String name);
 
-    void removeAssignee(AssigneeRow assigneeRow);
 }

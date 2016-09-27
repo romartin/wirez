@@ -37,7 +37,6 @@ public class VariableRow {
 
     public VariableRow() {
         this.id = lastId++;
-        this.variableType = variableType;
     }
 
     public VariableRow(Variable.VariableType variableType, String name, String dataType, String customDataType) {

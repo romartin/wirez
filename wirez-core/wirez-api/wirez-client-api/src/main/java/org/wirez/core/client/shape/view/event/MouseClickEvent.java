@@ -9,10 +9,8 @@ public final class MouseClickEvent extends AbstractMouseEvent {
     public MouseClickEvent( final double mouseX,
                             final double mouseY,
                             final double clientX,
-                            final double clientY,
-                            final double screenX,
-                            final double screenY ) {
-        super( mouseX, mouseY, clientX, clientY, screenX, screenY  );
+                            final double clientY ) {
+        super( mouseX, mouseY, clientX, clientY  );
     }
 
     public boolean isButtonLeft() {

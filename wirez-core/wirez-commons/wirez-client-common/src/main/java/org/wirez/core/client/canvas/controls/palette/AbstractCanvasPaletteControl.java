@@ -74,7 +74,7 @@ public abstract class AbstractCanvasPaletteControl
 
                 } else {
 
-                    AbstractCanvasPaletteControl.this.show( event.getMouseX(), event.getMouseY() );
+                    AbstractCanvasPaletteControl.this.show( event.getX(), event.getY() );
 
                 }
 

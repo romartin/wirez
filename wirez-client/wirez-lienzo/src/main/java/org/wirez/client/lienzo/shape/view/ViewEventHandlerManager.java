@@ -239,8 +239,6 @@ public class ViewEventHandlerManager {
                         final int y = nodeMouseClickEvent.getY();
                         final int clientX = nodeMouseClickEvent.getMouseEvent().getClientX();
                         final int clientY = nodeMouseClickEvent.getMouseEvent().getClientY();
-                        final int screenX = nodeMouseClickEvent.getMouseEvent().getScreenX();
-                        final int screenY = nodeMouseClickEvent.getMouseEvent().getScreenY();
                         final boolean isShiftKeyDown = nodeMouseClickEvent.isShiftKeyDown();
                         final boolean isAltKeyDown = nodeMouseClickEvent.isAltKeyDown();
                         final boolean isMetaKeyDown = nodeMouseClickEvent.isMetaKeyDown();
@@ -260,8 +258,6 @@ public class ViewEventHandlerManager {
                                             y,
                                             clientX,
                                             clientY,
-                                            screenX,
-                                            screenY,
                                             isShiftKeyDown,
                                             isAltKeyDown,
                                             isMetaKeyDown,
@@ -301,9 +297,7 @@ public class ViewEventHandlerManager {
                                 nodeMouseDoubleClickEvent.getX(),
                                 nodeMouseDoubleClickEvent.getY(),
                                 nodeMouseDoubleClickEvent.getMouseEvent().getClientX(),
-                                nodeMouseDoubleClickEvent.getMouseEvent().getClientY(),
-                                nodeMouseDoubleClickEvent.getMouseEvent().getScreenX(),
-                                nodeMouseDoubleClickEvent.getMouseEvent().getScreenY() );
+                                nodeMouseDoubleClickEvent.getMouseEvent().getClientY() );
                         event.setShiftKeyDown( nodeMouseDoubleClickEvent.isShiftKeyDown() );
                         event.setAltKeyDown( nodeMouseDoubleClickEvent.isAltKeyDown() );
                         event.setMetaKeyDown( nodeMouseDoubleClickEvent.isMetaKeyDown() );
@@ -325,8 +319,6 @@ public class ViewEventHandlerManager {
                                final int y,
                                final int clientX,
                                final int clientY,
-                               final int screenX,
-                               final int screenY,
                                final boolean isShiftKeyDown,
                                final boolean isAltKeyDown,
                                final boolean isMetaKeyDown,
@@ -334,7 +326,7 @@ public class ViewEventHandlerManager {
                                final boolean isButtonMiddle,
                                final boolean isButtonRight ) {
 
-        final MouseClickEvent event = new MouseClickEvent( x, y, clientX, clientY, screenX, screenY );
+        final MouseClickEvent event = new MouseClickEvent( x, y, clientX, clientY );
         event.setShiftKeyDown( isShiftKeyDown );
         event.setAltKeyDown( isAltKeyDown );
         event.setMetaKeyDown( isMetaKeyDown );

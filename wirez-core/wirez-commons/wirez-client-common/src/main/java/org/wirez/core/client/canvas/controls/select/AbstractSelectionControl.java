@@ -36,8 +36,8 @@ public abstract class AbstractSelectionControl extends AbstractCanvasHandlerRegi
     Event<CanvasElementSelectedEvent> elementSelectedEventEvent;
     Event<CanvasClearSelectionEvent> clearSelectionEventEvent;
 
-    protected final List<String> selectedElements = new ArrayList<String>();
-    protected ViewHandler<?> layerClickHandler;
+    private final List<String> selectedElements = new ArrayList<String>();
+    private ViewHandler<?> layerClickHandler;
 
     @Inject
     public AbstractSelectionControl( final Event<CanvasElementSelectedEvent> elementSelectedEventEvent,

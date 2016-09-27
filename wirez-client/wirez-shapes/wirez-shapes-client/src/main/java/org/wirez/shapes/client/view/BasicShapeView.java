@@ -5,7 +5,7 @@ import com.ait.lienzo.client.core.shape.wires.IControlHandle;
 import com.ait.lienzo.client.core.shape.wires.IControlHandleList;
 import com.ait.lienzo.client.core.shape.wires.LayoutContainer;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
-import com.ait.lienzo.client.core.shape.wires.event.AbstractWiresDragEvent;
+import com.ait.lienzo.client.core.shape.wires.event.*;
 import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import com.ait.lienzo.shared.core.types.ColorName;
@@ -24,27 +24,28 @@ import org.wirez.shapes.client.util.BasicShapesUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BasicShapeView<T> extends AbstractShapeView<T>
+public abstract class BasicShapeView<T>
+        extends AbstractShapeView<T>
         implements
-        HasTitle<T>,
-        HasControlPoints<T>,
-        HasEventHandlers<T, Shape<?>>,
-        HasFillGradient<T>,
-        HasChildren<BasicShapeView<T>> {
+            HasTitle<T>,
+            HasControlPoints<T>,
+            HasEventHandlers<T, Shape<?>>,
+            HasFillGradient<T>,
+            HasChildren<BasicShapeView<T>> {
 
     private static final ViewEventType[] SUPPORTED_EVENT_TYPES = new ViewEventType[]{
-            ViewEventType.MOUSE_CLICK, ViewEventType.MOUSE_DBL_CLICK, ViewEventType.DRAG,
+            ViewEventType.MOUSE_CLICK, ViewEventType.MOUSE_DBL_CLICK, ViewEventType.DRAG, ViewEventType.RESIZE,
             ViewEventType.TOUCH, ViewEventType.GESTURE
     };
 
-    protected ViewEventHandlerManager eventHandlerManager;
-    protected final List<BasicShapeView<T>> children = new ArrayList<>();
-    protected Text text;
+    private ViewEventHandlerManager eventHandlerManager;
+    private final List<BasicShapeView<T>> children = new ArrayList<>();
+    private Text text;
 
-    protected WiresLayoutContainer.Layout textPosition;
-    protected Type fillGradientType = null;
-    protected String fillGradientStartColor = null;
-    protected String fillGradientEndColor = null;
+    private WiresLayoutContainer.Layout textPosition;
+    private Type fillGradientType = null;
+    private String fillGradientStartColor = null;
+    private String fillGradientEndColor = null;
 
     public BasicShapeView( final MultiPath path ) {
         super( path );
@@ -68,7 +69,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
     }
 
-    protected void createEventHandlerManager( final Node<?> node ) {
+    private void createEventHandlerManager( final Node<?> node ) {
 
         if ( null != node ) {
 
@@ -197,7 +198,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
         return ( T ) this;
     }
 
-    protected Text buildText( String _text ) {
+    private Text buildText( String _text ) {
         Text text = new Text( _text ).setFontSize( 14 ).setFillColor( ColorName.BLACK ).setStrokeWidth( 1 );
         return text.moveToTop().setDraggable( false ).setAlpha( 0 );
     }
@@ -314,6 +315,13 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
 
                 eventHandlerManager.addHandlersRegistration( type, registrations );
 
+            } else if ( ViewEventType.RESIZE.equals( type ) ) {
+
+                final HandlerRegistration[] registrations =
+                        registerResizeHandler( ( org.wirez.core.client.shape.view.event.ResizeHandler ) eventHandler );
+
+                eventHandlerManager.addHandlersRegistration( type, registrations );
+
             } else {
 
                 eventHandlerManager.addHandler( type, eventHandler );
@@ -348,7 +356,7 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
     }
 
     // TODO: listen for WiresMoveEvent's as well?
-    protected HandlerRegistration[] registerDragHandler( final ViewHandler<org.wirez.core.client.shape.view.event.DragEvent> eventHandler ) {
+    private HandlerRegistration[] registerDragHandler( final ViewHandler<org.wirez.core.client.shape.view.event.DragEvent> eventHandler ) {
 
         final DragHandler dragHandler = ( DragHandler ) eventHandler;
 
@@ -373,11 +381,59 @@ public abstract class BasicShapeView<T> extends AbstractShapeView<T>
        return new HandlerRegistration[] { dragStartReg, dragMoveReg, dragEndReg };
     }
 
-    // TODO: Client & absolute coords.
+    private HandlerRegistration[] registerResizeHandler( final ViewHandler<org.wirez.core.client.shape.view.event.ResizeEvent> eventHandler ) {
+
+        final ResizeHandler resizeHandler = ( ResizeHandler ) eventHandler;
+
+        setResizable( true );
+
+        HandlerRegistration r0 = addWiresResizeStartHandler( new WiresResizeStartHandler() {
+            @Override
+            public void onShapeResizeStart( WiresResizeStartEvent wiresResizeStartEvent ) {
+                final ResizeEvent event = buildResizeEvent( wiresResizeStartEvent );
+                resizeHandler.start( event );
+            }
+        } );
+
+        HandlerRegistration r1 = addWiresResizeStepHandler( new WiresResizeStepHandler() {
+            @Override
+            public void onShapeResizeStep( WiresResizeStepEvent wiresResizeStepEvent ) {
+                final ResizeEvent event = buildResizeEvent( wiresResizeStepEvent );
+                resizeHandler.handle( event );
+            }
+        } );
+
+        HandlerRegistration r2 = addWiresResizeEndHandler( new WiresResizeEndHandler() {
+            @Override
+            public void onShapeResizeEnd( WiresResizeEndEvent wiresResizeEndEvent ) {
+                final ResizeEvent event = buildResizeEvent( wiresResizeEndEvent );
+                resizeHandler.end( event );
+            }
+        } );
+
+
+        return new HandlerRegistration[] { r0, r1, r2};
+    }
+
+
     private DragEvent buildDragEvent( final AbstractWiresDragEvent sourceDragEvent ) {
         final double x = sourceDragEvent.getX();
         final double y = sourceDragEvent.getY();
-        return new DragEvent( x, y, x, y, x, y );
+        final double cx = sourceDragEvent.getNodeDragEvent().getX();
+        final double cy = sourceDragEvent.getNodeDragEvent().getY();
+        final int dx = sourceDragEvent.getNodeDragEvent().getDragContext().getDx();
+        final int dy = sourceDragEvent.getNodeDragEvent().getDragContext().getDy();
+        return new DragEvent( x, y, cx, cy, dx, dy );
+    }
+
+    private ResizeEvent buildResizeEvent( final AbstractWiresResizeEvent sourceResizeEvent ) {
+        final double x = sourceResizeEvent.getX();
+        final double y = sourceResizeEvent.getY();
+        final double cx = sourceResizeEvent.getNodeDragEvent().getX();
+        final double cy = sourceResizeEvent.getNodeDragEvent().getY();
+        final double w = sourceResizeEvent.getWidth();
+        final double h = sourceResizeEvent.getHeight();
+        return new ResizeEvent( x, y, cx, cy, w, h );
     }
 
 }

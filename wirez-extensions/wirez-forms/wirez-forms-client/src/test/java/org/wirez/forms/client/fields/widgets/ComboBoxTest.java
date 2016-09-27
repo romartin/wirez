@@ -54,7 +54,9 @@ public class ComboBoxTest {
     @InjectMocks
     ComboBox comboBox = new ComboBox();
 
+    final boolean processVarNotifyModelChanges = false;
     private final boolean processVarQuoteStringValues = true;
+    private final boolean processVarAddCustomValues = true;
     private final String processVarConstantPrompt = "Constant ...";
     private final String processVarConstantPlaceholder = "Enter constant ...";
     private final String processVarEditPrefix = "Edit ";
@@ -67,7 +69,7 @@ public class ComboBoxTest {
 
     @Test
     public void testInit() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
         verify(view).init(comboBox, modelPresenter, listBox, textBox, processVarConstantPlaceholder);
     }
@@ -94,7 +96,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_CustomPrompt() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
 
         comboBox.listBoxValueChanged(processVarConstantPrompt);
@@ -110,7 +112,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_InvalidValue() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
 
         comboBox.listBoxValueChanged("********");
@@ -123,7 +125,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_EditValueString() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
         String constant = "a constant";
         when(view.getModelValue()).thenReturn(constant);
@@ -140,7 +142,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_EditValueNumber() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
         String constant = "123";
         when(view.getModelValue()).thenReturn(constant);
@@ -157,7 +159,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_CustomValueString() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
         String constant = "a constant";
         String quotedConstant = StringUtils.createQuotedConstant(constant);
@@ -174,7 +176,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_CustomValueQString1() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
         String constant = "\"hello\"";
         String quotedConstant = StringUtils.createQuotedConstant(constant);
@@ -191,7 +193,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_CustomValueQString2() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
         String constant = "greeting={\"hello\"}";
         String quotedConstant = StringUtils.createQuotedConstant(constant);
@@ -208,7 +210,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_CustomValueNumber() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
         String constant = "123";
         when(listBoxValues.isCustomValue(constant)).thenReturn(true);
@@ -225,7 +227,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_ExistingValueString() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
         String value = "employee";
         when(listBoxValues.isCustomValue(value)).thenReturn(false);
@@ -240,7 +242,7 @@ public class ComboBoxTest {
 
     @Test
     public void testListBoxValueChanged_ExistingValueNumber() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
         String value = "123";
         when(listBoxValues.isCustomValue(value)).thenReturn(false);
@@ -255,7 +257,7 @@ public class ComboBoxTest {
 
     @Test
     public void testTextBoxValueChanged_Empty() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
 
         comboBox.textBoxValueChanged("");
@@ -270,7 +272,7 @@ public class ComboBoxTest {
 
     @Test
     public void testTextBoxValueChanged_NonCustomValue() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
 
         String value = "employee";
@@ -287,7 +289,7 @@ public class ComboBoxTest {
 
     @Test
     public void testTextBoxValueChanged_CustomValue() {
-        comboBox.init(modelPresenter, listBox, textBox, processVarQuoteStringValues,
+        comboBox.init(modelPresenter, processVarNotifyModelChanges, listBox, textBox, processVarQuoteStringValues, processVarAddCustomValues,
                 processVarConstantPrompt, processVarConstantPlaceholder);
 
         String value = "something new";

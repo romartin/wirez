@@ -16,6 +16,8 @@
 
 package org.wirez.forms.client.fields.assigneeEditor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
@@ -40,10 +42,13 @@ import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.wirez.forms.client.fields.model.AssigneeRow;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 
 @Dependent
 @Templated("AssigneeEditorWidget.html#widget")
 public class AssigneeEditorWidgetViewImpl extends Composite implements AssigneeEditorWidgetView, HasValue<String> {
+
+    ListBoxValues nameListBoxValues;
 
     private String sAssignees;
 
@@ -58,6 +63,8 @@ public class AssigneeEditorWidgetViewImpl extends Composite implements AssigneeE
 
     @DataField
     protected TableCellElement nameth = Document.get().createTHElement();
+
+    List<String> names;
 
     /**
      * The list of assigneeRows that currently exist.
@@ -85,6 +92,12 @@ public class AssigneeEditorWidgetViewImpl extends Composite implements AssigneeE
         String oldValue = sAssignees;
 
         sAssignees = value;
+
+        // TODO: get names from server
+        if (names == null) {
+            names = new ArrayList<String>(Arrays.asList("user1", "user2", "user3", "user4", "user5"));
+            presenter.setNames(names);
+        }
 
         initView();
 
@@ -146,6 +159,7 @@ public class AssigneeEditorWidgetViewImpl extends Composite implements AssigneeE
 
         for (int i = 0; i < getAssigneeRowsCount(); i++) {
             AssigneeListItemWidgetView widget = getAssigneeWidget(i);
+            widget.setNames(nameListBoxValues);
             widget.setParentWidget(presenter);
         }
     }
@@ -160,17 +174,17 @@ public class AssigneeEditorWidgetViewImpl extends Composite implements AssigneeE
         return assigneeRows.getComponent(index);
     }
 
+    public void setAssigneesNames(ListBoxValues nameListBoxValues) {
+        this.nameListBoxValues = nameListBoxValues;
+
+        for (int i = 0; i < getAssigneeRowsCount(); i++) {
+            getAssigneeWidget(i).setNames(nameListBoxValues);
+        }
+    }
+
+
     @EventHandler("addButton")
     public void handleAddButton(ClickEvent e) {
         presenter.addAssignee();
     }
-
-    public void removeAssignee(AssigneeRow assigneeRow) {
-        presenter.removeAssignee(assigneeRow);
-
-        if (getAssigneeRows().isEmpty()) {
-            setNoneDisplayStyle();
-        }
-    }
-
 }

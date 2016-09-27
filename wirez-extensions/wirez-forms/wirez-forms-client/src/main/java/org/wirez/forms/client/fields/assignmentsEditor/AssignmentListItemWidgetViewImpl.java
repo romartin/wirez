@@ -185,12 +185,12 @@ public class AssignmentListItemWidgetViewImpl extends Composite implements Assig
     @PostConstruct
     public void init() {
         // Configure dataType and customDataType controls
-        dataTypeComboBox.init(this, dataType, customDataType, false,
+        dataTypeComboBox.init(this, false, dataType, customDataType, false, true,
                 AssignmentListItemWidgetView.CUSTOM_PROMPT,
                 AssignmentListItemWidgetView.ENTER_TYPE_PROMPT);
 
         // Configure processVar and constant controls
-        processVarComboBox.init(this, processVar, constant, true,
+        processVarComboBox.init(this, false, processVar, constant, true, true,
                 AssignmentListItemWidgetView.CONSTANT_PROMPT,
                 AssignmentListItemWidgetView.ENTER_CONSTANT_PROMPT);
 
@@ -358,5 +358,8 @@ public class AssignmentListItemWidgetViewImpl extends Composite implements Assig
         }
     }
 
+    public void notifyModelChanged() {
+        // Ignore
+    }
 
 }

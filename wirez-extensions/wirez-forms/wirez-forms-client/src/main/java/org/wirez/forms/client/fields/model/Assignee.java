@@ -22,15 +22,14 @@ public class Assignee {
 
     private String name;
 
-    public Assignee() {
-    }
+    private String customName;
 
-    public Assignee(String name) {
-        this.name = name;
+    public Assignee() {
     }
 
     public Assignee(AssigneeRow row) {
         this.name = row.getName();
+        this.customName = row.getCustomName();
     }
 
     public String getName() {
@@ -41,34 +40,60 @@ public class Assignee {
         this.name = name;
     }
 
+    public String getCustomName() {
+        return customName;
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
+    }
+
     public String toString() {
-        return name;
+        if (customName != null && !customName.isEmpty()) {
+            return customName;
+        } else if (name != null && !name.isEmpty()) {
+            return name;
+        } else {
+            return null;
+        }
     }
 
     /**
      * Deserializes an assignee
-     *
      * @param s
      * @return
      */
-    public static Assignee deserialize(String s) {
-        return new Assignee(s);
+    public static Assignee deserialize(String s, List<String> names) {
+        Assignee a = new Assignee();
+        if (names != null && names.contains(s)) {
+            a.setName(s);
+        } else {
+            a.setCustomName(s);
+        }
+        return a;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Assignee)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Assignee)) {
+            return false;
+        }
 
         Assignee assignee = (Assignee) o;
 
-        return getName() != null ? getName().equals(assignee.getName()) : assignee.getName() == null;
-
+        if (getName() != null ? !getName().equals(assignee.getName()) : assignee.getName() != null) {
+            return false;
+        }
+        return getCustomName() != null ? getCustomName().equals(assignee.getCustomName()) : assignee.getCustomName() == null;
     }
 
     @Override
     public int hashCode() {
         int result = getName() != null ? getName().hashCode() : 0;
+        result = 31 * result + (getCustomName() != null ? getCustomName().hashCode() : 0);
         return result;
     }
 }

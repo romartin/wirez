@@ -18,8 +18,12 @@ package org.wirez.forms.client.fields.assigneeEditor;
 
 import org.jboss.errai.ui.client.widget.HasModel;
 import org.wirez.forms.client.fields.model.AssigneeRow;
+import org.wirez.forms.client.fields.util.ListBoxValues;
 
 public interface AssigneeListItemWidgetView extends HasModel<AssigneeRow> {
+
+    String CUSTOM_PROMPT = "New" + ListBoxValues.EDIT_SUFFIX;
+    String ENTER_TYPE_PROMPT = "Enter name" + ListBoxValues.EDIT_SUFFIX;
 
     void init();
 
@@ -27,6 +31,16 @@ public interface AssigneeListItemWidgetView extends HasModel<AssigneeRow> {
 
     void notifyModelChanged();
 
+    void setNames(ListBoxValues nameListBoxValues);
+
     boolean isDuplicateName(String name);
+
+    String getName();
+
+    void setName(String name);
+
+    String getCustomName();
+
+    void setCustomName(String customName);
 
 }

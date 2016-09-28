@@ -21,6 +21,7 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.forms.metaModel.ListBox;
 import org.kie.workbench.common.forms.metaModel.SelectorDataProvider;
+import org.kie.workbench.common.forms.metaModel.TextArea;
 import org.wirez.bpmn.definition.BPMNPropertySet;
 import org.wirez.core.definition.annotation.Name;
 import org.wirez.core.definition.annotation.propertyset.Property;
@@ -31,37 +32,53 @@ import javax.validation.Valid;
 @Portable
 @Bindable
 @PropertySet
-public class BusinessRuleTaskExecutionSet implements BPMNPropertySet {
+public class ScriptTaskExecutionSet implements BPMNPropertySet {
 
     @Name
     public static final transient String propertySetName = "Implementation/Execution";
 
     @Property
-    @FieldDef( label = "RuleFlow Group", property = "value" )
+    @FieldDef( label = "Script", property = "value", position = 1)
+    @TextArea( rows = 5)
+    @Valid
+    private Script script;
+
+    @Property
+    @FieldDef( label = "Script Language", property = "value", position = 2)
     @ListBox
     @SelectorDataProvider(
             type = SelectorDataProvider.ProviderType.REMOTE,
-            className = "org.wirez.bpmn.backend.dataproviders.RuleFlowGroupFormProvider")
+            className = "org.wirez.bpmn.backend.dataproviders.ScriptLanguageFormProvider")
     @Valid
-    protected RuleFlowGroup ruleFlowGroup;
+    protected ScriptLanguage scriptLanguage;
 
-    public BusinessRuleTaskExecutionSet() {
-        this(new RuleFlowGroup(""));
+    public ScriptTaskExecutionSet() {
+        this(new Script(""), new ScriptLanguage(""));
     }
 
-    public BusinessRuleTaskExecutionSet(@MapsTo("ruleFlowGroup") RuleFlowGroup ruleFlowGroup) {
-        this.ruleFlowGroup = ruleFlowGroup;
+    public ScriptTaskExecutionSet(@MapsTo("script") Script script,
+                                  @MapsTo("scriptLanguage") ScriptLanguage scriptLanguage) {
+        this.script = script;
+        this.scriptLanguage = scriptLanguage;
     }
 
     public String getPropertySetName() {
         return propertySetName;
     }
 
-    public RuleFlowGroup getRuleFlowGroup() {
-        return ruleFlowGroup;
+    public Script getScript() {
+        return script;
     }
 
-    public void setRuleFlowGroup(RuleFlowGroup ruleFlowGroup) {
-        this.ruleFlowGroup = ruleFlowGroup;
+    public void setScript(Script script) {
+        this.script = script;
+    }
+
+    public ScriptLanguage getScriptLanguage() {
+        return scriptLanguage;
+    }
+
+    public void setScriptLanguage(ScriptLanguage scriptLanguage) {
+        this.scriptLanguage = scriptLanguage;
     }
 }

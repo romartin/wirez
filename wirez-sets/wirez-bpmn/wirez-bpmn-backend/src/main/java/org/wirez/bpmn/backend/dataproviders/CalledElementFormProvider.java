@@ -33,7 +33,7 @@ public class CalledElementFormProvider implements SelectorDataProvider {
 
     @Override
     public SelectorData getSelectorData( FormRenderingContext context ) {
-        Map<String, String> values = new TreeMap<>();
+        Map<Object, String> values = new TreeMap<>();
 
         values.put("/my/samples/businessprocess1.bpmn2", "/my/samples/businessprocess1.bpmn2");
         values.put("/my/samples/businessprocess2.bpmn2", "/my/samples/businessprocess2.bpmn2");

@@ -4,6 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.wirez.bpmn.definition.*;
 import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.wirez.bpmn.definition.property.general.Name;
+import org.wirez.bpmn.definition.property.task.CalledElement;
+import org.wirez.bpmn.definition.property.task.RuleFlowGroup;
+import org.wirez.bpmn.definition.property.task.ScriptLanguage;
 import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.bpmn.definition.property.variables.ProcessVariables;
 import org.wirez.core.api.DefinitionManager;
@@ -33,7 +36,12 @@ public class Bpmn2OryxIdMappings {
         put( UserTask.class, "Task" );
         put( ScriptTask.class, "Task" );
         put( BusinessRuleTask.class, "Task" );
+        put( RuleFlowGroup.class, "ruleflowgroup" );
+        put( CalledElement.class, "calledelement" );
+        put( ScriptLanguage.class, "script_language" );
     }};
+
+
 
     private final Map<Class<?>, Set<String>> skippedProperties = new HashMap<Class<?>, Set<String>>() {{
         // Add here global class <-> collection oryx prpoerty identifiers to skip processing, if any.
@@ -55,6 +63,7 @@ public class Bpmn2OryxIdMappings {
         Map<Class<?>, String> userTaskPropertiesMap = new HashMap<Class<?>, String>();
         put(UserTask.class, userTaskPropertiesMap);
         userTaskPropertiesMap.put(AssignmentsInfo.class, "assignmentsinfo");
+
     }};
 
     protected Bpmn2OryxIdMappings() {

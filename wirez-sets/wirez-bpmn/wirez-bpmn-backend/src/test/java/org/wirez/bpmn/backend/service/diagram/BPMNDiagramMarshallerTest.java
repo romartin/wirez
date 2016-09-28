@@ -13,6 +13,7 @@ import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxIdMappings;
 import org.wirez.bpmn.backend.marshall.json.oryx.Bpmn2OryxManager;
 import org.wirez.bpmn.backend.marshall.json.oryx.property.*;
 import org.wirez.bpmn.definition.*;
+import org.wirez.bpmn.definition.property.assignee.AssigneeSet;
 import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.diagram.DiagramSet;
@@ -77,6 +78,7 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_PROCESSVARIABLES = "org/wirez/bpmn/backend/service/diagram/processVariables.bpmn";
     protected static final String BPMN_USERTASKASSIGNMENTS = "org/wirez/bpmn/backend/service/diagram/userTaskAssignments.bpmn";
     protected static final String BPMN_PROCESSPROPERTIES = "org/wirez/bpmn/backend/service/diagram/processProperties.bpmn";
+    protected static final String BPMN_USERTASKASSIGNEES = "org/wirez/bpmn/backend/service/diagram/userTaskAssignees.bpmn";
 
     @Mock
     DefinitionManager definitionManager;
@@ -368,6 +370,30 @@ public class BPMNDiagramMarshallerTest {
 
     @Test
     @SuppressWarnings( "unchecked" )
+    public void testUnmarshallUserTaskAssignees() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_USERTASKASSIGNEES);
+        assertDiagram( diagram, 6 );
+        assertEquals( "UserGroups", diagram.getSettings().getTitle() );
+
+        AssigneeSet assigneeSet = null;
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while(it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof UserTask) {
+                    UserTask userTask = (UserTask) oDefinition;
+                    assigneeSet = userTask.getAssigneeSet();
+                    break;
+                }
+            }
+        }
+        assertEquals( "user,user1",  assigneeSet.getActors().getValue() );
+        assertEquals( "admin,kiemgmt",  assigneeSet.getGroupid().getValue());
+    }
+
+    @Test
+    @SuppressWarnings( "unchecked" )
     public void testUmarshallNotBoundaryEvents() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall( BPMN_NOT_BOUNDARY_EVENTS );
         assertEquals( "Not Boundary Event", diagram.getSettings().getTitle() );
@@ -502,6 +528,18 @@ public class BPMNDiagramMarshallerTest {
         assertTrue( result.contains("<bpmn2:targetRef>_6063D302-9D81-4C86-920B-E808A45377C2_reasonInputX</bpmn2:targetRef>"));
         assertTrue( result.contains("<bpmn2:sourceRef>_6063D302-9D81-4C86-920B-E808A45377C2_performanceOutputX</bpmn2:sourceRef>"));
         assertTrue( result.contains("<bpmn2:targetRef>performance</bpmn2:targetRef>"));
+    }
+
+    @Test
+    public void testMarshallUserTaskAssignees() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_USERTASKASSIGNEES);
+        String result = tested.marshall( diagram );
+        assertDiagram( result, 1, 5, 4 );
+
+        assertTrue( result.contains( "<![CDATA[admin,kiemgmt]]>" ) );
+        result = result.replace('\n', ' ');
+        assertTrue( result.matches( "(.*)<bpmn2:resourceAssignmentExpression(.*)>user</bpmn2:formalExpression>(.*)" ));
+        assertTrue( result.matches( "(.*)<bpmn2:resourceAssignmentExpression(.*)>user1</bpmn2:formalExpression>(.*)" ));
     }
 
     @Test

@@ -107,7 +107,7 @@ public class VariableListItemWidgetTest {
         widget.init();
         verify(widget, times(1)).init();
 
-        verify(dataTypeComboBox, times(1)).init(widget, dataType, customDataType, false,
+        verify(dataTypeComboBox, times(1)).init(widget, true, dataType, customDataType, false,  true,
                 VariableListItemWidgetView.CUSTOM_PROMPT, VariableListItemWidgetView.ENTER_TYPE_PROMPT);
 
         verify(name, times(1)).setRegExp(regExpCaptor.capture(), anyString(), anyString());

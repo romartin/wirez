@@ -34,17 +34,26 @@ public class ComboBox implements ComboBoxView.ComboBoxPresenter {
 
     protected boolean quoteStringValues;
 
+    protected boolean addCustomValues = true;
+
     protected String customPrompt;
+
+    ComboBoxView.ModelPresenter modelPresenter;
+
+    protected boolean notifyModelChanges = false;
 
     @Inject
     ComboBoxView view;
 
     @Override
-    public void init(final ComboBoxView.ModelPresenter modelPresenter, final ValueListBox<String> listBox, final TextBox textBox,
-            final boolean quoteStringValues,
+    public void init(final ComboBoxView.ModelPresenter modelPresenter, final boolean notifyModelChanges, final ValueListBox<String> listBox, final TextBox textBox,
+            final boolean quoteStringValues, final boolean addCustomValues,
             final String customPrompt, final String placeholder) {
         this.quoteStringValues = quoteStringValues;
+        this.addCustomValues = addCustomValues;
         this.customPrompt = customPrompt;
+        this.modelPresenter = modelPresenter;
+        this.notifyModelChanges = notifyModelChanges;
 
         view.init(this, modelPresenter, listBox, textBox, placeholder);
     }
@@ -62,6 +71,11 @@ public class ComboBox implements ComboBoxView.ComboBoxPresenter {
     @Override
     public void setShowCustomValues(final boolean showCustomValues) {
         this.showCustomValues = showCustomValues;
+    }
+
+    @Override
+    public void setAddCustomValues(final boolean addCustomValues) {
+        this.addCustomValues = addCustomValues;
     }
 
     @Override
@@ -113,10 +127,16 @@ public class ComboBox implements ComboBoxView.ComboBoxPresenter {
             }
             setListBoxValue(newValue);
             setTextBoxValue(textValue);
+            if (notifyModelChanges) {
+                notifyModelChanged();
+            }
         } else if (newValue != null) {
             // A non-custom value has been selected
             setListBoxValue(newValue);
             setTextBoxValue("");
+            if (notifyModelChanges) {
+                notifyModelChanged();
+            }
         }
         updateListBoxValues(view.getListBoxValue());
     }
@@ -146,6 +166,9 @@ public class ComboBox implements ComboBoxView.ComboBoxPresenter {
                 setListBoxValue(newValue);
                 currentTextValue = newValue;
             }
+            if (notifyModelChanges) {
+                notifyModelChanged();
+            }
         }
         view.setTextBoxVisible(false);
         view.setListBoxVisible(true);
@@ -157,7 +180,11 @@ public class ComboBox implements ComboBoxView.ComboBoxPresenter {
             newValue = StringUtils.createQuotedConstant(newValue);
             oldValue = StringUtils.createQuotedConstant(oldValue);
         }
-        return listBoxValues.addCustomValue(newValue, oldValue);
+        if (addCustomValues) {
+            return listBoxValues.addCustomValue(newValue, oldValue);
+        } else {
+            return newValue;
+        }
     }
 
     public void setTextBoxValue(String value) {
@@ -170,4 +197,7 @@ public class ComboBox implements ComboBoxView.ComboBoxPresenter {
         view.setListBoxModelValue(value);
     }
 
+    public void notifyModelChanged() {
+        modelPresenter.notifyModelChanged();
+    }
 }

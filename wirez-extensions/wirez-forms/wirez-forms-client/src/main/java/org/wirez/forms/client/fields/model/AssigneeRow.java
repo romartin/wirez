@@ -19,40 +19,32 @@ package org.wirez.forms.client.fields.model;
 import org.jboss.errai.databinding.client.api.Bindable;
 
 @Bindable
-public class VariableRow {
+public class AssigneeRow {
 
     private long id;
 
     private String name;
 
-    private Variable.VariableType variableType = Variable.VariableType.PROCESS;
-
-    private String dataType;
-
-    private String customDataType;
+    private String customName;
 
     // Field which is incremented for each row.
     // Required to implement equals function which needs a unique field
     private static long lastId = 0;
 
-    public VariableRow() {
+    public AssigneeRow() {
         this.id = lastId++;
     }
 
-    public VariableRow(Variable.VariableType variableType, String name, String dataType, String customDataType) {
+    public AssigneeRow(String name, String customName) {
         this.id = lastId++;
-        this.variableType = variableType;
         this.name = name;
-        this.dataType = dataType;
-        this.customDataType = customDataType;
+        this.customName = customName;
     }
 
-    public VariableRow(Variable variable) {
+    public AssigneeRow(Assignee assignee) {
         this.id = lastId++;
-        this.variableType = variable.getVariableType();
-        this.name = variable.getName();
-        this.dataType = variable.getDataType();
-        this.customDataType = variable.getCustomDataType();
+        this.name = assignee.getName();
+        this.customName = assignee.getCustomName();
      }
 
     public long getId() {
@@ -63,14 +55,6 @@ public class VariableRow {
         this.id = id;
     }
 
-    public Variable.VariableType getVariableType() {
-        return variableType;
-    }
-
-    public void setVariableType(Variable.VariableType variableType) {
-        this.variableType = variableType;
-    }
-
     public String getName() {
         return name;
     }
@@ -79,20 +63,22 @@ public class VariableRow {
         this.name = name;
     }
 
-    public String getDataType() {
-        return dataType;
+    public String getCustomName() {
+        return customName;
     }
 
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    public void setCustomName(String customName) {
+        this.customName = customName;
     }
 
-    public String getCustomDataType() {
-        return customDataType;
-    }
-
-    public void setCustomDataType(String customDataType) {
-        this.customDataType = customDataType;
+    public boolean isEmpty() {
+        if (name != null && name.length() > 0) {
+            return false;
+        } else if (customName != null && customName.length() > 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -106,13 +92,13 @@ public class VariableRow {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        VariableRow other = (VariableRow) obj;
+        AssigneeRow other = (AssigneeRow) obj;
         return (id == other.id);
     }
 
     @Override
     public String toString() {
-        return "VariableRow [variableType=" + variableType.toString() + ", name=" + name + ", dataType=" + dataType + ", customDataType=" + customDataType + "]";
+        return "AssigneeRow [name=" + name + ",customName=" + customName + "]";
     }
 
 }

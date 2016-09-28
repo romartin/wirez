@@ -35,6 +35,8 @@ public interface ComboBoxView {
         void setListBoxModelValue(final ValueListBox<String> listBox, String value);
 
         String getModelValue(final ValueListBox<String> listBox);
+
+        void notifyModelChanged();
     }
 
     /**
@@ -43,13 +45,17 @@ public interface ComboBoxView {
     interface ComboBoxPresenter {
 
         void init(final ComboBoxView.ModelPresenter modelPresenter,
+                final boolean notifyModelChanges,
                 final ValueListBox<String> listBox, final TextBox textBox,
                 final boolean quoteStringValues,
+                final boolean addCustomValues,
                 final String customPrompt, final String placeholder);
 
         void setListBoxValues(final ListBoxValues listBoxValues);
 
         void setShowCustomValues(final boolean showCustomValues);
+
+        void setAddCustomValues(final boolean addCustomValues);
 
         void setCurrentTextValue(String currentTextValue);
 

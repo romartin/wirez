@@ -39,6 +39,7 @@ import org.wirez.forms.client.fields.model.Variable;
 import org.wirez.forms.client.fields.resources.i18n.WirezFormsClientFieldsConstants;
 import org.wirez.forms.client.fields.util.ListBoxValues;
 import org.wirez.forms.client.fields.widgets.ComboBox;
+import org.wirez.forms.client.fields.widgets.ComboBoxView;
 import org.wirez.forms.client.fields.widgets.VariableNameTextBox;
 
 import static org.junit.Assert.*;
@@ -119,6 +120,7 @@ public class AssignmentListItemWidgetTest {
         Mockito.doCallRealMethod().when(widget).init();
         Mockito.doCallRealMethod().when(widget).setModel(any(AssignmentRow.class));
 
+        Mockito.doCallRealMethod().when(processVarComboBox).setAddCustomValues(any(Boolean.class));
         Mockito.doCallRealMethod().when(processVarComboBox).addCustomValueToListBoxValues(any(String.class), any(String.class));
         Mockito.doCallRealMethod().when(processVarComboBox).setListBoxValues(any(ListBoxValues.class));
 
@@ -131,9 +133,9 @@ public class AssignmentListItemWidgetTest {
         widget.init();
         verify(widget, times(1)).init();
 
-        verify(dataTypeComboBox, times(1)).init(widget, dataType, customDataType, false,
+        verify(dataTypeComboBox, times(1)).init(widget, false, dataType, customDataType, false, true,
                 AssignmentListItemWidgetView.CUSTOM_PROMPT, AssignmentListItemWidgetView.ENTER_TYPE_PROMPT);
-        verify(processVarComboBox, times(1)).init(widget, processVar, constant, true,
+        verify(processVarComboBox, times(1)).init(widget, false, processVar, constant, true, true,
                 AssignmentListItemWidgetView.CONSTANT_PROMPT, AssignmentListItemWidgetView.ENTER_CONSTANT_PROMPT);
 
         verify(name, times(1)).setRegExp(regExpCaptor.capture(), anyString(), anyString());
@@ -296,6 +298,7 @@ public class AssignmentListItemWidgetTest {
         };
         ListBoxValues processVarListBoxValues = new ListBoxValues(AssignmentListItemWidgetView.CONSTANT_PROMPT, WirezFormsClientFieldsConstants.INSTANCE.Edit() + " ",
                 processVarTester, ActivityDataIOEditorViewImpl.CONSTANT_MAX_DISPLAY_LENGTH);
+        processVarComboBox.setAddCustomValues(true);
         processVarComboBox.setListBoxValues(processVarListBoxValues);
 
         String sConstant = "\"abcdeabcde12345\"";

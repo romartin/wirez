@@ -25,10 +25,13 @@ import javax.inject.Inject;
 public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<AbstractCanvasHandler>
     implements DockingAcceptorControl<AbstractCanvasHandler> {
 
+    private CanvasCommandFactory canvasCommandFactory;
+
     @Inject
     public DockingAcceptorControlImpl( final CanvasCommandFactory canvasCommandFactory,
                                        final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager ) {
-        super( canvasCommandFactory, canvasCommandManager );
+        super( canvasCommandManager );
+        this.canvasCommandFactory = canvasCommandFactory;
     }
 
     @Override
@@ -65,8 +68,8 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
                 return false;
             }
 
-            final Node childNode = WiresUtils.getNode( canvasHandler, wiresShape );
-            final Node parentNode = WiresUtils.getNode( canvasHandler, wiresContainer );
+            final Node childNode = WiresUtils.getNode( getCanvasHandler(), wiresShape );
+            final Node parentNode = WiresUtils.getNode( getCanvasHandler(), wiresContainer );
 
             return allow( parentNode, childNode );
         }
@@ -79,8 +82,8 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
                 return false;
             }
 
-            final Node childNode = WiresUtils.getNode( canvasHandler, wiresShape );
-            final Node parentNode = WiresUtils.getNode( canvasHandler, wiresContainer );
+            final Node childNode = WiresUtils.getNode( getCanvasHandler(), wiresShape );
+            final Node parentNode = WiresUtils.getNode( getCanvasHandler(), wiresContainer );
 
             return accept( parentNode, childNode );
         }

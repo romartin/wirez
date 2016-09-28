@@ -1,15 +1,15 @@
 package org.wirez.client.lienzo.canvas.controls;
 
 import com.ait.lienzo.client.core.shape.wires.WiresContainer;
+import com.ait.lienzo.client.core.shape.wires.WiresLayer;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.client.lienzo.canvas.wires.WiresCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.CanvasHandler;
+import org.wirez.core.client.canvas.controls.CanvasControl;
 import org.wirez.core.client.command.CanvasCommandManager;
 import org.wirez.core.client.command.CanvasViolation;
-import org.wirez.core.client.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.controls.CanvasControl;
 import org.wirez.core.command.Command;
 import org.wirez.core.command.CommandResult;
 import org.wirez.core.command.CommandUtils;
@@ -25,14 +25,11 @@ public abstract class AbstractContainmentBasedControl<H extends CanvasHandler> i
 
     private static Logger LOGGER = Logger.getLogger(AbstractContainmentBasedControl.class.getName());
 
-    protected CanvasCommandFactory canvasCommandFactory;
-    protected CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
+    private CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager;
 
-    protected AbstractCanvasHandler canvasHandler;
+    private AbstractCanvasHandler canvasHandler;
 
-    public AbstractContainmentBasedControl(final CanvasCommandFactory canvasCommandFactory,
-                                           final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
-        this.canvasCommandFactory = canvasCommandFactory;
+    public AbstractContainmentBasedControl(final CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
         this.canvasCommandManager = canvasCommandManager;
     }
     
@@ -82,7 +79,7 @@ public abstract class AbstractContainmentBasedControl<H extends CanvasHandler> i
             final Command<AbstractCanvasHandler, CanvasViolation> command = getAddEdgeCommand( parent, child );
             CommandResult<CanvasViolation> violations = canvasCommandManager.allow( canvasHandler, command );
             isAllow = isAccept(violations);
-            log(Level.FINE, "isAllow=" + isAllow);
+            logResults( "isAllow", command, violations );
         }
 
         return isAllow;
@@ -114,19 +111,34 @@ public abstract class AbstractContainmentBasedControl<H extends CanvasHandler> i
             final Command<AbstractCanvasHandler, CanvasViolation> command = getAddEdgeCommand(parent,child);
             final CommandResult<CanvasViolation> violations = canvasCommandManager.execute( canvasHandler, command );
             isAccept = isAccept(violations);
-
+            logResults( "isAccept", command, violations );
+        } else {
+            log(Level.FINE, "isAccept = TRUE" );
         }
 
-        log(Level.FINE, "isAccept=" + isAccept);
         return isAccept;
         
     }
 
-    protected boolean isEnabled() {
+    protected boolean isAccept( final WiresContainer wiresContainer,
+                                final WiresShape wiresShape ) {
+
+        if ( !isEnabled() || !isWirezShape( wiresContainer ) || !isWirezShape( wiresShape ) ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected AbstractCanvasHandler getCanvasHandler() {
+        return canvasHandler;
+    }
+
+    private boolean isEnabled() {
         return canvasHandler != null;
     }
 
-    protected boolean isSameParent(final Node parent,
+    private boolean isSameParent(final Node parent,
                                  final Edge<Child, Node> edge) {
 
         if ( null != edge ) {
@@ -147,7 +159,7 @@ public abstract class AbstractContainmentBasedControl<H extends CanvasHandler> i
     }
 
     @SuppressWarnings("unchecked")
-    protected Edge<Object, Node> getTheEdge(final Node child) {
+    private Edge<Object, Node> getTheEdge(final Node child) {
         if ( child != null) {
             final List<Edge> outEdges = child.getInEdges();
             if ( null != outEdges && !outEdges.isEmpty() ) {
@@ -164,23 +176,37 @@ public abstract class AbstractContainmentBasedControl<H extends CanvasHandler> i
         return null;
     }
 
-    protected boolean isAccept( final WiresContainer wiresContainer,
-                                  final WiresShape wiresShape ) {
+    private boolean isWirezShape( final WiresContainer wiresShape ) {
+        return isWiresLayer( wiresShape ) || ( null != wiresShape.getContainer().getUserData() &&
+                wiresShape.getContainer().getUserData().equals( WiresCanvas.WIRES_CANVAS_GROUP_ID ) );
+    }
 
-        if ( !isEnabled() || !isWirezShape( wiresContainer ) || !isWirezShape( wiresShape ) ) {
-            return false;
+    private boolean isWiresLayer( final WiresContainer wiresShape ) {
+        return null != wiresShape && wiresShape instanceof WiresLayer;
+    }
+
+    private boolean isAccept(final CommandResult<CanvasViolation> result) {
+        return !CommandUtils.isError( result );
+    }
+
+    private void logResults( final String prefix,
+                             final Command<AbstractCanvasHandler, CanvasViolation> command,
+                             final CommandResult<CanvasViolation> violations ) {
+
+        if ( LogConfiguration.loggingIsEnabled() ) {
+
+            final boolean isOk = isAccept(violations);
+
+            if ( isOk ) {
+                log( Level.FINE, prefix + "= TRUE" );
+            } else {
+                log( Level.FINE, prefix + "= FALSE " );
+                log( Level.FINE, "*************** Command = { " + command.toString() + " } " );
+                log( Level.FINE, "*************** Violations = { " + violations.getMessage() + " } " );
+            }
+
         }
 
-        return true;
-    }
-
-    protected boolean isWirezShape( final WiresContainer wiresShape ) {
-        return null != wiresShape.getContainer().getUserData() &&
-                wiresShape.getContainer().getUserData().equals( WiresCanvas.WIRES_CANVAS_GROUP_ID );
-    }
-
-    protected boolean isAccept(final CommandResult<CanvasViolation> result) {
-        return !CommandUtils.isError( result );
     }
 
     private void log(final Level level, final String message) {

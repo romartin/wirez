@@ -17,6 +17,7 @@ import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.diagram.DiagramSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
+import org.wirez.bpmn.definition.property.simulation.SimulationSet;
 import org.wirez.bpmn.definition.property.variables.ProcessVariables;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.backend.definition.adapter.annotation.RuntimeDefinitionAdapter;
@@ -77,6 +78,8 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_PROCESSVARIABLES = "org/wirez/bpmn/backend/service/diagram/processVariables.bpmn";
     protected static final String BPMN_USERTASKASSIGNMENTS = "org/wirez/bpmn/backend/service/diagram/userTaskAssignments.bpmn";
     protected static final String BPMN_PROCESSPROPERTIES = "org/wirez/bpmn/backend/service/diagram/processProperties.bpmn";
+    protected static final String BPMN_SIMULATIONPROPERTIES = "org/wirez/bpmn/backend/service/diagram/simulationProperties.bpmn";
+
 
     @Mock
     DefinitionManager definitionManager;
@@ -364,6 +367,34 @@ public class BPMNDiagramMarshallerTest {
 
         AssignmentsInfo assignmentsinfo = dataIOSet.getAssignmentsinfo();
         assertEquals(assignmentsinfo.getValue(), "|reason:com.test.Reason,Comment:Object,Skippable:Object||performance:Object|[din]reason->reason,[dout]performance->performance");
+    }
+
+    @Test
+    @SuppressWarnings( "unchecked" )
+    public void testUnmarshallSimulationProperties() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_SIMULATIONPROPERTIES);
+        assertDiagram( diagram, 4 );
+        assertEquals( "SimulationProperties", diagram.getSettings().getTitle() );
+
+        SimulationSet simulationSet = null;
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while(it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof UserTask) {
+                    UserTask userTask = (UserTask) oDefinition;
+                    simulationSet = userTask.getSimulationSet();
+                    break;
+                }
+            }
+        }
+
+//        assertEquals( Double.valueOf(111),  simulationSet.getQuantity().getValue() );
+//        assertEquals( "poisson",  simulationSet.getDistributionType().getValue() );
+//        assertEquals( Double.valueOf(123),  simulationSet.getUnitCost().getValue() );
+//        assertEquals( Double.valueOf(999),  simulationSet.getWorkingHours().getValue() );
+//        assertEquals( Double.valueOf(321),  simulationSet.getMean().getValue() );
     }
 
     @Test

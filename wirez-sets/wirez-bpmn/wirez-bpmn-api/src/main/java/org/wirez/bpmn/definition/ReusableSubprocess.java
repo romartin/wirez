@@ -21,29 +21,20 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
-import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.SimulationSet;
-import org.wirez.bpmn.definition.property.task.BusinessRuleTaskExecutionSet;
 import org.wirez.bpmn.definition.property.task.ReusableSubprocessTaskExecutionSet;
-import org.wirez.bpmn.definition.property.task.TaskType;
-import org.wirez.bpmn.definition.property.task.TaskTypes;
-import org.wirez.bpmn.shape.proxy.SubprocessShapeProxy;
 import org.wirez.core.definition.annotation.Description;
-import org.wirez.core.definition.annotation.Shape;
-import org.wirez.core.definition.annotation.definition.*;
-import org.wirez.core.definition.annotation.morph.MorphBase;
-import org.wirez.core.definition.builder.Builder;
+import org.wirez.core.definition.annotation.definition.Definition;
+import org.wirez.core.definition.annotation.definition.PropertySet;
+import org.wirez.core.definition.annotation.definition.Title;
 import org.wirez.core.factory.graph.NodeFactory;
 import org.wirez.core.rule.annotation.CanDock;
-import org.wirez.shapes.factory.BasicShapesFactory;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Set;
 
 @Portable
 @Bindable

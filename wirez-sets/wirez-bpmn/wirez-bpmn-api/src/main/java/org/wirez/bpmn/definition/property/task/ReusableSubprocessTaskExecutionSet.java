@@ -24,8 +24,10 @@ import org.kie.workbench.common.forms.metaModel.ListBox;
 import org.kie.workbench.common.forms.metaModel.SelectorDataProvider;
 import org.wirez.bpmn.definition.BPMNPropertySet;
 import org.wirez.core.definition.annotation.Name;
-import org.wirez.core.definition.annotation.definition.Property;
+import org.wirez.core.definition.annotation.propertyset.Property;
 import org.wirez.core.definition.annotation.propertyset.PropertySet;
+
+import javax.validation.Valid;
 
 @Portable
 @Bindable
@@ -35,27 +37,31 @@ public class ReusableSubprocessTaskExecutionSet implements BPMNPropertySet  {
     public static final transient String propertySetName = "Implementation/Execution";
 
     @Property
-    @FieldDef( label = "Called Element" )
+    @FieldDef( label = "Called Element", property = "value" )
     @ListBox
     @SelectorDataProvider(
             type = SelectorDataProvider.ProviderType.REMOTE,
             className = "org.wirez.bpmn.backend.dataproviders.CalledElementFormProvider")
-    @NotEmpty
-    protected String calledelement = "";
+    @Valid
+    protected CalledElement calledElement;
 
     public ReusableSubprocessTaskExecutionSet() {
-        this("");
+        this(new CalledElement());
     }
 
-    public ReusableSubprocessTaskExecutionSet(@MapsTo("calledelement") String calledelement) {
-        this.calledelement = calledelement;
+    public ReusableSubprocessTaskExecutionSet(@MapsTo("calledelement") CalledElement calledElement) {
+        this.calledElement = calledElement;
     }
 
-    public String getCalledelement() {
-        return calledelement;
+    public String getPropertySetName() {
+        return propertySetName;
     }
 
-    public void setCalledelement(String calledelement) {
-        this.calledelement = calledelement;
+    public CalledElement getCalledElement() {
+        return calledElement;
+    }
+
+    public void setCalledElement(CalledElement calledElement) {
+        this.calledElement = calledElement;
     }
 }

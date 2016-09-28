@@ -11,10 +11,7 @@ import org.wirez.bpmn.definition.property.dataio.DataIOSet;
 import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
 import org.wirez.bpmn.definition.property.simulation.*;
-import org.wirez.bpmn.definition.property.task.EmptyTaskExecutionSet;
-import org.wirez.bpmn.definition.property.task.Script;
-import org.wirez.bpmn.definition.property.task.TaskType;
-import org.wirez.bpmn.definition.property.task.TaskTypes;
+import org.wirez.bpmn.definition.property.task.*;
 import org.wirez.core.definition.annotation.definition.Definition;
 import org.wirez.core.definition.annotation.definition.Property;
 import org.wirez.core.definition.annotation.definition.PropertySet;
@@ -38,10 +35,7 @@ public class ScriptTask extends BaseTask {
     @PropertySet
     @FieldDef( label = "Implementation/Execution", position = 1)
     @Valid
-    protected EmptyTaskExecutionSet executionSet;
-
-    @Property
-    protected Script script;
+    protected ScriptTaskExecutionSet executionSet;
 
     @NonPortable
     public static class ScriptTaskBuilder extends BaseTaskBuilder<ScriptTask> {
@@ -49,14 +43,13 @@ public class ScriptTask extends BaseTask {
         @Override
         public ScriptTask build() {
             return new ScriptTask(new BPMNGeneral("Task"),
-                    new EmptyTaskExecutionSet(),
+                    new ScriptTaskExecutionSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
                     new SimulationSet(),
-                    new TaskType( TaskTypes.SCRIPT ),
-                    new Script());
+                    new TaskType( TaskTypes.SCRIPT ));
         }
 
     }
@@ -66,38 +59,27 @@ public class ScriptTask extends BaseTask {
     }
 
     public ScriptTask(@MapsTo("general") BPMNGeneral general,
-                      @MapsTo("executionSet") EmptyTaskExecutionSet executionSet,
+                      @MapsTo("executionSet") ScriptTaskExecutionSet executionSet,
                       @MapsTo("dataIOSet") DataIOSet dataIOSet,
                       @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                       @MapsTo("fontSet") FontSet fontSet,
                       @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                       @MapsTo("simulationSet") SimulationSet simulationSet,
-                      @MapsTo("taskType") TaskType taskType,
-                      @MapsTo("script") Script script) {
+                      @MapsTo("taskType") TaskType taskType) {
 
         super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
-        this.script = script;
         this.executionSet = executionSet;
-
     }
 
     public String getTitle() {
         return title;
     }
 
-    public Script getScript() {
-        return script;
-    }
-
-    public void setScript(Script script) {
-        this.script = script;
-    }
-
-    public EmptyTaskExecutionSet getExecutionSet() {
+    public ScriptTaskExecutionSet getExecutionSet() {
         return executionSet;
     }
 
-    public void setExecutionSet(EmptyTaskExecutionSet executionSet) {
+    public void setExecutionSet(ScriptTaskExecutionSet executionSet) {
         this.executionSet = executionSet;
     }
 }

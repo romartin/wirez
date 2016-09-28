@@ -77,6 +77,9 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_PROCESSVARIABLES = "org/wirez/bpmn/backend/service/diagram/processVariables.bpmn";
     protected static final String BPMN_USERTASKASSIGNMENTS = "org/wirez/bpmn/backend/service/diagram/userTaskAssignments.bpmn";
     protected static final String BPMN_PROCESSPROPERTIES = "org/wirez/bpmn/backend/service/diagram/processProperties.bpmn";
+    protected static final String BPMN_BUSINESSRULETASKRULEFLOWGROUP = "org/wirez/bpmn/backend/service/diagram/businessRuleTask.bpmn";
+    protected static final String BPMN_REUSABLE_SUBPROCESS = "org/wirez/bpmn/backend/service/diagram/reusableSubprocessCalledElement.bpmn";
+    protected static final String BPMN_SCRIPTTASK = "org/wirez/bpmn/backend/service/diagram/scriptTask.bpmn";
 
     @Mock
     DefinitionManager definitionManager;
@@ -310,11 +313,11 @@ public class BPMNDiagramMarshallerTest {
         }
         assertEquals( variables.getValue(), "employee:java.lang.String,reason:java.lang.String,performance:java.lang.String" );
 
-        Node<? extends Definition, ?> diagramNode = diagram.getGraph().getNode( "_luRBMdEjEeWXpsZ1tNStKQ" );
+        Node<? extends Definition, ?> diagramNode = diagram.getGraph().getNode("_luRBMdEjEeWXpsZ1tNStKQ");
         assertTrue( diagramNode.getContent().getDefinition() instanceof BPMNDiagram );
         BPMNDiagram bpmnDiagram = ( BPMNDiagram ) diagramNode.getContent().getDefinition();
-        assertTrue( bpmnDiagram.getProcessData() != null );
-        assertTrue( bpmnDiagram.getProcessData().getProcessVariables() != null );
+        assertTrue(bpmnDiagram.getProcessData() != null);
+        assertTrue(bpmnDiagram.getProcessData().getProcessVariables() != null);
         variables = bpmnDiagram.getProcessData().getProcessVariables();
         assertEquals( variables.getValue(), "employee:java.lang.String,reason:java.lang.String,performance:java.lang.String" );
 
@@ -342,11 +345,11 @@ public class BPMNDiagramMarshallerTest {
                 }
             }
         }
-        assertEquals( "BPSimple",  generalProperties.getName().getValue() );
-        assertEquals( "\n" +
+        assertEquals("BPSimple", generalProperties.getName().getValue());
+        assertEquals("\n" +
                 "        This is a simple process\n" +
-                "    " , generalProperties.getDocumentation().getValue() );
-        assertEquals( "JDLProj.BPSimple", diagramProperties.getId().getValue());
+                "    ", generalProperties.getDocumentation().getValue());
+        assertEquals("JDLProj.BPSimple", diagramProperties.getId().getValue());
         assertEquals(  "org.jbpm", diagramProperties.getPackageProperty().getValue() );
         assertEquals( Boolean.valueOf(true), diagramProperties.getExecutable().getValue());
     }
@@ -370,8 +373,8 @@ public class BPMNDiagramMarshallerTest {
     @SuppressWarnings( "unchecked" )
     public void testUmarshallNotBoundaryEvents() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall( BPMN_NOT_BOUNDARY_EVENTS );
-        assertEquals( "Not Boundary Event", diagram.getSettings().getTitle() );
-        assertDiagram( diagram, 6 );
+        assertEquals("Not Boundary Event", diagram.getSettings().getTitle());
+        assertDiagram(diagram, 6);
         // Assert than the intermediate event is connected using a view connector, 
         // so not boundary to the task ( not docked ).
         Node event = diagram.getGraph().getNode( "_CB178D55-8DC2-4CAA-8C42-4F5028D4A1F6" );
@@ -438,8 +441,8 @@ public class BPMNDiagramMarshallerTest {
     @Test
     public void testMarshallBasic() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall( BPMN_BASIC );
-        String result = tested.marshall( diagram );
-        assertDiagram( result, 1, 3, 2 );
+        String result = tested.marshall(diagram);
+        assertDiagram(result, 1, 3, 2);
     }
 
     @Test
@@ -475,7 +478,7 @@ public class BPMNDiagramMarshallerTest {
 
         assertTrue( result.contains( "<bpmn2:property id=\"employee\" itemSubjectRef=\"_employeeItem\"/>" ) );
         assertTrue( result.contains( "<bpmn2:property id=\"reason\" itemSubjectRef=\"_reasonItem\"/>" ) );
-        assertTrue( result.contains( "<bpmn2:property id=\"performance\" itemSubjectRef=\"_performanceItem\"/>" ) );
+        assertTrue(result.contains("<bpmn2:property id=\"performance\" itemSubjectRef=\"_performanceItem\"/>"));
 
     }
 
@@ -483,7 +486,7 @@ public class BPMNDiagramMarshallerTest {
     public void testMarshallProcessProperties() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall( BPMN_PROCESSPROPERTIES );
         String result = tested.marshall( diagram );
-        assertDiagram( result, 1, 3, 2 );
+        assertDiagram(result, 1, 3, 2);
         assertTrue( result.contains( "bpmn2:process id=\"JDLProj.BPSimple\" drools:packageName=\"org.jbpm\" drools:version=\"1.0\" name=\"BPSimple\" isExecutable=\"true\"" ) );
 
     }
@@ -500,7 +503,7 @@ public class BPMNDiagramMarshallerTest {
 
         assertTrue( result.contains("<bpmn2:sourceRef>reason</bpmn2:sourceRef>"));
         assertTrue( result.contains("<bpmn2:targetRef>_6063D302-9D81-4C86-920B-E808A45377C2_reasonInputX</bpmn2:targetRef>"));
-        assertTrue( result.contains("<bpmn2:sourceRef>_6063D302-9D81-4C86-920B-E808A45377C2_performanceOutputX</bpmn2:sourceRef>"));
+        assertTrue(result.contains("<bpmn2:sourceRef>_6063D302-9D81-4C86-920B-E808A45377C2_performanceOutputX</bpmn2:sourceRef>"));
         assertTrue( result.contains("<bpmn2:targetRef>performance</bpmn2:targetRef>"));
     }
 
@@ -511,7 +514,92 @@ public class BPMNDiagramMarshallerTest {
         assertDiagram( result, 1, 7, 7 );
         Diagram diagram2 = unmarshall( BPMN_EVALUATION );
         String result2 = tested.marshall( diagram2 );
-        assertDiagram( result2, 1, 7, 7 );
+        assertDiagram(result2, 1, 7, 7);
+    }
+
+    @Test
+    @SuppressWarnings( "unchecked" )
+    public void testMarshallBusinessRuleTask() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_BUSINESSRULETASKRULEFLOWGROUP);
+
+        BusinessRuleTask businessRuleTask = null;
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while (it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof BusinessRuleTask) {
+                    businessRuleTask = (BusinessRuleTask) oDefinition;
+                    break;
+                }
+            }
+        }
+
+        assertNotNull(businessRuleTask);
+        assertNotNull(businessRuleTask.getExecutionSet());
+        assertNotNull(businessRuleTask.getExecutionSet().getRuleFlowGroup());
+        assertNotNull(businessRuleTask.getGeneral());
+        assertNotNull(businessRuleTask.getGeneral().getName());
+
+        assertEquals("my business rule task", businessRuleTask.getGeneral().getName().getValue());
+        assertEquals("my-ruleflow-group", businessRuleTask.getExecutionSet().getRuleFlowGroup().getValue());
+    }
+
+    @Test
+    public void testMarshallReusableSubprocess() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_REUSABLE_SUBPROCESS);
+        ReusableSubprocess reusableSubprocess = null;
+
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while (it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof ReusableSubprocess) {
+                    reusableSubprocess = (ReusableSubprocess) oDefinition;
+                    break;
+                }
+            }
+        }
+
+        assertNotNull(reusableSubprocess);
+        assertNotNull(reusableSubprocess.getExecutionSet());
+        assertNotNull(reusableSubprocess.getExecutionSet().getCalledElement());
+        assertNotNull(reusableSubprocess.getGeneral());
+        assertNotNull(reusableSubprocess.getGeneral().getName());
+
+        assertEquals("my subprocess", reusableSubprocess.getGeneral().getName().getValue());
+        assertEquals("my-called-element", reusableSubprocess.getExecutionSet().getCalledElement().getValue());
+    }
+
+    @Test
+    public void testMarshallScriptTask() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_SCRIPTTASK);
+        ScriptTask scriptTask = null;
+
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while (it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof ScriptTask) {
+                    scriptTask = (ScriptTask) oDefinition;
+                    break;
+                }
+            }
+        }
+
+        assertNotNull(scriptTask);
+        assertNotNull(scriptTask.getExecutionSet());
+        assertNotNull(scriptTask.getExecutionSet().getScript());
+        assertNotNull(scriptTask.getExecutionSet().getScriptLanguage());
+        assertNotNull(scriptTask.getGeneral());
+        assertNotNull(scriptTask.getGeneral().getName());
+
+        assertEquals("my script task", scriptTask.getGeneral().getName().getValue());
+        assertEquals("System.out.println(\"hello\");", scriptTask.getExecutionSet().getScript().getValue());
+        assertEquals("java", scriptTask.getExecutionSet().getScriptLanguage().getValue());
+
     }
 
     private void assertDiagram( String result, int diagramCount, int nodeCount, int edgeCount ) {

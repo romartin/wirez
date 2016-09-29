@@ -20,8 +20,16 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.wirez.bpmn.definition.property.background.BackgroundSet;
+import org.wirez.bpmn.definition.property.connectors.SequenceFlowExecutionSet;
+import org.wirez.bpmn.definition.property.dataio.DataIOSet;
+import org.wirez.bpmn.definition.property.dimensions.RectangleDimensionsSet;
+import org.wirez.bpmn.definition.property.font.FontSet;
 import org.wirez.bpmn.definition.property.general.BPMNGeneral;
+import org.wirez.bpmn.definition.property.simulation.SimulationSet;
+import org.wirez.bpmn.definition.property.task.BusinessRuleTaskExecutionSet;
+import org.wirez.bpmn.definition.property.task.TaskType;
 import org.wirez.bpmn.shape.proxy.SequenceFlowConnectorProxy;
 import org.wirez.core.definition.annotation.Description;
 import org.wirez.core.definition.annotation.Shape;
@@ -32,60 +40,40 @@ import org.wirez.core.rule.annotation.CanConnect;
 import org.wirez.core.rule.annotation.EdgeOccurrences;
 import org.wirez.shapes.factory.BasicShapesFactory;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
 @Portable
 @Bindable
 @Definition( graphFactory = EdgeFactory.class, builder = SequenceFlow.SequenceFlowBuilder.class )
-
 // Connection rules.
 @CanConnect( startRole = "sequence_start", endRole = "sequence_end" )
 @CanConnect( startRole = "choreography_sequence_start", endRole = "choreography_sequence_end" )
 @CanConnect( startRole = "Exclusive_Eventbased_Gateway", endRole = "FromEventbasedGateway" )
 @CanConnect( startRole = "EventbasedGateway", endRole = "FromEventbasedGateway" )
-
 // Edge cardinality rules.
 @EdgeOccurrences(role="Startevents_all", type = EdgeOccurrences.EdgeType.INCOMING, max = 0)
 @EdgeOccurrences(role="Endevents_all", type = EdgeOccurrences.EdgeType.OUTGOING, max = 0)
-
-@Shape( factory = BasicShapesFactory.class, proxy = SequenceFlowConnectorProxy.class )
-public class SequenceFlow implements BPMNDefinition {
-
-    @Category
-    public static final transient String category = Categories.CONNECTING_OBJECTS;
+public class SequenceFlow extends BaseConnector {
 
     @Title
     public static final transient String title = "Sequence Flow";
 
-    @Description
-    public static final transient String description = "A Sequence Flow";
-    
     @PropertySet
-    private BPMNGeneral general;
-
-    @PropertySet
-    private BackgroundSet backgroundSet;
-
-    @Labels
-    private final Set<String> labels = new HashSet<String>() {{
-        add( "all" );
-        add( "ConnectingObjectsMorph" );
-    }};
+    @FieldDef( label = "Implementation/Execution", position = 1)
+    @Valid
+    protected SequenceFlowExecutionSet executionSet;
 
     @NonPortable
-    public static class SequenceFlowBuilder implements Builder<SequenceFlow> {
-
-        public static final transient String COLOR = "#000000";
-        public static final transient String BORDER_COLOR = "#000000";
-        public static final Double BORDER_SIZE = 3d;
-
+    public static class SequenceFlowBuilder extends BaseConnectorBuilder<SequenceFlow> {
         @Override
         public SequenceFlow build() {
             return new SequenceFlow(  new BPMNGeneral( "Sequence" ),
-                    new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ) );
+                    new SequenceFlowExecutionSet(),
+                    new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
+                    new FontSet());
         }
-
     }
 
     public SequenceFlow() {
@@ -93,9 +81,12 @@ public class SequenceFlow implements BPMNDefinition {
     }
 
     public SequenceFlow(@MapsTo("general") BPMNGeneral general,
-                 @MapsTo("backgroundSet") BackgroundSet backgroundSet) {
-        this.general = general;
-        this.backgroundSet = backgroundSet;
+                        @MapsTo("executionSet") SequenceFlowExecutionSet executionSet,
+                        @MapsTo("backgroundSet") BackgroundSet backgroundSet,
+                        @MapsTo("fontSet") FontSet fontSet) {
+
+        super(general, backgroundSet, fontSet);
+        this.executionSet = executionSet;
     }
 
     public String getCategory() {
@@ -128,5 +119,13 @@ public class SequenceFlow implements BPMNDefinition {
 
     public void setBackgroundSet( BackgroundSet backgroundSet ) {
         this.backgroundSet = backgroundSet;
+    }
+
+    public SequenceFlowExecutionSet getExecutionSet() {
+        return executionSet;
+    }
+
+    public void setExecutionSet(SequenceFlowExecutionSet executionSet) {
+        this.executionSet = executionSet;
     }
 }

@@ -2,6 +2,9 @@ package org.wirez.bpmn.backend.marshall.json.oryx;
 
 import org.apache.commons.lang3.StringUtils;
 import org.wirez.bpmn.definition.*;
+import org.wirez.bpmn.definition.property.connectors.ConditionExpression;
+import org.wirez.bpmn.definition.property.connectors.ConditionExpressionLanguage;
+import org.wirez.bpmn.definition.property.connectors.Priority;
 import org.wirez.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.wirez.bpmn.definition.property.general.Name;
 import org.wirez.bpmn.definition.property.task.CalledElement;
@@ -39,6 +42,9 @@ public class Bpmn2OryxIdMappings {
         put( RuleFlowGroup.class, "ruleflowgroup" );
         put( CalledElement.class, "calledelement" );
         put( ScriptLanguage.class, "script_language" );
+        put( ConditionExpression.class, "conditionexpression" );
+        put( ConditionExpressionLanguage.class, "conditionexpressionlanguage" );
+        put( Priority.class, "priority" );
     }};
 
 

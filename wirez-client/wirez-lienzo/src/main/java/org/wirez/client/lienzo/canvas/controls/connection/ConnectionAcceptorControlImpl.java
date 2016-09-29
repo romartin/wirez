@@ -63,13 +63,20 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
     public boolean allowSource( final Node source,
                                 final Edge<View<?>, Node> connector,
                                 final int magnet ) {
-        if ( null != canvasHandler && null != source ) {
+
+        if ( null == canvasHandler ) {
+            return false;
+        }
+
+        final boolean eq = eq( source, connector.getSourceNode() );
+
+        if ( !eq ) {
             CommandResult<CanvasViolation> violations =
                     canvasCommandManager.allow( canvasHandler, canvasCommandFactory.SET_SOURCE_NODE( source, connector, magnet ) );
             return isAccept( violations );
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -78,13 +85,19 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
                                 final Edge<View<?>, Node> connector,
                                 final int magnet ) {
 
-        if ( null != canvasHandler && null != target ) {
+        if ( null == canvasHandler ) {
+            return false;
+        }
+
+        final boolean eq = eq( target, connector.getTargetNode() );
+
+        if ( !eq ) {
             CommandResult<CanvasViolation> violations =
                     canvasCommandManager.allow( canvasHandler, canvasCommandFactory.SET_TARGET_NODE( target, connector, magnet ) );
             return isAccept( violations );
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -93,13 +106,19 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
                                  final Edge<View<?>, Node> connector,
                                  final int magnet ) {
 
-        if ( null != canvasHandler ) {
+        if ( null == canvasHandler ) {
+            return false;
+        }
+
+        final boolean eq = eq( source, connector.getSourceNode() );
+
+        if ( !eq ) {
             CommandResult<CanvasViolation> violations =
                     canvasCommandManager.execute( canvasHandler, canvasCommandFactory.SET_SOURCE_NODE( source, connector, magnet ) );
             return isAccept( violations );
         }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -108,13 +127,28 @@ public class ConnectionAcceptorControlImpl implements ConnectionAcceptorControl<
                                  final Edge<View<?>, Node> connector,
                                  final int magnet ) {
 
-        if ( null != canvasHandler ) {
+        if ( null == canvasHandler ) {
+            return false;
+        }
+
+        final boolean eq = eq( target, connector.getTargetNode() );
+
+        if ( !eq ) {
             CommandResult<CanvasViolation> violations =
                     canvasCommandManager.execute( canvasHandler, canvasCommandFactory.SET_TARGET_NODE( target, connector, magnet ) );
             return isAccept( violations );
         }
 
-        return false;
+        return true;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    private static boolean eq( final Node n1,
+                               final Node n2 ) {
+        if ( n1 == null && n2 == null ) {
+            return true;
+        }
+        return null != n1 && n1.equals( n2 );
     }
 
     private final IConnectionAcceptor CONNECTION_ACCEPTOR = new IConnectionAcceptor() {

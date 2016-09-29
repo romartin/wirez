@@ -111,7 +111,8 @@ public final class SetConnectionSourceNodeCommand extends AbstractGraphCommand {
 
     @Override
     public String toString() {
-        return "SetConnectionSourceNodeCommand [edge=" + edge.getUUID() + ", candidate=" + sourceNode.getUUID() 
+        return "SetConnectionSourceNodeCommand [edge=" + edge.getUUID()
+                + ", candidate=" + ( null != sourceNode ? sourceNode.getUUID() : "null" )
                 + ", magnet=" + magnetIndex + "]";
     }
     

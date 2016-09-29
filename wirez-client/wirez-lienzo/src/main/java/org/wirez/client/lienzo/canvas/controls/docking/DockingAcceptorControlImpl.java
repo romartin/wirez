@@ -25,6 +25,7 @@ import javax.inject.Inject;
 public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<AbstractCanvasHandler>
     implements DockingAcceptorControl<AbstractCanvasHandler> {
 
+    private static final int HOTSPOT = 10;
     private CanvasCommandFactory canvasCommandFactory;
 
     @Inject
@@ -90,7 +91,7 @@ public class DockingAcceptorControlImpl extends AbstractContainmentBasedControl<
 
         @Override
         public int getHotspotSize() {
-            return IDockingAcceptor.HOTSPOT_SIZE;
+            return HOTSPOT;
         }
     };
 

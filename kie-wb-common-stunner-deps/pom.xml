@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>kie-wb-common-stunner</artifactId>
+    <groupId>org.kie.workbench.stunner</groupId>
+    <version>7.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>kie-wb-common-stunner-deps</artifactId>
+  <packaging>pom</packaging>
+  <name>Stunner Dependencies</name>
+
+  <properties>
+
+    <version.org.jboss.integration-platform>6.0.0.Final</version.org.jboss.integration-platform>
+    <version.org.uberfire>1.0.0-SNAPSHOT</version.org.uberfire>
+    <version.org.jboss.errai>4.0.0-SNAPSHOT</version.org.jboss.errai>
+    <version.org.jboss.errai.cdi10-compatible>3.0.6.Final</version.org.jboss.errai.cdi10-compatible>
+    <!-- WildFly version used together with the GWT's Super Dev Mode -->
+    <version.org.wildfly.gwt.sdm>10.0.0.Final</version.org.wildfly.gwt.sdm>
+    <version.com.ahomeit.lienzo.core>2.0.277-RELEASE</version.com.ahomeit.lienzo.core>
+    <version.com.ahomeit.lienzo.tooling.nativetools>1.0.185-RELEASE</version.com.ahomeit.lienzo.tooling.nativetools>
+    <version.com.ahomeit.lienzo.tooling.common>1.0.185-RELEASE</version.com.ahomeit.lienzo.tooling.common>
+    <version.com.allen-sauer.gwt.dnd>3.3.3</version.com.allen-sauer.gwt.dnd>
+    <version.com.google.gwt>2.8.0-rc1</version.com.google.gwt>
+    <!-- TODO Remove this when gson version is updated in ip-bom. Added from moving to gwt 2.8 RC1. -->
+    <version.com.google.code.gson>2.6.2</version.com.google.code.gson>
+    <version.org.gwtbootstrap3>0.9.3</version.org.gwtbootstrap3>
+    <version.org.owasp.encoder>1.1</version.org.owasp.encoder>
+    <version.com.googlecode.jsonsimple>1.1.1</version.com.googlecode.jsonsimple>
+    <version.com.googlecode.jtype>0.1.1</version.com.googlecode.jtype>
+    <version.de.benediktmeurer.gwt-slf4j>0.0.2</version.de.benediktmeurer.gwt-slf4j>
+    <version.org.jbpm.jbpm-bpmn2-emfextmodel>6.3.0.Final</version.org.jbpm.jbpm-bpmn2-emfextmodel>
+    <version.javax.el.api>2.2</version.javax.el.api>
+    <version.hibernate.validator>4.1.0.Final</version.hibernate.validator>
+    <version.validation.api>1.0.0.GA</version.validation.api>
+    <!-- TODO: Remove when moving to latest parent IP BOM. -->
+    <version.com.google.gwt.gwtmockito>1.1.6</version.com.google.gwt.gwtmockito>
+    <version.com.ahome-it.lienzo-tests>1.0.0-RC1</version.com.ahome-it.lienzo-tests>
+    <version.org.kie>7.0.0-SNAPSHOT</version.org.kie>
+
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- Stunner -->
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-bom</artifactId>
+        <type>pom</type>
+        <version>${project.version}</version>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- Integration Platform -->
+      <dependency>
+        <groupId>org.jboss.integration-platform</groupId>
+        <artifactId>jboss-integration-platform-bom</artifactId>
+        <type>pom</type>
+        <version>${version.org.jboss.integration-platform}</version>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- UberFire -->
+      <dependency>
+        <groupId>org.uberfire</groupId>
+        <artifactId>uberfire-bom</artifactId>
+        <type>pom</type>
+        <version>${version.org.uberfire}</version>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- KIE -->
+      <dependency>
+        <groupId>org.kie</groupId>
+        <artifactId>kie-parent-with-dependencies</artifactId>
+        <type>pom</type>
+        <version>${version.org.kie}</version>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.errai.bom</groupId>
+        <artifactId>errai-internal-bom</artifactId>
+        <type>pom</type>
+        <version>${version.org.jboss.errai}</version>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.owasp.encoder</groupId>
+        <artifactId>encoder</artifactId>
+        <version>${version.org.owasp.encoder}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.allen-sauer.gwt.dnd</groupId>
+        <artifactId>gwt-dnd</artifactId>
+        <version>${version.com.allen-sauer.gwt.dnd}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${version.com.google.code.gson}</version>
+      </dependency>
+
+      <!-- temporary, should be moved to jboss-ip-bom -->
+      <dependency>
+        <groupId>org.gwtbootstrap3</groupId>
+        <artifactId>gwtbootstrap3</artifactId>
+        <version>${version.org.gwtbootstrap3}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.gwtbootstrap3</groupId>
+        <artifactId>gwtbootstrap3-extras</artifactId>
+        <version>${version.org.gwtbootstrap3}</version>
+      </dependency>
+
+      <!-- GWT dev  -->
+
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-user</artifactId>
+        <version>${version.com.google.gwt}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.gwt</groupId>
+        <artifactId>gwt-dev</artifactId>
+        <version>${version.com.google.gwt}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>de.benediktmeurer.gwt-slf4j</groupId>
+        <artifactId>gwt-slf4j</artifactId>
+        <version>${version.de.benediktmeurer.gwt-slf4j}</version>
+      </dependency>
+
+      <!-- Validation API & hibernate impl. -->
+
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${version.validation.api}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${version.validation.api}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${version.hibernate.validator}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${version.hibernate.validator}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <!-- JSON parsing. -->
+
+      <dependency>
+        <groupId>com.googlecode.json-simple</groupId>
+        <artifactId>json-simple</artifactId>
+        <version>${version.com.googlecode.jsonsimple}</version>
+        <type>jar</type>
+      </dependency>
+
+      <!-- jbpm-designer backend required deps. -->
+
+      <dependency>
+        <groupId>org.jbpm</groupId>
+        <artifactId>jbpm-bpmn2-emfextmodel</artifactId>
+        <version>${version.org.jbpm.jbpm-bpmn2-emfextmodel}</version>
+      </dependency>
+
+      <!-- Lienzo. -->
+
+      <dependency>
+        <groupId>com.ahome-it</groupId>
+        <artifactId>lienzo-core</artifactId>
+        <version>${version.com.ahomeit.lienzo.core}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.ahome-it</groupId>
+        <artifactId>ahome-tooling-nativetools</artifactId>
+        <version>${version.com.ahomeit.lienzo.tooling.nativetools}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.ahome-it</groupId>
+        <artifactId>ahome-tooling-common</artifactId>
+        <version>${version.com.ahomeit.lienzo.tooling.common}</version>
+      </dependency>
+
+      <!-- Testing. -->
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${version.org.mockito}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.gwt.gwtmockito</groupId>
+        <artifactId>gwtmockito</artifactId>
+        <version>${version.com.google.gwt.gwtmockito}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.mortbay.jasper</groupId>
+            <artifactId>apache-el</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.el</groupId>
+        <artifactId>el-api</artifactId>
+        <version>${version.javax.el.api}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.ahome-it</groupId>
+        <artifactId>lienzo-tests</artifactId>
+        <version>${version.com.ahome-it.lienzo-tests}</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+
+  </dependencyManagement>
+
+</project>

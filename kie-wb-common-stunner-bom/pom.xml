@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>kie-wb-common-stunner</artifactId>
+    <groupId>org.kie.workbench.stunner</groupId>
+    <version>7.0.0-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>kie-wb-common-stunner-bom</artifactId>
+  <packaging>pom</packaging>
+  <name>Stunner BOM (Bill Of Materials)</name>
+
+  <dependencyManagement>
+    <dependencies>
+      <!--
+        IMPORTANT: Only declare modules of groupId org.kie.workbench.stunner
+        Do not declare external dependencies.
+        Do not duplicate modules from another bom.
+      -->
+      <!--
+        Declare all dependency versions. Do not declare <scope> or <optional>.
+        Each module should declare it's direct dependencies and possibly overwrite scope/optional.
+        Always declare the sources jar too and optionally the test-jar.
+      -->
+
+      <!-- Stunner Core-->
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-core-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-core-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-backend-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-backend-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-client-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-client-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-core-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-core-common</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-backend-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-backend-common</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-processors</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-processors</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
+      
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-backend</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-backend</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-backend</artifactId>
+        <version>${project.version}</version>
+        <type>test-jar</type>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-client-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-client-common</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-lienzo</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-lienzo</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <!-- Stunner Client-->
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-shapes-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-shapes-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-shapes-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-shapes-client</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-widgets</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-widgets</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-workbench</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-workbench</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <!-- Stunner Extensions-->
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-lienzo-extensions</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-lienzo-extensions</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <!-- Stunner Forms -->
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-forms-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-forms-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-forms-backend</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-forms-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-forms-client</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
+      <!-- Stunner - Default Sets-->
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-basicset-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-basicset-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-basicset-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-basicset-client</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-bpmn-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-bpmn-api</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-bpmn-backend</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-bpmn-backend</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-bpmn-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-bpmn-client</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+      </dependency>
+      
+      <!-- Stunner Showcase-->
+      
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-showcase</artifactId>
+        <version>${project.version}</version>
+        <type>war</type>
+      </dependency>
+
+      <!-- Stunner Tools -->
+
+      <dependency>
+        <groupId>org.kie.workbench.stunner</groupId>
+        <artifactId>kie-wb-common-stunner-oryx-import-tool</artifactId>
+        <version>${project.version}</version>
+        <type>jar</type>
+      </dependency>
+      
+    </dependencies>
+  </dependencyManagement>
+
+</project>

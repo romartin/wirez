@@ -9,12 +9,12 @@
     <version>7.0.0.CR4</version>
   </parent>
 
-  <groupId>org.wirez</groupId>
-  <artifactId>wirez-parent-metadata</artifactId>
-  <version>0.5.0-SNAPSHOT</version>
+  <groupId>org.kie.workbench.stunner</groupId>
+  <artifactId>kie-wb-common-stunner</artifactId>
+  <version>7.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Wirez Modelling Tool</name>
+  <name>Stunner Modelling Tool</name>
   <inceptionYear>2015</inceptionYear>
   <organization>
     <name>JBoss by Red Hat</name>
@@ -37,15 +37,15 @@
 
   <!-- Modules-->
   <modules>
-    <module>wirez-bom</module>
-    <module>wirez-deps</module>
-    <module>wirez-extensions</module>
-    <module>wirez-core</module>
-    <module>wirez-backend</module>
-    <module>wirez-client</module>
-    <module>wirez-sets</module>
-    <module>wirez-showcase</module>
-    <module>wirez-distros</module>
+    <module>kie-wb-common-stunner-bom</module>
+    <module>kie-wb-common-stunner-deps</module>
+    <module>kie-wb-common-stunner-extensions</module>
+    <module>kie-wb-common-stunner-core</module>
+    <module>kie-wb-common-stunner-backend</module>
+    <module>kie-wb-common-stunner-client</module>
+    <module>kie-wb-common-stunner-sets</module>
+    <module>kie-wb-common-stunner-showcase</module>
+    <module>kie-wb-common-stunner-distros</module>
   </modules>
   
   <!-- Repositories -->
@@ -80,7 +80,7 @@
     </pluginRepository>
   </pluginRepositories>
 
-  <!-- IMPORTANT: Do not declare any dependencies here! Declare them in wirez-deps. -->
+  <!-- IMPORTANT: Do not declare any dependencies here! Declare them in kie-wb-common-stunner-deps. -->
   <dependencyManagement/>
   <dependencies/>
 

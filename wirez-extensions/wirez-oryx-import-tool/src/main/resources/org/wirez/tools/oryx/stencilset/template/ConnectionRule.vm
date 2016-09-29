@@ -1,3 +1,0 @@
-#foreach ($c in $connections)
-@PermittedConnection( startRole = "$c.from", endRole = "$c.to" )
-#end

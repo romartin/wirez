@@ -54,6 +54,8 @@ import org.wirez.core.graph.content.Bounds;
 import org.wirez.core.graph.content.definition.Definition;
 import org.wirez.core.graph.content.relationship.Dock;
 import org.wirez.core.graph.content.view.*;
+import org.wirez.core.graph.impl.EdgeImpl;
+import org.wirez.core.graph.impl.NodeImpl;
 import org.wirez.core.graph.util.GraphUtils;
 import org.wirez.core.registry.definition.AdapterRegistry;
 
@@ -82,6 +84,7 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_REUSABLE_SUBPROCESS = "org/wirez/bpmn/backend/service/diagram/reusableSubprocessCalledElement.bpmn";
     protected static final String BPMN_SCRIPTTASK = "org/wirez/bpmn/backend/service/diagram/scriptTask.bpmn";
     protected static final String BPMN_USERTASKASSIGNEES = "org/wirez/bpmn/backend/service/diagram/userTaskAssignees.bpmn";
+    protected static final String BPMN_SEQUENCEFLOW = "org/wirez/bpmn/backend/service/diagram/sequenceFlow.bpmn";
 
     @Mock
     DefinitionManager definitionManager;
@@ -537,12 +540,12 @@ public class BPMNDiagramMarshallerTest {
     public void testMarshallUserTaskAssignees() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_USERTASKASSIGNEES);
         String result = tested.marshall( diagram );
-        assertDiagram( result, 1, 5, 4 );
+        assertDiagram(result, 1, 5, 4);
 
         assertTrue( result.contains( "<![CDATA[admin,kiemgmt]]>" ) );
         result = result.replace('\n', ' ');
-        assertTrue( result.matches( "(.*)<bpmn2:resourceAssignmentExpression(.*)>user</bpmn2:formalExpression>(.*)" ));
-        assertTrue( result.matches( "(.*)<bpmn2:resourceAssignmentExpression(.*)>user1</bpmn2:formalExpression>(.*)" ));
+        assertTrue( result.matches("(.*)<bpmn2:resourceAssignmentExpression(.*)>user</bpmn2:formalExpression>(.*)"));
+        assertTrue( result.matches("(.*)<bpmn2:resourceAssignmentExpression(.*)>user1</bpmn2:formalExpression>(.*)"));
     }
 
     @Test
@@ -637,6 +640,38 @@ public class BPMNDiagramMarshallerTest {
         assertEquals("my script task", scriptTask.getGeneral().getName().getValue());
         assertEquals("System.out.println(\"hello\");", scriptTask.getExecutionSet().getScript().getValue());
         assertEquals("java", scriptTask.getExecutionSet().getScriptLanguage().getValue());
+
+    }
+
+    @Test
+    public void testMarshallSequenceFlow() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_SEQUENCEFLOW);
+        SequenceFlow sequenceFlow = null;
+
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while (it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof BusinessRuleTask) {
+                    sequenceFlow = (SequenceFlow) ((ViewConnectorImpl) ((EdgeImpl) ((NodeImpl) element).getOutEdges().get(0)).getContent()).getDefinition();
+                    break;
+                }
+            }
+        }
+
+        assertNotNull(sequenceFlow);
+        assertNotNull(sequenceFlow.getExecutionSet());
+        assertNotNull(sequenceFlow.getExecutionSet().getConditionExpression());
+        assertNotNull(sequenceFlow.getExecutionSet().getConditionExpressionLanguage());
+        assertNotNull(sequenceFlow.getExecutionSet().getPriority());
+        assertNotNull(sequenceFlow.getGeneral());
+        assertNotNull(sequenceFlow.getGeneral().getName());
+
+        assertEquals("my sequence flow", sequenceFlow.getGeneral().getName().getValue());
+        assertEquals("System.out.println(\"hello\");", sequenceFlow.getExecutionSet().getConditionExpression().getValue());
+        assertEquals("java", sequenceFlow.getExecutionSet().getConditionExpressionLanguage().getValue());
+        assertEquals("1", sequenceFlow.getExecutionSet().getPriority().getValue());
 
     }
 

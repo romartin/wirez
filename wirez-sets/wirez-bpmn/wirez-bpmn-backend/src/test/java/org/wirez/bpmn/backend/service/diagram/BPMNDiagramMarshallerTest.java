@@ -85,6 +85,7 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_SCRIPTTASK = "org/wirez/bpmn/backend/service/diagram/scriptTask.bpmn";
     protected static final String BPMN_USERTASKASSIGNEES = "org/wirez/bpmn/backend/service/diagram/userTaskAssignees.bpmn";
     protected static final String BPMN_SEQUENCEFLOW = "org/wirez/bpmn/backend/service/diagram/sequenceFlow.bpmn";
+    protected static final String BPMN_XORGATEWAY = "org/wirez/bpmn/backend/service/diagram/xorGateway.bpmn";
 
     @Mock
     DefinitionManager definitionManager;
@@ -458,6 +459,41 @@ public class BPMNDiagramMarshallerTest {
     }
 
     @Test
+    @SuppressWarnings( "unchecked" )
+    public void testUnmarshallXorGateway() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall( BPMN_XORGATEWAY );
+        assertDiagram( diagram, 7 );
+        assertEquals( diagram.getSettings().getTitle(), "XORGateway");
+
+        Graph graph = diagram.getGraph();
+        Node<? extends Definition, ?> gatewayNode = graph.getNode("_877EA035-1A14-42E9-8CAA-43E9BF908C70");
+        ExclusiveDatabasedGateway xorGateway = (ExclusiveDatabasedGateway) gatewayNode.getContent().getDefinition();
+        assertEquals("AgeSplit", xorGateway.getGeneral().getName().getValue());
+        assertEquals("under 10 : _5110D608-BDAD-47BF-A3F9-E1DBE43ED7CD", xorGateway.getExecutionSet().getDefaultRoute().getValue());
+
+        SequenceFlow sequenceFlow1 = null;
+        SequenceFlow sequenceFlow2 = null;
+        List<Edge> outEdges = (List<Edge>) gatewayNode.getOutEdges();
+        if (outEdges != null) {
+            for (Edge edge : outEdges) {
+                if ("_C72E00C3-70DC-4BC9-A08E-761B4263A239".equals(edge.getUUID())) {
+                    sequenceFlow1 = (SequenceFlow) ((ViewConnector) edge.getContent()).getDefinition();
+                }
+                else if ("_5110D608-BDAD-47BF-A3F9-E1DBE43ED7CD".equals(edge.getUUID())) {
+                    sequenceFlow2 = (SequenceFlow) ((ViewConnector) edge.getContent()).getDefinition();
+                }
+            }
+        }
+        Node<? extends Definition, ?> sequenceFlowNode1 = graph.getNode("_C72E00C3-70DC-4BC9-A08E-761B4263A239");
+
+        assertNotNull(sequenceFlow1);
+        assertEquals("10 and over", sequenceFlow1.getGeneral().getName().getValue());
+
+        assertNotNull(sequenceFlow2);
+        assertEquals("under 10", sequenceFlow2.getGeneral().getName().getValue());
+    }
+
+    @Test
     public void testUnmarshallSeveralDiagrams() throws Exception {
         Diagram<Graph, Settings> diagram1 = unmarshall( BPMN_EVALUATION );
         assertDiagram( diagram1, 8 );
@@ -674,6 +710,16 @@ public class BPMNDiagramMarshallerTest {
         assertEquals("1", sequenceFlow.getExecutionSet().getPriority().getValue());
 
     }
+
+    @Test
+    public void testMarshallXorGateway() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall( BPMN_XORGATEWAY );
+        String result = tested.marshall( diagram );
+        assertDiagram( result, 1, 6, 5 );
+
+        assertTrue( result.contains( "<bpmn2:exclusiveGateway id=\"_877EA035-1A14-42E9-8CAA-43E9BF908C70\" drools:dg=\"under 10 : _5110D608-BDAD-47BF-A3F9-E1DBE43ED7CD\" name=\"AgeSplit\" gatewayDirection=\"Diverging\" default=\"_5110D608-BDAD-47BF-A3F9-E1DBE43ED7CD\">" ) );
+    }
+
 
     private void assertDiagram( String result, int diagramCount, int nodeCount, int edgeCount ) {
         int d = count( result, "<bpmndi:BPMNDiagram" );

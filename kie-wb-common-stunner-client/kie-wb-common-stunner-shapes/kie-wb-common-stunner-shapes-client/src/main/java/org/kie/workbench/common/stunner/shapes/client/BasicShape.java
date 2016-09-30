@@ -105,7 +105,6 @@ public abstract class BasicShape<W, V extends BasicShapeView>
 
     private void applyInvalidState() {
         applyActiveState(ShapeState.INVALID.getColor());
-        // TODO view.showControlPoints( HasControlPoints.ControlPointType.RESIZE );
     }
 
     private void applyHighlightState() {
@@ -125,29 +124,12 @@ public abstract class BasicShape<W, V extends BasicShapeView>
             this._strokeAlpha = getShapeView().getStrokeAlpha();
         }
 
-        /*getShapeView().getDecorator().setStrokeWidth( 5 );
-        getShapeView().getDecorator().setStrokeAlpha( 1 );
-        getShapeView().getDecorator().setStrokeColor( color );*/
 
         new BasicShapeDecoratorAnimation( color, 5, 1 ).forShape( this ).run();
 
     }
 
     private void applyNoneState() {
-
-        // TODO view.hideControlPoints();
-
-       /* if ( null != this._strokeWidth ) {
-            getShapeView().getDecorator().setStrokeWidth( this._strokeWidth );
-            this._strokeWidth = null;
-        }
-
-        if ( null != this._strokeColor ) {
-            getShapeView().getDecorator().setStrokeColor( this._strokeColor );
-            this._strokeColor = null;
-        }
-
-        getShapeView().getDecorator().setStrokeAlpha( null != this._strokeAlpha ? this._strokeAlpha : 0 );*/
 
         new BasicShapeDecoratorAnimation( this._strokeColor,
                             null != this._strokeWidth ? this._strokeWidth : 0,

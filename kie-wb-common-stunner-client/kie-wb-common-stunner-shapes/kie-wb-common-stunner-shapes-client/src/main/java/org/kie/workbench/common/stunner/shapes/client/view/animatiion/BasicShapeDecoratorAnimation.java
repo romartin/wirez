@@ -14,7 +14,7 @@ public final class BasicShapeDecoratorAnimation extends BasicDecoratorAnimation<
 
     @Override
     Shape getDecorator() {
-        return getView().getPath();
+        return getView().getShape();
     }
 
     private BasicShapeView<?> getView() {

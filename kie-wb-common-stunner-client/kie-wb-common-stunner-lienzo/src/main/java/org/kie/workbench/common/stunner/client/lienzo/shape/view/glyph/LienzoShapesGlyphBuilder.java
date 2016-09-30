@@ -65,35 +65,18 @@ public class LienzoShapesGlyphBuilder extends AbstractBindableShapeGlyphBuilder<
         // Create a copy of this view.
         group = group.copy();
 
+        // Group's bounding box top left point must be at 0,0 for all glyphs.
+        final BoundingBox gbb = group.getBoundingBox();
+        final double gx = group.getX() - ( gbb.getX() );
+        final double gy = group.getY() - ( gbb.getY() );
+        group.setX( gx / 2 ).setY( gy / 2 );
+
         // Scale, if necessary, to the given glyph size.
         final double[] scale = LienzoUtils.getScaleFactor( bb.getWidth(), bb.getHeight(), width, height );
         group.setScale( scale[0], scale[1] );
 
-        // Apply positions.
-        final double x = view instanceof HasRadius ? width / 2 : 0;
-        final double y = view instanceof HasRadius ? height / 2 : 0;
-
-        return new LienzoShapeGlyph( translate( group, x, y ), width, height );
+        return new LienzoShapeGlyph( group, width, height );
         
-    }
-
-    private Group translate( final Group group,
-                             final double x,
-                             final double y ) {
-
-        if ( x == 0 && y == 0 ) {
-
-            return group;
-
-        }
-
-        if ( null != group ) {
-
-            group.setX( x ).setY( y );
-
-        }
-
-        return group;
     }
 
 }

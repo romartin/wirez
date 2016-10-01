@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kie.workbench.common.stunner.core.definition.annotation.definition;
+package org.kie.workbench.common.stunner.core.definition.annotation;
 
 import java.lang.annotation.*;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-public @interface Property {
+@Target({ElementType.TYPE, ElementType.FIELD})
+public @interface PropertySet {
     
 }

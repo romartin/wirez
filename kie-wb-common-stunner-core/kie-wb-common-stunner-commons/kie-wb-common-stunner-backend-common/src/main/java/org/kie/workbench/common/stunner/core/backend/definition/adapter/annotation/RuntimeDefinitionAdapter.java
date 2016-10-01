@@ -1,5 +1,8 @@
 package org.kie.workbench.common.stunner.core.backend.definition.adapter.annotation;
 
+import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
+import org.kie.workbench.common.stunner.core.definition.annotation.Property;
+import org.kie.workbench.common.stunner.core.definition.annotation.PropertySet;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

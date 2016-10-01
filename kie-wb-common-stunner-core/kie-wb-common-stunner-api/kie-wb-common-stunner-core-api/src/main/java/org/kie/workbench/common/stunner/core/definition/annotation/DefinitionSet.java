@@ -13,13 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kie.workbench.common.stunner.core.definition.annotation.definition;
+package org.kie.workbench.common.stunner.core.definition.annotation;
+
+import org.kie.workbench.common.stunner.core.definition.builder.Builder;
+import org.kie.workbench.common.stunner.core.definition.builder.VoidBuilder;
+import org.kie.workbench.common.stunner.core.factory.graph.ElementFactory;
 
 import java.lang.annotation.*;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-public @interface PropertySet {
+@Target({ElementType.TYPE})
+public @interface DefinitionSet {
     
+    Class<?>[] definitions();
+
+    Class<? extends Builder<?>> builder() default VoidBuilder.class;
+    
+    Class<? extends ElementFactory> graphFactory();
+
 }

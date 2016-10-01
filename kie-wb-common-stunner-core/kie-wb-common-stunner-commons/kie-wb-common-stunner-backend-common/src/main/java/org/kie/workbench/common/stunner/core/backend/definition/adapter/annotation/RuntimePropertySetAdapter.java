@@ -1,13 +1,13 @@
 package org.kie.workbench.common.stunner.core.backend.definition.adapter.annotation;
 
+import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.kie.workbench.common.stunner.core.backend.definition.adapter.AbstractRuntimeAdapter;
 import org.kie.workbench.common.stunner.core.definition.adapter.PropertySetAdapter;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.definition.annotation.Name;
-import org.kie.workbench.common.stunner.core.definition.annotation.propertyset.Property;
-import org.kie.workbench.common.stunner.core.definition.annotation.propertyset.PropertySet;
+import org.kie.workbench.common.stunner.core.definition.annotation.PropertySet;
 
 import javax.enterprise.context.Dependent;
 import java.lang.reflect.Field;

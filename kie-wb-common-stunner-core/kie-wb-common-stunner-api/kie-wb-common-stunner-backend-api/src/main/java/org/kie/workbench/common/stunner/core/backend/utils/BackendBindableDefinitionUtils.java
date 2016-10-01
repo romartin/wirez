@@ -1,6 +1,6 @@
 package org.kie.workbench.common.stunner.core.backend.utils;
 
-import org.kie.workbench.common.stunner.core.definition.annotation.definitionset.DefinitionSet;
+import org.kie.workbench.common.stunner.core.definition.annotation.DefinitionSet;
 
 import java.util.Collections;
 import java.util.HashSet;

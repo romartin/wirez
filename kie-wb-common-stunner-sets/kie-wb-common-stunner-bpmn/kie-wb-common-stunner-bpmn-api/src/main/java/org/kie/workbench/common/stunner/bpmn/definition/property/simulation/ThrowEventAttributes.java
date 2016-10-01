@@ -5,8 +5,8 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNPropertySet;
 import org.kie.workbench.common.stunner.core.definition.annotation.Name;
-import org.kie.workbench.common.stunner.core.definition.annotation.propertyset.Property;
-import org.kie.workbench.common.stunner.core.definition.annotation.propertyset.PropertySet;
+import org.kie.workbench.common.stunner.core.definition.annotation.Property;
+import org.kie.workbench.common.stunner.core.definition.annotation.PropertySet;
 
 @Portable
 @Bindable

@@ -23,8 +23,8 @@ import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
 import org.kie.workbench.common.stunner.core.definition.annotation.Shape;
 import org.kie.workbench.common.stunner.core.definition.annotation.ShapeSet;
-import org.kie.workbench.common.stunner.core.definition.annotation.definition.Definition;
-import org.kie.workbench.common.stunner.core.definition.annotation.definitionset.DefinitionSet;
+import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
+import org.kie.workbench.common.stunner.core.definition.annotation.DefinitionSet;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.Morph;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBase;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphProperty;
@@ -75,25 +75,21 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
     public static final String ANNOTATION_DESCRIPTION = "org.kie.workbench.common.stunner.core.definition.annotation.Description";
     public static final String ANNOTATION_NAME = "org.kie.workbench.common.stunner.core.definition.annotation.Name";
 
-    public static final String ANNOTATION_DEFINITION_SET = "org.kie.workbench.common.stunner.core.definition.annotation.definitionset.DefinitionSet";
+    public static final String ANNOTATION_DEFINITION_SET = "org.kie.workbench.common.stunner.core.definition.annotation.DefinitionSet";
 
-    public static final String ANNOTATION_DEFINITION = "org.kie.workbench.common.stunner.core.definition.annotation.definition.Definition";
+    public static final String ANNOTATION_DEFINITION = "org.kie.workbench.common.stunner.core.definition.annotation.Definition";
     public static final String ANNOTATION_DEFINITION_CATEGORY = "org.kie.workbench.common.stunner.core.definition.annotation.definition.Category";
     public static final String ANNOTATION_DEFINITION_LABELS = "org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels";
-    public static final String ANNOTATION_DEFINITION_PROPERTY = "org.kie.workbench.common.stunner.core.definition.annotation.definition.Property";
-    public static final String ANNOTATION_DEFINITION_PROPERTYSET = "org.kie.workbench.common.stunner.core.definition.annotation.definition.PropertySet";
     public static final String ANNOTATION_DEFINITION_TITLE = "org.kie.workbench.common.stunner.core.definition.annotation.definition.Title";
 
     public static final String[] DEFINITION_ANNOTATIONS = new String[] {
             ANNOTATION_DEFINITION_CATEGORY, ANNOTATION_DEFINITION_LABELS,
-            ANNOTATION_DEFINITION_PROPERTY, ANNOTATION_DEFINITION_PROPERTYSET,
             ANNOTATION_DEFINITION_TITLE
     };
 
-    public static final String ANNOTATION_PROPERTY_SET = "org.kie.workbench.common.stunner.core.definition.annotation.propertyset.PropertySet";
-    public static final String ANNOTATION_PROPERTY_SET_PROPERTY = "org.kie.workbench.common.stunner.core.definition.annotation.propertyset.Property";
+    public static final String ANNOTATION_PROPERTY_SET = "org.kie.workbench.common.stunner.core.definition.annotation.PropertySet";
 
-    public static final String ANNOTATION_PROPERTY = "org.kie.workbench.common.stunner.core.definition.annotation.property.Property";
+    public static final String ANNOTATION_PROPERTY = "org.kie.workbench.common.stunner.core.definition.annotation.Property";
     public static final String ANNOTATION_NAME_PROPERTY = "org.kie.workbench.common.stunner.core.definition.annotation.property.NameProperty";
     public static final String ANNOTATION_PROPERTY_DEFAULT_VALUE = "org.kie.workbench.common.stunner.core.definition.annotation.property.DefaultValue";
     public static final String ANNOTATION_PROPERTY_ALLOWED_VALUES = "org.kie.workbench.common.stunner.core.definition.annotation.property.AllowedValues";
@@ -423,10 +419,10 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
             processingContext.getDefinitionAnnotations().getGraphFactoryFieldNames().put( propertyClassName, fqcn );
 
             // PropertySets fields.
-            processFieldNames(classElement, propertyClassName, ANNOTATION_DEFINITION_PROPERTYSET, processingContext.getDefinitionAnnotations().getPropertySetFieldNames());
+            processFieldNames(classElement, propertyClassName, ANNOTATION_PROPERTY_SET, processingContext.getDefinitionAnnotations().getPropertySetFieldNames());
 
             // Properties fields.
-            processFieldNames(classElement, propertyClassName, ANNOTATION_DEFINITION_PROPERTY, processingContext.getDefinitionAnnotations().getPropertyFieldNames());
+            processFieldNames(classElement, propertyClassName, ANNOTATION_PROPERTY, processingContext.getDefinitionAnnotations().getPropertyFieldNames());
 
 
             // -- Morphing annotations --
@@ -722,7 +718,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
                     true );
 
             // Properties fields.
-            processFieldNames(classElement, propertyClassName, ANNOTATION_PROPERTY_SET_PROPERTY, processingContext.getPropertySetAnnotations().getPropertiesFieldNames());
+            processFieldNames(classElement, propertyClassName, ANNOTATION_PROPERTY, processingContext.getPropertySetAnnotations().getPropertiesFieldNames());
 
         }
 

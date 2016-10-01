@@ -2,7 +2,7 @@ package org.kie.workbench.common.stunner.core.backend.definition.adapter;
 
 import org.kie.workbench.common.stunner.core.definition.adapter.DefinitionSetAdapter;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
-import org.kie.workbench.common.stunner.core.definition.annotation.definitionset.DefinitionSet;
+import org.kie.workbench.common.stunner.core.definition.annotation.DefinitionSet;
 
 import java.util.HashSet;
 import java.util.Set;

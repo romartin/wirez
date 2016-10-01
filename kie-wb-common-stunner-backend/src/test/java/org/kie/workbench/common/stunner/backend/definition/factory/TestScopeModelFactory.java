@@ -1,7 +1,7 @@
 package org.kie.workbench.common.stunner.backend.definition.factory;
 
 import org.kie.workbench.common.stunner.core.backend.utils.BackendBindableDefinitionUtils;
-import org.kie.workbench.common.stunner.core.definition.annotation.definition.Definition;
+import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.builder.Builder;
 import org.kie.workbench.common.stunner.core.factory.definition.AbstractTypeDefinitionFactory;
 

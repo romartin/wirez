@@ -160,7 +160,7 @@ public abstract class AbstractObjectBuilder<W, T extends Element<View<W>>> imple
 
                 if ( !found ) {
                     
-                    LOG.warn("Property [" + pId + "] not found for definition [" + pId + "]");
+                    LOG.warn("Property [" + pId + "] not found for definition [" + definition.getClass().getName() + "]");
                     
                 }
                 

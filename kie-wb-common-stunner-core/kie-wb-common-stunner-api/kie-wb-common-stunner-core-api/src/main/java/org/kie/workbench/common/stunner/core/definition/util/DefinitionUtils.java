@@ -184,13 +184,17 @@ public class DefinitionUtils {
 
         final Set<Object> properties = new HashSet<>();
 
-        // And properties on each definition's annotated PropertySet.
+        // And properties on each definition's PropertySet instance.
         final Set<?> propertySets = definitionManager.adapters().forDefinition().getPropertySets(definition);
         if ( null != propertySets && !propertySets.isEmpty() ) {
             for (Object propertySet : propertySets) {
                 final Set<?> setProperties = definitionManager.adapters().forPropertySet().getProperties(propertySet);
-                if( null != setProperties ) {
-                    properties.addAll(setProperties);
+                if ( null != setProperties && !setProperties.isEmpty() ) {
+                    for ( final Object property : setProperties ) {
+                        if ( null != property ) {
+                            properties.add( property );
+                        }
+                    }
                 }
             }
         }

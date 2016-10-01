@@ -28,7 +28,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.Thro
 import org.kie.workbench.common.stunner.bpmn.shape.proxy.EndTerminateEventShapeProxy;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
 import org.kie.workbench.common.stunner.core.definition.annotation.Shape;
-import org.kie.workbench.common.stunner.core.definition.annotation.definition.Definition;
+import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Title;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.Morph;
 import org.kie.workbench.common.stunner.core.factory.graph.NodeFactory;

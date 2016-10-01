@@ -1,11 +1,11 @@
 package org.kie.workbench.common.stunner.basicset.shape.proxy.icon.dynamics;
 
 import org.kie.workbench.common.stunner.basicset.definition.icon.dynamics.DynamicIcon;
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.icon.dynamics.IconProxy;
 
 public abstract class AbstractDynamicIconProxy<I extends DynamicIcon>
-        extends AbstractBasicDynamicShapeProxy<I>
+        extends AbstractBasicShapeProxy<I>
         implements IconProxy<I> {
     
     @Override

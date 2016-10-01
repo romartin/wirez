@@ -71,7 +71,7 @@ public class DynamicIconShape<W> extends AbstractProxyDynamicShape<W, DynamicIco
 
         // Icon.
         Icons icon = getIcon( getDefinition( element ), proxy );
-        view.setIcon( icon );
+        getShapeView().setIcon( icon );
         
     }
 

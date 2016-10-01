@@ -1,5 +1,6 @@
 package org.kie.workbench.common.stunner.bpmn.shape.proxy;
 
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.*;
 import org.kie.workbench.common.stunner.basicset.definition.icon.statics.StaticIcons;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseTask;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class TaskShapeProxy
-        extends AbstractBasicDynamicShapeProxy<BaseTask>
+        extends AbstractBasicShapeProxy<BaseTask>
         implements RectangleProxy<BaseTask>, HasChildProxies<BaseTask> {
     
     @Override
@@ -100,9 +101,9 @@ public final class TaskShapeProxy
     }
 
     @Override
-    public Map<BasicShapeProxy<BaseTask>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeProxy<BaseTask>, HasChildren.Layout> getChildProxies() {
         
-        return new HashMap<BasicShapeProxy<BaseTask>, HasChildren.Layout>() {{
+        return new HashMap<ShapeProxy<BaseTask>, HasChildren.Layout>() {{
             
             put( new TaskTypeProxy(), HasChildren.Layout.CENTER );
             

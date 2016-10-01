@@ -1,6 +1,7 @@
 package org.kie.workbench.common.stunner.bpmn.shape.proxy;
 
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.BasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.HasChildProxies;
 import org.kie.workbench.common.stunner.shapes.proxy.PolygonProxy;
@@ -15,7 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class ParallelGatewayShapeProxy
-        extends AbstractBasicDynamicShapeProxy<ParallelGateway>
+        extends AbstractBasicShapeProxy<ParallelGateway>
         implements
         PolygonProxy<ParallelGateway>,
         HasChildProxies<ParallelGateway> {
@@ -76,9 +77,9 @@ public final class ParallelGatewayShapeProxy
     }
 
     @Override
-    public Map<BasicShapeProxy<ParallelGateway>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeProxy<ParallelGateway>, HasChildren.Layout> getChildProxies() {
         
-        return new LinkedHashMap<BasicShapeProxy<ParallelGateway>, HasChildren.Layout>() {{
+        return new LinkedHashMap<ShapeProxy<ParallelGateway>, HasChildren.Layout>() {{
             
             put( new IconProxy(), HasChildren.Layout.CENTER );
             

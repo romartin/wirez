@@ -1,5 +1,6 @@
 package org.kie.workbench.common.stunner.bpmn.shape.proxy;
 
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.*;
 import org.kie.workbench.common.stunner.bpmn.definition.IntermediateTimerEvent;
 import org.kie.workbench.common.stunner.core.client.shape.HasChildren;
@@ -11,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class IntermediateTimerEventShapeProxy
-        extends AbstractBasicDynamicShapeProxy<IntermediateTimerEvent>
+        extends AbstractBasicShapeProxy<IntermediateTimerEvent>
         implements
         CircleProxy<IntermediateTimerEvent>,
         HasChildProxies<IntermediateTimerEvent> {
@@ -74,9 +75,9 @@ public final class IntermediateTimerEventShapeProxy
     }
 
     @Override
-    public Map<BasicShapeProxy<IntermediateTimerEvent>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeProxy<IntermediateTimerEvent>, HasChildren.Layout> getChildProxies() {
         
-        return new HashMap<BasicShapeProxy<IntermediateTimerEvent>, HasChildren.Layout>() {{
+        return new HashMap<ShapeProxy<IntermediateTimerEvent>, HasChildren.Layout>() {{
             
             put( new Circle1Proxy( IntermediateTimerEventShapeProxy.this ), HasChildren.Layout.CENTER );
             put( new Circle2Proxy( IntermediateTimerEventShapeProxy.this ), HasChildren.Layout.CENTER );
@@ -115,7 +116,7 @@ public final class IntermediateTimerEventShapeProxy
     public final class Circle1Proxy extends WrappedBasicNamedShapeProxy<IntermediateTimerEvent> 
             implements CircleProxy<IntermediateTimerEvent> {
 
-        public Circle1Proxy( final BasicNamedShapeProxy<IntermediateTimerEvent> parent ) {
+        public Circle1Proxy( final BasicShapeWithTitleProxy<IntermediateTimerEvent> parent ) {
             super( parent );
         }
 
@@ -135,7 +136,7 @@ public final class IntermediateTimerEventShapeProxy
     public final class Circle2Proxy extends WrappedBasicNamedShapeProxy<IntermediateTimerEvent>
             implements CircleProxy<IntermediateTimerEvent> {
 
-        public Circle2Proxy( final BasicNamedShapeProxy<IntermediateTimerEvent> parent ) {
+        public Circle2Proxy( final BasicShapeWithTitleProxy<IntermediateTimerEvent> parent ) {
             super( parent );
         }
 
@@ -155,7 +156,7 @@ public final class IntermediateTimerEventShapeProxy
     public final class Circle3Proxy extends WrappedBasicNamedShapeProxy<IntermediateTimerEvent>
             implements CircleProxy<IntermediateTimerEvent> {
 
-        public Circle3Proxy( final BasicNamedShapeProxy<IntermediateTimerEvent> parent ) {
+        public Circle3Proxy( final BasicShapeWithTitleProxy<IntermediateTimerEvent> parent ) {
             super( parent );
         }
 
@@ -175,7 +176,7 @@ public final class IntermediateTimerEventShapeProxy
     public final class Circle4Proxy extends WrappedBasicNamedShapeProxy<IntermediateTimerEvent>
             implements CircleProxy<IntermediateTimerEvent> {
 
-        public Circle4Proxy( final BasicNamedShapeProxy<IntermediateTimerEvent> parent ) {
+        public Circle4Proxy( final BasicShapeWithTitleProxy<IntermediateTimerEvent> parent ) {
             super( parent );
         }
 
@@ -195,7 +196,7 @@ public final class IntermediateTimerEventShapeProxy
     public final class Circle5Proxy extends WrappedBasicNamedShapeProxy<IntermediateTimerEvent>
             implements CircleProxy<IntermediateTimerEvent> {
 
-        public Circle5Proxy( final BasicNamedShapeProxy<IntermediateTimerEvent> parent ) {
+        public Circle5Proxy( final BasicShapeWithTitleProxy<IntermediateTimerEvent> parent ) {
             super( parent );
         }
 

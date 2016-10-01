@@ -1,10 +1,10 @@
 package org.kie.workbench.common.stunner.basicset.shape.proxy;
 
 import org.kie.workbench.common.stunner.basicset.definition.Rectangle;
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 
 public final class RectangleProxy
-        extends AbstractBasicDynamicShapeProxy<Rectangle>
+        extends AbstractBasicShapeProxy<Rectangle>
         implements org.kie.workbench.common.stunner.shapes.proxy.RectangleProxy<Rectangle> {
 
     @Override

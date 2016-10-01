@@ -1,7 +1,7 @@
 package org.kie.workbench.common.stunner.shapes.proxy;
 
-public interface BasicNamedShapeProxy<W>
-    extends BasicDynamicShapeProxy<W> {
+public interface BasicShapeWithTitleProxy<W>
+    extends BasicShapeProxy<W> {
 
     String getNamePropertyValue(W element);
 

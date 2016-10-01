@@ -1,10 +1,10 @@
 package org.kie.workbench.common.stunner.basicset.shape.proxy;
 
 import org.kie.workbench.common.stunner.basicset.definition.Ring;
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 
 public final class RingProxy
-        extends AbstractBasicDynamicShapeProxy<Ring>
+        extends AbstractBasicShapeProxy<Ring>
         implements org.kie.workbench.common.stunner.shapes.proxy.RingProxy<Ring> {
 
     @Override

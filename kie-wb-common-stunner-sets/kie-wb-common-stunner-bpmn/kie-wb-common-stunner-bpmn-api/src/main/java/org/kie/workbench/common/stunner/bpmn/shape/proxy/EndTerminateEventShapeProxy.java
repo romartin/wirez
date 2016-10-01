@@ -1,5 +1,6 @@
 package org.kie.workbench.common.stunner.bpmn.shape.proxy;
 
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.*;
 import org.kie.workbench.common.stunner.bpmn.definition.EndTerminateEvent;
 import org.kie.workbench.common.stunner.core.client.shape.HasChildren;
@@ -8,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class EndTerminateEventShapeProxy
-        extends AbstractBasicDynamicShapeProxy<EndTerminateEvent>
+        extends AbstractBasicShapeProxy<EndTerminateEvent>
         implements CircleProxy<EndTerminateEvent>,
         HasChildProxies<EndTerminateEvent> {
     
@@ -68,8 +69,8 @@ public final class EndTerminateEventShapeProxy
     }
 
     @Override
-    public Map<BasicShapeProxy<EndTerminateEvent>, HasChildren.Layout> getChildProxies() {
-        return new HashMap<BasicShapeProxy<EndTerminateEvent>, HasChildren.Layout>() {{
+    public Map<ShapeProxy<EndTerminateEvent>, HasChildren.Layout> getChildProxies() {
+        return new HashMap<ShapeProxy<EndTerminateEvent>, HasChildren.Layout>() {{
             put( new EndNoneEventRingProxy( EndTerminateEventShapeProxy.this ), HasChildren.Layout.CENTER );
         }};
     }
@@ -77,7 +78,7 @@ public final class EndTerminateEventShapeProxy
     public final class EndNoneEventRingProxy extends WrappedBasicNamedShapeProxy<EndTerminateEvent> 
             implements RingProxy<EndTerminateEvent> {
 
-        public EndNoneEventRingProxy(final BasicNamedShapeProxy<EndTerminateEvent> parent) {
+        public EndNoneEventRingProxy(final BasicShapeWithTitleProxy<EndTerminateEvent> parent) {
             super( parent );
         }
 

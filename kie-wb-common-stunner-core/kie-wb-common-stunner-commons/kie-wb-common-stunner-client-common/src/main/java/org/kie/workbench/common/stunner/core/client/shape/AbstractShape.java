@@ -35,8 +35,8 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
 
     private static Logger LOGGER = Logger.getLogger(AbstractShape.class.getName());
 
-    protected String uuid;
-    protected V view;
+    private String uuid;
+    private V view;
 
     public AbstractShape(final V view) {
         this.view = view;
@@ -105,7 +105,7 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         
     }
 
-    protected void _applyFillColor( final String color, final MutationContext mutationContext ) {
+    protected void applyFillColor( final String color, final MutationContext mutationContext ) {
         if (color != null && color.trim().length() > 0) {
             
             final boolean hasGradient = view instanceof HasFillGradient;
@@ -123,11 +123,13 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         }
     }
 
-    protected void _applyFillAlpha( final double alpha, final MutationContext mutationContext ) {
-        view.setFillAlpha( alpha );
+    protected void applyFillAlpha( final Double alpha, final MutationContext mutationContext ) {
+        if ( null != alpha ) {
+            view.setFillAlpha( alpha );
+        }
     }
 
-    protected void  _applyBorders(final String color, final Double width, final MutationContext mutationContext) {
+    protected void applyBorders( final String color, final Double width, final MutationContext mutationContext) {
         if (color != null && color.trim().length() > 0) {
             view.setStrokeColor(color);
         }
@@ -136,16 +138,18 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         }
     }
 
-    protected void  _applyBorderAlpha(final double alpha, final MutationContext mutationContext) {
-        view.setStrokeAlpha( alpha );
+    protected void applyBorderAlpha( final Double alpha, final MutationContext mutationContext) {
+        if ( null != alpha ) {
+            view.setStrokeAlpha( alpha );
+        }
     }
 
-    protected void _applyFont( final String family,
-                               final String color,
-                               final Double size,
-                               final Double borderSize,
-                               final Double alpha,
-                               final MutationContext mutationContext ) {
+    protected void applyFont( final String family,
+                              final String color,
+                              final Double size,
+                              final Double borderSize,
+                              final Double alpha,
+                              final MutationContext mutationContext ) {
         if ( view instanceof HasTitle ) {
             final HasTitle hasTitle = ( HasTitle ) view;
 
@@ -162,7 +166,7 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
 
             }
 
-            _applyFontAlpha( hasTitle, alpha, mutationContext );
+            applyFontAlpha( hasTitle, alpha, mutationContext );
 
 
             if ( borderSize != null && borderSize > 0 ) {
@@ -175,11 +179,12 @@ public abstract class AbstractShape<W, E extends Node<View<W>, Edge>, V extends 
         }
     }
 
-    protected void _applyFontAlpha( final HasTitle hasTitle,
-                                    final double alpha,
-                                    final MutationContext mutationContext ) {
-
-        hasTitle.setTitleAlpha( alpha );
+    protected void applyFontAlpha( final HasTitle hasTitle,
+                                   final Double alpha,
+                                   final MutationContext mutationContext ) {
+        if ( null != alpha ) {
+            hasTitle.setTitleAlpha( alpha );
+        }
 
     }
 

@@ -20,11 +20,11 @@ import org.kie.workbench.common.stunner.core.graph.Edge;
 import org.kie.workbench.common.stunner.core.graph.Node;
 import org.kie.workbench.common.stunner.core.graph.content.view.View;
 import org.kie.workbench.common.stunner.shapes.client.view.BasicShapeView;
-import org.kie.workbench.common.stunner.shapes.client.BasicNamedShape;
-import org.kie.workbench.common.stunner.shapes.proxy.BasicNamedShapeProxy;
+import org.kie.workbench.common.stunner.shapes.client.BasicShapeWithTitle;
+import org.kie.workbench.common.stunner.shapes.proxy.BasicShapeWithTitleProxy;
 
-public abstract class AbstractProxyTitledShape<W, V extends BasicShapeView, P extends BasicNamedShapeProxy<W>>
-        extends BasicNamedShape<W, V> {
+public abstract class AbstractProxyTitledShape<W, V extends BasicShapeView, P extends BasicShapeWithTitleProxy<W>>
+        extends BasicShapeWithTitle<W, V> {
 
     protected final transient P proxy;
 

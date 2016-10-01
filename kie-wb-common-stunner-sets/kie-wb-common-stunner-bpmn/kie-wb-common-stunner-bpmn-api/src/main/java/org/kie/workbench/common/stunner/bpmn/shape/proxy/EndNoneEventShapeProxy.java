@@ -1,11 +1,11 @@
 package org.kie.workbench.common.stunner.bpmn.shape.proxy;
 
 import org.kie.workbench.common.stunner.bpmn.definition.EndNoneEvent;
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.CircleProxy;
 
 public final class EndNoneEventShapeProxy
-        extends AbstractBasicDynamicShapeProxy<EndNoneEvent>
+        extends AbstractBasicShapeProxy<EndNoneEvent>
         implements CircleProxy<EndNoneEvent> {
     
     @Override

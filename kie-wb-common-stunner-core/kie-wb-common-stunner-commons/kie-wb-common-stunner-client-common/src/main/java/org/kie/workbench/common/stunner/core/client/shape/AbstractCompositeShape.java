@@ -12,7 +12,7 @@ public abstract class AbstractCompositeShape<W, E extends Node<View<W>, Edge>, V
     extends AbstractShape<W, E, V>
     implements HasChildren<AbstractShape<W, Node<View<W>, Edge>, ?>> {
 
-    protected final List<AbstractShape<W, Node<View<W>, Edge>, ?>> children = new LinkedList<AbstractShape<W, Node<View<W>, Edge>, ?>>();
+    private final List<AbstractShape<W, Node<View<W>, Edge>, ?>> children = new LinkedList<AbstractShape<W, Node<View<W>, Edge>, ?>>();
 
     public AbstractCompositeShape(final V view) {
         super( view );
@@ -92,5 +92,7 @@ public abstract class AbstractCompositeShape<W, E extends Node<View<W>, Edge>, V
         children.clear();
         
     }
+
+
     
 }

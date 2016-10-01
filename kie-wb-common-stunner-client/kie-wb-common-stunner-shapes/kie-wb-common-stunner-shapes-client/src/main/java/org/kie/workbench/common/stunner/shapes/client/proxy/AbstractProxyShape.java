@@ -17,6 +17,7 @@
 package org.kie.workbench.common.stunner.shapes.client.proxy;
 
 import org.kie.workbench.common.stunner.core.client.shape.MutationContext;
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
 import org.kie.workbench.common.stunner.core.graph.Edge;
 import org.kie.workbench.common.stunner.core.graph.Node;
 import org.kie.workbench.common.stunner.core.graph.content.view.View;
@@ -24,7 +25,7 @@ import org.kie.workbench.common.stunner.shapes.client.view.BasicShapeView;
 import org.kie.workbench.common.stunner.shapes.client.BasicShape;
 import org.kie.workbench.common.stunner.shapes.proxy.BasicShapeProxy;
 
-public abstract class AbstractProxyShape<W, V extends BasicShapeView, P extends BasicShapeProxy<W>>
+public abstract class AbstractProxyShape<W, V extends BasicShapeView, P extends ShapeProxy<W>>
         extends BasicShape<W, V> {
     
     protected final transient P proxy;

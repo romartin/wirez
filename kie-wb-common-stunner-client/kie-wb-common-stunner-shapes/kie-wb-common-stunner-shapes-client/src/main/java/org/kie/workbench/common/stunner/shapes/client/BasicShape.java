@@ -27,6 +27,7 @@ import org.kie.workbench.common.stunner.core.client.shape.ShapeState;
 import org.kie.workbench.common.stunner.core.graph.Edge;
 import org.kie.workbench.common.stunner.core.graph.Node;
 import org.kie.workbench.common.stunner.core.graph.content.view.View;
+import org.kie.workbench.common.stunner.core.graph.util.GraphUtils;
 import org.kie.workbench.common.stunner.shapes.client.view.BasicShapeView;
 import org.kie.workbench.common.stunner.shapes.client.view.animatiion.BasicShapeAnimation;
 import org.kie.workbench.common.stunner.shapes.client.view.animatiion.BasicShapeDecoratorAnimation;
@@ -44,8 +45,37 @@ public abstract class BasicShape<W, V extends BasicShapeView>
         super(shapeView);
     }
 
+    protected abstract String getBackgroundColor( Node<View<W>, Edge> element );
+    protected abstract Double getBackgroundAlpha( Node<View<W>, Edge> element );
+    protected abstract String getBorderColor( Node<View<W>, Edge> element );
+    protected abstract Double getBorderSize( Node<View<W>, Edge> element );
+    protected abstract Double getBorderAlpha( Node<View<W>, Edge> element );
+
     protected W getDefinition( final Node<View<W>, Edge> element ) {
         return element.getContent().getDefinition();
+    }
+
+    @Override
+    public void applyProperties( Node<View<W>, Edge> element, MutationContext mutationContext ) {
+        super.applyProperties( element, mutationContext );
+
+        // Fill color.
+        final String color = getBackgroundColor( element );
+        super.applyFillColor( color, mutationContext );
+
+        // Fill alpha.
+        final Double alpha = getBackgroundAlpha( element );
+        super.applyFillAlpha( alpha, mutationContext );
+
+        // Apply border styles.
+        final String bcolor = getBorderColor( element );
+        final Double bwidth = getBorderSize( element );
+        super.applyBorders( bcolor, bwidth, mutationContext );
+
+        // Apply border alpha.
+        final Double balpha = getBorderAlpha( element );
+        super.applyBorderAlpha( balpha, mutationContext );
+
     }
 
     @Override
@@ -157,10 +187,10 @@ public abstract class BasicShape<W, V extends BasicShapeView>
     }
 
     @Override
-    protected void _applyFillColor( final String color,
-                                    final MutationContext mutationContext ) {
+    protected void applyFillColor( final String color,
+                                   final MutationContext mutationContext ) {
 
-        final boolean hasGradient = view instanceof HasFillGradient;
+        final boolean hasGradient = getShapeView() instanceof HasFillGradient;
 
         // Fill gradient cannot be animated for now in lienzo.
         if ( color != null && color.trim().length() > 0
@@ -171,7 +201,7 @@ public abstract class BasicShape<W, V extends BasicShapeView>
 
         } else {
 
-            super._applyFillColor( color, mutationContext );
+            super.applyFillColor( color, mutationContext );
 
         }
 
@@ -179,9 +209,9 @@ public abstract class BasicShape<W, V extends BasicShapeView>
     }
 
     @Override
-    protected void _applyFontAlpha( final HasTitle hasTitle,
-                                    final double alpha,
-                                    final MutationContext mutationContext ) {
+    protected void applyFontAlpha( final HasTitle hasTitle,
+                                   final Double alpha,
+                                   final MutationContext mutationContext ) {
 
         final boolean isAnimation = isAnimationMutation( mutationContext );
 
@@ -191,10 +221,18 @@ public abstract class BasicShape<W, V extends BasicShapeView>
 
         } else {
 
-            super._applyFontAlpha( hasTitle, alpha, mutationContext );
+            super.applyFontAlpha( hasTitle, alpha, mutationContext );
 
         }
 
+    }
+
+    protected void _applyWidthAndHeight( final Node<View<W>, Edge> element,
+                                         final Double width,
+                                         final Double height,
+                                         final MutationContext mutationContext ) {
+        applySize( ( HasSize ) getShapeView(), width, height, mutationContext );
+        GraphUtils.updateBounds( width, height, element.getContent() );
     }
 
     @Override
@@ -215,6 +253,15 @@ public abstract class BasicShape<W, V extends BasicShapeView>
         }
 
 
+    }
+
+    protected void _applyRadius( final Node<View<W>, Edge> element,
+                                 final Double radius,
+                                 final MutationContext mutationContext ) {
+        if ( null != radius ) {
+            applyRadius( ( HasRadius ) getShapeView(), radius, mutationContext );
+            GraphUtils.updateBounds( radius, element.getContent() );
+        }
     }
 
     @Override

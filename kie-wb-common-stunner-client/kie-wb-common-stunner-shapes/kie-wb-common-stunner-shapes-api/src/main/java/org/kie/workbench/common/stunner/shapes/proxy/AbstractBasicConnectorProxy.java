@@ -1,7 +1,7 @@
 package org.kie.workbench.common.stunner.shapes.proxy;
 
 // TODO: Add support for text on connectors.
-public abstract class AbstractBasicConnectorProxy<W> extends AbstractBasicDynamicShapeProxy<W> implements ConnectorProxy<W> {
+public abstract class AbstractBasicConnectorProxy<W> extends AbstractBasicShapeProxy<W> implements ConnectorProxy<W> {
 
     @Override
     public String getNamePropertyValue( final W element ) {

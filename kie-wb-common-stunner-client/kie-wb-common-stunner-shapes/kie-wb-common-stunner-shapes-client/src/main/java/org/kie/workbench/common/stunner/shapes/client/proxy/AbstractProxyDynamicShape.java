@@ -19,12 +19,12 @@ package org.kie.workbench.common.stunner.shapes.client.proxy;
 import org.kie.workbench.common.stunner.core.graph.Edge;
 import org.kie.workbench.common.stunner.core.graph.Node;
 import org.kie.workbench.common.stunner.core.graph.content.view.View;
+import org.kie.workbench.common.stunner.shapes.client.BasicShape;
 import org.kie.workbench.common.stunner.shapes.client.view.BasicShapeView;
-import org.kie.workbench.common.stunner.shapes.client.BasicDynShape;
-import org.kie.workbench.common.stunner.shapes.proxy.BasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.BasicShapeProxy;
 
-public abstract class AbstractProxyDynamicShape<W, V extends BasicShapeView, P extends BasicDynamicShapeProxy<W>>
-        extends BasicDynShape<W, V> {
+public abstract class AbstractProxyDynamicShape<W, V extends BasicShapeView, P extends BasicShapeProxy<W>>
+        extends BasicShape<W, V> {
 
 
     protected final transient P proxy;

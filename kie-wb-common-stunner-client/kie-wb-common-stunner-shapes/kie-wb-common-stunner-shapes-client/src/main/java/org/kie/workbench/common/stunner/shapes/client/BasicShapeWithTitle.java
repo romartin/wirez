@@ -22,10 +22,10 @@ import org.kie.workbench.common.stunner.core.graph.Node;
 import org.kie.workbench.common.stunner.core.graph.content.view.View;
 import org.kie.workbench.common.stunner.shapes.client.view.BasicShapeView;
 
-public abstract class BasicNamedShape<W, V extends BasicShapeView>
-    extends BasicDynShape<W, V> {
+public abstract class BasicShapeWithTitle<W, V extends BasicShapeView>
+    extends BasicShape<W, V> {
 
-    public BasicNamedShape( final V shapeView) {
+    public BasicShapeWithTitle( final V shapeView) {
         super(shapeView);
     }
 
@@ -46,7 +46,7 @@ public abstract class BasicNamedShape<W, V extends BasicShapeView>
         return 1d;
     }
 
-    protected BasicNamedShape<W, V> _applyFont( final Node<View<W>, Edge> element, final MutationContext mutationContext) {
+    protected BasicShapeWithTitle<W, V> _applyFont( final Node<View<W>, Edge> element, final MutationContext mutationContext) {
         
         final String family = getFontFamily( element );
         final String color = getFontColor( element );
@@ -54,7 +54,7 @@ public abstract class BasicNamedShape<W, V extends BasicShapeView>
         final Double borderSize = getFontBorderSize( element );
         final Double alpha = getFontAlpha( element );
 
-        super._applyFont(family, color, size, borderSize, alpha, mutationContext);
+        super.applyFont(family, color, size, borderSize, alpha, mutationContext);
 
         return this;
     }

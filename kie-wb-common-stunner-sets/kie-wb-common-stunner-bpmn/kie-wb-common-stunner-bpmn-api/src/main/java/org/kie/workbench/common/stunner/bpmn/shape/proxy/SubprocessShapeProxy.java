@@ -1,6 +1,7 @@
 package org.kie.workbench.common.stunner.bpmn.shape.proxy;
 
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.BasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.HasChildProxies;
 import org.kie.workbench.common.stunner.shapes.proxy.RectangleProxy;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class SubprocessShapeProxy
-        extends AbstractBasicDynamicShapeProxy<ReusableSubprocess>
+        extends AbstractBasicShapeProxy<ReusableSubprocess>
         implements
         RectangleProxy<ReusableSubprocess>,
         HasChildProxies<ReusableSubprocess> {
@@ -71,9 +72,9 @@ public final class SubprocessShapeProxy
     }
 
     @Override
-    public Map<BasicShapeProxy<ReusableSubprocess>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeProxy<ReusableSubprocess>, HasChildren.Layout> getChildProxies() {
         
-        return new HashMap<BasicShapeProxy<ReusableSubprocess>, HasChildren.Layout>() {{
+        return new HashMap<ShapeProxy<ReusableSubprocess>, HasChildren.Layout>() {{
             
             put( new ProcessIconProxy(), HasChildren.Layout.CENTER );
             

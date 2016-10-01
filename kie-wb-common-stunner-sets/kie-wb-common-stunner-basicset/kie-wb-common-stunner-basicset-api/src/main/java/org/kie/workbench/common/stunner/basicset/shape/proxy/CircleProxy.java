@@ -1,10 +1,10 @@
 package org.kie.workbench.common.stunner.basicset.shape.proxy;
 
 import org.kie.workbench.common.stunner.basicset.definition.Circle;
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 
 public final class CircleProxy
-        extends AbstractBasicDynamicShapeProxy<Circle>
+        extends AbstractBasicShapeProxy<Circle>
         implements org.kie.workbench.common.stunner.shapes.proxy.CircleProxy<Circle> {
 
     @Override

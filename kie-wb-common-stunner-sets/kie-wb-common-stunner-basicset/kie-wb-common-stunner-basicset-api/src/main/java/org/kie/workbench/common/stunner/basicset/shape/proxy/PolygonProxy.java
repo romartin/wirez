@@ -1,10 +1,10 @@
 package org.kie.workbench.common.stunner.basicset.shape.proxy;
 
 import org.kie.workbench.common.stunner.basicset.definition.Polygon;
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 
 public final class PolygonProxy
-        extends AbstractBasicDynamicShapeProxy<Polygon>
+        extends AbstractBasicShapeProxy<Polygon>
         implements org.kie.workbench.common.stunner.shapes.proxy.PolygonProxy<Polygon> {
     
     @Override

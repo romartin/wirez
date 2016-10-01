@@ -47,15 +47,45 @@ public class StaticIconShape<W> extends AbstractProxyShape<W, StaticIconShapeVie
         
         return icon;
     }
-    
+
     @Override
     public void applyProperties(final Node<View<W>, Edge> element, final MutationContext mutationContext) {
         super.applyProperties(element, mutationContext);
         
         // Icon.
         Icons icon = getIcon( getDefinition( element ), proxy );
-        view.setIcon( icon );
+        getShapeView().setIcon( icon );
         
+    }
+
+    @Override
+    protected String getBackgroundColor( final Node<View<W>, Edge> element ) {
+        // Background color does not changes as model updates.
+        return null;
+    }
+
+    @Override
+    protected Double getBackgroundAlpha( final Node<View<W>, Edge> element ) {
+        // Background alpha does not changes as model updates.
+        return null;
+    }
+
+    @Override
+    protected String getBorderColor( final Node<View<W>, Edge> element ) {
+        // Border color does not changes as model updates.
+        return null;
+    }
+
+    @Override
+    protected Double getBorderSize( final Node<View<W>, Edge> element ) {
+        // Border size does not changes as model updates.
+        return null;
+    }
+
+    @Override
+    protected Double getBorderAlpha( final Node<View<W>, Edge> element ) {
+        // Border alpha does not changes as model updates.
+        return null;
     }
 
     @Override

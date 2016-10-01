@@ -2,7 +2,8 @@ package org.kie.workbench.common.stunner.basicset.shape.proxy;
 
 import org.kie.workbench.common.stunner.basicset.definition.PolygonWithIcon;
 import org.kie.workbench.common.stunner.core.client.shape.HasChildren;
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.BasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.HasChildProxies;
 import org.kie.workbench.common.stunner.shapes.proxy.icon.dynamics.AbstractDynamicIconProxy;
@@ -13,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class PolygonWithIconProxy
-        extends AbstractBasicDynamicShapeProxy<PolygonWithIcon>
+        extends AbstractBasicShapeProxy<PolygonWithIcon>
         implements
         org.kie.workbench.common.stunner.shapes.proxy.PolygonProxy<PolygonWithIcon>,
         HasChildProxies<PolygonWithIcon> {
@@ -74,8 +75,8 @@ public final class PolygonWithIconProxy
     }
 
     @Override
-    public Map<BasicShapeProxy<PolygonWithIcon>, HasChildren.Layout> getChildProxies() {
-        return new LinkedHashMap<BasicShapeProxy<PolygonWithIcon>, HasChildren.Layout>() {{
+    public Map<ShapeProxy<PolygonWithIcon>, HasChildren.Layout> getChildProxies() {
+        return new LinkedHashMap<ShapeProxy<PolygonWithIcon>, HasChildren.Layout>() {{
             put( new IconProxy(), HasChildren.Layout.CENTER );
         }};
     }

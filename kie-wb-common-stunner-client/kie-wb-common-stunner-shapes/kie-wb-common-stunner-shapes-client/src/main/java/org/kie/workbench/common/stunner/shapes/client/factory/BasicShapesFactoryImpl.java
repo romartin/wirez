@@ -30,6 +30,7 @@ import org.kie.workbench.common.stunner.core.client.shape.view.AbstractBindableS
 import org.kie.workbench.common.stunner.core.client.shape.view.ShapeGlyph;
 import org.kie.workbench.common.stunner.core.client.shape.view.ShapeGlyphBuilder;
 import org.kie.workbench.common.stunner.core.client.shape.view.ShapeView;
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
 import org.kie.workbench.common.stunner.shapes.client.proxy.*;
 import org.kie.workbench.common.stunner.shapes.client.view.*;
 import org.kie.workbench.common.stunner.shapes.client.view.icon.dynamics.DynamicIconShapeView;
@@ -89,7 +90,7 @@ public class BasicShapesFactoryImpl
 
     @SuppressWarnings("unchecked")
     protected MutableShape<Object, ShapeView> build( final Object definition,
-                                                final BasicShapeProxy<Object> proxy,
+                                                final ShapeProxy<Object> proxy,
                                                 final AbstractCanvasHandler context) {
 
         MutableShape<Object, ShapeView> shape = null;
@@ -193,11 +194,11 @@ public class BasicShapesFactoryImpl
         if ( null != shape && proxy instanceof HasChildProxies) {
 
             final HasChildProxies<Object> hasChildren = (HasChildProxies<Object>) proxy;
-            final Map<BasicShapeProxy<Object>, HasChildren.Layout> childProxies = hasChildren.getChildProxies();
+            final Map<ShapeProxy<Object>, HasChildren.Layout> childProxies = hasChildren.getChildProxies();
             if ( null != childProxies && !childProxies.isEmpty() ) {
-                for ( final Map.Entry<BasicShapeProxy<Object>, HasChildren.Layout> entry : childProxies.entrySet() ) {
+                for ( final Map.Entry<ShapeProxy<Object>, HasChildren.Layout> entry : childProxies.entrySet() ) {
 
-                    final BasicShapeProxy<Object> child = entry.getKey();
+                    final ShapeProxy<Object> child = entry.getKey();
                     final HasChildren.Layout layout = entry.getValue();
 
                     final MutableShape<Object, ShapeView> childShape = this.build( definition, child, context);
@@ -224,31 +225,31 @@ public class BasicShapesFactoryImpl
 
     }
     
-    private boolean isCircle( final BasicShapeProxy<Object> proxy ) {
+    private boolean isCircle( final ShapeProxy<Object> proxy ) {
         return proxy instanceof CircleProxy;
     }
 
-    private boolean isRing( final BasicShapeProxy<Object> proxy ) {
+    private boolean isRing( final ShapeProxy<Object> proxy ) {
         return proxy instanceof RingProxy;
     }
 
-    private boolean isRectangle( final BasicShapeProxy<Object> proxy ) {
+    private boolean isRectangle( final ShapeProxy<Object> proxy ) {
         return proxy instanceof RectangleProxy;
     }
 
-    private boolean isPolygon( final BasicShapeProxy<Object> proxy ) {
+    private boolean isPolygon( final ShapeProxy<Object> proxy ) {
         return proxy instanceof PolygonProxy;
     }
 
-    private boolean isConnector( final BasicShapeProxy<Object> proxy ) {
+    private boolean isConnector( final ShapeProxy<Object> proxy ) {
         return proxy instanceof ConnectorProxy;
     }
 
-    private boolean isDynamicIcon(final BasicShapeProxy<Object> proxy ) {
+    private boolean isDynamicIcon(final ShapeProxy<Object> proxy ) {
         return proxy instanceof IconProxy;
     }
 
-    private boolean isStaticIcon(final BasicShapeProxy<Object> proxy ) {
+    private boolean isStaticIcon(final ShapeProxy<Object> proxy ) {
         return proxy instanceof org.kie.workbench.common.stunner.shapes.proxy.icon.statics.IconProxy;
     }
     

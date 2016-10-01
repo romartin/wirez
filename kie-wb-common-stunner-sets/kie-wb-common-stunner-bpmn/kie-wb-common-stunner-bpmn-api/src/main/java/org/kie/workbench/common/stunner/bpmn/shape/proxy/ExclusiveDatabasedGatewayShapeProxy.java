@@ -1,6 +1,7 @@
 package org.kie.workbench.common.stunner.bpmn.shape.proxy;
 
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.BasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.HasChildProxies;
 import org.kie.workbench.common.stunner.shapes.proxy.PolygonProxy;
@@ -15,7 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class ExclusiveDatabasedGatewayShapeProxy
-        extends AbstractBasicDynamicShapeProxy<ExclusiveDatabasedGateway>
+        extends AbstractBasicShapeProxy<ExclusiveDatabasedGateway>
         implements
         PolygonProxy<ExclusiveDatabasedGateway>,
         HasChildProxies<ExclusiveDatabasedGateway> {
@@ -76,9 +77,9 @@ public final class ExclusiveDatabasedGatewayShapeProxy
     }
 
     @Override
-    public Map<BasicShapeProxy<ExclusiveDatabasedGateway>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeProxy<ExclusiveDatabasedGateway>, HasChildren.Layout> getChildProxies() {
         
-        return new LinkedHashMap<BasicShapeProxy<ExclusiveDatabasedGateway>, HasChildren.Layout>() {{
+        return new LinkedHashMap<ShapeProxy<ExclusiveDatabasedGateway>, HasChildren.Layout>() {{
             
             put( new IconProxy(), HasChildren.Layout.CENTER );
             

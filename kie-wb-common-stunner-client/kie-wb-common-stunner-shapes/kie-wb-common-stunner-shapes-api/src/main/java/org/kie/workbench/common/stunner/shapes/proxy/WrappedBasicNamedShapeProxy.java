@@ -2,11 +2,11 @@ package org.kie.workbench.common.stunner.shapes.proxy;
 
 public abstract class WrappedBasicNamedShapeProxy<W>
         extends AbstractBasicShapeProxy<W>
-        implements BasicNamedShapeProxy<W> {
+        implements BasicShapeWithTitleProxy<W> {
     
-    protected final BasicNamedShapeProxy<W> parent;
+    protected final BasicShapeWithTitleProxy<W> parent;
 
-    public WrappedBasicNamedShapeProxy(final BasicNamedShapeProxy<W> parent ) {
+    public WrappedBasicNamedShapeProxy(final BasicShapeWithTitleProxy<W> parent ) {
         this.parent = parent;
     }
 

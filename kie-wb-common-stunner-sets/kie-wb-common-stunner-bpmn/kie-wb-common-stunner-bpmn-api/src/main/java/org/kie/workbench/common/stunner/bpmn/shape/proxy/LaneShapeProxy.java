@@ -1,11 +1,11 @@
 package org.kie.workbench.common.stunner.bpmn.shape.proxy;
 
 import org.kie.workbench.common.stunner.bpmn.definition.Lane;
-import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicDynamicShapeProxy;
+import org.kie.workbench.common.stunner.shapes.proxy.AbstractBasicShapeProxy;
 import org.kie.workbench.common.stunner.shapes.proxy.RectangleProxy;
 
 public final class LaneShapeProxy
-        extends AbstractBasicDynamicShapeProxy<Lane>
+        extends AbstractBasicShapeProxy<Lane>
         implements RectangleProxy<Lane> {
     
     @Override

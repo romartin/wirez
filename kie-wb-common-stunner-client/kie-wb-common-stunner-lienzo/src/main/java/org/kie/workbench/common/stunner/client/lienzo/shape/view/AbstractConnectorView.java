@@ -4,6 +4,7 @@ import com.ait.lienzo.client.core.shape.AbstractDirectionalMultiPointShape;
 import com.ait.lienzo.client.core.shape.MultiPathDecorator;
 import com.ait.lienzo.client.core.shape.OrthogonalPolyLine;
 import com.ait.lienzo.client.core.shape.wires.*;
+import com.ait.lienzo.client.core.shape.wires.handlers.WiresConnectorControl;
 import com.ait.lienzo.client.core.types.Point2DArray;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.kie.workbench.common.stunner.core.client.shape.view.IsConnector;
@@ -16,6 +17,7 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
 
     protected String uuid;
     private int zindex;
+    private WiresConnectorControl connectorControl;
 
     public AbstractConnectorView(AbstractDirectionalMultiPointShape<?> line, MultiPathDecorator headDecorator, MultiPathDecorator tailDecorator ) {
         super(line, headDecorator, tailDecorator );
@@ -35,6 +37,7 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     }
     
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setUUID(final String uuid) {
         this.uuid = uuid;
         this.getGroup().setUserData( UUID_PREFFIX + uuid );
@@ -47,6 +50,7 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setZIndex(final int zindez) {
         this.zindex = zindez;
         return (T) this;
@@ -56,8 +60,19 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     public int getZIndex() {
         return zindex;
     }
-    
-    public T connect(final ShapeView headShapeView, 
+
+    @SuppressWarnings( "unchecked" )
+    public T setControl( final WiresConnectorControl connectorControl ) {
+        this.connectorControl = connectorControl;
+        return (T) this;
+    }
+
+    public WiresConnectorControl getControl() {
+        return connectorControl;
+    }
+
+    @SuppressWarnings( "unchecked" )
+    public T connect(final ShapeView headShapeView,
                            final int _headMagnetsIndex, 
                            final ShapeView tailShapeView, 
                            final int _tailMagnetsIndex,
@@ -110,6 +125,7 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setDragEnabled(final boolean isDraggable) {
         this.setDraggable();
         return (T) this;
@@ -132,12 +148,14 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setShapeX(final double x) {
         getGroup().setX(x);
         return (T) this;
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setShapeY(final double y) {
         getGroup().setY(y);
         return (T) this;
@@ -149,6 +167,7 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setFillColor(final String color) {
         getLine().setFillColor(color);
         return (T) this;
@@ -160,6 +179,7 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setFillAlpha(final double alpha) {
         getLine().setFillAlpha(alpha);
         return (T) this;
@@ -171,6 +191,7 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setStrokeColor(final String color) {
         getLine().setStrokeColor(color);
         return (T) this;
@@ -182,6 +203,7 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setStrokeAlpha(final double alpha) {
         getLine().setStrokeAlpha(alpha);
         return (T) this;
@@ -193,30 +215,35 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T setStrokeWidth(final double width) {
         getLine().setStrokeWidth(width);
         return (T) this;
     }
     
     @Override
+    @SuppressWarnings( "unchecked" )
     public T moveToTop() {
         getGroup().moveToTop();
         return (T) this;
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T moveToBottom() {
         getGroup().moveToBottom();
         return (T) this;
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T moveUp() {
         getGroup().moveUp();
         return (T) this;
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public T moveDown() {
         getGroup().moveDown();
         return (T) this;
@@ -230,6 +257,8 @@ public abstract class AbstractConnectorView<T> extends WiresConnector
 
         // Remove me.    
         this.removeFromParent();
+
+        this.connectorControl = null;
 
     }
     

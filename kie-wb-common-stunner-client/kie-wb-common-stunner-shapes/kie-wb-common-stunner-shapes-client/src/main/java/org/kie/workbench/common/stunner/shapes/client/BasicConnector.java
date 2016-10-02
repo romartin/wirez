@@ -117,6 +117,7 @@ public abstract class BasicConnector<W, V extends BasicConnectorView>
 
     private void applySelectedState() {
         applyActiveState(ShapeState.SELECTED.getColor());
+        getShapeView().getControl().showControlPoints();
     }
 
     private void applyInvalidState() {
@@ -161,6 +162,8 @@ public abstract class BasicConnector<W, V extends BasicConnectorView>
 
         getShapeView().getLine().setStrokeAlpha( null != this._strokeAlpha ? this._strokeAlpha : 1 );
         this._strokeAlpha = null;
+
+        getShapeView().getControl().hideControlPoints();
 
     }
 

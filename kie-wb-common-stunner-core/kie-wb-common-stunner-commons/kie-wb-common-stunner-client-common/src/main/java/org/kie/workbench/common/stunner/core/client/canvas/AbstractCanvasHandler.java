@@ -212,9 +212,6 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         canvas.addShape( shape );
         canvas.draw();
 
-        // Parents can register controls etc here.
-        doRegister( shape, candidate, factory );
-
         if ( fireEvents ) {
 
             // Fire listeners.
@@ -224,10 +221,6 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
             afterElementAdded( candidate, shape );
 
         }
-
-    }
-
-    protected void doRegister( final Shape shape, final Element element, final ShapeFactory factory ) {
 
     }
 

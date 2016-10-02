@@ -2,6 +2,7 @@ package org.kie.workbench.common.stunner.client.widgets.session.presenter.impl;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Label;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -18,8 +19,7 @@ public class CanvasSessionPresenterView
 
     @Inject
     @DataField
-    private FlowPanel loadingPanel;
-
+    private Label loadingPanel;
 
     @Inject
     @DataField

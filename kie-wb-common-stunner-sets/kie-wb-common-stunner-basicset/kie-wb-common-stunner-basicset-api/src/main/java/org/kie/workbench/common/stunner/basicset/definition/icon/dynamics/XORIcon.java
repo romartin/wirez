@@ -24,11 +24,13 @@ import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.stunner.basicset.definition.Categories;
 import org.kie.workbench.common.stunner.basicset.definition.property.Height;
 import org.kie.workbench.common.stunner.basicset.definition.property.Name;
-import org.kie.workbench.common.stunner.basicset.definition.property.background.BackgroundAndBorderSet;
-import org.kie.workbench.common.stunner.core.definition.annotation.*;
-import org.kie.workbench.common.stunner.core.definition.annotation.definition.*;
 import org.kie.workbench.common.stunner.basicset.definition.property.Width;
-import org.kie.workbench.common.stunner.basicset.shape.proxy.icon.dynamics.XORIconProxy;
+import org.kie.workbench.common.stunner.basicset.definition.property.background.BackgroundAndBorderSet;
+import org.kie.workbench.common.stunner.basicset.shape.def.icon.dynamics.XORIconShapeDefImpl;
+import org.kie.workbench.common.stunner.core.definition.annotation.*;
+import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
+import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
+import org.kie.workbench.common.stunner.core.definition.annotation.definition.Title;
 import org.kie.workbench.common.stunner.core.definition.builder.Builder;
 import org.kie.workbench.common.stunner.core.factory.graph.NodeFactory;
 import org.kie.workbench.common.stunner.shapes.factory.BasicShapesFactory;
@@ -41,7 +43,7 @@ import java.util.Set;
 @Bindable
 @Definition( graphFactory = NodeFactory.class, builder = XORIcon.XORIconBuilder.class )
 @Shape( factory = BasicShapesFactory.class,
-        proxy = XORIconProxy.class )
+        def = XORIconShapeDefImpl.class )
 public class XORIcon implements DynamicIcon {
 
     @Category

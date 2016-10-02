@@ -21,11 +21,13 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
-import org.kie.workbench.common.stunner.core.definition.annotation.*;
-import org.kie.workbench.common.stunner.core.definition.annotation.definition.*;
 import org.kie.workbench.common.stunner.basicset.definition.property.Name;
 import org.kie.workbench.common.stunner.basicset.definition.property.background.BackgroundAndBorderSet;
-import org.kie.workbench.common.stunner.basicset.shape.proxy.BasicConnectorProxy;
+import org.kie.workbench.common.stunner.basicset.shape.def.BasicConnectorDefImpl;
+import org.kie.workbench.common.stunner.core.definition.annotation.*;
+import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
+import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
+import org.kie.workbench.common.stunner.core.definition.annotation.definition.Title;
 import org.kie.workbench.common.stunner.core.definition.builder.Builder;
 import org.kie.workbench.common.stunner.core.factory.graph.EdgeFactory;
 import org.kie.workbench.common.stunner.core.rule.annotation.CanConnect;
@@ -39,7 +41,7 @@ import java.util.Set;
 @Bindable
 @Definition( graphFactory = EdgeFactory.class, builder = BasicConnector.BasicConnectorBuilder.class )
 @CanConnect( startRole = "all", endRole = "all" )
-@Shape( factory = BasicShapesFactory.class, proxy = BasicConnectorProxy.class )
+@Shape( factory = BasicShapesFactory.class, def = BasicConnectorDefImpl.class )
 public class BasicConnector  {
 
     @Category

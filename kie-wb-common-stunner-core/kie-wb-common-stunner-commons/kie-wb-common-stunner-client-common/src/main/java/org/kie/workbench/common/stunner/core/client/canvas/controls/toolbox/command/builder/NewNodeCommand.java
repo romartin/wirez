@@ -219,7 +219,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
                             final int y1 ) {
         super.onStart( context, element, item, x1, y1 );
 
-        // Disable layer events handlers in order to avoid layer events while using the drag proxy.
+        // Disable layer events handlers in order to avoid layer events while using the drag def.
         this.layerEventHandlers = getLayer( context );
         disableHandlers();
 
@@ -268,7 +268,7 @@ public abstract class NewNodeCommand<I> extends AbstractElementBuilderCommand<I>
 
                 final Node<View<?>, Edge> node = ( Node<View<?>, Edge> ) item.asNode();
 
-                // Perform the temporal proxy connections.
+                // Perform the temporal def connections.
                 edge.setSourceNode( sourceNode );
                 edge.setTargetNode( node );
 

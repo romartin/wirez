@@ -78,7 +78,7 @@ public abstract class NewPaletteNodeCommand<I> extends AbstractPaletteCommand<I>
 
                 final Edge<View<?>, Node> edge = (Edge<View<?>, Node>) edgeItem;
 
-                // Manually set the source node as the drag proxy will need it.
+                // Manually set the source node as the drag def will need it.
                 edge.setSourceNode( sourceNode );
 
                 clientFactoryServices.newElement( UUID.uuid(), definitionId, new ServiceCallback<Element>() {

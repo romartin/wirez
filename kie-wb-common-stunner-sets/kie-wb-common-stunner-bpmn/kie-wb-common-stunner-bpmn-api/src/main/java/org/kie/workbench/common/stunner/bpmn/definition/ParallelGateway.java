@@ -24,10 +24,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
-import org.kie.workbench.common.stunner.bpmn.shape.proxy.ParallelGatewayShapeProxy;
+import org.kie.workbench.common.stunner.bpmn.shape.def.ParallelGatewayShapeDef;
+import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
 import org.kie.workbench.common.stunner.core.definition.annotation.Shape;
-import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Title;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.Morph;
 import org.kie.workbench.common.stunner.core.factory.graph.NodeFactory;
@@ -36,7 +36,7 @@ import org.kie.workbench.common.stunner.shapes.factory.BasicShapesFactory;
 @Portable
 @Bindable
 @Definition( graphFactory = NodeFactory.class, builder = ParallelGateway.ParallelGatewayBuilder.class )
-@Shape( factory = BasicShapesFactory.class, proxy = ParallelGatewayShapeProxy.class )
+@Shape( factory = BasicShapesFactory.class, def = ParallelGatewayShapeDef.class )
 @Morph( base = BaseGateway.class )
 public class ParallelGateway extends BaseGateway {
 

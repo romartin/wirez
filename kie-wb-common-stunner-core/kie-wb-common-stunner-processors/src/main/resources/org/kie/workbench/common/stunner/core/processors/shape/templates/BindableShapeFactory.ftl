@@ -22,22 +22,15 @@ import ${parentClassName};
 import ${dc};
 </#list>
 
-<#list proxyClasses as pc>
+<#list shapeDefClasses as pc>
 import ${pc};
 </#list>
 
-<#list shapeProxyFactoryEntities as pc>
+<#list shapeDefFactoryEntities as pc>
 import ${pc.className};
 </#list>
 
-import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
-import org.kie.workbench.common.stunner.core.definition.util.DefinitionUtils;
-import org.kie.workbench.common.stunner.core.client.shape.Shape;
-import org.kie.workbench.common.stunner.core.client.shape.factory.*;
-import org.kie.workbench.common.stunner.core.client.shape.view.ShapeView;
 import org.kie.workbench.common.stunner.core.client.shape.factory.ShapeFactory;
-import org.kie.workbench.common.stunner.core.client.shape.factory.ShapeFactoryWrapper;
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -49,7 +42,7 @@ import javax.annotation.Generated;
 @ApplicationScoped
 public class ${className} extends ${parentClassName} {
 
-    <#list shapeProxyFactoryEntities as pc>
+    <#list shapeDefFactoryEntities as pc>
         ${pc.className} ${pc.id};
     </#list>
 
@@ -58,11 +51,11 @@ public class ${className} extends ${parentClassName} {
 
     @Inject
     public ${className}(
-            <#list shapeProxyFactoryEntities as pc>
+            <#list shapeDefFactoryEntities as pc>
                 final ${pc.className} ${pc.id}
             </#list>) {
 
-        <#list shapeProxyFactoryEntities as pc>
+        <#list shapeDefFactoryEntities as pc>
             this.${pc.id} = ${pc.id};
         </#list>
 
@@ -78,7 +71,7 @@ public class ${className} extends ${parentClassName} {
     
     }
 
-    <#list shapeProxyFactoryEntities as pc>
+    <#list shapeDefFactoryEntities as pc>
         @Override
         protected ShapeFactory getFactory() {
             return this.${pc.id};

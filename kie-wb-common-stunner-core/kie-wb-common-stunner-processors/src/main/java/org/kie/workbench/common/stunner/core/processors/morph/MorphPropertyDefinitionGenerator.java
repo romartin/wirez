@@ -16,11 +16,11 @@
 
 package org.kie.workbench.common.stunner.core.processors.morph;
 
-import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.kie.workbench.common.stunner.core.definition.morph.BindableMorphProperty;
 import org.kie.workbench.common.stunner.core.definition.morph.BindablePropertyMorphDefinition;
 import org.kie.workbench.common.stunner.core.processors.AbstractBindableAdapterGenerator;
 import org.kie.workbench.common.stunner.core.processors.ProcessingMorphProperty;
+import org.uberfire.annotations.processors.exceptions.GenerationException;
 
 import javax.annotation.processing.Messager;
 import java.util.Collection;

@@ -21,14 +21,14 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.ThrowEventAttributes;
-import org.kie.workbench.common.stunner.bpmn.shape.proxy.EndTerminateEventShapeProxy;
+import org.kie.workbench.common.stunner.bpmn.shape.def.EndTerminateEventShapeDef;
+import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
 import org.kie.workbench.common.stunner.core.definition.annotation.Shape;
-import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Title;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.Morph;
 import org.kie.workbench.common.stunner.core.factory.graph.NodeFactory;
@@ -37,7 +37,7 @@ import org.kie.workbench.common.stunner.shapes.factory.BasicShapesFactory;
 @Portable
 @Bindable
 @Definition( graphFactory = NodeFactory.class, builder = EndTerminateEvent.EndTerminateEventBuilder.class )
-@Shape( factory = BasicShapesFactory.class, proxy = EndTerminateEventShapeProxy.class )
+@Shape( factory = BasicShapesFactory.class, def = EndTerminateEventShapeDef.class )
 @Morph( base = BaseEndEvent.class )
 public class EndTerminateEvent extends BaseEndEvent {
 

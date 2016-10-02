@@ -17,14 +17,11 @@
 package org.kie.workbench.common.stunner.core.processors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.kie.workbench.common.stunner.core.processors.rule.*;
-import org.uberfire.annotations.processors.AbstractErrorAbsorbingProcessor;
-import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
-import org.kie.workbench.common.stunner.core.definition.annotation.Shape;
-import org.kie.workbench.common.stunner.core.definition.annotation.ShapeSet;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.DefinitionSet;
+import org.kie.workbench.common.stunner.core.definition.annotation.Shape;
+import org.kie.workbench.common.stunner.core.definition.annotation.ShapeSet;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.Morph;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBase;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphProperty;
@@ -39,8 +36,11 @@ import org.kie.workbench.common.stunner.core.processors.morph.MorphDefinitionPro
 import org.kie.workbench.common.stunner.core.processors.morph.MorphPropertyDefinitionGenerator;
 import org.kie.workbench.common.stunner.core.processors.property.BindablePropertyAdapterGenerator;
 import org.kie.workbench.common.stunner.core.processors.propertyset.BindablePropertySetAdapterGenerator;
+import org.kie.workbench.common.stunner.core.processors.rule.*;
 import org.kie.workbench.common.stunner.core.processors.shape.BindableShapeFactoryGenerator;
 import org.kie.workbench.common.stunner.core.processors.shape.BindableShapeSetGenerator;
+import org.uberfire.annotations.processors.AbstractErrorAbsorbingProcessor;
+import org.uberfire.annotations.processors.exceptions.GenerationException;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
@@ -502,7 +502,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
 
             }
 
-            // Shape Proxy Factory.
+            // Shape Definitions Factory.
             Shape shapeAnn = e.getAnnotation(Shape.class);
             if ( null != shapeAnn ) {
 
@@ -513,26 +513,26 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
                     sfm =  mte.getTypeMirror();
                 }
                 if ( null == sfm ) {
-                    throw new RuntimeException( "No ShapeProxy Factory class class specifyed for the Definition ["
+                    throw new RuntimeException( "No ShapeDef Factory class class specifyed for the Definition ["
                             + propertyClassName + "]" );
                 }
                 String sfmfqcn = sfm.toString();
 
                 TypeMirror sm = null;
                 try {
-                    Class<?> graphClass =  shapeAnn.proxy();
+                    Class<?> graphClass =  shapeAnn.def();
                 } catch( MirroredTypeException mte ) {
                     sm =  mte.getTypeMirror();
                 }
                 if ( null == sm ) {
-                    throw new RuntimeException("No Shape Proxy class class specifyed for the @Definition.");
+                    throw new RuntimeException("No Shape Def class class specifyed for the @Definition.");
                 }
                 String smfqcn = sm.toString();
                 
-                if ( !processingContext.getDefinitionAnnotations().getShapeProxies().containsKey( propertyClassName ) ) {
+                if ( !processingContext.getDefinitionAnnotations().getShapeDefinitions().containsKey( propertyClassName ) ) {
                     
                     processingContext.getDefinitionAnnotations()
-                            .getShapeProxies().put( propertyClassName, new String[] { sfmfqcn, smfqcn } );
+                            .getShapeDefinitions().put( propertyClassName, new String[] { sfmfqcn, smfqcn } );
                     
                 }
 
@@ -1441,7 +1441,7 @@ public class MainProcessor extends AbstractErrorAbsorbingProcessor {
         try {
 
             // Generate the Shape Set if annotation present.
-            if ( !processingContext.getDefinitionAnnotations().getShapeProxies().isEmpty() ) {
+            if ( !processingContext.getDefinitionAnnotations().getShapeDefinitions().isEmpty() ) {
 
                 // Ensure only visible on client side.
                 final String packageName = getGeneratedPackageName() + ".client.shape";

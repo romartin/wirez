@@ -15,8 +15,8 @@
  */
 package org.kie.workbench.common.stunner.core.definition.annotation;
 
-import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
-import org.kie.workbench.common.stunner.core.client.shape.factory.ShapeProxyFactory;
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeDef;
+import org.kie.workbench.common.stunner.core.client.shape.factory.ShapeDefFactory;
 
 import java.lang.annotation.*;
 
@@ -25,8 +25,8 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 public @interface Shape {
 
-    Class<? extends ShapeProxyFactory> factory();
+    Class<? extends ShapeDefFactory> factory();
 
-    Class<? extends ShapeProxy> proxy();
+    Class<? extends ShapeDef> def();
     
 }

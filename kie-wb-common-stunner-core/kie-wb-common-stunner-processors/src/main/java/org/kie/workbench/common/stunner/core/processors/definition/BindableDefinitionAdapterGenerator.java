@@ -16,11 +16,11 @@
 
 package org.kie.workbench.common.stunner.core.processors.definition;
 
-import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterFactory;
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableDefinitionAdapterProxy;
 import org.kie.workbench.common.stunner.core.processors.AbstractBindableAdapterGenerator;
 import org.kie.workbench.common.stunner.core.processors.ProcessingDefinitionAnnotations;
+import org.uberfire.annotations.processors.exceptions.GenerationException;
 
 import javax.annotation.processing.Messager;
 import java.util.HashMap;

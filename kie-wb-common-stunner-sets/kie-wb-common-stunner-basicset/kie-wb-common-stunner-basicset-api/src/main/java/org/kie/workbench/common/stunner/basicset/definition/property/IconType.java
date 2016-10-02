@@ -23,7 +23,7 @@ import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.property.*;
 import org.kie.workbench.common.stunner.core.definition.property.PropertyType;
 import org.kie.workbench.common.stunner.core.definition.property.type.EnumType;
-import org.kie.workbench.common.stunner.shapes.proxy.icon.dynamics.Icons;
+import org.kie.workbench.common.stunner.shapes.def.icon.dynamics.Icons;
 
 import java.util.ArrayList;
 

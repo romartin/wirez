@@ -42,14 +42,14 @@ import org.eclipse.emf.ecore.util.ExtendedMetaData;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.jboss.drools.*;
 import org.jboss.drools.impl.DroolsPackageImpl;
+import org.kie.workbench.common.stunner.bpmn.backend.legacy.resource.JBPMBpmn2ResourceFactoryImpl;
+import org.kie.workbench.common.stunner.bpmn.backend.legacy.util.Utils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleReference;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.kie.workbench.common.stunner.bpmn.backend.legacy.resource.JBPMBpmn2ResourceFactoryImpl;
-import org.kie.workbench.common.stunner.bpmn.backend.legacy.util.Utils;
 
 import java.io.File;
 import java.io.IOException;

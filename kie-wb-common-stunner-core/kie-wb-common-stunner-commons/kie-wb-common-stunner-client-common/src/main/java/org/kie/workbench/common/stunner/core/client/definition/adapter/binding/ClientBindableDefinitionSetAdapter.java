@@ -26,7 +26,7 @@ class ClientBindableDefinitionSetAdapter extends AbstractClientBindableAdapter<O
     public String getId(final Object pojo) {
         String _id = BindableAdapterUtils.getDefinitionSetId( pojo.getClass() );
 
-        // Avoid weld proxy class names issues.
+        // Avoid weld def class names issues.
         if ( _id.contains("$") ) {
             _id = _id.substring( 0, _id.indexOf("$") );
         }

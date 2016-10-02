@@ -16,9 +16,9 @@
 
 package org.kie.workbench.common.stunner.core.processors.shape;
 
-import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.kie.workbench.common.stunner.core.client.AbstractBindableShapeSet;
 import org.kie.workbench.common.stunner.core.processors.AbstractBindableAdapterGenerator;
+import org.uberfire.annotations.processors.exceptions.GenerationException;
 
 import javax.annotation.processing.Messager;
 import java.util.HashMap;

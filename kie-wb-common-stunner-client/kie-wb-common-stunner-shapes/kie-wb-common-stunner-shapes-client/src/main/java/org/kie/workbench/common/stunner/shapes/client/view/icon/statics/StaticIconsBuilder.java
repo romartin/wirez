@@ -5,7 +5,7 @@ import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.SVGPath;
 import com.ait.lienzo.shared.core.types.ColorName;
-import org.kie.workbench.common.stunner.shapes.proxy.icon.statics.Icons;
+import org.kie.workbench.common.stunner.shapes.def.icon.statics.Icons;
 
 public final class StaticIconsBuilder {
 

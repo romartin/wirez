@@ -1,13 +1,13 @@
 package org.kie.workbench.common.stunner.core.client.shape.view;
 
 import org.kie.workbench.common.stunner.core.client.shape.factory.ShapeFactory;
-import org.kie.workbench.common.stunner.core.definition.shape.GlyphProxy;
+import org.kie.workbench.common.stunner.core.definition.shape.GlyphDef;
 
 public interface ShapeGlyphBuilder<G> {
 
     ShapeGlyphBuilder<G> definition( String id );
 
-    ShapeGlyphBuilder<G> glyphProxy( GlyphProxy<?> glyphProxy, String id );
+    ShapeGlyphBuilder<G> glyphProxy( GlyphDef<?> glyphProxy, String id );
 
     ShapeGlyphBuilder<G> factory( ShapeFactory factory );
     ;

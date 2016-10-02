@@ -1,18 +1,18 @@
 package org.kie.workbench.common.stunner.core.client.shape.view;
 
 import org.kie.workbench.common.stunner.core.definition.adapter.binding.BindableAdapterUtils;
-import org.kie.workbench.common.stunner.core.definition.shape.AbstractBindableGlyphProxy;
-import org.kie.workbench.common.stunner.core.definition.shape.GlyphProxy;
+import org.kie.workbench.common.stunner.core.definition.shape.AbstractBindableGlyphDef;
+import org.kie.workbench.common.stunner.core.definition.shape.GlyphDef;
 
 public abstract class AbstractBindableShapeGlyphBuilder<G> extends AbstractShapeGlyphBuilder<G> {
 
     @SuppressWarnings("unchecked")
-    public ShapeGlyphBuilder<G> glyphProxy( final GlyphProxy<?> glyphProxy,
+    public ShapeGlyphBuilder<G> glyphProxy( final GlyphDef<?> glyphProxy,
                                             final Class<?> type ) {
 
-        if ( glyphProxy instanceof AbstractBindableGlyphProxy ) {
+        if ( glyphProxy instanceof AbstractBindableGlyphDef ) {
 
-            final AbstractBindableGlyphProxy bindableGlyphProxy = (AbstractBindableGlyphProxy) glyphProxy;
+            final AbstractBindableGlyphDef bindableGlyphProxy = (AbstractBindableGlyphDef ) glyphProxy;
             this.id = bindableGlyphProxy.getGlyphDefinitionId( type );
 
             return this;

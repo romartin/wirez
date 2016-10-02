@@ -5,7 +5,7 @@ import com.ait.lienzo.client.core.shape.MultiPath;
 import com.ait.lienzo.client.core.shape.wires.WiresLayoutContainer;
 import com.ait.lienzo.client.core.types.BoundingBox;
 import org.kie.workbench.common.stunner.shapes.client.view.BasicShapeView;
-import org.kie.workbench.common.stunner.shapes.proxy.icon.statics.Icons;
+import org.kie.workbench.common.stunner.shapes.def.icon.statics.Icons;
 
 public class StaticIconShapeView<T extends StaticIconShapeView> 
         extends BasicShapeView<T> {

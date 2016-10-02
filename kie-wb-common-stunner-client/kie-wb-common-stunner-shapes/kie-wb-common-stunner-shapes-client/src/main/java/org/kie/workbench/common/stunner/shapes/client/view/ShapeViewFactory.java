@@ -1,8 +1,8 @@
 package org.kie.workbench.common.stunner.shapes.client.view;
 
-import org.kie.workbench.common.stunner.shapes.proxy.icon.dynamics.Icons;
 import org.kie.workbench.common.stunner.shapes.client.view.icon.dynamics.DynamicIconShapeView;
 import org.kie.workbench.common.stunner.shapes.client.view.icon.statics.StaticIconShapeView;
+import org.kie.workbench.common.stunner.shapes.def.icon.dynamics.Icons;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -24,7 +24,7 @@ public class ShapeViewFactory {
         
     }
 
-    public StaticIconShapeView staticIcon( final org.kie.workbench.common.stunner.shapes.proxy.icon.statics.Icons icon ) {
+    public StaticIconShapeView staticIcon( final org.kie.workbench.common.stunner.shapes.def.icon.statics.Icons icon ) {
         
         return new StaticIconShapeView( icon );
         

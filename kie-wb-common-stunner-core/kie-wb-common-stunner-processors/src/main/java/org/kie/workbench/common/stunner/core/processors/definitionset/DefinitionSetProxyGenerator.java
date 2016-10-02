@@ -16,10 +16,10 @@
 
 package org.kie.workbench.common.stunner.core.processors.definitionset;
 
-import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.kie.workbench.common.stunner.core.definition.DefinitionSetProxy;
 import org.kie.workbench.common.stunner.core.processors.AbstractAdapterGenerator;
 import org.kie.workbench.common.stunner.core.processors.ProcessingEntity;
+import org.uberfire.annotations.processors.exceptions.GenerationException;
 
 import javax.annotation.processing.Messager;
 import java.util.HashMap;

@@ -16,12 +16,12 @@
 
 package org.kie.workbench.common.stunner.core.processors.shape;
 
-import org.uberfire.annotations.processors.exceptions.GenerationException;
 import org.kie.workbench.common.stunner.core.client.shape.factory.ShapeFactoryWrapper;
 import org.kie.workbench.common.stunner.core.processors.AbstractBindableAdapterGenerator;
 import org.kie.workbench.common.stunner.core.processors.MainProcessor;
 import org.kie.workbench.common.stunner.core.processors.ProcessingDefinitionAnnotations;
 import org.kie.workbench.common.stunner.core.processors.ProcessingEntity;
+import org.uberfire.annotations.processors.exceptions.GenerationException;
 
 import javax.annotation.processing.Messager;
 import java.util.*;
@@ -48,35 +48,35 @@ public class BindableShapeFactoryGenerator extends AbstractBindableAdapterGenera
         root.put("parentClassName",
                 ShapeFactoryWrapper.class.getName() );
 
-        Map<String, String[]> shapeProxies = processingDefinitionAnnotations.getShapeProxies();
-        Set<String> definitionClasses = shapeProxies.keySet();
-        Collection<String[]> values = shapeProxies.values();
+        Map<String, String[]> shapeDefs = processingDefinitionAnnotations.getShapeDefinitions();
+        Set<String> definitionClasses = shapeDefs.keySet();
+        Collection<String[]> values = shapeDefs.values();
         Collection<String> factoryClasses = getCollection( values, 0 );
-        Collection<String> proxyClasses = getCollection( values, 1 );
+        Collection<String> shapeDefClasses = getCollection( values, 1 );
 
-        Collection<ProcessingEntity> shapeProxyFactoryEntities = new LinkedList<>();
+        Collection<ProcessingEntity> shapeDefFactoryEntities = new LinkedList<>();
         for ( String s : factoryClasses ) {
-            shapeProxyFactoryEntities.add( new ProcessingEntity( s, MainProcessor.toClassMemberId( s ) ) );
+            shapeDefFactoryEntities.add( new ProcessingEntity( s, MainProcessor.toClassMemberId( s ) ) );
         }
         
-        root.put("shapeProxyFactoryEntities",
-                shapeProxyFactoryEntities );
+        root.put("shapeDefFactoryEntities",
+                shapeDefFactoryEntities );
         
         root.put("definitionClasses",
                 definitionClasses);
-        root.put("proxyClasses",
-                proxyClasses );
+        root.put("shapeDefClasses",
+                shapeDefClasses );
         
 
         Collection<String> addProxySentences = new LinkedList<>();
-        for ( Map.Entry<String, String[]> entry : shapeProxies.entrySet() ) {
+        for ( Map.Entry<String, String[]> entry : shapeDefs.entrySet() ) {
 
             String classname = entry.getKey();
             String factoryClass = entry.getValue()[0];
             String factoryId = MainProcessor.toClassMemberId( factoryClass );
-            String proxyClass = entry.getValue()[1];
+            String shapeDefClass = entry.getValue()[1];
             
-            addProxySentences.add( factoryId + ".addProxy( " + classname + ".class, new " + proxyClass + "() );" );
+            addProxySentences.add( factoryId + ".addShapeDef( " + classname + ".class, new " + shapeDefClass + "() );" );
             
         }
 

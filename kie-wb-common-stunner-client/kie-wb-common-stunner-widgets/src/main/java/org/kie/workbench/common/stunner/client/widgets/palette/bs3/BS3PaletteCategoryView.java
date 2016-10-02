@@ -152,7 +152,7 @@ public class BS3PaletteCategoryView extends Composite implements BS3PaletteCateg
                 // If calling presenter login when mouse down and presenter clear the palette view,
                 // the click event is never fired on the DOM.
                 // So using this timer the mouse down job is postponed, so if after MOUSE_DOWN_TIMER_DURATION
-                // there is no click event, this timer fires and shows the drag proxy. If click event fires, will
+                // there is no click event, this timer fires and shows the drag def. If click event fires, will
                 // cancer the timer so the mouse down job is not performed, as expected. Same for mouse move event just
                 // after the mouse down one.
                 BS3PaletteCategoryView.this.itemMouseDownTimer = new Timer() {

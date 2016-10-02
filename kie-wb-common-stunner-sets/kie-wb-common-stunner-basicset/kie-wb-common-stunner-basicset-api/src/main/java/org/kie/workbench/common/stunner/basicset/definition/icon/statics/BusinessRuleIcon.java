@@ -20,17 +20,17 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.stunner.basicset.definition.Categories;
-import org.kie.workbench.common.stunner.basicset.shape.proxy.icon.statics.StaticIconProxy;
+import org.kie.workbench.common.stunner.basicset.shape.def.icon.statics.StaticIconShapeDefImpl;
+import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
 import org.kie.workbench.common.stunner.core.definition.annotation.Shape;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
-import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Title;
 import org.kie.workbench.common.stunner.core.definition.builder.Builder;
 import org.kie.workbench.common.stunner.core.factory.graph.NodeFactory;
+import org.kie.workbench.common.stunner.shapes.def.icon.statics.Icons;
 import org.kie.workbench.common.stunner.shapes.factory.BasicShapesFactory;
-import org.kie.workbench.common.stunner.shapes.proxy.icon.statics.Icons;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +38,7 @@ import java.util.Set;
 @Portable
 @Bindable
 @Definition( graphFactory = NodeFactory.class, builder = BusinessRuleIcon.BusinessRuleIconBuilder.class )
-@Shape( factory = BasicShapesFactory.class, proxy = StaticIconProxy.class )
+@Shape( factory = BasicShapesFactory.class, def = StaticIconShapeDefImpl.class )
 public class BusinessRuleIcon implements StaticIcon {
 
     @Category

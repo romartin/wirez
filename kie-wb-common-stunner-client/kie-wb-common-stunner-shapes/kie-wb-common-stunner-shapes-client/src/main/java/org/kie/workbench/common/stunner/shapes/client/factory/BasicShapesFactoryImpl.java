@@ -25,26 +25,20 @@ import org.kie.workbench.common.stunner.core.client.shape.AbstractCompositeShape
 import org.kie.workbench.common.stunner.core.client.shape.AbstractShape;
 import org.kie.workbench.common.stunner.core.client.shape.HasChildren;
 import org.kie.workbench.common.stunner.core.client.shape.MutableShape;
-import org.kie.workbench.common.stunner.core.client.shape.factory.AbstractProxyShapeFactory;
+import org.kie.workbench.common.stunner.core.client.shape.factory.AbstractShapeDefFactory;
 import org.kie.workbench.common.stunner.core.client.shape.view.AbstractBindableShapeGlyphBuilder;
 import org.kie.workbench.common.stunner.core.client.shape.view.ShapeGlyph;
 import org.kie.workbench.common.stunner.core.client.shape.view.ShapeGlyphBuilder;
 import org.kie.workbench.common.stunner.core.client.shape.view.ShapeView;
-import org.kie.workbench.common.stunner.core.definition.shape.ShapeProxy;
-import org.kie.workbench.common.stunner.shapes.client.proxy.*;
+import org.kie.workbench.common.stunner.core.definition.shape.ShapeDef;
+import org.kie.workbench.common.stunner.shapes.client.*;
 import org.kie.workbench.common.stunner.shapes.client.view.*;
-import org.kie.workbench.common.stunner.shapes.client.view.icon.dynamics.DynamicIconShapeView;
-import org.kie.workbench.common.stunner.shapes.proxy.*;
-import org.kie.workbench.common.stunner.shapes.proxy.icon.dynamics.IconProxy;
-import org.kie.workbench.common.stunner.shapes.proxy.icon.dynamics.Icons;
-import org.kie.workbench.common.stunner.shapes.client.proxy.DynamicIconShape;
-import org.kie.workbench.common.stunner.shapes.client.proxy.RectangleShape;
-import org.kie.workbench.common.stunner.shapes.client.proxy.StaticIconShape;
-import org.kie.workbench.common.stunner.shapes.client.view.ConnectorView;
-import org.kie.workbench.common.stunner.shapes.client.view.PolygonView;
-import org.kie.workbench.common.stunner.shapes.client.view.ShapeViewFactory;
 import org.kie.workbench.common.stunner.shapes.client.view.glyph.ConnectorGlyph;
+import org.kie.workbench.common.stunner.shapes.client.view.icon.dynamics.DynamicIconShapeView;
 import org.kie.workbench.common.stunner.shapes.client.view.icon.statics.StaticIconShapeView;
+import org.kie.workbench.common.stunner.shapes.def.*;
+import org.kie.workbench.common.stunner.shapes.def.icon.dynamics.Icons;
+import org.kie.workbench.common.stunner.shapes.def.icon.statics.IconShapeDef;
 import org.kie.workbench.common.stunner.shapes.factory.BasicShapesFactory;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -53,7 +47,7 @@ import java.util.Map;
 
 @ApplicationScoped
 public class BasicShapesFactoryImpl 
-        extends AbstractProxyShapeFactory<Object, ShapeView, MutableShape<Object, ShapeView>, BasicShapeProxy<Object>>
+        extends AbstractShapeDefFactory<Object, ShapeView, MutableShape<Object, ShapeView>, ShapeDef<Object>>
         implements BasicShapesFactory<Object, AbstractCanvasHandler> {
 
     protected static final double DEFAULT_SIZE = 50;
@@ -83,21 +77,21 @@ public class BasicShapesFactoryImpl
                      final AbstractCanvasHandler context) {
 
         final String id = definitionManager.adapters().forDefinition().getId( definition );
-        final BasicShapeProxy<Object> proxy = getProxy( id );
+        final ShapeDef<Object> proxy = getShapeDef( id );
 
         return build( definition, proxy, context );
     }
 
     @SuppressWarnings("unchecked")
     protected MutableShape<Object, ShapeView> build( final Object definition,
-                                                final ShapeProxy<Object> proxy,
+                                                final ShapeDef<Object> proxy,
                                                 final AbstractCanvasHandler context) {
 
         MutableShape<Object, ShapeView> shape = null;
         
         if ( isCircle( proxy ) ) {
 
-            final CircleProxy<Object> circleProxy = (CircleProxy<Object>) proxy;
+            final CircleShapeDef<Object> circleProxy = (CircleShapeDef<Object> ) proxy;
 
             final double radius = circleProxy.getRadius( definition );
 
@@ -110,7 +104,7 @@ public class BasicShapesFactoryImpl
 
         if ( isRing( proxy ) ) {
 
-            final RingProxy<Object> ringProxy = (RingProxy<Object>) proxy;
+            final RingShapeDef<Object> ringProxy = (RingShapeDef<Object> ) proxy;
 
             final double oRadius = ringProxy.getOuterRadius( definition );
 
@@ -123,7 +117,7 @@ public class BasicShapesFactoryImpl
 
         if ( isRectangle( proxy ) ) {
 
-            final RectangleProxy<Object> rectangleProxy = (RectangleProxy<Object>) proxy;
+            final RectangleShapeDef<Object> rectangleProxy = (RectangleShapeDef<Object> ) proxy;
 
             final double width = rectangleProxy.getWidth( definition );
             final double height = rectangleProxy.getHeight( definition );
@@ -137,7 +131,7 @@ public class BasicShapesFactoryImpl
 
         if ( isPolygon( proxy ) ) {
 
-            final PolygonProxy<Object> polygonProxy = (PolygonProxy<Object>) proxy;
+            final PolygonShapeDef<Object> polygonProxy = (PolygonShapeDef<Object> ) proxy;
 
             final double radius = polygonProxy.getRadius( definition );
             final String fillColor = polygonProxy.getBackgroundColor( definition );
@@ -152,7 +146,7 @@ public class BasicShapesFactoryImpl
 
         if ( isConnector( proxy ) ) {
 
-            final ConnectorProxy<Object> polygonProxy = (ConnectorProxy<Object>) proxy;
+            final ConnectorShapeDef<Object> polygonProxy = (ConnectorShapeDef<Object> ) proxy;
 
             final ConnectorView view = shapeViewFactory.connector( 0, 0, 100, 100 );
 
@@ -162,10 +156,10 @@ public class BasicShapesFactoryImpl
 
         if ( isStaticIcon( proxy ) ) {
 
-            final org.kie.workbench.common.stunner.shapes.proxy.icon.statics.IconProxy<Object> iconProxy =
-                    ( org.kie.workbench.common.stunner.shapes.proxy.icon.statics.IconProxy<Object> ) proxy;
+            final IconShapeDef<Object> iconProxy =
+                    ( IconShapeDef<Object> ) proxy;
 
-            final org.kie.workbench.common.stunner.shapes.proxy.icon.statics.Icons icon = iconProxy.getIcon( definition );
+            final org.kie.workbench.common.stunner.shapes.def.icon.statics.Icons icon = iconProxy.getIcon( definition );
 
             final StaticIconShapeView view =
                     shapeViewFactory.staticIcon( icon );
@@ -176,8 +170,8 @@ public class BasicShapesFactoryImpl
 
         if ( isDynamicIcon( proxy ) ) {
 
-            final IconProxy<Object> iconProxy =
-                    (IconProxy<Object> ) proxy;
+            final org.kie.workbench.common.stunner.shapes.def.icon.dynamics.IconShapeDef iconProxy =
+                    ( org.kie.workbench.common.stunner.shapes.def.icon.dynamics.IconShapeDef ) proxy;
 
             final Icons icon = DynamicIconShape.getIcon( definition, iconProxy );
             final double width = iconProxy.getWidth( definition );
@@ -191,14 +185,14 @@ public class BasicShapesFactoryImpl
         }
         
         // Add children, if any.
-        if ( null != shape && proxy instanceof HasChildProxies) {
+        if ( null != shape && proxy instanceof HasChildShapeDefs ) {
 
-            final HasChildProxies<Object> hasChildren = (HasChildProxies<Object>) proxy;
-            final Map<ShapeProxy<Object>, HasChildren.Layout> childProxies = hasChildren.getChildProxies();
+            final HasChildShapeDefs<Object> hasChildren = (HasChildShapeDefs<Object> ) proxy;
+            final Map<ShapeDef<Object>, HasChildren.Layout> childProxies = hasChildren.getChildProxies();
             if ( null != childProxies && !childProxies.isEmpty() ) {
-                for ( final Map.Entry<ShapeProxy<Object>, HasChildren.Layout> entry : childProxies.entrySet() ) {
+                for ( final Map.Entry<ShapeDef<Object>, HasChildren.Layout> entry : childProxies.entrySet() ) {
 
-                    final ShapeProxy<Object> child = entry.getKey();
+                    final ShapeDef<Object> child = entry.getKey();
                     final HasChildren.Layout layout = entry.getValue();
 
                     final MutableShape<Object, ShapeView> childShape = this.build( definition, child, context);
@@ -225,32 +219,32 @@ public class BasicShapesFactoryImpl
 
     }
     
-    private boolean isCircle( final ShapeProxy<Object> proxy ) {
-        return proxy instanceof CircleProxy;
+    private boolean isCircle( final ShapeDef<Object> proxy ) {
+        return proxy instanceof CircleShapeDef;
     }
 
-    private boolean isRing( final ShapeProxy<Object> proxy ) {
-        return proxy instanceof RingProxy;
+    private boolean isRing( final ShapeDef<Object> proxy ) {
+        return proxy instanceof RingShapeDef;
     }
 
-    private boolean isRectangle( final ShapeProxy<Object> proxy ) {
-        return proxy instanceof RectangleProxy;
+    private boolean isRectangle( final ShapeDef<Object> proxy ) {
+        return proxy instanceof RectangleShapeDef;
     }
 
-    private boolean isPolygon( final ShapeProxy<Object> proxy ) {
-        return proxy instanceof PolygonProxy;
+    private boolean isPolygon( final ShapeDef<Object> proxy ) {
+        return proxy instanceof PolygonShapeDef;
     }
 
-    private boolean isConnector( final ShapeProxy<Object> proxy ) {
-        return proxy instanceof ConnectorProxy;
+    private boolean isConnector( final ShapeDef<Object> proxy ) {
+        return proxy instanceof ConnectorShapeDef;
     }
 
-    private boolean isDynamicIcon(final ShapeProxy<Object> proxy ) {
-        return proxy instanceof IconProxy;
+    private boolean isDynamicIcon(final ShapeDef<Object> proxy ) {
+        return proxy instanceof org.kie.workbench.common.stunner.shapes.def.icon.dynamics.IconShapeDef;
     }
 
-    private boolean isStaticIcon(final ShapeProxy<Object> proxy ) {
-        return proxy instanceof org.kie.workbench.common.stunner.shapes.proxy.icon.statics.IconProxy;
+    private boolean isStaticIcon(final ShapeDef<Object> proxy ) {
+        return proxy instanceof IconShapeDef;
     }
     
     @Override
@@ -260,7 +254,7 @@ public class BasicShapesFactoryImpl
                                 final double height) {
 
         final String id = getDefinitionId( clazz );
-        final BasicShapeProxy<Object> proxy = getProxy( id );
+        final ShapeDef<Object> proxy = getShapeDef( id );
 
         // Custom shape glyphs.
 

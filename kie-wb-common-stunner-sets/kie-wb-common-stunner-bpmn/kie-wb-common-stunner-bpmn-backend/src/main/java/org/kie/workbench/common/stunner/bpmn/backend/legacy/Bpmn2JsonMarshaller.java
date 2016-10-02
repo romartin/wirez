@@ -17,7 +17,6 @@ package org.kie.workbench.common.stunner.bpmn.backend.legacy;
 
 import bpsim.*;
 import bpsim.impl.BpsimPackageImpl;
-import org.eclipse.emf.common.util.EList;
 import org.codehaus.jackson.JsonEncoding;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
@@ -32,13 +31,14 @@ import org.eclipse.bpmn2.di.BPMNShape;
 import org.eclipse.dd.dc.Bounds;
 import org.eclipse.dd.dc.Point;
 import org.eclipse.dd.di.DiagramElement;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.jboss.drools.*;
 import org.jboss.drools.impl.DroolsPackageImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.kie.workbench.common.stunner.bpmn.backend.legacy.profile.IDiagramProfile;
 import org.kie.workbench.common.stunner.bpmn.backend.legacy.util.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

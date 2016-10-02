@@ -27,16 +27,16 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.jboss.drools.impl.DroolsFactoryImpl;
-import org.kie.workbench.common.stunner.bpmn.backend.legacy.Bpmn2JsonUnmarshaller;
-import org.kie.workbench.common.stunner.bpmn.backend.legacy.repository.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.kie.workbench.common.stunner.bpmn.backend.legacy.Bpmn2JsonMarshaller;
+import org.kie.workbench.common.stunner.bpmn.backend.legacy.Bpmn2JsonUnmarshaller;
 import org.kie.workbench.common.stunner.bpmn.backend.legacy.plugin.IDiagramPlugin;
 import org.kie.workbench.common.stunner.bpmn.backend.legacy.plugin.impl.PluginServiceImpl;
 import org.kie.workbench.common.stunner.bpmn.backend.legacy.profile.IDiagramProfile;
+import org.kie.workbench.common.stunner.bpmn.backend.legacy.repository.Repository;
 import org.kie.workbench.common.stunner.bpmn.backend.legacy.resource.JBPMBpmn2ResourceImpl;
 import org.kie.workbench.common.stunner.bpmn.backend.legacy.util.ConfigurationProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.servlet.ServletContext;
@@ -44,7 +44,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import java.io.*;
-import java.util.Collection;
 import java.util.*;
 
 

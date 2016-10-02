@@ -10,7 +10,6 @@ import com.ait.lienzo.client.core.types.BoundingBox;
 import com.ait.lienzo.client.core.types.LinearGradient;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.event.shared.HandlerRegistration;
-import org.kie.workbench.common.stunner.core.client.shape.view.event.*;
 import org.kie.workbench.common.stunner.client.lienzo.shape.view.AbstractShapeView;
 import org.kie.workbench.common.stunner.client.lienzo.shape.view.ViewEventHandlerManager;
 import org.kie.workbench.common.stunner.client.lienzo.util.LienzoShapeUtils;
@@ -19,6 +18,7 @@ import org.kie.workbench.common.stunner.core.client.shape.view.HasControlPoints;
 import org.kie.workbench.common.stunner.core.client.shape.view.HasEventHandlers;
 import org.kie.workbench.common.stunner.core.client.shape.view.HasFillGradient;
 import org.kie.workbench.common.stunner.core.client.shape.view.HasTitle;
+import org.kie.workbench.common.stunner.core.client.shape.view.event.*;
 import org.kie.workbench.common.stunner.shapes.client.util.BasicShapesUtils;
 
 import java.util.ArrayList;

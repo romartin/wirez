@@ -1,9 +1,7 @@
 package org.kie.workbench.common.stunner.core.client.shape.view;
 
 import org.kie.workbench.common.stunner.core.api.FactoryManager;
-import org.kie.workbench.common.stunner.core.client.shape.view.ShapeGlyph;
-import org.kie.workbench.common.stunner.core.client.shape.view.ShapeGlyphBuilder;
-import org.kie.workbench.common.stunner.core.definition.shape.GlyphProxy;
+import org.kie.workbench.common.stunner.core.definition.shape.GlyphDef;
 import org.kie.workbench.common.stunner.core.graph.Element;
 import org.kie.workbench.common.stunner.core.graph.content.view.View;
 import org.kie.workbench.common.stunner.core.util.UUID;
@@ -30,7 +28,7 @@ public abstract class AbstractShapeGlyphBuilder<G> implements ShapeGlyphBuilder<
     }
 
     @Override
-    public ShapeGlyphBuilder<G> glyphProxy( final GlyphProxy<?> glyphProxy,
+    public ShapeGlyphBuilder<G> glyphProxy( final GlyphDef<?> glyphProxy,
                                             final String id) {
 
         this.id = glyphProxy.getGlyphDefinitionId( id );

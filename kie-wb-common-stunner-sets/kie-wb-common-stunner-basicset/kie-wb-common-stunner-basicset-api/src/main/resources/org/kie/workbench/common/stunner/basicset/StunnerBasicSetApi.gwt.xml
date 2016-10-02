@@ -24,7 +24,7 @@
 	<inherits name="org.kie.workbench.common.stunner.shapes.StunnerShapesApi"/>
 
 	<source path="definition"/>
-	<source path="shape/proxy"/>
+	<source path="shape/def"/>
 	<source path="" includes="BasicSet.java"/>
 
 </module>

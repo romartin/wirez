@@ -1,7 +1,7 @@
 package org.kie.workbench.common.stunner.shapes.client.view.icon.dynamics;
 
 import com.ait.lienzo.client.core.shape.MultiPath;
-import org.kie.workbench.common.stunner.shapes.proxy.icon.dynamics.Icons;
+import org.kie.workbench.common.stunner.shapes.def.icon.dynamics.Icons;
 
 public class DynamicIconsBuilder {
 

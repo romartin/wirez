@@ -25,10 +25,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.Circ
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.ThrowEventAttributes;
-import org.kie.workbench.common.stunner.bpmn.shape.proxy.EndNoneEventShapeProxy;
+import org.kie.workbench.common.stunner.bpmn.shape.def.EndNoneEventShapeDef;
+import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
 import org.kie.workbench.common.stunner.core.definition.annotation.Shape;
-import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Title;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.Morph;
 import org.kie.workbench.common.stunner.core.factory.graph.NodeFactory;
@@ -37,7 +37,7 @@ import org.kie.workbench.common.stunner.shapes.factory.BasicShapesFactory;
 @Portable
 @Bindable
 @Definition( graphFactory = NodeFactory.class, builder = EndNoneEvent.EndNoneEventBuilder.class )
-@Shape( factory = BasicShapesFactory.class, proxy = EndNoneEventShapeProxy.class )
+@Shape( factory = BasicShapesFactory.class, def = EndNoneEventShapeDef.class )
 @Morph( base = BaseEndEvent.class )
 public class EndNoneEvent extends BaseEndEvent {
 

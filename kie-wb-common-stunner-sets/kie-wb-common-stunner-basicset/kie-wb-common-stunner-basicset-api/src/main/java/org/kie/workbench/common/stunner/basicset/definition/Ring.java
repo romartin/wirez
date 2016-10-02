@@ -21,14 +21,16 @@ import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
-import org.kie.workbench.common.stunner.core.definition.annotation.*;
-import org.kie.workbench.common.stunner.core.definition.annotation.definition.*;
 import org.kie.workbench.common.stunner.basicset.definition.property.InnerRadius;
 import org.kie.workbench.common.stunner.basicset.definition.property.Name;
 import org.kie.workbench.common.stunner.basicset.definition.property.OuterRadius;
 import org.kie.workbench.common.stunner.basicset.definition.property.background.BackgroundAndBorderSet;
 import org.kie.workbench.common.stunner.basicset.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.basicset.shape.proxy.RingProxy;
+import org.kie.workbench.common.stunner.basicset.shape.def.RingShapeDefImpl;
+import org.kie.workbench.common.stunner.core.definition.annotation.*;
+import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
+import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
+import org.kie.workbench.common.stunner.core.definition.annotation.definition.Title;
 import org.kie.workbench.common.stunner.core.definition.builder.Builder;
 import org.kie.workbench.common.stunner.core.factory.graph.NodeFactory;
 import org.kie.workbench.common.stunner.shapes.factory.BasicShapesFactory;
@@ -40,7 +42,7 @@ import java.util.Set;
 @Portable
 @Bindable
 @Definition( graphFactory = NodeFactory.class, builder = Ring.RingBuilder.class )
-@Shape( factory = BasicShapesFactory.class, proxy = RingProxy.class )
+@Shape( factory = BasicShapesFactory.class, def = RingShapeDefImpl.class )
 public class Ring {
 
     @Category

@@ -1,8 +1,8 @@
 package org.kie.workbench.common.stunner.basicset.definition.icon.dynamics;
 
 import org.kie.workbench.common.stunner.basicset.definition.property.Height;
-import org.kie.workbench.common.stunner.basicset.definition.property.background.BackgroundAndBorderSet;
 import org.kie.workbench.common.stunner.basicset.definition.property.Width;
+import org.kie.workbench.common.stunner.basicset.definition.property.background.BackgroundAndBorderSet;
 
 public interface DynamicIcon {
 

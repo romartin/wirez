@@ -6,6 +6,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.connectors.Cond
 import org.kie.workbench.common.stunner.bpmn.definition.property.connectors.ConditionExpressionLanguage;
 import org.kie.workbench.common.stunner.bpmn.definition.property.connectors.Priority;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.AssignmentsInfo;
+import org.kie.workbench.common.stunner.bpmn.definition.property.gateway.DefaultRoute;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.CalledElement;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.RuleFlowGroup;
@@ -45,6 +46,7 @@ public class Bpmn2OryxIdMappings {
         put( ConditionExpression.class, "conditionexpression" );
         put( ConditionExpressionLanguage.class, "conditionexpressionlanguage" );
         put( Priority.class, "priority" );
+        put( ExclusiveDatabasedGateway.class, "Exclusive_Databased_Gateway");
     }};
 
 
@@ -69,6 +71,10 @@ public class Bpmn2OryxIdMappings {
         Map<Class<?>, String> userTaskPropertiesMap = new HashMap<Class<?>, String>();
         put(UserTask.class, userTaskPropertiesMap);
         userTaskPropertiesMap.put(AssignmentsInfo.class, "assignmentsinfo");
+
+        Map<Class<?>, String> exclusiveDatabasedGatewayPropertiesMap = new HashMap<Class<?>, String>();
+        put(ExclusiveDatabasedGateway.class, exclusiveDatabasedGatewayPropertiesMap);
+        exclusiveDatabasedGatewayPropertiesMap.put(DefaultRoute.class, "defaultgate");
 
     }};
 

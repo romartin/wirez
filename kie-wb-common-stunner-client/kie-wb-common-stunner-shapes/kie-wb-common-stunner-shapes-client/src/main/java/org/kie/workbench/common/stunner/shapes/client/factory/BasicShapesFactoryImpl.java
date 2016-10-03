@@ -188,16 +188,16 @@ public class BasicShapesFactoryImpl
         if ( null != shape && proxy instanceof HasChildShapeDefs ) {
 
             final HasChildShapeDefs<Object> hasChildren = (HasChildShapeDefs<Object> ) proxy;
-            final Map<ShapeDef<Object>, HasChildren.Layout> childProxies = hasChildren.getChildProxies();
-            if ( null != childProxies && !childProxies.isEmpty() ) {
-                for ( final Map.Entry<ShapeDef<Object>, HasChildren.Layout> entry : childProxies.entrySet() ) {
+            final Map<ShapeDef<Object>, HasChildren.Layout> childShapeDefs = hasChildren.getChildShapeDefs();
+            if ( null != childShapeDefs && !childShapeDefs.isEmpty() ) {
+                for ( final Map.Entry<ShapeDef<Object>, HasChildren.Layout> entry : childShapeDefs.entrySet() ) {
 
                     final ShapeDef<Object> child = entry.getKey();
                     final HasChildren.Layout layout = entry.getValue();
 
                     final MutableShape<Object, ShapeView> childShape = this.build( definition, child, context);
 
-                    if ( childShape instanceof AbstractCompositeShape ) {
+                    if ( shape instanceof AbstractCompositeShape ) {
 
                         ( (AbstractCompositeShape) shape).addChild( (AbstractShape) childShape, layout );
 

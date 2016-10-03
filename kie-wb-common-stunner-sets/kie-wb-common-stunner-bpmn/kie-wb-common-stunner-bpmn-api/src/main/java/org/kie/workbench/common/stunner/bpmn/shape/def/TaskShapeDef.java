@@ -112,7 +112,7 @@ public final class TaskShapeDef
     }
 
     @Override
-    public Map<ShapeDef<BaseTask>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeDef<BaseTask>, HasChildren.Layout> getChildShapeDefs() {
         
         return new HashMap<ShapeDef<BaseTask>, HasChildren.Layout>() {{
             

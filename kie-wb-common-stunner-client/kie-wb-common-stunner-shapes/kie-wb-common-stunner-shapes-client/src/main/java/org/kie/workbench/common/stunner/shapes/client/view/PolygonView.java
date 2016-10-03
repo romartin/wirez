@@ -28,9 +28,12 @@ public class PolygonView extends BasicShapeView<PolygonView>
                                      final double radius,
                                      final double cornerRadius ) {
 
+        final double ix = radius;
+        final double iy = radius;
+
         if ((sides > 2) && (radius > 0))
         {
-            result.M(0, 0 - radius);
+            result.M( ix, iy - radius);
 
             if (cornerRadius <= 0)
             {
@@ -38,21 +41,21 @@ public class PolygonView extends BasicShapeView<PolygonView>
                 {
                     final double theta = (n * 2 * Math.PI / sides);
 
-                    result.L(radius * Math.sin(theta), -1 * radius * Math.cos(theta));
+                    result.L( ix + ( radius * Math.sin(theta) ), iy + ( -1 * radius * Math.cos(theta) ) );
                 }
                 result.Z();
             }
             else
             {
-                final Point2DArray list = new Point2DArray(0, 0 - radius);
+                final Point2DArray list = new Point2DArray( ix, iy - radius);
 
                 for (int n = 1; n < sides; n++)
                 {
                     final double theta = (n * 2 * Math.PI / sides);
 
-                    list.push(radius * Math.sin(theta), -1 * radius * Math.cos(theta));
+                    list.push( ix + ( radius * Math.sin(theta) ), iy + ( -1 * radius * Math.cos(theta) ) );
                 }
-                Geometry.drawArcJoinedLines(result.getPathPartList(), list.push(0, 0 - radius), cornerRadius);
+                Geometry.drawArcJoinedLines( result.getPathPartList(), list.push( ix, iy - radius ), cornerRadius );
             }
         }
 

@@ -79,7 +79,7 @@ public final class SubprocessShapeDef
     }
 
     @Override
-    public Map<ShapeDef<ReusableSubprocess>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeDef<ReusableSubprocess>, HasChildren.Layout> getChildShapeDefs() {
         
         return new HashMap<ShapeDef<ReusableSubprocess>, HasChildren.Layout>() {{
             

@@ -88,7 +88,7 @@ public final class IntermediateTimerEventShapeDef
     }
 
     @Override
-    public Map<ShapeDef<IntermediateTimerEvent>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeDef<IntermediateTimerEvent>, HasChildren.Layout> getChildShapeDefs() {
         
         return new HashMap<ShapeDef<IntermediateTimerEvent>, HasChildren.Layout>() {{
             

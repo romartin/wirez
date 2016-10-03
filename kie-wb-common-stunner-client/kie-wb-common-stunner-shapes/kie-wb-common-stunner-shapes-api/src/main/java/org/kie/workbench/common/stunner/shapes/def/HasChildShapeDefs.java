@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface HasChildShapeDefs<W> {
     
-    Map<ShapeDef<W>, HasChildren.Layout> getChildProxies();
+    Map<ShapeDef<W>, HasChildren.Layout> getChildShapeDefs();
     
 }

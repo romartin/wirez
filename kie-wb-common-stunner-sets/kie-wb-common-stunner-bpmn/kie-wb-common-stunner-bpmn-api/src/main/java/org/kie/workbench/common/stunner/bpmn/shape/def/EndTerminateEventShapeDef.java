@@ -80,7 +80,7 @@ public final class EndTerminateEventShapeDef
     }
 
     @Override
-    public Map<ShapeDef<EndTerminateEvent>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeDef<EndTerminateEvent>, HasChildren.Layout> getChildShapeDefs() {
         return new HashMap<ShapeDef<EndTerminateEvent>, HasChildren.Layout>() {{
             put( new EndNoneEventRingProxy( EndTerminateEventShapeDef.this ), HasChildren.Layout.CENTER );
         }};

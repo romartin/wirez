@@ -84,7 +84,7 @@ public final class ExclusiveDatabasedGatewayShapeDef
     }
 
     @Override
-    public Map<ShapeDef<ExclusiveDatabasedGateway>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeDef<ExclusiveDatabasedGateway>, HasChildren.Layout> getChildShapeDefs() {
         
         return new LinkedHashMap<ShapeDef<ExclusiveDatabasedGateway>, HasChildren.Layout>() {{
             

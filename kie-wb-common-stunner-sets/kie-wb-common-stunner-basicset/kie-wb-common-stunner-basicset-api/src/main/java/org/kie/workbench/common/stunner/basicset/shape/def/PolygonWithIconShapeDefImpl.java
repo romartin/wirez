@@ -84,7 +84,7 @@ public final class PolygonWithIconShapeDefImpl
     }
 
     @Override
-    public Map<ShapeDef<PolygonWithIcon>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeDef<PolygonWithIcon>, HasChildren.Layout> getChildShapeDefs() {
         return new LinkedHashMap<ShapeDef<PolygonWithIcon>, HasChildren.Layout>() {{
             put( new IconProxy(), HasChildren.Layout.CENTER );
         }};

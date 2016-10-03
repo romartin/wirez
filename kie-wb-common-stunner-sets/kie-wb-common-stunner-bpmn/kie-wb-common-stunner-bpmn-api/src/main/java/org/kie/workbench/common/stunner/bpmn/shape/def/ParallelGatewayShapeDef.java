@@ -84,7 +84,7 @@ public final class ParallelGatewayShapeDef
     }
 
     @Override
-    public Map<ShapeDef<ParallelGateway>, HasChildren.Layout> getChildProxies() {
+    public Map<ShapeDef<ParallelGateway>, HasChildren.Layout> getChildShapeDefs() {
         
         return new LinkedHashMap<ShapeDef<ParallelGateway>, HasChildren.Layout>() {{
             

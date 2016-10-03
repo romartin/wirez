@@ -25,7 +25,7 @@ public class CircleView extends BasicShapeView<CircleView>
 
     private static MultiPath create( final MultiPath path,
                                      final double radius ) {
-        return path.M( 0, -radius ).circle( radius );
+        return path.M( radius, 0 ).circle( radius );
     }
 
 }

@@ -78,7 +78,7 @@ public final class TaskShapeDef
 
     @Override
     public String getGlyphDescription(final BaseTask element ) {
-        return "A " + element.getTaskType().getValue().toString() + " Task";
+        return "A " + element.getGeneral().getTaskType().getValue().toString() + " Task";
     }
 
     @Override
@@ -136,7 +136,7 @@ public final class TaskShapeDef
         @Override
         public Icons getIcon( final BaseTask element) {
             
-            final TaskType taskType = element.getTaskType();
+            final TaskType taskType = element.getGeneral().getTaskType();
             
             switch (taskType.getValue()) {
             

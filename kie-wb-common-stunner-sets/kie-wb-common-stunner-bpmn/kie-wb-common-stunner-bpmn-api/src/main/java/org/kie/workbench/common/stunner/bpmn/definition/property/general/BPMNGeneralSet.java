@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.kie.workbench.common.stunner.bpmn.definition.property.general;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
@@ -14,10 +30,10 @@ import javax.validation.Valid;
 @Portable
 @Bindable
 @PropertySet
-public class BPMNGeneral implements BPMNPropertySet {
+public class BPMNGeneralSet implements BPMNPropertySet {
 
     @org.kie.workbench.common.stunner.core.definition.annotation.Name
-    public static final transient String propertySetName = "BPMN General";
+    public static final transient String propertySetName = "General";
 
     @Property
     @FieldDef(label = "Name", property = "value", position = 0)
@@ -30,23 +46,23 @@ public class BPMNGeneral implements BPMNPropertySet {
     @Valid
     private Documentation documentation;
 
-    public BPMNGeneral() {
+    public BPMNGeneralSet() {
         this( new Name(), new Documentation() );
     }
 
-    public BPMNGeneral(@MapsTo("name") Name name,
-                       @MapsTo("documentation") Documentation documentation) {
+    public BPMNGeneralSet(@MapsTo("name") Name name,
+                          @MapsTo("documentation") Documentation documentation) {
         this.name = name;
         this.documentation = documentation;
     }
 
-    public BPMNGeneral(String name,
-                       String documentation) {
+    public BPMNGeneralSet(String name,
+                          String documentation) {
         this.name = new Name( name );
         this.documentation = new Documentation( documentation );
     }
 
-    public BPMNGeneral(String name) {
+    public BPMNGeneralSet(String name) {
         this.name = new Name( name );
         this.documentation = new Documentation();
     }

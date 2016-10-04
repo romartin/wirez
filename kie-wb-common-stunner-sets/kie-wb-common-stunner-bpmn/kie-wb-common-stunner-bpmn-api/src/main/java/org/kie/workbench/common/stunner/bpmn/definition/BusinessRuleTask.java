@@ -24,7 +24,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Documentation;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.BusinessRuleTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
@@ -58,33 +61,31 @@ public class BusinessRuleTask extends BaseTask {
 
         @Override
         public BusinessRuleTask build() {
-            return new BusinessRuleTask(new BPMNGeneral("Task"),
+            return new BusinessRuleTask(new TaskGeneralSet(new Name("Task"), new Documentation(""), new TaskType(TaskTypes.BUSINESS_RULE)),
                     new BusinessRuleTaskExecutionSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
-                    new SimulationSet(),
-                    new TaskType( TaskTypes.BUSINESS_RULE )
+                    new SimulationSet()
             );
         }
 
     }
 
     public BusinessRuleTask() {
-        super( TaskTypes.BUSINESS_RULE );
+        super();
     }
 
-    public BusinessRuleTask(@MapsTo("general") BPMNGeneral general,
+    public BusinessRuleTask(@MapsTo("general") TaskGeneralSet general,
                             @MapsTo("executionSet") BusinessRuleTaskExecutionSet executionSet,
                             @MapsTo("dataIOSet") DataIOSet dataIOSet,
                             @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                             @MapsTo("fontSet") FontSet fontSet,
                             @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                            @MapsTo("simulationSet") SimulationSet simulationSet,
-                            @MapsTo("taskType") TaskType taskType) {
+                            @MapsTo("simulationSet") SimulationSet simulationSet) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
+        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet);
         this.executionSet = executionSet;
     }
 

@@ -22,19 +22,17 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
 import org.kie.workbench.common.stunner.bpmn.shape.def.TaskShapeDef;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
-import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.PropertySet;
 import org.kie.workbench.common.stunner.core.definition.annotation.Shape;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Category;
 import org.kie.workbench.common.stunner.core.definition.annotation.definition.Labels;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphBase;
-import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphProperty;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphPropertyValueBinding;
 import org.kie.workbench.common.stunner.core.definition.builder.Builder;
 import org.kie.workbench.common.stunner.shapes.factory.BasicShapesFactory;
@@ -56,9 +54,9 @@ public abstract class BaseTask implements BPMNDefinition {
     public static final transient String description = "A task is a unit of work - the job to be performed";
 
     @PropertySet
-    @FieldDef( label = "General Settings", position = 0)
+    @FieldDef( label = "General", position = 0)
     @Valid
-    protected BPMNGeneral general;
+    protected TaskGeneralSet general;
 
     @PropertySet
     @FieldDef( label = "Task Data", position = 2)
@@ -71,21 +69,17 @@ public abstract class BaseTask implements BPMNDefinition {
     protected BackgroundSet backgroundSet;
 
     @PropertySet
-    @FieldDef( label = "Font Settings", position = 4)
+    //@FieldDef( label = "Font Settings", position = 4)
     protected FontSet fontSet;
 
     @PropertySet
-    @FieldDef( label = "Process Simulation", position = 5)
+    //@FieldDef( label = "Process Simulation", position = 5)
     protected SimulationSet simulationSet;
 
     @PropertySet
     @FieldDef( label = "Shape Dimensions", position = 6)
     protected RectangleDimensionsSet dimensionsSet;
 
-    @Property
-    @FieldDef(label = "Task Type", property = "value", position = 7)
-    @MorphProperty( binder = TaskTypeMorphPropertyBinding.class )
-    protected TaskType taskType;
 
     public static class TaskTypeMorphPropertyBinding implements MorphPropertyValueBinding<TaskType, TaskTypes> {
 
@@ -134,24 +128,22 @@ public abstract class BaseTask implements BPMNDefinition {
 
     }
 
-    protected BaseTask( final TaskTypes type ) {
-        this.taskType = new TaskType( type );
+    protected BaseTask( ) {
+
     }
 
-    public BaseTask(@MapsTo("general") BPMNGeneral general,
+    public BaseTask(@MapsTo("general") TaskGeneralSet general,
                     @MapsTo("dataIOSet") DataIOSet dataIOSet,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
                     @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                    @MapsTo("simulationSet") SimulationSet simulationSet,
-                    @MapsTo("taskType") TaskType taskType ) {
+                    @MapsTo("simulationSet") SimulationSet simulationSet) {
         this.general = general;
         this.dataIOSet = dataIOSet;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.dimensionsSet = dimensionsSet;
         this.simulationSet = simulationSet;
-        this.taskType = taskType;
     }
 
     public String getCategory() {
@@ -166,7 +158,7 @@ public abstract class BaseTask implements BPMNDefinition {
         return labels;
     }
 
-    public BPMNGeneral getGeneral() {
+    public TaskGeneralSet getGeneral() {
         return general;
     }
 
@@ -182,7 +174,7 @@ public abstract class BaseTask implements BPMNDefinition {
         return fontSet;
     }
 
-    public void setGeneral( BPMNGeneral general ) {
+    public void setGeneral( TaskGeneralSet general ) {
         this.general = general;
     }
 
@@ -196,14 +188,6 @@ public abstract class BaseTask implements BPMNDefinition {
 
     public void setFontSet( FontSet fontSet ) {
         this.fontSet = fontSet;
-    }
-
-    public TaskType getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType( TaskType taskType ) {
-        this.taskType = taskType;
     }
 
     public SimulationSet getSimulationSet() {

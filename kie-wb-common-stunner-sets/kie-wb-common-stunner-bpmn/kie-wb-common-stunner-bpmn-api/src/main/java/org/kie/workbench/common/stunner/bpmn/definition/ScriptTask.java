@@ -9,7 +9,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Documentation;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.ScriptTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
@@ -43,32 +46,30 @@ public class ScriptTask extends BaseTask {
 
         @Override
         public ScriptTask build() {
-            return new ScriptTask(new BPMNGeneral("Task"),
+            return new ScriptTask(new TaskGeneralSet(new Name("Task"), new Documentation(""), new TaskType(TaskTypes.SCRIPT)),
                     new ScriptTaskExecutionSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
-                    new SimulationSet(),
-                    new TaskType( TaskTypes.SCRIPT ));
+                    new SimulationSet());
         }
 
     }
 
     public ScriptTask() {
-        super( TaskTypes.SCRIPT );
+        super( );
     }
 
-    public ScriptTask(@MapsTo("general") BPMNGeneral general,
+    public ScriptTask(@MapsTo("general") TaskGeneralSet general,
                       @MapsTo("executionSet") ScriptTaskExecutionSet executionSet,
                       @MapsTo("dataIOSet") DataIOSet dataIOSet,
                       @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                       @MapsTo("fontSet") FontSet fontSet,
                       @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                      @MapsTo("simulationSet") SimulationSet simulationSet,
-                      @MapsTo("taskType") TaskType taskType) {
+                      @MapsTo("simulationSet") SimulationSet simulationSet) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
+        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet);
         this.executionSet = executionSet;
     }
 

@@ -24,7 +24,7 @@ import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.shape.def.LaneShapeDef;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
@@ -38,6 +38,7 @@ import org.kie.workbench.common.stunner.core.factory.graph.NodeFactory;
 import org.kie.workbench.common.stunner.core.rule.annotation.CanContain;
 import org.kie.workbench.common.stunner.shapes.factory.BasicShapesFactory;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,13 +61,17 @@ public class Lane implements BPMNDefinition {
             "Lanes sub-divide pools or other lanes hierarchically.";
 
     @PropertySet
-    private BPMNGeneral general;
+    @FieldDef( label = "General Settings", position = 0)
+    @Valid
+    protected BPMNGeneralSet general;
 
     @PropertySet
-    private BackgroundSet backgroundSet;
+    @FieldDef( label = "Background Settings", position = 2)
+    @Valid
+    protected BackgroundSet backgroundSet;
 
     @PropertySet
-    @FieldDef( label = "Font Settings")
+    //@FieldDef( label = "Font Settings")
     private FontSet fontSet;
 
     @PropertySet
@@ -92,7 +97,7 @@ public class Lane implements BPMNDefinition {
 
         @Override
         public Lane build() {
-            return new Lane(  new BPMNGeneral( "Lane" ),
+            return new Lane(  new BPMNGeneralSet( "Lane" ),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT) );
@@ -104,7 +109,7 @@ public class Lane implements BPMNDefinition {
 
     }
 
-    public Lane(@MapsTo("general") BPMNGeneral general,
+    public Lane(@MapsTo("general") BPMNGeneralSet general,
                 @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                 @MapsTo("fontSet") FontSet fontSet,
                 @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet) {
@@ -130,7 +135,7 @@ public class Lane implements BPMNDefinition {
         return labels;
     }
 
-    public BPMNGeneral getGeneral() {
+    public BPMNGeneralSet getGeneral() {
         return general;
     }
 
@@ -150,7 +155,7 @@ public class Lane implements BPMNDefinition {
         this.backgroundSet = backgroundSet;
     }
 
-    public void setGeneral( BPMNGeneral general ) {
+    public void setGeneral( BPMNGeneralSet general ) {
         this.general = general;
     }
 

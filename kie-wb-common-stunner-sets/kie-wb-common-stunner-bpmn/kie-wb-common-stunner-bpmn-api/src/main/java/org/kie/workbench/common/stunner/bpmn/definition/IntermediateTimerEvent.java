@@ -23,8 +23,9 @@ import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.event.IntermediateTimerEventExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.shape.def.IntermediateTimerEventShapeDef;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
@@ -60,7 +61,12 @@ public class IntermediateTimerEvent implements BPMNDefinition {
     @PropertySet
     @FieldDef( label = "General Settings", position = 0)
     @Valid
-    private BPMNGeneral general;
+    private BPMNGeneralSet general;
+
+    @PropertySet
+    @FieldDef( label = "Implementation/Execution", position = 1)
+    @Valid
+    protected IntermediateTimerEventExecutionSet executionSet;
 
     @PropertySet
     @FieldDef( label = "Background Settings", position = 2)
@@ -68,11 +74,11 @@ public class IntermediateTimerEvent implements BPMNDefinition {
     private BackgroundSet backgroundSet;
 
     @PropertySet
-    @FieldDef( label = "Font Settings")
+    //@FieldDef( label = "Font Settings")
     private FontSet fontSet;
 
     @PropertySet
-    @FieldDef( label = "Shape Dimensions", position = 5)
+    @FieldDef( label = "Shape Dimensions", position = 3)
     private CircleDimensionSet dimensionsSet;
 
     @Labels
@@ -102,7 +108,8 @@ public class IntermediateTimerEvent implements BPMNDefinition {
 
         @Override
         public IntermediateTimerEvent build() {
-            return new IntermediateTimerEvent(  new BPMNGeneral( "Timer" ),
+            return new IntermediateTimerEvent(  new BPMNGeneralSet( "Timer" ),
+                    new IntermediateTimerEventExecutionSet(),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
                     new CircleDimensionSet( RADIUS ) );
@@ -114,7 +121,8 @@ public class IntermediateTimerEvent implements BPMNDefinition {
 
     }
 
-    public IntermediateTimerEvent(@MapsTo("general") BPMNGeneral general,
+    public IntermediateTimerEvent(@MapsTo("general") BPMNGeneralSet general,
+                                  @MapsTo("executionSet") IntermediateTimerEventExecutionSet executionSet,
                                   @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                                   @MapsTo("fontSet") FontSet fontSet,
                                   @MapsTo("dimensionsSet") CircleDimensionSet dimensionsSet) {
@@ -122,6 +130,7 @@ public class IntermediateTimerEvent implements BPMNDefinition {
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.dimensionsSet = dimensionsSet;
+        this.executionSet = executionSet;
     }
 
     public String getCategory() {
@@ -140,7 +149,7 @@ public class IntermediateTimerEvent implements BPMNDefinition {
         return labels;
     }
 
-    public BPMNGeneral getGeneral() {
+    public BPMNGeneralSet getGeneral() {
         return general;
     }
 
@@ -152,7 +161,7 @@ public class IntermediateTimerEvent implements BPMNDefinition {
         return fontSet;
     }
 
-    public void setGeneral( BPMNGeneral general ) {
+    public void setGeneral( BPMNGeneralSet general ) {
         this.general = general;
     }
 
@@ -170,5 +179,13 @@ public class IntermediateTimerEvent implements BPMNDefinition {
 
     public void setDimensionsSet(CircleDimensionSet dimensionsSet) {
         this.dimensionsSet = dimensionsSet;
+    }
+
+    public IntermediateTimerEventExecutionSet getExecutionSet() {
+        return executionSet;
+    }
+
+    public void setExecutionSet(IntermediateTimerEventExecutionSet executionSet) {
+        this.executionSet = executionSet;
     }
 }

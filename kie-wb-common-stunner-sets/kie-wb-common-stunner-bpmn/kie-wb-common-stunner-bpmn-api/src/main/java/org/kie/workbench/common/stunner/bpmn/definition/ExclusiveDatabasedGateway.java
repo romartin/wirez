@@ -27,7 +27,7 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.CircleDimensionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.gateway.ExclusiveGatewayExecutionSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.shape.def.ExclusiveDatabasedGatewayShapeDef;
 import org.kie.workbench.common.stunner.core.definition.annotation.Definition;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
@@ -64,11 +64,12 @@ public class ExclusiveDatabasedGateway extends BaseGateway {
 
         @Override
         public ExclusiveDatabasedGateway build() {
-            return new ExclusiveDatabasedGateway(  new BPMNGeneral( "gw" ),
+            return new ExclusiveDatabasedGateway(  new BPMNGeneralSet( "gw" ),
                     new ExclusiveGatewayExecutionSet(),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
-                    new CircleDimensionSet( RADIUS ) );
+                    new CircleDimensionSet( RADIUS )
+            );
         }
 
     }
@@ -77,7 +78,7 @@ public class ExclusiveDatabasedGateway extends BaseGateway {
         this.Id = nextID++;
     }
 
-    public ExclusiveDatabasedGateway(@MapsTo("general") BPMNGeneral general,
+    public ExclusiveDatabasedGateway(@MapsTo("general") BPMNGeneralSet general,
                                      @MapsTo("executionSet") ExclusiveGatewayExecutionSet executionSet,
                                      @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                                      @MapsTo("fontSet") FontSet fontSet,

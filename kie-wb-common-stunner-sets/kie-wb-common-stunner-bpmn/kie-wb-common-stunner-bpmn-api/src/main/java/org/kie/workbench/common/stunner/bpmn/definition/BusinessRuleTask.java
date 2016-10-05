@@ -61,20 +61,21 @@ public class BusinessRuleTask extends BaseTask {
 
         @Override
         public BusinessRuleTask build() {
-            return new BusinessRuleTask(new TaskGeneralSet(new Name("Task"), new Documentation(""), new TaskType(TaskTypes.BUSINESS_RULE)),
+            return new BusinessRuleTask(new TaskGeneralSet(new Name("Task"), new Documentation("")),
                     new BusinessRuleTaskExecutionSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
-                    new SimulationSet()
-            );
+                    new SimulationSet(),
+                    new TaskType( TaskTypes.BUSINESS_RULE )
+                    );
         }
 
     }
 
     public BusinessRuleTask() {
-        super();
+        super( TaskTypes.BUSINESS_RULE );
     }
 
     public BusinessRuleTask(@MapsTo("general") TaskGeneralSet general,
@@ -83,9 +84,10 @@ public class BusinessRuleTask extends BaseTask {
                             @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                             @MapsTo("fontSet") FontSet fontSet,
                             @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                            @MapsTo("simulationSet") SimulationSet simulationSet) {
+                            @MapsTo("simulationSet") SimulationSet simulationSet,
+                            @MapsTo("taskType") TaskType taskType) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet);
+        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
         this.executionSet = executionSet;
     }
 

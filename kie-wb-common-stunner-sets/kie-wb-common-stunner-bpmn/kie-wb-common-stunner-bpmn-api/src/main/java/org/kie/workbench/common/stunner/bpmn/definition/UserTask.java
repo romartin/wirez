@@ -43,19 +43,20 @@ public class UserTask extends BaseTask {
 
         @Override
         public UserTask build() {
-            return new UserTask(new TaskGeneralSet(new Name("Task"), new Documentation(""), new TaskType(TaskTypes.USER)),
+            return new UserTask(new TaskGeneralSet(new Name("Task"), new Documentation("")),
                     new AssigneeSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
-                    new SimulationSet());
+                    new SimulationSet(),
+                    new TaskType( TaskTypes.USER ));
         }
 
     }
 
     public UserTask() {
-        super( );
+        super( TaskTypes.USER );
     }
 
     public UserTask(@MapsTo("general") TaskGeneralSet general,
@@ -64,9 +65,10 @@ public class UserTask extends BaseTask {
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
                     @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                    @MapsTo("simulationSet") SimulationSet simulationSet) {
+                    @MapsTo("simulationSet") SimulationSet simulationSet,
+                    @MapsTo("taskType") TaskType taskType) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet);
+        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
         this.assigneeSet = assigneeSet;
     }
 

@@ -374,7 +374,7 @@ public class BPMNDiagramMarshallerTest {
 
         Node<? extends Definition, ?> selfEvaluationNode = diagram.getGraph().getNode( "_6063D302-9D81-4C86-920B-E808A45377C2");
         UserTask selfEvaluationTask = (UserTask) selfEvaluationNode.getContent().getDefinition();
-        assertEquals( selfEvaluationTask.getGeneral().getTaskType().getValue(), TaskTypes.USER);
+        assertEquals( selfEvaluationTask.getTaskType().getValue(), TaskTypes.USER);
         DataIOSet dataIOSet = selfEvaluationTask.getDataIOSet();
 
         AssignmentsInfo assignmentsinfo = dataIOSet.getAssignmentsinfo();
@@ -623,7 +623,7 @@ public class BPMNDiagramMarshallerTest {
         assertNotNull(businessRuleTask.getExecutionSet().getRuleFlowGroup());
         assertNotNull(businessRuleTask.getGeneral());
         assertNotNull(businessRuleTask.getGeneral().getName());
-        assertEquals(businessRuleTask.getGeneral().getTaskType().getValue(), TaskTypes.BUSINESS_RULE);
+        assertEquals(businessRuleTask.getTaskType().getValue(), TaskTypes.BUSINESS_RULE);
 
         assertEquals("my business rule task", businessRuleTask.getGeneral().getName().getValue());
         assertEquals("my-ruleflow-group", businessRuleTask.getExecutionSet().getRuleFlowGroup().getValue());
@@ -679,7 +679,7 @@ public class BPMNDiagramMarshallerTest {
         assertNotNull(scriptTask.getExecutionSet().getScriptLanguage());
         assertNotNull(scriptTask.getGeneral());
         assertNotNull(scriptTask.getGeneral().getName());
-        assertEquals(scriptTask.getGeneral().getTaskType().getValue(), TaskTypes.SCRIPT);
+        assertEquals(scriptTask.getTaskType().getValue(), TaskTypes.SCRIPT);
 
         assertEquals("my script task", scriptTask.getGeneral().getName().getValue());
         assertEquals("System.out.println(\"hello\");", scriptTask.getExecutionSet().getScript().getValue());

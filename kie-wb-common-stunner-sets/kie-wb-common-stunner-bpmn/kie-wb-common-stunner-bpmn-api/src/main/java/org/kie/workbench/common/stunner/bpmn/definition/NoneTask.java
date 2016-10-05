@@ -46,7 +46,7 @@ public class NoneTask extends BaseTask {
 
         @Override
         public NoneTask build() {
-            return new NoneTask(  new TaskGeneralSet(new Name("Task"), new Documentation(""), new TaskType(TaskTypes.NONE)),
+            return new NoneTask(  new TaskGeneralSet(new Name("Task"), new Documentation("")),
                     new EmptyTaskExecutionSet(),
                     new DataIOSet(),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
@@ -59,7 +59,7 @@ public class NoneTask extends BaseTask {
     }
 
     public NoneTask() {
-        super( );
+        super( TaskTypes.NONE );
     }
 
     public NoneTask(@MapsTo("general") TaskGeneralSet general,
@@ -71,7 +71,7 @@ public class NoneTask extends BaseTask {
                     @MapsTo("simulationSet") SimulationSet simulationSet,
                     @MapsTo("taskType") TaskType taskType) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet);
+        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
         this.executionSet = executionSet;
     }
 

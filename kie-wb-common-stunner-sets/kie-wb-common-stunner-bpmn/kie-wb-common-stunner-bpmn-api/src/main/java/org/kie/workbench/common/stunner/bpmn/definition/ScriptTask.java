@@ -46,19 +46,20 @@ public class ScriptTask extends BaseTask {
 
         @Override
         public ScriptTask build() {
-            return new ScriptTask(new TaskGeneralSet(new Name("Task"), new Documentation(""), new TaskType(TaskTypes.SCRIPT)),
+            return new ScriptTask(new TaskGeneralSet(new Name("Task"), new Documentation("")),
                     new ScriptTaskExecutionSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
-                    new SimulationSet());
+                    new SimulationSet(),
+                    new TaskType( TaskTypes.SCRIPT ));
         }
 
     }
 
     public ScriptTask() {
-        super( );
+        super( TaskTypes.SCRIPT );
     }
 
     public ScriptTask(@MapsTo("general") TaskGeneralSet general,
@@ -67,9 +68,10 @@ public class ScriptTask extends BaseTask {
                       @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                       @MapsTo("fontSet") FontSet fontSet,
                       @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
-                      @MapsTo("simulationSet") SimulationSet simulationSet) {
+                      @MapsTo("simulationSet") SimulationSet simulationSet,
+                      @MapsTo("taskType") TaskType taskType) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet);
+        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
         this.executionSet = executionSet;
     }
 

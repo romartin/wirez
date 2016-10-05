@@ -22,8 +22,6 @@ import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.forms.metaModel.TextArea;
 import org.kie.workbench.common.stunner.bpmn.definition.BPMNPropertySet;
 import org.kie.workbench.common.stunner.bpmn.definition.BaseTask;
-import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
-import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
 import org.kie.workbench.common.stunner.core.definition.annotation.Property;
 import org.kie.workbench.common.stunner.core.definition.annotation.PropertySet;
 import org.kie.workbench.common.stunner.core.definition.annotation.morph.MorphProperty;
@@ -49,33 +47,18 @@ public class TaskGeneralSet implements BPMNPropertySet {
     @Valid
     private Documentation documentation;
 
-    @Property
-    @FieldDef(label = "Task Type", property = "value", position = 2)
-    @MorphProperty( binder = BaseTask.TaskTypeMorphPropertyBinding.class )
-    protected TaskType taskType;
-
     public TaskGeneralSet() {
-        this( new Name(), new Documentation(), new TaskType( TaskTypes.NONE ));
+        this( new Name(), new Documentation());
     }
 
     public TaskGeneralSet(@MapsTo("name") Name name,
-                          @MapsTo("documentation") Documentation documentation,
-                          @MapsTo("taskType") TaskType taskType) {
+                          @MapsTo("documentation") Documentation documentation) {
         this.name = name;
         this.documentation = documentation;
-        this.taskType = taskType;
     }
 
     public String getPropertySetName() {
         return propertySetName;
-    }
-
-    public TaskType getTaskType() {
-        return taskType;
-    }
-
-    public void setTaskType(TaskType taskType) {
-        this.taskType = taskType;
     }
 
     public Name getName() {

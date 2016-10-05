@@ -22,6 +22,7 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
@@ -54,6 +55,11 @@ public class ReusableSubprocess extends BaseSubprocess {
     @Valid
     protected ReusableSubprocessTaskExecutionSet executionSet;
 
+    @PropertySet
+    @FieldDef( label = "Task Data", position = 2)
+    @Valid
+    protected DataIOSet dataIOSet;
+
     @NonPortable
     public static class ReusableSubprocessBuilder  extends BaseSubprocessBuilder<ReusableSubprocess> {
 
@@ -62,6 +68,7 @@ public class ReusableSubprocess extends BaseSubprocess {
             return new ReusableSubprocess(
                     new BPMNGeneralSet( "Subprocess" ),
                     new ReusableSubprocessTaskExecutionSet(),
+                    new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
@@ -75,6 +82,7 @@ public class ReusableSubprocess extends BaseSubprocess {
 
     public ReusableSubprocess(@MapsTo("general") BPMNGeneralSet general,
                               @MapsTo("executionSet") ReusableSubprocessTaskExecutionSet executionSet,
+                              @MapsTo("dataIOSet") DataIOSet dataIOSet,
                               @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                               @MapsTo("fontSet") FontSet fontSet,
                               @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
@@ -82,6 +90,7 @@ public class ReusableSubprocess extends BaseSubprocess {
 
         super(general, backgroundSet, fontSet, dimensionsSet, simulationSet);
         this.executionSet = executionSet;
+        this.dataIOSet = dataIOSet;
     }
 
     public String getTitle() {
@@ -92,7 +101,15 @@ public class ReusableSubprocess extends BaseSubprocess {
         return executionSet;
     }
 
+    public DataIOSet getDataIOSet() {
+        return dataIOSet;
+    }
+
     public void setExecutionSet(ReusableSubprocessTaskExecutionSet executionSet) {
         this.executionSet = executionSet;
+    }
+
+    public void setDataIOSet( DataIOSet dataIOSet ) {
+        this.dataIOSet = dataIOSet;
     }
 }

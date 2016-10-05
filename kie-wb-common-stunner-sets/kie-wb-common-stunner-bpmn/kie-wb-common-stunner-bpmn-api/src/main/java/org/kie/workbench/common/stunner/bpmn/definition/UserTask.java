@@ -1,5 +1,7 @@
 package org.kie.workbench.common.stunner.bpmn.definition;
 
+import javax.validation.Valid;
+
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -38,6 +40,11 @@ public class UserTask extends BaseTask {
     @FieldDef( label = "Assigned to", position = 1)
     protected AssigneeSet assigneeSet;
 
+    @PropertySet
+    @FieldDef( label = "Task Data", position = 2)
+    @Valid
+    protected DataIOSet dataIOSet;
+
     @NonPortable
     public static class UserTaskBuilder extends BaseTaskBuilder<UserTask> {
 
@@ -68,8 +75,9 @@ public class UserTask extends BaseTask {
                     @MapsTo("simulationSet") SimulationSet simulationSet,
                     @MapsTo("taskType") TaskType taskType) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
+        super(general, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
         this.assigneeSet = assigneeSet;
+        this.dataIOSet = dataIOSet;
     }
 
     public String getTitle() {
@@ -80,8 +88,16 @@ public class UserTask extends BaseTask {
         return assigneeSet;
     }
 
+    public DataIOSet getDataIOSet() {
+        return dataIOSet;
+    }
+
     public void setAssigneeSet(AssigneeSet assigneeSet) {
         this.assigneeSet = assigneeSet;
+    }
+
+    public void setDataIOSet( DataIOSet dataIOSet ) {
+        this.dataIOSet = dataIOSet;
     }
 
 }

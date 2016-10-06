@@ -630,7 +630,7 @@ public class BPMNDiagramMarshallerTest {
     }
 
     @Test
-    public void testMarshallReusableSubprocess() throws Exception {
+    public void testUnMarshallReusableSubprocess() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_REUSABLE_SUBPROCESS);
         ReusableSubprocess reusableSubprocess = null;
 
@@ -654,6 +654,16 @@ public class BPMNDiagramMarshallerTest {
 
         assertEquals("my subprocess", reusableSubprocess.getGeneral().getName().getValue());
         assertEquals("my-called-element", reusableSubprocess.getExecutionSet().getCalledElement().getValue());
+    }
+
+    @Test
+    public void testMarshallReusableSubprocess() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_REUSABLE_SUBPROCESS);
+        String result = tested.marshall( diagram );
+        assertDiagram(result, 1, 1, 0);
+
+        assertTrue( result.contains( "calledElement=\"my-called-element\"" ) );
+
     }
 
     @Test

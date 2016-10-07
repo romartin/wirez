@@ -12,6 +12,11 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.event.TimeCycle
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.TimeDate;
 import org.kie.workbench.common.stunner.bpmn.definition.property.event.TimeDuration;
 import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
+import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.DistributionType;
+import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.StandardDeviation;
+import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.TimeUnit;
+import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.UnitCost;
+import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.WorkingHours;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.CalledElement;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.RuleFlowGroup;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.ScriptLanguage;
@@ -55,6 +60,13 @@ public class Bpmn2OryxIdMappings {
         put( TimeDuration.class, "timeduration" );
         put( TimeCycle.class, "timecycle" );
         put( TimeCycleLanguage.class, "timecyclelanguage" );
+
+        // Simulation properties
+        put(TimeUnit.class, "timeunit");
+        put(StandardDeviation.class, "standarddeviation");
+        put(DistributionType.class, "distributiontype");
+        put(WorkingHours.class, "workinghours");
+        put(UnitCost.class, "unitcost");
     }};
 
 

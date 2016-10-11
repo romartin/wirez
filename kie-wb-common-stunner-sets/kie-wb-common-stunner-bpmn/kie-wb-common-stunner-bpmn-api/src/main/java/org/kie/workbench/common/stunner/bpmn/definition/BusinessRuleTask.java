@@ -24,7 +24,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Documentation;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.BusinessRuleTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
@@ -53,12 +56,17 @@ public class BusinessRuleTask extends BaseTask {
     @Valid
     protected BusinessRuleTaskExecutionSet executionSet;
 
+    @PropertySet
+    @FieldDef( label = "Task Data", position = 2)
+    @Valid
+    protected DataIOSet dataIOSet;
+
     @NonPortable
     public static class BusinessRuleTaskBuilder extends BaseTaskBuilder<BusinessRuleTask> {
 
         @Override
         public BusinessRuleTask build() {
-            return new BusinessRuleTask(new BPMNGeneral("Task"),
+            return new BusinessRuleTask(new TaskGeneralSet(new Name("Task"), new Documentation("")),
                     new BusinessRuleTaskExecutionSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
@@ -66,7 +74,7 @@ public class BusinessRuleTask extends BaseTask {
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
                     new SimulationSet(),
                     new TaskType( TaskTypes.BUSINESS_RULE )
-            );
+                    );
         }
 
     }
@@ -75,7 +83,7 @@ public class BusinessRuleTask extends BaseTask {
         super( TaskTypes.BUSINESS_RULE );
     }
 
-    public BusinessRuleTask(@MapsTo("general") BPMNGeneral general,
+    public BusinessRuleTask(@MapsTo("general") TaskGeneralSet general,
                             @MapsTo("executionSet") BusinessRuleTaskExecutionSet executionSet,
                             @MapsTo("dataIOSet") DataIOSet dataIOSet,
                             @MapsTo("backgroundSet") BackgroundSet backgroundSet,
@@ -84,8 +92,9 @@ public class BusinessRuleTask extends BaseTask {
                             @MapsTo("simulationSet") SimulationSet simulationSet,
                             @MapsTo("taskType") TaskType taskType) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
+        super(general, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
         this.executionSet = executionSet;
+        this.dataIOSet = dataIOSet;
     }
 
     public String getTitle() {
@@ -96,7 +105,15 @@ public class BusinessRuleTask extends BaseTask {
         return executionSet;
     }
 
+    public DataIOSet getDataIOSet() {
+        return dataIOSet;
+    }
+
     public void setExecutionSet(BusinessRuleTaskExecutionSet executionSet) {
         this.executionSet = executionSet;
+    }
+
+    public void setDataIOSet( DataIOSet dataIOSet ) {
+        this.dataIOSet = dataIOSet;
     }
 }

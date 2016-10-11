@@ -19,10 +19,9 @@ import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
@@ -56,36 +55,31 @@ public abstract class BaseTask implements BPMNDefinition {
     public static final transient String description = "A task is a unit of work - the job to be performed";
 
     @PropertySet
-    @FieldDef( label = "General Settings", position = 0)
+    @FieldDef( label = "General", position = 0)
     @Valid
-    protected BPMNGeneral general;
+    protected TaskGeneralSet general;
+
+    @Property
+    //@FieldDef(label = "Task Type", property = "value", position = 3)
+    @MorphProperty( binder = TaskTypeMorphPropertyBinding.class )
+    protected TaskType taskType;
 
     @PropertySet
-    @FieldDef( label = "Task Data", position = 2)
-    @Valid
-    protected DataIOSet dataIOSet;
-
-    @PropertySet
-    @FieldDef( label = "Background Settings", position = 3)
+    @FieldDef( label = "Background Settings", position = 4)
     @Valid
     protected BackgroundSet backgroundSet;
 
     @PropertySet
-    @FieldDef( label = "Font Settings", position = 4)
+    //@FieldDef( label = "Font Settings", position = 5)
     protected FontSet fontSet;
 
     @PropertySet
-    @FieldDef( label = "Process Simulation", position = 5)
+    //@FieldDef( label = "Process Simulation", position = 6)
     protected SimulationSet simulationSet;
 
     @PropertySet
-    @FieldDef( label = "Shape Dimensions", position = 6)
+    @FieldDef( label = "Shape Dimensions", position = 7)
     protected RectangleDimensionsSet dimensionsSet;
-
-    @Property
-    @FieldDef(label = "Task Type", property = "value", position = 7)
-    @MorphProperty( binder = TaskTypeMorphPropertyBinding.class )
-    protected TaskType taskType;
 
     public static class TaskTypeMorphPropertyBinding implements MorphPropertyValueBinding<TaskType, TaskTypes> {
 
@@ -138,15 +132,13 @@ public abstract class BaseTask implements BPMNDefinition {
         this.taskType = new TaskType( type );
     }
 
-    public BaseTask(@MapsTo("general") BPMNGeneral general,
-                    @MapsTo("dataIOSet") DataIOSet dataIOSet,
+    public BaseTask(@MapsTo("general") TaskGeneralSet general,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
                     @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                     @MapsTo("simulationSet") SimulationSet simulationSet,
                     @MapsTo("taskType") TaskType taskType ) {
         this.general = general;
-        this.dataIOSet = dataIOSet;
         this.backgroundSet = backgroundSet;
         this.fontSet = fontSet;
         this.dimensionsSet = dimensionsSet;
@@ -166,15 +158,11 @@ public abstract class BaseTask implements BPMNDefinition {
         return labels;
     }
 
-    public BPMNGeneral getGeneral() {
+    public TaskGeneralSet getGeneral() {
         return general;
     }
 
-    public DataIOSet getDataIOSet() {
-        return dataIOSet;
-    }
-
-    public BackgroundSet getBackgroundSet() {
+   public BackgroundSet getBackgroundSet() {
         return backgroundSet;
     }
 
@@ -182,12 +170,8 @@ public abstract class BaseTask implements BPMNDefinition {
         return fontSet;
     }
 
-    public void setGeneral( BPMNGeneral general ) {
+    public void setGeneral( TaskGeneralSet general ) {
         this.general = general;
-    }
-
-    public void setDataIOSet( DataIOSet dataIOSet ) {
-        this.dataIOSet = dataIOSet;
     }
 
     public void setBackgroundSet( BackgroundSet backgroundSet ) {

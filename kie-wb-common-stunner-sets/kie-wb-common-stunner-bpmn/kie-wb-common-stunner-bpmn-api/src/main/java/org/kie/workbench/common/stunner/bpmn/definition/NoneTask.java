@@ -6,10 +6,12 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Documentation;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.EmptyTaskExecutionSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
@@ -43,9 +45,8 @@ public class NoneTask extends BaseTask {
 
         @Override
         public NoneTask build() {
-            return new NoneTask(  new BPMNGeneral( "Task" ),
+            return new NoneTask(  new TaskGeneralSet(new Name("Task"), new Documentation("")),
                     new EmptyTaskExecutionSet(),
-                    new DataIOSet(),
                     new BackgroundSet( COLOR, BORDER_COLOR, BORDER_SIZE ),
                     new FontSet(),
                     new RectangleDimensionsSet(WIDTH, HEIGHT),
@@ -59,16 +60,15 @@ public class NoneTask extends BaseTask {
         super( TaskTypes.NONE );
     }
 
-    public NoneTask(@MapsTo("general") BPMNGeneral general,
+    public NoneTask(@MapsTo("general") TaskGeneralSet general,
                     @MapsTo("executionSet") EmptyTaskExecutionSet executionSet,
-                    @MapsTo("dataIOSet") DataIOSet dataIOSet,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
                     @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
                     @MapsTo("simulationSet") SimulationSet simulationSet,
                     @MapsTo("taskType") TaskType taskType) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
+        super(general, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
         this.executionSet = executionSet;
     }
 

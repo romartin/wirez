@@ -15,7 +15,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.assignee.Assign
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.AssignmentsInfo;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.diagram.DiagramSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
+import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
 import org.kie.workbench.common.stunner.bpmn.definition.property.variables.ProcessVariables;
 import org.kie.workbench.common.stunner.core.api.DefinitionManager;
 import org.kie.workbench.common.stunner.core.backend.definition.adapter.annotation.RuntimeDefinitionAdapter;
@@ -88,6 +91,8 @@ public class BPMNDiagramMarshallerTest {
     protected static final String BPMN_USERTASKASSIGNEES = "org/kie/workbench/common/stunner/bpmn/backend/service/diagram/userTaskAssignees.bpmn";
     protected static final String BPMN_SEQUENCEFLOW = "org/kie/workbench/common/stunner/bpmn/backend/service/diagram/sequenceFlow.bpmn";
     protected static final String BPMN_XORGATEWAY = "org/kie/workbench/common/stunner/bpmn/backend/service/diagram/xorGateway.bpmn";
+    protected static final String BPMN_TIMER_EVENT = "org/kie/workbench/common/stunner/bpmn/backend/service/diagram/timerEvent.bpmn";
+    protected static final String BPMN_SIMULATIONPROPERTIES = "org/kie/workbench/common/stunner/bpmn/backend/service/diagram/simulationProperties.bpmn";
 
     @Mock
     DefinitionManager definitionManager;
@@ -338,7 +343,7 @@ public class BPMNDiagramMarshallerTest {
         assertDiagram( diagram, 4 );
         assertEquals( "BPSimple", diagram.getSettings().getTitle() );
 
-        BPMNGeneral generalProperties = null;
+        BPMNGeneralSet generalProperties = null;
         DiagramSet diagramProperties = null;
         Iterator<Element> it = diagram.getGraph().nodes().iterator();
         while(it.hasNext()) {
@@ -371,6 +376,7 @@ public class BPMNDiagramMarshallerTest {
 
         Node<? extends Definition, ?> selfEvaluationNode = diagram.getGraph().getNode( "_6063D302-9D81-4C86-920B-E808A45377C2");
         UserTask selfEvaluationTask = (UserTask) selfEvaluationNode.getContent().getDefinition();
+        assertEquals( selfEvaluationTask.getTaskType().getValue(), TaskTypes.USER);
         DataIOSet dataIOSet = selfEvaluationTask.getDataIOSet();
 
         AssignmentsInfo assignmentsinfo = dataIOSet.getAssignmentsinfo();
@@ -399,6 +405,34 @@ public class BPMNDiagramMarshallerTest {
         }
         assertEquals( "user,user1",  assigneeSet.getActors().getValue() );
         assertEquals( "admin,kiemgmt",  assigneeSet.getGroupid().getValue());
+    }
+
+    @Test
+    @SuppressWarnings( "unchecked" )
+    public void testUnmarshallSimulationProperties() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_SIMULATIONPROPERTIES);
+        assertDiagram( diagram, 4 );
+        assertEquals( "SimulationProperties", diagram.getSettings().getTitle() );
+
+        SimulationSet simulationSet = null;
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while(it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof UserTask) {
+                    UserTask userTask = (UserTask) oDefinition;
+                    simulationSet = userTask.getSimulationSet();
+                    break;
+                }
+            }
+        }
+
+        assertEquals( Double.valueOf(111),  simulationSet.getQuantity().getValue() );
+        assertEquals( "poisson",  simulationSet.getDistributionType().getValue() );
+        assertEquals( Double.valueOf(123),  simulationSet.getUnitCost().getValue() );
+        assertEquals( Double.valueOf(999),  simulationSet.getWorkingHours().getValue() );
+        assertEquals( Double.valueOf(321),  simulationSet.getMean().getValue() );
     }
 
     @Test
@@ -587,6 +621,21 @@ public class BPMNDiagramMarshallerTest {
     }
 
     @Test
+    public void testMarshallSimulationProperties() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_SIMULATIONPROPERTIES);
+        String result = tested.marshall( diagram );
+        assertDiagram(result, 1, 3, 2);
+
+        result = result.replaceAll("\\s+"," ");
+        result = result.replaceAll("> <","><");
+        assertTrue( result.contains("<bpsim:TimeParameters xsi:type=\"bpsim:TimeParameters\"><bpsim:ProcessingTime xsi:type=\"bpsim:Parameter\"><bpsim:PoissonDistribution mean=\"321.0\"/>"));
+        assertTrue( result.contains("<bpsim:ResourceParameters xsi:type=\"bpsim:ResourceParameters\"><bpsim:Availability xsi:type=\"bpsim:Parameter\"><bpsim:FloatingParameter value=\"999.0\"/>"));
+        assertTrue( result.contains("<bpsim:Quantity xsi:type=\"bpsim:Parameter\"><bpsim:FloatingParameter value=\"111.0\"/></bpsim:Quantity>"));
+        assertTrue( result.contains("<bpsim:CostParameters xsi:type=\"bpsim:CostParameters\"><bpsim:UnitCost xsi:type=\"bpsim:Parameter\"><bpsim:FloatingParameter value=\"123.0\"/>"));
+        assertTrue( result.contains("<bpsim:TimeParameters xsi:type=\"bpsim:TimeParameters\"><bpsim:ProcessingTime xsi:type=\"bpsim:Parameter\"><bpsim:UniformDistribution max=\"10.0\" min=\"5.0\"/>"));
+    }
+
+    @Test
     public void testMarshallEvaluationTwice() throws Exception {
         Diagram diagram = unmarshall( BPMN_EVALUATION );
         String result = tested.marshall( diagram );
@@ -619,13 +668,14 @@ public class BPMNDiagramMarshallerTest {
         assertNotNull(businessRuleTask.getExecutionSet().getRuleFlowGroup());
         assertNotNull(businessRuleTask.getGeneral());
         assertNotNull(businessRuleTask.getGeneral().getName());
+        assertEquals(businessRuleTask.getTaskType().getValue(), TaskTypes.BUSINESS_RULE);
 
         assertEquals("my business rule task", businessRuleTask.getGeneral().getName().getValue());
         assertEquals("my-ruleflow-group", businessRuleTask.getExecutionSet().getRuleFlowGroup().getValue());
     }
 
     @Test
-    public void testMarshallReusableSubprocess() throws Exception {
+    public void testUnMarshallReusableSubprocess() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_REUSABLE_SUBPROCESS);
         ReusableSubprocess reusableSubprocess = null;
 
@@ -652,6 +702,16 @@ public class BPMNDiagramMarshallerTest {
     }
 
     @Test
+    public void testMarshallReusableSubprocess() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_REUSABLE_SUBPROCESS);
+        String result = tested.marshall( diagram );
+        assertDiagram(result, 1, 1, 0);
+
+        assertTrue( result.contains( "calledElement=\"my-called-element\"" ) );
+
+    }
+
+    @Test
     public void testMarshallScriptTask() throws Exception {
         Diagram<Graph, Settings> diagram = unmarshall(BPMN_SCRIPTTASK);
         ScriptTask scriptTask = null;
@@ -674,6 +734,7 @@ public class BPMNDiagramMarshallerTest {
         assertNotNull(scriptTask.getExecutionSet().getScriptLanguage());
         assertNotNull(scriptTask.getGeneral());
         assertNotNull(scriptTask.getGeneral().getName());
+        assertEquals(scriptTask.getTaskType().getValue(), TaskTypes.SCRIPT);
 
         assertEquals("my script task", scriptTask.getGeneral().getName().getValue());
         assertEquals("System.out.println(\"hello\");", scriptTask.getExecutionSet().getScript().getValue());
@@ -715,11 +776,38 @@ public class BPMNDiagramMarshallerTest {
 
     @Test
     public void testMarshallXorGateway() throws Exception {
-        Diagram<Graph, Settings> diagram = unmarshall( BPMN_XORGATEWAY );
-        String result = tested.marshall( diagram );
-        assertDiagram( result, 1, 6, 5 );
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_XORGATEWAY);
+        String result = tested.marshall(diagram);
+        assertDiagram(result, 1, 6, 5);
 
-        assertTrue( result.contains( "<bpmn2:exclusiveGateway id=\"_877EA035-1A14-42E9-8CAA-43E9BF908C70\" drools:dg=\"under 10 : _5110D608-BDAD-47BF-A3F9-E1DBE43ED7CD\" name=\"AgeSplit\" gatewayDirection=\"Diverging\" default=\"_5110D608-BDAD-47BF-A3F9-E1DBE43ED7CD\">" ) );
+        assertTrue(result.contains("<bpmn2:exclusiveGateway id=\"_877EA035-1A14-42E9-8CAA-43E9BF908C70\" drools:dg=\"under 10 : _5110D608-BDAD-47BF-A3F9-E1DBE43ED7CD\" name=\"AgeSplit\" gatewayDirection=\"Diverging\" default=\"_5110D608-BDAD-47BF-A3F9-E1DBE43ED7CD\">"));
+    }
+
+    public void testMarshallIntermediateTimerEvent() throws Exception {
+        Diagram<Graph, Settings> diagram = unmarshall(BPMN_TIMER_EVENT);
+        IntermediateTimerEvent timerEvent = null;
+
+        Iterator<Element> it = diagram.getGraph().nodes().iterator();
+        while (it.hasNext()) {
+            Element element = it.next();
+            if (element.getContent() instanceof View) {
+                Object oDefinition = ((View) element.getContent()).getDefinition();
+                if (oDefinition instanceof IntermediateTimerEvent) {
+                    timerEvent = (IntermediateTimerEvent) oDefinition;
+                    break;
+                }
+            }
+        }
+
+        assertNotNull(timerEvent);
+        assertNotNull(timerEvent.getGeneral());
+        assertNotNull(timerEvent.getExecutionSet());
+
+        assertEquals("myTimeDateValue", timerEvent.getExecutionSet().getTimeDate().getValue());
+        assertEquals("MyTimeDurationValue", timerEvent.getExecutionSet().getTimeDuration().getValue());
+        assertEquals("myTimeCycleValue", timerEvent.getExecutionSet().getTimeCycle().getValue());
+        assertEquals("cron", timerEvent.getExecutionSet().getTimeCycleLanguage().getValue());
+
     }
 
     private void assertDiagram( String result, int diagramCount, int nodeCount, int edgeCount ) {

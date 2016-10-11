@@ -21,7 +21,7 @@ import org.kie.workbench.common.forms.metaModel.FieldDef;
 import org.kie.workbench.common.stunner.bpmn.definition.property.background.BackgroundSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.shape.def.SubprocessShapeDef;
 import org.kie.workbench.common.stunner.core.definition.annotation.Description;
@@ -49,23 +49,23 @@ public abstract class BaseSubprocess implements BPMNDefinition {
     @PropertySet
     @FieldDef( label = "General Settings", position = 0)
     @Valid
-    protected BPMNGeneral general;
+    protected BPMNGeneralSet general;
 
     @PropertySet
-    @FieldDef( label = "Background Settings", position = 2)
+    @FieldDef( label = "Background Settings", position = 3)
     @Valid
     protected BackgroundSet backgroundSet;
 
     @PropertySet
-    @FieldDef( label = "Font Settings", position = 3)
+    //@FieldDef( label = "Font Settings", position = 4)
     protected FontSet fontSet;
 
     @PropertySet
-    @FieldDef( label = "Process Simulation", position = 4)
+    //@FieldDef( label = "Process Simulation", position = 5)
     protected SimulationSet simulationSet;
 
     @PropertySet
-    @FieldDef( label = "Shape Dimensions", position = 5)
+    @FieldDef( label = "Shape Dimensions", position = 6)
     protected RectangleDimensionsSet dimensionsSet;
 
     @Labels
@@ -95,7 +95,7 @@ public abstract class BaseSubprocess implements BPMNDefinition {
     protected BaseSubprocess( ) {
     }
 
-    public BaseSubprocess(@MapsTo("general") BPMNGeneral general,
+    public BaseSubprocess(@MapsTo("general") BPMNGeneralSet general,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
                     @MapsTo("fontSet") FontSet fontSet,
                     @MapsTo("dimensionsSet") RectangleDimensionsSet dimensionsSet,
@@ -115,11 +115,11 @@ public abstract class BaseSubprocess implements BPMNDefinition {
         return description;
     }
 
-    public BPMNGeneral getGeneral() {
+    public BPMNGeneralSet getGeneral() {
         return general;
     }
 
-    public void setGeneral(BPMNGeneral general) {
+    public void setGeneral(BPMNGeneralSet general) {
         this.general = general;
     }
 

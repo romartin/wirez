@@ -1,5 +1,7 @@
 package org.kie.workbench.common.stunner.bpmn.definition;
 
+import javax.validation.Valid;
+
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.NonPortable;
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -10,7 +12,10 @@ import org.kie.workbench.common.stunner.bpmn.definition.property.background.Back
 import org.kie.workbench.common.stunner.bpmn.definition.property.dataio.DataIOSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.dimensions.RectangleDimensionsSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.font.FontSet;
-import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneral;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.BPMNGeneralSet;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Documentation;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.Name;
+import org.kie.workbench.common.stunner.bpmn.definition.property.general.TaskGeneralSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.simulation.SimulationSet;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskType;
 import org.kie.workbench.common.stunner.bpmn.definition.property.task.TaskTypes;
@@ -35,12 +40,17 @@ public class UserTask extends BaseTask {
     @FieldDef( label = "Assigned to", position = 1)
     protected AssigneeSet assigneeSet;
 
+    @PropertySet
+    @FieldDef( label = "Task Data", position = 2)
+    @Valid
+    protected DataIOSet dataIOSet;
+
     @NonPortable
     public static class UserTaskBuilder extends BaseTaskBuilder<UserTask> {
 
         @Override
         public UserTask build() {
-            return new UserTask(new BPMNGeneral("Task"),
+            return new UserTask(new TaskGeneralSet(new Name("Task"), new Documentation("")),
                     new AssigneeSet(),
                     new DataIOSet(),
                     new BackgroundSet(COLOR, BORDER_COLOR, BORDER_SIZE),
@@ -56,7 +66,7 @@ public class UserTask extends BaseTask {
         super( TaskTypes.USER );
     }
 
-    public UserTask(@MapsTo("general") BPMNGeneral general,
+    public UserTask(@MapsTo("general") TaskGeneralSet general,
                     @MapsTo("assigneeSet") AssigneeSet assigneeSet,
                     @MapsTo("dataIOSet") DataIOSet dataIOSet,
                     @MapsTo("backgroundSet") BackgroundSet backgroundSet,
@@ -65,8 +75,9 @@ public class UserTask extends BaseTask {
                     @MapsTo("simulationSet") SimulationSet simulationSet,
                     @MapsTo("taskType") TaskType taskType) {
 
-        super(general, dataIOSet, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
+        super(general, backgroundSet, fontSet, dimensionsSet, simulationSet, taskType);
         this.assigneeSet = assigneeSet;
+        this.dataIOSet = dataIOSet;
     }
 
     public String getTitle() {
@@ -77,8 +88,16 @@ public class UserTask extends BaseTask {
         return assigneeSet;
     }
 
+    public DataIOSet getDataIOSet() {
+        return dataIOSet;
+    }
+
     public void setAssigneeSet(AssigneeSet assigneeSet) {
         this.assigneeSet = assigneeSet;
+    }
+
+    public void setDataIOSet( DataIOSet dataIOSet ) {
+        this.dataIOSet = dataIOSet;
     }
 
 }

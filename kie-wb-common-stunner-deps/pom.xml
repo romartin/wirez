@@ -35,7 +35,7 @@
     <version.de.benediktmeurer.gwt-slf4j>0.0.2</version.de.benediktmeurer.gwt-slf4j>
     <version.org.jbpm.jbpm-bpmn2-emfextmodel>6.3.0.Final</version.org.jbpm.jbpm-bpmn2-emfextmodel>
     <version.javax.el.api>2.2</version.javax.el.api>
-    <version.hibernate.validator>4.1.0.Final</version.hibernate.validator>
+    <version.hibernate.validator>5.3.5.Final</version.hibernate.validator>
     <version.validation.api>1.0.0.GA</version.validation.api>
     <!-- TODO: Remove when moving to latest parent IP BOM. -->
     <version.com.google.gwt.gwtmockito>1.1.6</version.com.google.gwt.gwtmockito>
